@@ -5,7 +5,7 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { useOfflineStore } from '@/stores/offline-store';
+import { useOfflineStore, type PendingSyncItem, type SyncConflict } from '@/stores/offline-store';
 import {
   setupOfflineTestEnvironment,
   cleanupOfflineTestEnvironment,
@@ -22,7 +22,6 @@ import {
   createMockFieldLevelConflict,
 } from '@/__tests__/factories/syncConflict.factory';
 import { STORES, putInStore, getAllFromStore, getFromStore, clearStore } from '@/lib/offline/indexeddb';
-import type { PendingSyncItem, SyncConflict } from '@/stores/offline-store';
 
 // Mock the OfflineClient
 vi.mock('@/lib/api/offline-client', () => ({

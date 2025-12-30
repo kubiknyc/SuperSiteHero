@@ -42,8 +42,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { BidSubmissionStatusBadge } from './BidPackageStatusBadge'
-import type { BidSubmissionWithDetails } from '@/types/bidding'
-import { formatBidAmount } from '@/types/bidding'
+import { formatBidAmount, type BidSubmissionWithDetails } from '@/types/bidding'
 
 type SortField = 'bidder' | 'amount' | 'date' | 'rank'
 type SortDirection = 'asc' | 'desc'

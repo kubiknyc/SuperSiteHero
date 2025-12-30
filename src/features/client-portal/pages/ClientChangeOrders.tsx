@@ -11,7 +11,6 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
 import {
   RadixSelect as Select,
   SelectContent,
@@ -36,8 +35,6 @@ import {
 import {
   FileEdit,
   Search,
-  Calendar,
-  DollarSign,
   Clock,
   CheckCircle2,
   XCircle,
@@ -45,7 +42,6 @@ import {
   Eye,
   ArrowUpRight,
   ArrowDownRight,
-  Minus,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'

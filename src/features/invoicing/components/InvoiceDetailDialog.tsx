@@ -12,25 +12,14 @@ import {
   Download,
   Edit,
   Plus,
-  Trash2,
   DollarSign,
   Calendar,
   Building2,
   Mail,
   Phone,
-  MapPin,
-  Clock,
-  CheckCircle,
-  AlertTriangle,
   CreditCard,
   Loader2,
 } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 import {
   Sheet,
   SheetContent,
@@ -110,7 +99,7 @@ export function InvoiceDetailDialog({
     try {
       await sendInvoice.mutateAsync({ id: invoiceId });
       toast.success('Invoice sent');
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to send invoice');
     }
   };

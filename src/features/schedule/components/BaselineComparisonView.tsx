@@ -8,11 +8,10 @@
 
 import * as React from 'react'
 import { format, parseISO, differenceInDays } from 'date-fns'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
+import { Card, CardContent } from '@/components/ui'
 import { Separator } from '@/components/ui/separator'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
@@ -40,7 +39,6 @@ import {
   AlertCircle,
   Search,
   Flag,
-  X,
   Calendar,
 } from 'lucide-react'
 import type { ScheduleActivity, ScheduleBaseline } from '@/types/schedule-activities'
@@ -129,7 +127,7 @@ function getVarianceColor(status: VarianceStatus): string {
   }
 }
 
-function getVarianceBgColor(status: VarianceStatus): string {
+function _getVarianceBgColor(status: VarianceStatus): string {
   switch (status) {
     case 'on_track': return 'bg-success-light text-green-800'
     case 'caution': return 'bg-warning-light text-yellow-800'
@@ -296,7 +294,8 @@ function VarianceBadge({ days, status }: VarianceBadgeProps) {
 interface BaselineComparisonViewProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  projectId: string
+  /** @deprecated Project ID reserved for future baseline data fetching */
+  projectId?: string
   baseline: ScheduleBaseline | null
   activities: ScheduleActivity[]
 }
@@ -308,7 +307,7 @@ interface BaselineComparisonViewProps {
 export function BaselineComparisonView({
   open,
   onOpenChange,
-  projectId,
+  projectId: _projectId,
   baseline,
   activities,
 }: BaselineComparisonViewProps) {

@@ -8,10 +8,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/lib/notifications/ToastContext'
 import { reportBuilderApi } from '@/lib/api/services/report-builder'
 import type {
-  ReportTemplate,
-  ScheduledReport,
-  GeneratedReport,
-  ReportFieldDefinition,
   CreateReportTemplateDTO,
   UpdateReportTemplateDTO,
   ReportTemplateFieldInput,

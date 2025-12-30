@@ -115,9 +115,6 @@ export function MarkupVersionComparison({
   // Container ref
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // Loading state for PDF worker
-  const [pdfWorkerReady, setPdfWorkerReady] = useState(false)
-
   // Initialize PDF.js worker lazily on component mount
   useEffect(() => {
     const initWorker = () => {
@@ -127,7 +124,6 @@ export function MarkupVersionComparison({
           import.meta.url
         ).toString()
       }
-      setPdfWorkerReady(true)
     }
     initWorker()
   }, [])
@@ -198,9 +194,6 @@ export function MarkupVersionComparison({
     modified: allChangeRegions.filter(r => r.changeType === 'modified').length,
     total: allChangeRegions.length,
   }), [allChangeRegions])
-
-  const isPdf1 = version1.file_type === 'application/pdf'
-  const isPdf2 = version2.file_type === 'application/pdf'
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>

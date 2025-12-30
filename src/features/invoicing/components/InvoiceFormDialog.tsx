@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { format, addDays } from 'date-fns';
 import { toast } from 'sonner';
-import { CalendarIcon, Loader2, Building2, User, Mail, Phone, MapPin } from 'lucide-react';
+import { CalendarIcon, Loader2, Building2 } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -230,7 +230,7 @@ export function InvoiceFormDialog({
         toast.success('Invoice created');
       }
       onOpenChange(false);
-    } catch (error) {
+    } catch (_error) {
       toast.error(isEditing ? 'Failed to update invoice' : 'Failed to create invoice');
     }
   };

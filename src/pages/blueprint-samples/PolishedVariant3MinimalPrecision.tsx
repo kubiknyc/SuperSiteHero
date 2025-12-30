@@ -3,7 +3,7 @@
 // Inspired by Swiss Design principles with JobSight professional aesthetic
 
 import { Link } from 'react-router-dom'
-import { TrendingUp, Users, FileText, AlertCircle, Building2, ArrowLeft } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 
 export default function PolishedVariant3MinimalPrecision() {
   const stats = [

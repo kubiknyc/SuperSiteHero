@@ -65,7 +65,7 @@ export const procurementApi = {
         }
 
         const { data, error } = await query;
-        if (error) throw error;
+        if (error) {throw error;}
         return data || [];
       } catch (error) {
         throw error instanceof ApiErrorClass
@@ -89,8 +89,8 @@ export const procurementApi = {
           .eq('id', id)
           .single();
 
-        if (error) throw error;
-        if (!data) throw new ApiErrorClass({ code: 'NOT_FOUND', message: 'Vendor not found' });
+        if (error) {throw error;}
+        if (!data) {throw new ApiErrorClass({ code: 'NOT_FOUND', message: 'Vendor not found' });}
         return data;
       } catch (error) {
         throw error instanceof ApiErrorClass
@@ -117,7 +117,7 @@ export const procurementApi = {
           .select()
           .single();
 
-        if (error) throw error;
+        if (error) {throw error;}
         return data;
       } catch (error) {
         throw error instanceof ApiErrorClass
@@ -142,7 +142,7 @@ export const procurementApi = {
           .select()
           .single();
 
-        if (error) throw error;
+        if (error) {throw error;}
         return data;
       } catch (error) {
         throw error instanceof ApiErrorClass
@@ -165,7 +165,7 @@ export const procurementApi = {
           .update({ deleted_at: new Date().toISOString() })
           .eq('id', id);
 
-        if (error) throw error;
+        if (error) {throw error;}
       } catch (error) {
         throw error instanceof ApiErrorClass
           ? error
@@ -230,7 +230,7 @@ export const procurementApi = {
         }
 
         const { data, error } = await query;
-        if (error) throw error;
+        if (error) {throw error;}
         return data || [];
       } catch (error) {
         throw error instanceof ApiErrorClass
@@ -254,8 +254,8 @@ export const procurementApi = {
           .eq('id', id)
           .single();
 
-        if (error) throw error;
-        if (!data) throw new ApiErrorClass({ code: 'NOT_FOUND', message: 'Purchase order not found' });
+        if (error) {throw error;}
+        if (!data) {throw new ApiErrorClass({ code: 'NOT_FOUND', message: 'Purchase order not found' });}
 
         // Fetch line items
         const { data: lineItems, error: lineError } = await db
@@ -264,7 +264,7 @@ export const procurementApi = {
           .eq('purchase_order_id', id)
           .order('line_number');
 
-        if (lineError) throw lineError;
+        if (lineError) {throw lineError;}
 
         return {
           ...data,
@@ -299,7 +299,7 @@ export const procurementApi = {
           .select()
           .single();
 
-        if (poError) throw poError;
+        if (poError) {throw poError;}
 
         // Create line items if provided
         if (line_items && line_items.length > 0) {
@@ -343,7 +343,7 @@ export const procurementApi = {
           .update(dto)
           .eq('id', id);
 
-        if (error) throw error;
+        if (error) {throw error;}
 
         return this.getPurchaseOrder(id);
       } catch (error) {
@@ -378,7 +378,7 @@ export const procurementApi = {
           })
           .eq('id', id);
 
-        if (error) throw error;
+        if (error) {throw error;}
 
         return this.getPurchaseOrder(id);
       } catch (error) {
@@ -405,7 +405,7 @@ export const procurementApi = {
           })
           .eq('id', id);
 
-        if (error) throw error;
+        if (error) {throw error;}
 
         // Update all line items to 'ordered'
         await db
@@ -449,7 +449,7 @@ export const procurementApi = {
           .update({ deleted_at: new Date().toISOString() })
           .eq('id', id);
 
-        if (error) throw error;
+        if (error) {throw error;}
       } catch (error) {
         throw error instanceof ApiErrorClass
           ? error
@@ -478,7 +478,7 @@ export const procurementApi = {
           .eq('purchase_order_id', purchaseOrderId)
           .order('line_number');
 
-        if (error) throw error;
+        if (error) {throw error;}
         return data || [];
       } catch (error) {
         throw error instanceof ApiErrorClass
@@ -516,7 +516,7 @@ export const procurementApi = {
           .select()
           .single();
 
-        if (error) throw error;
+        if (error) {throw error;}
         return data;
       } catch (error) {
         throw error instanceof ApiErrorClass
@@ -541,7 +541,7 @@ export const procurementApi = {
           .select()
           .single();
 
-        if (error) throw error;
+        if (error) {throw error;}
         return data;
       } catch (error) {
         throw error instanceof ApiErrorClass
@@ -564,7 +564,7 @@ export const procurementApi = {
           .delete()
           .eq('id', id);
 
-        if (error) throw error;
+        if (error) {throw error;}
       } catch (error) {
         throw error instanceof ApiErrorClass
           ? error
@@ -596,7 +596,7 @@ export const procurementApi = {
           .eq('line_item_id', lineItemId)
           .order('receipt_date', { ascending: false });
 
-        if (error) throw error;
+        if (error) {throw error;}
 
         return (data || []).map((r: any) => ({
           ...r,
@@ -629,7 +629,7 @@ export const procurementApi = {
           .select()
           .single();
 
-        if (error) throw error;
+        if (error) {throw error;}
         return data;
       } catch (error) {
         throw error instanceof ApiErrorClass
@@ -657,7 +657,7 @@ export const procurementApi = {
           p_project_id: projectId,
         });
 
-        if (error) throw error;
+        if (error) {throw error;}
         return data || {
           total_pos: 0,
           total_value: 0,

@@ -1,7 +1,7 @@
 // Blueprint Documents Sample
 
 import { Link } from 'react-router-dom'
-import { FolderOpen, FileText, Image, FileType, ChevronRight, Upload, Search } from 'lucide-react'
+import { FolderOpen, FileText, ChevronRight, Upload, Search } from 'lucide-react'
 
 export default function BlueprintDocuments() {
   const folders = [

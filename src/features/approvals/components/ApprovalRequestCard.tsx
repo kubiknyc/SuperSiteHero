@@ -4,13 +4,12 @@
  * Displays an approval request with status, progress, and action buttons
  */
 
-import * as React from 'react'
+import { useState, memo } from 'react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { ApprovalStatusBadge } from './ApprovalStatusBadge'
 import { ApproveWithConditionsDialog } from './ApproveWithConditionsDialog'
-import type { ApprovalRequest } from '@/types/approval-workflow'
-import { WORKFLOW_ENTITY_CONFIG } from '@/types/approval-workflow'
+import { WORKFLOW_ENTITY_CONFIG, type ApprovalRequest } from '@/types/approval-workflow'
 
 interface ApprovalRequestCardProps {
   request: ApprovalRequest
@@ -24,7 +23,7 @@ interface ApprovalRequestCardProps {
   className?: string
 }
 
-export function ApprovalRequestCard({
+export const ApprovalRequestCard = memo(function ApprovalRequestCard({
   request,
   currentUserId,
   onApprove,
@@ -35,9 +34,9 @@ export function ApprovalRequestCard({
   isLoading = false,
   className,
 }: ApprovalRequestCardProps) {
-  const [showRejectInput, setShowRejectInput] = React.useState(false)
-  const [showConditionsDialog, setShowConditionsDialog] = React.useState(false)
-  const [rejectComment, setRejectComment] = React.useState('')
+  const [showRejectInput, setShowRejectInput] = useState(false)
+  const [showConditionsDialog, setShowConditionsDialog] = useState(false)
+  const [rejectComment, setRejectComment] = useState('')
 
   const entityConfig = WORKFLOW_ENTITY_CONFIG[request.entity_type]
   const steps = request.workflow?.steps || []
@@ -249,6 +248,6 @@ export function ApprovalRequestCard({
       />
     </div>
   )
-}
+})
 
 export default ApprovalRequestCard

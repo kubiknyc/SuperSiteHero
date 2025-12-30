@@ -7,8 +7,7 @@
 import * as React from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import type { ApprovalWorkflow, WorkflowEntityType } from '@/types/approval-workflow'
-import { WORKFLOW_ENTITY_CONFIG } from '@/types/approval-workflow'
+import { WORKFLOW_ENTITY_CONFIG, type ApprovalWorkflow, type WorkflowEntityType } from '@/types/approval-workflow'
 
 interface WorkflowListProps {
   workflows: ApprovalWorkflow[]
@@ -129,7 +128,7 @@ interface TypeTabProps {
   onClick: () => void
 }
 
-function TypeTab({ label, value, selected, count, onClick }: TypeTabProps) {
+function TypeTab({ label, value: _value, selected, count, onClick }: TypeTabProps) {
   return (
     <button
       onClick={onClick}

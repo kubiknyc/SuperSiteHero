@@ -93,12 +93,12 @@ const statusColors: Record<ConstraintStatus, { color: string; bgColor: string }>
 export function ConstraintsList({
   constraints,
   activityId,
-  projectId,
+  projectId: _projectId,
   onAddConstraint,
   onResolveConstraint,
   onDeleteConstraint,
   onViewLinkedEntity,
-  isLoading,
+  isLoading: _isLoading,
   className,
 }: ConstraintsListProps) {
   const [showAddDialog, setShowAddDialog] = useState(false)

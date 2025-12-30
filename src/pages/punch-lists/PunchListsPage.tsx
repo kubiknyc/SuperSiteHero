@@ -1,7 +1,7 @@
 // File: /src/pages/punch-lists/PunchListsPage.tsx
 // Main punch lists page with filters, search, and table view
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
@@ -84,15 +84,15 @@ export function PunchListsPage() {
     }
   }, [punchItems])
 
-  const handleRowClick = (punchItemId: string) => {
+  const handleRowClick = useCallback((punchItemId: string) => {
     navigate(`/punch-lists/${punchItemId}`)
-  }
+  }, [navigate])
 
-  const handleEdit = (e: React.MouseEvent, punchItem: PunchItem) => {
+  const handleEdit = useCallback((e: React.MouseEvent, punchItem: PunchItem) => {
     e.stopPropagation()
     setEditingPunchItem(punchItem)
     setEditDialogOpen(true)
-  }
+  }, [])
 
   const tableColumns = [
     {

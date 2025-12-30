@@ -72,7 +72,7 @@ export function ConflictResolutionDialog({
   const handleResolve = async () => {
     setResolving(true)
     try {
-      let resolvedData: any
+      let resolvedData: Record<string, unknown>
 
       switch (selectedResolution) {
         case 'local':
@@ -119,7 +119,7 @@ export function ConflictResolutionDialog({
   }
 
   const getFieldDifferences = () => {
-    const differences: Array<{ field: string; local: any; server: any }> = []
+    const differences: Array<{ field: string; local: unknown; server: unknown }> = []
     const allKeys = new Set([
       ...Object.keys(conflict.localData || {}),
       ...Object.keys(conflict.serverData || {}),
@@ -147,7 +147,7 @@ export function ConflictResolutionDialog({
 
   const differences = getFieldDifferences()
 
-  const renderValue = (value: any): string => {
+  const renderValue = (value: unknown): string => {
     if (value === null || value === undefined) {return 'Not set'}
     if (typeof value === 'object') {return JSON.stringify(value, null, 2)}
     if (typeof value === 'boolean') {return value ? 'Yes' : 'No'}

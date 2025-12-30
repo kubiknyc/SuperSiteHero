@@ -2,7 +2,7 @@
 // Template card component for grid/list view
 // Phase: 2.1 - Template List/Grid View
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, memo } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -37,7 +37,7 @@ interface TemplateCardProps {
   onView?: (template: ChecklistTemplate) => void
 }
 
-export function TemplateCard({
+export const TemplateCard = memo(function TemplateCard({
   template,
   viewMode = 'grid',
   onEdit,
@@ -307,4 +307,4 @@ export function TemplateCard({
       </CardFooter>
     </Card>
   )
-}
+})

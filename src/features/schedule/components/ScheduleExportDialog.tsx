@@ -14,7 +14,6 @@ import {
   FileCode,
   Calendar,
   AlertTriangle,
-  CheckCircle2,
   Loader2,
   Filter,
   Info,

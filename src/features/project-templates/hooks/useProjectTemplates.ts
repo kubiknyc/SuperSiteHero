@@ -12,15 +12,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { projectTemplatesApi } from '@/lib/api/services/project-templates'
 import type {
-  ProjectTemplate,
-  ProjectTemplateWithDetails,
-  ProjectTemplatePhase,
   CreateProjectTemplateInput,
   UpdateProjectTemplateInput,
   CreateTemplateFromProjectInput,
   ProjectTemplateFilters,
   ApplyTemplateResult,
-  TemplateCategory,
 } from '@/types/project-template'
 
 // ============================================================================
@@ -144,7 +140,7 @@ export function useCreateProjectTemplate() {
     }) => {
       return projectTemplatesApi.createTemplate(input, userId)
     },
-    onSuccess: (data) => {
+    onSuccess: (_data) => {
       // Invalidate template lists for the company
       queryClient.invalidateQueries({
         queryKey: projectTemplateKeys.lists(),
@@ -344,7 +340,7 @@ export function useUpdateTemplatePhase() {
   return useMutation({
     mutationFn: ({
       phaseId,
-      templateId,
+      templateId: _templateId,
       updates,
     }: {
       phaseId: string
@@ -370,7 +366,7 @@ export function useDeleteTemplatePhase() {
   return useMutation({
     mutationFn: ({
       phaseId,
-      templateId,
+      templateId: _templateId,
     }: {
       phaseId: string
       templateId: string

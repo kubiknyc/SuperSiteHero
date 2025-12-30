@@ -29,7 +29,6 @@ import {
   MoreVertical,
 } from 'lucide-react'
 import { useQuickSync, useQBConnectionStatus } from '../hooks/useQuickBooks'
-import { formatDistanceToNow } from 'date-fns'
 import type { QBSyncStatus } from '@/types/quickbooks'
 import { logger } from '../../../lib/utils/logger';
 
@@ -58,7 +57,7 @@ export function QBEntitySyncButton({
   showStatus = true,
 }: QBEntitySyncButtonProps) {
   const { data: connectionStatus } = useQBConnectionStatus()
-  const { canSync, isSynced, syncStatus, isLoading, sync, error } = useQuickSync(
+  const { canSync, isSynced, syncStatus, isLoading, sync, error: _error } = useQuickSync(
     entityType,
     entityId
   )
@@ -195,7 +194,7 @@ interface QBSyncStatusIndicatorProps {
 
 export function QBSyncStatusIndicator({ entityType, entityId }: QBSyncStatusIndicatorProps) {
   const { data: connectionStatus } = useQBConnectionStatus()
-  const { isSynced, syncStatus, isLoading } = useQuickSync(entityType, entityId)
+  const { isSynced: _isSynced, syncStatus, isLoading } = useQuickSync(entityType, entityId)
 
   if (!connectionStatus?.isConnected) {return null}
 

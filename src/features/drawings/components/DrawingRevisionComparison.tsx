@@ -22,7 +22,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
-import { Slider } from '@/components/ui/slider';
 import {
   X,
   ZoomIn,
@@ -88,18 +87,18 @@ export function DrawingRevisionComparison({
   const [overlayOpacity1, setOverlayOpacity1] = useState(50);
   const [overlayOpacity2, setOverlayOpacity2] = useState(50);
 
-  // Slider image URLs for slider mode
-  const [sliderImage1, setSliderImage1] = useState<string | null>(null);
-  const [sliderImage2, setSliderImage2] = useState<string | null>(null);
+  // Slider image URLs for slider mode - currently used for image URL conversion
+  const [_sliderImage1, setSliderImage1] = useState<string | null>(null);
+  const [_sliderImage2, setSliderImage2] = useState<string | null>(null);
 
-  // PDF worker initialization
-  const [pdfWorkerReady, setPdfWorkerReady] = useState(false);
+  // PDF worker initialization - state tracks worker readiness
+  const [_pdfWorkerReady, setPdfWorkerReady] = useState(false);
 
   // Container ref
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Comparison helpers
-  const { formatRevisionLabel, getChangeTypeLabel } = useComparisonState();
+  // Comparison helpers - these may be used in future enhancements
+  const { formatRevisionLabel: _formatRevisionLabel, getChangeTypeLabel: _getChangeTypeLabel } = useComparisonState();
 
   // Fetch comparison data
   const {

@@ -1,7 +1,7 @@
 // Blueprint Dashboard Sample - Main landing page with stats and activity
 
 import { Link } from 'react-router-dom'
-import { TrendingUp, Users, FileText, AlertCircle, ChevronRight, Building2, Calendar, CheckCircle2 } from 'lucide-react'
+import { Users, FileText, AlertCircle, ChevronRight, Building2, Calendar } from 'lucide-react'
 
 export default function BlueprintDashboard() {
   const stats = [

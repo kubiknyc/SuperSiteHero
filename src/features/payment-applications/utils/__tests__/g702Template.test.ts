@@ -7,32 +7,43 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { generateG702PDF, downloadG702PDF } from '../g702Template'
 import type { G702PDFData, PaymentApplicationWithDetails } from '@/types/payment-application'
 
-// Mock jsPDF
-vi.mock('jspdf', () => {
-  const mockDoc = {
-    setFillColor: vi.fn().mockReturnThis(),
-    setDrawColor: vi.fn().mockReturnThis(),
-    setLineWidth: vi.fn().mockReturnThis(),
-    setFont: vi.fn().mockReturnThis(),
-    setFontSize: vi.fn().mockReturnThis(),
-    setTextColor: vi.fn().mockReturnThis(),
-    rect: vi.fn().mockReturnThis(),
-    text: vi.fn().mockReturnThis(),
-    line: vi.fn().mockReturnThis(),
+// Hoist the mock document so it can be used in vi.mock
+const { mockDoc, createMockDoc } = vi.hoisted(() => {
+  const createDoc = () => ({
+    setFillColor: vi.fn(function(this: any) { return this }),
+    setDrawColor: vi.fn(function(this: any) { return this }),
+    setLineWidth: vi.fn(function(this: any) { return this }),
+    setFont: vi.fn(function(this: any) { return this }),
+    setFontSize: vi.fn(function(this: any) { return this }),
+    setTextColor: vi.fn(function(this: any) { return this }),
+    rect: vi.fn(function(this: any) { return this }),
+    text: vi.fn(function(this: any) { return this }),
+    line: vi.fn(function(this: any) { return this }),
     splitTextToSize: vi.fn((text: string) => [text]),
     getNumberOfPages: vi.fn(() => 1),
-    setPage: vi.fn().mockReturnThis(),
-    addPage: vi.fn().mockReturnThis(),
+    setPage: vi.fn(function(this: any) { return this }),
+    addPage: vi.fn(function(this: any) { return this }),
     output: vi.fn((type: string) => {
       if (type === 'blob') {
         return new Blob(['fake-pdf-content'], { type: 'application/pdf' })
       }
       return 'fake-pdf-string'
     }),
-  }
+  })
+  return { mockDoc: createDoc(), createMockDoc: createDoc }
+})
+
+// Mock jsPDF with a proper constructor class
+vi.mock('jspdf', () => {
+  // Create a mock class that can be instantiated with `new`
+  const MockJsPDF = vi.fn(function(this: any) {
+    // Reset mockDoc functions for fresh mock per test
+    Object.assign(this, mockDoc)
+    return this
+  })
 
   return {
-    default: vi.fn(() => mockDoc),
+    default: MockJsPDF,
   }
 })
 

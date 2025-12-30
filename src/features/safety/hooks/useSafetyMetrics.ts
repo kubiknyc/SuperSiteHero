@@ -14,11 +14,7 @@ import { safetyMetricsApi } from '@/lib/api/services/safety-metrics'
 import type {
   EmployeeHoursWorked,
   EmployeeHoursWorkedInput,
-  SafetyMetrics,
   SafetyMetricsSnapshot,
-  SafetyMetricsTrendPoint,
-  SafetyMetricsDashboard,
-  IndustrySafetyBenchmark,
   EMRRecord,
   EMRRecordInput,
   HoursWorkedFilters,

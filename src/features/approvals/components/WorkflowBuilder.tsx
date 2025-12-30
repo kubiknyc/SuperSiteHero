@@ -8,16 +8,17 @@
 import * as React from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import type {
-  CreateStepInput,
-  CreateWorkflowInput,
-  WorkflowEntityType,
-  ApprovalWorkflow,
-  ApproverType,
-  DefaultRole,
-  CustomRole,
+import {
+  WORKFLOW_ENTITY_CONFIG,
+  DEFAULT_ROLE_CONFIG,
+  type CreateStepInput,
+  type CreateWorkflowInput,
+  type WorkflowEntityType,
+  type ApprovalWorkflow,
+  type ApproverType,
+  type DefaultRole,
+  type CustomRole,
 } from '@/types/approval-workflow'
-import { WORKFLOW_ENTITY_CONFIG, DEFAULT_ROLE_CONFIG } from '@/types/approval-workflow'
 
 interface WorkflowBuilderProps {
   initialData?: ApprovalWorkflow

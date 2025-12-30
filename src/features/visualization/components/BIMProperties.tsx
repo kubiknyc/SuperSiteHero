@@ -18,10 +18,8 @@ import {
   Download,
   Copy,
   Check,
-  ExternalLink,
   Edit2,
   X,
-  Filter,
   Ruler,
   Info,
 } from 'lucide-react';

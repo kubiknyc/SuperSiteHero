@@ -101,8 +101,10 @@ function isActivityInPeriod(
 interface LookAheadSyncDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  projectId: string
-  companyId: string
+  /** @deprecated Reserved for future API integration */
+  projectId?: string
+  /** @deprecated Reserved for future API integration */
+  companyId?: string
   activities: ScheduleActivity[]
   onSync?: (
     activityIds: string[],
@@ -119,8 +121,8 @@ interface LookAheadSyncDialogProps {
 export function LookAheadSyncDialog({
   open,
   onOpenChange,
-  projectId,
-  companyId,
+  projectId: _projectId,
+  companyId: _companyId,
   activities,
   onSync,
   onSyncComplete,
@@ -172,7 +174,7 @@ export function LookAheadSyncDialog({
   }, [activities, filterPeriod, criticalOnly, searchQuery])
 
   // Check if activity is already linked to look-ahead
-  const getActivityStatus = (activity: ScheduleActivity): 'new' | 'linked' => {
+  const getActivityStatus = (_activity: ScheduleActivity): 'new' | 'linked' => {
     // In a real implementation, we'd check if there's a look-ahead activity
     // with schedule_item_id === activity.id
     // For now, we'll assume all are new

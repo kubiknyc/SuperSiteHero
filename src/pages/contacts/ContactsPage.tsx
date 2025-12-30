@@ -22,6 +22,17 @@ import {
   Building2,
   Trash2,
 } from 'lucide-react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import { toast } from 'sonner'
 
 type ContactTypeFilter = 'all' | 'subcontractor' | 'architect' | 'engineer' | 'inspector' | 'supplier' | 'owner' | 'consultant' | 'other'
 
@@ -31,6 +42,9 @@ export function ContactsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [contactTypeFilter, setContactTypeFilter] = useState<ContactTypeFilter>('all')
   const [showPrimaryOnly, setShowPrimaryOnly] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [contactToDelete, setContactToDelete] = useState<{ id: string; name: string } | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   // Fetch data
   const { data: projects, isLoading: projectsLoading } = useProjects()
@@ -57,13 +71,26 @@ export function ContactsPage() {
     }
   }, [contacts])
 
-  const handleDeleteContact = async (contactId: string, contactName: string) => {
-    if (confirm(`Are you sure you want to delete ${contactName}?`)) {
-      try {
-        await deleteContact.mutateAsync(contactId)
-      } catch (error) {
-        alert('Failed to delete contact: ' + (error as Error).message)
-      }
+  const handleDeleteClick = (contactId: string, contactName: string) => {
+    setContactToDelete({ id: contactId, name: contactName })
+    setDeleteDialogOpen(true)
+  }
+
+  const handleDeleteConfirm = async () => {
+    if (!contactToDelete) {
+      return
+    }
+
+    setIsDeleting(true)
+    try {
+      await deleteContact.mutateAsync(contactToDelete.id)
+      toast.success(`${contactToDelete.name} deleted successfully`)
+      setDeleteDialogOpen(false)
+      setContactToDelete(null)
+    } catch (error) {
+      toast.error('Failed to delete contact: ' + (error as Error).message)
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -288,7 +315,7 @@ export function ContactsPage() {
                     className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
                     onClick={(e) => {
                       e.stopPropagation()
-                      handleDeleteContact(contact.id, displayName)
+                      handleDeleteClick(contact.id, displayName)
                     }}
                   >
                     <Trash2 className="h-4 w-4" />
@@ -299,6 +326,33 @@ export function ContactsPage() {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <Trash2 className="h-5 w-5 text-error" />
+              Delete Contact
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete {contactToDelete?.name}? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting} onClick={() => setContactToDelete(null)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              disabled={isDeleting}
+              className="bg-error hover:bg-red-700"
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AppLayout>
   )
 }

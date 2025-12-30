@@ -18,6 +18,7 @@ import type {
   NumberItemConfig,
   PhotoItemConfig,
   SignatureItemConfig,
+  ItemConfig,
 } from '@/types/checklists'
 
 interface ChecklistItemBuilderProps {
@@ -52,7 +53,7 @@ export function ChecklistItemBuilder({
     item_type: ChecklistItemType
     section?: string
     is_required: boolean
-    config: Record<string, any>
+    config: ItemConfig
   }>({
     label: '',
     item_type: 'checkbox',

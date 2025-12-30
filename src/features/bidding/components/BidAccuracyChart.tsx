@@ -16,8 +16,7 @@ import {
   Cell,
 } from 'recharts'
 import { Badge } from '@/components/ui/badge'
-import type { TradeVariance } from '@/types/historical-bid-analysis'
-import { formatCurrency, formatPercentage, getAccuracyConfig } from '@/types/historical-bid-analysis'
+import { formatCurrency, formatPercentage, getAccuracyConfig, type TradeVariance } from '@/types/historical-bid-analysis'
 
 interface BidAccuracyChartProps {
   data: TradeVariance[]

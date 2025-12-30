@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   LayoutDashboard, Building2, FileText, FolderOpen, Users, Settings,
-  Bell, Search, Menu, X, ChevronRight, HardHat, MessageSquare,
+  Bell, Search, Menu, ChevronRight, HardHat, MessageSquare,
   ClipboardList, AlertCircle, Shield, Calendar
 } from 'lucide-react'
 

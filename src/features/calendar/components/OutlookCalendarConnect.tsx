@@ -5,7 +5,7 @@
  * Provides OAuth flow, connection status, and sync settings.
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Calendar, Check, AlertCircle, RefreshCw, Settings, Unlink, ExternalLink } from 'lucide-react'
 import {
   useOutlookConnectionStatus,
@@ -41,8 +41,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from '@/components/ui/alert'
-import { formatLastSyncTime, OUTLOOK_SYNC_DIRECTIONS } from '@/types/outlook-calendar'
-import type { OutlookSyncDirection } from '@/types/outlook-calendar'
+import { formatLastSyncTime, OUTLOOK_SYNC_DIRECTIONS, type OutlookSyncDirection } from '@/types/outlook-calendar'
 import { logger } from '../../../lib/utils/logger';
 
 
@@ -71,7 +70,19 @@ export function OutlookCalendarConnect({
   const disconnectOutlook = useDisconnectOutlook()
   const refreshToken = useRefreshOutlookToken()
 
-  // Handle OAuth callback
+  // Use refs to store latest callbacks to avoid re-running the OAuth effect
+  const onConnectedRef = useRef(onConnected)
+  const refetchStatusRef = useRef(refetchStatus)
+  const completeConnectionRef = useRef(completeConnection)
+
+  // Keep refs updated with latest values
+  useEffect(() => {
+    onConnectedRef.current = onConnected
+    refetchStatusRef.current = refetchStatus
+    completeConnectionRef.current = completeConnection
+  }, [onConnected, refetchStatus, completeConnection])
+
+  // Handle OAuth callback - runs only once on mount to process OAuth redirect params
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
     const code = urlParams.get('code')
@@ -82,13 +93,13 @@ export function OutlookCalendarConnect({
       // Clean URL
       window.history.replaceState({}, '', window.location.pathname)
 
-      // Complete OAuth flow
-      completeConnection.mutate(
+      // Complete OAuth flow using refs for latest values
+      completeConnectionRef.current.mutate(
         { code, state },
         {
           onSuccess: () => {
-            onConnected?.()
-            refetchStatus()
+            onConnectedRef.current?.()
+            refetchStatusRef.current()
           },
         }
       )

@@ -34,20 +34,15 @@ import {
   Link,
   MessageSquare,
   Eye,
-  Save,
-  Settings,
   GripVertical,
-  ChevronRight,
   Camera,
   ArrowRight,
-  Edit2,
   X,
   Check,
   MapPin,
   Info,
   Image,
   Video,
-  FileText,
   ExternalLink,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -57,8 +52,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Switch } from '@/components/ui/switch';
-import { Separator } from '@/components/ui/separator';
 import {
   Select,
   SelectContent,
@@ -73,16 +66,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
 import {
   Tooltip,
   TooltipContent,

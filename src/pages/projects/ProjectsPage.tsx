@@ -1,7 +1,7 @@
 // File: /src/pages/projects/ProjectsPage.tsx
 // Projects list and management page
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
@@ -24,10 +24,14 @@ export function ProjectsPage() {
   const [editDialogOpen, setEditDialogOpen] = useState(false)
 
   // Filter projects based on search query
-  const filteredProjects = projects?.filter((project) =>
-    project.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    project.address?.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredProjects = useMemo(() => {
+    if (!projects) {return undefined}
+    const query = searchQuery.toLowerCase()
+    return projects.filter((project) =>
+      project.name.toLowerCase().includes(query) ||
+      project.address?.toLowerCase().includes(query)
+    )
+  }, [projects, searchQuery])
 
   // Status badge variant mapping
   const getStatusVariant = (status: string) => {

@@ -33,7 +33,6 @@ import {
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import type { Document as DocumentType } from '@/types/database'
-import type { ChangeRegion } from '../../types/markup'
 import { useCompareVersions } from '../../hooks/useDocumentComparison'
 
 // PDF.js worker will be initialized lazily on component mount
@@ -111,9 +110,9 @@ export function EnhancedVersionComparison({
   const [showChangeRegions, setShowChangeRegions] = useState(true)
 
   // Loading states
-  const [loading1, setLoading1] = useState(true)
-  const [loading2, setLoading2] = useState(true)
-  const [pdfWorkerReady, setPdfWorkerReady] = useState(false)
+  const [_loading1, setLoading1] = useState(true)
+  const [_loading2, setLoading2] = useState(true)
+  const [_pdfWorkerReady, setPdfWorkerReady] = useState(false)
 
   // Container ref for pan calculations
   const containerRef = useRef<HTMLDivElement>(null)
@@ -219,8 +218,8 @@ export function EnhancedVersionComparison({
   }, [open])
 
   // Check if files are PDFs
-  const isPdf1 = version1.file_type === 'application/pdf'
-  const isPdf2 = version2.file_type === 'application/pdf'
+  const _isPdf1 = version1.file_type === 'application/pdf'
+  const _isPdf2 = version2.file_type === 'application/pdf'
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>

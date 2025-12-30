@@ -42,20 +42,18 @@ import {
   useUpdateEscalationRule,
   useTestRuleCondition,
 } from '../hooks/useEscalationRules'
-import type {
-  EscalationRule,
-  CreateEscalationRuleInput,
-  EscalationSourceType,
-  EscalationActionType,
-  TriggerCondition,
-  SimpleCondition,
-  ConditionOperator,
-  ActionConfig,
-} from '@/types/workflow-automation'
 import {
   ESCALATION_SOURCE_TYPES,
   ESCALATION_ACTION_TYPES,
   CONDITION_OPERATORS,
+  type EscalationRule,
+  type CreateEscalationRuleInput,
+  type EscalationSourceType,
+  type EscalationActionType,
+  type TriggerCondition,
+  type SimpleCondition,
+  type ConditionOperator,
+  type ActionConfig,
 } from '@/types/workflow-automation'
 
 // Field definitions per source type

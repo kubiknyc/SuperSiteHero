@@ -3,6 +3,7 @@
  * Card display for bid packages in list view
  */
 
+import { memo } from 'react'
 import { formatDistanceToNow, format } from 'date-fns'
 import { Link } from 'react-router-dom'
 import {
@@ -22,8 +23,7 @@ import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { BidPackageStatusBadge } from './BidPackageStatusBadge'
-import type { BidPackageWithDetails } from '@/types/bidding'
-import { formatBidAmount, getDaysUntilDue, getBidTypeLabel, getDivisionName } from '@/types/bidding'
+import { formatBidAmount, getDaysUntilDue, getBidTypeLabel, getDivisionName, type BidPackageWithDetails } from '@/types/bidding'
 
 interface BidPackageCardProps {
   bidPackage: BidPackageWithDetails
@@ -31,7 +31,7 @@ interface BidPackageCardProps {
   onPublish?: (id: string) => void
 }
 
-export function BidPackageCard({ bidPackage, onInvite, onPublish }: BidPackageCardProps) {
+export const BidPackageCard = memo(function BidPackageCard({ bidPackage, onInvite, onPublish }: BidPackageCardProps) {
   const daysUntilDue = getDaysUntilDue(bidPackage.bid_due_date)
   const isOverdue = daysUntilDue < 0
   const isDueSoon = daysUntilDue >= 0 && daysUntilDue <= 3
@@ -193,4 +193,4 @@ export function BidPackageCard({ bidPackage, onInvite, onPublish }: BidPackageCa
       </CardFooter>
     </Card>
   )
-}
+})

@@ -8,6 +8,7 @@ import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { DashboardSelector, useDashboardView } from '@/features/dashboards'
 import { Badge } from '@/components/ui/badge'
+import { LocalErrorBoundary } from '@/components/errors'
 import {
   ClipboardList,
   AlertCircle,
@@ -172,17 +173,21 @@ export function DashboardPage() {
             </div>
 
             {/* Stats Grid - Enhanced with sparklines, better interactions, accessibility */}
-            <div
-              role="region"
-              aria-label="Project statistics overview"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                gap: '1.5rem',
-                marginBottom: '3rem'
-              }}
+            <LocalErrorBoundary
+              title="Unable to load statistics"
+              description="We couldn't load the dashboard statistics. Please try refreshing the page."
             >
-              {stats.map((stat) => {
+              <div
+                role="region"
+                aria-label="Project statistics overview"
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                  gap: '1.5rem',
+                  marginBottom: '3rem'
+                }}
+              >
+                {stats.map((stat) => {
                 const Icon = stat.icon
                 const percentage = (parseInt(stat.value) / stat.target) * 100
                 const isFocused = focusedCard === stat.label
@@ -316,7 +321,8 @@ export function DashboardPage() {
                   </div>
                 )
               })}
-            </div>
+              </div>
+            </LocalErrorBoundary>
 
             {/* Two Column Layout */}
             <div style={{
@@ -325,14 +331,18 @@ export function DashboardPage() {
               gap: '2rem'
             }}>
               {/* Active Projects */}
-              <div style={{
-                backgroundColor: '#FFFFFF',
-                border: '1px solid #E2E8F0',
-                borderRadius: '12px',
-                padding: '2rem',
-                boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)'
-              }}>
-                <div className="flex justify-between items-center mb-8">
+              <LocalErrorBoundary
+                title="Unable to load projects"
+                description="We couldn't load the projects list. Please try again."
+              >
+                <div style={{
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #E2E8F0',
+                  borderRadius: '12px',
+                  padding: '2rem',
+                  boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)'
+                }}>
+                  <div className="flex justify-between items-center mb-8">
                   <div>
                     <h2 className="heading-card mb-1 heading-section">
                       Active Projects
@@ -441,13 +451,19 @@ export function DashboardPage() {
                       <p className="body-small text-muted">No active projects</p>
                     </div>
                   )}
+                  </div>
                 </div>
-              </div>
+              </LocalErrorBoundary>
 
               {/* Sidebar */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 {/* Notices Widget */}
-                <NoticesWidget projectId={selectedProject?.id} />
+                <LocalErrorBoundary
+                  title="Unable to load notices"
+                  description="We couldn't load notices. Please try again."
+                >
+                  <NoticesWidget projectId={selectedProject?.id} />
+                </LocalErrorBoundary>
               </div>
             </div>
           </div>

@@ -3,7 +3,7 @@
  * React hook for managing message templates
  */
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import {
   messageTemplatesApi,
@@ -122,6 +122,20 @@ export function useMessageTemplates(
   )
 
   /**
+   * Load categories - defined before createTemplate/updateTemplate that depend on it
+   */
+  const loadCategories = useCallback(async (): Promise<void> => {
+    if (!companyId) {return}
+
+    try {
+      const data = await messageTemplatesApi.getTemplateCategories(companyId)
+      setCategories(data)
+    } catch (err) {
+      logger.error('[useMessageTemplates] Error loading categories:', err)
+    }
+  }, [companyId])
+
+  /**
    * Create template
    */
   const createTemplate = useCallback(
@@ -154,7 +168,7 @@ export function useMessageTemplates(
         throw error
       }
     },
-    [companyId, user?.id]
+    [companyId, user?.id, loadCategories]
   )
 
   /**
@@ -184,7 +198,7 @@ export function useMessageTemplates(
         throw error
       }
     },
-    []
+    [loadCategories]
   )
 
   /**
@@ -249,20 +263,6 @@ export function useMessageTemplates(
   )
 
   /**
-   * Load categories
-   */
-  const loadCategories = useCallback(async (): Promise<void> => {
-    if (!companyId) {return}
-
-    try {
-      const data = await messageTemplatesApi.getTemplateCategories(companyId)
-      setCategories(data)
-    } catch (err) {
-      logger.error('[useMessageTemplates] Error loading categories:', err)
-    }
-  }, [companyId])
-
-  /**
    * Apply template with substitutions
    */
   const applyTemplate = useCallback(
@@ -311,13 +311,21 @@ export function useMessageTemplates(
     await Promise.all([loadTemplates(), loadCategories()])
   }, [loadTemplates, loadCategories])
 
+  // Use refs for callbacks to avoid re-running effect when they change
+  const loadTemplatesRef = useRef(loadTemplates)
+  const loadCategoriesRef = useRef(loadCategories)
+  useEffect(() => {
+    loadTemplatesRef.current = loadTemplates
+    loadCategoriesRef.current = loadCategories
+  }, [loadTemplates, loadCategories])
+
   // Auto-load templates on mount or when category changes
   useEffect(() => {
     if (options.autoLoad !== false && companyId) {
-      loadTemplates()
-      loadCategories()
+      loadTemplatesRef.current()
+      loadCategoriesRef.current()
     }
-  }, [companyId, currentCategory]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [companyId, currentCategory, options.autoLoad])
 
   return {
     templates,

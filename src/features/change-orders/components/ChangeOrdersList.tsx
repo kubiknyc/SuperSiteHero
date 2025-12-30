@@ -10,8 +10,28 @@ import { Eye, DollarSign, Clock } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { WorkflowItem } from '@/types/database'
 
+interface WorkflowTypeInfo {
+  prefix?: string
+}
+
+interface RaisedByUserInfo {
+  first_name?: string
+  last_name?: string
+}
+
+interface ChangeOrderBid {
+  is_awarded?: boolean
+  lump_sum_cost?: number | null
+}
+
+interface ChangeOrderWithRelations extends WorkflowItem {
+  workflow_type?: WorkflowTypeInfo
+  raised_by_user?: RaisedByUserInfo
+  bids?: ChangeOrderBid[]
+}
+
 interface ChangeOrdersListProps {
-  changeOrders: (WorkflowItem & { workflow_type?: any; raised_by_user?: any; bids?: any[] })[]
+  changeOrders: ChangeOrderWithRelations[]
 }
 
 export function ChangeOrdersList({ changeOrders }: ChangeOrdersListProps) {
@@ -57,7 +77,7 @@ export function ChangeOrdersList({ changeOrders }: ChangeOrdersListProps) {
   return (
     <div className="space-y-4">
       {changeOrders.map((co) => {
-        const awardedBid = co.bids?.find((b: any) => b.is_awarded)
+        const awardedBid = co.bids?.find((b) => b.is_awarded)
         const totalCost = awardedBid?.lump_sum_cost || co.cost_impact
 
         return (

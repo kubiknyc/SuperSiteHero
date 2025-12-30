@@ -1,6 +1,7 @@
 // File: /src/components/offline/EntitySyncBadge.tsx
 // Small badge component showing sync status for individual entities
 
+import { memo } from 'react';
 import { Badge } from '@/components/ui/badge';
 import {
   Tooltip,
@@ -30,7 +31,7 @@ interface EntitySyncBadgeProps {
  * - Tooltip with detailed information
  * - Compact mode for smaller displays
  */
-export function EntitySyncBadge({
+export const EntitySyncBadge = memo(function EntitySyncBadge({
   status,
   lastSyncTime,
   error,
@@ -123,4 +124,4 @@ export function EntitySyncBadge({
       </Tooltip>
     </TooltipProvider>
   );
-}
+})

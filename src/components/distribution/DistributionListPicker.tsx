@@ -351,7 +351,7 @@ export function DistributionListPicker({
         </div>
 
         {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
+        <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'lists' | 'users' | 'external')}>
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="users" className="text-xs">
               <Users className="h-3 w-3 mr-1" />

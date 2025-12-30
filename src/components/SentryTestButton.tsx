@@ -24,6 +24,7 @@
 
 import { Button } from '@/components/ui/button'
 import { captureException, captureMessage, addSentryBreadcrumb } from '@/lib/sentry'
+import toast from 'react-hot-toast'
 
 export function SentryTestButton() {
   const testError = () => {
@@ -42,7 +43,7 @@ export function SentryTestButton() {
         environment: import.meta.env.MODE,
       })
 
-      alert('Test error sent to Sentry! Check your Sentry dashboard.')
+      toast.success('Test error sent to Sentry! Check your Sentry dashboard.')
     }
   }
 
@@ -62,7 +63,7 @@ export function SentryTestButton() {
       }
     )
 
-    alert('Test message sent to Sentry! Check your Sentry dashboard.')
+    toast.success('Test message sent to Sentry! Check your Sentry dashboard.')
   }
 
   return (

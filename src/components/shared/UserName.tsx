@@ -5,6 +5,7 @@
  * Falls back to a truncated UUID or custom fallback while loading or if not found.
  */
 
+import { memo } from 'react'
 import { useUserProfile, getDisplayName } from '@/hooks/useUserProfile'
 import { cn } from '@/lib/utils'
 
@@ -33,7 +34,7 @@ export interface UserNameProps {
  * // With custom styling
  * <UserName userId={rfi.raised_by} className="font-semibold" />
  */
-export function UserName({
+export const UserName = memo(function UserName({
   userId,
   fallback = 'Unknown User',
   className,
@@ -62,6 +63,6 @@ export function UserName({
 
   // User not found - show fallback
   return <span className={cn('text-muted-foreground', className)}>{fallback}</span>
-}
+})
 
 export default UserName

@@ -16,7 +16,7 @@
  * - Performance monitoring
  */
 
-import React, { useRef, useEffect, useState, useCallback, Suspense, useMemo } from 'react';
+import React, { useRef, useEffect, useState, useCallback, Suspense } from 'react';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import {
   OrbitControls,
@@ -38,13 +38,8 @@ import {
   Camera,
   Play,
   Pause,
-  Settings,
   Sun,
   Moon,
-  Eye,
-  EyeOff,
-  ZoomIn,
-  ZoomOut,
   AlertCircle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -56,12 +51,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Slider } from '@/components/ui/slider';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { useModelLoader } from '../hooks/useModelLoader';
-import type { ModelViewerSettings, CameraState } from '@/types/visualization';
+import type { ModelViewerSettings } from '@/types/visualization';
 import { logger } from '../../../lib/utils/logger';
 
 
@@ -142,9 +134,9 @@ interface SceneProps {
 }
 
 function Scene({ model, settings, onModelClick }: SceneProps) {
-  const { camera, gl, scene } = useThree();
+  const { gl } = useThree();
   const controlsRef = useRef<any>(null);
-  const modelRef = useRef<any>(null);
+  const _modelRef = useRef<any>(null);
 
   // Apply wireframe mode - Three.js requires direct mutation of scene objects
   useEffect(() => {
@@ -262,7 +254,7 @@ function Scene({ model, settings, onModelClick }: SceneProps) {
       {/* Model */}
       {model && (
         <primitive
-          ref={modelRef}
+          ref={_modelRef}
           object={model}
           onClick={handleClick}
         />
@@ -474,7 +466,7 @@ export function ModelViewer3D({
   modelUrl,
   format,
   initialCameraPosition = [10, 10, 10],
-  initialCameraTarget = [0, 0, 0],
+  _initialCameraTarget = [0, 0, 0],
   settings: initialSettings,
   showControls = true,
   showStats = false,

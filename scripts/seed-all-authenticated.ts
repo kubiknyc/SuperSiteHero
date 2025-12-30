@@ -14,10 +14,15 @@ const __dirname = path.dirname(__filename)
 
 dotenv.config({ path: path.resolve(__dirname, '..', '.env') })
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL!
-const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY!
+const supabaseUrl = process.env.VITE_SUPABASE_URL
+const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY
 const testEmail = process.env.TEST_USER_EMAIL || 'kubiknyc@gmail.com'
 const testPassword = process.env.TEST_USER_PASSWORD || 'Alfa1346!'
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Missing Supabase credentials. Required: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY')
+  process.exit(1)
+}
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 

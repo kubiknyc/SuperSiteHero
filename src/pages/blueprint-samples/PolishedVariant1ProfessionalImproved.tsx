@@ -6,7 +6,7 @@ import { TrendingUp, Users, FileText, AlertCircle, Building2, ArrowLeft, Calenda
 import { useState } from 'react'
 
 export default function PolishedVariant1ProfessionalImproved() {
-  const [loadingStates, setLoadingStates] = useState({ stats: false, projects: false })
+  const [_loadingStates, _setLoadingStates] = useState({ stats: false, projects: false })
   const [focusedCard, setFocusedCard] = useState<string | null>(null)
 
   const stats = [
@@ -210,10 +210,10 @@ export default function PolishedVariant1ProfessionalImproved() {
                     : '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
                   transform: isFocused ? 'translateY(-4px) scale(1.01)' : 'translateY(0) scale(1)'
                 }}
-                onMouseEnter={(e) => {
+                onMouseEnter={() => {
                   setFocusedCard(stat.label)
                 }}
-                onMouseLeave={(e) => {
+                onMouseLeave={() => {
                   setFocusedCard(null)
                 }}
               >

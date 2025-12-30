@@ -1,9 +1,8 @@
 // File: /src/pages/analytics/AnalyticsPage.tsx
 // Project Analytics Page - Displays predictive analytics dashboard
 
-import { useParams, useSearchParams, Link } from 'react-router-dom'
-import { cn } from '@/lib/utils'
-import { Button, Card, CardContent } from '@/components/ui'
+import { useParams, Link } from 'react-router-dom'
+import { Card, CardContent } from '@/components/ui'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { PredictiveAnalyticsDashboard } from '@/features/analytics/components'
 import { useProjects } from '@/features/projects/hooks/useProjects'
@@ -21,7 +20,6 @@ import { useProjects } from '@/features/projects/hooks/useProjects'
  */
 export function AnalyticsPage() {
   const { projectId } = useParams<{ projectId: string }>()
-  const [searchParams] = useSearchParams()
   const { data: projects } = useProjects()
 
   // If no projectId in URL, show project selector

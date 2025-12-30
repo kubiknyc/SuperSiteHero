@@ -1,7 +1,7 @@
 // Animated Blueprint Lines Demo
 // Shows various blueprint line animation effects on page load
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, Play } from 'lucide-react'
 

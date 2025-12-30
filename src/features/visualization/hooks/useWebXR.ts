@@ -21,12 +21,9 @@ import type {
   VRSession,
   ARSession,
   VRController,
-  ARPlane,
   ARAnchor,
   ARPose,
   VRTeleportTarget,
-  Vector3D,
-  Quaternion,
 } from '@/types/visualization';
 import { logger } from '../../../lib/utils/logger';
 
@@ -296,7 +293,7 @@ export function useWebXR(options: UseWebXROptions = {}): UseWebXRReturn {
           onSessionEnd?.();
         });
 
-        session.addEventListener('inputsourceschange', (event: XRInputSourceChangeEvent) => {
+        session.addEventListener('inputsourceschange', (_event: XRInputSourceChangeEvent) => {
           onInputSourceChange?.(Array.from(session.inputSources));
         });
 
@@ -312,7 +309,7 @@ export function useWebXR(options: UseWebXROptions = {}): UseWebXRReturn {
         onSessionStart?.(session);
         return true;
       } catch (_error) {
-        const err = error instanceof Error ? error : new Error('Failed to start VR session');
+        const err = _error instanceof Error ? _error : new Error('Failed to start VR session');
         onError?.(err);
         return false;
       }
@@ -408,7 +405,7 @@ export function useWebXR(options: UseWebXROptions = {}): UseWebXRReturn {
         onSessionStart?.(session);
         return true;
       } catch (_error) {
-        const err = error instanceof Error ? error : new Error('Failed to start AR session');
+        const err = _error instanceof Error ? _error : new Error('Failed to start AR session');
         onError?.(err);
         return false;
       }
@@ -422,7 +419,7 @@ export function useWebXR(options: UseWebXROptions = {}): UseWebXRReturn {
       try {
         await xrSessionRef.current.end();
       } catch (_error) {
-        logger.error('Error ending session:', error);
+        logger.error('Error ending session:', _error);
       }
     }
   }, []);
@@ -486,7 +483,7 @@ export function useWebXR(options: UseWebXROptions = {}): UseWebXRReturn {
 
         return null;
       } catch (_error) {
-        logger.error('Failed to create anchor:', error);
+        logger.error('Failed to create anchor:', _error);
         return null;
       }
     },
@@ -633,7 +630,7 @@ export function useVRControllers(
       return;
     }
 
-    const updateControllers = (frame: XRFrame) => {
+    const _updateControllers = (frame: XRFrame) => {
       const newControllers: VRController[] = [];
 
       for (const inputSource of session.inputSources) {

@@ -15,7 +15,6 @@
 
 import { useRef, useEffect, useCallback, useState } from 'react'
 import {
-  Video,
   StopCircle,
   Pause,
   Play,
@@ -38,7 +37,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
 import { useVideoRecorder, formatVideoDuration } from '@/hooks/useVideoRecorder'
-import { logger } from '../../../lib/utils/logger';
 
 
 export type VideoQuality = 'low' | 'medium' | 'high'
@@ -108,7 +106,7 @@ export function VideoCapture({
   autoStartPreview = true,
   defaultQuality = 'medium',
   showQualitySelector = true,
-  preferNativeCapture = true,
+  preferNativeCapture: _preferNativeCapture = true,
 }: VideoCaptureProps) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const [recordingComplete, setRecordingComplete] = useState(false)

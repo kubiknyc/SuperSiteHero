@@ -22,8 +22,8 @@ const __dirname = path.dirname(__filename)
 // Load environment variables
 dotenv.config({ path: path.resolve(__dirname, '..', '.env') })
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL!
-const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY!
+const supabaseUrl = process.env.VITE_SUPABASE_URL
+const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY
 const testEmail = process.env.TEST_USER_EMAIL || 'kubiknyc@gmail.com'
 const testPassword = process.env.TEST_USER_PASSWORD || 'Alfa1346!'
 

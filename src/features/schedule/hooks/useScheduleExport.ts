@@ -8,7 +8,7 @@
  */
 
 import { useState, useCallback, useRef } from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/hooks/useAuth'
@@ -55,7 +55,7 @@ const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000 // 1 hour
 // Rate Limiting
 // =============================================
 
-interface RateLimitEntry {
+interface _RateLimitEntry {
   userId: string
   timestamps: number[]
 }
@@ -99,7 +99,6 @@ function recordExport(userId: string): void {
 
 export function useScheduleExport({ projectId, projectName, projectNumber }: UseScheduleExportOptions) {
   const { userProfile } = useAuth()
-  const queryClient = useQueryClient()
 
   // State
   const [state, setState] = useState<ExportState>({
@@ -206,9 +205,9 @@ export function useScheduleExport({ projectId, projectName, projectNumber }: Use
           errors: errorMessage ? [errorMessage] : null,
           imported_by: userProfile?.id,
         })
-      } catch (_e) {
+      } catch (logError) {
         // Log failure shouldn't block the export
-        logger.error('Failed to log export:', e)
+        logger.error('Failed to log export:', logError)
       }
     },
     [projectId, userProfile?.id]

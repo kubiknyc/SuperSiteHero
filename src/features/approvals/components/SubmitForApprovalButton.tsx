@@ -21,8 +21,7 @@ import {
   useCreateApprovalRequest,
 } from '../hooks/useApprovalRequests'
 import { useAuth } from '@/lib/auth/AuthContext'
-import type { WorkflowEntityType, ApprovalWorkflow } from '@/types/approval-workflow'
-import { WORKFLOW_ENTITY_CONFIG } from '@/types/approval-workflow'
+import { WORKFLOW_ENTITY_CONFIG, type WorkflowEntityType, type ApprovalWorkflow } from '@/types/approval-workflow'
 import { cn } from '@/lib/utils'
 
 export interface SubmitForApprovalButtonProps {
@@ -42,7 +41,7 @@ export function SubmitForApprovalButton({
   entityId,
   projectId,
   companyId: providedCompanyId,
-  entityName,
+  entityName: _entityName,
   onSuccess,
   onError,
   className,

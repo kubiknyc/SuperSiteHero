@@ -5,6 +5,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
+import { LocalErrorBoundary } from '@/components/errors'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import { useDailyReports } from '@/features/daily-reports/hooks/useDailyReports'
 import { DailyReportsCalendar } from '@/features/daily-reports/components/DailyReportsCalendar'
@@ -612,31 +613,41 @@ export function DailyReportsPage() {
 
         {/* Calendar View */}
         {viewMode === 'calendar' && !isLoading && !error && (
-          <DailyReportsCalendar
-            reports={filteredReports || []}
-            projectId={activeProjectId}
-            isLoading={isLoading}
-          />
+          <LocalErrorBoundary
+            title="Unable to load calendar"
+            description="We couldn't render the calendar view. Try switching to list view."
+          >
+            <DailyReportsCalendar
+              reports={filteredReports || []}
+              projectId={activeProjectId}
+              isLoading={isLoading}
+            />
+          </LocalErrorBoundary>
         )}
 
         {/* List View - Reports Table */}
         {viewMode === 'list' && filteredReports && filteredReports.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Reports</CardTitle>
-              <CardDescription>
-                {filteredReports.length} report{filteredReports.length !== 1 ? 's' : ''} found
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <VirtualizedTable<DailyReport>
-                data={filteredReports}
-                columns={tableColumns}
-                estimatedRowHeight={73}
-                emptyMessage="No reports available"
-              />
-            </CardContent>
-          </Card>
+          <LocalErrorBoundary
+            title="Unable to load reports table"
+            description="We couldn't render the reports list. Please try refreshing the page."
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle>Reports</CardTitle>
+                <CardDescription>
+                  {filteredReports.length} report{filteredReports.length !== 1 ? 's' : ''} found
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <VirtualizedTable<DailyReport>
+                  data={filteredReports}
+                  columns={tableColumns}
+                  estimatedRowHeight={73}
+                  emptyMessage="No reports available"
+                />
+              </CardContent>
+            </Card>
+          </LocalErrorBoundary>
         )}
 
         {/* Summary Cards - Only show in list view */}

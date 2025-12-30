@@ -8,7 +8,7 @@
  * - Sync status indicators
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { messagingKeys } from './useMessaging'
@@ -135,23 +135,29 @@ export function useQueueProcessor() {
     }
   }, [isProcessing, queryClient])
 
+  // Use ref to store latest processQueue for mount effect
+  const processQueueRef = useRef(processQueue)
+  useEffect(() => {
+    processQueueRef.current = processQueue
+  }, [processQueue])
+
   // Auto-process when coming online
   useEffect(() => {
     const handleOnline = () => {
       // Delay slightly to ensure connection is stable
-      setTimeout(processQueue, 1000)
+      setTimeout(() => processQueueRef.current(), 1000)
     }
 
     window.addEventListener('online', handleOnline)
     return () => window.removeEventListener('online', handleOnline)
-  }, [processQueue])
+  }, [])
 
   // Process on mount if online
   useEffect(() => {
     if (navigator.onLine) {
-      processQueue()
+      processQueueRef.current()
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [])
 
   return {
     processQueue,

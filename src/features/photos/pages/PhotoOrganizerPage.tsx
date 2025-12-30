@@ -28,6 +28,7 @@ import {
   Clock,
   HardDrive,
 } from 'lucide-react'
+import { LocalErrorBoundary } from '@/components/errors'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
@@ -710,7 +711,13 @@ export function PhotoOrganizerPage() {
       </div>
 
       {/* Stats Cards */}
-      <StatsCards stats={stats || null} isLoading={statsLoading} />
+      <LocalErrorBoundary
+        title="Unable to load photo statistics"
+        description="Stats couldn't be loaded."
+        showRetry={false}
+      >
+        <StatsCards stats={stats || null} isLoading={statsLoading} />
+      </LocalErrorBoundary>
 
       {/* Toolbar */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
@@ -859,20 +866,30 @@ export function PhotoOrganizerPage() {
       ) : (
         <>
           {viewMode === 'grid' && (
-            <PhotoGrid
-              photos={photos || []}
-              selectedIds={selectedPhotoIds}
-              onSelect={handleSelectPhoto}
-              onView={handleViewPhoto}
-            />
+            <LocalErrorBoundary
+              title="Unable to load photo grid"
+              description="The photo gallery couldn't be rendered. Try refreshing."
+            >
+              <PhotoGrid
+                photos={photos || []}
+                selectedIds={selectedPhotoIds}
+                onSelect={handleSelectPhoto}
+                onView={handleViewPhoto}
+              />
+            </LocalErrorBoundary>
           )}
           {viewMode === 'timeline' && (
-            <PhotoTimeline
-              photos={photos || []}
-              selectedIds={selectedPhotoIds}
-              onSelect={handleSelectPhoto}
-              onView={handleViewPhoto}
-            />
+            <LocalErrorBoundary
+              title="Unable to load timeline"
+              description="The photo timeline couldn't be rendered. Try the grid view."
+            >
+              <PhotoTimeline
+                photos={photos || []}
+                selectedIds={selectedPhotoIds}
+                onSelect={handleSelectPhoto}
+                onView={handleViewPhoto}
+              />
+            </LocalErrorBoundary>
           )}
           {viewMode === 'location' && (
             <div className="text-center py-8 text-muted-foreground">

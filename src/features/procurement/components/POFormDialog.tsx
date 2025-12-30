@@ -190,7 +190,7 @@ export function POFormDialog({
   }, [open, purchaseOrder, reset]);
 
   const onSubmit = async (data: FormData) => {
-    if (!userProfile?.company_id) return;
+    if (!userProfile?.company_id) {return;}
 
     const lineItemDTOs: CreatePOLineItemDTO[] = data.line_items
       .filter((item) => item.description.trim())

@@ -23,7 +23,6 @@ import {
   Ruler,
   Square,
   Crosshair,
-  Settings,
   Trash2,
   Copy,
   Check,
@@ -286,7 +285,7 @@ export function MeasurementTools({
               </div>
             ) : (
               <div className="divide-y">
-                {measurements.map((m, index) => (
+                {measurements.map((m, _index) => (
                   <div
                     key={m.id}
                     className="flex items-center justify-between p-2 hover:bg-surface"

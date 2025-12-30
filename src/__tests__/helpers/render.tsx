@@ -113,7 +113,7 @@ export function createTestQueryClient(): QueryClient {
     },
     // Silence console errors during tests
     logger: {
-      log: console.log,
+      log: console.info,
       warn: console.warn,
       error: () => {},
     },

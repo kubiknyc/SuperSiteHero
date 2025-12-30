@@ -88,7 +88,7 @@ export function MarkupHistoryPanel({
 }: MarkupHistoryPanelProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [sortBy, setSortBy] = useState<SortOption>('newest')
+  const [sortBy, _setSortBy] = useState<SortOption>('newest')
   const [groupBy, setGroupBy] = useState<GroupOption>('date')
   const [filterAuthor, setFilterAuthor] = useState<string>('all')
   const [filterType, setFilterType] = useState<string>('all')

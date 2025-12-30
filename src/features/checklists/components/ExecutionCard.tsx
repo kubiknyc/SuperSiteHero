@@ -2,7 +2,7 @@
 // Execution card component for grid/list view
 // Phase: 3.1 - Checklist Execution UI
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -49,7 +49,7 @@ const STATUS_LABELS = {
   rejected: 'Rejected',
 }
 
-export function ExecutionCard({
+export const ExecutionCard = memo(function ExecutionCard({
   execution,
   viewMode = 'grid',
   onDelete,
@@ -359,4 +359,4 @@ export function ExecutionCard({
       </CardFooter>
     </Card>
   )
-}
+})

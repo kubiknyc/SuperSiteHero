@@ -3,7 +3,7 @@
 // Fully aligned with JobSight Design System - Industrial theme variant
 
 import { Link } from 'react-router-dom'
-import { TrendingUp, Users, FileText, AlertCircle, Building2, ArrowLeft, HardHat, Ruler, Wrench } from 'lucide-react'
+import { AlertCircle, Building2, ArrowLeft, HardHat, Ruler, Wrench } from 'lucide-react'
 
 export default function PolishedVariant4ModernIndustrial() {
   const stats = [

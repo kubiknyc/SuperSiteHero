@@ -31,7 +31,6 @@ import { LayerManager } from './LayerManager'
 import { MeasurementTools } from './MeasurementTools'
 import { StampTools } from './StampTools'
 import { MarkupHistoryPanel } from './MarkupHistoryPanel'
-import type { AnnotationType } from '@/types/markup'
 import type {
   ExtendedAnnotationType,
   MarkupLayer,

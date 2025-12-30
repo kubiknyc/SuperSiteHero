@@ -6,8 +6,11 @@
 
 import * as React from 'react'
 import { cn } from '@/lib/utils'
-import type { ApprovalActionRecord, ApprovalActionType } from '@/types/approval-workflow'
-import { APPROVAL_ACTION_CONFIG } from '@/types/approval-workflow'
+import {
+  APPROVAL_ACTION_CONFIG,
+  type ApprovalActionRecord,
+  type ApprovalActionType,
+} from '@/types/approval-workflow'
 
 interface ApprovalHistoryProps {
   actions: ApprovalActionRecord[]

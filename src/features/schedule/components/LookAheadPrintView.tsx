@@ -6,10 +6,10 @@
  */
 
 import { useState, useMemo } from 'react'
-import { format, addDays, addWeeks, parseISO, isWithinInterval } from 'date-fns'
+import { format, addWeeks, parseISO, isWithinInterval } from 'date-fns'
 import { Calendar, Printer, Download, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
@@ -23,7 +23,8 @@ import { logger } from '../../../lib/utils/logger';
 // ============================================================================
 
 interface LookAheadPrintViewProps {
-  projectId: string
+  /** @deprecated Reserved for future API integration */
+  projectId?: string
   projectName: string
   activities: ScheduleActivity[]
   onClose?: () => void
@@ -83,7 +84,7 @@ function calculateDuration(startDate: string, endDate: string): number {
 // ============================================================================
 
 export function LookAheadPrintView({
-  projectId,
+  projectId: _projectId,
   projectName,
   activities,
   onClose,

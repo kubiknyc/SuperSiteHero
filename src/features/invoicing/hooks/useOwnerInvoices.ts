@@ -9,6 +9,9 @@ import type {
   OwnerInvoiceFilters,
   CreateOwnerInvoiceDTO,
   UpdateOwnerInvoiceDTO,
+  CreateLineItemDTO,
+  UpdateLineItemDTO,
+  RecordPaymentDTO,
 } from '@/types/owner-invoice';
 
 // =============================================
@@ -261,7 +264,7 @@ export function useUpdateLineItem() {
     mutationFn: ({
       id,
       dto,
-      invoiceId,
+      invoiceId: _invoiceId,
     }: {
       id: string;
       dto: UpdateLineItemDTO;
@@ -281,7 +284,7 @@ export function useDeleteLineItem() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, invoiceId }: { id: string; invoiceId: string }) =>
+    mutationFn: ({ id, invoiceId: _invoiceId }: { id: string; invoiceId: string }) =>
       ownerInvoicesApi.deleteLineItem(id),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: invoiceKeys.lineItems(variables.invoiceId) });
@@ -334,7 +337,7 @@ export function useDeletePayment() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, invoiceId }: { id: string; invoiceId: string }) =>
+    mutationFn: ({ id, invoiceId: _invoiceId }: { id: string; invoiceId: string }) =>
       ownerInvoicesApi.deletePayment(id),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: invoiceKeys.payments(variables.invoiceId) });

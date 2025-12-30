@@ -87,12 +87,12 @@ class AutonomousTestOrchestrator {
 
       console.log(`✅ Unit Tests: ${result.passed ? 'PASSED' : 'FAILED'} (${result.duration}ms)`);
       return result;
-    } catch (error: any) {
+    } catch (error: unknown) {
       const result: TestResult = {
         phase: 'unit',
         passed: false,
         duration: Date.now() - start,
-        errors: [error.message]
+        errors: [error instanceof Error ? error.message : String(error)]
       };
       console.log(`❌ Unit Tests: FAILED`);
       return result;
@@ -118,13 +118,13 @@ class AutonomousTestOrchestrator {
         passed: true,
         duration: Date.now() - start
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.log(`❌ Integration Tests: FAILED`);
       return {
         phase: 'integration',
         passed: false,
         duration: Date.now() - start,
-        errors: [error.message]
+        errors: [error instanceof Error ? error.message : String(error)]
       };
     }
   }
@@ -156,13 +156,13 @@ class AutonomousTestOrchestrator {
         passed: true,
         duration: Date.now() - start
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.log(`❌ Critical E2E Tests: FAILED`);
       return {
         phase: 'e2e-critical',
         passed: false,
         duration: Date.now() - start,
-        errors: [error.message]
+        errors: [error instanceof Error ? error.message : String(error)]
       };
     }
   }
@@ -186,13 +186,13 @@ class AutonomousTestOrchestrator {
         passed: true,
         duration: Date.now() - start
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.log(`❌ Full E2E Tests: FAILED`);
       return {
         phase: 'e2e-full',
         passed: false,
         duration: Date.now() - start,
-        errors: [error.message]
+        errors: [error instanceof Error ? error.message : String(error)]
       };
     }
   }
@@ -216,13 +216,13 @@ class AutonomousTestOrchestrator {
         passed: true,
         duration: Date.now() - start
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.log(`❌ Visual Tests: FAILED`);
       return {
         phase: 'visual',
         passed: false,
         duration: Date.now() - start,
-        errors: [error.message]
+        errors: [error instanceof Error ? error.message : String(error)]
       };
     }
   }
@@ -246,13 +246,13 @@ class AutonomousTestOrchestrator {
         passed: true,
         duration: Date.now() - start
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.log(`❌ Accessibility Tests: FAILED`);
       return {
         phase: 'accessibility',
         passed: false,
         duration: Date.now() - start,
-        errors: [error.message]
+        errors: [error instanceof Error ? error.message : String(error)]
       };
     }
   }
@@ -276,13 +276,13 @@ class AutonomousTestOrchestrator {
         passed: true,
         duration: Date.now() - start
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.log(`❌ Performance Tests: FAILED`);
       return {
         phase: 'performance',
         passed: false,
         duration: Date.now() - start,
-        errors: [error.message]
+        errors: [error instanceof Error ? error.message : String(error)]
       };
     }
   }

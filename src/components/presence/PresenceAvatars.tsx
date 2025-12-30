@@ -1,7 +1,7 @@
 // File: src/components/presence/PresenceAvatars.tsx
 // Component to display avatars of users currently viewing a page/resource
 
-import * as React from 'react'
+import { memo, useMemo } from 'react'
 import { cn } from '@/lib/utils'
 import {
   Tooltip,
@@ -41,7 +41,7 @@ const overlapClasses = {
  * <PresenceAvatars users={users} maxVisible={3} />
  * ```
  */
-export function PresenceAvatars({
+export const PresenceAvatars = memo(function PresenceAvatars({
   users,
   maxVisible = 3,
   size = 'md',
@@ -50,7 +50,7 @@ export function PresenceAvatars({
   currentUserId,
 }: PresenceAvatarsProps) {
   // Filter out current user if needed
-  const filteredUsers = React.useMemo(() => {
+  const filteredUsers = useMemo(() => {
     if (showCurrentUser || !currentUserId) {return users}
     return users.filter((u) => u.id !== currentUserId)
   }, [users, showCurrentUser, currentUserId])
@@ -136,7 +136,7 @@ export function PresenceAvatars({
       </div>
     </TooltipProvider>
   )
-}
+})
 
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/)

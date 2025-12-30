@@ -7,13 +7,9 @@
 import { useMemo, useState, useCallback } from 'react'
 import {
   getAllStandardTemplates,
-  getTemplatesByCategory,
-  getTemplatesByDataSource,
   getTemplateById,
-  searchTemplates,
   getTemplateCounts,
   getAllTags,
-  filterByTags,
   type StandardTemplate,
   type TemplateCategory,
 } from '../services/standardTemplates'

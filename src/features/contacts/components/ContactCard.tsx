@@ -1,6 +1,7 @@
 // File: /src/features/contacts/components/ContactCard.tsx
 // Contact card component for displaying contact information
 
+import { memo } from 'react'
 import { Phone, Mail, MapPin, Building2, Briefcase, Star } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -26,7 +27,7 @@ const contactTypeColors: Record<string, string> = {
   other: 'bg-muted text-foreground',
 }
 
-export function ContactCard({ contact, onClick, className }: ContactCardProps) {
+export const ContactCard = memo(function ContactCard({ contact, onClick, className }: ContactCardProps) {
   const fullName = [contact.first_name, contact.last_name].filter(Boolean).join(' ')
   const displayName = fullName || contact.company_name || 'Unnamed Contact'
 
@@ -163,4 +164,4 @@ export function ContactCard({ contact, onClick, className }: ContactCardProps) {
       </CardContent>
     </Card>
   )
-}
+})

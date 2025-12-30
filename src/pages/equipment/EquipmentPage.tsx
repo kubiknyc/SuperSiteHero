@@ -882,7 +882,7 @@ export function EquipmentPage() {
                   <div className="space-y-3">
                     {equipment
                       ?.filter(eq => {
-                        if (!eq.purchase_date) return false
+                        if (!eq.purchase_date) {return false}
                         const yearsOwned = differenceInDays(new Date(), parseISO(eq.purchase_date)) / 365
                         return yearsOwned > 5 // Show equipment owned > 5 years
                       })
@@ -923,7 +923,7 @@ export function EquipmentPage() {
                       })}
 
                     {(!equipment || equipment.filter(eq => {
-                      if (!eq.purchase_date) return false
+                      if (!eq.purchase_date) {return false}
                       const yearsOwned = differenceInDays(new Date(), parseISO(eq.purchase_date)) / 365
                       return yearsOwned > 5
                     }).length === 0) && (

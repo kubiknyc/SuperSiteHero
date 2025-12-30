@@ -55,7 +55,7 @@ self.addEventListener('push', (event) => {
   let payload;
   try {
     payload = event.data.json();
-  } catch (e) {
+  } catch {
     // Fallback for plain text
     payload = {
       title: 'JobSight Notification',
@@ -421,7 +421,7 @@ self.addEventListener('fetch', (event) => {
 
           // Try network
           return await fetch(event.request);
-        } catch (error) {
+        } catch {
           // Network failed, serve offline page
           const cache = await caches.open(CACHE_NAME);
           const cachedResponse = await cache.match(OFFLINE_URL);

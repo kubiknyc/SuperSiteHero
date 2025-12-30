@@ -16,8 +16,7 @@ import {
   ResponsiveContainer,
   ComposedChart,
 } from 'recharts'
-import type { BidTrendData } from '@/types/historical-bid-analysis'
-import { formatCurrency, formatPercentage } from '@/types/historical-bid-analysis'
+import { formatCurrency, formatPercentage, type BidTrendData } from '@/types/historical-bid-analysis'
 
 interface BidTrendChartProps {
   data: BidTrendData[]

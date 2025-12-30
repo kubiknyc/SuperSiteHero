@@ -746,7 +746,7 @@ function addTableToPdf(
   })
 
   // Calculate column widths based on field types
-  const contentWidth = pageWidth - 2 * margin
+  const _contentWidth = pageWidth - 2 * margin
   const columnWidths = fields.map(f => {
     if (f.column_width) {return f.column_width}
     switch (f.field_type) {
@@ -834,12 +834,12 @@ function addChartToPdf(
 ): number {
   const { orientation } = options
   const pageWidth = orientation === 'landscape' ? 297 : 210
-  const pageHeight = orientation === 'landscape' ? 210 : 297
+  const _pageHeight = orientation === 'landscape' ? 210 : 297
   const margin = PDF_STYLES.spacing.margin
-  const contentWidth = pageWidth - 2 * margin
+  const _contentWidth = pageWidth - 2 * margin
 
   // Check if we need a new page for the chart
-  if (startY + 100 > pageHeight - 30) {
+  if (startY + 100 > _pageHeight - 30) {
     doc.addPage()
     startY = margin
   }
@@ -1127,7 +1127,7 @@ export async function exportToPdf(options: ReportExportOptions): Promise<ReportE
       try {
         const chartData = generateChartDataForExport(data, chartConfig)
         if (chartData.labels.length > 0) {
-          currentY = addChartToPdf(doc, chartData, chartConfig, currentY + 10, { orientation })
+          addChartToPdf(doc, chartData, chartConfig, currentY + 10, { orientation })
         }
       } catch (chartError) {
         logger.warn('[ReportExport] Failed to add chart to PDF:', chartError)

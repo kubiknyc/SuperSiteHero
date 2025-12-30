@@ -235,7 +235,7 @@ export function useRemoveWidget() {
   return useMutation({
     mutationFn: ({
       widgetId,
-      layoutId,
+      layoutId: _layoutId,
     }: {
       widgetId: string
       layoutId: string

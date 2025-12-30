@@ -9,8 +9,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { scheduledFieldReportApi } from '@/lib/api/services/scheduled-field-reports'
 import { useToast } from '@/components/ui/use-toast'
 import type {
-  ScheduledFieldReport,
-  GeneratedFieldReport,
   CreateScheduledFieldReportInput,
   UpdateScheduledFieldReportInput,
   FieldReportType,

@@ -124,7 +124,7 @@ export function ScoringReportView({
     return filtered
   }, [executions, filters, sortBy, sortOrder])
 
-  const handleFilterChange = (key: keyof ScoringReportFilters, value: any) => {
+  const handleFilterChange = (key: keyof ScoringReportFilters, value: ScoringReportFilters[keyof ScoringReportFilters]) => {
     setFilters((prev) => ({ ...prev, [key]: value }))
   }
 

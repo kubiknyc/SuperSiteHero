@@ -187,13 +187,13 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
 
   try {
     const registration = await navigator.serviceWorker.ready
-    console.log('[ServiceWorker] Ready with scope:', registration.scope)
+    console.info('[ServiceWorker] Ready with scope:', registration.scope)
 
     // Register for background sync if supported
     if (isBackgroundSyncSupported()) {
       try {
         await registration.sync.register('offline-sync')
-        console.log('[ServiceWorker] Background sync registered')
+        console.info('[ServiceWorker] Background sync registered')
       } catch (syncError) {
         console.warn('[ServiceWorker] Background sync registration failed:', syncError)
       }
@@ -218,12 +218,12 @@ export async function requestPersistentStorage(): Promise<boolean> {
   try {
     const isPersisted = await navigator.storage.persisted()
     if (isPersisted) {
-      console.log('[Storage] Storage is already persistent')
+      console.info('[Storage] Storage is already persistent')
       return true
     }
 
     const granted = await navigator.storage.persist()
-    console.log(`[Storage] Persistent storage ${granted ? 'granted' : 'denied'}`)
+    console.info(`[Storage] Persistent storage ${granted ? 'granted' : 'denied'}`)
     return granted
   } catch (error) {
     console.error('[Storage] Error requesting persistent storage:', error)
@@ -294,7 +294,7 @@ export function subscribeToTableChanges(
         filter: `project_id=eq.${projectId}`,
       },
       (payload) => {
-        console.log(`[Realtime] ${table} INSERT:`, payload)
+        console.info(`[Realtime] ${table} INSERT:`, payload)
         onInsert?.(payload.new)
       }
     )
@@ -307,7 +307,7 @@ export function subscribeToTableChanges(
         filter: `project_id=eq.${projectId}`,
       },
       (payload) => {
-        console.log(`[Realtime] ${table} UPDATE:`, payload)
+        console.info(`[Realtime] ${table} UPDATE:`, payload)
         onUpdate?.(payload.new)
       }
     )
@@ -320,7 +320,7 @@ export function subscribeToTableChanges(
         filter: `project_id=eq.${projectId}`,
       },
       (payload) => {
-        console.log(`[Realtime] ${table} DELETE:`, payload)
+        console.info(`[Realtime] ${table} DELETE:`, payload)
         onDelete?.(payload.old)
       }
     )
@@ -342,7 +342,7 @@ export function subscribeToTableChanges(
 export function unsubscribeFromAllChannels(): void {
   realtimeChannels.forEach((channel, name) => {
     supabase.removeChannel(channel)
-    console.log(`[Realtime] Unsubscribed from ${name}`)
+    console.info(`[Realtime] Unsubscribed from ${name}`)
   })
   realtimeChannels.clear()
 }

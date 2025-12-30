@@ -11,7 +11,7 @@
  * - Export measurements
  */
 
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { useThree, useFrame } from '@react-three/fiber';
 import { Html, Line } from '@react-three/drei';
 import {
@@ -22,10 +22,7 @@ import {
   Download,
   Eye,
   EyeOff,
-  Plus,
   X,
-  Check,
-  RotateCcw,
   Copy,
   Settings,
 } from 'lucide-react';
@@ -281,11 +278,11 @@ export function MeasurementScene({
   previewPoint,
   activeTool,
   unitSystem,
-  onPointClick,
+  _onPointClick,
   onMeasurementSelect,
 }: MeasurementSceneProps) {
   const { camera, raycaster, scene } = useThree();
-  const planeRef = useRef(new THREE.Plane(new THREE.Vector3(0, 1, 0), 0));
+  const _planeRef = useRef(new THREE.Plane(new THREE.Vector3(0, 1, 0), 0));
 
   // Handle pointer move for preview point
   useFrame(({ pointer }) => {

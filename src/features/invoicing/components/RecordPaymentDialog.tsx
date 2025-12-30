@@ -103,7 +103,7 @@ export function RecordPaymentDialog({
       toast.success('Payment recorded');
       form.reset();
       onOpenChange(false);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to record payment');
     }
   };

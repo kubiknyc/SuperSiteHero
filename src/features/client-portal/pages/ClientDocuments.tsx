@@ -36,7 +36,6 @@ import {
   ExternalLink,
   FolderOpen,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import type { ClientDocumentView } from '@/types/client-portal'
 
@@ -70,7 +69,7 @@ export function ClientDocuments() {
 
   const [searchTerm, setSearchTerm] = useState('')
   const [categoryFilter, setCategoryFilter] = useState<string>('all')
-  const [viewMode, setViewMode] = useState<'list' | 'grid'>('list')
+  const [_viewMode, _setViewMode] = useState<'list' | 'grid'>('list')
 
   // Get unique categories
   const categories = useMemo(() => {

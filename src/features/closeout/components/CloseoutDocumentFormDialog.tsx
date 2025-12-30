@@ -29,13 +29,13 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Loader2, FileText, Building, Calendar, Hash } from 'lucide-react'
-import type {
-  CloseoutDocumentWithDetails,
-  CreateCloseoutDocumentDTO,
-  UpdateCloseoutDocumentDTO,
-  CloseoutDocumentType,
+import {
+  CLOSEOUT_DOCUMENT_TYPES,
+  type CloseoutDocumentWithDetails,
+  type CreateCloseoutDocumentDTO,
+  type UpdateCloseoutDocumentDTO,
+  type CloseoutDocumentType,
 } from '@/types/closeout'
-import { CLOSEOUT_DOCUMENT_TYPES } from '@/types/closeout'
 
 // =============================================
 // Form Schema

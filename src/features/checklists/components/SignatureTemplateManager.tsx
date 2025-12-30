@@ -18,7 +18,17 @@ import {
   type SignatureTemplate,
 } from '../utils/signatureTemplates'
 import toast from 'react-hot-toast'
-import { logger } from '../../../lib/utils/logger';
+import { logger } from '../../../lib/utils/logger'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 
 interface SignatureTemplateManagerProps {
@@ -36,6 +46,8 @@ export function SignatureTemplateManager({
   const [newTemplateName, setNewTemplateName] = useState('')
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editName, setEditName] = useState('')
+  const [overwriteConfirm, setOverwriteConfirm] = useState(false)
+  const [deleteConfirm, setDeleteConfirm] = useState<{ id: string; name: string } | null>(null)
 
   const refreshTemplates = () => {
     setTemplates(getSignatureTemplates())
@@ -53,10 +65,16 @@ export function SignatureTemplateManager({
     }
 
     if (!isTemplateNameAvailable(newTemplateName.trim())) {
-      if (!confirm(`Template "${newTemplateName}" already exists. Overwrite it?`)) {
-        return
-      }
+      // Show overwrite confirmation dialog
+      setOverwriteConfirm(true)
+      return
     }
+
+    doSaveTemplate()
+  }
+
+  const doSaveTemplate = () => {
+    if (!currentSignature) {return}
 
     try {
       saveSignatureTemplate(newTemplateName.trim(), currentSignature)
@@ -68,6 +86,7 @@ export function SignatureTemplateManager({
       toast.error('Failed to save template')
       logger.error(error)
     }
+    setOverwriteConfirm(false)
   }
 
   const handleSelectTemplate = (template: SignatureTemplate) => {
@@ -78,18 +97,21 @@ export function SignatureTemplateManager({
   }
 
   const handleDeleteTemplate = (id: string, name: string) => {
-    if (!confirm(`Delete template "${name}"?`)) {
-      return
-    }
+    setDeleteConfirm({ id, name })
+  }
+
+  const doDeleteTemplate = () => {
+    if (!deleteConfirm) {return}
 
     try {
-      deleteSignatureTemplate(id)
+      deleteSignatureTemplate(deleteConfirm.id)
       refreshTemplates()
       toast.success('Template deleted')
     } catch (error) {
       toast.error('Failed to delete template')
       logger.error(error)
     }
+    setDeleteConfirm(null)
   }
 
   const handleStartEdit = (template: SignatureTemplate) => {
@@ -300,6 +322,45 @@ export function SignatureTemplateManager({
           </div>
         )}
       </div>
+
+      {/* Overwrite confirmation dialog */}
+      <AlertDialog open={overwriteConfirm} onOpenChange={setOverwriteConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Overwrite Template</AlertDialogTitle>
+            <AlertDialogDescription>
+              Template "{newTemplateName}" already exists. Do you want to overwrite it?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={doSaveTemplate}>
+              Overwrite
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete confirmation dialog */}
+      <AlertDialog open={!!deleteConfirm} onOpenChange={(open) => !open && setDeleteConfirm(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Template</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete template "{deleteConfirm?.name}"? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={doDeleteTemplate}
+              className="bg-error hover:bg-red-700"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

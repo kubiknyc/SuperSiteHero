@@ -9,19 +9,13 @@ import { useToast } from '@/lib/notifications/ToastContext'
 import { safetyObservationsApi } from '@/lib/api/services/safety-observations'
 import type {
   SafetyObservation,
-  SafetyObservationWithDetails,
   ObservationPhoto,
-  ObservationComment,
-  ObserverPoints,
-  LeaderboardEntry,
   CreateObservationDTO,
   UpdateObservationDTO,
   CreateObservationPhotoDTO,
   CreateObservationCommentDTO,
   ObservationFilters,
   LeaderboardFilters,
-  ObservationStats,
-  LeadingIndicators,
 } from '@/types/safety-observations'
 
 // ============================================================================

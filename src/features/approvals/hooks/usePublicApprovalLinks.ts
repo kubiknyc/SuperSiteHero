@@ -187,7 +187,7 @@ export function useSubmitClientApprovalResponse() {
       ipAddress?: string;
       userAgent?: string;
     }) => publicApprovalsApi.submitClientApprovalResponse(input, ipAddress, userAgent),
-    onSuccess: (data) => {
+    onSuccess: (_data) => {
       // Invalidate the page data query to show updated status
       queryClient.invalidateQueries({
         queryKey: publicApprovalKeys.all,

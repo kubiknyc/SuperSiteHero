@@ -14,18 +14,14 @@
  * - Mobile-optimized performance
  */
 
-import React, { useRef, useState, useCallback, useEffect, useMemo } from 'react';
-import { Canvas, useThree, useFrame } from '@react-three/fiber'
-import { OrbitControls, Html, Environment } from '@react-three/drei';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber'
+import { OrbitControls } from '@react-three/drei';
 import {
   Camera,
-  Move,
   RotateCcw,
-  Maximize2,
-  Minimize2,
   X,
   Plus,
-  Minus,
   RotateCw,
   Target,
   Smartphone,
@@ -34,7 +30,6 @@ import {
   Check,
   Loader2,
   Hand,
-  Move3D,
   ZoomIn,
   ZoomOut,
 } from 'lucide-react';
@@ -53,7 +48,6 @@ import { useWebXR, useWebXRSupport } from '../hooks/useWebXR';
 import { useModelLoader } from '../hooks/useModelLoader';
 import type {
   ARAnchor,
-  ARPlacementState,
   Vector3D,
   Model3DMetadata,
 } from '@/types/visualization';
@@ -301,11 +295,11 @@ function PlacementControls({
 // AR Not Supported Fallback
 // ============================================================================
 
-interface ARFallbackProps {
+interface _ARFallbackProps {
   onClose?: () => void;
 }
 
-function ARFallback({ onClose }: ARFallbackProps) {
+function _ARFallback({ onClose }: _ARFallbackProps) {
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center bg-black text-white p-4">
       <AlertCircle className="h-16 w-16 text-warning mb-4" />
@@ -335,10 +329,10 @@ export function ARViewer({
   modelUrl,
   models,
   enableMarkerAR = false,
-  markerImageUrl,
+  _markerImageUrl,
   showControls = true,
   initialScale = 1,
-  enableShadows = true,
+  _enableShadows = true,
   className,
   onModelPlaced,
   onSessionStart,

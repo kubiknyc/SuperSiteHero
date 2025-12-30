@@ -5,7 +5,7 @@
  * statistics, filtering, and quick actions.
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
@@ -84,17 +84,17 @@ export function QualityControlPage() {
   const { data: inspections = [], isLoading: isLoadingInspections } = useInspections(inspFilters);
   const { data: stats } = useProjectQCStats(selectedProjectId);
 
-  const handleProjectChange = (projectId: string) => {
+  const handleProjectChange = useCallback((projectId: string) => {
     const newParams = new URLSearchParams(searchParams);
     newParams.set('project', projectId);
     setSearchParams(newParams);
-  };
+  }, [searchParams, setSearchParams]);
 
-  const handleTabChange = (tab: string) => {
+  const handleTabChange = useCallback((tab: string) => {
     const newParams = new URLSearchParams(searchParams);
     newParams.set('tab', tab);
     setSearchParams(newParams);
-  };
+  }, [searchParams, setSearchParams]);
 
   const isLoading = isLoadingProjects || isLoadingNCRs || isLoadingInspections;
 

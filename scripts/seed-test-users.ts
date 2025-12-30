@@ -27,8 +27,8 @@ const __dirname = path.dirname(__filename)
 // Load environment variables
 dotenv.config({ path: path.resolve(__dirname, '..', '.env') })
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const supabaseUrl = process.env.VITE_SUPABASE_URL
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
 if (!supabaseUrl) {
   console.error('Missing VITE_SUPABASE_URL in .env file')

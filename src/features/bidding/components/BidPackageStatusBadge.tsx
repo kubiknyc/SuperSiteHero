@@ -4,11 +4,13 @@
  */
 
 import { Badge } from '@/components/ui/badge'
-import type { BidPackageStatus, BidSubmissionStatus, InvitationResponseStatus } from '@/types/bidding'
 import {
   BID_PACKAGE_STATUSES,
   BID_SUBMISSION_STATUSES,
   INVITATION_RESPONSE_STATUSES,
+  type BidPackageStatus,
+  type BidSubmissionStatus,
+  type InvitationResponseStatus,
 } from '@/types/bidding'
 
 interface BidPackageStatusBadgeProps {

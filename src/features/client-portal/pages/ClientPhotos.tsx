@@ -34,7 +34,6 @@ import {
   ChevronRight,
   ZoomIn,
 } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import type { ClientPhotoView } from '@/types/client-portal'
 

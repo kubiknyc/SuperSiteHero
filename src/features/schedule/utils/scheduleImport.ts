@@ -338,7 +338,7 @@ export function parsePrimaveraXER(xerContent: string): ParsedScheduleData {
     const taskIdMap = new Map<string, number>()
 
     // Process tasks
-    taskTable.records.forEach((task, index) => {
+    taskTable.records.forEach((task, _index) => {
       const taskId = task['task_id']
       const taskCode = task['task_code']
       const taskName = task['task_name']
@@ -495,8 +495,8 @@ export function validateParsedSchedule(parsed: ParsedScheduleData): {
  */
 export function convertToActivityDTOs(
   activities: ImportedActivity[],
-  projectId: string,
-  companyId: string
+  _projectId: string,
+  _companyId: string
 ): Omit<CreateScheduleActivityDTO, 'project_id' | 'company_id'>[] {
   return activities.map((activity, index) => ({
     activity_id: activity.activity_id,

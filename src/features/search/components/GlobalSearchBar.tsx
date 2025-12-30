@@ -334,7 +334,7 @@ export function GlobalSearchBar({
     rateLimit,
     recentSearches,
     clearRecentSearches,
-    setProjectId,
+    setProjectId: _setProjectId,
   } = useSemanticSearch({
     defaultProjectId: initialProjectId,
     debounceMs: 300,

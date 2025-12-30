@@ -1,3 +1,4 @@
+ 
 // Diagnostic utility to check auth state and user profile
 // Run this in browser console: import('/src/utils/diagnose-auth.ts').then(m => m.diagnoseAuth())
 

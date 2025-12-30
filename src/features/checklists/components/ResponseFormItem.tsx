@@ -18,6 +18,11 @@ import type {
   CheckboxResponseData,
   TextResponseData,
   NumberResponseData,
+  TextItemConfig,
+  NumberItemConfig,
+  PhotoItemConfig,
+  SignatureItemConfig,
+  ScoreValue,
 } from '@/types/checklists'
 
 interface ResponseFormItemProps {
@@ -144,7 +149,7 @@ export function ResponseFormItem({
   // Text input
   const renderTextInput = () => {
     const currentValue = (response.response_data as TextResponseData)?.value || ''
-    const config = templateItem.config as any
+    const config = templateItem.config as TextItemConfig
     const isMultiline = config?.multiline
     const maxLength = config?.max_length
     const placeholder = config?.placeholder || 'Enter text...'
@@ -194,7 +199,7 @@ export function ResponseFormItem({
   // Number input
   const renderNumberInput = () => {
     const currentValue = (response.response_data as NumberResponseData)?.value || 0
-    const config = templateItem.config as any
+    const config = templateItem.config as NumberItemConfig
     const min = config?.min
     const max = config?.max
     const units = config?.units
@@ -229,7 +234,7 @@ export function ResponseFormItem({
   // Photo input
   const renderPhotoInput = () => {
     const photoUrls = response.photo_urls || []
-    const config = templateItem.config as any
+    const config = templateItem.config as PhotoItemConfig
     const minPhotos = config?.min_photos || 0
     const maxPhotos = config?.max_photos || 5
 
@@ -288,7 +293,7 @@ export function ResponseFormItem({
   // Signature input
   const renderSignatureInput = () => {
     const signatureUrl = response.signature_url
-    const config = templateItem.config as any
+    const config = templateItem.config as SignatureItemConfig
     const role = config?.role
     const title = config?.title
 

@@ -33,7 +33,6 @@ import {
   Maximize2,
   X,
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { BeforeAfterSlider } from '@/features/photo-progress/components/BeforeAfterSlider';
 import { useDrawingRevisionsForComparison } from '../hooks/useDrawingComparison';
 import type { Drawing } from '@/types/drawing';

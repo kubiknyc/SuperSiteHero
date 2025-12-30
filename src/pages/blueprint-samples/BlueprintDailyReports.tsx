@@ -1,7 +1,7 @@
 // Blueprint Daily Reports Sample
 
 import { Link } from 'react-router-dom'
-import { FileText, ChevronRight, Plus, Search, Filter } from 'lucide-react'
+import { ChevronRight, Plus, Search, Filter } from 'lucide-react'
 
 export default function BlueprintDailyReports() {
   const reports = [

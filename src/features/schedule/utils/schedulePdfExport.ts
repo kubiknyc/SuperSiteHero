@@ -25,7 +25,8 @@ import {
 // ============================================================================
 
 interface SchedulePdfOptions {
-  projectId: string
+  /** @deprecated Reserved for company info lookup via getCompanyInfo */
+  projectId?: string
   projectName: string
   projectNumber?: string
   activities: ScheduleActivity[]
@@ -71,7 +72,7 @@ const STATUS_COLORS: Record<string, [number, number, number]> = {
 // HELPERS
 // ============================================================================
 
-function formatDate(dateString: string | null | undefined): string {
+function _formatDate(dateString: string | null | undefined): string {
   if (!dateString) {return '—'}
   try {
     return format(parseISO(dateString), 'MMM d, yyyy')
@@ -139,11 +140,11 @@ export async function generateSchedulePdf(options: SchedulePdfOptions): Promise<
   })
 
   const pageWidth = doc.internal.pageSize.getWidth()
-  const pageHeight = doc.internal.pageSize.getHeight()
+  const _pageHeight = doc.internal.pageSize.getHeight()
   const margin = 15
 
   // Fetch company info for branding
-  const gcCompany = providedGcCompany || await getCompanyInfo(projectId)
+  const gcCompany = providedGcCompany || (projectId ? await getCompanyInfo(projectId) : undefined)
 
   // ========================================
   // HEADER - Using JobSight branding

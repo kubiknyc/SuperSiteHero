@@ -5,7 +5,7 @@
  * into a real-world feature (e.g., punch list management)
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { SyncStatusBanner } from '@/components/SyncStatusBanner';
 import { SyncBadge } from '@/components/SyncBadge';
@@ -78,7 +78,7 @@ export function OfflinePunchListExample() {
 
     if (!isOnline) {
       // Queue for later sync
-      console.log('Offline: Queued item for sync', item.id);
+      console.info('Offline: Queued item for sync', item.id);
       return;
     }
 
@@ -100,7 +100,7 @@ export function OfflinePunchListExample() {
   /**
    * Sync item to server with conflict detection
    */
-  const syncItemToServer = async (item: PunchListItem) => {
+  const syncItemToServer = useCallback(async (item: PunchListItem) => {
     setIsSyncing(true);
     setSyncError(null);
 
@@ -152,12 +152,12 @@ export function OfflinePunchListExample() {
     } finally {
       setIsSyncing(false);
     }
-  };
+  }, []);
 
   /**
    * Process all pending syncs when coming back online
    */
-  const processPendingQueue = async () => {
+  const processPendingQueue = useCallback(async () => {
     const pending = items.filter(item => item.syncStatus === 'pending');
 
     if (pending.length === 0 || !isOnline) {
@@ -177,7 +177,7 @@ export function OfflinePunchListExample() {
     }
 
     setIsSyncing(false);
-  };
+  }, [items, isOnline, syncItemToServer]);
 
   /**
    * Handle conflict resolution
@@ -234,7 +234,7 @@ export function OfflinePunchListExample() {
 
       return () => clearTimeout(timer);
     }
-  }, [isOnline, pendingSyncs]);
+  }, [isOnline, pendingSyncs, processPendingQueue]);
 
   /**
    * Retry sync on error
@@ -355,7 +355,7 @@ async function fetchItemFromServer(_id: string): Promise<PunchListItem | null> {
 async function updateItemOnServer(item: PunchListItem): Promise<void> {
   // Simulate API call
   await new Promise(resolve => setTimeout(resolve, 1000));
-  console.log('Synced to server:', item.id);
+  console.info('Synced to server:', item.id);
 }
 
 export default OfflinePunchListExample;

@@ -57,7 +57,8 @@ describe('CreateSubmittalDialog', () => {
         />
       );
 
-      expect(screen.getByText('Create Submittal')).toBeInTheDocument();
+      // Use getByRole to target the dialog title specifically (h2 heading)
+      expect(screen.getByRole('heading', { name: 'Create Submittal' })).toBeInTheDocument();
     });
 
     it('should not render dialog content when open is false', () => {

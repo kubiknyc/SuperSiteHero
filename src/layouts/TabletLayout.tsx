@@ -11,7 +11,7 @@
 
 import { useState, useCallback, useRef, useEffect, type ReactNode } from 'react';
 import { cn } from '@/lib/utils';
-import { useOrientation, useResponsiveLayout } from '@/hooks/useOrientation';
+import { useResponsiveLayout } from '@/hooks/useOrientation';
 import { Button } from '@/components/ui/button';
 import {
   ChevronLeft,
@@ -71,7 +71,6 @@ export function MasterDetailLayout({
 
   const isMobile = layout === 'mobile';
   const isTabletPortrait = layout === 'tablet-portrait';
-  const isTabletLandscape = layout === 'tablet-landscape' || layout === 'desktop';
 
   // Auto-show detail panel when selection changes on mobile
   useEffect(() => {
@@ -304,7 +303,7 @@ export function ResponsiveGridLayout({
   children,
   minItemWidth = '280px',
   gap = 'gap-4 tablet:gap-6',
-  columns = {
+  columns: _columns = {
     mobile: 1,
     tabletPortrait: 2,
     tabletLandscape: 3,
@@ -312,23 +311,6 @@ export function ResponsiveGridLayout({
   },
   className,
 }: ResponsiveGridLayoutProps) {
-  const layout = useResponsiveLayout();
-
-  const getGridCols = () => {
-    switch (layout) {
-      case 'mobile':
-        return `grid-cols-${columns.mobile || 1}`;
-      case 'tablet-portrait':
-        return `grid-cols-${columns.tabletPortrait || 2}`;
-      case 'tablet-landscape':
-        return `grid-cols-${columns.tabletLandscape || 3}`;
-      case 'desktop':
-        return `grid-cols-${columns.desktop || 4}`;
-      default:
-        return 'grid-cols-1';
-    }
-  };
-
   return (
     <div
       className={cn(
@@ -472,7 +454,6 @@ export function SplitViewLayout({
   const [ratio, setRatio] = useState(defaultRatio);
   const [isDragging, setIsDragging] = useState(false);
 
-  const isHorizontal = direction === 'horizontal';
   const isMobile = layout === 'mobile';
 
   // On mobile, stack vertically regardless of direction prop
@@ -636,7 +617,8 @@ export function TouchOptimizedContainer({
   padForTouch = true,
   className,
 }: TouchOptimizedContainerProps) {
-  const { isTouchDevice } = useOrientation();
+  // Note: Using CSS media queries for touch detection instead of JS hook
+  const isTouchDevice = typeof window !== 'undefined' && 'ontouchstart' in window;
 
   return (
     <div className={cn(

@@ -26,7 +26,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import {
@@ -41,11 +40,11 @@ import {
 } from 'lucide-react'
 import { useCreateTemplateFromProject } from '../hooks/useProjectTemplates'
 import { toast } from 'sonner'
-import type {
-  TemplateCategory,
-  CreateTemplateFromProjectInput,
+import {
+  TEMPLATE_CATEGORIES,
+  type TemplateCategory,
+  type CreateTemplateFromProjectInput,
 } from '@/types/project-template'
-import { TEMPLATE_CATEGORIES } from '@/types/project-template'
 import { logger } from '../../../lib/utils/logger';
 
 

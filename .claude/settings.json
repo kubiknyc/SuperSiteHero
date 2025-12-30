@@ -32,41 +32,5 @@
     "NODE_ENV": "development"
   },
   "includeCoAuthoredBy": true,
-  "cleanupPeriodDays": 30,
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "powershell -Command \"$file = $env:STDIN_JSON | ConvertFrom-Json | Select-Object -ExpandProperty tool_input | Select-Object -ExpandProperty file_path; if ($file -match '\\.(js|jsx|ts|tsx)$') { npx prettier --write $file }\"",
-            "timeout": 30
-          }
-        ]
-      },
-      {
-        "matcher": "Write|Edit|MultiEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "powershell -Command \"$file = $env:STDIN_JSON | ConvertFrom-Json | Select-Object -ExpandProperty tool_input | Select-Object -ExpandProperty file_path; if ($file -match '\\.(ts|tsx)$' -and $file -notmatch '\\.test\\.' -and $file -notmatch '\\.spec\\.') { $result = npx tsc --noEmit 2>&1; if ($LASTEXITCODE -ne 0) { Write-Error 'TypeScript errors found'; exit 2 } }\"",
-            "timeout": 30
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "powershell -Command \"if (Test-Path package.json) { $changed = git diff --name-only --diff-filter=ACMR | Where-Object { $_ -match '\\.(js|jsx|ts|tsx)$' }; if ($changed) { Write-Host 'Running linter on changed files...'; npx eslint $changed } }\"",
-            "timeout": 60
-          }
-        ]
-      }
-    ]
-  }
+  "cleanupPeriodDays": 30
 }

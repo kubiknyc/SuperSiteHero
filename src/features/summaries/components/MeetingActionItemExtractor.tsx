@@ -13,8 +13,6 @@ import {
   ChevronUp,
   User,
   Calendar,
-  AlertCircle,
-  Sparkles,
   ListChecks,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -71,7 +69,7 @@ export function MeetingActionItemExtractor({
     data,
     isLoading,
     isExtracting,
-    error,
+    error: _error,
     extract,
     reextract,
     confirmItem,

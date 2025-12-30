@@ -22,6 +22,7 @@ import {
   Pencil,
 } from 'lucide-react'
 import { AppLayout } from '@/components/layout/AppLayout'
+import { LocalErrorBoundary } from '@/components/errors'
 import {
   Card,
   CardContent,
@@ -250,15 +251,20 @@ export function DocumentDetailPage() {
         </div>
 
         {/* Document Viewer */}
-        <div className="bg-card rounded-lg border border-border overflow-hidden">
-          <DocumentViewer
-            document={document}
-            allowMarkup={true}
-            readOnly={false}
-            height="h-96"
-            enableMarkup={false}
-          />
-        </div>
+        <LocalErrorBoundary
+          title="Unable to load document preview"
+          description="The document preview couldn't be loaded. Try downloading the file instead."
+        >
+          <div className="bg-card rounded-lg border border-border overflow-hidden">
+            <DocumentViewer
+              document={document}
+              allowMarkup={true}
+              readOnly={false}
+              height="h-96"
+              enableMarkup={false}
+            />
+          </div>
+        </LocalErrorBoundary>
 
         {/* Main Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -604,11 +610,17 @@ export function DocumentDetailPage() {
             )}
 
             {/* AI Analysis Panel */}
-            <DocumentAiPanel
-              documentId={document.id}
-              projectId={document.project_id}
-              onNavigateToDocument={(id) => navigate(`/documents/${id}`)}
-            />
+            <LocalErrorBoundary
+              title="Unable to load AI analysis"
+              description="The AI analysis panel couldn't be loaded."
+              showRetry={true}
+            >
+              <DocumentAiPanel
+                documentId={document.id}
+                projectId={document.project_id}
+                onNavigateToDocument={(id) => navigate(`/documents/${id}`)}
+              />
+            </LocalErrorBoundary>
           </div>
         </div>
       </div>

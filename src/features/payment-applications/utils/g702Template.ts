@@ -8,14 +8,13 @@ import { format } from 'date-fns'
 import type { G702PDFData } from '@/types/payment-application'
 import {
   PAGE_WIDTH_PORTRAIT,
-  PAGE_HEIGHT_PORTRAIT,
   MARGIN,
   COLORS,
   FONT_SIZES,
   BORDER_WIDTH,
   formatCurrency,
-  formatPercent,
   formatDate,
+  formatPercent,
 } from './pdfStyles'
 import {
   addDocumentHeader,
@@ -71,7 +70,7 @@ function drawText(
 /**
  * Draw a labeled field (label above, value below in box)
  */
-function drawLabeledField(
+function _drawLabeledField(
   doc: jsPDF,
   label: string,
   value: string,

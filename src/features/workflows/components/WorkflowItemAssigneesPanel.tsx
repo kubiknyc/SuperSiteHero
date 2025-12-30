@@ -50,7 +50,7 @@ export function WorkflowItemAssigneesPanel({
   ) || []
 
   // Get available users (not yet assigned)
-  const availableUsers = projectUsers?.filter(
+  const _availableUsers = projectUsers?.filter(
     (pu) => !currentAssignees.includes(pu.user_id)
   ) || []
 

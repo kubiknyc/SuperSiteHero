@@ -6,12 +6,11 @@
  * Includes XML escaping for security (--safe flag).
  */
 
-import { format, parseISO, differenceInDays } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import type {
   ScheduleActivity,
   ScheduleDependency,
   DependencyType,
-  ActivityType,
 } from '@/types/schedule-activities'
 
 // =============================================
@@ -207,7 +206,7 @@ function generateXmlFooter(): string {
 function generateProjectMetadata(
   projectName: string,
   projectNumber?: string,
-  activityCount?: number
+  _activityCount?: number
 ): string {
   const now = new Date()
   const dateStr = format(now, "yyyy-MM-dd'T'HH:mm:ss")

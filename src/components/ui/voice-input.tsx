@@ -5,13 +5,13 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 import { Button } from './button'
 import { useVoiceToText } from '@/hooks/useVoiceToText'
-import type {
-  VoiceInputProps,
-  VoiceButtonProps,
-  SpeechLanguage,
-  VoiceInputMode,
+import {
+  VOICE_STATUS_MESSAGES,
+  type VoiceInputProps,
+  type VoiceButtonProps,
+  type SpeechLanguage,
+  type VoiceInputMode,
 } from '@/types/voice'
-import { VOICE_STATUS_MESSAGES } from '@/types/voice'
 
 /**
  * Microphone icon component

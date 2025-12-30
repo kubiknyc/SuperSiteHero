@@ -8,10 +8,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/lib/notifications/ToastContext'
 import { reportSharingApi } from '@/lib/api/services/report-sharing'
 import type {
-  SharedReport,
   CreateReportShareDTO,
   UpdateReportShareDTO,
-  PublicSharedReportData,
 } from '@/types/report-builder'
 
 // ============================================================================
@@ -186,7 +184,7 @@ export function useRegenerateShareToken() {
         reportTemplateId,
         newToken,
       })),
-    onSuccess: ({ reportTemplateId, newToken }) => {
+    onSuccess: ({ newToken }) => {
       queryClient.invalidateQueries({ queryKey: reportSharingKeys.shares() })
       showToast({
         type: 'success',

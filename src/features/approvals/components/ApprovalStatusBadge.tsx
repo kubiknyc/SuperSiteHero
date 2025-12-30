@@ -4,10 +4,9 @@
  * Displays the current approval status with appropriate colors
  */
 
-import * as React from 'react'
+import { memo } from 'react'
 import { cn } from '@/lib/utils'
-import type { ApprovalStatus } from '@/types/approval-workflow'
-import { APPROVAL_STATUS_CONFIG } from '@/types/approval-workflow'
+import { APPROVAL_STATUS_CONFIG, type ApprovalStatus } from '@/types/approval-workflow'
 import { TouchWrapper } from '@/components/ui/touch-wrapper'
 
 interface ApprovalStatusBadgeProps {
@@ -26,7 +25,7 @@ const statusColorClasses: Record<ApprovalStatus, string> = {
   cancelled: 'bg-muted text-secondary border-border',
 }
 
-export function ApprovalStatusBadge({
+export const ApprovalStatusBadge = memo(function ApprovalStatusBadge({
   status,
   showConditions = false,
   conditions,
@@ -69,7 +68,7 @@ export function ApprovalStatusBadge({
   }
 
   return badge
-}
+})
 
 function StatusIcon({ status }: { status: ApprovalStatus }) {
   switch (status) {

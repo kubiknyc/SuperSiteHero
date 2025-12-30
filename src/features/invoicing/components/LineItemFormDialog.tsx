@@ -92,7 +92,7 @@ export function LineItemFormDialog({
       toast.success('Line item added');
       form.reset();
       onOpenChange(false);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to add line item');
     }
   };

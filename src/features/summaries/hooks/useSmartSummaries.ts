@@ -6,12 +6,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { smartSummariesApi } from '@/lib/api/services/smart-summaries'
 import { useAIFeatureEnabled } from '@/features/ai/hooks/useAIConfiguration'
-import type {
-  AISummary,
-  DailyReportSummaryResponse,
-  MeetingActionItemsResponse,
-  WeeklyStatusResponse,
-} from '@/types/ai'
 import { toast } from 'sonner'
 
 // Query keys

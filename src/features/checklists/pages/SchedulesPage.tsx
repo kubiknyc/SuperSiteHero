@@ -26,6 +26,16 @@ import {
 import { ScheduleDialog } from '../components/ScheduleDialog'
 import { ScheduleRemindersNotification } from '../components/ScheduleRemindersNotification'
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import {
   useSchedules,
   useScheduleStatistics,
   useDeleteSchedule,
@@ -36,10 +46,15 @@ import {
 } from '../hooks/useSchedules'
 import { useTemplates } from '../hooks/useTemplates'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
-import type { ChecklistSchedule, ScheduleStatus } from '@/types/checklist-schedules'
-import { getFrequencyLabel, getDayOfWeekLabel, isScheduleDue } from '@/types/checklist-schedules'
+import {
+  getFrequencyLabel,
+  getDayOfWeekLabel,
+  isScheduleDue,
+  type ChecklistSchedule,
+  type ScheduleStatus,
+  type CreateChecklistScheduleDTO,
+} from '@/types/checklist-schedules'
 import { format, formatDistanceToNow } from 'date-fns'
-import type { CreateChecklistScheduleDTO } from '@/types/checklist-schedules'
 
 type StatusFilter = 'all' | ScheduleStatus
 
@@ -53,6 +68,8 @@ export function SchedulesPage() {
   const [editingSchedule, setEditingSchedule] = useState<ChecklistSchedule | null>(null)
   const [selectedTemplateId, _setSelectedTemplateId] = useState('')
   const [selectedProjectId, _setSelectedProjectId] = useState('')
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [scheduleToDelete, setScheduleToDelete] = useState<ChecklistSchedule | null>(null)
 
   // Data hooks
   const { data: allSchedules = [], isLoading } = useSchedules()
@@ -115,9 +132,16 @@ export function SchedulesPage() {
     }
   }
 
-  const handleDeleteSchedule = (schedule: ChecklistSchedule) => {
-    if (confirm(`Are you sure you want to delete "${schedule.name}"?`)) {
-      deleteSchedule(schedule.id)
+  const handleDeleteClick = (schedule: ChecklistSchedule) => {
+    setScheduleToDelete(schedule)
+    setDeleteDialogOpen(true)
+  }
+
+  const handleDeleteConfirm = () => {
+    if (scheduleToDelete) {
+      deleteSchedule(scheduleToDelete.id)
+      setDeleteDialogOpen(false)
+      setScheduleToDelete(null)
     }
   }
 
@@ -421,7 +445,7 @@ export function SchedulesPage() {
                         <Button
                           variant="outline"
                           size="icon"
-                          onClick={() => handleDeleteSchedule(schedule)}
+                          onClick={() => handleDeleteClick(schedule)}
                           title="Delete schedule"
                           className="text-error hover:text-red-800"
                         >
@@ -451,6 +475,27 @@ export function SchedulesPage() {
           projectId={selectedProjectId || projects[0]?.id || ''}
         />
       )}
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <Trash2 className="h-5 w-5 text-error" />
+              Delete Schedule
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete &quot;{scheduleToDelete?.name}&quot;? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setScheduleToDelete(null)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteConfirm} className="bg-error hover:bg-red-700">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

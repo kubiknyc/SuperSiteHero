@@ -11,6 +11,7 @@ import type {
   LienWaiverWithDetails,
   LienWaiverTemplate,
   LienWaiverRequirement,
+  LienWaiverHistory,
   LienWaiverFilters,
   LienWaiverTemplateFilters,
   CreateLienWaiverDTO,
@@ -23,7 +24,6 @@ import type {
   NotarizeWaiverDTO,
   ApproveWaiverDTO,
   RejectWaiverDTO,
-  ProjectWaiverSummary,
 } from '@/types/lien-waiver';
 
 // Query keys
@@ -307,7 +307,7 @@ export function useCreateLienWaiver() {
  */
 export function useUpdateLienWaiver() {
   const queryClient = useQueryClient();
-  const { user } = useAuth();
+  const { user: _user } = useAuth();
 
   return useMutation({
     mutationFn: async ({ id, ...dto }: UpdateLienWaiverDTO & { id: string }) => {
@@ -429,7 +429,7 @@ export function useMarkWaiverReceived() {
  */
 export function useSignWaiver() {
   const queryClient = useQueryClient();
-  const { user } = useAuth();
+  const { user: _user } = useAuth();
 
   return useMutation({
     mutationFn: async ({ id, ...dto }: SignWaiverDTO & { id: string }) => {
@@ -459,7 +459,7 @@ export function useSignWaiver() {
  */
 export function useNotarizeWaiver() {
   const queryClient = useQueryClient();
-  const { user } = useAuth();
+  const { user: _user } = useAuth();
 
   return useMutation({
     mutationFn: async ({ id, ...dto }: NotarizeWaiverDTO & { id: string }) => {

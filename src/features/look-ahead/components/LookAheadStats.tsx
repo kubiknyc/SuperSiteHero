@@ -15,6 +15,7 @@ import {
   AlertTriangle,
   Target,
   Calendar,
+  Activity,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
@@ -29,7 +30,7 @@ interface LookAheadStatsProps {
   className?: string
 }
 
-export function LookAheadStats({ metrics, isLoading, className }: LookAheadStatsProps) {
+export function LookAheadStats({ metrics, isLoading: _isLoading, className }: LookAheadStatsProps) {
   const ppcStatus = getPPCStatusColor(metrics.currentWeekPPC)
 
   const trendIcon = {
@@ -38,7 +39,7 @@ export function LookAheadStats({ metrics, isLoading, className }: LookAheadStats
     stable: <Minus className="h-4 w-4 text-disabled" />,
   }
 
-  const trendLabel = {
+  const _trendLabel = {
     up: 'Improving',
     down: 'Declining',
     stable: 'Stable',

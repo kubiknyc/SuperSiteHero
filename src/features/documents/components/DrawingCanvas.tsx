@@ -578,14 +578,14 @@ export function DrawingCanvas({
 
   // Handle undo
   const handleUndo = useCallback(() => {
-    if (historyStep === 0) return
+    if (historyStep === 0) {return}
     setHistoryStep(historyStep - 1)
     setShapes(history[historyStep - 1])
   }, [historyStep, history])
 
   // Handle redo
   const handleRedo = useCallback(() => {
-    if (historyStep === history.length - 1) return
+    if (historyStep === history.length - 1) {return}
     setHistoryStep(historyStep + 1)
     setShapes(history[historyStep + 1])
   }, [historyStep, history])

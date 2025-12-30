@@ -1,7 +1,7 @@
 // Blueprint Project Detail Sample
 
 import { Link } from 'react-router-dom'
-import { Building2, Users, Calendar, DollarSign, TrendingUp, ChevronRight, CheckCircle2 } from 'lucide-react'
+import { Users, Calendar, DollarSign, TrendingUp, ChevronRight, CheckCircle2 } from 'lucide-react'
 
 export default function BlueprintProjectDetail() {
   return (

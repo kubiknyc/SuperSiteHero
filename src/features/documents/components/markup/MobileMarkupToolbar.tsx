@@ -139,7 +139,7 @@ export function MobileMarkupToolbar({
   const [isExpanded, setIsExpanded] = useState(false)
   const [showColorPicker, setShowColorPicker] = useState(false)
   const [showShapeTools, setShowShapeTools] = useState(false)
-  const [showMoreTools, setShowMoreTools] = useState(false)
+  const [_showMoreTools, _setShowMoreTools] = useState(false)
 
   // Check if current tool is a shape tool
   const isShapeTool = SHAPE_TOOLS.some((t) => t.id === selectedTool)

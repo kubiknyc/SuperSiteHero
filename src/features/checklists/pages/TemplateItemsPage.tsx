@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Save, Eye } from 'lucide-react'
+import { ArrowLeft, Save, Eye, Trash2 } from 'lucide-react'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
@@ -17,6 +17,16 @@ import {
 } from '../hooks/useTemplateItems'
 import type { ChecklistTemplateItem, CreateChecklistTemplateItemDTO } from '@/types/checklists'
 import toast from 'react-hot-toast'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 export function TemplateItemsPage() {
   const { templateId } = useParams<{ templateId: string }>()
@@ -29,6 +39,9 @@ export function TemplateItemsPage() {
   const reorderItems = useReorderTemplateItems()
 
   const [localItems, setLocalItems] = useState<ChecklistTemplateItem[]>([])
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   // Sync local items with fetched data
   useEffect(() => {
@@ -74,16 +87,27 @@ export function TemplateItemsPage() {
     }
   }
 
-  const handleDeleteItem = async (itemId: string) => {
-    if (!confirm('Are you sure you want to delete this item?')) {return}
-    if (!templateId) {return}
+  const handleDeleteClick = (itemId: string) => {
+    setItemToDelete(itemId)
+    setDeleteDialogOpen(true)
+  }
 
+  const handleDeleteConfirm = async () => {
+    if (!itemToDelete || !templateId) {
+      return
+    }
+
+    setIsDeleting(true)
     try {
-      await deleteItem.mutateAsync({ itemId, templateId })
-      setLocalItems(localItems.filter((item) => item.id !== itemId))
+      await deleteItem.mutateAsync({ itemId: itemToDelete, templateId })
+      setLocalItems(localItems.filter((item) => item.id !== itemToDelete))
       toast.success('Item deleted successfully')
+      setDeleteDialogOpen(false)
+      setItemToDelete(null)
     } catch (_error) {
       toast.error('Failed to delete item')
+    } finally {
+      setIsDeleting(false)
     }
   }
 
@@ -230,12 +254,39 @@ export function TemplateItemsPage() {
               onItemsChange={handleItemsChange}
               onAddItem={handleAddItem}
               onUpdateItem={handleUpdateItem}
-              onDeleteItem={handleDeleteItem}
+              onDeleteItem={handleDeleteClick}
               onReorderItems={handleReorderItems}
             />
           </CardContent>
         </Card>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <Trash2 className="h-5 w-5 text-error" />
+              Delete Checklist Item
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this checklist item? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting} onClick={() => setItemToDelete(null)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              disabled={isDeleting}
+              className="bg-error hover:bg-red-700"
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AppLayout>
   )
 }

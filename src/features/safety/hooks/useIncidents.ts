@@ -8,11 +8,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useToast } from '@/lib/notifications/ToastContext'
 import { safetyIncidentsApi } from '@/lib/api/services/safety-incidents'
 import type {
-  SafetyIncident,
-  SafetyIncidentWithDetails,
-  IncidentPerson,
-  IncidentPhoto,
-  IncidentCorrectiveAction,
   CreateIncidentDTO,
   UpdateIncidentDTO,
   CreateIncidentPersonDTO,
@@ -21,8 +16,6 @@ import type {
   UpdateCorrectiveActionDTO,
   IncidentFilters,
   CorrectiveActionFilters,
-  IncidentStats,
-  CorrectiveActionStats,
 } from '@/types/safety-incidents'
 
 // ============================================================================

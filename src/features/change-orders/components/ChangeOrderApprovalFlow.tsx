@@ -1,7 +1,7 @@
 // File: /src/features/change-orders/components/ChangeOrderApprovalFlow.tsx
 // Visual workflow indicator and approval actions for change orders
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { format } from 'date-fns'
 import {
   useSubmitEstimate,
@@ -27,6 +27,16 @@ import {
   Loader2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import {
   ChangeOrderStatus,
   canSubmitForApproval,
@@ -67,6 +77,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
   const [approvedAmount, setApprovedAmount] = useState('')
   const [approvedDays, setApprovedDays] = useState('')
   const [approverName, setApproverName] = useState('')
+  const [showVoidConfirm, setShowVoidConfirm] = useState(false)
 
   // Calculate current step
   const getCurrentStep = (status: string): number => {
@@ -163,8 +174,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
   }
 
   // Handle void
-  const handleVoid = async () => {
-    if (!confirm('Are you sure you want to void this change order? This cannot be undone.')) {return}
+  const handleVoidConfirm = useCallback(async () => {
     try {
       await voidChangeOrder.mutateAsync({ id: changeOrder.id, reason: comments || 'Voided by user' })
       resetForm()
@@ -172,7 +182,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
     } catch (e) {
       logger.error('Failed to void change order:', e)
     }
-  }
+  }, [changeOrder.id, comments, voidChangeOrder, onStatusChange])
 
   // Render approval form
   const renderApprovalForm = () => {
@@ -451,7 +461,7 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
                 <Button
                   variant="outline"
                   className="text-error border-red-200 hover:bg-error-light"
-                  onClick={handleVoid}
+                  onClick={() => setShowVoidConfirm(true)}
                   disabled={voidChangeOrder.isPending}
                 >
                   <Ban className="h-4 w-4 mr-2" />
@@ -465,6 +475,27 @@ export function ChangeOrderApprovalFlow({ changeOrder, onStatusChange }: ChangeO
 
       {/* Approval form */}
       {renderApprovalForm()}
+
+      {/* Void confirmation dialog */}
+      <AlertDialog open={showVoidConfirm} onOpenChange={setShowVoidConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Void Change Order</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to void this change order? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleVoidConfirm}
+              className="bg-error hover:bg-red-700"
+            >
+              Void Change Order
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

@@ -3,7 +3,7 @@
  * Utilities for creating and managing MSW handlers in tests
  */
 
-import { http, HttpResponse, type DefaultBodyType, type HttpHandler, type StrictRequest } from 'msw';
+import { http, HttpResponse, type DefaultBodyType, type HttpHandler, type StrictRequest, type JsonBodyType } from 'msw';
 import { setupServer, type SetupServerApi } from 'msw/node';
 
 // Import factories

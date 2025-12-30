@@ -35,8 +35,7 @@ import { VendorPerformanceCard } from './VendorPerformanceCard'
 import { BidTrendChart } from './BidTrendChart'
 import { useBidAnalysisDashboard, useExportBidAnalysis } from '../hooks/useHistoricalBidAnalysis'
 import { CSI_DIVISIONS } from '@/types/cost-tracking'
-import type { BidAnalysisFilters, TrendDirection } from '@/types/historical-bid-analysis'
-import { formatPercentage, getTrendColor } from '@/types/historical-bid-analysis'
+import { formatPercentage, getTrendColor, type BidAnalysisFilters, type TrendDirection } from '@/types/historical-bid-analysis'
 
 interface SummaryCardProps {
   title: string

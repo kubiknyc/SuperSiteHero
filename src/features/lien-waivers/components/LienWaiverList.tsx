@@ -3,7 +3,6 @@
 
 import * as React from 'react'
 import { cn } from '@/lib/utils'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,13 +12,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import type {
-  LienWaiverWithDetails,
-  LienWaiverStatus,
-  ProjectWaiverSummary,
-} from '@/types/lien-waiver'
 import {
+  type LienWaiverWithDetails,
+  type LienWaiverStatus,
+  type ProjectWaiverSummary,
   LIEN_WAIVER_STATUSES,
   LIEN_WAIVER_TYPES,
   formatWaiverAmount,

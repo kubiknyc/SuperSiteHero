@@ -25,7 +25,14 @@ import { useUpdateResponse } from '../hooks/useResponses'
 import { useTemplateItems } from '../hooks/useTemplateItems'
 import { useKeyboardShortcuts, getChecklistShortcuts } from '../hooks/useKeyboardShortcuts'
 import { evaluateItemVisibility, buildResponsesMap } from '../utils/conditionEvaluator'
-import type { ChecklistResponse } from '@/types/checklists'
+import type {
+  ChecklistResponse,
+  CheckboxResponseData,
+  TextResponseData,
+  NumberResponseData,
+  PhotoResponseData,
+  SignatureResponseData,
+} from '@/types/checklists'
 import { formatDistanceToNow } from 'date-fns'
 import toast from 'react-hot-toast'
 import { logger } from '@/lib/utils/logger'
@@ -95,20 +102,30 @@ export function ActiveExecutionPage() {
     const total = visibleResponses.length
     const completed = visibleResponses.filter((r) => {
       // Consider a response completed if it has data
-      const data = r.response_data as any
+      const data = r.response_data
       if (!data) {return false}
 
       switch (r.item_type) {
-        case 'checkbox':
-          return data.value && data.value !== 'unchecked'
-        case 'text':
-          return data.value && data.value.trim().length > 0
-        case 'number':
-          return data.value !== null && data.value !== undefined
-        case 'photo':
-          return data.photo_urls && data.photo_urls.length > 0
-        case 'signature':
-          return data.signature_url && data.signature_url.length > 0
+        case 'checkbox': {
+          const checkboxData = data as CheckboxResponseData
+          return checkboxData.value && checkboxData.value !== 'unchecked'
+        }
+        case 'text': {
+          const textData = data as TextResponseData
+          return textData.value && textData.value.trim().length > 0
+        }
+        case 'number': {
+          const numberData = data as NumberResponseData
+          return numberData.value !== null && numberData.value !== undefined
+        }
+        case 'photo': {
+          const photoData = data as PhotoResponseData
+          return photoData.photo_urls && photoData.photo_urls.length > 0
+        }
+        case 'signature': {
+          const signatureData = data as SignatureResponseData
+          return signatureData.signature_url && signatureData.signature_url.length > 0
+        }
         default:
           return false
       }
@@ -285,20 +302,30 @@ export function ActiveExecutionPage() {
       const response = responseMap.get(item.id)
       if (!response) {return true}
 
-      const data = response.response_data as any
+      const data = response.response_data
       if (!data) {return true}
 
       switch (response.item_type) {
-        case 'checkbox':
-          return !data.value || data.value === 'unchecked'
-        case 'text':
-          return !data.value || data.value.trim().length === 0
-        case 'number':
-          return data.value === null || data.value === undefined
-        case 'photo':
-          return !data.photo_urls || data.photo_urls.length === 0
-        case 'signature':
-          return !data.signature_url || data.signature_url.length === 0
+        case 'checkbox': {
+          const checkboxData = data as CheckboxResponseData
+          return !checkboxData.value || checkboxData.value === 'unchecked'
+        }
+        case 'text': {
+          const textData = data as TextResponseData
+          return !textData.value || textData.value.trim().length === 0
+        }
+        case 'number': {
+          const numberData = data as NumberResponseData
+          return numberData.value === null || numberData.value === undefined
+        }
+        case 'photo': {
+          const photoData = data as PhotoResponseData
+          return !photoData.photo_urls || photoData.photo_urls.length === 0
+        }
+        case 'signature': {
+          const signatureData = data as SignatureResponseData
+          return !signatureData.signature_url || signatureData.signature_url.length === 0
+        }
         default:
           return true
       }

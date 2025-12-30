@@ -22,7 +22,6 @@ import {
   Loader2,
 } from 'lucide-react'
 import { useQBDashboard, useBulkSync, useQBConnectionStatus } from '../hooks/useQuickBooks'
-import { QBSyncStatusBadge } from './QBSyncStatusBadge'
 import { QBSyncLogTable } from './QBSyncLogTable'
 import { QBPendingSyncsList } from './QBPendingSyncsList'
 import { formatDistanceToNow } from 'date-fns'

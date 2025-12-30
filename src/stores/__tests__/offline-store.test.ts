@@ -27,7 +27,7 @@ import {
 import { STORES, putInStore, getAllFromStore, clearStore } from '@/lib/offline/indexeddb';
 
 describe('Offline Store', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     setupOfflineTestEnvironment();
     // Reset store state
     useOfflineStore.setState({
@@ -42,6 +42,13 @@ describe('Offline Store', () => {
       networkQuality: null,
       storageQuota: null,
     });
+    // Clear IndexedDB stores to prevent test pollution
+    try {
+      await clearStore(STORES.SYNC_QUEUE);
+      await clearStore(STORES.CONFLICTS);
+    } catch {
+      // Store might not exist yet
+    }
   });
 
   afterEach(() => {
@@ -548,8 +555,9 @@ describe('Offline Store', () => {
       });
 
       expect(result.current.storageQuota).toBeDefined();
-      expect(result.current.storageQuota?.usage).toBeGreaterThanOrEqual(0);
-      expect(result.current.storageQuota?.quota).toBeGreaterThan(0);
+      // StorageManager.getQuota returns { total, used, available, warning, critical }
+      expect(result.current.storageQuota?.used).toBeGreaterThanOrEqual(0);
+      expect(result.current.storageQuota?.total).toBeGreaterThan(0);
     });
   });
 

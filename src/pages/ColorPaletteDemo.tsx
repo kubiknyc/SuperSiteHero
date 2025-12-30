@@ -4,7 +4,7 @@
  * User will select their preferred palette from this page
  */
 
-import { HardHat, FileText, Shield, CheckCircle, ArrowRight, Star, Zap, Users, Calendar } from 'lucide-react';
+import { HardHat, FileText, CheckCircle, ArrowRight, Star, Zap, Users, Calendar } from 'lucide-react';
 
 // Define all 6 color palettes
 const palettes = [

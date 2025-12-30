@@ -3,7 +3,7 @@
  * Displays budget variance alerts with severity-based styling
  */
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
@@ -65,10 +65,19 @@ export function BudgetVarianceAlerts({
   const [showAll, setShowAll] = useState(false)
   const [dismissedAlerts, setDismissedAlerts] = useState<Set<string>>(new Set())
 
-  // Filter out dismissed alerts
-  const visibleAlerts = alerts.filter(a => !dismissedAlerts.has(a.id))
-  const displayedAlerts = showAll ? visibleAlerts : visibleAlerts.slice(0, maxVisible)
-  const hasMore = visibleAlerts.length > maxVisible
+  // Filter out dismissed alerts and compute display data
+  const { visibleAlerts, displayedAlerts, hasMore, criticalCount, warningCount, infoCount } = useMemo(() => {
+    const visible = alerts.filter(a => !dismissedAlerts.has(a.id))
+    const displayed = showAll ? visible : visible.slice(0, maxVisible)
+    return {
+      visibleAlerts: visible,
+      displayedAlerts: displayed,
+      hasMore: visible.length > maxVisible,
+      criticalCount: visible.filter(a => a.severity === 'critical').length,
+      warningCount: visible.filter(a => a.severity === 'warning').length,
+      infoCount: visible.filter(a => a.severity === 'info').length,
+    }
+  }, [alerts, dismissedAlerts, showAll, maxVisible])
 
   const handleDismiss = (alertId: string, e: React.MouseEvent) => {
     e.stopPropagation()
@@ -83,11 +92,6 @@ export function BudgetVarianceAlerts({
   if (isLoading || error || visibleAlerts.length === 0) {
     return null
   }
-
-  // Summary badge counts
-  const criticalCount = visibleAlerts.filter(a => a.severity === 'critical').length
-  const warningCount = visibleAlerts.filter(a => a.severity === 'warning').length
-  const infoCount = visibleAlerts.filter(a => a.severity === 'info').length
 
   return (
     <Card className={cn(

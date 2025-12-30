@@ -26,7 +26,17 @@ import {
   AlertCircle,
 } from 'lucide-react'
 import { calculateItemTotal, type ChangeOrderItem, type CreateChangeOrderItemDTO } from '@/types/change-order'
-import { logger } from '../../../lib/utils/logger';
+import { logger } from '../../../lib/utils/logger'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 
 interface ChangeOrderItemsEditorProps {
@@ -82,6 +92,7 @@ export function ChangeOrderItemsEditor({
   const [editingId, setEditingId] = useState<string | null>(null)
   const [showAddForm, setShowAddForm] = useState(false)
   const [formData, setFormData] = useState<ItemFormData>(emptyFormData)
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null)
 
   // Calculate total
   const total = items?.reduce((sum, item) => sum + (item.total_amount || 0), 0) || 0
@@ -197,12 +208,14 @@ export function ChangeOrderItemsEditor({
   }
 
   // Delete item
-  const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this item?')) {return}
+  const handleDeleteConfirm = async () => {
+    if (!deleteConfirmId) {return}
     try {
-      await deleteItem.mutateAsync({ id, changeOrderId })
+      await deleteItem.mutateAsync({ id: deleteConfirmId, changeOrderId })
     } catch (e) {
       logger.error('Failed to delete item:', e)
+    } finally {
+      setDeleteConfirmId(null)
     }
   }
 
@@ -472,7 +485,7 @@ export function ChangeOrderItemsEditor({
                           variant="ghost"
                           size="sm"
                           className="text-error hover:text-error-dark hover:bg-error-light"
-                          onClick={() => handleDelete(item.id)}
+                          onClick={() => setDeleteConfirmId(item.id)}
                           disabled={deleteItem.isPending}
                         >
                           <Trash2 className="h-4 w-4" />
@@ -506,6 +519,27 @@ export function ChangeOrderItemsEditor({
           </div>
         ) : null}
       </CardContent>
+
+      {/* Delete confirmation dialog */}
+      <AlertDialog open={!!deleteConfirmId} onOpenChange={(open) => !open && setDeleteConfirmId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Item</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this item? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              className="bg-error hover:bg-red-700"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   )
 }

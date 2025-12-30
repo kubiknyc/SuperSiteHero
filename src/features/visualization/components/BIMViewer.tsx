@@ -28,17 +28,12 @@ import {
   Minimize2,
   Eye,
   EyeOff,
-  Target,
   Layers,
   ChevronRight,
   ChevronDown,
   Box,
   Upload,
-  X,
   Search,
-  Filter,
-  Ruler,
-  Scissors,
   AlertCircle,
   Building2,
   Home,
@@ -46,7 +41,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import {
   Collapsible,
@@ -126,7 +120,7 @@ function BIMScene({
 
   // Handle click for selection
   const handleClick = useCallback(
-    (event: any) => {
+    (_event: any) => {
       if (!scene) {return;}
 
       raycaster.setFromCamera(pointer, camera);

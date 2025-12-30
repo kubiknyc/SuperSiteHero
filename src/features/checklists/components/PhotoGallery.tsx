@@ -12,6 +12,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 interface PhotoGalleryProps {
   photos: string[]
@@ -31,6 +41,7 @@ export function PhotoGallery({
   const [previewPhoto, setPreviewPhoto] = useState<string | null>(null)
   const [deletingIndex, setDeletingIndex] = useState<number | null>(null)
   const [downloadTimestamp] = useState(() => Date.now())
+  const [deleteConfirm, setDeleteConfirm] = useState<{ url: string; index: number } | null>(null)
 
   const handleDelete = (url: string, index: number) => {
     // Prevent deletion if it would go below minimum
@@ -38,16 +49,19 @@ export function PhotoGallery({
       return
     }
 
-    // Confirm deletion
-    if (!confirm('Are you sure you want to delete this photo?')) {
-      return
-    }
+    // Show confirmation dialog
+    setDeleteConfirm({ url, index })
+  }
 
-    setDeletingIndex(index)
-    onDeletePhoto?.(url, index)
+  const handleDeleteConfirm = () => {
+    if (!deleteConfirm) {return}
+
+    setDeletingIndex(deleteConfirm.index)
+    onDeletePhoto?.(deleteConfirm.url, deleteConfirm.index)
 
     // Clear deleting state after a delay
     setTimeout(() => setDeletingIndex(null), 500)
+    setDeleteConfirm(null)
   }
 
   if (photos.length === 0) {
@@ -174,6 +188,27 @@ export function PhotoGallery({
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Delete confirmation dialog */}
+      <AlertDialog open={!!deleteConfirm} onOpenChange={(open) => !open && setDeleteConfirm(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Photo</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this photo? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              className="bg-error hover:bg-red-700"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }

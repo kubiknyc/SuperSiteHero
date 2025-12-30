@@ -6,15 +6,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { quickbooksApi } from '@/lib/api/services/quickbooks'
 import { useAuth } from '@/lib/auth/AuthContext'
 import type {
-  QBConnection,
-  QBAccountMapping,
-  QBEntityMapping,
-  QBSyncLog,
-  QBPendingSync,
-  QBConnectionStatus,
-  QBSyncStats,
-  QBSyncDashboard,
-  QBAccount,
   CompleteQBConnectionDTO,
   UpdateQBConnectionDTO,
   CreateQBAccountMappingDTO,
@@ -128,7 +119,6 @@ export function useCompleteQBConnection() {
  */
 export function useRefreshQBToken() {
   const queryClient = useQueryClient()
-  const { userProfile } = useAuth()
 
   return useMutation({
     mutationFn: (connectionId: string) => quickbooksApi.refreshToken(connectionId),
@@ -143,7 +133,6 @@ export function useRefreshQBToken() {
  */
 export function useUpdateQBConnection() {
   const queryClient = useQueryClient()
-  const { userProfile } = useAuth()
 
   return useMutation({
     mutationFn: ({
@@ -164,15 +153,12 @@ export function useUpdateQBConnection() {
  */
 export function useDisconnectQB() {
   const queryClient = useQueryClient()
-  const { userProfile } = useAuth()
 
   return useMutation({
     mutationFn: (connectionId: string) => quickbooksApi.disconnect(connectionId),
     onSuccess: () => {
-      if (userProfile?.company_id) {
-        // Clear all QB-related queries
-        queryClient.invalidateQueries({ queryKey: quickbooksKeys.all })
-      }
+      // Clear all QB-related queries
+      queryClient.invalidateQueries({ queryKey: quickbooksKeys.all })
     },
   })
 }

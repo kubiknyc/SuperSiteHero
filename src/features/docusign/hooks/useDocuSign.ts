@@ -62,7 +62,6 @@ export function useDocuSignConnectionStatus() {
  */
 export function useInitiateDocuSignConnection() {
   const { userProfile } = useAuth()
-  const queryClient = useQueryClient()
   const companyId = userProfile?.company_id
 
   return useMutation({
@@ -210,7 +209,7 @@ export function useCreateDocuSignEnvelope() {
 
   return useMutation({
     mutationFn: (dto: CreateEnvelopeDTO) => docuSignApi.createEnvelope(companyId!, dto),
-    onSuccess: (data) => {
+    onSuccess: (_data) => {
       queryClient.invalidateQueries({ queryKey: docuSignKeys.envelopes(companyId!) })
       queryClient.invalidateQueries({ queryKey: docuSignKeys.stats(companyId!) })
       toast.success('Envelope created successfully')
@@ -306,7 +305,7 @@ export function useCreatePaymentApplicationEnvelope() {
   return useMutation({
     mutationFn: (config: PaymentApplicationSigningConfig) =>
       docuSignApi.createPaymentApplicationEnvelope(companyId!, config),
-    onSuccess: (data) => {
+    onSuccess: (_data) => {
       queryClient.invalidateQueries({ queryKey: docuSignKeys.envelopes(companyId!) })
       queryClient.invalidateQueries({ queryKey: docuSignKeys.stats(companyId!) })
       toast.success('Payment application sent for signature')
@@ -328,7 +327,7 @@ export function useCreateChangeOrderEnvelope() {
   return useMutation({
     mutationFn: (config: ChangeOrderSigningConfig) =>
       docuSignApi.createChangeOrderEnvelope(companyId!, config),
-    onSuccess: (data) => {
+    onSuccess: (_data) => {
       queryClient.invalidateQueries({ queryKey: docuSignKeys.envelopes(companyId!) })
       queryClient.invalidateQueries({ queryKey: docuSignKeys.stats(companyId!) })
       toast.success('Change order sent for signature')
@@ -350,7 +349,7 @@ export function useCreateLienWaiverEnvelope() {
   return useMutation({
     mutationFn: (config: LienWaiverSigningConfig) =>
       docuSignApi.createLienWaiverEnvelope(companyId!, config),
-    onSuccess: (data) => {
+    onSuccess: (_data) => {
       queryClient.invalidateQueries({ queryKey: docuSignKeys.envelopes(companyId!) })
       queryClient.invalidateQueries({ queryKey: docuSignKeys.stats(companyId!) })
       toast.success('Lien waiver sent for signature')

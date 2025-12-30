@@ -62,6 +62,10 @@ interface ProjectSubcontractor {
   trade: string
 }
 
+interface ProjectUserRow {
+  user: ProjectUser | null
+}
+
 // Fetch project team members
 async function fetchProjectUsers(projectId: string): Promise<ProjectUser[]> {
   const { data, error } = await supabase
@@ -80,7 +84,7 @@ async function fetchProjectUsers(projectId: string): Promise<ProjectUser[]> {
   if (error) {throw error}
 
   return (data || [])
-    .map((pu: any) => pu.user)
+    .map((pu: ProjectUserRow) => pu.user)
     .filter((u: ProjectUser | null) => u !== null) as ProjectUser[]
 }
 

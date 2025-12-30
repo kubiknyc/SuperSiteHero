@@ -8,8 +8,6 @@
 import { supabase } from '@/lib/supabase';
 import type {
   Model3DMetadata,
-  IFCModel,
-  IFCElement,
   VRTour,
   VRTourNode,
   VRAnnotation,

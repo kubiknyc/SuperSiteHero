@@ -3,7 +3,7 @@
  * Detail view for a single bid package
  */
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { format } from 'date-fns'
 import {
@@ -89,6 +89,15 @@ export default function BidPackageDetailPage() {
   const publishBidPackage = usePublishBidPackage()
   const awardBid = useAwardBid()
 
+  // Memoize expensive calculations - must be before early returns
+  const { responsesReceived, responseRate } = useMemo(() => {
+    if (!stats) {return { responsesReceived: 0, responseRate: 0 }}
+    const pendingCount = invitations?.filter((i) => i.response_status === 'pending').length || 0
+    const received = stats.total_invitations - pendingCount
+    const rate = stats.total_invitations > 0 ? (received / stats.total_invitations) * 100 : 0
+    return { responsesReceived: received, responseRate: rate }
+  }, [stats, invitations])
+
   if (isLoadingPackage) {
     return (
       <div className="container py-8">
@@ -152,13 +161,6 @@ export default function BidPackageDetailPage() {
       toast.error('Failed to award bid')
     }
   }
-
-  const responsesReceived = stats
-    ? stats.total_invitations - (invitations?.filter((i) => i.response_status === 'pending').length || 0)
-    : 0
-  const responseRate = stats && stats.total_invitations > 0
-    ? (responsesReceived / stats.total_invitations) * 100
-    : 0
 
   return (
     <div className="container py-6 space-y-6">

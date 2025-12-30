@@ -17,7 +17,6 @@ import {
   type SafetyMetricsTrendPoint,
   type SafetyScorecard,
   type RateStatus,
-  type IndustrySafetyBenchmark,
 } from '@/types/safety-metrics'
 
 // ============================================================================
@@ -284,12 +283,12 @@ export function calculateScorecard(
   targetTrir: number | null = null,
   targetDart: number | null = null
 ): SafetyScorecard {
-  // Calculate performance against industry
-  const trirVsIndustry = benchmark?.avg_trir
+  // Calculate performance against industry (kept for future use in extended scorecard)
+  const _trirVsIndustry = benchmark?.avg_trir
     ? calculateBenchmarkVariance(metrics.trir, benchmark.avg_trir)
     : null
 
-  const dartVsIndustry = benchmark?.avg_dart
+  const _dartVsIndustry = benchmark?.avg_dart
     ? calculateBenchmarkVariance(metrics.dart, benchmark.avg_dart)
     : null
 

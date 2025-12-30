@@ -109,7 +109,7 @@ export function SendInvitationDialog({
     )
   })
 
-  const handleManualSubmit = async (values: any) => {
+  const handleManualSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const dto: CreateBidInvitationDTO = {
         bid_package_id: bidPackageId,

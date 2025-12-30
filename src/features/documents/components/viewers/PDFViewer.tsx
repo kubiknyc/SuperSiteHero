@@ -62,7 +62,7 @@ export function PDFViewer({
   fileName = 'document.pdf',
   allowMarkup = false,
   readOnly = false,
-  onMarkupCreate,
+  onMarkupCreate: _onMarkupCreate,
   height = 'h-screen',
   enableMarkup: initialEnableMarkup = false,
   markupState,

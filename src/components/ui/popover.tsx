@@ -52,14 +52,13 @@ export function PopoverTrigger({ children, asChild, className }: PopoverTriggerP
     setOpen(!open)
   }
 
-  if (asChild && React.isValidElement(children)) {
+  if (asChild && React.isValidElement<{ onClick?: (e: React.MouseEvent) => void }>(children)) {
     return React.cloneElement(children, {
-      ...children.props,
       onClick: (e: React.MouseEvent) => {
         children.props.onClick?.(e)
         handleClick()
       },
-    } as any)
+    })
   }
 
   return (

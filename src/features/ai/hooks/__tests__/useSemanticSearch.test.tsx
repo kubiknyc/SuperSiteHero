@@ -21,7 +21,7 @@ vi.mock('@/lib/auth/AuthContext', () => ({
 vi.mock('@/lib/api/services/semantic-search', () => ({
   semanticSearch: vi.fn(),
   simpleSearch: vi.fn(),
-  checkRateLimit: vi.fn(() => ({
+  checkRateLimit: vi.fn(() => Promise.resolve({
     remaining: 45,
     limit: 50,
     resetAt: new Date(Date.now() + 3600000),
@@ -341,14 +341,13 @@ describe('useSemanticSearch', () => {
       // Should not have searched yet (debounce)
       expect(semanticSearch).not.toHaveBeenCalled()
 
-      // Fast-forward past debounce
-      act(() => {
-        vi.advanceTimersByTime(350)
+      // Fast-forward past debounce and flush all pending timers/promises
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(350)
       })
 
-      await waitFor(() => {
-        expect(semanticSearch).toHaveBeenCalled()
-      })
+      // Search should now be called
+      expect(semanticSearch).toHaveBeenCalled()
 
       vi.useRealTimers()
     })
@@ -384,15 +383,13 @@ describe('useSemanticSearch', () => {
         result.current.setQuery('test')
       })
 
-      // Fast-forward past debounce
-      act(() => {
-        vi.advanceTimersByTime(350)
+      // Fast-forward past debounce and flush promises
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(350)
       })
 
-      await waitFor(() => {
-        // Should only search once with final query
-        expect(semanticSearch).toHaveBeenCalledTimes(1)
-      })
+      // Should only search once with final query
+      expect(semanticSearch).toHaveBeenCalledTimes(1)
 
       vi.useRealTimers()
     })
@@ -451,13 +448,22 @@ describe('useSemanticSearch', () => {
 
   describe('rate limit', () => {
     it('should fetch rate limit info', async () => {
+      const { checkRateLimit } = await import('@/lib/api/services/semantic-search')
+
+      // Ensure mock is properly setup
+      vi.mocked(checkRateLimit).mockResolvedValue({
+        remaining: 45,
+        limit: 50,
+        resetAt: new Date(Date.now() + 3600000),
+      })
+
       const { result } = renderHook(() => useSemanticSearch(), {
         wrapper: createWrapper(),
       })
 
       await waitFor(() => {
         expect(result.current.rateLimit).not.toBeNull()
-      })
+      }, { timeout: 2000 })
 
       expect(result.current.rateLimit?.remaining).toBeDefined()
       expect(result.current.rateLimit?.limit).toBe(50)
@@ -482,13 +488,13 @@ describe('useSemanticSearch', () => {
         result.current.setQuery('test query')
       })
 
-      act(() => {
+      await act(async () => {
         result.current.search()
       })
 
       await waitFor(() => {
         expect(result.current.error).toBeTruthy()
-      })
+      }, { timeout: 2000 })
 
       expect(result.current.error?.message).toBe('Search failed')
     })
@@ -507,13 +513,13 @@ describe('useSemanticSearch', () => {
         result.current.setQuery('test query')
       })
 
-      act(() => {
+      await act(async () => {
         result.current.search()
       })
 
       await waitFor(() => {
         expect(result.current.error).toBeTruthy()
-      })
+      }, { timeout: 2000 })
 
       // Second search succeeds
       vi.mocked(semanticSearch).mockResolvedValueOnce({
@@ -524,13 +530,13 @@ describe('useSemanticSearch', () => {
         queryExpansionTimeMs: 50,
       })
 
-      act(() => {
+      await act(async () => {
         result.current.search()
       })
 
       await waitFor(() => {
         expect(result.current.isLoading).toBe(false)
-      })
+      }, { timeout: 2000 })
     })
   })
 

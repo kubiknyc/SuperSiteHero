@@ -16,7 +16,17 @@ import { SignatureTemplateManager } from './SignatureTemplateManager'
 import { uploadSignature, deleteSignature } from '../utils/storageUtils'
 import { PenTool, Save, X } from 'lucide-react'
 import toast from 'react-hot-toast'
-import { logger } from '../../../lib/utils/logger';
+import { logger } from '../../../lib/utils/logger'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 
 
 interface SignatureCaptureDialogProps {
@@ -44,6 +54,7 @@ export function SignatureCaptureDialog({
 }: SignatureCaptureDialogProps) {
   const [signatureDataUrl, setSignatureDataUrl] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
+  const [showRemoveConfirm, setShowRemoveConfirm] = useState(false)
 
   const handleSignatureCapture = (dataUrl: string) => {
     setSignatureDataUrl(dataUrl)
@@ -92,12 +103,8 @@ export function SignatureCaptureDialog({
     }
   }
 
-  const handleRemove = async () => {
+  const handleRemoveConfirm = async () => {
     if (!currentSignature) {return}
-
-    if (!confirm('Are you sure you want to remove this signature?')) {
-      return
-    }
 
     setIsUploading(true)
 
@@ -111,6 +118,7 @@ export function SignatureCaptureDialog({
       toast.error('Failed to remove signature. Please try again.')
     } finally {
       setIsUploading(false)
+      setShowRemoveConfirm(false)
     }
   }
 
@@ -165,7 +173,7 @@ export function SignatureCaptureDialog({
             <Button
               type="button"
               variant="destructive"
-              onClick={handleRemove}
+              onClick={() => setShowRemoveConfirm(true)}
               disabled={disabled || isUploading}
             >
               <X className="w-4 h-4 mr-2" />
@@ -201,6 +209,27 @@ export function SignatureCaptureDialog({
           </Button>
         </DialogFooter>
       </DialogContent>
+
+      {/* Remove signature confirmation dialog */}
+      <AlertDialog open={showRemoveConfirm} onOpenChange={setShowRemoveConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remove Signature</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to remove this signature? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleRemoveConfirm}
+              className="bg-error hover:bg-red-700"
+            >
+              Remove
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dialog>
   )
 }

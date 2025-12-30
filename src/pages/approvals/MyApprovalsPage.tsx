@@ -5,12 +5,11 @@
  */
 
 import * as React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Button } from '@/components/ui/button'
 import {
   ApprovalRequestCard,
-  ApprovalStatusBadge,
 } from '@/features/approvals/components'
 import {
   useApprovalRequests,
@@ -23,7 +22,7 @@ import {
   useCancelApprovalRequest,
 } from '@/features/approvals/hooks'
 import { useAuth } from '@/lib/auth/AuthContext'
-import type { ApprovalStatus, WorkflowEntityType } from '@/types/approval-workflow'
+import type { WorkflowEntityType } from '@/types/approval-workflow'
 import { WORKFLOW_ENTITY_CONFIG } from '@/types/approval-workflow'
 import { cn } from '@/lib/utils'
 import { logger } from '../../lib/utils/logger';

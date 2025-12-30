@@ -41,7 +41,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Switch } from '@/components/ui/switch'
 import { cn } from '@/lib/utils'
 import { useCreateBidPackage } from '../hooks/useBidding'
-import { BID_TYPES, CSI_DIVISIONS, type CreateBidPackageDTO } from '@/types/bidding'
+import { BID_TYPES, CSI_DIVISIONS, type CreateBidPackageDTO, type BidPackage } from '@/types/bidding'
 import { toast } from 'sonner'
 import { logger } from '../../../lib/utils/logger';
 
@@ -69,7 +69,7 @@ interface CreateBidPackageDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   projectId: string
-  onSuccess?: (bidPackage: any) => void
+  onSuccess?: (bidPackage: BidPackage) => void
 }
 
 export function CreateBidPackageDialog({
@@ -102,7 +102,7 @@ export function CreateBidPackageDialog({
     },
   })
 
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const dto: CreateBidPackageDTO = {
         project_id: projectId,

@@ -10,17 +10,23 @@
  * - Error handling
  */
 
+import React from 'react'
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { renderHook, waitFor, act } from '@testing-library/react'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useBiometricAuth } from '../useBiometricAuth'
 import * as biometricLib from '@/lib/auth/biometric'
-import { createMockUser } from '@/__tests__/factories'
-import { renderAuthenticated } from '@/__tests__/helpers'
+import { createMockUser, createMockSession } from '@/__tests__/factories'
 import type { BiometricSettings, BiometricCredential } from '@/lib/auth/biometric'
+
+// Hoist mock functions so they can be used in vi.mock
+const { mockUseAuth } = vi.hoisted(() => ({
+  mockUseAuth: vi.fn(),
+}))
 
 // Mock the auth context
 vi.mock('@/lib/auth/AuthContext', () => ({
-  useAuth: vi.fn(),
+  useAuth: mockUseAuth,
 }))
 
 // Mock the biometric library
@@ -56,9 +62,37 @@ const mockCredentials: BiometricCredential[] = [
   },
 ]
 
+// Create a wrapper with auth context and query client
+function createWrapper(user: ReturnType<typeof createMockUser> | null = mockUser) {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: { retry: false },
+      mutations: { retry: false },
+    },
+  })
+
+  return function Wrapper({ children }: { children: React.ReactNode }) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    )
+  }
+}
+
 describe('useBiometricAuth', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+
+    // Mock useAuth to return the mock user
+    mockUseAuth.mockReturnValue({
+      user: mockUser,
+      userProfile: mockUser,
+      session: createMockSession(),
+      loading: false,
+      signIn: vi.fn(),
+      signOut: vi.fn(),
+    })
 
     // Default mock implementations
     vi.mocked(biometricLib.isWebAuthnSupported).mockReturnValue(true)
@@ -74,7 +108,7 @@ describe('useBiometricAuth', () => {
   describe('Browser Support Detection', () => {
     it('should detect WebAuthn support', async () => {
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await waitFor(() => {
@@ -86,7 +120,7 @@ describe('useBiometricAuth', () => {
 
     it('should detect platform authenticator availability', async () => {
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await waitFor(() => {
@@ -100,7 +134,7 @@ describe('useBiometricAuth', () => {
       vi.mocked(biometricLib.isWebAuthnSupported).mockReturnValue(false)
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await waitFor(() => {
@@ -113,7 +147,7 @@ describe('useBiometricAuth', () => {
       vi.mocked(biometricLib.isPlatformAuthenticatorAvailable).mockResolvedValue(false)
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await waitFor(() => {
@@ -126,7 +160,7 @@ describe('useBiometricAuth', () => {
   describe('Settings Loading', () => {
     it('should load biometric settings on mount', async () => {
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await waitFor(() => {
@@ -139,7 +173,7 @@ describe('useBiometricAuth', () => {
 
     it('should show enabled state from settings', async () => {
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await waitFor(() => {
@@ -153,7 +187,7 @@ describe('useBiometricAuth', () => {
       )
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await waitFor(() => {
@@ -163,8 +197,18 @@ describe('useBiometricAuth', () => {
     })
 
     it('should not load settings when user is not authenticated', async () => {
+      // Override mock to return null user
+      mockUseAuth.mockReturnValue({
+        user: null,
+        userProfile: null,
+        session: null,
+        loading: false,
+        signIn: vi.fn(),
+        signOut: vi.fn(),
+      })
+
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: null }),
+        wrapper: createWrapper(null),
       })
 
       await waitFor(() => {
@@ -187,7 +231,7 @@ describe('useBiometricAuth', () => {
       vi.mocked(biometricLib.registerBiometricCredential).mockResolvedValue(newCredential)
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       let registeredCredential: BiometricCredential | undefined
@@ -213,7 +257,7 @@ describe('useBiometricAuth', () => {
       vi.mocked(biometricLib.registerBiometricCredential).mockResolvedValue(newCredential)
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await act(async () => {
@@ -232,7 +276,7 @@ describe('useBiometricAuth', () => {
       )
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await expect(async () => {
@@ -251,7 +295,7 @@ describe('useBiometricAuth', () => {
       vi.mocked(biometricLib.registerBiometricCredential).mockResolvedValue(newCredential)
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await act(async () => {
@@ -270,7 +314,7 @@ describe('useBiometricAuth', () => {
       vi.mocked(biometricLib.deleteBiometricCredential).mockResolvedValue(true)
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       let success = false
@@ -287,7 +331,7 @@ describe('useBiometricAuth', () => {
       vi.mocked(biometricLib.deleteBiometricCredential).mockResolvedValue(true)
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await act(async () => {
@@ -306,7 +350,7 @@ describe('useBiometricAuth', () => {
       )
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await expect(async () => {
@@ -322,7 +366,7 @@ describe('useBiometricAuth', () => {
       vi.mocked(biometricLib.authenticateWithBiometric).mockResolvedValue(true)
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       let success = false
@@ -339,7 +383,7 @@ describe('useBiometricAuth', () => {
       vi.mocked(biometricLib.authenticateWithBiometric).mockResolvedValue(false)
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       let success = true
@@ -357,7 +401,7 @@ describe('useBiometricAuth', () => {
       )
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await expect(async () => {
@@ -373,7 +417,7 @@ describe('useBiometricAuth', () => {
       vi.mocked(biometricLib.updateBiometricSettings).mockResolvedValue(undefined)
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await act(async () => {
@@ -389,7 +433,7 @@ describe('useBiometricAuth', () => {
       vi.mocked(biometricLib.updateBiometricSettings).mockResolvedValue(undefined)
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await act(async () => {
@@ -405,7 +449,7 @@ describe('useBiometricAuth', () => {
       vi.mocked(biometricLib.updateBiometricSettings).mockResolvedValue(undefined)
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await act(async () => {
@@ -424,7 +468,7 @@ describe('useBiometricAuth', () => {
       vi.mocked(biometricLib.isReauthenticationNeeded).mockReturnValue(true)
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await waitFor(() => {
@@ -439,7 +483,7 @@ describe('useBiometricAuth', () => {
       vi.mocked(biometricLib.isReauthenticationNeeded).mockReturnValue(false)
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await waitFor(() => {
@@ -454,7 +498,7 @@ describe('useBiometricAuth', () => {
       vi.mocked(biometricLib.clearBiometricAuthSession).mockReturnValue(undefined)
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await act(() => {
@@ -468,7 +512,7 @@ describe('useBiometricAuth', () => {
   describe('Manual Settings Refresh', () => {
     it('should allow manual settings refresh', async () => {
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       // Clear the initial load call
@@ -487,7 +531,7 @@ describe('useBiometricAuth', () => {
       vi.mocked(biometricLib.updateBiometricSettings).mockResolvedValue(undefined)
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       // Fire multiple operations rapidly
@@ -504,11 +548,12 @@ describe('useBiometricAuth', () => {
     })
 
     it('should handle user changing during hook lifetime', async () => {
+      const newUser = createMockUser({ id: 'user-2', role: 'admin' })
+
       const { result, rerender } = renderHook(
-        ({ user }) => useBiometricAuth(),
+        () => useBiometricAuth(),
         {
-          wrapper: ({ children, user }) => renderAuthenticated({ children, user }),
-          initialProps: { user: mockUser },
+          wrapper: createWrapper(),
         }
       )
 
@@ -516,9 +561,18 @@ describe('useBiometricAuth', () => {
         expect(result.current.settings).toEqual(mockSettings)
       })
 
-      // Change user
-      const newUser = createMockUser({ id: 'user-2', role: 'admin' })
-      rerender({ user: newUser })
+      // Change user by updating the mock
+      mockUseAuth.mockReturnValue({
+        user: newUser,
+        userProfile: newUser,
+        session: createMockSession(),
+        loading: false,
+        signIn: vi.fn(),
+        signOut: vi.fn(),
+      })
+
+      // Rerender to pick up new user
+      rerender()
 
       // Should reload settings for new user
       await waitFor(() => {
@@ -533,7 +587,7 @@ describe('useBiometricAuth', () => {
       })
 
       const { result } = renderHook(() => useBiometricAuth(), {
-        wrapper: ({ children }) => renderAuthenticated({ children, user: mockUser }),
+        wrapper: createWrapper(),
       })
 
       await waitFor(() => {

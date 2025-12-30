@@ -218,7 +218,7 @@ export function useProjectPaymentSummary(projectId: string | undefined) {
   }
 
   const paidApps = applications.filter(a => a.status === 'paid')
-  const approvedApps = applications.filter(a => a.status === 'approved')
+  const _approvedApps = applications.filter(a => a.status === 'approved')
   const latestApp = applications[0]
 
   const total_billed = applications.reduce((sum, a) =>

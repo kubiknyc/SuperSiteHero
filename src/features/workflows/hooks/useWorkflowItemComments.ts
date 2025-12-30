@@ -44,7 +44,7 @@ export function useUpdateWorkflowItemComment() {
   return useMutation({
     mutationFn: async ({
       commentId,
-      workflowItemId,
+      workflowItemId: _workflowItemId,
       updates,
     }: {
       commentId: string
@@ -68,7 +68,7 @@ export function useDeleteWorkflowItemComment() {
   return useMutation({
     mutationFn: async ({
       commentId,
-      workflowItemId,
+      workflowItemId: _workflowItemId,
     }: {
       commentId: string
       workflowItemId: string

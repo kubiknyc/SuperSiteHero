@@ -162,7 +162,7 @@ export function VendorFormDialog({
   }, [open, vendor, reset]);
 
   const onSubmit = async (data: FormData) => {
-    if (!userProfile?.company_id) return;
+    if (!userProfile?.company_id) {return;}
 
     const dto: CreateVendorDTO = {
       name: data.name.trim(),

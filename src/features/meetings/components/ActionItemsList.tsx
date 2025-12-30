@@ -13,6 +13,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { Label } from '@/components/ui/label'
 import {
   Plus,
@@ -50,6 +60,8 @@ export function ActionItemsList({ meetingId, projectId, readOnly = false }: Acti
   const queryClient = useQueryClient()
   const [showAddDialog, setShowAddDialog] = useState(false)
   const [editingItem, setEditingItem] = useState<MeetingActionItem | null>(null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [itemToDelete, setItemToDelete] = useState<string | null>(null)
   const [newItem, setNewItem] = useState({
     description: '',
     assignee_name: '',
@@ -260,9 +272,8 @@ export function ActionItemsList({ meetingId, projectId, readOnly = false }: Acti
                                 size="icon"
                                 className="h-6 w-6 text-error"
                                 onClick={() => {
-                                  if (confirm('Delete this action item?')) {
-                                    deleteItem.mutate(item.id)
-                                  }
+                                  setItemToDelete(item.id)
+                                  setDeleteDialogOpen(true)
                                 }}
                               >
                                 <Trash2 className="h-3 w-3" />
@@ -554,6 +565,38 @@ export function ActionItemsList({ meetingId, projectId, readOnly = false }: Acti
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <Trash2 className="h-5 w-5 text-error" />
+              Delete Action Item
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this action item? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setItemToDelete(null)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (itemToDelete) {
+                  deleteItem.mutate(itemToDelete)
+                  setDeleteDialogOpen(false)
+                  setItemToDelete(null)
+                }
+              }}
+              className="bg-error hover:bg-red-700"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

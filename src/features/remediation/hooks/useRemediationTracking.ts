@@ -8,7 +8,6 @@ import { useToast } from '@/components/ui/use-toast';
 import { remediationService } from '@/lib/api/services/remediation-tracking';
 import type {
   RemediationSourceType,
-  RemediationStatus,
   CreatePunchFromInspectionDTO,
   CreatePunchFromChecklistDTO,
   UpdateRemediationStatusDTO,
@@ -294,7 +293,7 @@ export function useUpdateAutoLinkConfig() {
       sourceType: RemediationSourceType;
       dto: UpdateAutoLinkConfigDTO;
     }) => remediationService.config.updateConfig(sourceType, dto),
-    onSuccess: (data) => {
+    onSuccess: (_data) => {
       queryClient.invalidateQueries({
         queryKey: remediationKeys.config(),
       });
