@@ -62,7 +62,7 @@ const AUTH_URL = `${SUPABASE_URL}/auth/v1`;
 /**
  * Create a successful API response
  */
-export function successResponse<T>(data: T, options: HandlerOptions = {}) {
+export function successResponse(data: unknown, options: HandlerOptions = {}) {
   const { status = 200 } = options;
   return HttpResponse.json(data, { status });
 }
@@ -159,10 +159,10 @@ export function serverErrorResponse(message: string = 'Internal server error') {
 /**
  * Create a handler for a Supabase REST endpoint
  */
-export function createSupabaseHandler<T>(
+export function createSupabaseHandler(
   method: HttpMethod,
   table: string,
-  response: T | T[] | (() => T | T[]),
+  response: unknown,
   options: HandlerOptions = {}
 ): HttpHandler {
   const { delay = 0, status = 200 } = options;
@@ -175,7 +175,7 @@ export function createSupabaseHandler<T>(
       await new Promise((resolve) => setTimeout(resolve, delay));
     }
 
-    const data = typeof response === 'function' ? response() : response;
+    const data = typeof response === 'function' ? (response as () => unknown)() : response;
     return HttpResponse.json(Array.isArray(data) ? data : [data], { status });
   });
 }
@@ -342,21 +342,21 @@ export function overrideHandler(server: SetupServerApi, handler: HttpHandler): v
 /**
  * Create a handler that tracks requests
  */
-export function createTrackedHandler<TBody = DefaultBodyType>(
+export function createTrackedHandler(
   method: HttpMethod,
   path: string,
-  response: HttpResponse
+  responseData: unknown
 ): {
   handler: HttpHandler;
-  requests: StrictRequest<TBody>[];
-  getLastRequest: () => StrictRequest<TBody> | undefined;
+  requests: Request[];
+  getLastRequest: () => Request | undefined;
   clearRequests: () => void;
 } {
-  const requests: StrictRequest<TBody>[] = [];
+  const requests: Request[] = [];
 
   const handler = http[method](path, async ({ request }) => {
-    requests.push(request as StrictRequest<TBody>);
-    return response;
+    requests.push(request);
+    return HttpResponse.json(responseData);
   });
 
   return {
@@ -375,18 +375,19 @@ export function createTrackedHandler<TBody = DefaultBodyType>(
 export function createFailAfterHandler(
   method: HttpMethod,
   path: string,
-  successResponse: HttpResponse,
-  failResponse: HttpResponse,
-  failAfter: number
+  successData: unknown,
+  failData: unknown,
+  failAfter: number,
+  failStatus: number = 500
 ): HttpHandler {
   let requestCount = 0;
 
   return http[method](path, async () => {
     requestCount++;
     if (requestCount > failAfter) {
-      return failResponse;
+      return HttpResponse.json(failData, { status: failStatus });
     }
-    return successResponse;
+    return HttpResponse.json(successData);
   });
 }
 
@@ -396,12 +397,12 @@ export function createFailAfterHandler(
 export function createDelayedHandler(
   method: HttpMethod,
   path: string,
-  response: HttpResponse,
+  responseData: unknown,
   delayMs: number
 ): HttpHandler {
   return http[method](path, async () => {
     await new Promise((resolve) => setTimeout(resolve, delayMs));
-    return response;
+    return HttpResponse.json(responseData);
   });
 }
 
@@ -411,15 +412,16 @@ export function createDelayedHandler(
 export function createFlakyHandler(
   method: HttpMethod,
   path: string,
-  successResponse: HttpResponse,
-  failResponse: HttpResponse,
-  failureProbability: number = 0.5
+  successData: unknown,
+  failData: unknown,
+  failureProbability: number = 0.5,
+  failStatus: number = 500
 ): HttpHandler {
   return http[method](path, async () => {
     if (Math.random() < failureProbability) {
-      return failResponse;
+      return HttpResponse.json(failData, { status: failStatus });
     }
-    return successResponse;
+    return HttpResponse.json(successData);
   });
 }
 
