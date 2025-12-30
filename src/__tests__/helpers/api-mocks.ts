@@ -113,7 +113,7 @@ export function errorResponse(
   message: string,
   status: number = 400,
   code?: string
-): HttpResponse {
+) {
   return HttpResponse.json(
     {
       error: message,
@@ -127,28 +127,28 @@ export function errorResponse(
 /**
  * Create a 401 Unauthorized response
  */
-export function unauthorizedResponse(message: string = 'Unauthorized'): HttpResponse {
+export function unauthorizedResponse(message: string = 'Unauthorized') {
   return errorResponse(message, 401, 'UNAUTHORIZED');
 }
 
 /**
  * Create a 403 Forbidden response
  */
-export function forbiddenResponse(message: string = 'Forbidden'): HttpResponse {
+export function forbiddenResponse(message: string = 'Forbidden') {
   return errorResponse(message, 403, 'FORBIDDEN');
 }
 
 /**
  * Create a 404 Not Found response
  */
-export function notFoundResponse(message: string = 'Not found'): HttpResponse {
+export function notFoundResponse(message: string = 'Not found') {
   return errorResponse(message, 404, 'NOT_FOUND');
 }
 
 /**
  * Create a 500 Server Error response
  */
-export function serverErrorResponse(message: string = 'Internal server error'): HttpResponse {
+export function serverErrorResponse(message: string = 'Internal server error') {
   return errorResponse(message, 500, 'INTERNAL_SERVER_ERROR');
 }
 

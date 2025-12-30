@@ -90,8 +90,8 @@ export interface WorkflowItemFactoryOptions {
   spec_section?: string;
   submittal_type?: string;
   required_date?: string;
-  submitted_date?: string;
-  approved_date?: string;
+  submitted_date?: string | null;
+  approved_date?: string | null;
   created_by?: string;
   company_id?: string;
   deleted_at?: string | null;
@@ -115,7 +115,7 @@ export interface SubmittalProcurementFactoryOptions {
   procurement_status?: ProcurementStatus;
   order_date?: string;
   expected_delivery?: string;
-  actual_delivery?: string;
+  actual_delivery?: string | null;
   lead_time_days?: number;
   unit_cost?: number;
   quantity?: number;
