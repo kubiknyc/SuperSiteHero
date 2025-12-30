@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './select';
-import { Input } from './Input';
+import { Input } from './input';
 import { Badge } from './badge';
 import {
   type CurrencyCode,
@@ -125,7 +125,7 @@ export function CurrencySelector({
                 type="text"
                 placeholder="Search currencies..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                 className="pl-8 h-8"
               />
             </div>

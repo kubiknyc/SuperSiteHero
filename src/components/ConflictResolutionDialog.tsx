@@ -99,7 +99,7 @@ export function ConflictResolutionDialog({
         }
       }
 
-      resolveConflict(conflict.id, resolvedData)
+      resolveConflict(conflict.id, selectedResolution, resolvedData)
       onOpenChange(false)
     } catch (_error) {
       logger.error('[ConflictResolution] Failed to resolve conflict:', _error)

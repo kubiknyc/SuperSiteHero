@@ -174,7 +174,7 @@ export function EnhancedConflictResolutionDialog({
       );
 
       // Resolve conflict in store
-      await resolveConflict(conflict.id, strategy, resolvedData);
+      await resolveConflict(conflict.id, strategy === 'keep-local' ? 'local' : strategy === 'keep-server' ? 'server' : 'merge', resolvedData);
       onOpenChange(false);
 
       logger.log('[ConflictResolution] Conflict resolved:', {

@@ -22,7 +22,7 @@ interface ConnectionStatusProps {
 
 const statusConfig: Record<
   ConnectionState,
-  { color: string; label: string; icon: React.ElementType }
+  { color: string; label: string; icon: React.ComponentType<{ className?: string }> }
 > = {
   connected: {
     color: 'text-success',

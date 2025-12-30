@@ -148,7 +148,7 @@ export {
 export type { SwipeableListItemProps, SwipeAction } from './swipeable-list-item'
 
 export { PullToRefresh, RefreshableList } from './pull-to-refresh'
-export type { PullToRefreshProps, RefreshableListProps, PullToRefreshState } from './pull-to-refresh'
+export type { PullToRefreshProps, RefreshableListProps } from './pull-to-refresh'
 
 // Theme components
 export {

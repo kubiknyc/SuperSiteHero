@@ -85,7 +85,7 @@ async function fetchProjectUsers(projectId: string): Promise<ProjectUser[]> {
 
   return (data || [])
     .map((pu: ProjectUserRow) => pu.user)
-    .filter((u: ProjectUser | null) => u !== null) as ProjectUser[]
+    .filter((u): u is ProjectUser => u !== null)
 }
 
 // Fetch project subcontractors
