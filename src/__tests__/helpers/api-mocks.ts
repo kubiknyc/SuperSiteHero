@@ -4,8 +4,7 @@
  */
 
 import { http, HttpResponse, type DefaultBodyType, type HttpHandler, type StrictRequest } from 'msw';
-import { setupServer } from 'msw/node';
-import type { SetupServerApi } from 'msw/node';
+import { setupServer, type SetupServerApi } from 'msw/node';
 
 // Import factories
 import {
@@ -63,7 +62,7 @@ const AUTH_URL = `${SUPABASE_URL}/auth/v1`;
 /**
  * Create a successful API response
  */
-export function successResponse<T>(data: T, options: HandlerOptions = {}): HttpResponse {
+export function successResponse<T>(data: T, options: HandlerOptions = {}) {
   const { status = 200 } = options;
   return HttpResponse.json(data, { status });
 }
@@ -71,7 +70,7 @@ export function successResponse<T>(data: T, options: HandlerOptions = {}): HttpR
 /**
  * Create a successful array response (Supabase format)
  */
-export function arrayResponse<T>(data: T[], options: HandlerOptions = {}): HttpResponse {
+export function arrayResponse<T>(data: T[], options: HandlerOptions = {}) {
   const { status = 200 } = options;
   return HttpResponse.json(data, {
     status,
@@ -89,11 +88,14 @@ export function paginatedResponse<T>(
   page: number = 1,
   pageSize: number = 10,
   total?: number
-): HttpResponse {
+) {
   const totalCount = total ?? data.length;
   const totalPages = Math.ceil(totalCount / pageSize);
   const start = (page - 1) * pageSize;
   const end = Math.min(start + pageSize, totalCount);
+
+  // Unused but kept for potential future use
+  void totalPages;
 
   return HttpResponse.json(data, {
     status: 200,

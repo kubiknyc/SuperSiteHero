@@ -13,9 +13,28 @@ import type { WorkflowItem, WorkflowType, SubmittalProcurement } from '@/types/d
 export type SubmittalStatus = 'draft' | 'submitted' | 'under_review' | 'approved' | 'rejected' | 'resubmit_required';
 export type ProcurementStatus = 'pending' | 'ordered' | 'in_transit' | 'delivered' | 'installed';
 
-export interface MockWorkflowItem extends Omit<WorkflowItem, 'metadata' | 'custom_fields'> {
+export interface MockWorkflowItem {
+  id: string;
+  project_id: string;
+  workflow_type_id: string;
+  number: number;
+  title: string;
+  description?: string;
+  status: string;
+  priority?: string;
+  assignees?: string[];
+  spec_section?: string;
+  submittal_type?: string;
+  required_date?: string;
+  submitted_date?: string | null;
+  approved_date?: string | null;
+  created_by?: string;
+  company_id?: string;
   metadata?: Record<string, any> | null;
   custom_fields?: Record<string, any> | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string | null;
 }
 
 export interface MockWorkflowType {
@@ -34,8 +53,28 @@ export interface MockWorkflowType {
   deleted_at: string | null;
 }
 
-export interface MockSubmittalProcurement extends Omit<SubmittalProcurement, 'metadata'> {
+export interface MockSubmittalProcurement {
+  id: string;
+  workflow_item_id: string;
+  vendor_name?: string;
+  vendor_contact?: string;
+  vendor_phone?: string;
+  vendor_address?: string;
+  procurement_status: string;
+  order_number?: string;
+  order_date?: string;
+  expected_delivery?: string;
+  actual_delivery?: string | null;
+  lead_time_days?: number;
+  unit_cost?: number;
+  quantity?: number;
+  total_cost?: number;
+  tracking_number?: string | null;
+  notes?: string;
   metadata?: Record<string, any> | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string | null;
 }
 
 export interface WorkflowItemFactoryOptions {
