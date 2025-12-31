@@ -24,117 +24,67 @@ import {
   ArrowDownRight,
   Briefcase,
   Activity,
+  Loader2,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
+import { Skeleton } from '@/components/ui/skeleton'
+import { useExecutiveDashboard } from '../hooks/useExecutiveDashboard'
 
 interface ExecutiveDashboardProps {
   companyId?: string
 }
 
-export function ExecutiveDashboard({ companyId: _companyId }: ExecutiveDashboardProps) {
-  // Mock data - replace with actual queries
-  const portfolioMetrics = {
-    totalProjects: 8,
-    activeProjects: 5,
-    totalContractValue: 87500000,
-    revenueToDate: 52300000,
-    profitMargin: 8.2,
-    projectedRevenue: 89200000,
-    backlog: 35200000,
+export function ExecutiveDashboard({ companyId }: ExecutiveDashboardProps) {
+  // Fetch real data from the dashboard hook
+  const { data, isLoading, error } = useExecutiveDashboard(companyId)
+
+  // Use real data or fallback defaults
+  const portfolioMetrics = data?.portfolioMetrics || {
+    totalProjects: 0,
+    activeProjects: 0,
+    totalContractValue: 0,
+    revenueToDate: 0,
+    profitMargin: 0,
+    projectedRevenue: 0,
+    backlog: 0,
   }
 
-  const projectsSummary = [
-    {
-      id: '1',
-      name: 'Downtown Office Tower',
-      status: 'active',
-      contractValue: 24500000,
-      percentComplete: 62,
-      margin: 9.1,
-      risk: 'medium',
-      scheduleStatus: 'on-track',
-    },
-    {
-      id: '2',
-      name: 'Riverside Apartments',
-      status: 'active',
-      contractValue: 18200000,
-      percentComplete: 45,
-      margin: 7.8,
-      risk: 'low',
-      scheduleStatus: 'ahead',
-    },
-    {
-      id: '3',
-      name: 'Medical Center Expansion',
-      status: 'active',
-      contractValue: 32000000,
-      percentComplete: 28,
-      margin: 8.5,
-      risk: 'high',
-      scheduleStatus: 'behind',
-    },
-    {
-      id: '4',
-      name: 'Retail Plaza Phase 2',
-      status: 'active',
-      contractValue: 8500000,
-      percentComplete: 85,
-      margin: 10.2,
-      risk: 'low',
-      scheduleStatus: 'on-track',
-    },
-    {
-      id: '5',
-      name: 'Industrial Warehouse',
-      status: 'active',
-      contractValue: 4300000,
-      percentComplete: 72,
-      margin: 6.9,
-      risk: 'medium',
-      scheduleStatus: 'on-track',
-    },
-  ]
+  const projectsSummary = data?.projectsSummary || []
 
-  const financialTrends = {
-    revenueGrowth: 12.5,
-    profitGrowth: 8.3,
-    cashOnHand: 4250000,
+  const financialTrends = data?.financialTrends || {
+    revenueGrowth: 0,
+    profitGrowth: 0,
+    cashOnHand: 0,
     arAging: {
-      current: 2800000,
-      over30: 450000,
-      over60: 125000,
-      over90: 45000,
+      current: 0,
+      over30: 0,
+      over60: 0,
+      over90: 0,
     },
-    unbilledRevenue: 1850000,
+    unbilledRevenue: 0,
   }
 
-  const safetyMetrics = {
-    emr: 0.85,
-    trir: 1.2,
-    totalIncidents: 3,
-    nearMisses: 12,
-    daysWithoutLostTime: 342,
-    safetyScore: 94,
+  const safetyMetrics = data?.safetyMetrics || {
+    emr: 0,
+    trir: 0,
+    totalIncidents: 0,
+    nearMisses: 0,
+    daysWithoutLostTime: 0,
+    safetyScore: 0,
   }
 
-  const resourceUtilization = {
-    totalEmployees: 156,
-    fieldWorkers: 124,
-    pmUtilization: 87,
-    equipmentUtilization: 72,
-    subcontractorSpend: 45200000,
+  const resourceUtilization = data?.resourceUtilization || {
+    totalEmployees: 0,
+    fieldWorkers: 0,
+    pmUtilization: 0,
+    equipmentUtilization: 0,
+    subcontractorSpend: 0,
   }
 
-  const kpis = [
-    { name: 'On-Time Delivery', value: 88, target: 90, trend: 'up' },
-    { name: 'Budget Performance', value: 94, target: 95, trend: 'stable' },
-    { name: 'Client Satisfaction', value: 92, target: 90, trend: 'up' },
-    { name: 'Safety Score', value: 94, target: 95, trend: 'up' },
-  ]
+  const kpis = data?.kpis || []
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -151,6 +101,40 @@ export function ExecutiveDashboard({ companyId: _companyId }: ExecutiveDashboard
       currency: 'USD',
       maximumFractionDigits: 0,
     }).format(value)
+  }
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold flex items-center gap-2 heading-section">
+              <Building2 className="h-6 w-6 text-indigo-600" />
+              Executive Dashboard
+            </h2>
+            <p className="text-muted-foreground">{format(new Date(), 'EEEE, MMMM d, yyyy')}</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map(i => (
+            <Card key={i}>
+              <CardContent className="p-4">
+                <Skeleton className="h-4 w-24 mb-2" />
+                <Skeleton className="h-8 w-32 mb-2" />
+                <Skeleton className="h-3 w-20" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <Card>
+          <CardContent className="py-12 text-center">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
+            <p className="text-muted-foreground mt-2">Loading dashboard data...</p>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   return (

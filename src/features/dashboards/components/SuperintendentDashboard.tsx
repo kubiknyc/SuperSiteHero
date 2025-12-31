@@ -29,12 +29,15 @@ import {
   Sun,
   CloudRain,
   ChevronRight,
+  Loader2,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
+import { Skeleton } from '@/components/ui/skeleton'
 import type { Project } from '@/types/database'
+import { useSuperintendentDashboard } from '../hooks/useSuperintendentDashboard'
 
 interface SuperintendentDashboardProps {
   project?: Project | null
@@ -42,73 +45,88 @@ interface SuperintendentDashboardProps {
 }
 
 export function SuperintendentDashboard({ project: _project, projectId }: SuperintendentDashboardProps) {
-  // Mock data - replace with actual queries
-  const [baseTime] = React.useState(() => Date.now())
-  const dailyReportStatus = {
+  // Fetch real data from the dashboard hook
+  const { data, isLoading } = useSuperintendentDashboard(projectId)
+
+  // Use real data or fallback defaults
+  const dailyReportStatus = data?.dailyReportStatus || {
     submitted: false,
-    lastSubmitted: new Date(baseTime - 86400000),
+    lastSubmitted: null,
   }
 
-  const workforceMetrics = {
-    totalOnSite: 47,
-    byTrade: [
-      { trade: 'Electrical', count: 12, subcontractor: 'ABC Electric' },
-      { trade: 'Plumbing', count: 8, subcontractor: 'Premier Plumbing' },
-      { trade: 'HVAC', count: 6, subcontractor: 'Cool Air Inc' },
-      { trade: 'Drywall', count: 15, subcontractor: 'Wall Masters' },
-      { trade: 'GC Crew', count: 6, subcontractor: 'In-house' },
-    ],
-    hoursToday: 376,
-    trend: 'up' as const,
-    trendValue: 8,
+  const workforceMetrics = data?.workforceMetrics || {
+    totalOnSite: 0,
+    byTrade: [],
+    hoursToday: 0,
+    trend: 'stable' as const,
+    trendValue: 0,
   }
 
-  const safetyMetrics = {
-    daysSinceIncident: 127,
-    nearMissesThisWeek: 2,
-    toolboxTalksCompleted: 5,
-    openObservations: 3,
-    safetyScore: 94,
+  const safetyMetrics = data?.safetyMetrics || {
+    daysSinceIncident: 0,
+    nearMissesThisWeek: 0,
+    toolboxTalksCompleted: 0,
+    openObservations: 0,
+    safetyScore: 0,
   }
 
-  const punchListMetrics = {
-    open: 23,
-    inProgress: 8,
-    readyForReview: 5,
-    completedThisWeek: 12,
-    percentComplete: 67,
+  const punchListMetrics = data?.punchListMetrics || {
+    open: 0,
+    inProgress: 0,
+    readyForReview: 0,
+    completedThisWeek: 0,
+    percentComplete: 0,
   }
 
-  const weather = {
-    condition: 'Partly Cloudy',
-    temperature: 72,
-    high: 78,
-    low: 58,
-    humidity: 45,
-    windSpeed: 8,
+  const weather = data?.weather || {
+    condition: 'Unknown',
+    temperature: 0,
+    high: 0,
+    low: 0,
+    humidity: 0,
+    windSpeed: 0,
     workable: true,
   }
 
-  const equipmentOnSite = [
-    { name: 'Crane #1', status: 'active', operator: 'J. Martinez' },
-    { name: 'Forklift #2', status: 'active', operator: 'M. Davis' },
-    { name: 'Scissor Lift #3', status: 'idle', operator: null },
-    { name: 'Boom Lift #1', status: 'maintenance', operator: null },
-  ]
+  const equipmentOnSite = data?.equipmentOnSite || []
 
-  const upcomingInspections = [
-    { type: 'Electrical Rough-In', date: 'Tomorrow, 9:00 AM', status: 'scheduled' },
-    { type: 'Plumbing Underground', date: 'Wed, 10:00 AM', status: 'scheduled' },
-    { type: 'Fire Sprinkler', date: 'Friday, 2:00 PM', status: 'pending' },
-  ]
+  const upcomingInspections = data?.upcomingInspections || []
 
-  const todaysChecklist = [
-    { task: 'Morning safety briefing', completed: true },
-    { task: 'Check weather forecast', completed: true },
-    { task: 'Review subcontractor schedules', completed: true },
-    { task: 'Inspect active work areas', completed: false },
-    { task: 'Submit daily report', completed: false },
-  ]
+  const todaysChecklist = data?.todaysChecklist || []
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold flex items-center gap-2 heading-section">
+              <HardHat className="h-6 w-6 text-warning" />
+              Field Operations Dashboard
+            </h2>
+            <p className="text-muted-foreground">{format(new Date(), 'EEEE, MMMM d, yyyy')}</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map(i => (
+            <Card key={i}>
+              <CardContent className="p-4">
+                <Skeleton className="h-4 w-24 mb-2" />
+                <Skeleton className="h-8 w-20 mb-2" />
+                <Skeleton className="h-3 w-28" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <Card>
+          <CardContent className="py-12 text-center">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
+            <p className="text-muted-foreground mt-2">Loading field data...</p>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -140,7 +158,9 @@ export function SuperintendentDashboard({ project: _project, projectId }: Superi
               <div className="flex-1">
                 <p className="font-medium text-amber-800">Daily Report Not Submitted</p>
                 <p className="text-sm text-amber-700">
-                  Last report: {format(dailyReportStatus.lastSubmitted, 'MMM d, yyyy')}
+                  Last report: {dailyReportStatus.lastSubmitted
+                    ? format(new Date(dailyReportStatus.lastSubmitted), 'MMM d, yyyy')
+                    : 'None'}
                 </p>
               </div>
               <Link to={projectId ? `/projects/${projectId}/daily-reports/new` : '/daily-reports/new'}>

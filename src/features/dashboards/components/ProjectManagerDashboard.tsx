@@ -28,12 +28,15 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   CircleDot,
+  Loader2,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
+import { Skeleton } from '@/components/ui/skeleton'
 import type { Project } from '@/types/database'
+import { useProjectManagerDashboard } from '../hooks/useProjectManagerDashboard'
 
 interface ProjectManagerDashboardProps {
   project?: Project | null
@@ -41,75 +44,63 @@ interface ProjectManagerDashboardProps {
 }
 
 export function ProjectManagerDashboard({ project: _project, projectId }: ProjectManagerDashboardProps) {
-  // Mock data - replace with actual queries
-  const budgetMetrics = {
-    contractValue: 12500000,
-    costToDate: 7850000,
-    percentComplete: 62.8,
-    projectedFinal: 12750000,
-    variance: 250000,
-    variancePercent: 2.0,
-    committedCosts: 11200000,
-    pendingChanges: 350000,
+  // Fetch real data from the dashboard hook
+  const { data, isLoading } = useProjectManagerDashboard(projectId)
+
+  // Use real data or fallback defaults
+  const budgetMetrics = data?.budgetMetrics || {
+    contractValue: 0,
+    costToDate: 0,
+    percentComplete: 0,
+    projectedFinal: 0,
+    variance: 0,
+    variancePercent: 0,
+    committedCosts: 0,
+    pendingChanges: 0,
   }
 
-  const scheduleMetrics = {
-    percentComplete: 58,
-    daysRemaining: 142,
-    baselineEndDate: new Date('2025-08-15'),
-    projectedEndDate: new Date('2025-08-22'),
-    varianceDays: 7,
-    milestonesDue: 3,
-    milestonesOverdue: 1,
+  const scheduleMetrics = data?.scheduleMetrics || {
+    percentComplete: 0,
+    daysRemaining: 0,
+    baselineEndDate: new Date(),
+    projectedEndDate: new Date(),
+    varianceDays: 0,
+    milestonesDue: 0,
+    milestonesOverdue: 0,
   }
 
-  const rfiMetrics = {
-    total: 45,
-    open: 8,
-    overdue: 2,
-    avgResponseDays: 4.2,
-    submittedThisWeek: 3,
-    closedThisWeek: 5,
+  const rfiMetrics = data?.rfiMetrics || {
+    total: 0,
+    open: 0,
+    overdue: 0,
+    avgResponseDays: 0,
+    submittedThisWeek: 0,
+    closedThisWeek: 0,
   }
 
-  const submittalMetrics = {
-    total: 128,
-    pending: 15,
-    underReview: 8,
-    overdue: 3,
-    approved: 89,
-    approvedWithComments: 13,
+  const submittalMetrics = data?.submittalMetrics || {
+    total: 0,
+    pending: 0,
+    underReview: 0,
+    overdue: 0,
+    approved: 0,
+    approvedWithComments: 0,
   }
 
-  const changeOrderMetrics = {
-    pendingCount: 4,
-    pendingValue: 185000,
-    approvedCount: 12,
-    approvedValue: 450000,
-    rejectedCount: 2,
-    netChange: 450000,
+  const changeOrderMetrics = data?.changeOrderMetrics || {
+    pendingCount: 0,
+    pendingValue: 0,
+    approvedCount: 0,
+    approvedValue: 0,
+    rejectedCount: 0,
+    netChange: 0,
   }
 
-  const actionItems = [
-    { title: 'Review updated HVAC specs', assignee: 'Sarah J.', dueDate: 'Today', priority: 'high' },
-    { title: 'Approve CO #007 - Structural', assignee: 'You', dueDate: 'Tomorrow', priority: 'high' },
-    { title: 'Schedule owner walkthrough', assignee: 'Mike D.', dueDate: 'This week', priority: 'medium' },
-    { title: 'Review pay app #8 backup', assignee: 'You', dueDate: 'Next week', priority: 'medium' },
-  ]
+  const actionItems = data?.actionItems || []
 
-  const teamWorkload = [
-    { name: 'Sarah Johnson', role: 'Asst. PM', tasks: 12, overdue: 1 },
-    { name: 'Mike Davis', role: 'Superintendent', tasks: 8, overdue: 0 },
-    { name: 'John Smith', role: 'Engineer', tasks: 15, overdue: 2 },
-    { name: 'Emily Chen', role: 'Coordinator', tasks: 6, overdue: 0 },
-  ]
+  const teamWorkload = data?.teamWorkload || []
 
-  const riskIndicators = [
-    { area: 'Budget', level: 'medium', trend: 'stable', message: '2% over budget projection' },
-    { area: 'Schedule', level: 'high', trend: 'down', message: '7 days behind baseline' },
-    { area: 'Safety', level: 'low', trend: 'up', message: '127 days without incident' },
-    { area: 'Quality', level: 'low', trend: 'stable', message: 'All inspections passing' },
-  ]
+  const riskIndicators = data?.riskIndicators || []
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -118,6 +109,41 @@ export function ProjectManagerDashboard({ project: _project, projectId }: Projec
       notation: value >= 1000000 ? 'compact' : 'standard',
       maximumFractionDigits: value >= 1000000 ? 1 : 0,
     }).format(value)
+  }
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold flex items-center gap-2 heading-section">
+              <Briefcase className="h-6 w-6 text-primary" />
+              Project Manager Dashboard
+            </h2>
+            <p className="text-muted-foreground">{format(new Date(), 'EEEE, MMMM d, yyyy')}</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map(i => (
+            <Card key={i}>
+              <CardContent className="p-4">
+                <Skeleton className="h-4 w-24 mb-2" />
+                <Skeleton className="h-8 w-32 mb-2" />
+                <Skeleton className="h-2 w-full mb-2" />
+                <Skeleton className="h-3 w-20" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        <Card>
+          <CardContent className="py-12 text-center">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto text-muted-foreground" />
+            <p className="text-muted-foreground mt-2">Loading project data...</p>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   return (
