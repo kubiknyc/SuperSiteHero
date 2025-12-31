@@ -29,8 +29,10 @@ interface GanttTaskBarProps {
   showProgress: boolean
   showCriticalPath: boolean
   showBaseline: boolean
+  isSelected?: boolean
   config: GanttConfig
   onClick?: (task: ScheduleItem) => void
+  onDoubleClick?: (task: ScheduleItem) => void
   onHover?: (task: ScheduleItem | null) => void
   onDragStart?: (task: ScheduleItem, mode: DragMode) => void
   onDragMove?: (task: ScheduleItem, result: DragResult) => void
@@ -56,8 +58,10 @@ export function GanttTaskBar({
   showProgress,
   showCriticalPath,
   showBaseline,
+  isSelected = false,
   config,
   onClick,
+  onDoubleClick,
   onHover,
   onDragStart,
   onDragMove,
@@ -271,11 +275,14 @@ export function GanttTaskBar({
   if (task.is_milestone) {
     return (
       <g
-        className="cursor-pointer transition-opacity hover:opacity-80"
+        className={`cursor-pointer transition-opacity hover:opacity-80 ${isSelected ? 'opacity-100' : ''}`}
         onClick={() => onClick?.(task)}
+        onDoubleClick={() => onDoubleClick?.(task)}
         onMouseEnter={() => onHover?.(task)}
         onMouseLeave={() => onHover?.(null)}
         data-testid={`milestone-${task.id}`}
+        data-state={isSelected ? 'selected' : undefined}
+        aria-selected={isSelected}
       >
         <title>{tooltipContent}</title>
         {/* Baseline milestone (smaller, behind) */}
@@ -321,11 +328,14 @@ export function GanttTaskBar({
 
   return (
     <g
-      className="transition-opacity"
+      className={`transition-opacity ${isSelected ? 'opacity-100' : ''}`}
       onClick={() => !isDragging && onClick?.(task)}
+      onDoubleClick={() => !isDragging && onDoubleClick?.(task)}
       onMouseEnter={() => onHover?.(task)}
       onMouseLeave={() => onHover?.(null)}
       data-testid={`task-bar-${task.id}`}
+      data-state={isSelected ? 'selected' : undefined}
+      aria-selected={isSelected}
     >
       <title>{tooltipContent}</title>
 
@@ -372,10 +382,10 @@ export function GanttTaskBar({
         rx={4}
         ry={4}
         fill={isDragging ? 'transparent' : barColor}
-        stroke={isCritical ? CRITICAL_PATH_COLOR : isDragging ? barColor : 'transparent'}
-        strokeWidth={isCritical ? 2 : isDragging ? 2 : 0}
+        stroke={isSelected ? '#3b82f6' : isCritical ? CRITICAL_PATH_COLOR : isDragging ? barColor : 'transparent'}
+        strokeWidth={isSelected ? 3 : isCritical ? 2 : isDragging ? 2 : 0}
         strokeDasharray={isDragging ? '4 2' : 'none'}
-        className="transition-all"
+        className={`transition-all ${isSelected ? 'selected' : ''}`}
         style={{ cursor: isDragging ? getActiveDragCursor(dragMode) : hoverCursor }}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMoveOnBar}

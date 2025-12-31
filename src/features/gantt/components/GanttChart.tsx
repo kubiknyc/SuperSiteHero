@@ -79,6 +79,10 @@ export function GanttChart({
 
   // Sidebar collapse state for tablets
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+  const [sidebarWidth, setSidebarWidth] = useState(customConfig?.sidebar_width || DEFAULT_GANTT_CONFIG.sidebar_width)
+  const [isResizing, setIsResizing] = useState(false)
+  const resizeStartX = useRef(0)
+  const resizeStartWidth = useRef(0)
 
   // Auto-collapse sidebar on tablet portrait
   useEffect(() => {
@@ -94,11 +98,11 @@ export function GanttChart({
   // Calculate responsive sidebar width based on device
   const responsiveSidebarWidth = useMemo(() => {
     if (isSidebarCollapsed) {return 0}
-    if (layout === 'mobile') {return 200}
-    if (layout === 'tablet-portrait') {return 220}
-    if (layout === 'tablet-landscape') {return 280}
-    return customConfig?.sidebar_width || DEFAULT_GANTT_CONFIG.sidebar_width
-  }, [layout, isSidebarCollapsed, customConfig?.sidebar_width])
+    if (layout === 'mobile') {return Math.min(sidebarWidth, 200)}
+    if (layout === 'tablet-portrait') {return Math.min(sidebarWidth, 220)}
+    if (layout === 'tablet-landscape') {return Math.min(sidebarWidth, 280)}
+    return sidebarWidth
+  }, [layout, isSidebarCollapsed, sidebarWidth])
 
   // Merge custom config with defaults, applying tablet optimizations
   const config = useMemo(
@@ -123,10 +127,12 @@ export function GanttChart({
   const [zoomLevel, setZoomLevel] = useState<GanttZoomLevel>(customConfig?.zoom_level || 'week')
   const [scrollX, setScrollX] = useState(0)
   const [hoveredTask, setHoveredTask] = useState<ScheduleItem | null>(null)
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
   const [showCriticalPath, setShowCriticalPath] = useState(config.show_critical_path)
   const [showDependencies, setShowDependencies] = useState(config.show_dependencies)
   const [showMilestones, setShowMilestones] = useState(config.show_milestones)
   const [showBaseline, setShowBaseline] = useState(config.show_baseline)
+  const [showWeekends, setShowWeekends] = useState(true)
   const [isDragging, setIsDragging] = useState(false)
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null)
 
@@ -385,6 +391,49 @@ export function GanttChart({
     setIsSidebarCollapsed(prev => !prev)
   }, [])
 
+  // Handle task selection
+  const handleTaskSelect = useCallback((task: ScheduleItem) => {
+    setSelectedTaskId(task.id)
+    onTaskClick?.(task)
+  }, [onTaskClick])
+
+  // Handle task double-click to open detail dialog
+  const handleTaskDoubleClick = useCallback((task: ScheduleItem) => {
+    setSelectedTaskId(task.id)
+    onTaskClick?.(task)
+  }, [onTaskClick])
+
+  // Handle sidebar resize
+  const handleResizeStart = useCallback((e: React.MouseEvent) => {
+    e.preventDefault()
+    setIsResizing(true)
+    resizeStartX.current = e.clientX
+    resizeStartWidth.current = sidebarWidth
+  }, [sidebarWidth])
+
+  const handleResizeMove = useCallback((e: MouseEvent) => {
+    if (!isResizing) return
+    const diff = e.clientX - resizeStartX.current
+    const newWidth = Math.max(150, Math.min(500, resizeStartWidth.current + diff))
+    setSidebarWidth(newWidth)
+  }, [isResizing])
+
+  const handleResizeEnd = useCallback(() => {
+    setIsResizing(false)
+  }, [])
+
+  // Add global mouse listeners for resize
+  useEffect(() => {
+    if (isResizing) {
+      document.addEventListener('mousemove', handleResizeMove)
+      document.addEventListener('mouseup', handleResizeEnd)
+      return () => {
+        document.removeEventListener('mousemove', handleResizeMove)
+        document.removeEventListener('mouseup', handleResizeEnd)
+      }
+    }
+  }, [isResizing, handleResizeMove, handleResizeEnd])
+
   return (
     <div
       className={cn(
@@ -410,6 +459,8 @@ export function GanttChart({
         onToggleMilestones={() => setShowMilestones(!showMilestones)}
         showBaseline={showBaseline}
         onToggleBaseline={() => setShowBaseline(!showBaseline)}
+        showWeekends={showWeekends}
+        onToggleWeekends={() => setShowWeekends(!showWeekends)}
         hasBaseline={hasBaseline}
         onSaveBaseline={onSaveBaseline}
         onClearBaseline={onClearBaseline}
@@ -504,6 +555,7 @@ export function GanttChart({
             )}
             {visibleItems.map((task) => {
               const floatInfo = getFloatInfo(task.id)
+              const isSelected = selectedTaskId === task.id
               return (
                 <div
                   key={task.id}
@@ -512,13 +564,17 @@ export function GanttChart({
                     "hover:bg-muted transition-colors",
                     hoveredTask?.id === task.id && "bg-blue-50",
                     draggedTaskId === task.id && "bg-warning-light",
+                    isSelected && "bg-primary/10 ring-2 ring-primary ring-inset",
                     // Larger padding on touch devices
                     isTouchDevice && "px-3"
                   )}
                   style={{ height: config.row_height }}
-                  onClick={() => onTaskClick?.(task)}
+                  onClick={() => handleTaskSelect(task)}
+                  onDoubleClick={() => handleTaskDoubleClick(task)}
                   onMouseEnter={() => setHoveredTask(task)}
                   onMouseLeave={() => setHoveredTask(null)}
+                  data-state={isSelected ? 'selected' : undefined}
+                  aria-selected={isSelected}
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
@@ -579,6 +635,19 @@ export function GanttChart({
             )}
           </div>
 
+          {/* Resize handle */}
+          {!isSidebarCollapsed && (
+            <div
+              className={cn(
+                "flex-shrink-0 w-1 cursor-col-resize bg-border hover:bg-primary transition-colors",
+                isResizing && "bg-primary"
+              )}
+              onMouseDown={handleResizeStart}
+              data-testid="resize-handle"
+              title="Drag to resize sidebar"
+            />
+          )}
+
           {/* Chart area */}
           <div
             className="flex-1 relative"
@@ -635,8 +704,10 @@ export function GanttChart({
                     showProgress={config.show_progress}
                     showCriticalPath={showCriticalPath}
                     showBaseline={showBaseline}
+                    isSelected={selectedTaskId === task.id}
                     config={config}
-                    onClick={onTaskClick}
+                    onClick={handleTaskSelect}
+                    onDoubleClick={handleTaskDoubleClick}
                     onHover={setHoveredTask}
                     onDragStart={handleDragStart}
                     onDragMove={handleDragMove}

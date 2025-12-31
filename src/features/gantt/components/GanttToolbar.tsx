@@ -11,9 +11,17 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
   ZoomIn,
   ZoomOut,
   Calendar,
+  CalendarOff,
   RefreshCw,
   ChevronLeft,
   ChevronRight,
@@ -30,6 +38,11 @@ import {
 } from 'lucide-react'
 import type { GanttZoomLevel } from '@/types/schedule'
 
+interface FilterOption {
+  value: string
+  label: string
+}
+
 interface GanttToolbarProps {
   zoomLevel: GanttZoomLevel
   onZoomChange: (level: GanttZoomLevel) => void
@@ -45,11 +58,20 @@ interface GanttToolbarProps {
   onToggleMilestones: () => void
   showBaseline?: boolean
   onToggleBaseline?: () => void
+  showWeekends?: boolean
+  onToggleWeekends?: () => void
   hasBaseline?: boolean
   onSaveBaseline?: () => void
   onClearBaseline?: () => void
   onImport?: () => void
   onExport?: () => void
+  // Filter props
+  projectFilter?: string
+  onProjectFilterChange?: (value: string) => void
+  projectOptions?: FilterOption[]
+  phaseFilter?: string
+  onPhaseFilterChange?: (value: string) => void
+  phaseOptions?: FilterOption[]
   stats?: {
     total_tasks: number
     completed_tasks: number
@@ -81,11 +103,19 @@ export function GanttToolbar({
   onToggleMilestones,
   showBaseline = false,
   onToggleBaseline,
+  showWeekends = true,
+  onToggleWeekends,
   hasBaseline = false,
   onSaveBaseline,
   onClearBaseline,
   onImport,
   onExport,
+  projectFilter,
+  onProjectFilterChange,
+  projectOptions = [],
+  phaseFilter,
+  onPhaseFilterChange,
+  phaseOptions = [],
   stats,
   criticalPathInfo,
   isLoading,
@@ -218,6 +248,45 @@ export function GanttToolbar({
         >
           <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
         </Button>
+
+        {/* Filters */}
+        {onProjectFilterChange && projectOptions.length > 0 && (
+          <Select
+            value={projectFilter}
+            onValueChange={onProjectFilterChange}
+          >
+            <SelectTrigger className="w-[140px] h-8" data-testid="project-filter">
+              <SelectValue placeholder="All Projects" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Projects</SelectItem>
+              {projectOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+
+        {onPhaseFilterChange && phaseOptions.length > 0 && (
+          <Select
+            value={phaseFilter}
+            onValueChange={onPhaseFilterChange}
+          >
+            <SelectTrigger className="w-[120px] h-8" data-testid="phase-filter">
+              <SelectValue placeholder="All Phases" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Phases</SelectItem>
+              {phaseOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </div>
 
       {/* Center: Toggle buttons */}
@@ -263,6 +332,26 @@ export function GanttToolbar({
           <Milestone className="h-4 w-4 mr-1" />
           Milestones
         </Button>
+
+        {/* Weekend toggle */}
+        {onToggleWeekends && (
+          <Button
+            variant={showWeekends ? 'default' : 'outline'}
+            size="sm"
+            onClick={onToggleWeekends}
+            title={showWeekends ? 'Hide weekends' : 'Show weekends'}
+            data-testid="toggle-weekends"
+            aria-pressed={showWeekends}
+            aria-checked={showWeekends}
+          >
+            {showWeekends ? (
+              <Calendar className="h-4 w-4 mr-1" />
+            ) : (
+              <CalendarOff className="h-4 w-4 mr-1" />
+            )}
+            Weekends
+          </Button>
+        )}
 
         {/* Baseline toggle */}
         {onToggleBaseline && (
