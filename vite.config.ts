@@ -1,7 +1,7 @@
 // File: /vite.config.ts
 // Vite configuration for the Construction Management Platform
 
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 import path from 'path'
@@ -10,7 +10,12 @@ import path from 'path'
 import pkg from './package.json' with { type: 'json' }
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  // Load env file based on `mode` in the current working directory.
+  // Set the third parameter to '' to load all env regardless of the `VITE_` prefix.
+  const env = loadEnv(mode, process.cwd(), '')
+
+  return {
   // Define global constants
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
@@ -268,4 +273,5 @@ export default defineConfig({
     format: 'es', // Use ES modules for workers
     plugins: () => []
   }
+}
 })

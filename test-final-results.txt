@@ -1,0 +1,841 @@
+
+> jobsight@0.1.0 test
+> vitest --run --reporter=verbose
+
+
+ RUN  v4.0.16 c:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero
+
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Budget Variance Calculations > revised_budget calculation > should calculate revised budget as original + changes 2ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Budget Variance Calculations > revised_budget calculation > should handle zero changes 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Budget Variance Calculations > revised_budget calculation > should handle negative changes (budget reduction) 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Budget Variance Calculations > variance calculation > should calculate variance as revised - actual (positive = under budget) 1ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Budget Variance Calculations > variance calculation > should show negative variance when over budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Budget Variance Calculations > variance calculation > should show zero variance when exactly on budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Budget Variance Calculations > percent_spent calculation > should calculate percent spent correctly 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Budget Variance Calculations > percent_spent calculation > should handle 0% spent 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Budget Variance Calculations > percent_spent calculation > should handle over 100% spent 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Budget Variance Calculations > percent_spent calculation > should handle zero budget edge case 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Budget Variance Calculations > variance_percent calculation > should calculate variance percentage correctly 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Budget Variance Calculations > variance_percent calculation > should show positive percentage when under budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Budget Variance Calculations > variance_percent calculation > should handle zero budget edge case 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Budget Variance Calculations > complex budget scenarios > should correctly calculate all fields for typical budget line 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Budget Variance Calculations > complex budget scenarios > should handle budget with multiple change orders 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Threshold Logic > critical overrun detection > should detect critical overrun (>10% over budget) 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Threshold Logic > critical overrun detection > should not trigger critical for exactly 10% overrun 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Threshold Logic > warning overrun detection > should detect warning overrun (5-10% over budget) 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Threshold Logic > near budget detection > should detect when approaching budget (>90% spent) 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Threshold Logic > near budget detection > should not trigger near budget for 89% spent 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Threshold Logic > minimum variance amount threshold > should respect minimum variance amount (avoid noise) 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Threshold Logic > minimum variance amount threshold > should trigger alert when exceeds minimum amount 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Alert Severity > line-level severity classification > should classify as critical when >10% over budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Alert Severity > line-level severity classification > should classify as warning when 5-10% over budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Alert Severity > line-level severity classification > should classify as info when approaching budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Alert Severity > project-level severity classification > should classify project as critical when >5% over budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Alert Severity > project-level severity classification > should classify project as warning when 3-5% over budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Alert Types > should identify line_over_budget alert 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Alert Types > should identify line_near_budget alert 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Alert Types > should identify project_over_budget alert 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Alert Types > should identify division_over_budget alert 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Variance Calculations > Cost Variance (CV) > should calculate CV = EV - AC (positive = under budget) 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Variance Calculations > Cost Variance (CV) > should show negative CV when over budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Variance Calculations > Cost Variance (CV) > should calculate CV percentage 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Variance Calculations > Schedule Variance (SV) > should calculate SV = EV - PV (positive = ahead of schedule) 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Variance Calculations > Schedule Variance (SV) > should show negative SV when behind schedule 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Variance Calculations > Schedule Variance (SV) > should calculate SV percentage 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Variance Calculations > Variance at Completion (VAC) > should calculate VAC = BAC - EAC (positive = under budget at completion) 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Variance Calculations > Variance at Completion (VAC) > should show negative VAC when projected over budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Variance Calculations > Variance at Completion (VAC) > should calculate VAC percentage 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Variance Calculations > Estimate to Complete (ETC) > should calculate ETC = EAC - AC 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Variance Calculations > Estimate to Complete (ETC) > should handle zero ETC when project complete 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Variance Calculations > complete EVM variance scenario > should calculate all EVM variances correctly 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Performance Indices > Cost Performance Index (CPI) > should calculate CPI = EV / AC 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Performance Indices > Cost Performance Index (CPI) > should show CPI < 1 when over budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Performance Indices > Schedule Performance Index (SPI) > should calculate SPI = EV / PV 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Performance Indices > Schedule Performance Index (SPI) > should show SPI < 1 when behind schedule 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Performance Indices > Cost-Schedule Index (CSI) > should calculate CSI = CPI * SPI 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Performance Indices > Cost-Schedule Index (CSI) > should show poor performance when CSI < 1 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Performance Indices > To-Complete Performance Index (TCPI) > should calculate TCPI_BAC = (BAC - EV) / (BAC - AC) 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Performance Indices > To-Complete Performance Index (TCPI) > should calculate TCPI_EAC = (BAC - EV) / (EAC - AC) 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Performance Status > getPerformanceStatus function > should classify CPI 1.05+ as excellent 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Performance Status > getPerformanceStatus function > should classify CPI 1.0-1.04 as good 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Performance Status > getPerformanceStatus function > should classify CPI 0.95-0.99 as fair 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Performance Status > getPerformanceStatus function > should classify CPI 0.90-0.94 as poor 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Performance Status > getPerformanceStatus function > should classify CPI <0.90 as critical 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Performance Status > getPerformanceStatus function > should classify SPI using same thresholds 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > EVM Performance Status > custom threshold support > should use custom thresholds when provided 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Complete Variance Scenarios > healthy project scenario > should show all positive indicators 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Complete Variance Scenarios > critical overrun scenario > should trigger critical alerts 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Complete Variance Scenarios > approaching budget scenario > should trigger near budget alert 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Complete Variance Scenarios > multiple change orders scenario > should track variance through multiple revisions 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateRevisedBudget > should add positive changes to original 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateRevisedBudget > should subtract negative changes from original 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateRevisedBudget > should handle zero changes 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateRevisedBudget > should handle zero original 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateRevisedBudget > should handle both zeros 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateRevisedBudget > should handle large values 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateRevisedBudget > should handle decimal values 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateVariance > should return positive when under budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateVariance > should return negative when over budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateVariance > should return zero when exactly on budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateVariance > should handle zero budget with costs 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateVariance > should handle zero costs 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateVariance > should handle negative budget edge case 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculatePercentSpent > should calculate 50% spent correctly 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculatePercentSpent > should calculate 100% spent correctly 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculatePercentSpent > should calculate over 100% spent 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculatePercentSpent > should return 0 for zero budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculatePercentSpent > should return 0 for negative budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculatePercentSpent > should return 0 for zero actual cost 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculatePercentSpent > should handle small percentages 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculatePercentSpent > should handle large percentages 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateVariancePercent > should calculate positive variance percent 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateVariancePercent > should calculate negative variance percent 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateVariancePercent > should return 0 for zero budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateVariancePercent > should return 0 for negative budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateVariancePercent > should handle very small variances 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateVariancePercent > should handle very large variances 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > determineAlertSeverity > should return critical for >10% variance 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > determineAlertSeverity > should return warning for 5-10% variance 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > determineAlertSeverity > should return info for <5% variance 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > determineAlertSeverity > should handle exactly 10% (critical threshold) 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > determineAlertSeverity > should handle exactly 5% (warning threshold) 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > determineAlertSeverity > should handle zero variance 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > shouldTriggerAlert > should not trigger for small variance below minimum 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > shouldTriggerAlert > should trigger line_over_budget for significant overrun 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > shouldTriggerAlert > should trigger line_near_budget when approaching limit 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > shouldTriggerAlert > should not trigger for healthy budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > shouldTriggerAlert > should prioritize over_budget over near_budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > generateVarianceAlert > should generate alert for over budget scenario 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > generateVarianceAlert > should generate alert for near budget scenario 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > generateVarianceAlert > should return null for healthy budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > generateVarianceAlert > should return null for small variance below minimum 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > generateVarianceAlert > should handle zero budget gracefully 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateVarianceTrend > should return stable for single data point 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateVarianceTrend > should return stable for empty data 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateVarianceTrend > should return improving for increasing variance 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateVarianceTrend > should return declining for decreasing variance 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateVarianceTrend > should return stable for flat variance 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > calculateVarianceTrend > should use only last 5 data points 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > aggregateDivisionVariance > should aggregate single division correctly 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > aggregateDivisionVariance > should aggregate multiple divisions correctly 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > aggregateDivisionVariance > should handle empty budget array 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Helper Functions > aggregateDivisionVariance > should handle division with zero budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Commitment Variance > committed vs actual variance > should calculate under-committed scenario 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Commitment Variance > committed vs actual variance > should calculate over-committed scenario 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Commitment Variance > committed vs actual variance > should calculate exposure (uncommitted budget) 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Commitment Variance > committed vs actual variance > should identify over-commitment 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Commitment Variance > forecast vs budget variance > should calculate positive forecast variance (under forecast) 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Commitment Variance > forecast vs budget variance > should calculate negative forecast variance (over forecast) 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Commitment Variance > forecast vs budget variance > should calculate forecast variance percent 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Project-Level Variance > total project variance calculation > should sum all line item variances 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Project-Level Variance > total project variance calculation > should calculate weighted variance percent 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Project-Level Variance > project variance thresholds > should classify project as critical when >5% over 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Project-Level Variance > project variance thresholds > should classify project as warning when 3-5% over 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Project-Level Variance > project variance thresholds > should classify project as info when <3% variance 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Project-Level Variance > contingency consumption > should calculate contingency usage percent 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Project-Level Variance > contingency consumption > should alert when contingency exceeds threshold 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Project-Level Variance > contingency consumption > should calculate remaining contingency 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Alert Summary > alert aggregation > should count alerts by severity 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Alert Summary > alert aggregation > should calculate total overrun amount 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Alert Summary > alert aggregation > should count lines over budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Variance Alert Summary > alert aggregation > should generate complete summary 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Edge Cases and Error Handling > precision handling > should handle floating point precision for percent calculations 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Edge Cases and Error Handling > precision handling > should handle very small decimal variances 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Edge Cases and Error Handling > precision handling > should round currency appropriately 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Edge Cases and Error Handling > negative value handling > should handle negative original budget (credit) 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Edge Cases and Error Handling > negative value handling > should handle negative actual costs (refunds) 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Edge Cases and Error Handling > negative value handling > should calculate variance percent with negative budget 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Edge Cases and Error Handling > boundary conditions > should handle exactly at warning threshold 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Edge Cases and Error Handling > boundary conditions > should handle exactly at critical threshold 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Edge Cases and Error Handling > boundary conditions > should handle exactly at minimum variance amount 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Edge Cases and Error Handling > boundary conditions > should handle 100% percent spent 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Edge Cases and Error Handling > boundary conditions > should handle 0% percent spent 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Edge Cases and Error Handling > large number handling > should handle multi-million dollar budgets 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Edge Cases and Error Handling > large number handling > should handle very small percentages on large budgets 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Edge Cases and Error Handling > null and undefined handling > should default null values to zero in calculations 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Edge Cases and Error Handling > null and undefined handling > should handle undefined in variance calculation 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Real-World Construction Budget Scenarios > Commercial Office Building - Full Budget Analysis > should calculate total project variance 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Real-World Construction Budget Scenarios > Commercial Office Building - Full Budget Analysis > should identify divisions over budget 2ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Real-World Construction Budget Scenarios > Commercial Office Building - Full Budget Analysis > should calculate worst performing division 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Real-World Construction Budget Scenarios > Commercial Office Building - Full Budget Analysis > should calculate best performing division 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Real-World Construction Budget Scenarios > Residential Development - Multi-Unit Analysis > should calculate per-unit variance 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Real-World Construction Budget Scenarios > Residential Development - Multi-Unit Analysis > should calculate average variance per unit 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Real-World Construction Budget Scenarios > Residential Development - Multi-Unit Analysis > should identify units requiring attention 1ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Real-World Construction Budget Scenarios > Infrastructure Project - Phased Variance > should calculate variance for completed phases only 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Real-World Construction Budget Scenarios > Infrastructure Project - Phased Variance > should calculate percent complete by cost 0ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts > Real-World Construction Budget Scenarios > Infrastructure Project - Phased Variance > should project final cost based on current performance 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > getEquipment > should get all equipment for a company 7ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > getEquipment > should filter by equipment_type (single) 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > getEquipment > should filter by equipment_type (multiple) 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > getEquipment > should filter by category 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > getEquipment > should filter by status 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > getEquipment > should filter by ownership_type 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > getEquipment > should filter by current_project_id 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > getEquipment > should search equipment by multiple fields 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > getEquipment > should handle database errors 3ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > getEquipment > should return empty array when no data 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > getEquipmentById > should get equipment with all details 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > getEquipmentById > should handle not found error 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > createEquipment > should create equipment with required fields 2ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > createEquipment > should create equipment with all optional fields 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > createEquipment > should handle user company not found 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > createEquipment > should handle creation errors 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > updateEquipment > should update equipment fields 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > updateEquipmentStatus > should update equipment status 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > deleteEquipment > should soft delete equipment 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > deleteEquipment > should handle deletion errors 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > getEquipmentStatistics > should calculate comprehensive statistics 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > getEquipmentStatistics > should calculate utilization rate 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > getEquipmentStatistics > should return default stats when no equipment 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentApi > getAvailableEquipment > should get only available equipment 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentAssignmentsApi > getAssignments > should get assignments for equipment 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentAssignmentsApi > getProjectEquipment > should get active equipment for project 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentAssignmentsApi > assignEquipment > should assign equipment to project 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentAssignmentsApi > assignEquipment > should assign with optional fields 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentAssignmentsApi > updateAssignment > should update assignment 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentAssignmentsApi > returnEquipment > should complete assignment and update equipment status 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentAssignmentsApi > returnEquipment > should use current date if not provided 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentLogsApi > getLogs > should get logs with filters 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentLogsApi > getLogs > should filter by date range 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentLogsApi > createLog > should create log entry 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentLogsApi > getTotalHours > should calculate total hours for date range 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentLogsApi > getTotalHours > should return 0 when no logs 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentLogsApi > postCostToTransaction > should post equipment cost via RPC 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentLogsApi > batchPostCosts > should batch post costs and return results 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentMaintenanceApi > getMaintenance > should get maintenance records with filters 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentMaintenanceApi > scheduleMaintenance > should schedule maintenance 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentMaintenanceApi > completeMaintenance > should complete maintenance with details 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentMaintenanceApi > completeMaintenance > should use current date if not provided 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentMaintenanceApi > cancelMaintenance > should cancel maintenance 0ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentMaintenanceApi > getUpcomingMaintenance > should get maintenance scheduled in next 30 days 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentInspectionsApi > getInspections > should get inspections for equipment 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentInspectionsApi > createInspection > should create inspection 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentInspectionsApi > getLatestInspection > should get most recent inspection 1ms
+ ✓ src/lib/api/services/equipment.test.ts > equipmentInspectionsApi > getLatestInspection > should return null when no inspections exist 0ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > getMeetings > should get all meetings with default filters 7ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > getMeetings > should filter meetings by project_id 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > getMeetings > should filter meetings by meeting_type 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > getMeetings > should filter meetings by status 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > getMeetings > should filter meetings by date range 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > getMeetings > should search meetings by title and description 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > getMeetings > should handle database errors 3ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > getMeetings > should return empty array when no data 0ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > getMeetingById > should get a single meeting by ID 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > getMeetingById > should handle not found error 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > getMeetingWithDetails > should get meeting with all related data 2ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > createMeeting > should create a new meeting with required fields 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > createMeeting > should create meeting with all optional fields 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > createMeeting > should handle creation errors 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > updateMeeting > should update meeting fields 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > updateMeeting > should update timestamp 0ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > publishMinutes > should publish meeting minutes 0ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > deleteMeeting > should soft delete meeting 0ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > deleteMeeting > should handle deletion errors 0ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > getUpcomingMeetings > should get upcoming meetings with default limit 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > getUpcomingMeetings > should filter by project_id 0ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingsApi > getUpcomingMeetings > should only include future meetings 0ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingNotesApi > getNotes > should get notes for a meeting 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingNotesApi > createNote > should create a note with required fields 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingNotesApi > createNote > should create note with all fields 0ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingNotesApi > updateNote > should update note content 0ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingNotesApi > deleteNote > should delete a note 0ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingNotesApi > reorderNotes > should reorder notes 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingActionItemsApi > getActionItems > should get action items for a meeting 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingActionItemsApi > createActionItem > should create action item with defaults 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingActionItemsApi > completeActionItem > should complete action item and set completion date 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingActionItemsApi > convertToTask > should convert action item to task 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingAttendeesApi > getAttendees > should get attendees ordered by required then name 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingAttendeesApi > addAttendee > should add attendee with default status 0ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingAttendeesApi > markAttendance > should mark attendee as attended 0ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingAttendeesApi > markAttendance > should mark attendee as absent 0ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingAttendeesApi > removeAttendee > should delete attendee 0ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingAttendeesApi > addProjectUsersAsAttendees > should add all project users as attendees 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingAttendeesApi > addProjectUsersAsAttendees > should return empty array if no project users 0ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingAttachmentsApi > getAttachments > should get attachments ordered by created_at desc 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingAttachmentsApi > addAttachment > should add attachment with default type 0ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingAttachmentsApi > deleteAttachment > should delete attachment 0ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingAttachmentsApi > uploadAndAttach > should upload file and create attachment record 2ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingAttachmentsApi > uploadAndAttach > should handle upload errors 1ms
+ ✓ src/lib/api/services/meetings.test.ts > meetingAttachmentsApi > uploadAndAttach > should require authentication 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should get action items with default ordering 6ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should filter by project_id 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should filter by meeting_id 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should filter by single status 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should filter by multiple statuses 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should filter by priority 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should filter by category 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should filter by assigned_to 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should filter by assigned_company 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should filter by urgency_status 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should filter items with tasks 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should filter items without tasks 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should filter overdue_only items 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should filter escalated_only items 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should support search by title and description 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should support pagination with limit 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should support pagination with offset 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should handle database errors 3ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItems > should return empty array when no data 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItem > should get a single action item by ID 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItem > should return null when item not found (PGRST116) 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > getActionItem > should throw on other database errors 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > createActionItem > should create action item with required fields 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > createActionItem > should create action item with all optional fields 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > createActionItem > should handle creation errors 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > updateActionItem > should update action item fields 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > updateActionItem > should handle update errors 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > deleteActionItem > should delete action item 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - CRUD Operations > deleteActionItem > should handle deletion errors 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Status & Resolution > updateActionItemStatus > should update status to in_progress 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Status & Resolution > updateActionItemStatus > should auto-set resolution when completing 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Status & Resolution > updateActionItemStatus > should handle status update errors 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Status & Resolution > resolveActionItem > should resolve item as completed 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Status & Resolution > resolveActionItem > should resolve item as deferred 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Status & Resolution > resolveActionItem > should handle resolution errors 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Linking & Pipeline > linkActionItem > should link to task 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Linking & Pipeline > linkActionItem > should link to RFI 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Linking & Pipeline > linkActionItem > should link to constraint 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Linking & Pipeline > linkActionItem > should link to change order 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Linking & Pipeline > linkActionItem > should handle linking errors 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Linking & Pipeline > unlinkActionItem > should unlink task 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Linking & Pipeline > unlinkActionItem > should unlink RFI 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Linking & Pipeline > convertToTask > should convert action item to task via RPC 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Linking & Pipeline > convertToTask > should handle conversion errors 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Linking & Pipeline > carryoverActionItems > should carryover all items from source meeting 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Linking & Pipeline > carryoverActionItems > should carryover specific items 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Linking & Pipeline > carryoverActionItems > should handle carryover errors 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Reporting & Statistics > getProjectSummary > should get project action item summary 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Reporting & Statistics > getProjectSummary > should return null when no summary found 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Reporting & Statistics > getItemsByAssignee > should get items grouped by assignee 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Reporting & Statistics > getOverdueItems > should get overdue items 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Reporting & Statistics > getOverdueItems > should filter overdue by project 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Reporting & Statistics > getItemsDueSoon > should get items due today or soon 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Reporting & Statistics > getEscalatedItems > should get escalated items 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Reporting & Statistics > getStatusCounts > should count items by status 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Reporting & Statistics > getStatusCounts > should handle empty project 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Escalation System > calculateEscalationLevel > should return level 0 for items not overdue 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Escalation System > calculateEscalationLevel > should return level 1 for 3+ days overdue 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Escalation System > calculateEscalationLevel > should return level 2 for 7+ days overdue 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Escalation System > calculateEscalationLevel > should return level 3 for 14+ days overdue 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Escalation System > calculateEscalationLevel > should use custom config 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Escalation System > escalateActionItem > should escalate item to next level 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Escalation System > escalateActionItem > should handle not found item 0ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Escalation System > getEscalationStats > should calculate escalation statistics 1ms
+ ✓ src/lib/api/services/action-items.test.ts > actionItemsApi - Escalation System > getEscalationStats > should query all projects when no projectId 2ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateResponseTime > should calculate response time correctly for same day response 2ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateResponseTime > should calculate response time correctly for 1 day 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateResponseTime > should calculate response time correctly for multiple days 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateResponseTime > should handle month boundary correctly 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateResponseTime > should handle year boundary correctly 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateResponseTime > should return null when submitted date is null 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateResponseTime > should return null when responded date is null 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateResponseTime > should return null when both dates are null 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateResponseTime > should handle Date objects as input 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateResponseTime > should handle ISO date strings with times 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateResponseTime > should handle negative response time (responded before submitted - edge case) 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateBusinessDays > should calculate business days excluding weekends 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateBusinessDays > should exclude Saturday and Sunday 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateBusinessDays > should return 0 for same day (exclusive end) 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateBusinessDays > should handle weekend only span 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateBusinessDays > should handle multiple weeks correctly 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateBusinessDays > should handle Saturday as start 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > isResponseOnTime > should return true when response is within required days 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > isResponseOnTime > should return true when response is exactly on required days 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > isResponseOnTime > should return false when response exceeds required days 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > isResponseOnTime > should return null when submitted date is null 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > isResponseOnTime > should return null when responded date is null 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > isResponseOnTime > should use priority-specific threshold when provided 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > isResponseOnTime > should return true for same day response 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateDaysOverdue > should return negative number when response is early 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateDaysOverdue > should return zero when response is exactly on time 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateDaysOverdue > should return positive number when response is late 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateDaysOverdue > should use current date when responded date is null (pending RFI) 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Response Time Calculations > calculateDaysOverdue > should return 0 when submitted date is null 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculateMean > should calculate mean correctly 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculateMean > should return 0 for empty array 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculateMean > should handle single value 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculateMean > should handle decimal values 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculateMean > should handle large values 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculateMedian > should calculate median for odd number of values 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculateMedian > should calculate median for even number of values 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculateMedian > should return 0 for empty array 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculateMedian > should handle single value 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculateMedian > should handle unsorted input 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculateMedian > should not modify original array 1ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculatePercentile > should calculate 50th percentile (median) 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculatePercentile > should calculate 25th percentile 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculatePercentile > should calculate 75th percentile 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculatePercentile > should calculate 90th percentile 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculatePercentile > should return 0 for empty array 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculatePercentile > should return min value for 0th percentile 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculatePercentile > should return max value for 100th percentile 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculatePercentile > should throw error for percentile < 0 1ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculatePercentile > should throw error for percentile > 100 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculateStandardDeviation > should calculate standard deviation correctly 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculateStandardDeviation > should return 0 for empty array 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculateStandardDeviation > should return 0 for single value 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculateStandardDeviation > should return 0 for identical values 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculateStatistics > should calculate all statistics correctly 1ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculateStatistics > should return zeros for empty array 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculateStatistics > should handle single value 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculatePercentiles > should calculate all percentiles correctly 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Statistical Functions > calculatePercentiles > should handle small datasets 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Performance Rating > getPerformanceRating > should return excellent for >= 95% on-time 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Performance Rating > getPerformanceRating > should return good for >= 85% and < 95% 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Performance Rating > getPerformanceRating > should return average for >= 70% and < 85% 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Performance Rating > getPerformanceRating > should return needs_improvement for < 70% 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Performance Rating > getPerformanceRating > should use custom thresholds when provided 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Trend Analysis > determineTrendDirection > should return improving when response times decrease significantly 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Trend Analysis > determineTrendDirection > should return declining when response times increase significantly 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Trend Analysis > determineTrendDirection > should return stable when change is within threshold 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Trend Analysis > determineTrendDirection > should use custom threshold when provided 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Trend Analysis > determineTrendDirection > should handle boundary values 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Trend Analysis > calculateMovingAverage > should calculate moving average correctly 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Trend Analysis > calculateMovingAverage > should return all nulls when window size exceeds array length 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Trend Analysis > calculateMovingAverage > should handle window size of 1 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Trend Analysis > calculateMovingAverage > should handle empty array 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Distribution Buckets > createDistributionBuckets > should create default buckets with correct counts 1ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Distribution Buckets > createDistributionBuckets > should calculate percentages correctly 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Distribution Buckets > createDistributionBuckets > should handle empty array 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Distribution Buckets > createDistributionBuckets > should use custom buckets when provided 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Date Helpers > getDayOfWeekName > should return correct day names 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Date Helpers > getDayOfWeekName > should return Unknown for invalid day number 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Date Helpers > getMonthName > should return correct month names 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Date Helpers > getMonthName > should return Unknown for invalid month number 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Date Helpers > getDateRangeFromPreset > should return correct range for last_7_days 1ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Date Helpers > getDateRangeFromPreset > should return correct range for last_30_days 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Date Helpers > getDateRangeFromPreset > should return correct range for all_time 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Date Helpers > getDateRangeFromPreset > should default to all_time for unknown preset 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Edge Cases > Same day responses > should count as 0 days response time 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Edge Cases > Same day responses > should be considered on time 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Edge Cases > Same day responses > should show negative days overdue (early) 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Edge Cases > Very long response times > should handle 100+ day response times 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Edge Cases > Very long response times > should correctly classify as late 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Edge Cases > Very long response times > should calculate correct days overdue 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Edge Cases > Leap year handling > should handle February 29 in leap year 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Edge Cases > Leap year handling > should handle non-leap year February 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Edge Cases > Timezone edge cases > should normalize times for consistent day calculation 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Edge Cases > Zero required response days > should handle 0 required days threshold 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Edge Cases > Statistical edge cases > should handle all identical values 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Edge Cases > Statistical edge cases > should handle very large dataset 2ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Edge Cases > Statistical edge cases > should handle negative values (theoretical edge case) 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Edge Cases > Statistical edge cases > should handle decimal precision 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Complete Analytics Scenarios > Healthy project scenario > should show positive metrics for on-time responses 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Complete Analytics Scenarios > Problematic project scenario > should identify issues with late responses 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Complete Analytics Scenarios > Priority-based analysis > should identify priority-specific performance issues 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Complete Analytics Scenarios > Trend detection > should detect improving trend when response times decrease 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Complete Analytics Scenarios > Trend detection > should detect declining trend when response times increase 0ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts > Complete Analytics Scenarios > Assignee comparison > should correctly rank assignees by performance 0ms
+ ✓ src/lib/api/services/messaging.test.ts > Conversation Methods > getConversations > should fetch conversations for user 6ms
+ ✓ src/lib/api/services/messaging.test.ts > Conversation Methods > getConversations > should apply type filter 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Conversation Methods > getConversations > should apply project filter 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Conversation Methods > getConversations > should apply search filter 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Conversation Methods > getConversations > should apply pagination 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Conversation Methods > getConversations > should handle errors 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Conversation Methods > getConversation > should fetch single conversation 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Conversation Methods > getConversation > should return error if user not a participant 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Conversation Methods > createConversation > should create group conversation 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Conversation Methods > createConversation > should add initial participants 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Conversation Methods > getOrCreateDirectConversation > should call database function 2ms
+ ✓ src/lib/api/services/messaging.test.ts > Conversation Methods > updateConversation > should update conversation name 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Conversation Methods > addParticipants > should add new participants 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Conversation Methods > addParticipants > should require creator to add participants 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Conversation Methods > removeParticipant > should remove participant as creator 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Conversation Methods > removeParticipant > should prevent removing self 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Conversation Methods > leaveConversation > should allow user to leave 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Message Methods > getMessages > should fetch messages for conversation 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Message Methods > getMessages > should apply before_id filter for pagination 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Message Methods > getMessages > should apply sender filter 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Message Methods > getMessage > should fetch single message 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Message Methods > sendMessage > should send text message 2ms
+ ✓ src/lib/api/services/messaging.test.ts > Message Methods > sendMessage > should extract @mentions from content 2ms
+ ✓ src/lib/api/services/messaging.test.ts > Message Methods > editMessage > should edit message content 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Message Methods > deleteMessage > should soft delete message 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Message Methods > markAsRead > should mark messages as read 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Message Methods > searchMessages > should search messages globally 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Message Methods > searchMessages > should search within specific conversation 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Participant Methods > getParticipants > should fetch all participants 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Participant Methods > updateParticipant > should update participant settings 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Participant Methods > getUnreadCount > should get total unread count 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Participant Methods > getUnreadCount > should get conversation-specific unread count 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Reaction Methods > addReaction > should add new reaction 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Reaction Methods > addReaction > should return existing reaction if duplicate 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Reaction Methods > removeReaction > should remove reaction 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Error Handling > should handle database errors gracefully 1ms
+ ✓ src/lib/api/services/messaging.test.ts > Error Handling > should handle permission errors 1ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getProjectHealthReport > should fetch project health report successfully 5ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getProjectHealthReport > should calculate budget variance correctly 1ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getProjectHealthReport > should count open items correctly 1ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getProjectHealthReport > should throw error when project not found 3ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getProjectHealthReport > should handle null budget and contract_value 1ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getDailyReportAnalytics > should fetch daily report analytics successfully 1ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getDailyReportAnalytics > should calculate submission rate correctly 1ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getDailyReportAnalytics > should aggregate trades correctly 1ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getDailyReportAnalytics > should aggregate equipment utilization correctly 1ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getDailyReportAnalytics > should handle empty reports 1ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getDailyReportAnalytics > should handle database errors gracefully 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getWorkflowSummary > should fetch workflow summary successfully 1ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getWorkflowSummary > should group items by status correctly 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getWorkflowSummary > should calculate total cost impact correctly 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getWorkflowSummary > should calculate total schedule impact correctly 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getWorkflowSummary > should calculate average response time correctly 1ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getWorkflowSummary > should handle empty workflow items 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getWorkflowSummary > should handle database errors gracefully 1ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getPunchListReport > should fetch punch list report successfully 1ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getPunchListReport > should group items by status correctly 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getPunchListReport > should group items by trade with completion rate 1ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getPunchListReport > should group items by location correctly 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getPunchListReport > should calculate rejection rate correctly 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getPunchListReport > should handle empty punch list 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getPunchListReport > should handle database errors gracefully 1ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getSafetyIncidentReport > should fetch safety incident report successfully 1ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getSafetyIncidentReport > should group incidents by type correctly 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getSafetyIncidentReport > should group incidents by severity correctly 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getSafetyIncidentReport > should count open incidents correctly 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getSafetyIncidentReport > should handle empty incidents 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getSafetyIncidentReport > should handle database errors gracefully 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getFinancialSummary > should fetch financial summary successfully 1ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getFinancialSummary > should calculate change orders impact correctly 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getFinancialSummary > should calculate forecasted total correctly 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getFinancialSummary > should calculate percentage over budget correctly 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getFinancialSummary > should handle null budget 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getFinancialSummary > should handle database errors gracefully 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getDocumentSummary > should fetch document summary successfully 1ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getDocumentSummary > should group documents by type correctly 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getDocumentSummary > should group documents by discipline correctly 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getDocumentSummary > should count outstanding approvals correctly 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getDocumentSummary > should count superseded documents correctly 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getDocumentSummary > should handle empty documents 0ms
+ ✓ src/lib/api/services/reports.test.ts > Reports API Service > getDocumentSummary > should handle database errors gracefully 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > getProjectDocuments > should fetch project documents with default ordering 6ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > getProjectDocuments > should fetch project documents with custom options 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > getProjectDocuments > should wrap non-API errors in ApiErrorClass 4ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > getProjectDocuments > should preserve API errors 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > getDocument > should fetch a single document 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > getDocument > should wrap errors in ApiErrorClass 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > createDocument > should create a document with default status and version flags 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > createDocument > should throw error if project_id is missing 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > createDocument > should throw error if file_url is missing 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > createDocument > should wrap API errors 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > updateDocument > should update a document 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > updateDocument > should throw error if document_id is missing 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > updateDocument > should wrap API errors 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > deleteDocument > should delete a document 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > deleteDocument > should throw error if document_id is missing 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > deleteDocument > should wrap API errors 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > getProjectFolders > should fetch project folders ordered by sort_order 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > getProjectFolders > should wrap errors 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > createFolder > should create a folder 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > createFolder > should throw error if project_id is missing 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > createFolder > should wrap API errors 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > updateFolder > should update a folder 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > updateFolder > should wrap errors 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > deleteFolder > should delete a folder 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > deleteFolder > should wrap errors 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > findDocumentByName > should find a document by name without folder filter 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > findDocumentByName > should find a document by name with folder filter 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > findDocumentByName > should find a document by name with null folder filter 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > findDocumentByName > should return null if document not found 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > findDocumentByName > should throw error if projectId is missing 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > findDocumentByName > should throw error if documentName is missing 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > findDocumentByName > should wrap API errors with context 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > createDocumentVersion > should create a new version with incremented version number 3ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > createDocumentVersion > should handle version increments correctly 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > createDocumentVersion > should default to version 1.1 if no version exists 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > createDocumentVersion > should throw error if documentId is missing 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > createDocumentVersion > should throw error if newFileUrl is missing 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > createDocumentVersion > should wrap errors 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > getDocumentVersions > should fetch all versions in chronological order 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > getDocumentVersions > should throw error if documentId is missing 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > getDocumentVersions > should wrap errors 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > getLatestVersion > should return the latest version 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > getLatestVersion > should throw error if no latest version found 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > getLatestVersion > should wrap errors 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > revertToVersion > should revert to a previous version 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > revertToVersion > should handle case with no current latest version 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > revertToVersion > should throw error if versionId is missing 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > revertToVersion > should wrap errors 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > compareVersions > should compare two versions and return differences 1ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > compareVersions > should return empty differences if versions are identical 0ms
+ ✓ src/lib/api/services/documents.test.ts > documentsApi > compareVersions > should wrap errors 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Type Helpers > isIncomingPayment > returns true for owner_requisition 2ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Type Helpers > isIncomingPayment > returns true for progress_billing 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Type Helpers > isIncomingPayment > returns false for subcontractor_pay_application 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Type Helpers > isIncomingPayment > returns false for invoice_payment 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Type Helpers > isIncomingPayment > returns false for vendor_payment 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Type Helpers > isIncomingPayment > returns false for retention_release 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Type Helpers > calculateDaysUntilDue > returns positive days for future dates 2ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Type Helpers > calculateDaysUntilDue > returns negative days for past dates 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Type Helpers > calculateDaysUntilDue > returns approximately 0 for today 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Type Helpers > getPriorityFromDueDate > returns critical for overdue (negative days) 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Type Helpers > getPriorityFromDueDate > returns high for 0-3 days until due 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Type Helpers > getPriorityFromDueDate > returns medium for 4-7 days until due 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Type Helpers > getPriorityFromDueDate > returns low for more than 7 days until due 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Type Helpers > getPaymentTypeConfig > returns correct config for each payment type 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Type Helpers > getPaymentTypeConfig > returns default config for unknown type 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Summary Calculations > calculates correct totals for mixed payments 2ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Summary Calculations > correctly identifies overdue payments 1ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Summary Calculations > correctly counts pending approvals 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Summary Calculations > groups payments by type correctly 1ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Summary Calculations > handles empty payment list 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Cash Flow Projection Calculations > calculates correct monthly totals 1ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Cash Flow Projection Calculations > calculates confidence percentage correctly 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Cash Flow Projection Calculations > handles 100% confirmed payments 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Cash Flow Projection Calculations > calculates cumulative cash flow correctly 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Cash Flow Projection Calculations > categorizes payment types correctly 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Calendar Data Generation > calculates correct daily totals 1ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Calendar Data Generation > handles days with no payments 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Calendar Data Generation > handles days with only incoming payments 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Calendar Data Generation > handles days with only outgoing payments 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Pattern Analysis > identifies improving trend 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Pattern Analysis > identifies declining trend 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Pattern Analysis > identifies stable trend 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Pattern Analysis > returns stable for insufficient data 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Pattern Analysis > calculates 100% when all payments are on time 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Pattern Analysis > calculates 0% when all payments are late 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Pattern Analysis > calculates correct percentage for mixed payments 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Pattern Analysis > returns 100% for no payment history 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Edge Cases > handles payments with zero amounts 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Edge Cases > handles payments with very large amounts 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Edge Cases > handles all payment statuses 1ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Edge Cases > handles all payment types 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Edge Cases > handles dates at year boundaries 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Weekly and Monthly Aggregation > correctly aggregates daily totals into weekly 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Weekly and Monthly Aggregation > handles empty days array 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Weekly and Monthly Aggregation > handles single day 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Multi-Month Cash Flow Projections > correctly calculates cumulative cash flow 1ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Multi-Month Cash Flow Projections > handles all negative months 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Multi-Month Cash Flow Projections > handles empty projections 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Priority Logic > assigns critical priority to severely overdue payments 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Priority Logic > assigns high priority to payments due today or within 3 days 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Priority Logic > assigns medium priority to payments due within 4-7 days 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Priority Logic > assigns low priority to payments due in more than a week 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Type Categorization > correctly identifies incoming payment types 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Type Categorization > correctly identifies outgoing payment types 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Payment Type Categorization > returns correct config for each payment type 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Boundary and Negative Value Handling > handles payments with null/undefined amounts gracefully 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Boundary and Negative Value Handling > handles mixed positive and negative net cash flows 0ms
+ ✓ src/lib/api/services/payment-forecast.test.ts > Boundary and Negative Value Handling > calculates correct net when incoming equals outgoing 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getScheduleItems > should fetch schedule items for a project 6ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getScheduleItems > should apply show_completed filter 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getScheduleItems > should apply milestones_only filter 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getScheduleItems > should apply date range filters 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getScheduleItems > should apply search filter 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getScheduleItems > should apply critical_only filter 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getScheduleItems > should handle database errors 3ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getScheduleItem > should fetch a single schedule item 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getScheduleItem > should throw error when item ID is not provided 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getScheduleItem > should throw error when item not found 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > createScheduleItem > should create a new schedule item 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > createScheduleItem > should throw error when project_id is missing 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > createScheduleItem > should throw error when task_name is missing 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > createScheduleItem > should handle database errors 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > updateScheduleItem > should update a schedule item 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > updateScheduleItem > should throw error when item ID is missing 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > updateScheduleItem > should handle database errors 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > deleteScheduleItem > should soft delete a schedule item 3ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > deleteScheduleItem > should throw error when item ID is missing 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > deleteScheduleItem > should handle database errors 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > updateProgress > should update progress percentage 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > updateProgress > should clamp progress to 0-100 range 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getDependencies > should fetch all dependencies for a project 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getDependencies > should throw error when project ID is missing 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getDependencies > should handle database errors 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > createDependency > should create a dependency 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > createDependency > should throw error when predecessor/successor IDs are missing 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > createDependency > should throw error for self-dependency 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > createDependency > should handle database errors on create 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > deleteDependency > should delete a dependency 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > deleteDependency > should throw error when dependency ID is missing 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getScheduleStats > should calculate schedule statistics correctly 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getScheduleStats > should calculate overall progress correctly 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getScheduleStats > should handle empty schedule 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getScheduleDateRange > should find earliest start and latest finish dates 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getScheduleDateRange > should return null for empty schedule 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getScheduleItemsWithVariance > should fetch schedule items with variance 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getScheduleItemsWithVariance > should handle database errors 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > saveBaseline > should save a baseline 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > saveBaseline > should handle database errors 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > clearBaseline > should clear baseline 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > clearBaseline > should handle database errors 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > getBaselines > should fetch all baselines for a project 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > hasBaseline > should return true if baseline exists 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > hasBaseline > should return false if no baseline exists 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > hasBaseline > should return false on error 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > importScheduleItems > should import schedule items 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > importScheduleItems > should clear existing items when requested 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > importScheduleItems > should handle batch import errors 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > importDependencies > should import dependencies 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > importDependencies > should collect errors for failed dependencies 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > updateCriticalPath > should update critical path flags 1ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > updateCriticalPath > should handle empty critical task list 0ms
+ ✓ src/lib/api/services/schedule.test.ts > scheduleApi > reorderItems > should reorder schedule items 1ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > createEmptyMetrics > should create metrics with all zero values 3ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > createEmptyMetrics > should set status date correctly 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > createEmptyMetrics > should default status values to good 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > createEmptyMetrics > should set data currency to current 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > calculateTrend > should return stable for single value 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > calculateTrend > should return stable for empty array 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > calculateTrend > should return improving for upward trend 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > calculateTrend > should return declining for downward trend 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > calculateTrend > should return stable for flat values 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > calculateTrend > should return stable for small variations 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > calculateTrend > should handle exactly 2 values 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > calculateTrend > should use only last 7 values for long arrays 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > determineRiskLevel > should return low for healthy project with no alerts 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > determineRiskLevel > should return medium for CSI below 1.0 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > determineRiskLevel > should return medium for warning alerts 1ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > determineRiskLevel > should return high for CSI below 0.9 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > determineRiskLevel > should return high for single critical alert 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > determineRiskLevel > should return critical for CSI below 0.8 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > determineRiskLevel > should return critical for multiple critical alerts 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Helper Functions > determineRiskLevel > should prioritize CSI over alert count 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Cost Variance (CV) > should calculate positive variance (under budget) 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Cost Variance (CV) > should calculate negative variance (over budget) 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Cost Variance (CV) > should return zero when EV equals AC 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Cost Variance (CV) > should handle zero values 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Schedule Variance (SV) > should calculate positive variance (ahead of schedule) 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Schedule Variance (SV) > should calculate negative variance (behind schedule) 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Schedule Variance (SV) > should return zero when on schedule 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Cost Performance Index (CPI) > should calculate CPI above 1.0 (under budget) 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Cost Performance Index (CPI) > should calculate CPI below 1.0 (over budget) 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Cost Performance Index (CPI) > should return 1.0 when EV equals AC 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Cost Performance Index (CPI) > should handle zero AC (division by zero) 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Cost Performance Index (CPI) > should calculate precise decimal values 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Schedule Performance Index (SPI) > should calculate SPI above 1.0 (ahead of schedule) 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Schedule Performance Index (SPI) > should calculate SPI below 1.0 (behind schedule) 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Schedule Performance Index (SPI) > should return 1.0 when on schedule 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Schedule Performance Index (SPI) > should handle zero PV (division by zero) 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Cost-Schedule Index (CSI) > should multiply CPI and SPI 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Cost-Schedule Index (CSI) > should indicate combined poor performance 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Core Calculations > Cost-Schedule Index (CSI) > should indicate combined good performance 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > Estimate at Completion (EAC) - CPI-based > should forecast higher cost when CPI < 1 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > Estimate at Completion (EAC) - CPI-based > should forecast lower cost when CPI > 1 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > Estimate at Completion (EAC) - CPI-based > should equal BAC when CPI = 1 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > Estimate at Completion (EAC) - CPI-based > should handle zero CPI 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > Estimate at Completion (EAC) - CPI*SPI-based > should be more conservative than CPI-only 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > Estimate at Completion (EAC) - CPI*SPI-based > should account for schedule impact 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > Estimate at Completion (EAC) - CPI*SPI-based > should handle zero CPI*SPI 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > Estimate to Complete (ETC) > should calculate remaining cost 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > Estimate to Complete (ETC) > should return zero when complete 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > Estimate to Complete (ETC) > should handle negative (money returned scenario) 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > Variance at Completion (VAC) > should be negative when over budget 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > Variance at Completion (VAC) > should be positive when under budget 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > Variance at Completion (VAC) > should be zero when on budget 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > To-Complete Performance Index (TCPI) > TCPI to meet BAC > should require higher efficiency when behind 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > To-Complete Performance Index (TCPI) > TCPI to meet BAC > should require lower efficiency when ahead 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > To-Complete Performance Index (TCPI) > TCPI to meet BAC > should handle edge case when exactly on track 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > To-Complete Performance Index (TCPI) > TCPI to meet BAC > should handle budget exhausted 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > To-Complete Performance Index (TCPI) > TCPI to meet EAC > should be lower than TCPI_BAC when EAC > BAC 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > EVM Forecast Calculations > To-Complete Performance Index (TCPI) > TCPI to meet EAC > should be higher than TCPI_BAC when EAC < BAC 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Percentage Calculations > Percent Variance > should calculate positive variance percentage 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Percentage Calculations > Percent Variance > should calculate negative variance percentage 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Percentage Calculations > Percent Variance > should handle zero baseline 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Percentage Calculations > Percent Complete > should calculate earned percentage of budget 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Percentage Calculations > Percent Complete > should handle zero BAC 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Percentage Calculations > Percent Complete > should handle over 100% (extra work) 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Percentage Calculations > Percent Spent > should calculate actual cost percentage of budget 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Percentage Calculations > Percent Spent > should indicate budget overrun 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Percentage Calculations > Percent Spent > should handle zero BAC 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Performance Status Determination > should return good for index >= 1.0 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Performance Status Determination > should return warning for index >= 0.95 and < 1.0 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Performance Status Determination > should return at_risk for index >= 0.9 and < 0.95 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Performance Status Determination > should return critical for index < 0.9 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Real-World Construction Scenarios > Scenario: Commercial Building Project - Month 6 > should calculate correct variances 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Real-World Construction Scenarios > Scenario: Commercial Building Project - Month 6 > should calculate correct performance indices 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Real-World Construction Scenarios > Scenario: Commercial Building Project - Month 6 > should calculate correct forecasts 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Real-World Construction Scenarios > Scenario: Commercial Building Project - Month 6 > should identify project as at-risk 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Real-World Construction Scenarios > Scenario: Highway Project - Ahead of Schedule > should show positive variances 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Real-World Construction Scenarios > Scenario: Highway Project - Ahead of Schedule > should show healthy performance indices 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Real-World Construction Scenarios > Scenario: Highway Project - Ahead of Schedule > should forecast under-budget completion 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Real-World Construction Scenarios > Scenario: Highway Project - Ahead of Schedule > should identify project as healthy 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Real-World Construction Scenarios > Scenario: Renovation Project - Severe Overrun > should show severe negative variances 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Real-World Construction Scenarios > Scenario: Renovation Project - Severe Overrun > should show poor performance indices 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Real-World Construction Scenarios > Scenario: Renovation Project - Severe Overrun > should forecast significant overrun 0ms
+ ✓ src/lib/api/services/earned-value-management.test.ts > Real-World Construction Scenarios > Scenario: Renovation Project - Severe Overrun > should indicate unrealistic TCPI to meet original budget 0ms
+ ↓ src/lib/api/services/historical-bid-analysis.test.ts > Historical Bid Analysis API > getVendorBidHistory > should fetch and calculate vendor bid history metrics
+ ↓ src/lib/api/services/historical-bid-analysis.test.ts > Historical Bid Analysis API > getVendorBidHistory > should handle vendor with no bids
+ ↓ src/lib/api/services/historical-bid-analysis.test.ts > Historical Bid Analysis API > getVendorBidHistory > should filter by divisions
+ ↓ src/lib/api/services/historical-bid-analysis.test.ts > Historical Bid Analysis API > getVendorWinRate > should calculate win rate by division
+ ↓ src/lib/api/services/historical-bid-analysis.test.ts > Historical Bid Analysis API > getBidAccuracyAnalysis > should analyze bid accuracy vs actual costs
+ ↓ src/lib/api/services/historical-bid-analysis.test.ts > Historical Bid Analysis API > getBidAccuracyAnalysis > should handle project with no awarded bids
+ ↓ src/lib/api/services/historical-bid-analysis.test.ts > Historical Bid Analysis API > getPriceVarianceByTrade > should calculate variance statistics by trade
+ ↓ src/lib/api/services/historical-bid-analysis.test.ts > Historical Bid Analysis API > getPriceVarianceByTrade > should handle trade with no data
+ ↓ src/lib/api/services/historical-bid-analysis.test.ts > Historical Bid Analysis API > getBidTrendAnalysis > should analyze bid trends over time
+ ↓ src/lib/api/services/historical-bid-analysis.test.ts > Historical Bid Analysis API > getRecommendedVendors > should score and rank vendors based on performance
+ ↓ src/lib/api/services/historical-bid-analysis.test.ts > Historical Bid Analysis API > getRecommendedVendors > should return empty array when no vendors found
+ ↓ src/lib/api/services/historical-bid-analysis.test.ts > Historical Bid Analysis API > generateBidPerformanceReport > should generate comprehensive performance report
+ ↓ src/lib/api/services/historical-bid-analysis.test.ts > Historical Bid Analysis API > Error handling > should handle database errors gracefully
+ ↓ src/lib/api/services/historical-bid-analysis.test.ts > Historical Bid Analysis API > Error handling > should throw ApiErrorClass for known errors
+ ✓ src/lib/api/services/lien-waiver-reminders.test.ts > lienWaiverReminderService > getWaiversNeedingReminders > should fetch waivers needing reminders within threshold 6ms
+ ✓ src/lib/api/services/lien-waiver-reminders.test.ts > lienWaiverReminderService > getWaiversNeedingReminders > should handle errors when fetching waivers 3ms
+ ✓ src/lib/api/services/lien-waiver-reminders.test.ts > lienWaiverReminderService > getOverdueWaivers > should fetch only overdue waivers 1ms
+ ✓ src/lib/api/services/lien-waiver-reminders.test.ts > lienWaiverReminderService > getProjectManagerEmail > should return PM email when found 1ms
+ ✓ src/lib/api/services/lien-waiver-reminders.test.ts > lienWaiverReminderService > getProjectManagerEmail > should return null when PM not found 1ms
+ ✓ src/lib/api/services/lien-waiver-reminders.test.ts > lienWaiverReminderService > sendWaiverReminder > should send reminder email for upcoming due date 25ms
+ ✓ src/lib/api/services/lien-waiver-reminders.test.ts > lienWaiverReminderService > sendWaiverReminder > should send overdue reminder and escalate to PM 2ms
+ ✓ src/lib/api/services/lien-waiver-reminders.test.ts > lienWaiverReminderService > sendWaiverReminder > should fail gracefully when no recipient email found 1ms
+ ✓ src/lib/api/services/lien-waiver-reminders.test.ts > lienWaiverReminderService > sendWaiverReminder > should handle email sending errors 2ms
+ ✓ src/lib/api/services/lien-waiver-reminders.test.ts > lienWaiverReminderService > processReminders > should process batch of reminders successfully 2ms
+ ✓ src/lib/api/services/lien-waiver-reminders.test.ts > lienWaiverReminderService > processReminders > should skip waivers without due dates 1ms
+ ✓ src/lib/api/services/lien-waiver-reminders.test.ts > lienWaiverReminderService > processReminders > should handle partial failures in batch 1ms
+ ✓ src/lib/api/services/lien-waiver-reminders.test.ts > lienWaiverReminderService > getReminderStats > should calculate reminder statistics correctly 1ms
+ ✓ src/lib/api/services/lien-waiver-reminders.test.ts > lienWaiverReminderService > getReminderStats > should handle empty waiver list 1ms
+ ✓ src/lib/api/services/checklist-scoring.test.ts > checklistScoringApi > calculateExecutionScore > should calculate binary score - all pass 5ms
+ ✓ src/lib/api/services/checklist-scoring.test.ts > checklistScoringApi > calculateExecutionScore > should calculate binary score - any fail 1ms
+ ✓ src/lib/api/services/checklist-scoring.test.ts > checklistScoringApi > calculateExecutionScore > should calculate percentage score correctly 1ms
+ ✓ src/lib/api/services/checklist-scoring.test.ts > checklistScoringApi > calculateExecutionScore > should calculate points-based score correctly 1ms
+ ✓ src/lib/api/services/checklist-scoring.test.ts > checklistScoringApi > calculateExecutionScore > should handle N/A items correctly when included in total 1ms
+ ✓ src/lib/api/services/checklist-scoring.test.ts > checklistScoringApi > calculateExecutionScore > should handle N/A items correctly when excluded from total 1ms
+ ✓ src/lib/api/services/checklist-scoring.test.ts > checklistScoringApi > calculateExecutionScore > should auto-fail on critical item failure 2ms
+ ✓ src/lib/api/services/checklist-scoring.test.ts > checklistScoringApi > calculateExecutionScore > should calculate letter grade correctly 1ms
+ ✓ src/lib/api/services/checklist-scoring.test.ts > checklistScoringApi > getScoringReport > should calculate summary statistics correctly 0ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > collectProjectSnapshot > should collect a snapshot successfully 4ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > collectProjectSnapshot > should handle snapshot collection error 2ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > getProjectSnapshots > should fetch project snapshots 1ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > getProjectSnapshots > should filter snapshots by date range 1ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > getProjectSnapshots > should return empty array when no snapshots found 1ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > getLatestSnapshot > should fetch the latest snapshot 1ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > getLatestSnapshot > should return null when no snapshots exist 0ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > getLatestPrediction > should fetch the latest prediction 1ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > storePrediction > should store a new prediction 1ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > getRiskScores > should fetch risk assessment for project 1ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > getRiskScores > should handle risk calculation errors 1ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > getRecommendations > should fetch all recommendations for project 0ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > getRecommendations > should filter recommendations by category 1ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > getRecommendations > should filter recommendations by status 0ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > acknowledgeRecommendation > should acknowledge a recommendation 3ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > implementRecommendation > should mark recommendation as implemented 1ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > dismissRecommendation > should dismiss a recommendation with reason 1ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > getActiveModel > should fetch active model by type 1ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > getModels > should fetch all models 1ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > getDashboardData > should fetch complete dashboard data 2ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > Error Handling > should wrap database errors in ApiErrorClass 1ms
+ ✓ src/lib/api/services/analytics.test.ts > Analytics API Service > Error Handling > should handle network errors 1ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Topics API > getTopics > should fetch topics with filters 3ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Topics API > getTopics > should filter by category 2ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Topics API > getTopic > should fetch single topic 1ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Topics API > getTopic > should throw error when topic not found 2ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Topics API > createTopic > should create new topic 1ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Topics API > updateTopic > should update topic 1ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Talks API > getTalks > should fetch talks with filters 1ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Talks API > getTalk > should fetch single talk 0ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Talks API > getTalkWithDetails > should fetch talk with attendees 1ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Talks API > createTalk > should create new talk 0ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Talks API > startTalk > should start talk and set status to in_progress 1ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Talks API > completeTalk > should complete talk 0ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Talks API > getUpcomingTalks > should fetch upcoming talks 1ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Attendees API > getAttendees > should fetch attendees for talk 0ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Attendees API > addAttendee > should add attendee to talk 1ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Attendees API > bulkAddAttendees > should add multiple attendees 0ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Attendees API > signInAttendee > should sign in attendee 0ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Attendees API > markAbsent > should mark attendee as absent 0ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Attendees API > bulkSignIn > should sign in all expected attendees 0ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Certifications API > getCertifications > should fetch certifications with status calculation 1ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Certifications API > getWorkerCertifications > should fetch certifications for specific worker 0ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Certifications API > getExpiringCertifications > should fetch certifications expiring within days 0ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Stats API > getProjectStats > should fetch project statistics 0ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Stats API > getProjectStats > should return default stats when no data 0ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Stats API > getComplianceSummary > should calculate compliance summary 1ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Stats API > getAttendanceRate > should calculate attendance rate 0ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts > Toolbox Stats API > getAttendanceRate > should return 100 when no talks 0ms

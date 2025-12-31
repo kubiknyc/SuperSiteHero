@@ -84,12 +84,24 @@ async function createAuthenticatedSession(options: {
   const context = await browser.newContext();
   const page = await context.newPage();
 
+  // Capture console errors
+  const consoleErrors: string[] = [];
+  page.on('console', msg => {
+    if (msg.type() === 'error') {
+      consoleErrors.push(msg.text());
+    }
+  });
+
   try {
     // Navigate to login page
     console.log(`   → Navigating to ${baseURL}`);
     await page.goto(baseURL);
 
     console.log(`   → Current URL: ${page.url()}`);
+
+    // Take screenshot immediately to see what loaded
+    await page.screenshot({ path: path.join(__dirname, '../playwright/.auth/page-load.png') });
+    console.log(`   📸 Page load screenshot: playwright/.auth/page-load.png`);
 
     // Check what Supabase URL is being used in the browser
     const supabaseUrl = await page.evaluate(() => {
@@ -143,6 +155,9 @@ async function createAuthenticatedSession(options: {
     console.log(`   ✅ ${role} session saved to ${path.basename(authFile)}`);
   } catch (error) {
     console.error(`   ❌ Failed to create ${role} session:`, error);
+    if (consoleErrors.length > 0) {
+      console.error(`   🔍 Console errors during login:`, consoleErrors.join('\n   '));
+    }
     throw error;
   } finally {
     await browser.close();

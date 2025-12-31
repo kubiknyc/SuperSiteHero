@@ -1,0 +1,506 @@
+
+> jobsight@0.1.0 test
+> vitest
+
+
+ RUN  v4.0.16 C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero
+
+ ✓ src/features/bidding/utils/__tests__/bidEvaluation.test.ts (55 tests) 62ms
+ ✓ src/features/cost-tracking/utils/__tests__/evmCalculations.test.ts (114 tests) 73ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts (159 tests) 80ms
+ ✓ src/features/cost-tracking/utils/__tests__/evmByDivision.test.ts (56 tests) 95ms
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should generate basic schedule PDF
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should fetch company info when not provided
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should use provided company info
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should add document header with project name
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should include project number in document title when provided
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should render summary statistics when provided
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should not render statistics when not provided
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should render milestones table when includeMilestones is true
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should not render milestones table when includeMilestones is false
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should include baseline columns when includeBaseline is true
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should exclude baseline columns when includeBaseline is false
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should truncate long milestone names to 40 characters
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should render all activities table when includeAllActivities is true
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should not render activities table when includeAllActivities is false
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should mark critical activities with "Yes" indicator
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should format dates correctly in tables
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should add footers to all pages
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should use landscape orientation by default
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > generateSchedulePdf > should use portrait orientation when specified
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+ ✓ src/lib/api/services/equipment.test.ts (48 tests) 75ms
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > exportScheduleToPdf > should call save with sanitized filename
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > exportScheduleToPdf > should sanitize special characters in project name
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+stderr | src/features/schedule/utils/__tests__/schedulePdfExport.test.ts > Schedule PDF Export > exportScheduleToPdf > should include current date in filename
+[vitest] The vi.fn() mock did not use 'function' or 'class' in its implementation, see https://vitest.dev/api/vi#vi-spyon for examples.
+
+ ❯ src/features/schedule/utils/__tests__/schedulePdfExport.test.ts (22 tests | 22 failed) 113ms
+       × should generate basic schedule PDF 15ms
+       × should fetch company info when not provided 1ms
+       × should use provided company info 1ms
+       × should add document header with project name 1ms
+       × should include project number in document title when provided 1ms
+       × should render summary statistics when provided 1ms
+       × should not render statistics when not provided 1ms
+       × should render milestones table when includeMilestones is true 1ms
+       × should not render milestones table when includeMilestones is false 1ms
+       × should include baseline columns when includeBaseline is true 3ms
+       × should exclude baseline columns when includeBaseline is false 17ms
+       × should truncate long milestone names to 40 characters 1ms
+       × should render all activities table when includeAllActivities is true 4ms
+       × should not render activities table when includeAllActivities is false 10ms
+       × should mark critical activities with "Yes" indicator 5ms
+       × should format dates correctly in tables 2ms
+       × should add footers to all pages 3ms
+       × should use landscape orientation by default 4ms
+       × should use portrait orientation when specified 1ms
+       × should call save with sanitized filename 1ms
+       × should sanitize special characters in project name 1ms
+       × should include current date in filename 1ms
+ ✓ src/lib/api/services/action-items.test.ts (65 tests) 100ms
+ ✓ src/lib/api/services/meetings.test.ts (45 tests) 146ms
+ ✓ src/lib/api/services/checklists.test.ts (66 tests) 263ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts (104 tests) 74ms
+ ✓ src/features/lien-waivers/hooks/useLienWaivers.test.tsx (42 tests) 740ms
+ ✓ src/features/docusign/hooks/__tests__/useDocuSign.test.tsx (45 tests) 2567ms
+ ✓ src/features/schedule/utils/__tests__/scheduleExport.test.ts (96 tests) 230ms
+ ✓ src/features/action-items/hooks/__tests__/useActionItems.test.tsx (79 tests) 4557ms
+ ✓ src/components/__tests__/PWAInstallPrompt.test.tsx (88 tests) 4831ms
+         ✓ calls onClose when close button is clicked  368ms
+         ✓ calls dismissPrompt when "Not now" is clicked  394ms
+         ✓ calls dismissPrompt when X button is clicked  410ms
+         ✓ dismisses permanently when "don't show again" is checked  484ms
+ ❯ src/components/__tests__/ConflictResolutionDialog.test.tsx (59 tests | 2 failed) 5926ms
+       ✓ does not render when conflict is null 72ms
+       ✓ does not render when open is false 122ms
+       ✓ renders dialog when open is true and conflict exists 40ms
+       ✓ applies max width and height classes 41ms
+       ✓ renders title with alert icon 38ms
+       ✓ renders description with entity type 23ms
+       ✓ displays entity type badge 27ms
+       ✓ displays formatted detected timestamp 25ms
+       ✓ displays number of differing fields 20ms
+       ✓ renders three resolution buttons  518ms
+       ✓ renders icons in resolution buttons 19ms
+       ✓ defaults to server resolution selected 101ms
+       ✓ changes selection when Keep Local is clicked 211ms
+       ✓ changes selection when Keep Server is clicked 291ms
+       ✓ renders manual merge button with tooltip 118ms
+       ✓ renders three tabs 13ms
+       ✓ defaults to diff tab 19ms
+       ✓ renders tab labels 29ms
+       ✓ renders all field differences 19ms
+       ✓ displays local and server values for each difference 37ms
+       ✓ skips id and created_at fields 17ms
+       ✓ applies color coding to local and server values 20ms
+       ✓ shows "No differences found" when no differences exist 9ms
+       ✓ renders field names with underscores replaced by spaces 12ms
+       ✓ renders icons for local and server labels 22ms
+       ✓ renders local data as JSON 19ms
+       ✓ wraps JSON in pre tag for formatting 14ms
+       ✓ renders server data as JSON 14ms
+       ✓ wraps JSON in pre tag for formatting 19ms
+       ✓ renders null as "Not set" 12ms
+       ✓ renders undefined as "Not set" 12ms
+       ✓ renders boolean true as "Yes" 11ms
+       ✓ renders boolean false as "No" 15ms
+       ✓ renders objects as JSON 12ms
+       ✓ renders strings as-is 17ms
+       ✓ renders numbers as strings 12ms
+       ✓ shows local resolution preview when local is selected 149ms
+       ✓ shows server resolution preview when server is selected 18ms
+       ✓ shows merge resolution preview when merge is selected 149ms
+       ✓ renders Cancel and Resolve buttons 135ms
+       ✓ calls onOpenChange(false) when Cancel is clicked 141ms
+       × calls resolveConflict with local data when Keep Local is selected 1300ms
+       × calls resolveConflict with server data when Keep Server is selected 1140ms
+       ✓ closes dialog after successful resolution 115ms
+       ✓ shows resolving state while processing 126ms
+       ✓ disables buttons while resolving 159ms
+       ✓ handles resolution errors gracefully 125ms
+       ✓ logs warning when merge is selected 0ms
+       ✓ wraps diff content in scroll area 13ms
+       ✓ sets fixed height on scroll areas 19ms
+       ✓ applies dark mode classes to local diff boxes 14ms
+       ✓ applies dark mode classes to server diff boxes 13ms
+       ✓ handles empty localData 11ms
+       ✓ handles empty serverData 12ms
+       ✓ handles complex nested objects 14ms
+       ✓ handles arrays in data 10ms
+       ✓ uses semantic dialog structure 11ms
+       ✓ provides descriptive button labels 211ms
+       ✓ uses heading for dialog title 12ms
+ ✓ src/features/bidding/utils/__tests__/bidComparison.test.ts (61 tests) 39ms
+ ✓ src/features/insurance/hooks/useInsurance.test.tsx (48 tests) 797ms
+ ✓ src/lib/api/services/messaging.test.ts (37 tests) 89ms
+ ✓ src/features/toolbox-talks/hooks/useToolboxTalks.test.tsx (55 tests) 1487ms
+ ✓ src/features/safety/hooks/useIncidents.test.tsx (50 tests) 1388ms
+ ✓ src/features/submittals/hooks/__tests__/useSubmittals.test.tsx (32 tests) 1755ms
+     ✓ should handle procurement status transitions  384ms
+ ✓ src/components/__tests__/SyncStatusPanel.test.tsx (53 tests) 2332ms
+       ✓ renders Resolve button for each conflict  320ms
+ ✓ src/lib/api/services/payment-forecast.test.ts (58 tests) 25ms
+ ✓ src/features/equipment/hooks/useEquipment.test.tsx (49 tests) 2287ms
+stderr | src/features/rfis/hooks/useRFIResponseAnalytics.test.ts > Edge Cases > should handle null trends data in useResponseTimeTrendAnalysis
+Query data cannot be undefined. Please make sure to return a value other than undefined from your query function. Affected query key: ["rfi-response-analytics","project","test-project-123","trends",{"endDate":"2025-12-30","startDate":"2025-10-01"},"week"]
+
+ ✓ src/features/rfis/hooks/useRFIResponseAnalytics.test.ts (35 tests) 4524ms
+     ✓ should handle errors  3052ms
+ ✓ src/lib/api/services/reports.test.ts (44 tests) 40ms
+ ✓ src/features/submittals/components/__tests__/CreateSubmittalDialog.test.tsx (26 tests) 8212ms
+       ✓ should update title field when typed  358ms
+       ✓ should update description field when typed  345ms
+       ✓ should not submit when projectId is missing  374ms
+       ✓ should trim whitespace from title  461ms
+       ✓ should call mutateAsync with correct data on submit  799ms
+       ✓ should include cost impact when provided  620ms
+       ✓ should include schedule impact when provided  521ms
+       ✓ should include due date when provided  692ms
+       ✓ should reset form after successful submission  710ms
+       ✓ should close dialog after successful submission  430ms
+       ✓ should call onSuccess callback after successful submission  470ms
+       ✓ should handle submission error  355ms
+       ✓ should not close dialog on submission error  350ms
+       ✓ should not submit form when cancel is clicked  346ms
+ ✓ src/features/submittals/utils/__tests__/pdfExport.test.ts (32 tests) 73ms
+ ✓ src/features/schedule/hooks/useScheduleActivities.test.tsx (46 tests) 933ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts (27 tests) 34ms
+ ✓ src/features/payment-applications/utils/__tests__/pdfExport.test.ts (39 tests) 724ms
+     ✓ should handle complete workflow from draft to approved  315ms
+ ✓ src/features/daily-reports/store/__tests__/dailyReportStoreV2.test.ts (28 tests) 315ms
+ ✓ src/features/daily-reports/services/__tests__/workflowEngine.test.ts (49 tests) 27ms
+ ✓ src/features/cost-tracking/utils/__tests__/evmForecasting.test.ts (61 tests) 46ms
+ ✓ src/lib/api/services/__tests__/email-integration.test.ts (26 tests) 38ms
+ ❯ src/lib/api/services/__tests__/material-receiving.test.ts (22 tests | 3 failed) 61ms
+       × should fetch material receipts with filters successfully 15ms
+       ✓ should throw error when fetch fails 4ms
+       ✓ should apply vendor filter 4ms
+       ✓ should apply date range filters 1ms
+       × should fetch single material receipt 4ms
+       ✓ should throw error when receipt not found 1ms
+       ✓ should create new material receipt 1ms
+       ✓ should throw error when user not authenticated 1ms
+       ✓ should set default values for condition and status 2ms
+       ✓ should update material receipt 1ms
+       ✓ should soft delete material receipt 2ms
+       ✓ should update status to inspected with inspector info 2ms
+       ✓ should update material condition with notes 2ms
+       ✓ should fetch photos for material receipt 2ms
+       ✓ should add photo to material receipt 1ms
+       ✓ should upload photo file and create record 2ms
+       ✓ should fetch statistics for project 1ms
+       × should return default stats when rpc fails 1ms
+       ✓ should fetch unique vendors for project 2ms
+       ✓ should fetch unique storage locations 1ms
+       ✓ should link material receipt to submittal 1ms
+       ✓ should unlink material receipt from submittal 1ms
+ ❯ src/lib/api/services/__tests__/meetings.test.ts (17 tests | 4 failed) 31ms
+       × should fetch meetings with filters 9ms
+       × should apply date range filter 1ms
+       × should apply search filter 1ms
+       ✓ should create new meeting 1ms
+       ✓ should update meeting 1ms
+       ✓ should publish meeting minutes 1ms
+       ✓ should fetch meeting with all related data 1ms
+       × should fetch upcoming meetings 1ms
+       ✓ should create meeting note 1ms
+       ✓ should reorder notes 1ms
+       ✓ should create action item 1ms
+       ✓ should mark action item as completed 1ms
+       ✓ should convert action item to task 1ms
+       ✓ should add attendee to meeting 1ms
+       ✓ should mark attendee as present 1ms
+       ✓ should bulk add project users as attendees 2ms
+       ✓ should upload file and create attachment 2ms
+ ❯ src/lib/api/services/__tests__/photo-management.test.ts (19 tests | 3 failed) 58ms
+       × should fetch photos with filters 17ms
+       ✓ should filter by category 4ms
+       ✓ should filter by GPS presence 2ms
+       ✓ should apply date range filter 2ms
+       ✓ should create photo with metadata 3ms
+       ✓ should update photo metadata 1ms
+       ✓ should soft delete photo 2ms
+       ✓ should fetch photo collections 2ms
+       ✓ should create photo collection 1ms
+       ✓ should add photo to collection 2ms
+       ✓ should create before/after comparison 2ms
+       ✓ should fetch annotations for photo 2ms
+       × should create photo annotation 3ms
+       ✓ should get photos near GPS location 3ms
+       ✓ should get photo statistics 1ms
+       × should link photo to daily report 2ms
+       ✓ should throw error for invalid entity type 2ms
+       ✓ should log photo access 2ms
+       ✓ should get unique filter values 3ms
+ ✓ src/features/cost-estimates/utils/__tests__/pdfExport.test.ts (20 tests) 120ms
+ ❯ src/lib/api/services/__tests__/photo-templates.test.ts (19 tests | 3 failed) 58ms
+       ✓ should fetch photo templates with filters 4ms
+       × should filter by category 7ms
+       ✓ should fetch single template 1ms
+       ✓ should return null when template not found 1ms
+       ✓ should create new template 1ms
+       ✓ should update template 2ms
+       ✓ should soft delete template 7ms
+       × should fetch requirements with filters 9ms
+       ✓ should generate requirements for date 9ms
+       ✓ should complete requirement and link photo 1ms
+       ✓ should skip requirement with reason 1ms
+       ✓ should review and approve requirement 1ms
+       ✓ should fetch completion statistics 0ms
+       ✓ should get daily checklist with stats 2ms
+       ✓ should fetch progress series 1ms
+       ✓ should create new progress series 1ms
+       ✓ should add photo to series 1ms
+       ✓ should duplicate existing template 1ms
+       × should mark overdue requirements 3ms
+ ✓ src/features/checklists/utils/__tests__/pdfExport.test.ts (24 tests) 46ms
+ ✓ src/features/ai/hooks/__tests__/useSemanticSearch.test.tsx (26 tests) 442ms
+stderr | src/features/auth/hooks/__tests__/useBiometricAuth.test.tsx > useBiometricAuth > Settings Loading > should handle loading errors
+Error loading biometric settings: Error: Failed to load
+    at C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/src/features/auth/hooks/__tests__/useBiometricAuth.test.tsx:186:9
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+ ✓ src/lib/api/services/documents.test.ts (51 tests) 58ms
+stderr | src/features/auth/hooks/__tests__/useBiometricAuth.test.tsx > useBiometricAuth > Session Management > should clear biometric auth session
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ ✓ src/features/payment-applications/utils/__tests__/g703Template.test.ts (44 tests) 570ms
+ ❯ src/features/auth/hooks/__tests__/useBiometricAuth.test.tsx (28 tests | 10 failed) 1624ms
+       ✓ should detect WebAuthn support 41ms
+       ✓ should detect platform authenticator availability 60ms
+       ✓ should handle unsupported browsers 6ms
+       ✓ should handle unavailable platform authenticator 10ms
+       ✓ should load biometric settings on mount 69ms
+       ✓ should show enabled state from settings 71ms
+       ✓ should handle loading errors 72ms
+       ✓ should not load settings when user is not authenticated 7ms
+       × should register new device successfully 6ms
+       × should register device with auto-generated name 5ms
+       × should handle registration errors 12ms
+       × should refresh settings after successful registration 3ms
+       ✓ should remove device successfully 4ms
+       ✓ should refresh settings after device removal 5ms
+       × should handle removal errors 11ms
+       × should authenticate successfully 6ms
+       ✓ should handle authentication failure 3ms
+       × should handle authentication errors 4ms
+       ✓ should toggle enabled state 4ms
+       × should update reauth interval 8ms
+       × should refresh settings after toggle 1029ms
+       × should check if re-authentication is needed 63ms
+       ✓ should not need reauth when recently authenticated 13ms
+       ✓ should clear biometric auth session 7ms
+       ✓ should allow manual settings refresh 4ms
+       ✓ should handle rapid successive operations 4ms
+       ✓ should handle user changing during hook lifetime 77ms
+       ✓ should handle disabled biometric settings 13ms
+ ✓ src/features/drawings/hooks/useDrawings.test.tsx (52 tests) 1233ms
+ ✓ src/lib/api/services/schedule.test.ts (54 tests) 63ms
+ ↓ src/lib/api/services/historical-bid-analysis.test.ts (14 tests | 14 skipped)
+ ✓ src/features/payment-applications/utils/__tests__/g702Template.test.ts (47 tests) 345ms
+ ✓ src/lib/api/services/earned-value-management.test.ts (83 tests) 26ms
+ ✓ src/features/jsa/hooks/useJSA.test.tsx (46 tests) 982ms
+ ✓ src/features/quickbooks/hooks/useQuickBooks.test.tsx (49 tests) 1469ms
+stderr | src/features/approvals/hooks/useApprovals.test.tsx > useApprovalRequests > should return empty array on error
+[useApprovalRequests] Query failed: Error: DB error
+    at C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/src/features/approvals/hooks/useApprovals.test.tsx:296:43
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+stderr | src/features/approvals/hooks/useApprovals.test.tsx > Approval Error Handling > should handle API errors gracefully for requests
+[useApprovalRequests] Query failed: Error: Network error
+    at C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/src/features/approvals/hooks/useApprovals.test.tsx:820:43
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+ ✓ src/features/approvals/hooks/useApprovals.test.tsx (42 tests) 1280ms
+ ✓ src/features/rfis/hooks/useRFIs.test.ts (28 tests) 793ms
+ ✓ src/types/cost-tracking.test.ts (81 tests) 41ms
+ ✓ src/features/reports/hooks/useReportBuilder.test.tsx (35 tests) 802ms
+stderr | src/lib/auth/AuthContextWithMFA.test.tsx > AuthContextWithMFA > Security Critical Tests > should handle profile fetch failure during sign in
+Error fetching user profile: Error: Profile not found
+    at C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/src/lib/auth/AuthContextWithMFA.test.tsx:788:22
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+ ✓ src/lib/auth/AuthContextWithMFA.test.tsx (18 tests) 1491ms
+ ✓ src/features/look-ahead/hooks/useLookAhead.test.tsx (30 tests) 1619ms
+ ✓ src/__tests__/security/data-isolation.test.ts (19 tests) 17ms
+ ✓ src/features/approvals/hooks/usePublicApprovalLinks.test.tsx (27 tests) 1398ms
+ ✓ src/lib/api/services/lien-waiver-reminders.test.ts (14 tests) 132ms
+ ✓ src/components/__tests__/LoadingScreen.test.tsx (88 tests) 1566ms
+ ✓ src/features/cost-tracking/hooks/useCostTracking.test.tsx (46 tests) 932ms
+ ✓ src/features/punch-lists/store/offlinePunchStore.test.ts (31 tests) 63ms
+ ✓ src/features/rfis/utils/__tests__/pdfExport.test.ts (26 tests) 129ms
+ ✓ src/lib/api/services/checklist-scoring.test.ts (9 tests) 17ms
+ ✓ src/features/payment-applications/hooks/usePaymentApplications.test.tsx (35 tests) 690ms
+ ✓ src/features/lien-waivers/utils/__tests__/pdfExport.test.ts (27 tests) 161ms
+ ✓ src/features/daily-reports/utils/__tests__/pdfExport.test.ts (27 tests) 135ms
+ ✓ src/types/closeout.test.ts (39 tests) 49ms
+ ✓ src/lib/api/services/analytics.test.ts (22 tests) 31ms
+ ✓ src/features/bidding/hooks/useBidding.test.tsx (32 tests) 1578ms
+ ✓ src/features/daily-reports/store/offlineReportStore.test.ts (41 tests) 44ms
+ ✓ src/features/site-instructions/hooks/useSiteInstructions.test.tsx (34 tests) 1000ms
+ ✓ src/types/quickbooks.test.ts (62 tests) 31ms
+ ✓ src/features/cost-estimates/hooks/useCostEstimates.test.tsx (41 tests) 1819ms
+stderr | src/__tests__/security/rls-policies.test.ts > Cross-Tenant Isolation Tests
+GoTrueClient@sb-your_project_id-auth-token:1 (2.89.0) 2025-12-30T22:47:11.354Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+ ✓ src/__tests__/security/rls-policies.test.ts (34 tests | 8 skipped) 357ms
+ ✓ src/types/lien-waiver.test.ts (48 tests) 145ms
+ ✓ src/features/transmittals/hooks/useTransmittals.test.tsx (37 tests) 2116ms
+ ✓ src/types/drawing.test.ts (48 tests) 74ms
+ ✓ src/features/closeout/hooks/useCloseout.test.tsx (29 tests) 1315ms
+ ✓ src/lib/auth/rbac.test.ts (33 tests) 17ms
+ ✓ src/components/__tests__/ThemeToggle.test.tsx (66 tests) 6998ms
+       ✓ shows dropdown trigger button  568ms
+       ✓ shows theme options when dropdown is opened  1091ms
+       ✓ calls setTheme when light option is clicked  1511ms
+       ✓ calls setTheme when dark option is clicked  955ms
+       ✓ calls setTheme when system option is clicked  548ms
+       ✓ shows dropdown menu in compact mode  375ms
+ ✓ src/types/schedule.test.ts (37 tests) 19ms
+ ✓ src/features/cost-tracking/hooks/useEVM.test.tsx (39 tests) 1378ms
+ ✓ src/lib/offline/message-queue.test.ts (29 tests) 457ms
+ ✓ src/features/summaries/hooks/useSmartSummaries.test.tsx (34 tests) 2300ms
+     ✓ should handle API error in query  1066ms
+ ✓ src/types/meeting-minutes.test.ts (38 tests) 24ms
+ ✓ src/features/documents/hooks/useDocuments.test.ts (21 tests) 739ms
+ ✓ src/lib/validation/schemas.test.ts (61 tests) 110ms
+stderr | src/stores/__tests__/offline-store.test.ts > Offline Store > Event Listeners > should handle online event
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/stores/__tests__/offline-store.test.ts > Offline Store > Event Listeners > should handle offline event
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ ✓ src/stores/__tests__/offline-store.test.ts (36 tests) 614ms
+stderr | src/__tests__/integration/submittal-workflow.test.tsx > Submittal Workflow Integration > Multiple Submittals > should handle multiple submittals independently
+Encountered two children with the same key, `new-1`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+ ✓ src/__tests__/integration/submittal-workflow.test.tsx (10 tests) 5224ms
+       ✓ should complete full submittal lifecycle: Create → Submit → Approve → Track Procurement  1582ms
+       ✓ should handle rejection workflow  572ms
+       ✓ should transition from draft to submitted  324ms
+       ✓ should transition from submitted to approved  446ms
+       ✓ should transition from submitted to rejected  541ms
+       ✓ should only show procurement section for approved submittals  380ms
+       ✓ should track procurement status transitions  731ms
+       ✓ should create procurement record with vendor details  464ms

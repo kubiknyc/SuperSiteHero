@@ -1,0 +1,45 @@
+
+> jobsight@0.1.0 test:e2e
+> playwright test
+
+[dotenv@17.2.3] injecting env (1) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.3] injecting env (22) from .env.test -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+
+🔧 Running Playwright global setup...
+
+✅ Environment variables verified
+🔐 Creating authenticated session for user: test@supersitehero.local
+   → Navigating to http://localhost:5173
+   → Current URL: http://localhost:5173/
+   → Waiting for email input...
+   → Filling in credentials...
+   → Submitting form...
+   ⚠️  Error message found: ErrorFailed to fetch
+   📸 Screenshot saved to playwright/.auth/login-debug.png
+   → Waiting for redirect...
+   ❌ Failed to create user session: page.waitForURL: Timeout 15000ms exceeded.
+=========================== logs ===========================
+waiting for navigation until "load"
+============================================================
+    at createAuthenticatedSession (c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\global-setup.ts:124:16)
+    at globalSetup (c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\global-setup.ts:50:3) {
+  name: 'TimeoutError'
+}
+TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+=========================== logs ===========================
+waiting for navigation until "load"
+============================================================
+
+   at global-setup.ts:124
+
+  122 |     // Wait for successful login (redirect away from login page)
+  123 |     console.log(`   → Waiting for redirect...`);
+> 124 |     await page.waitForURL(url => !url.pathname.includes('/login'), {
+      |                ^
+  125 |       timeout: 15000,
+  126 |     });
+  127 |
+    at createAuthenticatedSession (c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\global-setup.ts:124:16)
+    at globalSetup (c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\global-setup.ts:50:3)
+
+[1A[2K

@@ -115,7 +115,7 @@ export default defineConfig({
   webServer: {
     command: 'npm run dev:test',
     url: 'http://localhost:5173',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,  // Always start fresh server in test mode
     timeout: 180000,  // Increased timeout for slow server startup
   },
 });

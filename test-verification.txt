@@ -1,0 +1,251 @@
+
+> jobsight@0.1.0 test
+> vitest --run
+
+
+ RUN  v4.0.16 C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero
+
+ ✓ src/features/bidding/utils/__tests__/bidEvaluation.test.ts (55 tests) 33ms
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts (159 tests) 55ms
+ ✓ src/features/cost-tracking/utils/__tests__/evmCalculations.test.ts (114 tests) 35ms
+ ✓ src/lib/api/services/meetings.test.ts (45 tests) 52ms
+ ✓ src/lib/api/services/equipment.test.ts (48 tests) 60ms
+ ✓ src/features/cost-tracking/utils/__tests__/evmByDivision.test.ts (56 tests) 54ms
+ ✓ src/lib/api/services/action-items.test.ts (65 tests) 56ms
+ ✓ src/lib/api/services/checklists.test.ts (66 tests) 98ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts (104 tests) 45ms
+ ✓ src/features/lien-waivers/hooks/useLienWaivers.test.tsx (42 tests) 616ms
+ ✓ src/lib/api/services/messaging.test.ts (37 tests) 57ms
+ ✓ src/features/docusign/hooks/__tests__/useDocuSign.test.tsx (45 tests) 2637ms
+ ✓ src/components/__tests__/SyncStatusPanel.test.tsx (53 tests) 1995ms
+       ✓ renders Resolve button for each conflict  344ms
+ ✓ src/features/bidding/utils/__tests__/bidComparison.test.ts (61 tests) 27ms
+ ✓ src/lib/api/services/reports.test.ts (44 tests) 31ms
+ ✓ src/components/__tests__/ConflictResolutionDialog.test.tsx (59 tests) 3594ms
+       ✓ renders three resolution buttons  490ms
+ ✓ src/features/action-items/hooks/__tests__/useActionItems.test.tsx (79 tests) 4284ms
+ ✓ src/features/insurance/hooks/useInsurance.test.tsx (48 tests) 800ms
+stderr | src/features/rfis/hooks/useRFIResponseAnalytics.test.ts > Edge Cases > should handle null trends data in useResponseTimeTrendAnalysis
+Query data cannot be undefined. Please make sure to return a value other than undefined from your query function. Affected query key: ["rfi-response-analytics","project","test-project-123","trends",{"endDate":"2025-12-30","startDate":"2025-10-01"},"week"]
+
+ ✓ src/features/rfis/hooks/useRFIResponseAnalytics.test.ts (35 tests) 4565ms
+     ✓ should handle errors  3055ms
+ ✓ src/components/__tests__/PWAInstallPrompt.test.tsx (88 tests) 4541ms
+         ✓ calls onClose when close button is clicked  306ms
+         ✓ calls dismissPrompt when "Not now" is clicked  379ms
+         ✓ calls dismissPrompt when X button is clicked  403ms
+         ✓ dismisses permanently when "don't show again" is checked  467ms
+ ✓ src/features/safety/hooks/useIncidents.test.tsx (50 tests) 1154ms
+ ✓ src/features/toolbox-talks/hooks/useToolboxTalks.test.tsx (55 tests) 1494ms
+ ✓ src/lib/api/services/payment-forecast.test.ts (58 tests) 23ms
+ ✓ src/features/payment-applications/utils/__tests__/g703Template.test.ts (44 tests) 360ms
+ ✓ src/features/schedule/utils/__tests__/scheduleExport.test.ts (96 tests) 208ms
+ ✓ src/features/submittals/hooks/__tests__/useSubmittals.test.tsx (32 tests) 1680ms
+     ✓ should handle procurement status transitions  352ms
+ ✓ src/features/cost-tracking/utils/__tests__/evmForecasting.test.ts (61 tests) 38ms
+ ✓ src/features/equipment/hooks/useEquipment.test.tsx (49 tests) 2105ms
+ ✓ src/features/schedule/hooks/useScheduleActivities.test.tsx (46 tests) 862ms
+ ✓ src/lib/api/services/documents.test.ts (51 tests) 57ms
+ ✓ src/features/drawings/hooks/useDrawings.test.tsx (52 tests) 1195ms
+ ✓ src/lib/api/services/schedule.test.ts (54 tests) 52ms
+ ✓ src/features/submittals/utils/__tests__/pdfExport.test.ts (32 tests) 50ms
+ ✓ src/lib/api/services/earned-value-management.test.ts (83 tests) 18ms
+ ✓ src/features/payment-applications/utils/__tests__/g702Template.test.ts (47 tests) 283ms
+stderr | src/features/approvals/hooks/useApprovals.test.tsx > useApprovalRequests > should return empty array on error
+[useApprovalRequests] Query failed: Error: DB error
+    at C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/src/features/approvals/hooks/useApprovals.test.tsx:296:43
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+ ✓ src/features/jsa/hooks/useJSA.test.tsx (46 tests) 973ms
+ ↓ src/lib/api/services/historical-bid-analysis.test.ts (14 tests | 14 skipped)
+ ✓ src/features/quickbooks/hooks/useQuickBooks.test.tsx (49 tests) 1446ms
+ ✓ src/types/cost-tracking.test.ts (81 tests) 27ms
+ ✓ src/features/reports/hooks/useReportBuilder.test.tsx (35 tests) 777ms
+ ✓ src/features/rfis/hooks/useRFIs.test.ts (28 tests) 785ms
+stderr | src/features/approvals/hooks/useApprovals.test.tsx > Approval Error Handling > should handle API errors gracefully for requests
+[useApprovalRequests] Query failed: Error: Network error
+    at C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/src/features/approvals/hooks/useApprovals.test.tsx:820:43
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+ ✓ src/features/approvals/hooks/useApprovals.test.tsx (42 tests) 1302ms
+ ✓ src/__tests__/security/data-isolation.test.ts (19 tests) 14ms
+stderr | src/lib/auth/AuthContextWithMFA.test.tsx > AuthContextWithMFA > Security Critical Tests > should handle profile fetch failure during sign in
+Error fetching user profile: Error: Profile not found
+    at C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/src/lib/auth/AuthContextWithMFA.test.tsx:788:22
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+ ✓ src/lib/auth/AuthContextWithMFA.test.tsx (18 tests) 1426ms
+ ✓ src/features/look-ahead/hooks/useLookAhead.test.tsx (30 tests) 1618ms
+ ✓ src/components/__tests__/LoadingScreen.test.tsx (88 tests) 761ms
+ ✓ src/features/approvals/hooks/usePublicApprovalLinks.test.tsx (27 tests) 1260ms
+ ✓ src/lib/api/services/lien-waiver-reminders.test.ts (14 tests) 65ms
+ ✓ src/features/punch-lists/store/offlinePunchStore.test.ts (31 tests) 26ms
+ ✓ src/features/payment-applications/hooks/usePaymentApplications.test.tsx (35 tests) 489ms
+ ✓ src/features/cost-tracking/hooks/useCostTracking.test.tsx (46 tests) 811ms
+ ✓ src/features/daily-reports/utils/__tests__/pdfExport.test.ts (27 tests) 42ms
+ ✓ src/types/closeout.test.ts (39 tests) 30ms
+ ✓ src/lib/api/services/checklist-scoring.test.ts (9 tests) 13ms
+ ✓ src/lib/api/services/analytics.test.ts (22 tests) 31ms
+ ✓ src/features/daily-reports/store/offlineReportStore.test.ts (41 tests) 31ms
+ ✓ src/features/bidding/hooks/useBidding.test.tsx (32 tests) 1441ms
+ ✓ src/types/quickbooks.test.ts (62 tests) 17ms
+ ✓ src/features/payment-applications/utils/__tests__/pdfExport.test.ts (39 tests) 688ms
+     ✓ should handle complete workflow from draft to approved  308ms
+ ✓ src/features/site-instructions/hooks/useSiteInstructions.test.tsx (34 tests) 827ms
+ ✓ src/features/cost-estimates/hooks/useCostEstimates.test.tsx (41 tests) 1566ms
+ ✓ src/features/checklists/utils/__tests__/pdfExport.test.ts (24 tests) 32ms
+ ✓ src/types/lien-waiver.test.ts (48 tests) 49ms
+stderr | src/__tests__/security/rls-policies.test.ts > Cross-Tenant Isolation Tests
+GoTrueClient@sb-your_project_id-auth-token:1 (2.89.0) 2025-12-30T23:32:14.977Z Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.
+
+ ✓ src/__tests__/security/rls-policies.test.ts (34 tests | 8 skipped) 156ms
+ ✓ src/features/transmittals/hooks/useTransmittals.test.tsx (37 tests) 1933ms
+ ✓ src/features/daily-reports/store/__tests__/dailyReportStoreV2.test.ts (28 tests) 134ms
+ ✓ src/types/drawing.test.ts (48 tests) 21ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts (27 tests) 35ms
+ ✓ src/lib/auth/rbac.test.ts (33 tests) 15ms
+ ✓ src/components/__tests__/ThemeToggle.test.tsx (66 tests) 3565ms
+       ✓ shows theme options when dropdown is opened  548ms
+       ✓ calls setTheme when light option is clicked  401ms
+       ✓ calls setTheme when dark option is clicked  343ms
+       ✓ calls setTheme when system option is clicked  328ms
+       ✓ shows dropdown menu in compact mode  307ms
+ ✓ src/features/closeout/hooks/useCloseout.test.tsx (29 tests) 1314ms
+ ✓ src/features/cost-tracking/hooks/useEVM.test.tsx (39 tests) 1327ms
+ ✓ src/types/schedule.test.ts (37 tests) 16ms
+ ✓ src/types/meeting-minutes.test.ts (38 tests) 15ms
+ ✓ src/lib/offline/message-queue.test.ts (29 tests) 452ms
+ ✓ src/features/summaries/hooks/useSmartSummaries.test.tsx (34 tests) 2249ms
+     ✓ should handle API error in query  1043ms
+ ✓ src/features/documents/hooks/useDocuments.test.ts (21 tests) 746ms
+ ✓ src/lib/validation/schemas.test.ts (61 tests) 32ms
+stderr | src/features/auth/hooks/__tests__/useBiometricAuth.test.tsx > useBiometricAuth > Settings Loading > should handle loading errors
+Error loading biometric settings: Error: Failed to load
+    at C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/src/features/auth/hooks/__tests__/useBiometricAuth.test.tsx:186:9
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:145:11
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:915:26
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1243:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1209:10)
+    at file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1653:37
+    at Traces.$ (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/vitest/dist/chunks/traces.U4xDYhzZ.js:115:27)
+    at trace (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/vitest/dist/chunks/test.B8ej_ZHS.js:239:21)
+    at runTest (file:///C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/node_modules/@vitest/runner/dist/index.js:1653:12)
+
+ ✓ src/features/rfis/utils/__tests__/pdfExport.test.ts (26 tests) 46ms
+stderr | src/stores/__tests__/offline-store.test.ts > Offline Store > Event Listeners > should handle online event
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/stores/__tests__/offline-store.test.ts > Offline Store > Event Listeners > should handle offline event
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ ✓ src/stores/__tests__/offline-store.test.ts (36 tests) 262ms
+stderr | src/features/auth/hooks/__tests__/useBiometricAuth.test.tsx > useBiometricAuth > Session Management > should clear biometric auth session
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ ❯ src/features/auth/hooks/__tests__/useBiometricAuth.test.tsx (28 tests | 6 failed) 2288ms
+       ✓ should detect WebAuthn support 50ms
+       ✓ should detect platform authenticator availability 73ms
+       ✓ should handle unsupported browsers 4ms
+       ✓ should handle unavailable platform authenticator 11ms
+       ✓ should load biometric settings on mount 76ms
+       ✓ should show enabled state from settings 61ms
+       ✓ should handle loading errors 77ms
+       ✓ should not load settings when user is not authenticated 11ms
+       ✓ should register new device successfully 75ms
+       ✓ should register device with auto-generated name 70ms
+       ✓ should handle registration errors 70ms
+       ✓ should refresh settings after successful registration 84ms
+       ✓ should remove device successfully 3ms
+       ✓ should refresh settings after device removal 5ms
+       × should handle removal errors 71ms
+       ✓ should authenticate successfully 59ms
+       × should handle authentication failure 66ms
+       × should handle authentication errors 68ms
+       ✓ should toggle enabled state 3ms
+       × should update reauth interval 73ms
+       × should refresh settings after toggle 1096ms
+       × should check if re-authentication is needed 83ms
+       ✓ should not need reauth when recently authenticated 3ms
+       ✓ should clear biometric auth session 3ms
+       ✓ should allow manual settings refresh 2ms
+       ✓ should handle rapid successive operations 2ms
+       ✓ should handle user changing during hook lifetime 78ms
+       ✓ should handle disabled biometric settings 6ms
+stderr | src/__tests__/integration/submittal-workflow.test.tsx > Submittal Workflow Integration > Multiple Submittals > should handle multiple submittals independently
+Encountered two children with the same key, `new-1`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+
+ ✓ src/__tests__/integration/submittal-workflow.test.tsx (10 tests) 2712ms
+       ✓ should complete full submittal lifecycle: Create → Submit → Approve → Track Procurement  727ms
+       ✓ should track procurement status transitions  411ms

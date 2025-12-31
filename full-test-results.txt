@@ -1,0 +1,23 @@
+
+> jobsight@0.1.0 test
+> vitest --run
+
+
+ RUN  v4.0.16 c:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero
+
+ ✓ src/lib/api/services/cost-tracking-variance.test.ts (159 tests) 31ms
+ ✓ src/lib/api/services/equipment.test.ts (48 tests) 46ms
+ ✓ src/lib/api/services/meetings.test.ts (45 tests) 57ms
+ ✓ src/lib/api/services/action-items.test.ts (65 tests) 54ms
+ ✓ src/lib/api/services/rfi-response-analytics.test.ts (104 tests) 41ms
+ ✓ src/lib/api/services/messaging.test.ts (37 tests) 53ms
+ ✓ src/lib/api/services/reports.test.ts (44 tests) 34ms
+ ✓ src/lib/api/services/documents.test.ts (51 tests) 58ms
+ ✓ src/lib/api/services/payment-forecast.test.ts (58 tests) 35ms
+ ✓ src/lib/api/services/schedule.test.ts (54 tests) 47ms
+ ✓ src/lib/api/services/earned-value-management.test.ts (83 tests) 25ms
+ ↓ src/lib/api/services/historical-bid-analysis.test.ts (14 tests | 14 skipped)
+ ✓ src/lib/api/services/lien-waiver-reminders.test.ts (14 tests) 58ms
+ ✓ src/lib/api/services/checklist-scoring.test.ts (9 tests) 14ms
+ ✓ src/lib/api/services/analytics.test.ts (22 tests) 30ms
+ ✓ src/lib/api/services/__tests__/toolbox-talks.test.ts (27 tests) 30ms
