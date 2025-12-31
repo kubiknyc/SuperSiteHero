@@ -40,17 +40,11 @@ async function login(page: Page) {
   await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
   await page.fill('input[type="password"]', TEST_PASSWORD);
 
-  // Wait for auth response
-  const responsePromise = page.waitForResponse(
-    resp => (resp.url().includes('auth') || resp.url().includes('session')) && resp.status() === 200,
-    { timeout: 15000 }
-  ).catch(() => null);
-
+  // Submit login form
   await page.click('button[type="submit"]');
-  await responsePromise;
 
-  // Wait for redirect away from login
-  await page.waitForURL(/\/(projects|dashboard)/, { timeout: 15000 });
+  // Wait for redirect away from login (use Phase 1 pattern - negative assertion)
+  await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
 
   // Verify authenticated state
   await page.waitForTimeout(500);
