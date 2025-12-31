@@ -6,7 +6,7 @@ import { ZoomIn, ZoomOut, Download, Maximize2, Pencil } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { cn } from '@/lib/utils'
 import { LazyDrawingCanvas } from '../LazyDrawingCanvas'
-import { UnifiedDrawingCanvas } from '../markup/UnifiedDrawingCanvas'
+import { LazyUnifiedDrawingCanvas as UnifiedDrawingCanvas } from '../markup/LazyUnifiedDrawingCanvas'
 import { logger } from '../../../../lib/utils/logger';
 
 
@@ -144,13 +144,13 @@ export function ImageViewer({
 
   // Pan handlers
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (zoom <= 100) {return} // Only allow pan when zoomed in
+    if (zoom <= 100) { return } // Only allow pan when zoomed in
     setIsDragging(true)
     setDragStart({ x: e.clientX - panX, y: e.clientY - panY })
   }
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging || zoom <= 100) {return}
+    if (!isDragging || zoom <= 100) { return }
     setPanX(e.clientX - dragStart.x)
     setPanY(e.clientY - dragStart.y)
   }

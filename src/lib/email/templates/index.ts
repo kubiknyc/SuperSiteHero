@@ -145,3 +145,7 @@ export type {
   ActionItemInfo,
   NoteInfo,
 } from './meeting-minutes'
+
+// Scheduled Report Templates
+export { generateScheduledReportEmail } from './scheduled-report'
+export type { ScheduledReportEmailData } from './scheduled-report'

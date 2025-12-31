@@ -4,6 +4,7 @@
 // Original components
 export { MarkupToolbar } from './MarkupToolbar'
 export { UnifiedDrawingCanvas } from './UnifiedDrawingCanvas'
+export { LazyUnifiedDrawingCanvas } from './LazyUnifiedDrawingCanvas'
 
 // Enhanced components
 export { ColorPicker } from './ColorPicker'

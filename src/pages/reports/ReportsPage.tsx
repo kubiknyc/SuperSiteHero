@@ -42,6 +42,7 @@ import {
   Play,
   Settings,
   Mail,
+  Send,
 } from 'lucide-react'
 import { useAuth } from '@/lib/auth/AuthContext'
 import {
@@ -50,6 +51,7 @@ import {
   useDuplicateReportTemplate,
   useScheduledReports,
   useGeneratedReports,
+  useExecuteScheduledReport,
 } from '@/features/reports/hooks/useReportBuilder'
 import {
   ReportTemplateCard,
@@ -94,10 +96,11 @@ export function ReportsPage() {
   // Mutations
   const deleteTemplate = useDeleteReportTemplate()
   const duplicateTemplate = useDuplicateReportTemplate()
+  const executeScheduledReport = useExecuteScheduledReport()
 
   // Filter templates by search
   const filteredTemplates = templates?.filter((t) => {
-    if (!searchTerm) {return true}
+    if (!searchTerm) { return true }
     const term = searchTerm.toLowerCase()
     return (
       t.name.toLowerCase().includes(term) ||
@@ -128,7 +131,7 @@ export function ReportsPage() {
   }
 
   const handleDeleteConfirm = async () => {
-    if (!selectedTemplate) {return}
+    if (!selectedTemplate) { return }
     await deleteTemplate.mutateAsync(selectedTemplate.id)
     setDeleteDialogOpen(false)
     setSelectedTemplate(null)
@@ -146,7 +149,7 @@ export function ReportsPage() {
   }, [])
 
   const handleDuplicateConfirm = async () => {
-    if (!selectedTemplate || !newTemplateName.trim()) {return}
+    if (!selectedTemplate || !newTemplateName.trim()) { return }
     await duplicateTemplate.mutateAsync({
       id: selectedTemplate.id,
       newName: newTemplateName.trim(),
@@ -399,13 +402,29 @@ export function ReportsPage() {
                               </p>
                             </div>
                           )}
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => navigate(`/reports/schedules/${schedule.id}`)}
-                          >
-                            <Settings className="h-4 w-4" />
-                          </Button>
+                          <div className="flex items-center gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              title="Run Now"
+                              onClick={() => executeScheduledReport.mutate(schedule.id)}
+                              disabled={executeScheduledReport.isPending}
+                            >
+                              {executeScheduledReport.isPending ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                              ) : (
+                                <Send className="h-4 w-4" />
+                              )}
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              title="Settings"
+                              onClick={() => navigate(`/reports/schedules/${schedule.id}`)}
+                            >
+                              <Settings className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </CardContent>

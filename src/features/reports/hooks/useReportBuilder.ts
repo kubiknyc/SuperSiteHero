@@ -273,9 +273,9 @@ export function useSaveTemplateConfiguration() {
       grouping?: ReportTemplateGroupingInput[]
     }) => {
       await reportBuilderApi.setTemplateFields(templateId, fields)
-      if (filters) {await reportBuilderApi.setTemplateFilters(templateId, filters)}
-      if (sorting) {await reportBuilderApi.setTemplateSorting(templateId, sorting)}
-      if (grouping) {await reportBuilderApi.setTemplateGrouping(templateId, grouping)}
+      if (filters) { await reportBuilderApi.setTemplateFilters(templateId, filters) }
+      if (sorting) { await reportBuilderApi.setTemplateSorting(templateId, sorting) }
+      if (grouping) { await reportBuilderApi.setTemplateGrouping(templateId, grouping) }
       return reportBuilderApi.getReportTemplate(templateId)
     },
     onSuccess: (template) => {
@@ -436,6 +436,47 @@ export function useToggleScheduledReportActive() {
     },
   })
 }
+
+/**
+ * Execute a scheduled report immediately (Run Now)
+ */
+export function useExecuteScheduledReport() {
+  const queryClient = useQueryClient()
+  const { showToast } = useToast()
+
+  return useMutation({
+    mutationFn: async (scheduleId: string) => {
+      const { executeScheduledReport } = await import('@/lib/api/services/scheduled-report-executor')
+      return executeScheduledReport(scheduleId)
+    },
+    onSuccess: (result) => {
+      queryClient.invalidateQueries({ queryKey: reportBuilderKeys.scheduled() })
+      queryClient.invalidateQueries({ queryKey: reportBuilderKeys.scheduledDetail(result.scheduleId) })
+
+      if (result.success) {
+        showToast({
+          type: 'success',
+          title: 'Report Sent',
+          message: `"${result.reportName}" was sent to ${result.recipientCount} recipient${result.recipientCount !== 1 ? 's' : ''} (${result.recordCount} records).`,
+        })
+      } else {
+        showToast({
+          type: 'error',
+          title: 'Execution Failed',
+          message: result.error || 'Failed to execute scheduled report',
+        })
+      }
+    },
+    onError: (error: Error) => {
+      showToast({
+        type: 'error',
+        title: 'Error',
+        message: error.message || 'Failed to execute scheduled report',
+      })
+    },
+  })
+}
+
 
 // ============================================================================
 // Generated Report Hooks

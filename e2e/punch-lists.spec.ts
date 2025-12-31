@@ -549,7 +549,8 @@ test.describe('Punch Lists Management', () => {
 
   test('should display punch list summary statistics', async ({ page }) => {
     // Look for summary cards or statistics
-    const summaryElements = page.locator('[data-testid*="summary"], .summary-card, .stats-card, text=/total|open|closed|verified/i');
+    const summaryElements = page.locator('[data-testid*="summary"], .summary-card, .stats-card')
+      .or(page.getByText(/total|open|closed|verified/i));
 
     // Should show some summary information
     const count = await summaryElements.count();
@@ -707,7 +708,8 @@ test.describe('Punch Lists Management', () => {
     await page.waitForTimeout(2000);
 
     // Look for due date fields in the list or detail view
-    const dueDateElements = page.locator('[data-testid*="due-date"], text=/due date|deadline/i, input[type="date"]');
+    const dueDateElements = page.locator('[data-testid*="due-date"], input[type="date"]')
+      .or(page.getByText(/due date|deadline/i));
 
     // Due dates might be present
     const count = await dueDateElements.count();
