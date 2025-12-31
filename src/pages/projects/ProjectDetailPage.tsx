@@ -18,7 +18,7 @@ import { Badge } from '@/components/ui/badge'
 import { PresenceAvatars } from '@/components/presence/PresenceAvatars'
 import { useProjectPresence } from '@/hooks/useRealtimePresence'
 import { Label } from '@/components/ui/label'
-import { ArrowLeft, Edit, Loader2, Calendar, LayoutTemplate, CheckCircle, WifiOff } from 'lucide-react'
+import { ArrowLeft, Edit, Loader2, Calendar, LayoutTemplate, CheckCircle, WifiOff, Settings } from 'lucide-react'
 import { format } from 'date-fns'
 import { SaveAsTemplateDialog } from '@/features/project-templates/components'
 import { useAuth } from '@/hooks/useAuth'
@@ -189,6 +189,10 @@ export function ProjectDetailPage() {
             <Button variant="outline" onClick={() => setSaveAsTemplateOpen(true)}>
               <LayoutTemplate className="h-4 w-4 mr-2" />
               Save as Template
+            </Button>
+            <Button variant="outline" onClick={() => navigate(`/projects/${projectId}/settings`)}>
+              <Settings className="h-4 w-4 mr-2" />
+              Settings
             </Button>
             <Button onClick={() => setEditDialogOpen(true)}>
               <Edit className="h-4 w-4 mr-2" />
