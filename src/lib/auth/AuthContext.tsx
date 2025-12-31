@@ -16,6 +16,7 @@ interface AuthContextType {
   isPending: boolean
   signIn: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
+  refreshUserProfile: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -149,6 +150,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const isPending = userProfile?.approval_status === 'pending'
 
+  // Refresh user profile from database (used after profile updates)
+  const refreshUserProfile = async () => {
+    if (user) {
+      await fetchUserProfile(user.id)
+    }
+  }
+
   const value = {
     session,
     user,
@@ -157,6 +165,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isPending,
     signIn,
     signOut,
+    refreshUserProfile,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

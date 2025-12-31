@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
-import { Bell, Workflow, Receipt, ChevronRight, Building2, Users, LayoutTemplate, UsersRound, Shield, Bot, Moon, Calendar, FileSignature } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { Bell, Workflow, Receipt, ChevronRight, Building2, Users, LayoutTemplate, UsersRound, Shield, Bot, Moon, Calendar, FileSignature, Pencil, ShieldCheck } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { ThemeSelector } from '@/components/ThemeToggle'
 import { PWAInstallButton } from '@/components/PWAInstallPrompt'
@@ -125,6 +127,13 @@ export function SettingsPage() {
     (section) => !section.adminOnly || isAdmin
   )
 
+  // Get initials for avatar fallback
+  const getInitials = () => {
+    const first = userProfile?.first_name?.[0] || ''
+    const last = userProfile?.last_name?.[0] || ''
+    return (first + last).toUpperCase() || 'U'
+  }
+
   return (
     <AppLayout>
       <div className="container max-w-4xl py-6 space-y-6">
@@ -134,6 +143,39 @@ export function SettingsPage() {
             Manage your account settings and preferences
           </p>
         </div>
+
+        {/* Profile Card */}
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center gap-4">
+              <Avatar className="h-16 w-16 border-2 border-border">
+                {userProfile?.avatar_url ? (
+                  <AvatarImage src={userProfile.avatar_url} alt="Profile" />
+                ) : null}
+                <AvatarFallback className="text-lg bg-primary/10 text-primary">
+                  {getInitials()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-lg truncate">
+                  {userProfile?.first_name} {userProfile?.last_name}
+                </h3>
+                <p className="text-sm text-muted-foreground truncate">
+                  {userProfile?.email}
+                </p>
+                <p className="text-sm text-muted-foreground capitalize">
+                  {userProfile?.role}
+                </p>
+              </div>
+              <Button variant="outline" asChild>
+                <Link to="/profile/edit">
+                  <Pencil className="h-4 w-4 mr-2" />
+                  Edit Profile
+                </Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Appearance & App Settings */}
         <div className="space-y-4">
@@ -174,6 +216,28 @@ export function SettingsPage() {
         {/* Security Settings */}
         <div className="space-y-4">
           <h2 className="text-lg font-semibold heading-section">Security</h2>
+
+          {/* MFA Setup */}
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-start gap-4">
+                <div className="p-3 rounded-lg bg-emerald-100 dark:bg-emerald-900">
+                  <ShieldCheck className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <div className="flex-1">
+                  <CardTitle className="text-lg mb-1">Two-Factor Authentication</CardTitle>
+                  <CardDescription className="mb-4">
+                    Add an extra layer of security to your account by enabling two-factor authentication
+                  </CardDescription>
+                  <Button variant="outline" asChild>
+                    <Link to="/auth/mfa-setup">
+                      Configure MFA
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* MFA Backup Codes */}
           <MFABackupCodes />

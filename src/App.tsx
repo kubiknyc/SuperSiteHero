@@ -27,6 +27,11 @@ import './styles/industrial-theme.css'
 import { LoginPage } from './pages/auth/LoginPage'
 import { SignupPage } from './pages/auth/SignupPage'
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage'
+import { ResetPasswordPage } from './pages/auth/ResetPasswordPage'
+
+// MFA pages - lazy loaded as they're secondary auth flows
+const MFASetupPage = lazy(() => import('./pages/auth/MFASetupPage').then(m => ({ default: m.MFASetupPage })))
+const MFAVerifyPage = lazy(() => import('./pages/auth/MFAVerifyPage').then(m => ({ default: m.MFAVerifyPage })))
 
 // Registration flow - loaded eagerly as part of initial auth experience
 import { CompanyRegistration } from './features/registration/CompanyRegistration'
@@ -109,6 +114,9 @@ const ApprovalRequestPage = lazy(() => import('./pages/approvals/ApprovalRequest
 const ApprovalWorkflowsPage = lazy(() => import('./pages/settings/ApprovalWorkflowsPage').then(m => ({ default: m.ApprovalWorkflowsPage })))
 const NotificationPreferencesPage = lazy(() => import('./pages/settings/NotificationPreferencesPage').then(m => ({ default: m.NotificationPreferencesPage })))
 const SettingsPage = lazy(() => import('./pages/settings/SettingsPage').then(m => ({ default: m.SettingsPage })))
+
+// Profile feature
+const ProfileEditPage = lazy(() => import('./pages/profile/ProfileEditPage').then(m => ({ default: m.ProfileEditPage })))
 const CompanyProfilePage = lazy(() => import('./pages/settings/CompanyProfilePage').then(m => ({ default: m.CompanyProfilePage })))
 const UserManagementPage = lazy(() => import('./pages/settings/UserManagementPage').then(m => ({ default: m.UserManagementPage })))
 const ProjectTemplatesPage = lazy(() => import('./pages/settings/ProjectTemplatesPage').then(m => ({ default: m.ProjectTemplatesPage })))
@@ -414,6 +422,11 @@ function App() {
                 <Route path="/signup" element={<SignupPage />} />
                 <Route path="/register" element={<CompanyRegistration />} />
                 <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+                {/* MFA Routes */}
+                <Route path="/auth/mfa-setup" element={<ProtectedRoute><MFASetupPage /></ProtectedRoute>} />
+                <Route path="/auth/mfa-verify" element={<MFAVerifyPage />} />
 
                 {/* Protected registration routes */}
                 <Route path="/pending-approval" element={<ProtectedRoute><PendingApproval /></ProtectedRoute>} />
@@ -507,6 +520,10 @@ function App() {
                 {/* Approvals feature */}
                 <Route path="/approvals" element={<ProtectedRoute><MyApprovalsPage /></ProtectedRoute>} />
                 <Route path="/approvals/:id" element={<ProtectedRoute><ApprovalRequestPage /></ProtectedRoute>} />
+                {/* Profile feature */}
+                <Route path="/profile" element={<ProtectedRoute><ProfileEditPage /></ProtectedRoute>} />
+                <Route path="/profile/edit" element={<ProtectedRoute><ProfileEditPage /></ProtectedRoute>} />
+
                 {/* Settings feature */}
                 <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
                 <Route path="/settings/company" element={<ProtectedRoute><CompanyProfilePage /></ProtectedRoute>} />
