@@ -11,13 +11,17 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-dotenv.config({ path: path.resolve(__dirname, '.env.local') });
+// Load test environment if running tests, otherwise use local environment
+const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env.local';
+dotenv.config({ path: path.resolve(__dirname, envFile) });
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
   testDir: './e2e',
+  /* Global setup - runs once before all tests */
+  globalSetup: './e2e/global-setup.ts',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */

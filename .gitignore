@@ -28,6 +28,8 @@ dist-ssr
 .env.local
 .env.*.local
 .env.k6
+# Keep .env.test as a template, but ignore if it has real credentials
+# .env.test
 
 # Performance test results
 tests/load/results/*.json
