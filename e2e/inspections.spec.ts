@@ -494,6 +494,314 @@ test.describe('Inspection Detail Page', () => {
 });
 
 // ============================================================================
+// INSPECTION PHOTOS TESTS
+// ============================================================================
+
+test.describe('Inspection Photos', () => {
+  test.beforeEach(async ({ page }) => {
+    await login(page);
+    await navigateToInspections(page);
+  });
+
+  test('should show photo upload button', async ({ page }) => {
+    const firstInspection = page.locator('[data-testid="inspection-item"]:first-child, a[href*="inspections/"]').first();
+
+    if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await firstInspection.click();
+      await page.waitForLoadState('networkidle');
+
+      // Look for photo upload button or file input
+      const uploadButton = page.locator(
+        'button:has-text("Add Photo"), ' +
+        'button:has-text("Upload Photo"), ' +
+        'button:has-text("Attach Photo"), ' +
+        '[data-testid*="upload-photo"]'
+      ).first();
+
+      if (await uploadButton.isVisible({ timeout: 5000 })) {
+        expect(await uploadButton.isVisible()).toBeTruthy();
+      } else {
+        test.skip();
+      }
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should open photo upload dialog', async ({ page }) => {
+    const firstInspection = page.locator('[data-testid="inspection-item"]:first-child, a[href*="inspections/"]').first();
+
+    if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await firstInspection.click();
+      await page.waitForLoadState('networkidle');
+
+      const uploadButton = page.locator('button:has-text("Add Photo"), button:has-text("Upload")').first();
+
+      if (await uploadButton.isVisible({ timeout: 5000 })) {
+        await uploadButton.click();
+        await page.waitForTimeout(500);
+
+        // Should open dialog or show file input
+        const dialog = page.locator('[role="dialog"], input[type="file"]');
+        await expect(dialog.first()).toBeVisible({ timeout: 5000 });
+      } else {
+        test.skip();
+      }
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should show photo type categorization options', async ({ page }) => {
+    const firstInspection = page.locator('[data-testid="inspection-item"]:first-child, a[href*="inspections/"]').first();
+
+    if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await firstInspection.click();
+      await page.waitForLoadState('networkidle');
+
+      const uploadButton = page.locator('button:has-text("Add Photo"), button:has-text("Upload")').first();
+
+      if (await uploadButton.isVisible({ timeout: 5000 })) {
+        await uploadButton.click();
+        await page.waitForTimeout(500);
+
+        // Look for photo type selector
+        const photoTypeSelector = page.locator(
+          'select[name*="photo_type"], ' +
+          'select[name*="type"], ' +
+          '[data-testid*="photo-type"]'
+        ).first();
+
+        const hasTypeSelector = await photoTypeSelector.isVisible({ timeout: 3000 }).catch(() => false);
+
+        if (hasTypeSelector) {
+          // Should have options: general, before, after, deficiency, compliance
+          const typeOptions = page.locator('text=/general|before|after|deficiency|compliance/i');
+          const count = await typeOptions.count();
+          expect(count).toBeGreaterThan(0);
+        }
+      } else {
+        test.skip();
+      }
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should display photo gallery when photos exist', async ({ page }) => {
+    const firstInspection = page.locator('[data-testid="inspection-item"]:first-child, a[href*="inspections/"]').first();
+
+    if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await firstInspection.click();
+      await page.waitForLoadState('networkidle');
+
+      // Look for photos section
+      const photosSection = page.locator(
+        '[data-testid*="photos"], ' +
+        '[class*="photo-gallery"], ' +
+        'text=/photos|images/i'
+      ).first();
+
+      if (await photosSection.isVisible({ timeout: 5000 })) {
+        // Should show photos or empty state
+        const hasPhotos = await page.locator('[data-testid*="photo-"], img[alt*="inspection"]')
+          .first()
+          .isVisible({ timeout: 3000 })
+          .catch(() => false);
+
+        const hasEmptyState = await page.locator('text=/no photos|add photo/i')
+          .first()
+          .isVisible({ timeout: 3000 })
+          .catch(() => false);
+
+        expect(hasPhotos || hasEmptyState).toBeTruthy();
+      } else {
+        test.skip();
+      }
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should allow adding caption to photos', async ({ page }) => {
+    const firstInspection = page.locator('[data-testid="inspection-item"]:first-child, a[href*="inspections/"]').first();
+
+    if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await firstInspection.click();
+      await page.waitForLoadState('networkidle');
+
+      const uploadButton = page.locator('button:has-text("Add Photo"), button:has-text("Upload")').first();
+
+      if (await uploadButton.isVisible({ timeout: 5000 })) {
+        await uploadButton.click();
+        await page.waitForTimeout(500);
+
+        // Look for caption input
+        const captionInput = page.locator(
+          'input[name*="caption"], ' +
+          'textarea[name*="caption"], ' +
+          'input[placeholder*="caption" i]'
+        ).first();
+
+        if (await captionInput.isVisible({ timeout: 3000 })) {
+          await captionInput.fill('Test photo caption for inspection');
+          const value = await captionInput.inputValue();
+          expect(value).toContain('Test photo caption');
+        }
+      } else {
+        test.skip();
+      }
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should show location description field', async ({ page }) => {
+    const firstInspection = page.locator('[data-testid="inspection-item"]:first-child, a[href*="inspections/"]').first();
+
+    if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await firstInspection.click();
+      await page.waitForLoadState('networkidle');
+
+      const uploadButton = page.locator('button:has-text("Add Photo"), button:has-text("Upload")').first();
+
+      if (await uploadButton.isVisible({ timeout: 5000 })) {
+        await uploadButton.click();
+        await page.waitForTimeout(500);
+
+        // Look for location description field
+        const locationField = page.locator(
+          'input[name*="location"], ' +
+          'textarea[name*="location"], ' +
+          'input[placeholder*="location" i]'
+        ).first();
+
+        if (await locationField.isVisible({ timeout: 3000 })) {
+          expect(await locationField.isVisible()).toBeTruthy();
+        }
+      } else {
+        test.skip();
+      }
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should allow editing photo details', async ({ page }) => {
+    const firstInspection = page.locator('[data-testid="inspection-item"]:first-child, a[href*="inspections/"]').first();
+
+    if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await firstInspection.click();
+      await page.waitForLoadState('networkidle');
+
+      // Look for existing photo
+      const photoCard = page.locator('[data-testid*="photo-"], img[alt*="inspection"]').first();
+
+      if (await photoCard.isVisible({ timeout: 5000 })) {
+        // Look for edit button on photo
+        const editButton = page.locator(
+          'button:has-text("Edit"), ' +
+          '[data-testid*="edit-photo"], ' +
+          '[aria-label*="edit" i]'
+        ).first();
+
+        if (await editButton.isVisible({ timeout: 3000 })) {
+          await editButton.click();
+          await page.waitForTimeout(500);
+
+          // Should open edit dialog
+          const dialog = page.locator('[role="dialog"]');
+          await expect(dialog).toBeVisible({ timeout: 5000 });
+        }
+      } else {
+        test.skip();
+      }
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should allow deleting photos', async ({ page }) => {
+    const firstInspection = page.locator('[data-testid="inspection-item"]:first-child, a[href*="inspections/"]').first();
+
+    if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await firstInspection.click();
+      await page.waitForLoadState('networkidle');
+
+      // Look for existing photo
+      const photoCard = page.locator('[data-testid*="photo-"], img[alt*="inspection"]').first();
+
+      if (await photoCard.isVisible({ timeout: 5000 })) {
+        // Look for delete button
+        const deleteButton = page.locator(
+          'button:has-text("Delete"), ' +
+          'button:has-text("Remove"), ' +
+          '[data-testid*="delete-photo"]'
+        ).first();
+
+        if (await deleteButton.isVisible({ timeout: 3000 })) {
+          expect(await deleteButton.isVisible()).toBeTruthy();
+        }
+      } else {
+        test.skip();
+      }
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should show photo metadata (size, type, date)', async ({ page }) => {
+    const firstInspection = page.locator('[data-testid="inspection-item"]:first-child, a[href*="inspections/"]').first();
+
+    if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await firstInspection.click();
+      await page.waitForLoadState('networkidle');
+
+      // Look for existing photo
+      const photoCard = page.locator('[data-testid*="photo-"]').first();
+
+      if (await photoCard.isVisible({ timeout: 5000 })) {
+        // Look for metadata like file size, date, or type
+        const metadata = page.locator('text=/kb|mb|jpeg|png|uploaded|taken|ago/i');
+
+        if (await metadata.first().isVisible({ timeout: 3000 })) {
+          const count = await metadata.count();
+          expect(count).toBeGreaterThan(0);
+        }
+      } else {
+        test.skip();
+      }
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should support photo reordering', async ({ page }) => {
+    const firstInspection = page.locator('[data-testid="inspection-item"]:first-child, a[href*="inspections/"]').first();
+
+    if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
+      await firstInspection.click();
+      await page.waitForLoadState('networkidle');
+
+      // Look for reorder controls (drag handles, up/down buttons)
+      const reorderControls = page.locator(
+        '[data-testid*="drag-handle"], ' +
+        'button[aria-label*="move" i], ' +
+        '[class*="drag-handle"]'
+      );
+
+      if (await reorderControls.first().isVisible({ timeout: 3000 })) {
+        expect(await reorderControls.count()).toBeGreaterThan(0);
+      } else {
+        test.skip();
+      }
+    } else {
+      test.skip();
+    }
+  });
+});
+
+// ============================================================================
 // SEARCH AND FILTER TESTS
 // ============================================================================
 

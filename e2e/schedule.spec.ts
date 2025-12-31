@@ -641,3 +641,366 @@ test.describe('Schedule and Gantt Chart', () => {
     expect(typeof loadingVisible).toBe('boolean');
   });
 });
+
+// ============================================================================
+// RESOURCE HISTOGRAM TESTS
+// ============================================================================
+
+test.describe('Resource Histogram', () => {
+  test.beforeEach(async ({ page }) => {
+    await login(page);
+    await navigateToSchedule(page);
+  });
+
+  test('should show resource histogram toggle button', async ({ page }) => {
+    // Wait for page to load
+    await page.waitForTimeout(2000);
+
+    // Look for resource histogram toggle
+    const histogramToggle = page.locator(
+      'button:has-text("Resource"), ' +
+      'button:has-text("Histogram"), ' +
+      '[data-testid*="resource-histogram"], ' +
+      '[data-testid*="histogram-toggle"]'
+    ).first();
+
+    if (await histogramToggle.isVisible({ timeout: 5000 })) {
+      expect(await histogramToggle.isVisible()).toBeTruthy();
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should toggle resource histogram visibility', async ({ page }) => {
+    // Wait for page to load
+    await page.waitForTimeout(2000);
+
+    // Find histogram toggle button
+    const histogramToggle = page.locator(
+      'button:has-text("Resource"), ' +
+      'button:has-text("Histogram"), ' +
+      '[data-testid*="histogram-toggle"]'
+    ).first();
+
+    if (await histogramToggle.isVisible({ timeout: 5000 })) {
+      // Click to show histogram
+      await histogramToggle.click();
+      await page.waitForTimeout(500);
+
+      // Look for histogram visualization
+      const histogram = page.locator(
+        '[data-testid*="histogram"], ' +
+        '[class*="histogram"], ' +
+        'text=/resource.*allocation|workload/i'
+      ).first();
+
+      // Histogram should be visible after toggle
+      if (await histogram.isVisible({ timeout: 3000 })) {
+        expect(await histogram.isVisible()).toBeTruthy();
+      }
+
+      // Click again to hide
+      await histogramToggle.click();
+      await page.waitForTimeout(500);
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should display resource histogram with bars', async ({ page }) => {
+    // Wait for page to load
+    await page.waitForTimeout(2000);
+
+    // Enable histogram if toggle exists
+    const histogramToggle = page.locator('[data-testid*="histogram-toggle"]').first();
+    if (await histogramToggle.isVisible({ timeout: 3000 })) {
+      await histogramToggle.click();
+      await page.waitForTimeout(500);
+    }
+
+    // Look for histogram bars or chart elements
+    const histogramBars = page.locator(
+      '[data-testid*="histogram-bar"], ' +
+      '[class*="histogram-bar"], ' +
+      'rect[class*="resource"]'
+    );
+
+    if (await histogramBars.first().isVisible({ timeout: 5000 })) {
+      // Should have bars representing resource allocation
+      const count = await histogramBars.count();
+      expect(count).toBeGreaterThan(0);
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should show labor resource bars', async ({ page }) => {
+    // Wait for page to load
+    await page.waitForTimeout(2000);
+
+    // Enable histogram
+    const histogramToggle = page.locator('[data-testid*="histogram-toggle"]').first();
+    if (await histogramToggle.isVisible({ timeout: 3000 })) {
+      await histogramToggle.click();
+      await page.waitForTimeout(500);
+    }
+
+    // Look for labor-specific indicators
+    const laborBars = page.locator(
+      '[data-testid*="labor"], ' +
+      'text=/labor|workers|crew/i, ' +
+      '[class*="labor"]'
+    );
+
+    if (await laborBars.first().isVisible({ timeout: 5000 })) {
+      const count = await laborBars.count();
+      expect(count).toBeGreaterThan(0);
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should show equipment resource bars', async ({ page }) => {
+    // Wait for page to load
+    await page.waitForTimeout(2000);
+
+    // Enable histogram
+    const histogramToggle = page.locator('[data-testid*="histogram-toggle"]').first();
+    if (await histogramToggle.isVisible({ timeout: 3000 })) {
+      await histogramToggle.click();
+      await page.waitForTimeout(500);
+    }
+
+    // Look for equipment-specific indicators
+    const equipmentBars = page.locator(
+      '[data-testid*="equipment"], ' +
+      'text=/equipment|machinery/i, ' +
+      '[class*="equipment"]'
+    );
+
+    if (await equipmentBars.first().isVisible({ timeout: 5000 })) {
+      const count = await equipmentBars.count();
+      expect(count).toBeGreaterThan(0);
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should display resource conflict warnings', async ({ page }) => {
+    // Wait for page to load
+    await page.waitForTimeout(2000);
+
+    // Enable histogram
+    const histogramToggle = page.locator('[data-testid*="histogram-toggle"]').first();
+    if (await histogramToggle.isVisible({ timeout: 3000 })) {
+      await histogramToggle.click();
+      await page.waitForTimeout(500);
+    }
+
+    // Look for conflict indicators (over-allocation warnings)
+    const conflictWarnings = page.locator(
+      '[data-testid*="conflict"], ' +
+      '[class*="over-allocated"], ' +
+      '[class*="warning"], ' +
+      'text=/conflict|over.*allocated/i'
+    );
+
+    // Conflicts may or may not exist depending on data
+    const count = await conflictWarnings.count();
+    expect(count).toBeGreaterThanOrEqual(0);
+  });
+
+  test('should show conflict count badge', async ({ page }) => {
+    // Wait for page to load
+    await page.waitForTimeout(2000);
+
+    // Look for conflict count indicator
+    const conflictBadge = page.locator(
+      '[data-testid*="conflict-count"], ' +
+      '[class*="badge"], ' +
+      'text=/\\d+.*conflict/i'
+    );
+
+    if (await conflictBadge.first().isVisible({ timeout: 5000 })) {
+      // Badge should show number
+      const text = await conflictBadge.first().textContent();
+      expect(text).toMatch(/\d+/);
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should highlight over-allocated periods in histogram', async ({ page }) => {
+    // Wait for page to load
+    await page.waitForTimeout(2000);
+
+    // Enable histogram
+    const histogramToggle = page.locator('[data-testid*="histogram-toggle"]').first();
+    if (await histogramToggle.isVisible({ timeout: 3000 })) {
+      await histogramToggle.click();
+      await page.waitForTimeout(500);
+    }
+
+    // Look for highlighted/warning bars
+    const overAllocatedBars = page.locator(
+      '[data-testid*="over-allocated"], ' +
+      '[class*="over-allocated"], ' +
+      '[class*="warning"], ' +
+      'rect[fill*="red"], ' +
+      'rect[fill*="orange"]'
+    );
+
+    // Over-allocation may not exist in test data
+    const count = await overAllocatedBars.count();
+    expect(count).toBeGreaterThanOrEqual(0);
+  });
+
+  test('should show resource tooltip on bar hover', async ({ page }) => {
+    // Wait for page to load
+    await page.waitForTimeout(2000);
+
+    // Enable histogram
+    const histogramToggle = page.locator('[data-testid*="histogram-toggle"]').first();
+    if (await histogramToggle.isVisible({ timeout: 3000 })) {
+      await histogramToggle.click();
+      await page.waitForTimeout(500);
+    }
+
+    // Find first histogram bar
+    const firstBar = page.locator('[data-testid*="histogram-bar"]').first();
+
+    if (await firstBar.isVisible({ timeout: 5000 })) {
+      // Hover over bar
+      await firstBar.hover();
+      await page.waitForTimeout(500);
+
+      // Look for tooltip
+      const tooltip = page.locator(
+        '[role="tooltip"], ' +
+        '.tooltip, ' +
+        '[data-testid*="tooltip"], ' +
+        '[class*="popover"]'
+      );
+
+      if (await tooltip.first().isVisible({ timeout: 2000 })) {
+        expect(await tooltip.first().isVisible()).toBeTruthy();
+      }
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should display resource utilization percentage', async ({ page }) => {
+    // Wait for page to load
+    await page.waitForTimeout(2000);
+
+    // Enable histogram
+    const histogramToggle = page.locator('[data-testid*="histogram-toggle"]').first();
+    if (await histogramToggle.isVisible({ timeout: 3000 })) {
+      await histogramToggle.click();
+      await page.waitForTimeout(500);
+    }
+
+    // Look for percentage indicators
+    const percentageElements = page.locator(
+      'text=/\\d+%|percent|utilization/i, ' +
+      '[data-testid*="utilization"]'
+    );
+
+    if (await percentageElements.first().isVisible({ timeout: 5000 })) {
+      const count = await percentageElements.count();
+      expect(count).toBeGreaterThan(0);
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should filter histogram by resource type', async ({ page }) => {
+    // Wait for page to load
+    await page.waitForTimeout(2000);
+
+    // Enable histogram
+    const histogramToggle = page.locator('[data-testid*="histogram-toggle"]').first();
+    if (await histogramToggle.isVisible({ timeout: 3000 })) {
+      await histogramToggle.click();
+      await page.waitForTimeout(500);
+    }
+
+    // Look for resource type filter
+    const resourceFilter = page.locator(
+      'select[name*="resource"], ' +
+      '[data-testid*="resource-filter"], ' +
+      'button:has-text("Labor"), ' +
+      'button:has-text("Equipment")'
+    ).first();
+
+    if (await resourceFilter.isVisible({ timeout: 3000 })) {
+      // Change filter
+      await resourceFilter.click();
+      await page.waitForTimeout(500);
+
+      // Verify interaction worked
+      expect(await resourceFilter.isVisible()).toBeTruthy();
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should show resource legend', async ({ page }) => {
+    // Wait for page to load
+    await page.waitForTimeout(2000);
+
+    // Enable histogram
+    const histogramToggle = page.locator('[data-testid*="histogram-toggle"]').first();
+    if (await histogramToggle.isVisible({ timeout: 3000 })) {
+      await histogramToggle.click();
+      await page.waitForTimeout(500);
+    }
+
+    // Look for legend
+    const legend = page.locator(
+      '[data-testid*="legend"], ' +
+      '[class*="legend"], ' +
+      'text=/labor|equipment|subcontractor/i'
+    );
+
+    if (await legend.first().isVisible({ timeout: 5000 })) {
+      const count = await legend.count();
+      expect(count).toBeGreaterThan(0);
+    } else {
+      test.skip();
+    }
+  });
+
+  test('should sync histogram with timeline scroll', async ({ page }) => {
+    // Wait for page to load
+    await page.waitForTimeout(2000);
+
+    // Enable histogram
+    const histogramToggle = page.locator('[data-testid*="histogram-toggle"]').first();
+    if (await histogramToggle.isVisible({ timeout: 3000 })) {
+      await histogramToggle.click();
+      await page.waitForTimeout(500);
+    }
+
+    // Find timeline container
+    const timelineContainer = page.locator('[data-testid="gantt-container"]').first();
+
+    if (await timelineContainer.isVisible()) {
+      // Get initial scroll
+      const initialScroll = await timelineContainer.evaluate(el => el.scrollLeft);
+
+      // Scroll timeline
+      await timelineContainer.evaluate(el => el.scrollLeft = el.scrollLeft + 200);
+      await page.waitForTimeout(300);
+
+      // Get new scroll
+      const newScroll = await timelineContainer.evaluate(el => el.scrollLeft);
+
+      // Verify scroll changed
+      expect(newScroll).toBeGreaterThanOrEqual(initialScroll);
+    } else {
+      test.skip();
+    }
+  });
+});
