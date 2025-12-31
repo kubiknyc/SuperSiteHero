@@ -45,6 +45,7 @@ import { DashboardPage } from './pages/DashboardPage'
 // Projects feature
 const ProjectsPage = lazy(() => import('./pages/projects/ProjectsPage').then(m => ({ default: m.ProjectsPage })))
 const ProjectDetailPage = lazy(() => import('./pages/projects/ProjectDetailPage').then(m => ({ default: m.ProjectDetailPage })))
+const ProjectSettingsPage = lazy(() => import('./pages/projects/ProjectSettingsPage').then(m => ({ default: m.ProjectSettingsPage })))
 
 // Daily Reports feature
 const DailyReportsPage = lazy(() => import('./pages/daily-reports/DailyReportsPage').then(m => ({ default: m.DailyReportsPage })))
@@ -450,6 +451,7 @@ function App() {
                 {/* Projects feature */}
                 <Route path="/projects" element={<ProtectedRoute><ProjectsPage /></ProtectedRoute>} />
                 <Route path="/projects/:projectId" element={<ProtectedRoute><ProjectDetailPage /></ProtectedRoute>} />
+                <Route path="/projects/:projectId/settings" element={<ProtectedRoute><ProjectSettingsPage /></ProtectedRoute>} />
 
                 {/* Daily Reports feature */}
                 <Route path="/daily-reports" element={<ProtectedRoute><DailyReportsPage /></ProtectedRoute>} />
