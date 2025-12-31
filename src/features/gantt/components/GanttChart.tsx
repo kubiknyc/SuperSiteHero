@@ -48,6 +48,7 @@ interface GanttChartProps {
   onSaveBaseline?: () => void
   onClearBaseline?: () => void
   onImport?: () => void
+  onExport?: () => void
   hasBaseline?: boolean
   config?: Partial<GanttConfig>
 }
@@ -64,6 +65,7 @@ export function GanttChart({
   onSaveBaseline,
   onClearBaseline,
   onImport,
+  onExport,
   hasBaseline = false,
   config: customConfig,
 }: GanttChartProps) {
@@ -384,11 +386,14 @@ export function GanttChart({
   }, [])
 
   return (
-    <div className={cn(
-      "flex flex-col h-full bg-card rounded-lg shadow overflow-hidden",
-      // Better touch handling on tablets
-      isTouchDevice && "touch-manipulation"
-    )}>
+    <div
+      className={cn(
+        "flex flex-col h-full bg-card rounded-lg shadow overflow-hidden",
+        // Better touch handling on tablets
+        isTouchDevice && "touch-manipulation"
+      )}
+      data-testid="gantt-chart"
+    >
       {/* Toolbar - with tablet optimizations */}
       <GanttToolbar
         zoomLevel={zoomLevel}
@@ -409,6 +414,7 @@ export function GanttChart({
         onSaveBaseline={onSaveBaseline}
         onClearBaseline={onClearBaseline}
         onImport={onImport}
+        onExport={onExport}
         stats={stats}
         isLoading={isLoading}
         criticalPathInfo={criticalPathResult ? {
@@ -432,6 +438,7 @@ export function GanttChart({
         ref={containerRef}
         className="flex-1 overflow-auto relative"
         onScroll={handleScroll}
+        data-testid="gantt-container"
       >
         <div className="flex min-h-full">
           {/* Sidebar toggle button for collapsed state on tablets */}
@@ -464,6 +471,7 @@ export function GanttChart({
               isSidebarCollapsed && "w-0 overflow-hidden"
             )}
             style={{ width: isSidebarCollapsed ? 0 : config.sidebar_width }}
+            data-testid="task-list"
           >
             {/* Collapse button header row for non-collapsed state */}
             {!isSidebarCollapsed && (isTablet || layout === 'mobile') && (
@@ -575,19 +583,21 @@ export function GanttChart({
           <div
             className="flex-1 relative"
             style={{ minWidth: timelineWidth, minHeight: contentHeight }}
+            data-testid="gantt-chart-area"
           >
             <svg
               ref={svgRef}
               width={timelineWidth}
               height={Math.max(contentHeight, 200)}
               className="absolute top-0 left-0"
+              data-testid="gantt-svg"
             >
               {/* Grid */}
               <g className="grid">{renderGridLines}</g>
 
               {/* Today line */}
               {config.show_today_line && todayPosition >= 0 && todayPosition <= timelineWidth && (
-                <g className="today-line">
+                <g className="today-line" data-testid="today-indicator">
                   <line
                     x1={todayPosition}
                     y1={0}
@@ -609,7 +619,7 @@ export function GanttChart({
               )}
 
               {/* Dependency lines */}
-              <g className="dependencies">{renderDependencyLines}</g>
+              <g className="dependencies" data-testid="dependency-lines">{renderDependencyLines}</g>
 
               {/* Task bars */}
               <g className="tasks">

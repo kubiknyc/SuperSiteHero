@@ -22,6 +22,7 @@ import {
   AlertTriangle,
   Target,
   Upload,
+  Download,
   Save,
   Trash2,
   MoreVertical,
@@ -48,6 +49,7 @@ interface GanttToolbarProps {
   onSaveBaseline?: () => void
   onClearBaseline?: () => void
   onImport?: () => void
+  onExport?: () => void
   stats?: {
     total_tasks: number
     completed_tasks: number
@@ -83,6 +85,7 @@ export function GanttToolbar({
   onSaveBaseline,
   onClearBaseline,
   onImport,
+  onExport,
   stats,
   criticalPathInfo,
   isLoading,
@@ -102,17 +105,19 @@ export function GanttToolbar({
   }
 
   return (
-    <div className="flex items-center justify-between p-3 bg-card border-b">
+    <div className="flex items-center justify-between p-3 bg-card border-b" data-testid="gantt-toolbar">
       {/* Left: Navigation & Zoom */}
       <div className="flex items-center gap-2">
         {/* Navigation */}
-        <div className="flex items-center border rounded-md">
+        <div className="flex items-center border rounded-md" data-testid="gantt-navigation">
           <Button
             variant="ghost"
             size="sm"
             onClick={onScrollLeft}
             className="rounded-r-none"
             title="Scroll left"
+            aria-label="pan left"
+            data-testid="pan-left"
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -122,6 +127,7 @@ export function GanttToolbar({
             onClick={onScrollToToday}
             className="rounded-none border-x"
             title="Go to today"
+            data-testid="go-to-today"
           >
             <Calendar className="h-4 w-4 mr-1" />
             Today
@@ -132,13 +138,46 @@ export function GanttToolbar({
             onClick={onScrollRight}
             className="rounded-l-none"
             title="Scroll right"
+            aria-label="pan right"
+            data-testid="pan-right"
           >
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
 
+        {/* View switcher buttons */}
+        <div className="flex items-center border rounded-md" data-testid="view-switcher">
+          <Button
+            variant={zoomLevel === 'day' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => onZoomChange('day')}
+            className="rounded-r-none"
+            data-testid="view-day"
+          >
+            Day
+          </Button>
+          <Button
+            variant={zoomLevel === 'week' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => onZoomChange('week')}
+            className="rounded-none border-x"
+            data-testid="view-week"
+          >
+            Week
+          </Button>
+          <Button
+            variant={zoomLevel === 'month' ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => onZoomChange('month')}
+            className="rounded-l-none"
+            data-testid="view-month"
+          >
+            Month
+          </Button>
+        </div>
+
         {/* Zoom controls */}
-        <div className="flex items-center border rounded-md">
+        <div className="flex items-center border rounded-md" data-testid="zoom-controls">
           <Button
             variant="ghost"
             size="sm"
@@ -146,10 +185,12 @@ export function GanttToolbar({
             disabled={currentZoomIndex === 0}
             className="rounded-r-none"
             title="Zoom in"
+            aria-label="zoom in"
+            data-testid="zoom-in"
           >
             <ZoomIn className="h-4 w-4" />
           </Button>
-          <span className="px-3 text-sm font-medium capitalize border-x">
+          <span className="px-3 text-sm font-medium capitalize border-x" data-testid="zoom-level">
             {zoomLevel}
           </span>
           <Button
@@ -159,6 +200,8 @@ export function GanttToolbar({
             disabled={currentZoomIndex === ZOOM_LEVELS.length - 1}
             className="rounded-l-none"
             title="Zoom out"
+            aria-label="zoom out"
+            data-testid="zoom-out"
           >
             <ZoomOut className="h-4 w-4" />
           </Button>
@@ -171,18 +214,21 @@ export function GanttToolbar({
           onClick={onRefresh}
           disabled={isLoading}
           title="Refresh data"
+          data-testid="refresh-schedule"
         >
           <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
         </Button>
       </div>
 
       {/* Center: Toggle buttons */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2" data-testid="gantt-toggles">
         <Button
           variant={showCriticalPath ? 'default' : 'outline'}
           size="sm"
           onClick={onToggleCriticalPath}
           title="Toggle critical path"
+          data-testid="toggle-critical-path"
+          aria-pressed={showCriticalPath}
           className={showCriticalPath ? 'bg-error hover:bg-red-700' : ''}
         >
           <AlertTriangle className="h-4 w-4 mr-1" />
@@ -199,6 +245,8 @@ export function GanttToolbar({
           size="sm"
           onClick={onToggleDependencies}
           title="Toggle dependencies"
+          data-testid="toggle-dependencies"
+          aria-pressed={showDependencies}
         >
           <GitBranch className="h-4 w-4 mr-1" />
           Dependencies
@@ -209,6 +257,8 @@ export function GanttToolbar({
           size="sm"
           onClick={onToggleMilestones}
           title="Toggle milestones"
+          data-testid="toggle-milestones"
+          aria-pressed={showMilestones}
         >
           <Milestone className="h-4 w-4 mr-1" />
           Milestones
@@ -222,6 +272,8 @@ export function GanttToolbar({
             onClick={onToggleBaseline}
             disabled={!hasBaseline}
             title={hasBaseline ? 'Toggle baseline comparison' : 'No baseline saved'}
+            data-testid="toggle-baseline"
+            aria-pressed={showBaseline}
             className={showBaseline ? 'bg-gray-600 hover:bg-gray-700' : ''}
           >
             <Target className="h-4 w-4 mr-1" />
@@ -249,15 +301,35 @@ export function GanttToolbar({
                 Clear Baseline
               </DropdownMenuItem>
             )}
-            {(onSaveBaseline || onClearBaseline) && onImport && <DropdownMenuSeparator />}
+            {(onSaveBaseline || onClearBaseline) && (onImport || onExport) && <DropdownMenuSeparator />}
             {onImport && (
               <DropdownMenuItem onClick={onImport}>
                 <Upload className="h-4 w-4 mr-2" />
                 Import from MS Project
               </DropdownMenuItem>
             )}
+            {onExport && (
+              <DropdownMenuItem onClick={onExport} data-testid="export-schedule">
+                <Download className="h-4 w-4 mr-2" />
+                Export Schedule
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
+
+        {/* Export button (visible when export is available) */}
+        {onExport && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onExport}
+            title="Export schedule"
+            data-testid="export-button"
+          >
+            <Download className="h-4 w-4 mr-1" />
+            Export
+          </Button>
+        )}
       </div>
 
       {/* Right: Stats */}

@@ -71,6 +71,7 @@ export function GanttTimeline({
     <div
       className="sticky top-0 z-20 bg-card border-b"
       style={{ height: headerHeight }}
+      data-testid="timeline-header"
     >
       <div className="flex">
         {/* Sidebar placeholder */}
@@ -82,7 +83,7 @@ export function GanttTimeline({
         </div>
 
         {/* Timeline */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden" data-testid="timeline-dates">
           <div
             className="relative"
             style={{

@@ -275,6 +275,7 @@ export function GanttTaskBar({
         onClick={() => onClick?.(task)}
         onMouseEnter={() => onHover?.(task)}
         onMouseLeave={() => onHover?.(null)}
+        data-testid={`milestone-${task.id}`}
       >
         <title>{tooltipContent}</title>
         {/* Baseline milestone (smaller, behind) */}
@@ -324,6 +325,7 @@ export function GanttTaskBar({
       onClick={() => !isDragging && onClick?.(task)}
       onMouseEnter={() => onHover?.(task)}
       onMouseLeave={() => onHover?.(null)}
+      data-testid={`task-bar-${task.id}`}
     >
       <title>{tooltipContent}</title>
 
@@ -416,6 +418,7 @@ export function GanttTaskBar({
           ry={4}
           fill="rgba(255,255,255,0.3)"
           className="pointer-events-none"
+          data-testid={`progress-bar-${task.id}`}
         />
       )}
 

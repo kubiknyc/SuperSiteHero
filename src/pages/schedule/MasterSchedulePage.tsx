@@ -59,6 +59,7 @@ import {
   useMasterScheduleData,
   useUpdateScheduleActivity,
   useUpdateScheduleActivityWithNotification,
+  useCreateScheduleActivityWithNotification,
   useCreateBaselineWithNotification,
   useSetActiveBaseline,
   useClearBaseline,
@@ -97,6 +98,7 @@ export function MasterSchedulePage() {
   // Mutations
   const updateActivity = useUpdateScheduleActivity()
   const updateActivityWithNotification = useUpdateScheduleActivityWithNotification()
+  const createActivityWithNotification = useCreateScheduleActivityWithNotification()
   const createBaseline = useCreateBaselineWithNotification()
   const setActiveBaseline = useSetActiveBaseline()
   const clearBaseline = useClearBaseline()
@@ -104,7 +106,7 @@ export function MasterSchedulePage() {
   // State
   const [selectedActivity, setSelectedActivity] = useState<ScheduleActivity | null>(null)
   const [showImportDialog, setShowImportDialog] = useState(false)
-  const [_showActivityDialog, setShowActivityDialog] = useState(false)
+  const [showActivityDialog, setShowActivityDialog] = useState(false)
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [editingActivity, setEditingActivity] = useState<ScheduleActivity | null>(null)
   const [isSavingBaseline, setIsSavingBaseline] = useState(false)
@@ -241,6 +243,21 @@ export function MasterSchedulePage() {
       setEditingActivity(null)
     },
     [editingActivity, updateActivityWithNotification]
+  )
+
+  // Handle create new activity
+  const handleActivityCreate = useCallback(
+    async (data: CreateScheduleActivityDTO) => {
+      if (!projectId || !userProfile?.company_id) {return}
+      await createActivityWithNotification.mutateAsync({
+        ...data,
+        project_id: projectId,
+        company_id: userProfile.company_id,
+      })
+      setShowActivityDialog(false)
+      await refetch()
+    },
+    [projectId, userProfile?.company_id, createActivityWithNotification, refetch]
   )
 
   // Handle PDF export
@@ -434,6 +451,7 @@ export function MasterSchedulePage() {
             <Button
               size="sm"
               onClick={() => setShowActivityDialog(true)}
+              data-testid="add-activity-button"
             >
               <Plus className="h-4 w-4 mr-2" />
               Add Activity
@@ -500,6 +518,7 @@ export function MasterSchedulePage() {
               onSaveBaseline={handleSaveBaseline}
               onClearBaseline={handleClearBaseline}
               onImport={() => setShowImportDialog(true)}
+              onExport={() => setShowExportDialog(true)}
               hasBaseline={hasBaseline}
             />
           )}
@@ -563,6 +582,16 @@ export function MasterSchedulePage() {
             setShowLookAheadSync(false)
             // Optionally navigate to look-ahead page
           }}
+        />
+
+        {/* Activity Create Dialog */}
+        <ActivityFormDialog
+          open={showActivityDialog}
+          onOpenChange={setShowActivityDialog}
+          projectId={projectId!}
+          companyId={userProfile?.company_id || ''}
+          onSubmit={handleActivityCreate}
+          isLoading={createActivityWithNotification.isPending}
         />
 
         {/* Activity Edit Dialog */}
