@@ -140,7 +140,7 @@ export async function generateSchedulePdf(options: SchedulePdfOptions): Promise<
   })
 
   const pageWidth = doc.internal.pageSize.getWidth()
-  const _pageHeight = doc.internal.pageSize.getHeight()
+  const pageHeight = doc.internal.pageSize.getHeight()
   const margin = 15
 
   // Fetch company info for branding

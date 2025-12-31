@@ -19,13 +19,13 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-// Load environment variables
-dotenv.config({ path: path.resolve(__dirname, '..', '.env') })
+// Load environment variables from .env.test (for E2E testing)
+dotenv.config({ path: path.resolve(__dirname, '..', '.env.test') })
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY
-const testEmail = process.env.TEST_USER_EMAIL || 'kubiknyc@gmail.com'
-const testPassword = process.env.TEST_USER_PASSWORD || 'Alfa1346!'
+const testEmail = process.env.TEST_USER_EMAIL || 'test@supersitehero.local'
+const testPassword = process.env.TEST_USER_PASSWORD || 'TestPassword123!'
 
 if (!supabaseUrl || !supabaseKey) {
   console.error('Missing Supabase credentials in .env file')

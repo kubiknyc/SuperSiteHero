@@ -339,7 +339,8 @@ describe('Photo Management API', () => {
         color: '#FF0000',
       })
 
-      expect(result.annotation_type).toBe('arrow')
+      // Note: the API maps annotation_type to annotationType
+      expect(result.annotationType).toBe('arrow')
     })
   })
 
@@ -397,7 +398,8 @@ describe('Photo Management API', () => {
 
       const result = await photoApi.linkPhotoToEntity('photo1', 'daily_report', 'report1')
 
-      expect(result.daily_report_id).toBe('report1')
+      // Note: the API maps daily_report_id to dailyReportId
+      expect(result.dailyReportId).toBe('report1')
     })
 
     it('should throw error for invalid entity type', async () => {

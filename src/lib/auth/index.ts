@@ -8,7 +8,8 @@ export { AuthProvider, useAuth } from './AuthContext'
 export {
   checkMFAStatus,
   enrollMFA,
-  verifyMFA,
+  verifyMFACode,
+  verifyMFAEnrollment,
   unenrollMFA,
   getMFAChallenge,
   isRoleMFARequired,
@@ -16,26 +17,27 @@ export {
   updateUserMFAPreferences,
   type MFAFactor,
   type MFAEnrollmentData,
-  type MFAPreferences,
 } from './mfa'
 
 // MFA middleware
 export {
   checkMFARequirement,
-  createMFASession,
-  getMFASession,
-  clearMFASession,
-  isMFASessionValid,
-  type MFASession,
+  isPathMFAProtected,
+  calculateMFAGracePeriod,
+  enforceMFAForRoute,
 } from './mfaMiddleware'
 
 // Biometric authentication
 export {
-  isBiometricSupported,
+  isWebAuthnSupported,
+  isPlatformAuthenticatorAvailable,
+  isConditionalMediationAvailable,
   registerBiometricCredential,
   authenticateWithBiometric,
-  getBiometricCredentials,
-  removeBiometricCredential,
+  verifyBiometricAuthentication,
+  getUserBiometricCredentials,
+  deleteBiometricCredential,
+  getBiometricSettings,
   updateBiometricSettings,
   type BiometricCredential,
   type BiometricSettings,

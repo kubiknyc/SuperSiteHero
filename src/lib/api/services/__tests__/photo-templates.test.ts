@@ -434,7 +434,8 @@ describe('Photo Templates API', () => {
       const result = await photoTemplates.markOverdueRequirements()
 
       expect(result).toBe(5)
-      expect(supabase.rpc).toHaveBeenCalledWith('mark_overdue_photo_requirements')
+      // The callRpc helper passes undefined as second arg when no params provided
+      expect(supabase.rpc).toHaveBeenCalledWith('mark_overdue_photo_requirements', undefined)
     })
   })
 })

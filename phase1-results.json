@@ -1,0 +1,33 @@
+[dotenv@17.2.3] injecting env (1) from .env.local -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (22) from .env.test -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+
+🔧 Running Playwright global setup...
+
+✅ Environment variables verified
+🔐 Creating authenticated session for user: test@supersitehero.local
+   → Navigating to http://localhost:5173
+   → Current URL: http://localhost:5173/
+   📸 Page load screenshot: playwright/.auth/page-load.png
+   → Supabase URL in browser: ERROR_CHECKING
+   → Waiting for email input...
+   → Filling in credentials...
+   → Submitting form...
+   ⚠️  Error message found: SuccessYou have been signed in successfully.
+   📸 Screenshot saved to playwright/.auth/login-debug.png
+   → Waiting for redirect...
+   ✅ user session saved to user.json
+🔐 Creating authenticated session for admin: admin@supersitehero.local
+   → Navigating to http://localhost:5173
+   → Current URL: http://localhost:5173/
+   📸 Page load screenshot: playwright/.auth/page-load.png
+   → Supabase URL in browser: ERROR_CHECKING
+   → Waiting for email input...
+   → Filling in credentials...
+   → Submitting form...
+   ⚠️  Error message found: SuccessYou have been signed in successfully.
+   📸 Screenshot saved to playwright/.auth/login-debug.png
+   → Waiting for redirect...
+   ✅ admin session saved to admin.json
+
+✅ Global setup complete!
+

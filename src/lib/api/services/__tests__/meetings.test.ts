@@ -203,6 +203,7 @@ describe('Meetings API', () => {
         select: vi.fn().mockReturnThis(),
         is: vi.fn().mockReturnThis(),
         gte: vi.fn().mockReturnThis(),
+        eq: vi.fn().mockReturnThis(),
         in: vi.fn().mockReturnThis(),
         order: vi.fn().mockReturnThis(),
         limit: vi.fn().mockReturnThis(),
@@ -213,6 +214,7 @@ describe('Meetings API', () => {
 
       await meetingsApi.getUpcomingMeetings('proj1', 10)
 
+      expect(mockQuery.eq).toHaveBeenCalledWith('project_id', 'proj1')
       expect(mockQuery.in).toHaveBeenCalledWith('status', ['scheduled', 'in_progress'])
       expect(mockQuery.limit).toHaveBeenCalledWith(10)
     })

@@ -31,11 +31,15 @@ async function login(page: Page) {
   await page.click('button[type="submit"]');
   await responsePromise;
 
-  // Wait for redirect away from login
-  await page.waitForURL(/\/(projects|dashboard)/, { timeout: 15000 });
+  // Wait for redirect away from login (login redirects to "/" which is the dashboard)
+  // Use flexible check: just verify we're NOT on login page anymore
+  await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
-  // Verify authenticated state
-  await page.waitForTimeout(500);
+  // Verify authenticated state by looking for user menu
+  await page.waitForSelector('[data-testid="user-menu"], [aria-label="User menu"], button:has-text("Logout"), button:has-text("Sign out")', { timeout: 10000 });
+
+  // Wait for page to be fully loaded
+  await page.waitForLoadState('networkidle');
 }
 
 // Helper to navigate to project's daily reports
