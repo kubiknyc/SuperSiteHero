@@ -12,6 +12,7 @@ import {
   WarrantyList,
   CloseoutDocumentFormDialog,
   WarrantyFormDialog,
+  PunchListCloseoutSummary,
   useCloseoutDocuments,
   useWarranties,
   useCloseoutStatistics,
@@ -20,6 +21,7 @@ import {
   useUpdateCloseoutDocument,
   useCreateWarranty,
   useUpdateWarranty,
+  usePunchListCloseout,
 } from '@/features/closeout'
 import { useContacts } from '@/features/contacts/hooks/useContacts'
 import {
@@ -50,6 +52,7 @@ import {
   Loader2,
   CheckCircle2,
   Clock,
+  CheckSquare,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { format } from 'date-fns'
@@ -206,6 +209,7 @@ export function CloseoutPage() {
 
   const { data: closeoutStats } = useCloseoutStatistics(selectedProjectId || undefined)
   const { data: warrantyStats } = useWarrantyStatistics(selectedProjectId || undefined)
+  const { data: punchListStatus } = usePunchListCloseout(selectedProjectId || undefined)
 
   // Fetch subcontractors for form dialogs
   const { data: contacts = [] } = useContacts(selectedProjectId || undefined, {
@@ -392,7 +396,7 @@ export function CloseoutPage() {
         ) : (
           <>
             {/* Overview Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               <Card>
                 <CardContent className="py-4">
                   <div className="flex items-center gap-3">
@@ -419,6 +423,40 @@ export function CloseoutPage() {
                       <p className="text-sm text-muted">Completion</p>
                       <p className="text-xl font-bold text-success">
                         {completionPercent}%
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="py-4">
+                  <div className="flex items-center gap-3">
+                    <div className={`rounded-lg p-2 ${
+                      punchListStatus?.isReadyForCloseout
+                        ? 'bg-green-100'
+                        : (punchListStatus?.open || 0) + (punchListStatus?.inProgress || 0) > 0
+                          ? 'bg-orange-100'
+                          : 'bg-muted'
+                    }`}>
+                      <CheckSquare className={`h-5 w-5 ${
+                        punchListStatus?.isReadyForCloseout
+                          ? 'text-green-600'
+                          : (punchListStatus?.open || 0) + (punchListStatus?.inProgress || 0) > 0
+                            ? 'text-orange-600'
+                            : 'text-secondary'
+                      }`} />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted">Punch List</p>
+                      <p className={`text-xl font-bold ${
+                        punchListStatus?.isReadyForCloseout
+                          ? 'text-green-600'
+                          : (punchListStatus?.open || 0) + (punchListStatus?.inProgress || 0) > 0
+                            ? 'text-orange-600'
+                            : ''
+                      }`}>
+                        {punchListStatus?.verified || 0}/{punchListStatus?.total || 0}
                       </p>
                     </div>
                   </div>
@@ -456,9 +494,9 @@ export function CloseoutPage() {
               </Card>
             </div>
 
-            {/* Tabs for Documents and Warranties */}
+            {/* Tabs for Documents, Warranties, and Punch Lists */}
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-2 max-w-md">
+              <TabsList className="grid w-full grid-cols-3 max-w-lg">
                 <TabsTrigger value="documents" className="flex items-center gap-2">
                   <FileCheck className="h-4 w-4" />
                   Documents ({totalDocuments})
@@ -466,6 +504,13 @@ export function CloseoutPage() {
                 <TabsTrigger value="warranties" className="flex items-center gap-2">
                   <Shield className="h-4 w-4" />
                   Warranties ({totalWarranties})
+                </TabsTrigger>
+                <TabsTrigger value="punchlist" className="flex items-center gap-2">
+                  <CheckSquare className="h-4 w-4" />
+                  Punch List
+                  {punchListStatus && !punchListStatus.isReadyForCloseout && (
+                    <span className="ml-1 h-2 w-2 rounded-full bg-orange-500" />
+                  )}
                 </TabsTrigger>
               </TabsList>
 
@@ -487,6 +532,10 @@ export function CloseoutPage() {
                   onCreateWarranty={handleCreateWarranty}
                   onExport={handleExportWarranties}
                 />
+              </TabsContent>
+
+              <TabsContent value="punchlist" className="mt-6">
+                <PunchListCloseoutSummary projectId={selectedProjectId} />
               </TabsContent>
             </Tabs>
           </>
