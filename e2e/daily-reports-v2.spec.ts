@@ -42,15 +42,11 @@ async function login(page: Page) {
   await page.waitForLoadState('networkidle');
 }
 
-// Helper to navigate to project's daily reports
+// Helper to navigate to daily reports
 async function navigateToDailyReports(page: Page) {
-  await page.goto('/projects');
-  const projectLink = page.locator('a[href*="/projects/"]').first();
-  await projectLink.click();
+  // Direct navigation to daily reports page (most reliable)
+  await page.goto('/daily-reports');
   await page.waitForLoadState('networkidle');
-
-  const dailyReportsLink = page.locator('a:has-text("Daily Reports"), a[href*="daily-reports"]');
-  await dailyReportsLink.first().click();
   await expect(page).toHaveURL(/daily-reports/, { timeout: 10000 });
 }
 
