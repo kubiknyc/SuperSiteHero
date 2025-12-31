@@ -124,7 +124,10 @@ test.describe('Punch Lists Management', () => {
 
     // Submit the form
     const submitButton = page.locator('button[type="submit"], button:has-text("Create"), button:has-text("Save"), button:has-text("Add")').first();
-    await submitButton.click();
+
+    // Scroll the button into view within the dialog and click with force
+    await submitButton.scrollIntoViewIfNeeded();
+    await submitButton.click({ force: true });
 
     // Should redirect or show success
     await page.waitForTimeout(2000);

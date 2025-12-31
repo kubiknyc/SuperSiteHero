@@ -68,7 +68,7 @@ const DialogPortal: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   if (!open) {return null}
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-[60]">
       {children}
     </div>
   )
@@ -100,11 +100,11 @@ const DialogContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <DialogPortal>
     <DialogOverlay />
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="flex items-center justify-center min-h-screen p-4 pointer-events-none">
       <div
         ref={ref}
         className={cn(
-          'relative w-full max-w-lg rounded-lg border border-border bg-card p-6 shadow-lg dark:border-border dark:bg-background',
+          'relative w-full max-w-lg rounded-lg border border-border bg-card p-6 shadow-lg dark:border-border dark:bg-background pointer-events-auto',
           className
         )}
         onClick={(e) => e.stopPropagation()}
