@@ -16,6 +16,8 @@ import {
 import { GanttToolbar } from './GanttToolbar'
 import { GanttTimeline } from './GanttTimeline'
 import { GanttTaskBar } from './GanttTaskBar'
+import { ResourceHistogram } from './ResourceHistogram'
+import { useResourceConflicts } from '../hooks/useResourceConflicts'
 import {
   getColumnWidth,
   calculateOptimalDateRange,
@@ -133,6 +135,7 @@ export function GanttChart({
   const [showMilestones, setShowMilestones] = useState(config.show_milestones)
   const [showBaseline, setShowBaseline] = useState(config.show_baseline)
   const [showWeekends, setShowWeekends] = useState(true)
+  const [showResources, setShowResources] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null)
 
@@ -144,6 +147,13 @@ export function GanttChart({
       14 // 2 weeks padding
     )
   }, [dateRange?.earliest_start, dateRange?.latest_finish])
+
+  // Calculate resource conflicts for histogram
+  const resourceAnalysis = useResourceConflicts(items, startDate, endDate, {
+    laborCapacityPerDay: 8,
+    equipmentCapacityPerDay: 4,
+    workHoursPerDay: 8,
+  })
 
   // Calculate critical path
   const criticalPathResult = useMemo((): CriticalPathResult | null => {
@@ -461,6 +471,9 @@ export function GanttChart({
         onToggleBaseline={() => setShowBaseline(!showBaseline)}
         showWeekends={showWeekends}
         onToggleWeekends={() => setShowWeekends(!showWeekends)}
+        showResources={showResources}
+        onToggleResources={() => setShowResources(!showResources)}
+        resourceConflictCount={resourceAnalysis.conflicts.length}
         hasBaseline={hasBaseline}
         onSaveBaseline={onSaveBaseline}
         onClearBaseline={onClearBaseline}
@@ -734,6 +747,19 @@ export function GanttChart({
           </div>
         </div>
       </div>
+
+      {/* Resource Histogram */}
+      {showResources && items.length > 0 && (
+        <ResourceHistogram
+          resourceAnalysis={resourceAnalysis}
+          columnWidth={columnWidth}
+          height={120}
+          laborCapacity={8}
+          equipmentCapacity={4}
+          showEquipment={true}
+          showWeekends={showWeekends}
+        />
+      )}
 
       {/* Hover tooltip */}
       {hoveredTask && !isDragging && (

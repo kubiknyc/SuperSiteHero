@@ -35,6 +35,7 @@ import {
   Trash2,
   MoreVertical,
   Clock,
+  Users,
 } from 'lucide-react'
 import type { GanttZoomLevel } from '@/types/schedule'
 
@@ -60,6 +61,9 @@ interface GanttToolbarProps {
   onToggleBaseline?: () => void
   showWeekends?: boolean
   onToggleWeekends?: () => void
+  showResources?: boolean
+  onToggleResources?: () => void
+  resourceConflictCount?: number
   hasBaseline?: boolean
   onSaveBaseline?: () => void
   onClearBaseline?: () => void
@@ -105,6 +109,9 @@ export function GanttToolbar({
   onToggleBaseline,
   showWeekends = true,
   onToggleWeekends,
+  showResources = false,
+  onToggleResources,
+  resourceConflictCount = 0,
   hasBaseline = false,
   onSaveBaseline,
   onClearBaseline,
@@ -350,6 +357,27 @@ export function GanttToolbar({
               <CalendarOff className="h-4 w-4 mr-1" />
             )}
             Weekends
+          </Button>
+        )}
+
+        {/* Resources toggle */}
+        {onToggleResources && (
+          <Button
+            variant={showResources ? 'default' : 'outline'}
+            size="sm"
+            onClick={onToggleResources}
+            title="Toggle resource histogram"
+            data-testid="toggle-resources"
+            aria-pressed={showResources}
+            className={showResources ? 'bg-violet-600 hover:bg-violet-700' : ''}
+          >
+            <Users className="h-4 w-4 mr-1" />
+            Resources
+            {resourceConflictCount > 0 && (
+              <Badge variant="secondary" className="ml-1 bg-red-500/20 text-white text-[10px]">
+                {resourceConflictCount}
+              </Badge>
+            )}
           </Button>
         )}
 
