@@ -86,21 +86,47 @@ async function createAuthenticatedSession(options: {
 
   try {
     // Navigate to login page
+    console.log(`   → Navigating to ${baseURL}`);
     await page.goto(baseURL);
 
+    console.log(`   → Current URL: ${page.url()}`);
+
+    // Check what Supabase URL is being used in the browser
+    const supabaseUrl = await page.evaluate(() => {
+      return (window as any).VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL || 'NOT_SET';
+    }).catch(() => 'ERROR_CHECKING');
+    console.log(`   → Supabase URL in browser: ${supabaseUrl}`);
+
     // Wait for login form
+    console.log(`   → Waiting for email input...`);
     await page.waitForSelector('input[type="email"], input[name="email"]', {
       timeout: 30000,
     });
 
     // Fill in credentials
+    console.log(`   → Filling in credentials...`);
     await page.fill('input[type="email"], input[name="email"]', email);
     await page.fill('input[type="password"]', password);
 
     // Submit login form
+    console.log(`   → Submitting form...`);
     await page.click('button[type="submit"]');
 
+    // Wait a moment to see if there are any errors
+    await page.waitForTimeout(2000);
+
+    // Check for error messages
+    const errorMessage = await page.locator('[role="alert"], .error, [data-testid="error-message"]').textContent().catch(() => null);
+    if (errorMessage) {
+      console.log(`   ⚠️  Error message found: ${errorMessage}`);
+    }
+
+    // Take screenshot for debugging
+    await page.screenshot({ path: path.join(__dirname, '../playwright/.auth/login-debug.png') });
+    console.log(`   📸 Screenshot saved to playwright/.auth/login-debug.png`);
+
     // Wait for successful login (redirect away from login page)
+    console.log(`   → Waiting for redirect...`);
     await page.waitForURL(url => !url.pathname.includes('/login'), {
       timeout: 15000,
     });

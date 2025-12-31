@@ -6,6 +6,7 @@
   "description": "JobSight - Construction Field Management Platform for Superintendents",
   "scripts": {
     "dev": "vite",
+    "dev:test": "vite --mode test",
     "build": "vite build",
     "build:strict": "tsc && vite build",
     "preview": "vite preview",
@@ -23,6 +24,7 @@
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:report": "playwright show-report playwright-report",
+    "test:e2e:setup": "node scripts/setup-e2e.mjs",
     "playwright:install": "playwright install",
     "test:manual": "playwright codegen http://localhost:5174",
     "test:manual:auth": "playwright codegen --save-storage=auth.json http://localhost:5174/login",
