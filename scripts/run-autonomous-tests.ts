@@ -379,6 +379,9 @@ class AutonomousTestRunner {
       },
     };
 
+    // Ensure report directory exists
+    await fs.mkdir(this.reportDir, { recursive: true });
+
     // Save JSON report
     const jsonPath = path.join(this.reportDir, `report-${Date.now()}.json`);
     await fs.writeFile(jsonPath, JSON.stringify(report, null, 2));

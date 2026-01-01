@@ -11,7 +11,20 @@
 import { test, expect, type Page, type BrowserContext } from '@playwright/test';
 import { createErrorCollector, type ErrorCollector } from './helpers/error-collector';
 import { createSafeInteractor } from './helpers/safe-interactor';
-import routesConfig from './routes.json';
+import * as fs from 'fs';
+import * as path from 'path';
+import { fileURLToPath } from 'url';
+
+// ES module dirname equivalent
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load routes configuration from JSON file
+const routesPath = path.join(__dirname, 'routes.json');
+const routesConfig = JSON.parse(fs.readFileSync(routesPath, 'utf-8'));
+
+// Auth state directory - use project root playwright/.auth to match global setup
+const AUTH_DIR = path.join(__dirname, '../../playwright/.auth');
 
 // Types for route configuration
 interface RouteConfig {
@@ -178,29 +191,12 @@ test.describe('Autonomous Smoke Crawl', () => {
   });
 
   // Authenticated routes - requires login
+  // Use existing user.json from global setup
   test.describe('Authenticated Routes', () => {
     const authRoutes = routeGroups.get('authenticated') || [];
 
-    test.beforeAll(async ({ browser }) => {
-      // Pre-authenticate and save state
-      const context = await browser.newContext();
-      const page = await context.newPage();
-
-      const loggedIn = await login(
-        page,
-        TEST_USERS.authenticated.email,
-        TEST_USERS.authenticated.password
-      );
-
-      if (!loggedIn) {
-        console.warn('Failed to login for authenticated routes, tests may fail');
-      }
-
-      await context.storageState({ path: '.auth/authenticated.json' });
-      await context.close();
-    });
-
-    test.use({ storageState: '.auth/authenticated.json' });
+    // Use existing auth state from global setup
+    test.use({ storageState: path.join(AUTH_DIR, 'user.json') });
 
     for (const route of authRoutes) {
       test(`${route.path} ${route.critical ? '(critical)' : ''}`, async ({ page }) => {
@@ -213,7 +209,7 @@ test.describe('Autonomous Smoke Crawl', () => {
             timeout: routes.config.defaultTimeout,
           });
 
-          // Handle potential redirect to login
+          // Handle potential redirect to login (session may have expired)
           if (page.url().includes('/login')) {
             const loggedIn = await login(
               page,
@@ -243,7 +239,7 @@ test.describe('Autonomous Smoke Crawl', () => {
     }
   });
 
-  // Admin routes
+  // Admin routes - use admin.json from global setup
   test.describe('Admin Routes', () => {
     const adminRoutes = routeGroups.get('admin') || [];
 
@@ -252,20 +248,8 @@ test.describe('Autonomous Smoke Crawl', () => {
       return;
     }
 
-    test.beforeAll(async ({ browser }) => {
-      const context = await browser.newContext();
-      const page = await context.newPage();
-
-      const loggedIn = await login(page, TEST_USERS.admin.email, TEST_USERS.admin.password);
-      if (!loggedIn) {
-        console.warn('Failed to login as admin, tests may fail');
-      }
-
-      await context.storageState({ path: '.auth/admin.json' });
-      await context.close();
-    });
-
-    test.use({ storageState: '.auth/admin.json' });
+    // Use existing admin auth state from global setup
+    test.use({ storageState: path.join(AUTH_DIR, 'admin.json') });
 
     for (const route of adminRoutes) {
       test(`${route.path} ${route.critical ? '(critical)' : ''}`, async ({ page }) => {
@@ -302,7 +286,7 @@ test.describe('Autonomous Smoke Crawl', () => {
     }
   });
 
-  // Project Manager routes
+  // Project Manager routes - login fresh for each test since no pre-saved auth
   test.describe('Project Manager Routes', () => {
     const pmRoutes = routeGroups.get('project_manager') || [];
 
@@ -311,31 +295,22 @@ test.describe('Autonomous Smoke Crawl', () => {
       return;
     }
 
-    test.beforeAll(async ({ browser }) => {
-      const context = await browser.newContext();
-      const page = await context.newPage();
-
-      const loggedIn = await login(
-        page,
-        TEST_USERS.project_manager.email,
-        TEST_USERS.project_manager.password
-      );
-      if (!loggedIn) {
-        console.warn('Failed to login as project manager, tests may fail');
-      }
-
-      await context.storageState({ path: '.auth/pm.json' });
-      await context.close();
-    });
-
-    test.use({ storageState: '.auth/pm.json' });
-
     for (const route of pmRoutes) {
       test(`${route.path} ${route.critical ? '(critical)' : ''}`, async ({ page }) => {
         errorCollector = createErrorCollector(page, routes.allowlist);
         await errorCollector.attach();
 
         try {
+          // Login as project manager first
+          const loggedIn = await login(
+            page,
+            TEST_USERS.project_manager.email,
+            TEST_USERS.project_manager.password
+          );
+          if (!loggedIn) {
+            console.warn('Failed to login as project manager');
+          }
+
           await page.goto(`${baseUrl}${route.path}`, {
             waitUntil: 'domcontentloaded',
             timeout: routes.config.defaultTimeout,
@@ -360,7 +335,7 @@ test.describe('Autonomous Smoke Crawl', () => {
     }
   });
 
-  // Superintendent routes
+  // Superintendent routes - login fresh for each test since no pre-saved auth
   test.describe('Superintendent Routes', () => {
     const superRoutes = routeGroups.get('superintendent') || [];
 
@@ -369,31 +344,22 @@ test.describe('Autonomous Smoke Crawl', () => {
       return;
     }
 
-    test.beforeAll(async ({ browser }) => {
-      const context = await browser.newContext();
-      const page = await context.newPage();
-
-      const loggedIn = await login(
-        page,
-        TEST_USERS.superintendent.email,
-        TEST_USERS.superintendent.password
-      );
-      if (!loggedIn) {
-        console.warn('Failed to login as superintendent, tests may fail');
-      }
-
-      await context.storageState({ path: '.auth/super.json' });
-      await context.close();
-    });
-
-    test.use({ storageState: '.auth/super.json' });
-
     for (const route of superRoutes) {
       test(`${route.path} ${route.critical ? '(critical)' : ''}`, async ({ page }) => {
         errorCollector = createErrorCollector(page, routes.allowlist);
         await errorCollector.attach();
 
         try {
+          // Login as superintendent first
+          const loggedIn = await login(
+            page,
+            TEST_USERS.superintendent.email,
+            TEST_USERS.superintendent.password
+          );
+          if (!loggedIn) {
+            console.warn('Failed to login as superintendent');
+          }
+
           await page.goto(`${baseUrl}${route.path}`, {
             waitUntil: 'domcontentloaded',
             timeout: routes.config.defaultTimeout,
@@ -418,7 +384,7 @@ test.describe('Autonomous Smoke Crawl', () => {
     }
   });
 
-  // Subcontractor routes
+  // Subcontractor routes - login fresh for each test since no pre-saved auth
   test.describe('Subcontractor Routes', () => {
     const subRoutes = routeGroups.get('subcontractor') || [];
 
@@ -427,31 +393,22 @@ test.describe('Autonomous Smoke Crawl', () => {
       return;
     }
 
-    test.beforeAll(async ({ browser }) => {
-      const context = await browser.newContext();
-      const page = await context.newPage();
-
-      const loggedIn = await login(
-        page,
-        TEST_USERS.subcontractor.email,
-        TEST_USERS.subcontractor.password
-      );
-      if (!loggedIn) {
-        console.warn('Failed to login as subcontractor, tests may fail');
-      }
-
-      await context.storageState({ path: '.auth/sub.json' });
-      await context.close();
-    });
-
-    test.use({ storageState: '.auth/sub.json' });
-
     for (const route of subRoutes) {
       test(`${route.path} ${route.critical ? '(critical)' : ''}`, async ({ page }) => {
         errorCollector = createErrorCollector(page, routes.allowlist);
         await errorCollector.attach();
 
         try {
+          // Login as subcontractor first
+          const loggedIn = await login(
+            page,
+            TEST_USERS.subcontractor.email,
+            TEST_USERS.subcontractor.password
+          );
+          if (!loggedIn) {
+            console.warn('Failed to login as subcontractor');
+          }
+
           await page.goto(`${baseUrl}${route.path}`, {
             waitUntil: 'domcontentloaded',
             timeout: routes.config.defaultTimeout,
@@ -476,17 +433,10 @@ test.describe('Autonomous Smoke Crawl', () => {
     }
   });
 
-  // Critical flow tests
+  // Critical flow tests - use existing user.json from global setup
   test.describe('Critical Flows', () => {
-    test.beforeAll(async ({ browser }) => {
-      const context = await browser.newContext();
-      const page = await context.newPage();
-      await login(page, TEST_USERS.authenticated.email, TEST_USERS.authenticated.password);
-      await context.storageState({ path: '.auth/authenticated.json' });
-      await context.close();
-    });
-
-    test.use({ storageState: '.auth/authenticated.json' });
+    // Use existing auth state from global setup
+    test.use({ storageState: path.join(AUTH_DIR, 'user.json') });
 
     test('Daily Reports flow is accessible', async ({ page }) => {
       errorCollector = createErrorCollector(page, routes.allowlist);
