@@ -1,0 +1,14 @@
+[dotenv@17.2.3] injecting env (20) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.3] injecting env (9) from .env.test -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+🔧 Running Playwright global setup...
+
+✅ Environment variables verified
+
+📡 Verifying server responsiveness before tests...
+
+
+⏳ Waiting for server to become healthy (max 120s)...
+
+   Attempt 1...
+   Still waiting: Login Page

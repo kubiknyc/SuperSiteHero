@@ -165,8 +165,12 @@ async function checkSupabaseAuth(
     headers: { Accept: 'application/json' },
   });
 
+  // Supabase Auth API returns 401 without API key, but that still means it's reachable
+  // This is expected behavior - we're just checking connectivity, not authentication
+  const isReachable = response.ok || response.status === 401;
+
   return {
-    passed: response.ok,
+    passed: isReachable,
     details: {
       status: response.status,
       statusText: response.statusText,
@@ -177,6 +181,16 @@ async function checkSupabaseAuth(
 
 /**
  * Check if the login page is accessible and rendering correctly
+ *
+ * NOTE: For client-side rendered (CSR) React apps, the initial HTML response
+ * won't contain form elements - they only appear after JavaScript executes.
+ * This check verifies that:
+ * 1. The login URL returns a 200 status
+ * 2. The response is HTML
+ * 3. The HTML contains the React root element for the app to mount
+ *
+ * The actual form element verification is done later in createAuthenticatedSession
+ * using Playwright which executes JavaScript.
  */
 async function checkLoginPage(
   baseURL: string
@@ -196,19 +210,36 @@ async function checkLoginPage(
   }
 
   const html = await response.text();
+  const contentType = response.headers.get('content-type') || '';
 
-  // Check for key elements that indicate the page rendered correctly
-  const hasEmailInput = html.includes('type="email"') || html.includes('name="email"');
-  const hasPasswordInput = html.includes('type="password"');
-  const hasSubmitButton = html.includes('type="submit"');
+  // For CSR apps, check that:
+  // 1. We got HTML content
+  // 2. The HTML contains basic structure (root div for React to mount)
+  // 3. The HTML has script tags (indicating JS will execute)
+  const isHtml = contentType.includes('text/html');
+  const hasRootElement = html.includes('id="root"') || html.includes('id="app"') || html.includes('id="__next"');
+  const hasScripts = html.includes('<script');
+
+  // For CSR apps, also check for server-rendered form elements (SSR/hybrid apps)
+  // This is optional - won't fail if not present since CSR apps render dynamically
+  const hasServerRenderedForm =
+    (html.includes('type="email"') || html.includes('name="email"')) &&
+    html.includes('type="password"');
+
+  // Pass if we have valid HTML with mounting point, OR if we have server-rendered form
+  const passed = isHtml && (hasRootElement || hasServerRenderedForm);
 
   return {
-    passed: hasEmailInput && hasPasswordInput && hasSubmitButton,
+    passed,
     details: {
-      hasEmailInput,
-      hasPasswordInput,
-      hasSubmitButton,
+      isHtml,
+      hasRootElement,
+      hasScripts,
+      hasServerRenderedForm,
       contentLength: html.length,
+      note: hasServerRenderedForm
+        ? 'Server-rendered form detected'
+        : 'Client-side rendered app detected (form will render after JS execution)',
     },
   };
 }
