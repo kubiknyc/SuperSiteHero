@@ -1,0 +1,182 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e7]:
+          - img "JobSight" [ref=e9]
+          - generic [ref=e10]:
+            - heading "JobSight" [level=1] [ref=e11]
+            - paragraph [ref=e12]: Field Management
+        - button "Search Ctrl+K" [ref=e14] [cursor=pointer]:
+          - img [ref=e15]
+          - generic [ref=e18]: Search
+          - generic [ref=e20]: Ctrl+K
+      - navigation [ref=e21]:
+        - generic [ref=e22]:
+          - link "Dashboard" [ref=e23] [cursor=pointer]:
+            - /url: /
+            - img [ref=e24]
+            - generic [ref=e29]: Dashboard
+          - link "Projects" [ref=e30] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e31]
+            - generic [ref=e33]: Projects
+          - link "Messages" [ref=e34] [cursor=pointer]:
+            - /url: /messages
+            - img [ref=e35]
+            - generic [ref=e37]: Messages
+          - link "Documents" [ref=e38] [cursor=pointer]:
+            - /url: /documents
+            - img [ref=e39]
+            - generic [ref=e42]: Documents
+        - generic [ref=e44]:
+          - button "Field Work" [ref=e46] [cursor=pointer]:
+            - img [ref=e47]
+            - generic [ref=e51]: Field Work
+            - img [ref=e52]
+          - button "Management" [ref=e55] [cursor=pointer]:
+            - img [ref=e56]
+            - generic [ref=e59]: Management
+            - img [ref=e60]
+          - generic [ref=e62]:
+            - button "Administration" [expanded] [ref=e63] [cursor=pointer]:
+              - img [ref=e64]
+              - generic [ref=e67]: Administration
+              - img [ref=e68]
+            - generic [ref=e70]:
+              - link "Notices" [ref=e71] [cursor=pointer]:
+                - /url: /notices
+                - img [ref=e72]
+                - generic [ref=e75]: Notices
+              - link "Site Instructions" [ref=e76] [cursor=pointer]:
+                - /url: /site-instructions
+                - img [ref=e77]
+                - generic [ref=e80]: Site Instructions
+              - link "Permits" [ref=e81] [cursor=pointer]:
+                - /url: /permits
+                - img [ref=e82]
+                - generic [ref=e86]: Permits
+              - link "Safety" [ref=e87] [cursor=pointer]:
+                - /url: /safety
+                - img [ref=e88]
+                - generic [ref=e90]: Safety
+              - link "Quality Control" [ref=e91] [cursor=pointer]:
+                - /url: /quality-control
+                - img [ref=e92]
+                - generic [ref=e96]: Quality Control
+              - link "Equipment" [ref=e97] [cursor=pointer]:
+                - /url: /equipment
+                - img [ref=e98]
+                - generic [ref=e103]: Equipment
+              - link "Procurement" [ref=e104] [cursor=pointer]:
+                - /url: /procurement
+                - img [ref=e105]
+                - generic [ref=e109]: Procurement
+              - link "Budget" [ref=e110] [cursor=pointer]:
+                - /url: /budget
+                - img [ref=e111]
+                - generic [ref=e113]: Budget
+              - link "Invoices" [ref=e114] [cursor=pointer]:
+                - /url: /invoices
+                - img [ref=e115]
+                - generic [ref=e118]: Invoices
+              - link "Contacts" [ref=e119] [cursor=pointer]:
+                - /url: /contacts
+                - img [ref=e120]
+                - generic [ref=e125]: Contacts
+          - button "Reports & Analytics" [ref=e127] [cursor=pointer]:
+            - img [ref=e128]
+            - generic [ref=e131]: Reports & Analytics
+            - img [ref=e132]
+      - generic [ref=e134]:
+        - generic [ref=e135]:
+          - generic [ref=e137]:
+            - img [ref=e138]
+            - generic [ref=e142]: Online
+          - button "Online - Click for details" [ref=e143] [cursor=pointer]:
+            - img [ref=e144]
+        - generic [ref=e146]:
+          - generic [ref=e147]: Theme
+          - 'button "Current theme: System. Click to change." [ref=e148] [cursor=pointer]':
+            - img [ref=e149]
+            - img
+            - generic [ref=e155]: Toggle theme
+        - generic [ref=e156]:
+          - paragraph [ref=e157]: Test User
+          - paragraph [ref=e158]: test@supersitehero.local
+          - paragraph [ref=e159]: member
+        - link "Settings" [ref=e160] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e161]
+          - text: Settings
+        - button "Sign Out" [ref=e164] [cursor=pointer]:
+          - img [ref=e165]
+          - text: Sign Out
+    - main [ref=e168]:
+      - generic [ref=e169]:
+        - generic [ref=e170]:
+          - generic [ref=e171]:
+            - heading "Budget" [level=1] [ref=e172]:
+              - img [ref=e173]
+              - text: Budget
+            - paragraph [ref=e175]: Track project budgets and cost codes
+          - generic [ref=e176]:
+            - combobox [ref=e177] [cursor=pointer]:
+              - generic: All Projects
+              - img [ref=e178]
+            - button "Export" [disabled]:
+              - img
+              - generic: Export
+            - button "Add Budget Line" [active] [ref=e180] [cursor=pointer]:
+              - img [ref=e181]
+              - generic [ref=e182]: Add Budget Line
+        - generic [ref=e183]:
+          - generic [ref=e186]:
+            - img [ref=e188]
+            - generic [ref=e190]:
+              - paragraph [ref=e191]: Total Budget
+              - paragraph [ref=e192]: $0
+          - generic [ref=e195]:
+            - img [ref=e197]
+            - generic [ref=e200]:
+              - paragraph [ref=e201]: Spent
+              - paragraph [ref=e202]: $0
+              - paragraph [ref=e203]: 0% of budget
+          - generic [ref=e206]:
+            - img [ref=e208]
+            - generic [ref=e211]:
+              - paragraph [ref=e212]: Committed
+              - paragraph [ref=e213]: $0
+              - paragraph [ref=e214]: 0% committed
+          - generic [ref=e217]:
+            - img [ref=e219]
+            - generic [ref=e222]:
+              - paragraph [ref=e223]: Remaining
+              - paragraph [ref=e224]: $0
+              - paragraph [ref=e225]: Available
+          - generic [ref=e228]:
+            - img [ref=e230]
+            - generic [ref=e233]:
+              - paragraph [ref=e234]: Variance
+              - paragraph [ref=e235]: +$0
+              - paragraph [ref=e236]: Under budget (0%)
+        - generic [ref=e238]:
+          - img [ref=e239]
+          - textbox "Search cost codes..." [ref=e242]
+        - generic [ref=e243]:
+          - heading "Cost Code Budgets" [level=3] [ref=e245]:
+            - generic [ref=e246]: Cost Code Budgets
+          - generic [ref=e248]:
+            - img [ref=e249]
+            - paragraph [ref=e251]: Select a project to view budgets
+            - paragraph [ref=e252]: Choose a project from the dropdown above
+  - generic:
+    - button
+    - button [ref=e253] [cursor=pointer]:
+      - img [ref=e255]
+      - generic:
+        - img
+```

@@ -1,0 +1,190 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - main [ref=e4]:
+      - generic [ref=e5]:
+        - button "Back to Projects" [ref=e7] [cursor=pointer]:
+          - img [ref=e8]
+          - text: Back to Projects
+        - generic [ref=e10]:
+          - generic [ref=e12]:
+            - heading "Downtown Office Building" [level=1] [ref=e13]
+            - paragraph [ref=e14]: "#2024-001"
+          - generic [ref=e15]:
+            - button "Make Offline" [ref=e16] [cursor=pointer]:
+              - img [ref=e17]
+              - text: Make Offline
+            - button "Schedule" [ref=e24] [cursor=pointer]:
+              - img [ref=e25]
+              - text: Schedule
+            - button "Save as Template" [ref=e27] [cursor=pointer]:
+              - img [ref=e28]
+              - text: Save as Template
+            - button "Settings" [ref=e32] [cursor=pointer]:
+              - img [ref=e33]
+              - text: Settings
+            - button "Edit" [ref=e36] [cursor=pointer]:
+              - img [ref=e37]
+              - text: Edit
+            - button "Delete project" [ref=e40] [cursor=pointer]:
+              - img [ref=e41]
+        - generic [ref=e45]: Active
+        - generic [ref=e46]:
+          - generic [ref=e47]:
+            - generic [ref=e48]:
+              - heading "Description" [level=3] [ref=e50]
+              - paragraph [ref=e52]: Modern office complex in downtown district
+            - generic [ref=e53]:
+              - heading "Location" [level=3] [ref=e55]
+              - generic [ref=e56]:
+                - generic [ref=e57]:
+                  - text: Address
+                  - paragraph [ref=e58]: 456 Main Street
+                - generic [ref=e59]:
+                  - generic [ref=e60]:
+                    - text: City
+                    - paragraph [ref=e61]: New York
+                  - generic [ref=e62]:
+                    - text: State
+                    - paragraph [ref=e63]: NY
+                  - generic [ref=e64]:
+                    - text: ZIP
+                    - paragraph [ref=e65]: "10001"
+            - generic [ref=e66]:
+              - generic [ref=e67]:
+                - generic [ref=e68]:
+                  - heading "Documents" [level=3] [ref=e69]
+                  - paragraph [ref=e70]: 0 documents
+                - button "Upload Document" [ref=e71] [cursor=pointer]:
+                  - img [ref=e72]
+                  - text: Upload Document
+              - generic [ref=e73]:
+                - generic [ref=e74]:
+                  - textbox "Search documents..." [ref=e75]
+                  - combobox [ref=e76]:
+                    - option "All Types" [selected]
+                    - option "Drawing"
+                    - option "Specification"
+                    - option "Submittal"
+                    - option "Shop Drawing"
+                    - option "Scope"
+                    - option "General"
+                    - option "Photo"
+                    - option "Other"
+                - generic [ref=e77]:
+                  - img [ref=e78]
+                  - paragraph [ref=e81]: No documents found
+            - generic [ref=e82]:
+              - generic [ref=e83]:
+                - generic [ref=e84]:
+                  - heading "Requests for Information" [level=3] [ref=e85]
+                  - paragraph [ref=e86]: 0 RFIs
+                - button "New RFI" [ref=e87] [cursor=pointer]
+              - generic [ref=e88]:
+                - generic [ref=e89]:
+                  - textbox "Search RFIs..." [ref=e90]
+                  - combobox [ref=e91]:
+                    - option "All Statuses" [selected]
+                    - option "Draft"
+                    - option "Submitted"
+                    - option "Answered"
+                    - option "Approved"
+                    - option "Rejected"
+                    - option "Closed"
+                - generic [ref=e92]:
+                  - img [ref=e93]
+                  - paragraph [ref=e95]: No RFIs found
+            - generic [ref=e96]:
+              - generic [ref=e97]:
+                - generic [ref=e98]:
+                  - heading "Submittals" [level=3] [ref=e99]
+                  - paragraph [ref=e100]: 0 items • 0 draft • 0 submitted • 0 approved
+                - button "New Submittal" [ref=e101] [cursor=pointer]
+              - generic [ref=e102]:
+                - generic [ref=e103]:
+                  - textbox "Search by title..." [ref=e104]
+                  - combobox [ref=e105]:
+                    - option "All Statuses" [selected]
+                    - option "Draft"
+                    - option "Submitted"
+                    - option "Under Review"
+                    - option "Approved"
+                    - option "Rejected"
+                    - option "Resubmit Required"
+                - generic [ref=e106]:
+                  - img [ref=e107]
+                  - paragraph [ref=e109]: No submittals found
+            - generic [ref=e110]:
+              - generic [ref=e111]:
+                - generic [ref=e112]:
+                  - heading "Punch List" [level=3] [ref=e113]
+                  - paragraph [ref=e114]: 0 open / 0 total
+                - button "New" [ref=e115] [cursor=pointer]:
+                  - img [ref=e116]
+                  - text: New
+              - generic [ref=e117]:
+                - generic [ref=e118]:
+                  - textbox "Search..." [ref=e119]
+                  - option "All" [ref=e120]
+                  - option "Open" [ref=e121]
+                  - option "In Progress" [ref=e122]
+                  - option "Completed" [ref=e123]
+                  - option "Verified" [ref=e124]
+                  - combobox [ref=e125]
+                - generic [ref=e126]:
+                  - img [ref=e127]
+                  - paragraph [ref=e129]: No punch items found
+            - generic [ref=e130]:
+              - generic [ref=e131]:
+                - generic [ref=e132]:
+                  - heading "Subcontractor Portal Access" [level=3] [ref=e133]:
+                    - img [ref=e134]
+                    - text: Subcontractor Portal Access
+                  - paragraph [ref=e138]: Manage which subcontractors can access the portal for this project
+                - button "Invite" [ref=e139] [cursor=pointer]
+              - generic [ref=e141]: Failed to load portal access records
+          - generic [ref=e142]:
+            - generic [ref=e143]:
+              - heading "Timeline" [level=3] [ref=e145]
+              - generic [ref=e146]:
+                - generic [ref=e147]:
+                  - text: Start Date
+                  - paragraph [ref=e148]: Jan 14, 2024
+                - generic [ref=e149]:
+                  - text: Est. End Date
+                  - paragraph [ref=e150]: Jun 29, 2025
+            - generic [ref=e151]:
+              - heading "Project Info" [level=3] [ref=e153]
+              - generic [ref=e155]:
+                - text: Status
+                - generic [ref=e156]: Active
+    - navigation "Main navigation" [ref=e157]:
+      - generic [ref=e158]:
+        - link "Navigate to Dashboard" [ref=e159] [cursor=pointer]:
+          - /url: /
+          - img [ref=e161]
+          - generic [ref=e166]: Home
+        - link "Navigate to Projects" [ref=e167] [cursor=pointer]:
+          - /url: /projects
+          - img [ref=e169]
+          - generic [ref=e171]: Projects
+        - link "Navigate to Messages" [ref=e172] [cursor=pointer]:
+          - /url: /messages
+          - img [ref=e174]
+          - generic [ref=e176]: Messages
+        - link "Navigate to Daily Reports" [ref=e177] [cursor=pointer]:
+          - /url: /daily-reports
+          - img [ref=e179]
+          - generic [ref=e182]: Reports
+        - button "Open navigation menu" [ref=e183] [cursor=pointer]:
+          - img [ref=e184]
+          - generic [ref=e185]: More
+  - generic:
+    - button
+    - button [ref=e186] [cursor=pointer]:
+      - img [ref=e188]
+      - generic:
+        - img
+```

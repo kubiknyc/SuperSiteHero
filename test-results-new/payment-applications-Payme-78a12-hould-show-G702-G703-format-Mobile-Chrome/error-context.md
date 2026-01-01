@@ -1,0 +1,54 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - main [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e7]:
+            - heading "Payment Applications" [level=1] [ref=e8]:
+              - img [ref=e9]
+              - text: Payment Applications
+            - paragraph [ref=e12]: AIA G702/G703 billing workflow
+          - button "New Application" [disabled]:
+            - img
+            - text: New Application
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - img [ref=e18]
+            - text: Select Project
+          - option "Select a project..." [ref=e22]
+          - combobox [disabled] [ref=e23]
+        - generic [ref=e25]:
+          - img [ref=e26]
+          - heading "Select a Project" [level=3] [ref=e30]
+          - paragraph [ref=e31]: Choose a project above to view and manage payment applications
+    - navigation "Main navigation" [ref=e32]:
+      - generic [ref=e33]:
+        - link "Navigate to Dashboard" [ref=e34] [cursor=pointer]:
+          - /url: /
+          - img [ref=e36]
+          - generic [ref=e41]: Home
+        - link "Navigate to Projects" [ref=e42] [cursor=pointer]:
+          - /url: /projects
+          - img [ref=e44]
+          - generic [ref=e46]: Projects
+        - link "Navigate to Messages" [ref=e47] [cursor=pointer]:
+          - /url: /messages
+          - img [ref=e49]
+          - generic [ref=e51]: Messages
+        - link "Navigate to Daily Reports" [ref=e52] [cursor=pointer]:
+          - /url: /daily-reports
+          - img [ref=e54]
+          - generic [ref=e57]: Reports
+        - button "Open navigation menu" [ref=e58] [cursor=pointer]:
+          - img [ref=e59]
+          - generic [ref=e60]: More
+  - generic:
+    - button
+    - button [ref=e61] [cursor=pointer]:
+      - img [ref=e63]
+      - generic:
+        - img
+```

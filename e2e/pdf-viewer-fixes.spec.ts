@@ -39,7 +39,7 @@ async function login(page: Page) {
   await page.click('button[type="submit"]');
 
   // Wait for redirect away from login
-  await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+  await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
   await page.waitForTimeout(1000);
 }
 

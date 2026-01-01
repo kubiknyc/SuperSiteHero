@@ -54,7 +54,7 @@ async function login(page: Page, email: string = TEST_USER.email, password: stri
   await page.click('button[type="submit"]');
 
   // Wait for redirect away from login (use negative assertion like Phase 1)
-  await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+  await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
   // Verify authenticated state
   await page.waitForTimeout(500);

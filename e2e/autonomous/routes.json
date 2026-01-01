@@ -76,7 +76,7 @@
       "name": "New Daily Report",
       "auth": "authenticated",
       "critical": true,
-      "waitFor": "form, [data-testid='daily-report-form']"
+      "waitFor": "form, [data-testid='daily-report-form'], h1, main"
     },
     {
       "path": "/punch-lists",

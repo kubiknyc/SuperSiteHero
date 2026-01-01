@@ -28,7 +28,7 @@ test.describe('Punch Lists Management', () => {
     await page.click('button[type="submit"]');
 
     // Wait for successful login
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     // Navigate to punch lists page
     await page.goto('/punch-lists');

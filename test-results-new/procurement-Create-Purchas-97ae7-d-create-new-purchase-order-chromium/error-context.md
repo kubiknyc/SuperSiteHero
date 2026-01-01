@@ -1,0 +1,229 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e7]:
+          - img "JobSight" [ref=e9]
+          - generic [ref=e10]:
+            - heading "JobSight" [level=1] [ref=e11]
+            - paragraph [ref=e12]: Field Management
+        - button "Search Ctrl+K" [ref=e14] [cursor=pointer]:
+          - img [ref=e15]
+          - generic [ref=e18]: Search
+          - generic [ref=e20]: Ctrl+K
+      - navigation [ref=e21]:
+        - generic [ref=e22]:
+          - link "Dashboard" [ref=e23] [cursor=pointer]:
+            - /url: /
+            - img [ref=e24]
+            - generic [ref=e29]: Dashboard
+          - link "Projects" [ref=e30] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e31]
+            - generic [ref=e33]: Projects
+          - link "Messages" [ref=e34] [cursor=pointer]:
+            - /url: /messages
+            - img [ref=e35]
+            - generic [ref=e37]: Messages
+          - link "Documents" [ref=e38] [cursor=pointer]:
+            - /url: /documents
+            - img [ref=e39]
+            - generic [ref=e42]: Documents
+        - generic [ref=e44]:
+          - button "Field Work" [ref=e46] [cursor=pointer]:
+            - img [ref=e47]
+            - generic [ref=e51]: Field Work
+            - img [ref=e52]
+          - button "Management" [ref=e55] [cursor=pointer]:
+            - img [ref=e56]
+            - generic [ref=e59]: Management
+            - img [ref=e60]
+          - generic [ref=e62]:
+            - button "Administration" [expanded] [ref=e63] [cursor=pointer]:
+              - img [ref=e64]
+              - generic [ref=e67]: Administration
+              - img [ref=e68]
+            - generic [ref=e70]:
+              - link "Notices" [ref=e71] [cursor=pointer]:
+                - /url: /notices
+                - img [ref=e72]
+                - generic [ref=e75]: Notices
+              - link "Site Instructions" [ref=e76] [cursor=pointer]:
+                - /url: /site-instructions
+                - img [ref=e77]
+                - generic [ref=e80]: Site Instructions
+              - link "Permits" [ref=e81] [cursor=pointer]:
+                - /url: /permits
+                - img [ref=e82]
+                - generic [ref=e86]: Permits
+              - link "Safety" [ref=e87] [cursor=pointer]:
+                - /url: /safety
+                - img [ref=e88]
+                - generic [ref=e90]: Safety
+              - link "Quality Control" [ref=e91] [cursor=pointer]:
+                - /url: /quality-control
+                - img [ref=e92]
+                - generic [ref=e96]: Quality Control
+              - link "Equipment" [ref=e97] [cursor=pointer]:
+                - /url: /equipment
+                - img [ref=e98]
+                - generic [ref=e103]: Equipment
+              - link "Procurement" [ref=e104] [cursor=pointer]:
+                - /url: /procurement
+                - img [ref=e105]
+                - generic [ref=e109]: Procurement
+              - link "Budget" [ref=e110] [cursor=pointer]:
+                - /url: /budget
+                - img [ref=e111]
+                - generic [ref=e113]: Budget
+              - link "Invoices" [ref=e114] [cursor=pointer]:
+                - /url: /invoices
+                - img [ref=e115]
+                - generic [ref=e118]: Invoices
+              - link "Contacts" [ref=e119] [cursor=pointer]:
+                - /url: /contacts
+                - img [ref=e120]
+                - generic [ref=e125]: Contacts
+          - button "Reports & Analytics" [ref=e127] [cursor=pointer]:
+            - img [ref=e128]
+            - generic [ref=e131]: Reports & Analytics
+            - img [ref=e132]
+      - generic [ref=e134]:
+        - generic [ref=e135]:
+          - generic [ref=e137]:
+            - img [ref=e138]
+            - generic [ref=e142]: Online
+          - button "Online - Click for details" [ref=e143] [cursor=pointer]:
+            - img [ref=e144]
+        - generic [ref=e146]:
+          - generic [ref=e147]: Theme
+          - 'button "Current theme: System. Click to change." [ref=e148] [cursor=pointer]':
+            - img [ref=e149]
+            - img
+            - generic [ref=e155]: Toggle theme
+        - generic [ref=e156]:
+          - paragraph [ref=e157]: Test User
+          - paragraph [ref=e158]: test@supersitehero.local
+          - paragraph [ref=e159]: member
+        - link "Settings" [ref=e160] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e161]
+          - text: Settings
+        - button "Sign Out" [ref=e164] [cursor=pointer]:
+          - img [ref=e165]
+          - text: Sign Out
+    - main [ref=e168]:
+      - generic [ref=e169]:
+        - generic [ref=e170]:
+          - generic [ref=e171]:
+            - heading "Procurement" [level=1] [ref=e172]
+            - paragraph [ref=e173]: Manage purchase orders and vendor relationships
+          - generic [ref=e174]:
+            - button "Add Vendor" [active] [ref=e175] [cursor=pointer]:
+              - img [ref=e176]
+              - text: Add Vendor
+            - button "New Purchase Order" [ref=e180] [cursor=pointer]:
+              - img [ref=e181]
+              - text: New Purchase Order
+        - generic [ref=e182]:
+          - generic [ref=e183]: Select Project
+          - combobox [ref=e184] [cursor=pointer]:
+            - generic: Downtown Office Building
+            - img [ref=e185]
+        - generic [ref=e187]:
+          - generic [ref=e190]:
+            - img [ref=e192]
+            - generic [ref=e196]:
+              - paragraph [ref=e197]: "0"
+              - paragraph [ref=e198]: Total POs
+          - generic [ref=e201]:
+            - img [ref=e203]
+            - generic [ref=e205]:
+              - paragraph [ref=e206]: $0
+              - paragraph [ref=e207]: Total Value
+          - generic [ref=e210]:
+            - img [ref=e212]
+            - generic [ref=e215]:
+              - paragraph [ref=e216]: "0"
+              - paragraph [ref=e217]: Awaiting Approval
+          - generic [ref=e220]:
+            - img [ref=e222]
+            - generic [ref=e227]:
+              - paragraph [ref=e228]: "0"
+              - paragraph [ref=e229]: Pending Delivery
+          - generic [ref=e232]:
+            - img [ref=e234]
+            - generic [ref=e237]:
+              - paragraph [ref=e238]: "0"
+              - paragraph [ref=e239]: Received
+          - generic [ref=e242]:
+            - img [ref=e244]
+            - generic [ref=e248]:
+              - paragraph [ref=e249]: "0"
+              - paragraph [ref=e250]: Vendors
+        - generic [ref=e251]:
+          - generic [ref=e252]:
+            - tab "Purchase Orders" [selected] [ref=e253] [cursor=pointer]:
+              - img [ref=e254]
+              - text: Purchase Orders
+            - tab "Vendors" [ref=e258] [cursor=pointer]:
+              - img [ref=e259]
+              - text: Vendors
+          - tabpanel [ref=e263]:
+            - generic [ref=e264]:
+              - generic [ref=e266]:
+                - img [ref=e267]
+                - textbox "Search purchase orders..." [ref=e270]
+              - combobox [ref=e271] [cursor=pointer]:
+                - img [ref=e272]
+                - generic: All Statuses
+                - img [ref=e274]
+            - generic [ref=e276]:
+              - img [ref=e277]
+              - heading "No Purchase Orders Found" [level=3] [ref=e281]
+              - paragraph [ref=e282]: Create your first purchase order to get started
+              - button "Create Purchase Order" [ref=e283] [cursor=pointer]:
+                - img [ref=e284]
+                - text: Create Purchase Order
+        - generic [ref=e287]:
+          - generic [ref=e288]:
+            - heading "Add New Vendor" [level=2] [ref=e289]:
+              - img [ref=e290]
+              - text: Add New Vendor
+            - paragraph [ref=e294]: Add a new vendor to your supplier list.
+          - generic [ref=e295]:
+            - generic [ref=e296]:
+              - generic [ref=e297]:
+                - tab "Basic Info" [selected] [ref=e298] [cursor=pointer]
+                - tab "Contact" [ref=e299] [cursor=pointer]
+                - tab "Business" [ref=e300] [cursor=pointer]
+              - tabpanel [ref=e304]:
+                - generic [ref=e305]:
+                  - generic [ref=e306]:
+                    - generic [ref=e307]: Vendor Name *
+                    - textbox "Company name" [ref=e308]
+                  - generic [ref=e309]:
+                    - text: Vendor Code
+                    - textbox "e.g., ACE-001" [ref=e310]
+                - generic [ref=e311]:
+                  - text: Vendor Type
+                  - combobox [ref=e312] [cursor=pointer]:
+                    - generic: Supplier
+                    - img [ref=e313]
+                  - combobox [ref=e315]
+                - generic [ref=e316]:
+                  - text: Contact Name
+                  - textbox "Primary contact" [ref=e317]
+            - generic [ref=e318]:
+              - button "Cancel" [ref=e319] [cursor=pointer]
+              - button "Add Vendor" [ref=e320] [cursor=pointer]
+  - generic:
+    - button
+    - button [ref=e321] [cursor=pointer]:
+      - img [ref=e323]
+      - generic:
+        - img
+```

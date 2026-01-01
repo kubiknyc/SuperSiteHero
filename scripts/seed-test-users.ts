@@ -24,7 +24,8 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-// Load environment variables
+// Load environment variables - try .env.test first, fall back to .env
+dotenv.config({ path: path.resolve(__dirname, '..', '.env.test') })
 dotenv.config({ path: path.resolve(__dirname, '..', '.env') })
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL
@@ -53,8 +54,52 @@ const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
   },
 })
 
-// Test user definitions
-const TEST_USERS = [
+// E2E Test users (from .env.test) - these match the credentials in smoke-crawl tests
+const E2E_TEST_USERS = [
+  {
+    email: process.env.TEST_USER_EMAIL || 'test@supersitehero.local',
+    password: process.env.TEST_USER_PASSWORD || 'TestPassword123!',
+    first_name: 'Test',
+    last_name: 'User',
+    role: 'superintendent', // General test user with full access
+    phone: '555-E2E-0001',
+  },
+  {
+    email: process.env.TEST_ADMIN_EMAIL || 'admin@supersitehero.local',
+    password: process.env.TEST_ADMIN_PASSWORD || 'AdminPassword123!',
+    first_name: 'Admin',
+    last_name: 'E2E',
+    role: 'superintendent', // Admin has full access
+    phone: '555-E2E-0002',
+  },
+  {
+    email: process.env.TEST_PM_EMAIL || 'pm@supersitehero.local',
+    password: process.env.TEST_PM_PASSWORD || 'PMPassword123!',
+    first_name: 'PM',
+    last_name: 'E2E',
+    role: 'project_manager',
+    phone: '555-E2E-0003',
+  },
+  {
+    email: process.env.TEST_SUPER_EMAIL || 'super@supersitehero.local',
+    password: process.env.TEST_SUPER_PASSWORD || 'SuperPassword123!',
+    first_name: 'Super',
+    last_name: 'E2E',
+    role: 'superintendent',
+    phone: '555-E2E-0004',
+  },
+  {
+    email: process.env.TEST_SUB_EMAIL || 'sub@supersitehero.local',
+    password: process.env.TEST_SUB_PASSWORD || 'SubPassword123!',
+    first_name: 'Sub',
+    last_name: 'E2E',
+    role: 'subcontractor',
+    phone: '555-E2E-0005',
+  },
+]
+
+// Manual test user definitions (for development testing)
+const MANUAL_TEST_USERS = [
   {
     email: 'superintendent@test.supersitehero.com',
     password: 'TestSuper123!',
@@ -120,6 +165,9 @@ const TEST_USERS = [
     phone: '555-001-0008',
   },
 ]
+
+// Combined test users - E2E users first, then manual test users
+const TEST_USERS = [...E2E_TEST_USERS, ...MANUAL_TEST_USERS]
 
 interface CreatedUser {
   id: string

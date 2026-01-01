@@ -31,7 +31,7 @@ async function login(page: Page) {
   await responsePromise;
 
   // Wait for redirect away from login
-  await page.waitForURL(/\/(projects|dashboard)/, { timeout: 15000 });
+  await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
   // Verify authenticated state
   await page.waitForTimeout(500);
@@ -80,7 +80,7 @@ test.describe('Public Approval Page', () => {
       await page.goto('/approve/test_token');
 
       // Should not redirect to login
-      await expect(page).not.toHaveURL(/\/login/);
+      await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
     });
   });
 

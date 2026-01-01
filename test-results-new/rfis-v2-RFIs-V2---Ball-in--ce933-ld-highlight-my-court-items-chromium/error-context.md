@@ -1,0 +1,218 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e7]:
+          - img "JobSight" [ref=e9]
+          - generic [ref=e10]:
+            - heading "JobSight" [level=1] [ref=e11]
+            - paragraph [ref=e12]: Field Management
+        - button "Search Ctrl+K" [ref=e14] [cursor=pointer]:
+          - img [ref=e15]
+          - generic [ref=e18]: Search
+          - generic [ref=e20]: Ctrl+K
+      - navigation [ref=e21]:
+        - generic [ref=e22]:
+          - link "Dashboard" [ref=e23] [cursor=pointer]:
+            - /url: /
+            - img [ref=e24]
+            - generic [ref=e29]: Dashboard
+          - link "Projects" [ref=e30] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e31]
+            - generic [ref=e33]: Projects
+          - link "Messages" [ref=e34] [cursor=pointer]:
+            - /url: /messages
+            - img [ref=e35]
+            - generic [ref=e37]: Messages
+          - link "Documents" [ref=e38] [cursor=pointer]:
+            - /url: /documents
+            - img [ref=e39]
+            - generic [ref=e42]: Documents
+        - generic [ref=e44]:
+          - button "Field Work" [ref=e46] [cursor=pointer]:
+            - img [ref=e47]
+            - generic [ref=e51]: Field Work
+            - img [ref=e52]
+          - button "Management" [ref=e55] [cursor=pointer]:
+            - img [ref=e56]
+            - generic [ref=e59]: Management
+            - img [ref=e60]
+          - button "Administration" [ref=e63] [cursor=pointer]:
+            - img [ref=e64]
+            - generic [ref=e67]: Administration
+            - img [ref=e68]
+          - button "Reports & Analytics" [ref=e71] [cursor=pointer]:
+            - img [ref=e72]
+            - generic [ref=e75]: Reports & Analytics
+            - img [ref=e76]
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - generic [ref=e81]:
+            - img [ref=e82]
+            - generic [ref=e86]: Online
+          - button "Online - Click for details" [ref=e87] [cursor=pointer]:
+            - img [ref=e88]
+        - generic [ref=e90]:
+          - generic [ref=e91]: Theme
+          - 'button "Current theme: System. Click to change." [ref=e92] [cursor=pointer]':
+            - img [ref=e93]
+            - img
+            - generic [ref=e99]: Toggle theme
+        - generic [ref=e100]:
+          - paragraph [ref=e101]: Test User
+          - paragraph [ref=e102]: test@supersitehero.local
+          - paragraph [ref=e103]: member
+        - link "Settings" [ref=e104] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e105]
+          - text: Settings
+        - button "Sign Out" [ref=e108] [cursor=pointer]:
+          - img [ref=e109]
+          - text: Sign Out
+    - main [ref=e112]:
+      - generic [ref=e114]:
+        - generic [ref=e115]:
+          - heading "Dashboard" [level=1] [ref=e116]
+          - generic [ref=e117]:
+            - paragraph [ref=e118]: Welcome back, Test
+            - generic [ref=e119]: •
+            - paragraph [ref=e120]:
+              - img [ref=e121]
+              - text: Wednesday, December 31, 2025
+        - region "Project statistics overview" [ref=e124]:
+          - article "12 tasks pending out of 15 target, up 3 from last period" [ref=e125] [cursor=pointer]:
+            - generic [ref=e127]:
+              - img [ref=e129]
+              - generic [ref=e132]:
+                - img [ref=e133]
+                - text: "+3"
+            - generic [ref=e136]:
+              - paragraph [ref=e137]: Tasks Pending
+              - generic [ref=e138]:
+                - paragraph [ref=e139]: "12"
+                - paragraph [ref=e140]: / 15
+              - img [ref=e142]
+            - generic [ref=e145]:
+              - generic [ref=e146]: Progress to Target
+              - generic [ref=e147]: 80%
+          - article "5 open RFIs with target of 3, up 2 from last period" [ref=e151] [cursor=pointer]:
+            - generic [ref=e153]:
+              - img [ref=e155]
+              - generic [ref=e157]:
+                - img [ref=e158]
+                - text: "+2"
+            - generic [ref=e161]:
+              - paragraph [ref=e162]: Open RFIs
+              - generic [ref=e163]:
+                - paragraph [ref=e164]: "5"
+                - paragraph [ref=e165]: / 3
+              - img [ref=e167]
+            - generic [ref=e170]:
+              - generic [ref=e171]: Progress to Target
+              - generic [ref=e172]: 167%
+          - article "23 punch items with target of 15, down 8 from last period" [ref=e176] [cursor=pointer]:
+            - generic [ref=e178]:
+              - img [ref=e180]
+              - generic [ref=e183]:
+                - img [ref=e184]
+                - text: "-8"
+            - generic [ref=e187]:
+              - paragraph [ref=e188]: Punch Items
+              - generic [ref=e189]:
+                - paragraph [ref=e190]: "23"
+                - paragraph [ref=e191]: / 15
+              - img [ref=e193]
+            - generic [ref=e196]:
+              - generic [ref=e197]: Progress to Target
+              - generic [ref=e198]: 153%
+          - article "127 days since last incident with target of 365" [ref=e202] [cursor=pointer]:
+            - generic [ref=e204]:
+              - img [ref=e206]
+              - generic [ref=e208]:
+                - img [ref=e209]
+                - text: "+1"
+            - generic [ref=e212]:
+              - paragraph [ref=e213]: Days Since Incident
+              - generic [ref=e214]:
+                - paragraph [ref=e215]: "127"
+                - paragraph [ref=e216]: / 365
+              - img [ref=e218]
+            - generic [ref=e221]:
+              - generic [ref=e222]: Progress to Target
+              - generic [ref=e223]: 35%
+        - generic [ref=e227]:
+          - generic [ref=e228]:
+            - generic [ref=e229]:
+              - generic [ref=e230]:
+                - heading "Active Projects" [level=2] [ref=e231]
+                - paragraph [ref=e232]: 3 projects in progress
+              - link "View All" [ref=e233] [cursor=pointer]:
+                - /url: /projects
+                - text: View All
+                - img [ref=e234]
+            - generic [ref=e236]:
+              - 'link "Downtown Office Building Project health: active Started Jan 14, 2024 • Updated recently ACTIVE Progress 75%" [ref=e237] [cursor=pointer]':
+                - /url: /projects/0a8f1f43-2207-4f27-8471-e5bc14d6c3ba
+                - generic [ref=e238]:
+                  - generic [ref=e239]:
+                    - generic [ref=e240]:
+                      - heading "Downtown Office Building" [level=3] [ref=e241]
+                      - 'generic "Project health: active" [ref=e242]'
+                    - generic [ref=e243]:
+                      - generic [ref=e244]:
+                        - img [ref=e245]
+                        - text: Started Jan 14, 2024
+                      - generic [ref=e247]: •
+                      - generic [ref=e248]: Updated recently
+                  - generic [ref=e249]: ACTIVE
+                - generic [ref=e251]:
+                  - generic [ref=e252]: Progress
+                  - generic [ref=e253]: 75%
+              - 'link "Residential Tower Project health: active Started Feb 29, 2024 • Updated recently ACTIVE Progress 75%" [ref=e256] [cursor=pointer]':
+                - /url: /projects/21fe2223-1413-4d9a-b6c8-1f0cd0287a39
+                - generic [ref=e257]:
+                  - generic [ref=e258]:
+                    - generic [ref=e259]:
+                      - heading "Residential Tower" [level=3] [ref=e260]
+                      - 'generic "Project health: active" [ref=e261]'
+                    - generic [ref=e262]:
+                      - generic [ref=e263]:
+                        - img [ref=e264]
+                        - text: Started Feb 29, 2024
+                      - generic [ref=e266]: •
+                      - generic [ref=e267]: Updated recently
+                  - generic [ref=e268]: ACTIVE
+                - generic [ref=e270]:
+                  - generic [ref=e271]: Progress
+                  - generic [ref=e272]: 75%
+              - 'link "Shopping Mall Renovation Project health: planning Started Jan 31, 2024 • Updated recently PLANNING Progress 75%" [ref=e275] [cursor=pointer]':
+                - /url: /projects/bbe19ce4-9743-454e-aed0-580b163d6492
+                - generic [ref=e276]:
+                  - generic [ref=e277]:
+                    - generic [ref=e278]:
+                      - heading "Shopping Mall Renovation" [level=3] [ref=e279]
+                      - 'generic "Project health: planning" [ref=e280]'
+                    - generic [ref=e281]:
+                      - generic [ref=e282]:
+                        - img [ref=e283]
+                        - text: Started Jan 31, 2024
+                      - generic [ref=e285]: •
+                      - generic [ref=e286]: Updated recently
+                  - generic [ref=e287]: PLANNING
+                - generic [ref=e289]:
+                  - generic [ref=e290]: Progress
+                  - generic [ref=e291]: 75%
+          - heading "Notices" [level=3] [ref=e297]:
+            - img [ref=e298]
+            - text: Notices
+  - generic:
+    - button
+    - button [ref=e305] [cursor=pointer]:
+      - img [ref=e307]
+      - generic:
+        - img
+```

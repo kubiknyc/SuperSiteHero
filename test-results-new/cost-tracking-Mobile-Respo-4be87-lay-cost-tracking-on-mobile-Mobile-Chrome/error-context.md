@@ -1,0 +1,54 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - main [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e7]:
+            - heading "Cost Tracking" [level=1] [ref=e8]:
+              - img [ref=e9]
+              - text: Cost Tracking
+            - paragraph [ref=e11]: Manage project budgets, track costs, and analyze spending by division
+          - generic [ref=e12]:
+            - combobox [ref=e13]:
+              - option "Select a project..." [selected]
+              - option "Downtown Office Building"
+              - option "Residential Tower"
+              - option "Shopping Mall Renovation"
+              - option "Test Material 1767240137125"
+            - button "Refresh data" [ref=e14] [cursor=pointer]:
+              - img [ref=e15]
+        - generic [ref=e21]:
+          - img [ref=e22]
+          - heading "Select a Project" [level=3] [ref=e24]
+          - paragraph [ref=e25]: Choose a project from the dropdown above to view and manage costs
+    - navigation "Main navigation" [ref=e26]:
+      - generic [ref=e27]:
+        - link "Navigate to Dashboard" [ref=e28] [cursor=pointer]:
+          - /url: /
+          - img [ref=e30]
+          - generic [ref=e35]: Home
+        - link "Navigate to Projects" [ref=e36] [cursor=pointer]:
+          - /url: /projects
+          - img [ref=e38]
+          - generic [ref=e40]: Projects
+        - link "Navigate to Messages" [ref=e41] [cursor=pointer]:
+          - /url: /messages
+          - img [ref=e43]
+          - generic [ref=e45]: Messages
+        - link "Navigate to Daily Reports" [ref=e46] [cursor=pointer]:
+          - /url: /daily-reports
+          - img [ref=e48]
+          - generic [ref=e51]: Reports
+        - button "Open navigation menu" [ref=e52] [cursor=pointer]:
+          - img [ref=e53]
+          - generic [ref=e54]: More
+  - generic:
+    - button
+    - button [ref=e55] [cursor=pointer]:
+      - img [ref=e57]
+      - generic:
+        - img
+```

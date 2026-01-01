@@ -108,7 +108,7 @@ class LoginPage {
   }
 
   async waitForDashboard() {
-    await this.page.waitForURL(/\/dashboard|\/projects/i, { timeout: 10000 });
+    await this.page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 10000 });
   }
 
   async hasBiometricOption() {

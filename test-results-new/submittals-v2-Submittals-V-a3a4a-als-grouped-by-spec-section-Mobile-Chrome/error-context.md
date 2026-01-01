@@ -1,0 +1,93 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - main [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e7]:
+            - heading "Submittals" [level=1] [ref=e8]
+            - paragraph [ref=e9]: Manage project submittals with CSI MasterFormat organization
+          - generic [ref=e10]:
+            - button "Export" [disabled]:
+              - img
+              - text: Export
+            - button "New Submittal" [ref=e11] [cursor=pointer]:
+              - img [ref=e12]
+              - text: New Submittal
+        - generic [ref=e15]:
+          - generic [ref=e16]:
+            - generic [ref=e17]: Project
+            - option "Select a project" [ref=e18]
+            - option "Downtown Office Building" [ref=e19]
+            - option "Residential Tower" [ref=e20]
+            - option "Shopping Mall Renovation" [ref=e21]
+            - option "Test Material 1767240137125" [ref=e22]
+            - combobox [ref=e23]
+          - generic [ref=e24]:
+            - generic [ref=e25]: Search
+            - textbox "Search submittals..." [ref=e26]
+          - generic [ref=e27]:
+            - generic [ref=e28]: Status
+            - option "All Statuses" [ref=e29]
+            - option "Not Submitted" [ref=e30]
+            - option "Submitted" [ref=e31]
+            - option "Under Review" [ref=e32]
+            - option "Approved" [ref=e33]
+            - option "Approved as Noted" [ref=e34]
+            - option "Revise and Resubmit" [ref=e35]
+            - option "Rejected" [ref=e36]
+            - option "Void" [ref=e37]
+            - combobox [ref=e38]
+          - generic [ref=e39]:
+            - generic [ref=e40]: Ball-in-Court
+            - option "All" [ref=e41]
+            - option "Subcontractor" [ref=e42]
+            - option "General Contractor" [ref=e43]
+            - option "Architect" [ref=e44]
+            - option "Owner" [ref=e45]
+            - option "Engineer" [ref=e46]
+            - combobox [ref=e47]
+          - generic [ref=e48]:
+            - button "Group by Spec Section" [ref=e49] [cursor=pointer]:
+              - img [ref=e50]
+            - button "List View" [ref=e55] [cursor=pointer]:
+              - img [ref=e56]
+            - button "Lead Time Analytics" [ref=e57] [cursor=pointer]:
+              - img [ref=e58]
+        - generic [ref=e61]:
+          - generic [ref=e63]:
+            - heading "Submittal Log" [level=3] [ref=e64]
+            - paragraph [ref=e65]: 0 submittals across 0 spec sections
+          - generic [ref=e67]:
+            - img [ref=e68]
+            - paragraph [ref=e70]: Failed to load submittals
+    - navigation "Main navigation" [ref=e71]:
+      - generic [ref=e72]:
+        - link "Navigate to Dashboard" [ref=e73] [cursor=pointer]:
+          - /url: /
+          - img [ref=e75]
+          - generic [ref=e80]: Home
+        - link "Navigate to Projects" [ref=e81] [cursor=pointer]:
+          - /url: /projects
+          - img [ref=e83]
+          - generic [ref=e85]: Projects
+        - link "Navigate to Messages" [ref=e86] [cursor=pointer]:
+          - /url: /messages
+          - img [ref=e88]
+          - generic [ref=e90]: Messages
+        - link "Navigate to Daily Reports" [ref=e91] [cursor=pointer]:
+          - /url: /daily-reports
+          - img [ref=e93]
+          - generic [ref=e96]: Reports
+        - button "Open navigation menu" [ref=e97] [cursor=pointer]:
+          - img [ref=e98]
+          - generic [ref=e99]: More
+  - generic:
+    - button
+    - button [ref=e100] [cursor=pointer]:
+      - img [ref=e102]
+      - generic:
+        - img
+```

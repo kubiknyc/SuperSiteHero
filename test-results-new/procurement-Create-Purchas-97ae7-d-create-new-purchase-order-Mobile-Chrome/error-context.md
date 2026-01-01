@@ -1,0 +1,139 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - main [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e7]:
+            - heading "Procurement" [level=1] [ref=e8]
+            - paragraph [ref=e9]: Manage purchase orders and vendor relationships
+          - generic [ref=e10]:
+            - button "Add Vendor" [active] [ref=e11] [cursor=pointer]:
+              - img [ref=e12]
+              - text: Add Vendor
+            - button "New Purchase Order" [ref=e16] [cursor=pointer]:
+              - img [ref=e17]
+              - text: New Purchase Order
+        - generic [ref=e18]:
+          - generic [ref=e19]: Select Project
+          - combobox [ref=e20] [cursor=pointer]:
+            - generic: Downtown Office Building
+            - img [ref=e21]
+        - generic [ref=e23]:
+          - generic [ref=e26]:
+            - img [ref=e28]
+            - generic [ref=e32]:
+              - paragraph [ref=e33]: "0"
+              - paragraph [ref=e34]: Total POs
+          - generic [ref=e37]:
+            - img [ref=e39]
+            - generic [ref=e41]:
+              - paragraph [ref=e42]: $0
+              - paragraph [ref=e43]: Total Value
+          - generic [ref=e46]:
+            - img [ref=e48]
+            - generic [ref=e51]:
+              - paragraph [ref=e52]: "0"
+              - paragraph [ref=e53]: Awaiting Approval
+          - generic [ref=e56]:
+            - img [ref=e58]
+            - generic [ref=e63]:
+              - paragraph [ref=e64]: "0"
+              - paragraph [ref=e65]: Pending Delivery
+          - generic [ref=e68]:
+            - img [ref=e70]
+            - generic [ref=e73]:
+              - paragraph [ref=e74]: "0"
+              - paragraph [ref=e75]: Received
+          - generic [ref=e78]:
+            - img [ref=e80]
+            - generic [ref=e84]:
+              - paragraph [ref=e85]: "0"
+              - paragraph [ref=e86]: Vendors
+        - generic [ref=e87]:
+          - generic [ref=e88]:
+            - tab "Purchase Orders" [selected] [ref=e89] [cursor=pointer]:
+              - img [ref=e90]
+              - text: Purchase Orders
+            - tab "Vendors 1" [ref=e94] [cursor=pointer]:
+              - img [ref=e95]
+              - text: Vendors
+              - generic [ref=e99]: "1"
+          - tabpanel [ref=e100]:
+            - generic [ref=e101]:
+              - generic [ref=e103]:
+                - img [ref=e104]
+                - textbox "Search purchase orders..." [ref=e107]
+              - combobox [ref=e108] [cursor=pointer]:
+                - img [ref=e109]
+                - generic: All Statuses
+                - img [ref=e111]
+            - generic [ref=e113]:
+              - img [ref=e114]
+              - heading "No Purchase Orders Found" [level=3] [ref=e118]
+              - paragraph [ref=e119]: Create your first purchase order to get started
+              - button "Create Purchase Order" [ref=e120] [cursor=pointer]:
+                - img [ref=e121]
+                - text: Create Purchase Order
+        - generic [ref=e124]:
+          - generic [ref=e125]:
+            - heading "Add New Vendor" [level=2] [ref=e126]:
+              - img [ref=e127]
+              - text: Add New Vendor
+            - paragraph [ref=e131]: Add a new vendor to your supplier list.
+          - generic [ref=e132]:
+            - generic [ref=e133]:
+              - generic [ref=e134]:
+                - tab "Basic Info" [selected] [ref=e135] [cursor=pointer]
+                - tab "Contact" [ref=e136] [cursor=pointer]
+                - tab "Business" [ref=e137] [cursor=pointer]
+              - tabpanel [ref=e141]:
+                - generic [ref=e142]:
+                  - generic [ref=e143]:
+                    - generic [ref=e144]: Vendor Name *
+                    - textbox "Company name" [ref=e145]
+                  - generic [ref=e146]:
+                    - text: Vendor Code
+                    - textbox "e.g., ACE-001" [ref=e147]
+                - generic [ref=e148]:
+                  - text: Vendor Type
+                  - combobox [ref=e149] [cursor=pointer]:
+                    - generic: Supplier
+                    - img [ref=e150]
+                  - combobox [ref=e152]
+                - generic [ref=e153]:
+                  - text: Contact Name
+                  - textbox "Primary contact" [ref=e154]
+            - generic [ref=e155]:
+              - button "Cancel" [ref=e156] [cursor=pointer]
+              - button "Add Vendor" [ref=e157] [cursor=pointer]
+    - navigation "Main navigation" [ref=e158]:
+      - generic [ref=e159]:
+        - link "Navigate to Dashboard" [ref=e160] [cursor=pointer]:
+          - /url: /
+          - img [ref=e162]
+          - generic [ref=e167]: Home
+        - link "Navigate to Projects" [ref=e168] [cursor=pointer]:
+          - /url: /projects
+          - img [ref=e170]
+          - generic [ref=e172]: Projects
+        - link "Navigate to Messages" [ref=e173] [cursor=pointer]:
+          - /url: /messages
+          - img [ref=e175]
+          - generic [ref=e177]: Messages
+        - link "Navigate to Daily Reports" [ref=e178] [cursor=pointer]:
+          - /url: /daily-reports
+          - img [ref=e180]
+          - generic [ref=e183]: Reports
+        - button "Open navigation menu" [ref=e184] [cursor=pointer]:
+          - img [ref=e185]
+          - generic [ref=e186]: More
+  - generic:
+    - button
+    - button [ref=e187] [cursor=pointer]:
+      - img [ref=e189]
+      - generic:
+        - img
+```

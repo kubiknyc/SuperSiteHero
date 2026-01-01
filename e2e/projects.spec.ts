@@ -20,7 +20,7 @@ test.describe('Projects', () => {
     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
   });
 
   test('should display projects list', async ({ page }) => {

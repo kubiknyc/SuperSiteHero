@@ -26,7 +26,7 @@ test.describe('Checklists Management', () => {
     await page.click('button[type="submit"]');
 
     // Wait for successful login
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     // Navigate to checklists page
     await page.goto('/checklists');

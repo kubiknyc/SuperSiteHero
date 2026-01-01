@@ -1,0 +1,61 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - main [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e7]:
+            - heading "Requests for Information" [level=1] [ref=e8]
+            - paragraph [ref=e9]: Track RFIs with ball-in-court workflow and drawing references
+          - generic [ref=e10]:
+            - generic [ref=e11]:
+              - button "List" [ref=e12] [cursor=pointer]
+              - button "Ball-in-Court" [ref=e13] [cursor=pointer]
+            - button "Export" [disabled]: Export
+            - button "New RFI" [disabled]
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - text: Select Project
+            - combobox "Select Project" [ref=e18]:
+              - option "Select a project..." [selected]
+              - option "Test Material 1767240137125"
+              - option "Shopping Mall Renovation"
+              - option "Residential Tower"
+              - option "Downtown Office Building"
+          - paragraph [ref=e19]:
+            - img [ref=e20]
+            - text: Select a project to view RFIs
+        - generic [ref=e23]:
+          - img [ref=e24]
+          - heading "No Project Selected" [level=3] [ref=e27]
+          - paragraph [ref=e28]: Select a project above to view and manage RFIs
+    - navigation "Main navigation" [ref=e29]:
+      - generic [ref=e30]:
+        - link "Navigate to Dashboard" [ref=e31] [cursor=pointer]:
+          - /url: /
+          - img [ref=e33]
+          - generic [ref=e38]: Home
+        - link "Navigate to Projects" [ref=e39] [cursor=pointer]:
+          - /url: /projects
+          - img [ref=e41]
+          - generic [ref=e43]: Projects
+        - link "Navigate to Messages" [ref=e44] [cursor=pointer]:
+          - /url: /messages
+          - img [ref=e46]
+          - generic [ref=e48]: Messages
+        - link "Navigate to Daily Reports" [ref=e49] [cursor=pointer]:
+          - /url: /daily-reports
+          - img [ref=e51]
+          - generic [ref=e54]: Reports
+        - button "Open navigation menu" [ref=e55] [cursor=pointer]:
+          - img [ref=e56]
+          - generic [ref=e57]: More
+  - generic:
+    - button
+    - button [ref=e58] [cursor=pointer]:
+      - img [ref=e60]
+      - generic:
+        - img
+```

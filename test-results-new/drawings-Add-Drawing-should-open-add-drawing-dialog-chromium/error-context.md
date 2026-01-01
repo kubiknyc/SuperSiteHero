@@ -1,0 +1,90 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e7]:
+          - img "JobSight" [ref=e9]
+          - generic [ref=e10]:
+            - heading "JobSight" [level=1] [ref=e11]
+            - paragraph [ref=e12]: Field Management
+        - button "Search Ctrl+K" [ref=e14] [cursor=pointer]:
+          - img [ref=e15]
+          - generic [ref=e18]: Search
+          - generic [ref=e20]: Ctrl+K
+      - navigation [ref=e21]:
+        - generic [ref=e22]:
+          - link "Dashboard" [ref=e23] [cursor=pointer]:
+            - /url: /
+            - img [ref=e24]
+            - generic [ref=e29]: Dashboard
+          - link "Projects" [ref=e30] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e31]
+            - generic [ref=e33]: Projects
+          - link "Messages" [ref=e34] [cursor=pointer]:
+            - /url: /messages
+            - img [ref=e35]
+            - generic [ref=e37]: Messages
+          - link "Documents" [ref=e38] [cursor=pointer]:
+            - /url: /documents
+            - img [ref=e39]
+            - generic [ref=e42]: Documents
+        - generic [ref=e44]:
+          - button "Field Work" [ref=e46] [cursor=pointer]:
+            - img [ref=e47]
+            - generic [ref=e51]: Field Work
+            - img [ref=e52]
+          - button "Management" [ref=e55] [cursor=pointer]:
+            - img [ref=e56]
+            - generic [ref=e59]: Management
+            - img [ref=e60]
+          - button "Administration" [ref=e63] [cursor=pointer]:
+            - img [ref=e64]
+            - generic [ref=e67]: Administration
+            - img [ref=e68]
+          - button "Reports & Analytics" [ref=e71] [cursor=pointer]:
+            - img [ref=e72]
+            - generic [ref=e75]: Reports & Analytics
+            - img [ref=e76]
+        - link "Takeoffs" [ref=e79] [cursor=pointer]:
+          - /url: /projects/0a8f1f43-2207-4f27-8471-e5bc14d6c3ba/takeoffs
+          - img [ref=e80]
+          - generic [ref=e86]: Takeoffs
+      - generic [ref=e87]:
+        - generic [ref=e88]:
+          - generic [ref=e90]:
+            - img [ref=e91]
+            - generic [ref=e95]: Online
+          - button "Online - Click for details" [ref=e96] [cursor=pointer]:
+            - img [ref=e97]
+        - generic [ref=e99]:
+          - generic [ref=e100]: Theme
+          - 'button "Current theme: System. Click to change." [ref=e101] [cursor=pointer]':
+            - img [ref=e102]
+            - img
+            - generic [ref=e108]: Toggle theme
+        - generic [ref=e109]:
+          - paragraph [ref=e110]: Test User
+          - paragraph [ref=e111]: test@supersitehero.local
+          - paragraph [ref=e112]: member
+        - link "Settings" [ref=e113] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e114]
+          - text: Settings
+        - button "Sign Out" [ref=e117] [cursor=pointer]:
+          - img [ref=e118]
+          - text: Sign Out
+    - main [ref=e121]:
+      - generic [ref=e123]:
+        - img [ref=e124]
+        - paragraph [ref=e126]: Loading project details...
+  - generic:
+    - button
+    - button [ref=e127] [cursor=pointer]:
+      - img [ref=e129]
+      - generic:
+        - img
+```

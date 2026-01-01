@@ -1,0 +1,142 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e7]:
+          - img "JobSight" [ref=e9]
+          - generic [ref=e10]:
+            - heading "JobSight" [level=1] [ref=e11]
+            - paragraph [ref=e12]: Field Management
+        - button "Search Ctrl+K" [ref=e14] [cursor=pointer]:
+          - img [ref=e15]
+          - generic [ref=e18]: Search
+          - generic [ref=e20]: Ctrl+K
+      - navigation [ref=e21]:
+        - generic [ref=e22]:
+          - link "Dashboard" [ref=e23] [cursor=pointer]:
+            - /url: /
+            - img [ref=e24]
+            - generic [ref=e29]: Dashboard
+          - link "Projects" [ref=e30] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e31]
+            - generic [ref=e33]: Projects
+          - link "Messages" [ref=e34] [cursor=pointer]:
+            - /url: /messages
+            - img [ref=e35]
+            - generic [ref=e37]: Messages
+          - link "Documents" [ref=e38] [cursor=pointer]:
+            - /url: /documents
+            - img [ref=e39]
+            - generic [ref=e42]: Documents
+        - generic [ref=e44]:
+          - button "Field Work" [ref=e46] [cursor=pointer]:
+            - img [ref=e47]
+            - generic [ref=e51]: Field Work
+            - img [ref=e52]
+          - button "Management" [ref=e55] [cursor=pointer]:
+            - img [ref=e56]
+            - generic [ref=e59]: Management
+            - img [ref=e60]
+          - button "Administration" [ref=e63] [cursor=pointer]:
+            - img [ref=e64]
+            - generic [ref=e67]: Administration
+            - img [ref=e68]
+          - button "Reports & Analytics" [ref=e71] [cursor=pointer]:
+            - img [ref=e72]
+            - generic [ref=e75]: Reports & Analytics
+            - img [ref=e76]
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - generic [ref=e81]:
+            - img [ref=e82]
+            - generic [ref=e86]: Online
+          - button "Online - Click for details" [ref=e87] [cursor=pointer]:
+            - img [ref=e88]
+        - generic [ref=e90]:
+          - generic [ref=e91]: Theme
+          - 'button "Current theme: System. Click to change." [ref=e92] [cursor=pointer]':
+            - img [ref=e93]
+            - img
+            - generic [ref=e99]: Toggle theme
+        - generic [ref=e100]:
+          - paragraph [ref=e101]: Test User
+          - paragraph [ref=e102]: test@supersitehero.local
+          - paragraph [ref=e103]: member
+        - link "Settings" [ref=e104] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e105]
+          - text: Settings
+        - button "Sign Out" [ref=e108] [cursor=pointer]:
+          - img [ref=e109]
+          - text: Sign Out
+    - main [ref=e112]:
+      - generic [ref=e113]:
+        - generic [ref=e114]:
+          - generic [ref=e115]:
+            - heading "Submittals" [level=1] [ref=e116]
+            - paragraph [ref=e117]: Manage project submittals with CSI MasterFormat organization
+          - generic [ref=e118]:
+            - button "Export" [disabled]:
+              - img
+              - text: Export
+            - button "New Submittal" [ref=e119] [cursor=pointer]:
+              - img [ref=e120]
+              - text: New Submittal
+        - generic [ref=e123]:
+          - generic [ref=e124]:
+            - generic [ref=e125]: Project
+            - option "Select a project" [ref=e126]
+            - option "Downtown Office Building" [ref=e127]
+            - option "Residential Tower" [ref=e128]
+            - option "Shopping Mall Renovation" [ref=e129]
+            - option "Test Material 1767240137125" [ref=e130]
+            - combobox [ref=e131]
+          - generic [ref=e132]:
+            - generic [ref=e133]: Search
+            - textbox "Search submittals..." [ref=e134]
+          - generic [ref=e135]:
+            - generic [ref=e136]: Status
+            - option "All Statuses" [ref=e137]
+            - option "Not Submitted" [ref=e138]
+            - option "Submitted" [ref=e139]
+            - option "Under Review" [ref=e140]
+            - option "Approved" [ref=e141]
+            - option "Approved as Noted" [ref=e142]
+            - option "Revise and Resubmit" [ref=e143]
+            - option "Rejected" [ref=e144]
+            - option "Void" [ref=e145]
+            - combobox [ref=e146]
+          - generic [ref=e147]:
+            - generic [ref=e148]: Ball-in-Court
+            - option "All" [ref=e149]
+            - option "Subcontractor" [ref=e150]
+            - option "General Contractor" [ref=e151]
+            - option "Architect" [ref=e152]
+            - option "Owner" [ref=e153]
+            - option "Engineer" [ref=e154]
+            - combobox [ref=e155]
+          - generic [ref=e156]:
+            - button "Group by Spec Section" [ref=e157] [cursor=pointer]:
+              - img [ref=e158]
+            - button "List View" [ref=e163] [cursor=pointer]:
+              - img [ref=e164]
+            - button "Lead Time Analytics" [ref=e165] [cursor=pointer]:
+              - img [ref=e166]
+        - generic [ref=e169]:
+          - generic [ref=e171]:
+            - heading "Submittal Log" [level=3] [ref=e172]
+            - paragraph [ref=e173]: 0 submittals across 0 spec sections
+          - generic [ref=e175]:
+            - img [ref=e176]
+            - paragraph [ref=e178]: Loading submittals...
+  - generic:
+    - button
+    - button [ref=e179] [cursor=pointer]:
+      - img [ref=e181]
+      - generic:
+        - img
+```

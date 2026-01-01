@@ -1,0 +1,164 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e7]:
+          - img "JobSight" [ref=e9]
+          - generic [ref=e10]:
+            - heading "JobSight" [level=1] [ref=e11]
+            - paragraph [ref=e12]: Field Management
+        - button "Search Ctrl+K" [ref=e14] [cursor=pointer]:
+          - img [ref=e15]
+          - generic [ref=e18]: Search
+          - generic [ref=e20]: Ctrl+K
+      - navigation [ref=e21]:
+        - generic [ref=e22]:
+          - link "Dashboard" [ref=e23] [cursor=pointer]:
+            - /url: /
+            - img [ref=e24]
+            - generic [ref=e29]: Dashboard
+          - link "Projects" [ref=e30] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e31]
+            - generic [ref=e33]: Projects
+          - link "Messages" [ref=e34] [cursor=pointer]:
+            - /url: /messages
+            - img [ref=e35]
+            - generic [ref=e37]: Messages
+          - link "Documents" [ref=e38] [cursor=pointer]:
+            - /url: /documents
+            - img [ref=e39]
+            - generic [ref=e42]: Documents
+        - generic [ref=e44]:
+          - button "Field Work" [ref=e46] [cursor=pointer]:
+            - img [ref=e47]
+            - generic [ref=e51]: Field Work
+            - img [ref=e52]
+          - button "Management" [ref=e55] [cursor=pointer]:
+            - img [ref=e56]
+            - generic [ref=e59]: Management
+            - img [ref=e60]
+          - button "Administration" [ref=e63] [cursor=pointer]:
+            - img [ref=e64]
+            - generic [ref=e67]: Administration
+            - img [ref=e68]
+          - button "Reports & Analytics" [ref=e71] [cursor=pointer]:
+            - img [ref=e72]
+            - generic [ref=e75]: Reports & Analytics
+            - img [ref=e76]
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - generic [ref=e81]:
+            - img [ref=e82]
+            - generic [ref=e86]: Online
+          - button "Online - Click for details" [ref=e87] [cursor=pointer]:
+            - img [ref=e88]
+        - generic [ref=e90]:
+          - generic [ref=e91]: Theme
+          - 'button "Current theme: System. Click to change." [ref=e92] [cursor=pointer]':
+            - img [ref=e93]
+            - img
+            - generic [ref=e99]: Toggle theme
+        - generic [ref=e100]:
+          - paragraph [ref=e101]: Test User
+          - paragraph [ref=e102]: test@supersitehero.local
+          - paragraph [ref=e103]: member
+        - link "Settings" [ref=e104] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e105]
+          - text: Settings
+        - button "Sign Out" [ref=e108] [cursor=pointer]:
+          - img [ref=e109]
+          - text: Sign Out
+    - main [ref=e112]:
+      - generic [ref=e113]:
+        - generic [ref=e114]:
+          - generic [ref=e115]:
+            - heading "Projects" [level=1] [ref=e116]
+            - paragraph [ref=e117]: Manage and track your construction projects
+          - button "New Project" [ref=e118] [cursor=pointer]:
+            - img [ref=e119]
+            - text: New Project
+        - generic [ref=e120]:
+          - img [ref=e121]
+          - textbox "Search projects by name or address..." [ref=e124]
+        - generic [ref=e125]:
+          - generic [ref=e126]:
+            - generic [ref=e127]:
+              - generic [ref=e128]:
+                - link "Downtown Office Building" [ref=e130] [cursor=pointer]:
+                  - /url: /projects/0a8f1f43-2207-4f27-8471-e5bc14d6c3ba
+                  - heading "Downtown Office Building" [level=3] [ref=e131]
+                - generic [ref=e132]: Active
+              - paragraph [ref=e133]:
+                - img [ref=e134]
+                - generic [ref=e137]: 456 Main Street
+            - generic [ref=e140]:
+              - img [ref=e141]
+              - generic [ref=e143]: Started Jan 14, 2024
+            - generic [ref=e144]:
+              - button "Edit" [ref=e145] [cursor=pointer]:
+                - img [ref=e146]
+                - text: Edit
+              - button "Delete project" [ref=e149] [cursor=pointer]:
+                - img [ref=e150]
+          - generic [ref=e153]:
+            - generic [ref=e154]:
+              - generic [ref=e155]:
+                - link "Residential Tower" [ref=e157] [cursor=pointer]:
+                  - /url: /projects/21fe2223-1413-4d9a-b6c8-1f0cd0287a39
+                  - heading "Residential Tower" [level=3] [ref=e158]
+                - generic [ref=e159]: Active
+              - paragraph [ref=e160]:
+                - img [ref=e161]
+                - generic [ref=e164]: 789 Park Avenue
+            - generic [ref=e167]:
+              - img [ref=e168]
+              - generic [ref=e170]: Started Feb 29, 2024
+            - generic [ref=e171]:
+              - button "Edit" [ref=e172] [cursor=pointer]:
+                - img [ref=e173]
+                - text: Edit
+              - button "Delete project" [ref=e176] [cursor=pointer]:
+                - img [ref=e177]
+          - generic [ref=e180]:
+            - generic [ref=e181]:
+              - generic [ref=e182]:
+                - link "Shopping Mall Renovation" [ref=e184] [cursor=pointer]:
+                  - /url: /projects/bbe19ce4-9743-454e-aed0-580b163d6492
+                  - heading "Shopping Mall Renovation" [level=3] [ref=e185]
+                - generic [ref=e186]: Planning
+              - paragraph [ref=e187]:
+                - img [ref=e188]
+                - generic [ref=e191]: 321 Commerce Drive
+            - generic [ref=e194]:
+              - img [ref=e195]
+              - generic [ref=e197]: Started Jan 31, 2024
+            - generic [ref=e198]:
+              - button "Edit" [ref=e199] [cursor=pointer]:
+                - img [ref=e200]
+                - text: Edit
+              - button "Delete project" [ref=e203] [cursor=pointer]:
+                - img [ref=e204]
+          - generic [ref=e207]:
+            - generic [ref=e209]:
+              - link "Test Material 1767240137125" [ref=e211] [cursor=pointer]:
+                - /url: /projects/63b57b3a-18eb-403f-b996-69017304b30b
+                - heading "Test Material 1767240137125" [level=3] [ref=e212]
+              - generic [ref=e213]: Planning
+            - generic [ref=e215]:
+              - button "Edit" [ref=e216] [cursor=pointer]:
+                - img [ref=e217]
+                - text: Edit
+              - button "Delete project" [ref=e220] [cursor=pointer]:
+                - img [ref=e221]
+  - generic:
+    - button
+    - button [ref=e224] [cursor=pointer]:
+      - img [ref=e226]
+      - generic:
+        - img
+```

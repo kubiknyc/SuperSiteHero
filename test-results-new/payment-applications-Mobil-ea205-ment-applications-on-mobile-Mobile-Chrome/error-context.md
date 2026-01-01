@@ -1,0 +1,58 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - main [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e7]:
+            - heading "Payment Applications" [level=1] [ref=e8]:
+              - img [ref=e9]
+              - text: Payment Applications
+            - paragraph [ref=e12]: AIA G702/G703 billing workflow
+          - button "New Application" [disabled]:
+            - img
+            - text: New Application
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - img [ref=e18]
+            - text: Select Project
+          - option "Select a project..." [ref=e22]
+          - option "Test Material 1767240137125" [ref=e23]
+          - option "Shopping Mall Renovation" [ref=e24]
+          - option "Residential Tower" [ref=e25]
+          - option "Downtown Office Building" [ref=e26]
+          - combobox [ref=e27]
+        - generic [ref=e29]:
+          - img [ref=e30]
+          - heading "Select a Project" [level=3] [ref=e34]
+          - paragraph [ref=e35]: Choose a project above to view and manage payment applications
+    - navigation "Main navigation" [ref=e36]:
+      - generic [ref=e37]:
+        - link "Navigate to Dashboard" [ref=e38] [cursor=pointer]:
+          - /url: /
+          - img [ref=e40]
+          - generic [ref=e45]: Home
+        - link "Navigate to Projects" [ref=e46] [cursor=pointer]:
+          - /url: /projects
+          - img [ref=e48]
+          - generic [ref=e50]: Projects
+        - link "Navigate to Messages" [ref=e51] [cursor=pointer]:
+          - /url: /messages
+          - img [ref=e53]
+          - generic [ref=e55]: Messages
+        - link "Navigate to Daily Reports" [ref=e56] [cursor=pointer]:
+          - /url: /daily-reports
+          - img [ref=e58]
+          - generic [ref=e61]: Reports
+        - button "Open navigation menu" [ref=e62] [cursor=pointer]:
+          - img [ref=e63]
+          - generic [ref=e64]: More
+  - generic:
+    - button
+    - button [ref=e65] [cursor=pointer]:
+      - img [ref=e67]
+      - generic:
+        - img
+```

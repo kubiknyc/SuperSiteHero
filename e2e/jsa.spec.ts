@@ -45,7 +45,7 @@ async function login(page: Page) {
   await page.click('button[type="submit"]');
   await responsePromise;
 
-  await page.waitForURL(/\/(projects|dashboard)/, { timeout: 15000 });
+  await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
   await page.waitForTimeout(500);
 }
 

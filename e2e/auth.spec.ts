@@ -44,7 +44,7 @@ test.describe('Authentication', () => {
     await page.click('button[type="submit"]');
 
     // Should redirect to dashboard, projects, or home page after login
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     // Should show user is logged in (look for logout button or user menu)
     const userIndicator = page.locator('[data-testid="user-menu"], [aria-label="User menu"], button:has-text("Logout"), button:has-text("Sign out")');
@@ -74,7 +74,7 @@ test.describe('Authentication', () => {
     await page.click('button[type="submit"]');
 
     // Wait for redirect away from login
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     // Find and click logout button
     const userMenu = page.locator('[data-testid="user-menu"], [aria-label="User menu"]');
@@ -97,13 +97,13 @@ test.describe('Authentication', () => {
     await page.click('button[type="submit"]');
 
     // Wait for redirect away from login
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     // Refresh the page
     await page.reload();
 
     // Should still be logged in (session persisted) - not redirected to login
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 10000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 10000 });
   });
 
   test('should redirect protected routes to login', async ({ page }) => {

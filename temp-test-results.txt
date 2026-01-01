@@ -1,0 +1,200 @@
+  x  239 [webkit] ƒ?§ e2e\projects.spec.ts:93:3 ƒ?§ Projects ƒ?§ should show project detail with content (8ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY>ÿ‹,?  run anywhere with `dotenvx run -- yourcommand`
+  x  240 [webkit] ƒ?§ e2e\schedule.spec.ts:84:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should display Gantt chart page (6ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY` sync secrets across teammates & machines: https://dotenvx.com/ops
+  x  241 [webkit] ƒ?§ e2e\schedule.spec.ts:101:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should display task timeline with tasks (6ms)
+  x  242 [webkit] ƒ?§ e2e\schedule.spec.ts:114:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should show timeline controls (zoom, pan) (7ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  enable debug logging with { debug: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY>ÿ‹,?  run anywhere with `dotenvx run -- yourcommand`
+  x  243 [webkit] ƒ?§ e2e\schedule.spec.ts:130:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should zoom in on timeline (7ms)
+  x  244 [webkit] ƒ?§ e2e\schedule.spec.ts:149:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should zoom out on timeline (6ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"` add access controls to secrets: https://dotenvx.com/ops
+  x  245 [webkit] ƒ?§ e2e\schedule.spec.ts:165:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should scroll timeline horizontally (5ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  specify custom .env file path with { path: '/custom/path/.env' }
+  x  246 [webkit] ƒ?§ e2e\schedule.spec.ts:187:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should navigate timeline with pan controls (6ms)
+  x  247 [webkit] ƒ?§ e2e\schedule.spec.ts:206:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should open create task dialog from timeline (5ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  write to custom object with { processEnv: myObject }
+  x  248 [webkit] ƒ?§ e2e\schedule.spec.ts:234:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should display task details on timeline hover or click (5ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY` sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  write to custom object with { processEnv: myObject }
+  x  249 [webkit] ƒ?§ e2e\schedule.spec.ts:272:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should show task duration on timeline (8ms)
+  x  250 [webkit] ƒ?§ e2e\schedule.spec.ts:291:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should display date range on timeline header (6ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒo. audit secrets and track compliance: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"? prevent building .env in docker: https://dotenvx.com/prebuild
+  x  251 [webkit] ƒ?§ e2e\schedule.spec.ts:305:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should filter tasks by project (7ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"­ add observability to secrets: https://dotenvx.com/ops
+  x  252 [webkit] ƒ?§ e2e\schedule.spec.ts:329:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should filter tasks by phase (7ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY>ÿ‹,?  run anywhere with `dotenvx run -- yourcommand`
+  x  253 [webkit] ƒ?§ e2e\schedule.spec.ts:378:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should display critical path toggle or indicator (6ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"` add access controls to secrets: https://dotenvx.com/ops
+  x  254 [webkit] ƒ?§ e2e\schedule.spec.ts:350:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should toggle weekend display (6ms)
+  x  255 [webkit] ƒ?§ e2e\schedule.spec.ts:403:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should display milestone markers (6ms)
+  x   83 [chromium] ƒ?§ e2e\schedule.spec.ts:918:3 ƒ?§ Resource Histogram ƒ?§ should display resource utilization percentage (10.2s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  enable debug logging with { debug: true }
+  x   90 [chromium] ƒ?§ e2e\tasks.spec.ts:81:3 ƒ?§ Tasks Management ƒ?§ should create a new task with required fields (17.4s)
+  x  256 [webkit] ƒ?§ e2e\schedule.spec.ts:414:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should show task dependencies as connection lines (8ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"? prevent committing .env to code: https://dotenvx.com/precommit
+  x  257 [webkit] ƒ?§ e2e\schedule.spec.ts:427:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should open export schedule dialog (7ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"? prevent building .env in docker: https://dotenvx.com/prebuild
+  x  258 [webkit] ƒ?§ e2e\schedule.spec.ts:452:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should switch between timeline views (day, week, month) (8ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY>ÿ‹,?  run anywhere with `dotenvx run -- yourcommand`
+  x  259 [webkit] ƒ?§ e2e\schedule.spec.ts:480:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should validate date range selection (6ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY>ÿ‹,?  run anywhere with `dotenvx run -- yourcommand`
+  x  260 [webkit] ƒ?§ e2e\schedule.spec.ts:511:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should show today indicator on timeline (6ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY", add secrets lifecycle management: https://dotenvx.com/ops
+  x  261 [webkit] ƒ?§ e2e\schedule.spec.ts:522:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should display progress bars on tasks (6ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  suppress all logs with { quiet: true }
+  x  262 [webkit] ƒ?§ e2e\schedule.spec.ts:535:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should show task list sidebar alongside Gantt (6ms)
+  x  263 [webkit] ƒ?§ e2e\schedule.spec.ts:554:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should resize task list sidebar (6ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"? encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  load multiple .env files with { path: ['.env.local', '.env'] }
+  x  264 [webkit] ƒ?§ e2e\schedule.spec.ts:576:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should highlight selected task (6ms)
+  x  265 [webkit] ƒ?§ e2e\schedule.spec.ts:607:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should navigate to task detail from Gantt (8ms)
+  x  266 [webkit] ƒ?§ e2e\schedule.spec.ts:640:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should handle empty schedule state (7ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  suppress all logs with { quiet: true }
+  x  267 [webkit] ƒ?§ e2e\schedule.spec.ts:664:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should show loading state while fetching schedule (11ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"­ add observability to secrets: https://dotenvx.com/ops
+  x  268 [webkit] ƒ?§ e2e\schedule.spec.ts:694:3 ƒ?§ Resource Histogram ƒ?§ should show resource histogram toggle button (6ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"­ add observability to secrets: https://dotenvx.com/ops
+  x  269 [webkit] ƒ?§ e2e\schedule.spec.ts:710:3 ƒ?§ Resource Histogram ƒ?§ should toggle resource histogram visibility (7ms)
+  x  270 [webkit] ƒ?§ e2e\schedule.spec.ts:742:3 ƒ?§ Resource Histogram ƒ?§ should display resource histogram with bars (6ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY", add secrets lifecycle management: https://dotenvx.com/ops
+  x  271 [webkit] ƒ?§ e2e\schedule.spec.ts:769:3 ƒ?§ Resource Histogram ƒ?§ should show labor resource bars (7ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  suppress all logs with { quiet: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"? prevent committing .env to code: https://dotenvx.com/precommit
+  x  272 [webkit] ƒ?§ e2e\schedule.spec.ts:821:3 ƒ?§ Resource Histogram ƒ?§ should display resource conflict warnings (7ms)
+  x  273 [webkit] ƒ?§ e2e\schedule.spec.ts:795:3 ƒ?§ Resource Histogram ƒ?§ should show equipment resource bars (7ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  specify custom .env file path with { path: '/custom/path/.env' }
+  x  274 [webkit] ƒ?§ e2e\schedule.spec.ts:843:3 ƒ?§ Resource Histogram ƒ?§ should show conflict count badge (5ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"? prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY` sync secrets across teammates & machines: https://dotenvx.com/ops
+  x  275 [webkit] ƒ?§ e2e\schedule.spec.ts:861:3 ƒ?§ Resource Histogram ƒ?§ should highlight over-allocated periods in histogram (12ms)
+  x  276 [webkit] ƒ?§ e2e\schedule.spec.ts:883:3 ƒ?§ Resource Histogram ƒ?§ should show resource tooltip on bar hover (7ms)
+  x  277 [webkit] ƒ?§ e2e\schedule.spec.ts:918:3 ƒ?§ Resource Histogram ƒ?§ should display resource utilization percentage (6ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"` add access controls to secrets: https://dotenvx.com/ops
+  x  278 [webkit] ƒ?§ e2e\schedule.spec.ts:944:3 ƒ?§ Resource Histogram ƒ?§ should filter histogram by resource type (6ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY>ÿ‹,?  run anywhere with `dotenvx run -- yourcommand`
+  x  279 [webkit] ƒ?§ e2e\schedule.spec.ts:974:3 ƒ?§ Resource Histogram ƒ?§ should show resource legend (6ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"? prevent building .env in docker: https://dotenvx.com/prebuild
+  x  280 [webkit] ƒ?§ e2e\schedule.spec.ts:1000:3 ƒ?§ Resource Histogram ƒ?§ should sync histogram with timeline scroll (6ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  write to custom object with { processEnv: myObject }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"? prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY-,‹,? backup and recover secrets: https://dotenvx.com/ops
+  x  281 [webkit] ƒ?§ e2e\tasks.spec.ts:36:3 ƒ?§ Tasks Management ƒ?§ should display tasks list page (5ms)
+  x  282 [webkit] ƒ?§ e2e\tasks.spec.ts:63:3 ƒ?§ Tasks Management ƒ?§ should navigate to create task page (5ms)
+  x  283 [webkit] ƒ?§ e2e\tasks.spec.ts:53:3 ƒ?§ Tasks Management ƒ?§ should show task filters and sorting options (7ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY", add secrets lifecycle management: https://dotenvx.com/ops
+  x  284 [webkit] ƒ?§ e2e\tasks.spec.ts:81:3 ƒ?§ Tasks Management ƒ?§ should create a new task with required fields (6ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY>ÿ‹,?  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  enable debug logging with { debug: true }
+  x  285 [webkit] ƒ?§ e2e\tasks.spec.ts:130:3 ƒ?§ Tasks Management ƒ?§ should validate required fields on create (8ms)
+  x  286 [webkit] ƒ?§ e2e\tasks.spec.ts:150:3 ƒ?§ Tasks Management ƒ?§ should filter tasks by status (7ms)
+  x  287 [webkit] ƒ?§ e2e\tasks.spec.ts:175:3 ƒ?§ Tasks Management ƒ?§ should open task detail view (7ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"` add access controls to secrets: https://dotenvx.com/ops
+  x  288 [webkit] ƒ?§ e2e\tasks.spec.ts:199:3 ƒ?§ Tasks Management ƒ?§ should navigate to edit task page (9ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY>ÿ‹,?  run anywhere with `dotenvx run -- yourcommand`
+  x  289 [webkit] ƒ?§ e2e\tasks.spec.ts:233:3 ƒ?§ Tasks Management ƒ?§ should update task status (8ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"? encrypt with Dotenvx: https://dotenvx.com
+  x  290 [webkit] ƒ?§ e2e\tasks.spec.ts:267:3 ƒ?§ Tasks Management ƒ?§ should search tasks (6ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY-,‹,? backup and recover secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY", add secrets lifecycle management: https://dotenvx.com/ops
+  x  292 [webkit] ƒ?§ e2e\tasks.spec.ts:284:3 ƒ?§ Tasks Management ƒ?§ should display empty state when no tasks (6ms)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY>ÿ‹,?  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"` add access controls to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  write to custom object with { processEnv: myObject }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY>ÿ‹,?  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  enable debug logging with { debug: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  enable debug logging with { debug: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  enable debug logging with { debug: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY", add secrets lifecycle management: https://dotenvx.com/ops
+  ok 296 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:162:3 ƒ?§ Meetings - Setup & Navigation ƒ?§ should show all navigation tabs (All, Today, Upcoming, Past) (10.6s)
+  ok 295 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:128:3 ƒ?§ Meetings - Setup & Navigation ƒ?§ should access from project view (11.7s)
+  ok 300 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:282:3 ƒ?§ Meetings - CRUD Operations ƒ?§ should validate required fields on creation (10.4s)
+  ok 298 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:204:3 ƒ?§ Meetings - CRUD Operations ƒ?§ should create meeting with full details (13.4s)
+  ok 297 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:169:3 ƒ?§ Meetings - Setup & Navigation ƒ?§ should display empty state when no meetings or show meetings list (14.4s)
+  ok 301 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:307:3 ƒ?§ Meetings - CRUD Operations ƒ?§ should edit meeting details (15.7s)
+  ok 293 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:119:3 ƒ?§ Meetings - Setup & Navigation ƒ?§ should display page title and summary cards (19.1s)
+  ok 303 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:360:3 ƒ?§ Meetings - CRUD Operations ƒ?§ should cancel meeting with confirmation (12.8s)
+  ok 304 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:384:3 ƒ?§ Meetings - CRUD Operations ƒ?§ should delete meeting with confirmation (12.6s)
+  ok 305 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:408:3 ƒ?§ Meetings - CRUD Operations ƒ?§ should view meeting detail page (13.8s)
+  ok 302 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:341:3 ƒ?§ Meetings - CRUD Operations ƒ?§ should update meeting status (17.6s)
+  ok 306 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:424:3 ƒ?§ Meetings - CRUD Operations ƒ?§ should navigate between detail tabs (13.8s)
+  ok 308 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:493:3 ƒ?§ Meetings - Attendee Management ƒ?§ should add attendees to meeting (11.0s)
+  ok 309 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:520:3 ƒ?§ Meetings - Attendee Management ƒ?§ should set representing organization for attendees (7.7s)
+  ok 307 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:445:3 ƒ?§ Meetings - CRUD Operations ƒ?§ should verify meeting appears in list after creation (15.1s)
+  ok 310 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:541:3 ƒ?§ Meetings - Attendee Management ƒ?§ should remove attendees from meeting (8.0s)
+  ok 311 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:564:3 ƒ?§ Meetings - Attendee Management ƒ?§ should mark attendees as present/absent (7.3s)
+  ok 314 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:632:3 ƒ?§ Meetings - Action Items Integration ƒ?§ should create action item from meeting (7.8s)
+  ok 316 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:682:3 ƒ?§ Meetings - Action Items Integration ƒ?§ should set action item category (7.9s)
+  ok 291 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:101:3 ƒ?§ Meetings - Setup & Navigation ƒ?§ should navigate to meetings dashboard (51.1s)
+  ok 321 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:785:3 ƒ?§ Meetings - Filtering & Search ƒ?§ should filter by project (7.4s)
+  ok 322 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:804:3 ƒ?§ Meetings - Filtering & Search ƒ?§ should filter by meeting type with multi-select (9.0s)
+  ok 312 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:587:3 ƒ?§ Meetings - Attendee Management ƒ?§ should send meeting invitations (44.2s)
+  ok 318 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:728:3 ƒ?§ Meetings - Action Items Integration ƒ?§ should mark action item complete from meeting view (42.1s)
+  ok 323 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:821:3 ƒ?§ Meetings - Filtering & Search ƒ?§ should use quick date filters (All, Today, Upcoming, Past) (13.2s)
+  ok 324 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:834:3 ƒ?§ Meetings - Filtering & Search ƒ?§ should use date range filtering (9.3s)
+  ok 325 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:846:3 ƒ?§ Meetings - Filtering & Search ƒ?§ should search by name, agenda, location (8.0s)
+  ok 326 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:856:3 ƒ?§ Meetings - Filtering & Search ƒ?§ should clear all filters (11.3s)
+  x   96 [chromium] ƒ?§ e2e\tasks.spec.ts:284:3 ƒ?§ Tasks Management ƒ?§ should display empty state when no tasks (17.7s)
+  x  294 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:123:3 ƒ?§ Meetings - Setup & Navigation ƒ?§ should show filter bar with project selector (1.0m)
+  x  319 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:751:3 ƒ?§ Meetings - Action Items Integration ƒ?§ should view action item count on meeting card (1.0m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY>ÿ‹,?  run anywhere with `dotenvx run -- yourcommand`
+  x  299 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:254:3 ƒ?§ Meetings - CRUD Operations ƒ?§ should create meeting with minimal required fields (1.0m)
+  ok 330 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:918:3 ƒ?§ Meetings - Error Handling ƒ?§ should handle network failures gracefully (7.2s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"? prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  load multiple .env files with { path: ['.env.local', '.env'] }
+  ok 331 [Mobile Chrome] ƒ?§ e2e\projects.spec.ts:39:3 ƒ?§ Projects ƒ?§ should open create project dialog or page (7.3s)
+  ok 334 [Mobile Chrome] ƒ?§ e2e\projects.spec.ts:69:3 ƒ?§ Projects ƒ?§ should navigate to project detail page (9.2s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  load multiple .env files with { path: ['.env.local', '.env'] }
+  ok 336 [Mobile Chrome] ƒ?§ e2e\projects.spec.ts:27:3 ƒ?§ Projects ƒ?§ should display projects list (8.6s)
+  ok 332 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:937:3 ƒ?§ Meetings - Error Handling ƒ?§ should show validation errors on invalid input (29.0s)
+  ok 338 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:101:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should display task timeline with tasks (24.3s)
+  ok 339 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:114:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should show timeline controls (zoom, pan) (9.8s)
+  ok 340 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:130:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should zoom in on timeline (7.9s)
+  x  313 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:603:3 ƒ?§ Meetings - Attendee Management ƒ?§ should track attendance count (1.0m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"? prevent building .env in docker: https://dotenvx.com/prebuild
+  ok 342 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:165:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should scroll timeline horizontally (16.4s)
+  ok 343 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:187:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should navigate timeline with pan controls (9.9s)
+  x  329 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:900:3 ƒ?§ Meetings - Dashboard Statistics ƒ?§ should display meetings with action items count (1.1m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  load multiple .env files with { path: ['.env.local', '.env'] }
+  x  320 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:762:3 ƒ?§ Meetings - Action Items Integration ƒ?§ should display action items with action items count stat (13.1s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY>ÿ‹,?  run anywhere with `dotenvx run -- yourcommand`
+  ok 345 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:234:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should display task details on timeline hover or click (11.8s)
+  x  328 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:894:3 ƒ?§ Meetings - Dashboard Statistics ƒ?§ should display accurate today and upcoming counts (1.1m)
+  x  327 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:885:3 ƒ?§ Meetings - Dashboard Statistics ƒ?§ should display accurate total meetings count (1.1m)
+  ok 346 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:272:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should show task duration on timeline (10.8s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY", add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"? prevent building .env in docker: https://dotenvx.com/prebuild
+  ok 348 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:350:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should toggle weekend display (9.5s)
+  -  350 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:329:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should filter tasks by phase
+  x  335 [Mobile Chrome] ƒ?§ e2e\projects.spec.ts:93:3 ƒ?§ Projects ƒ?§ should show project detail with content (17.9s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  specify custom .env file path with { path: '/custom/path/.env' }
+  ok 353 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:414:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should show task dependencies as connection lines (10.3s)
+  x  317 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:705:3 ƒ?§ Meetings - Action Items Integration ƒ?§ should assign action item to attendee (1.0m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY", add secrets lifecycle management: https://dotenvx.com/ops
+  x  337 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:84:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should display Gantt chart page (38.5s)
+  x  333 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:965:3 ƒ?§ Meetings - Error Handling ƒ?§ should prevent double-submission (1.0m)
+  ok 355 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:452:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should switch between timeline views (day, week, month) (8.0s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"? prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒo. audit secrets and track compliance: https://dotenvx.com/ops
+  ok 356 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:522:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should display progress bars on tasks (9.0s)
+  x  315 [Mobile Chrome] ƒ?§ e2e\meetings.spec.ts:659:3 ƒ?§ Meetings - Action Items Integration ƒ?§ should set action item priority (1.0m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  enable debug logging with { debug: true }
+  -  357 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:480:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should validate date range selection
+  ok 358 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:511:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should show today indicator on timeline (17.0s)
+  ok 360 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:554:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should resize task list sidebar (9.1s)
+  -  363 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:640:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should handle empty schedule state
+  x  344 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:206:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should open create task dialog from timeline (1.0m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: dY"? encrypt with Dotenvx: https://dotenvx.com
+  ok 365 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:694:3 ƒ?§ Resource Histogram ƒ?§ should show resource histogram toggle button (16.1s)
+  x  347 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:291:3 ƒ?§ Schedule and Gantt Chart ƒ?§ should display date range on timeline header (18.0s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ƒsT‹,?  suppress all logs with { quiet: true }
+  -  367 [Mobile Chrome] ƒ?§ e2e\schedule.spec.ts:742:3 ƒ?§ Resource Histogram ƒ?§ should display resource histogram with bars

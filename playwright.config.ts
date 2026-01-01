@@ -107,7 +107,7 @@ export default defineConfig({
       testMatch: 'smoke-crawl.spec.ts',
       use: {
         ...devices['Desktop Chrome'],
-        trace: 'on',
+        trace: 'retain-on-failure', // Only record trace on failure to avoid Windows path issues
         video: 'retain-on-failure',
         screenshot: 'only-on-failure',
       },

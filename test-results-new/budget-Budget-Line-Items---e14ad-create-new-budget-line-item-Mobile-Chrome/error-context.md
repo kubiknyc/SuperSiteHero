@@ -1,0 +1,89 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - main [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e7]:
+            - heading "Budget" [level=1] [ref=e8]:
+              - img [ref=e9]
+              - text: Budget
+            - paragraph [ref=e11]: Track project budgets and cost codes
+          - generic [ref=e12]:
+            - combobox [ref=e13] [cursor=pointer]:
+              - generic: All Projects
+              - img [ref=e14]
+            - button [disabled]:
+              - img
+            - button [active] [ref=e16] [cursor=pointer]:
+              - img [ref=e17]
+        - generic [ref=e18]:
+          - generic [ref=e21]:
+            - img [ref=e23]
+            - generic [ref=e25]:
+              - paragraph [ref=e26]: Total Budget
+              - paragraph [ref=e27]: $0
+          - generic [ref=e30]:
+            - img [ref=e32]
+            - generic [ref=e35]:
+              - paragraph [ref=e36]: Spent
+              - paragraph [ref=e37]: $0
+              - paragraph [ref=e38]: 0% of budget
+          - generic [ref=e41]:
+            - img [ref=e43]
+            - generic [ref=e46]:
+              - paragraph [ref=e47]: Committed
+              - paragraph [ref=e48]: $0
+              - paragraph [ref=e49]: 0% committed
+          - generic [ref=e52]:
+            - img [ref=e54]
+            - generic [ref=e57]:
+              - paragraph [ref=e58]: Remaining
+              - paragraph [ref=e59]: $0
+              - paragraph [ref=e60]: Available
+          - generic [ref=e63]:
+            - img [ref=e65]
+            - generic [ref=e68]:
+              - paragraph [ref=e69]: Variance
+              - paragraph [ref=e70]: +$0
+              - paragraph [ref=e71]: Under budget (0%)
+        - generic [ref=e73]:
+          - img [ref=e74]
+          - textbox "Search cost codes..." [ref=e77]
+        - generic [ref=e78]:
+          - heading "Cost Code Budgets" [level=3] [ref=e80]:
+            - generic [ref=e81]: Cost Code Budgets
+          - generic [ref=e83]:
+            - img [ref=e84]
+            - paragraph [ref=e86]: Select a project to view budgets
+            - paragraph [ref=e87]: Choose a project from the dropdown above
+    - navigation "Main navigation" [ref=e88]:
+      - generic [ref=e89]:
+        - link "Navigate to Dashboard" [ref=e90] [cursor=pointer]:
+          - /url: /
+          - img [ref=e92]
+          - generic [ref=e97]: Home
+        - link "Navigate to Projects" [ref=e98] [cursor=pointer]:
+          - /url: /projects
+          - img [ref=e100]
+          - generic [ref=e102]: Projects
+        - link "Navigate to Messages" [ref=e103] [cursor=pointer]:
+          - /url: /messages
+          - img [ref=e105]
+          - generic [ref=e107]: Messages
+        - link "Navigate to Daily Reports" [ref=e108] [cursor=pointer]:
+          - /url: /daily-reports
+          - img [ref=e110]
+          - generic [ref=e113]: Reports
+        - button "Open navigation menu" [ref=e114] [cursor=pointer]:
+          - img [ref=e115]
+          - generic [ref=e116]: More
+  - generic:
+    - button
+    - button [ref=e117] [cursor=pointer]:
+      - img [ref=e119]
+      - generic:
+        - img
+```

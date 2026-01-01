@@ -1,0 +1,47 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img "JobSight" [ref=e12]
+        - generic [ref=e13]:
+          - img "JobSight" [ref=e14]
+          - paragraph [ref=e15]: Construction Field Management
+      - paragraph [ref=e16]: Sign in to access your projects and daily reports
+    - generic [ref=e17]:
+      - button "Sign in with Biometrics" [disabled]:
+        - img
+        - text: Sign in with Biometrics
+    - generic [ref=e22]: or continue with email
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - text: Email address
+          - textbox "Email address" [disabled] [ref=e26]:
+            - /placeholder: you@company.com
+            - text: test@supersitehero.local
+        - generic [ref=e27]:
+          - generic [ref=e28]:
+            - generic [ref=e29]: Password
+            - link "Forgot password?" [ref=e30] [cursor=pointer]:
+              - /url: /forgot-password
+          - textbox "Password" [disabled] [ref=e31]:
+            - /placeholder: Enter your password
+            - text: TestPassword123!
+      - generic [ref=e32]:
+        - button "Signing in..." [disabled]:
+          - img
+          - text: Signing in...
+        - paragraph [ref=e33]:
+          - text: Don't have an account?
+          - link "Sign up" [ref=e34] [cursor=pointer]:
+            - /url: /signup
+  - generic:
+    - button
+    - button [ref=e35] [cursor=pointer]:
+      - img [ref=e37]
+      - generic:
+        - img
+```

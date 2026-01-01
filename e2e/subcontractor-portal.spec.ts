@@ -25,7 +25,7 @@ test.describe('Subcontractor Portal - Dashboard', () => {
     await page.fill('input[type="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/portal');
     await page.waitForLoadState('networkidle');
@@ -78,7 +78,7 @@ test.describe('Subcontractor Portal - Projects', () => {
     await page.fill('input[type="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/portal/projects');
     await page.waitForLoadState('networkidle');
@@ -137,7 +137,7 @@ test.describe('Subcontractor Portal - Bids', () => {
     await page.fill('input[type="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/portal/bids');
     await page.waitForLoadState('networkidle');
@@ -257,7 +257,7 @@ test.describe('Subcontractor Portal - Punch Items', () => {
     await page.fill('input[type="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/portal/punch-items');
     await page.waitForLoadState('networkidle');
@@ -344,7 +344,7 @@ test.describe('Subcontractor Portal - Tasks', () => {
     await page.fill('input[type="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/portal/tasks');
     await page.waitForLoadState('networkidle');
@@ -409,7 +409,7 @@ test.describe('Subcontractor Portal - Compliance', () => {
     await page.fill('input[type="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/portal/compliance');
     await page.waitForLoadState('networkidle');
@@ -464,7 +464,7 @@ test.describe('Subcontractor Portal - Daily Reports', () => {
     await page.fill('input[type="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/portal/daily-reports');
     await page.waitForLoadState('networkidle');

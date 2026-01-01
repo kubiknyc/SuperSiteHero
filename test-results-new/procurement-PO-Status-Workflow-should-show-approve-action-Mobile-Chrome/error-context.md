@@ -1,0 +1,143 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - main [ref=e4]:
+        - generic [ref=e6]:
+          - generic [ref=e7]:
+            - heading "Dashboard" [level=1] [ref=e8]
+            - generic [ref=e9]:
+              - paragraph [ref=e10]: Welcome back, Test
+              - generic [ref=e11]: •
+              - paragraph [ref=e12]:
+                - img [ref=e13]
+                - text: Wednesday, December 31, 2025
+          - region "Project statistics overview" [ref=e16]:
+            - article "12 tasks pending out of 15 target, up 3 from last period" [ref=e17] [cursor=pointer]:
+              - generic [ref=e19]:
+                - img [ref=e21]
+                - generic [ref=e24]:
+                  - img [ref=e25]
+                  - text: "+3"
+              - generic [ref=e28]:
+                - paragraph [ref=e29]: Tasks Pending
+                - generic [ref=e30]:
+                  - paragraph [ref=e31]: "12"
+                  - paragraph [ref=e32]: / 15
+                - img [ref=e34]
+              - generic [ref=e37]:
+                - generic [ref=e38]: Progress to Target
+                - generic [ref=e39]: 80%
+            - article "5 open RFIs with target of 3, up 2 from last period" [ref=e43] [cursor=pointer]:
+              - generic [ref=e45]:
+                - img [ref=e47]
+                - generic [ref=e49]:
+                  - img [ref=e50]
+                  - text: "+2"
+              - generic [ref=e53]:
+                - paragraph [ref=e54]: Open RFIs
+                - generic [ref=e55]:
+                  - paragraph [ref=e56]: "5"
+                  - paragraph [ref=e57]: / 3
+                - img [ref=e59]
+              - generic [ref=e62]:
+                - generic [ref=e63]: Progress to Target
+                - generic [ref=e64]: 167%
+            - article "23 punch items with target of 15, down 8 from last period" [ref=e68] [cursor=pointer]:
+              - generic [ref=e70]:
+                - img [ref=e72]
+                - generic [ref=e75]:
+                  - img [ref=e76]
+                  - text: "-8"
+              - generic [ref=e79]:
+                - paragraph [ref=e80]: Punch Items
+                - generic [ref=e81]:
+                  - paragraph [ref=e82]: "23"
+                  - paragraph [ref=e83]: / 15
+                - img [ref=e85]
+              - generic [ref=e88]:
+                - generic [ref=e89]: Progress to Target
+                - generic [ref=e90]: 153%
+            - article "127 days since last incident with target of 365" [ref=e94] [cursor=pointer]:
+              - generic [ref=e96]:
+                - img [ref=e98]
+                - generic [ref=e100]:
+                  - img [ref=e101]
+                  - text: "+1"
+              - generic [ref=e104]:
+                - paragraph [ref=e105]: Days Since Incident
+                - generic [ref=e106]:
+                  - paragraph [ref=e107]: "127"
+                  - paragraph [ref=e108]: / 365
+                - img [ref=e110]
+              - generic [ref=e113]:
+                - generic [ref=e114]: Progress to Target
+                - generic [ref=e115]: 35%
+          - generic [ref=e119]:
+            - generic [ref=e120]:
+              - generic [ref=e121]:
+                - generic [ref=e122]:
+                  - heading "Active Projects" [level=2] [ref=e123]
+                  - paragraph [ref=e124]: 0 projects in progress
+                - link "View All" [ref=e125] [cursor=pointer]:
+                  - /url: /projects
+                  - text: View All
+                  - img [ref=e126]
+              - generic [ref=e129]:
+                - img [ref=e130]
+                - paragraph [ref=e134]: No active projects
+            - generic [ref=e136]:
+              - generic [ref=e138]:
+                - heading "Notices" [level=3] [ref=e139]:
+                  - img [ref=e140]
+                  - text: Notices
+                - link "View All" [ref=e143] [cursor=pointer]:
+                  - /url: /notices
+                  - button "View All" [ref=e144]:
+                    - text: View All
+                    - img [ref=e145]
+              - generic [ref=e147]:
+                - generic [ref=e148]:
+                  - generic [ref=e149]: "Total Active: 0"
+                  - generic [ref=e150]: "Critical: 0"
+                  - generic [ref=e151]: "Awaiting Response: 0"
+                  - generic [ref=e152]: "Sent This Month: 0"
+                - paragraph [ref=e153]: No notices for this project
+      - navigation "Main navigation" [ref=e154]:
+        - generic [ref=e155]:
+          - link "Navigate to Dashboard" [ref=e156] [cursor=pointer]:
+            - /url: /
+            - img [ref=e158]
+            - generic [ref=e163]: Home
+          - link "Navigate to Projects" [ref=e164] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e166]
+            - generic [ref=e168]: Projects
+          - link "Navigate to Messages" [ref=e169] [cursor=pointer]:
+            - /url: /messages
+            - img [ref=e171]
+            - generic [ref=e173]: Messages
+          - link "Navigate to Daily Reports" [ref=e174] [cursor=pointer]:
+            - /url: /daily-reports
+            - img [ref=e176]
+            - generic [ref=e179]: Reports
+          - button "Open navigation menu" [ref=e180] [cursor=pointer]:
+            - img [ref=e181]
+            - generic [ref=e182]: More
+    - alert [ref=e183]:
+      - generic [ref=e184]:
+        - img [ref=e185]
+        - generic [ref=e188]:
+          - heading "Success" [level=3] [ref=e189]
+          - paragraph [ref=e190]: You have been signed in successfully.
+        - button "Close notification" [ref=e191] [cursor=pointer]:
+          - img [ref=e192]
+  - generic:
+    - button
+    - button [ref=e195] [cursor=pointer]:
+      - img [ref=e197]
+      - generic:
+        - img
+```

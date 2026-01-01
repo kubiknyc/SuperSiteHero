@@ -26,7 +26,7 @@ test.describe('Settings - Main Settings Page', () => {
     await page.fill('input[type="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/settings');
     await page.waitForLoadState('networkidle');
@@ -77,7 +77,7 @@ test.describe('Settings - Company Profile', () => {
     await page.fill('input[type="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/settings/company');
     await page.waitForLoadState('networkidle');
@@ -140,7 +140,7 @@ test.describe('Settings - User Management', () => {
     await page.fill('input[type="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/settings/users');
     await page.waitForLoadState('networkidle');
@@ -233,7 +233,7 @@ test.describe('Settings - Approval Workflows', () => {
     await page.fill('input[type="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/settings/approval-workflows');
     await page.waitForLoadState('networkidle');
@@ -270,7 +270,7 @@ test.describe('Settings - Project Templates', () => {
     await page.fill('input[type="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/settings/project-templates');
     await page.waitForLoadState('networkidle');
@@ -307,7 +307,7 @@ test.describe('Settings - Distribution Lists', () => {
     await page.fill('input[type="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/settings/distribution-lists');
     await page.waitForLoadState('networkidle');
@@ -335,7 +335,7 @@ test.describe('Settings - Roles & Permissions', () => {
     await page.fill('input[type="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/settings/roles');
     await page.waitForLoadState('networkidle');
@@ -362,7 +362,7 @@ test.describe('Settings - Notification Preferences', () => {
     await page.fill('input[type="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/settings/notifications');
     await page.waitForLoadState('networkidle');
@@ -426,7 +426,7 @@ test.describe('Settings - QuickBooks Integration', () => {
     await page.fill('input[type="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/settings/quickbooks');
     await page.waitForLoadState('networkidle');
@@ -463,7 +463,7 @@ test.describe('Settings - Calendar Integrations', () => {
     await page.fill('input[type="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/settings/calendar');
     await page.waitForLoadState('networkidle');
@@ -491,7 +491,7 @@ test.describe('Settings - AI Settings', () => {
     await page.fill('input[type="email"]', TEST_EMAIL);
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/settings/ai');
     await page.waitForLoadState('networkidle');

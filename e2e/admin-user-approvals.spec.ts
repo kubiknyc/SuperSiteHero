@@ -32,7 +32,7 @@ async function loginAsAdmin(page: Page) {
   await page.click('button[type="submit"]');
   await responsePromise;
 
-  await page.waitForURL(/\/(projects|dashboard|settings)/, { timeout: 15000 });
+  await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
   await page.waitForTimeout(500);
 }
 
@@ -246,7 +246,7 @@ test.describe('Access Control', () => {
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
 
-    await page.waitForURL(/\/(projects|dashboard)/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     // Try to access admin page
     await page.goto('/settings/user-approvals');

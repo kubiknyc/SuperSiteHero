@@ -1,0 +1,172 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - main [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e7]:
+            - heading "Submittals" [level=1] [ref=e8]
+            - paragraph [ref=e9]: Manage project submittals with CSI MasterFormat organization
+          - generic [ref=e10]:
+            - button "Export" [disabled]:
+              - img
+              - text: Export
+            - button "New Submittal" [active] [ref=e11] [cursor=pointer]:
+              - img [ref=e12]
+              - text: New Submittal
+        - generic [ref=e15]:
+          - generic [ref=e16]:
+            - generic [ref=e17]: Project
+            - option "Select a project" [ref=e18]
+            - option "Downtown Office Building" [ref=e19]
+            - option "Residential Tower" [ref=e20]
+            - option "Shopping Mall Renovation" [ref=e21]
+            - option "Test Material 1767240137125" [ref=e22]
+            - combobox [ref=e23]
+          - generic [ref=e24]:
+            - generic [ref=e25]: Search
+            - textbox "Search submittals..." [ref=e26]
+          - generic [ref=e27]:
+            - generic [ref=e28]: Status
+            - option "All Statuses" [ref=e29]
+            - option "Not Submitted" [ref=e30]
+            - option "Submitted" [ref=e31]
+            - option "Under Review" [ref=e32]
+            - option "Approved" [ref=e33]
+            - option "Approved as Noted" [ref=e34]
+            - option "Revise and Resubmit" [ref=e35]
+            - option "Rejected" [ref=e36]
+            - option "Void" [ref=e37]
+            - combobox [ref=e38]
+          - generic [ref=e39]:
+            - generic [ref=e40]: Ball-in-Court
+            - option "All" [ref=e41]
+            - option "Subcontractor" [ref=e42]
+            - option "General Contractor" [ref=e43]
+            - option "Architect" [ref=e44]
+            - option "Owner" [ref=e45]
+            - option "Engineer" [ref=e46]
+            - combobox [ref=e47]
+          - generic [ref=e48]:
+            - button "Group by Spec Section" [ref=e49] [cursor=pointer]:
+              - img [ref=e50]
+            - button "List View" [ref=e55] [cursor=pointer]:
+              - img [ref=e56]
+            - button "Lead Time Analytics" [ref=e57] [cursor=pointer]:
+              - img [ref=e58]
+        - generic [ref=e61]:
+          - generic [ref=e63]:
+            - heading "Submittal Log" [level=3] [ref=e64]
+            - paragraph [ref=e65]: 0 submittals across 0 spec sections
+          - generic [ref=e67]:
+            - img [ref=e68]
+            - paragraph [ref=e70]: Failed to load submittals
+        - generic [ref=e73]:
+          - heading "Create Submittal" [level=2] [ref=e75]
+          - generic [ref=e76]:
+            - generic [ref=e77]:
+              - heading "Specification Reference" [level=3] [ref=e78]
+              - generic [ref=e79]:
+                - generic [ref=e80]: Spec Section (CSI MasterFormat) *
+                - generic [ref=e81]:
+                  - textbox "Select or type spec section..." [ref=e82]
+                  - img [ref=e84]
+            - generic [ref=e87]:
+              - generic [ref=e88]:
+                - text: Submittal Title *
+                - textbox "Submittal Title *" [ref=e89]:
+                  - /placeholder: e.g., Reinforcing Steel Shop Drawings
+              - generic [ref=e90]:
+                - text: Submittal Type *
+                - option "Product Data" [ref=e91]
+                - option "Shop Drawing" [ref=e92]
+                - option "Sample" [ref=e93]
+                - option "Mix Design" [ref=e94]
+                - option "Mock-up" [ref=e95]
+                - option "Test Report" [ref=e96]
+                - option "Certificate" [ref=e97]
+                - option "Warranty" [ref=e98]
+                - option "Operation Manual" [ref=e99]
+                - option "Maintenance Manual" [ref=e100]
+                - option "As-Built" [ref=e101]
+                - option "Closeout" [ref=e102]
+                - option "Other" [ref=e103]
+                - combobox [ref=e104]
+                - paragraph [ref=e105]: Manufacturer product specifications and data sheets
+              - generic [ref=e106]:
+                - text: Discipline
+                - option "Select discipline..." [ref=e107]
+                - option "Architectural" [ref=e108]
+                - option "Structural" [ref=e109]
+                - option "Mechanical" [ref=e110]
+                - option "Electrical" [ref=e111]
+                - option "Plumbing" [ref=e112]
+                - option "Fire Protection" [ref=e113]
+                - option "Civil" [ref=e114]
+                - option "Landscape" [ref=e115]
+                - option "Interiors" [ref=e116]
+                - combobox [ref=e117]
+            - generic [ref=e118]:
+              - text: Description
+              - textbox "Description" [ref=e119]:
+                - /placeholder: Detailed description of the submittal package...
+            - generic [ref=e120]:
+              - heading "Assignment & Tracking" [level=3] [ref=e121]
+              - generic [ref=e122]:
+                - generic [ref=e123]:
+                  - text: Responsible Subcontractor
+                  - option "Select subcontractor..." [ref=e124]
+                  - combobox [ref=e125]
+                - generic [ref=e126]:
+                  - text: Ball-in-Court
+                  - option "Subcontractor" [ref=e127]
+                  - option "General Contractor" [ref=e128]
+                  - option "Architect" [ref=e129]
+                  - option "Owner" [ref=e130]
+                  - option "Engineer" [ref=e131]
+                  - combobox [ref=e132]
+                  - paragraph [ref=e133]: Who currently has responsibility for action
+            - generic [ref=e134]:
+              - heading "Schedule" [level=3] [ref=e135]
+              - generic [ref=e136]:
+                - generic [ref=e137]:
+                  - text: Date Required on Site
+                  - textbox "Date Required on Site" [ref=e138]
+                  - paragraph [ref=e139]: When material/equipment must be on site
+                - generic [ref=e140]:
+                  - text: Review Period (days)
+                  - spinbutton "Review Period (days)" [ref=e141]: "14"
+                  - paragraph [ref=e142]: "Standard: 14 days for Architect review"
+            - generic [ref=e143]:
+              - button "Cancel" [ref=e144] [cursor=pointer]
+              - button "Create Submittal" [disabled]
+    - navigation "Main navigation" [ref=e145]:
+      - generic [ref=e146]:
+        - link "Navigate to Dashboard" [ref=e147] [cursor=pointer]:
+          - /url: /
+          - img [ref=e149]
+          - generic [ref=e154]: Home
+        - link "Navigate to Projects" [ref=e155] [cursor=pointer]:
+          - /url: /projects
+          - img [ref=e157]
+          - generic [ref=e159]: Projects
+        - link "Navigate to Messages" [ref=e160] [cursor=pointer]:
+          - /url: /messages
+          - img [ref=e162]
+          - generic [ref=e164]: Messages
+        - link "Navigate to Daily Reports" [ref=e165] [cursor=pointer]:
+          - /url: /daily-reports
+          - img [ref=e167]
+          - generic [ref=e170]: Reports
+        - button "Open navigation menu" [ref=e171] [cursor=pointer]:
+          - img [ref=e172]
+          - generic [ref=e173]: More
+  - generic:
+    - button
+    - button [ref=e174] [cursor=pointer]:
+      - img [ref=e176]
+      - generic:
+        - img
+```

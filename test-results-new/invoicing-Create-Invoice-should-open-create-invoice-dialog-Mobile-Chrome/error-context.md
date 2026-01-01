@@ -1,0 +1,72 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - heading "Invoices" [level=1] [ref=e6]:
+          - img [ref=e7]
+          - text: Invoices
+        - paragraph [ref=e10]: Bill project owners and track payments
+      - button "Create Invoice" [ref=e11] [cursor=pointer]:
+        - img [ref=e12]
+        - text: Create Invoice
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - heading "Draft" [level=3] [ref=e16]:
+          - img [ref=e17]
+          - text: Draft
+        - generic [ref=e20]:
+          - generic [ref=e21]: "0"
+          - paragraph [ref=e22]: $0
+      - generic [ref=e23]:
+        - heading "Sent" [level=3] [ref=e25]:
+          - img [ref=e26]
+          - text: Sent
+        - generic [ref=e29]:
+          - generic [ref=e30]: "0"
+          - paragraph [ref=e31]: $0
+      - generic [ref=e32]:
+        - heading "Overdue" [level=3] [ref=e34]:
+          - img [ref=e35]
+          - text: Overdue
+        - generic [ref=e37]:
+          - generic [ref=e38]: "0"
+          - paragraph [ref=e39]: $0
+      - generic [ref=e40]:
+        - heading "Paid" [level=3] [ref=e42]:
+          - img [ref=e43]
+          - text: Paid
+        - generic [ref=e46]:
+          - generic [ref=e47]: "0"
+          - paragraph [ref=e48]: $0 this month
+      - generic [ref=e49]:
+        - heading "Outstanding" [level=3] [ref=e51]:
+          - img [ref=e52]
+          - text: Outstanding
+        - generic [ref=e54]:
+          - generic [ref=e55]: $0
+          - paragraph [ref=e56]: Total receivables
+    - generic [ref=e57]:
+      - generic [ref=e58]:
+        - img [ref=e59]
+        - textbox "Search invoices..." [ref=e62]
+      - combobox [ref=e63] [cursor=pointer]:
+        - img [ref=e64]
+        - generic: All Status
+        - img [ref=e66]
+    - generic [ref=e69]:
+      - img [ref=e70]
+      - heading "No invoices found" [level=3] [ref=e73]
+      - paragraph [ref=e74]: Create your first invoice to bill the project owner
+      - button "Create Invoice" [ref=e75] [cursor=pointer]:
+        - img [ref=e76]
+        - text: Create Invoice
+  - generic:
+    - button
+    - button [ref=e77] [cursor=pointer]:
+      - img [ref=e79]
+      - generic:
+        - img
+```

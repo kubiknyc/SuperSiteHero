@@ -1,0 +1,144 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - heading "Invoices" [level=1] [ref=e6]:
+          - img [ref=e7]
+          - text: Invoices
+        - paragraph [ref=e10]: Bill project owners and track payments
+      - button "Create Invoice" [ref=e11] [cursor=pointer]:
+        - img [ref=e12]
+        - text: Create Invoice
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - heading "Draft" [level=3] [ref=e16]:
+          - img [ref=e17]
+          - text: Draft
+        - generic [ref=e20]:
+          - generic [ref=e21]: "0"
+          - paragraph [ref=e22]: $0
+      - generic [ref=e23]:
+        - heading "Sent" [level=3] [ref=e25]:
+          - img [ref=e26]
+          - text: Sent
+        - generic [ref=e29]:
+          - generic [ref=e30]: "0"
+          - paragraph [ref=e31]: $0
+      - generic [ref=e32]:
+        - heading "Overdue" [level=3] [ref=e34]:
+          - img [ref=e35]
+          - text: Overdue
+        - generic [ref=e37]:
+          - generic [ref=e38]: "0"
+          - paragraph [ref=e39]: $0
+      - generic [ref=e40]:
+        - heading "Paid" [level=3] [ref=e42]:
+          - img [ref=e43]
+          - text: Paid
+        - generic [ref=e46]:
+          - generic [ref=e47]: "0"
+          - paragraph [ref=e48]: $0 this month
+      - generic [ref=e49]:
+        - heading "Outstanding" [level=3] [ref=e51]:
+          - img [ref=e52]
+          - text: Outstanding
+        - generic [ref=e54]:
+          - generic [ref=e55]: $0
+          - paragraph [ref=e56]: Total receivables
+    - generic [ref=e57]:
+      - generic [ref=e58]:
+        - img [ref=e59]
+        - textbox "Search invoices..." [ref=e62]
+      - combobox [ref=e63] [cursor=pointer]:
+        - img [ref=e64]
+        - generic: All Status
+        - img [ref=e66]
+    - generic [ref=e69]:
+      - img [ref=e70]
+      - heading "No invoices found" [level=3] [ref=e73]
+      - paragraph [ref=e74]: Create your first invoice to bill the project owner
+      - button "Create Invoice" [ref=e75] [cursor=pointer]:
+        - img [ref=e76]
+        - text: Create Invoice
+    - generic [ref=e79]:
+      - generic [ref=e80]:
+        - heading "Create Invoice" [level=2] [ref=e81]
+        - paragraph [ref=e82]: Fill in the details to create a new invoice
+      - generic [ref=e83]:
+        - generic [ref=e84]:
+          - generic [ref=e85]:
+            - tab "Billing" [selected] [ref=e86] [cursor=pointer]
+            - tab "Details" [ref=e87] [cursor=pointer]
+            - tab "Notes" [ref=e88] [cursor=pointer]
+          - tabpanel [ref=e89]:
+            - generic [ref=e90]:
+              - generic [ref=e91]:
+                - generic [ref=e92]: Invoice Date
+                - button "Invoice Date" [ref=e94] [cursor=pointer]:
+                  - text: December 31st, 2025
+                  - img [ref=e95]
+              - generic [ref=e97]:
+                - text: Payment Terms
+                - combobox "Payment Terms" [ref=e98] [cursor=pointer]:
+                  - generic: Net 30
+                  - img [ref=e99]
+                - combobox [ref=e101]
+              - generic [ref=e102]:
+                - generic [ref=e103]: Due Date
+                - button "Due Date" [ref=e105] [cursor=pointer]:
+                  - text: January 30th, 2026
+                  - img [ref=e106]
+            - generic [ref=e108]:
+              - heading "Bill To" [level=3] [ref=e109]:
+                - img [ref=e110]
+                - text: Bill To
+              - generic [ref=e114]:
+                - generic [ref=e115]:
+                  - text: Contact Name *
+                  - textbox "Contact Name *" [active] [ref=e116]:
+                    - /placeholder: John Smith
+                  - paragraph [ref=e117]: Bill to name is required
+                - generic [ref=e118]:
+                  - text: Company
+                  - textbox "Company" [ref=e119]:
+                    - /placeholder: ABC Properties LLC
+              - generic [ref=e120]:
+                - generic [ref=e121]:
+                  - text: Email
+                  - textbox "Email" [ref=e122]:
+                    - /placeholder: john@example.com
+                - generic [ref=e123]:
+                  - text: Phone
+                  - textbox "Phone" [ref=e124]:
+                    - /placeholder: (555) 123-4567
+              - generic [ref=e125]:
+                - text: Address
+                - textbox "Address" [ref=e126]:
+                  - /placeholder: 123 Main Street
+              - textbox "Suite 100" [ref=e128]
+              - generic [ref=e129]:
+                - generic [ref=e130]:
+                  - text: City
+                  - textbox "City" [ref=e131]:
+                    - /placeholder: New York
+                - generic [ref=e132]:
+                  - text: State
+                  - textbox "State" [ref=e133]:
+                    - /placeholder: NY
+                - generic [ref=e134]:
+                  - text: ZIP
+                  - textbox "ZIP" [ref=e135]:
+                    - /placeholder: "10001"
+        - generic [ref=e136]:
+          - button "Cancel" [ref=e137] [cursor=pointer]
+          - button "Create Invoice" [ref=e138] [cursor=pointer]
+  - generic:
+    - button
+    - button [ref=e139] [cursor=pointer]:
+      - img [ref=e141]
+      - generic:
+        - img
+```

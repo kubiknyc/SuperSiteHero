@@ -25,7 +25,7 @@ test.describe('Tasks Management', () => {
     await page.click('button[type="submit"]');
 
     // Wait for successful login and navigation away from login page
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     // Navigate to tasks page
     await page.goto('/tasks');

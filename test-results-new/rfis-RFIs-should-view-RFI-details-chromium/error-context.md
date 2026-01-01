@@ -1,0 +1,42 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img "JobSight" [ref=e12]
+        - generic [ref=e13]:
+          - img "JobSight" [ref=e14]
+          - paragraph [ref=e15]: Construction Field Management
+      - paragraph [ref=e16]: Sign in to access your projects and daily reports
+    - button "Sign in with Biometrics" [ref=e18] [cursor=pointer]:
+      - img [ref=e19]
+      - text: Sign in with Biometrics
+    - generic [ref=e32]: or continue with email
+    - generic [ref=e33]:
+      - generic [ref=e34]:
+        - generic [ref=e35]:
+          - text: Email address
+          - textbox "Email address" [active] [ref=e36]:
+            - /placeholder: you@company.com
+        - generic [ref=e37]:
+          - generic [ref=e38]:
+            - generic [ref=e39]: Password
+            - link "Forgot password?" [ref=e40] [cursor=pointer]:
+              - /url: /forgot-password
+          - textbox "Password" [ref=e41]:
+            - /placeholder: Enter your password
+      - generic [ref=e42]:
+        - button "Sign in" [ref=e43] [cursor=pointer]
+        - paragraph [ref=e44]:
+          - text: Don't have an account?
+          - link "Sign up" [ref=e45] [cursor=pointer]:
+            - /url: /signup
+  - generic:
+    - button
+    - button "21st logo" [ref=e46] [cursor=pointer]:
+      - img "21st logo" [ref=e49]
+      - generic:
+        - img
+```

@@ -27,7 +27,7 @@ test.describe('Approvals Feature', () => {
     await page.click('button[type="submit"]');
 
     // Wait for redirect away from login
-    await expect(page).not.toHaveURL(/\/login/, { timeout: 15000 });
+    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     // Navigate to approvals
     await page.goto('/approvals');

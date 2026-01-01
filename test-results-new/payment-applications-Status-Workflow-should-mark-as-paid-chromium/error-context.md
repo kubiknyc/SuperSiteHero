@@ -1,0 +1,107 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e7]:
+          - img "JobSight" [ref=e9]
+          - generic [ref=e10]:
+            - heading "JobSight" [level=1] [ref=e11]
+            - paragraph [ref=e12]: Field Management
+        - button "Search Ctrl+K" [ref=e14] [cursor=pointer]:
+          - img [ref=e15]
+          - generic [ref=e18]: Search
+          - generic [ref=e20]: Ctrl+K
+      - navigation [ref=e21]:
+        - generic [ref=e22]:
+          - link "Dashboard" [ref=e23] [cursor=pointer]:
+            - /url: /
+            - img [ref=e24]
+            - generic [ref=e29]: Dashboard
+          - link "Projects" [ref=e30] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e31]
+            - generic [ref=e33]: Projects
+          - link "Messages" [ref=e34] [cursor=pointer]:
+            - /url: /messages
+            - img [ref=e35]
+            - generic [ref=e37]: Messages
+          - link "Documents" [ref=e38] [cursor=pointer]:
+            - /url: /documents
+            - img [ref=e39]
+            - generic [ref=e42]: Documents
+        - generic [ref=e44]:
+          - button "Field Work" [ref=e46] [cursor=pointer]:
+            - img [ref=e47]
+            - generic [ref=e51]: Field Work
+            - img [ref=e52]
+          - button "Management" [ref=e55] [cursor=pointer]:
+            - img [ref=e56]
+            - generic [ref=e59]: Management
+            - img [ref=e60]
+          - button "Administration" [ref=e63] [cursor=pointer]:
+            - img [ref=e64]
+            - generic [ref=e67]: Administration
+            - img [ref=e68]
+          - button "Reports & Analytics" [ref=e71] [cursor=pointer]:
+            - img [ref=e72]
+            - generic [ref=e75]: Reports & Analytics
+            - img [ref=e76]
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - generic [ref=e81]:
+            - img [ref=e82]
+            - generic [ref=e86]: Online
+          - button "Online - Click for details" [ref=e87] [cursor=pointer]:
+            - img [ref=e88]
+        - generic [ref=e90]:
+          - generic [ref=e91]: Theme
+          - 'button "Current theme: System. Click to change." [ref=e92] [cursor=pointer]':
+            - img [ref=e93]
+            - img
+            - generic [ref=e99]: Toggle theme
+        - generic [ref=e100]:
+          - paragraph [ref=e101]: Test User
+          - paragraph [ref=e102]: test@supersitehero.local
+          - paragraph [ref=e103]: member
+        - link "Settings" [ref=e104] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e105]
+          - text: Settings
+        - button "Sign Out" [ref=e108] [cursor=pointer]:
+          - img [ref=e109]
+          - text: Sign Out
+    - main [ref=e112]:
+      - generic [ref=e113]:
+        - generic [ref=e114]:
+          - generic [ref=e115]:
+            - heading "Payment Applications" [level=1] [ref=e116]:
+              - img [ref=e117]
+              - text: Payment Applications
+            - paragraph [ref=e120]: AIA G702/G703 billing workflow
+          - button "New Application" [disabled]:
+            - img
+            - text: New Application
+        - generic [ref=e124]:
+          - generic [ref=e125]:
+            - img [ref=e126]
+            - text: Select Project
+          - option "Select a project..." [ref=e130]
+          - option "Test Material 1767240137125" [ref=e131]
+          - option "Shopping Mall Renovation" [ref=e132]
+          - option "Residential Tower" [ref=e133]
+          - option "Downtown Office Building" [ref=e134]
+          - combobox [ref=e135]
+        - generic [ref=e137]:
+          - img [ref=e138]
+          - heading "Select a Project" [level=3] [ref=e142]
+          - paragraph [ref=e143]: Choose a project above to view and manage payment applications
+  - generic:
+    - button
+    - button [ref=e144] [cursor=pointer]:
+      - img [ref=e146]
+      - generic:
+        - img
+```

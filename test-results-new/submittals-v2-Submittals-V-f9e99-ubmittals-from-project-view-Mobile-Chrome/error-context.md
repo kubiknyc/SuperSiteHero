@@ -1,0 +1,113 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - main [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]:
+          - generic [ref=e7]:
+            - heading "Projects" [level=1] [ref=e8]
+            - paragraph [ref=e9]: Manage and track your construction projects
+          - button "New Project" [ref=e10] [cursor=pointer]
+        - generic [ref=e11]:
+          - img [ref=e12]
+          - textbox "Search projects by name or address..." [ref=e15]
+        - generic [ref=e16]:
+          - generic [ref=e17]:
+            - generic [ref=e18]:
+              - generic [ref=e19]:
+                - link "Downtown Office Building" [ref=e21] [cursor=pointer]:
+                  - /url: /projects/0a8f1f43-2207-4f27-8471-e5bc14d6c3ba
+                  - heading "Downtown Office Building" [level=3] [ref=e22]
+                - generic [ref=e23]: Active
+              - paragraph [ref=e24]:
+                - img [ref=e25]
+                - generic [ref=e28]: 456 Main Street
+            - generic [ref=e31]:
+              - img [ref=e32]
+              - generic [ref=e34]: Started Jan 14, 2024
+            - generic [ref=e35]:
+              - button "Edit" [ref=e36] [cursor=pointer]:
+                - img [ref=e37]
+                - text: Edit
+              - button "Delete project" [ref=e40] [cursor=pointer]:
+                - img [ref=e41]
+          - generic [ref=e44]:
+            - generic [ref=e45]:
+              - generic [ref=e46]:
+                - link "Residential Tower" [ref=e48] [cursor=pointer]:
+                  - /url: /projects/21fe2223-1413-4d9a-b6c8-1f0cd0287a39
+                  - heading "Residential Tower" [level=3] [ref=e49]
+                - generic [ref=e50]: Active
+              - paragraph [ref=e51]:
+                - img [ref=e52]
+                - generic [ref=e55]: 789 Park Avenue
+            - generic [ref=e58]:
+              - img [ref=e59]
+              - generic [ref=e61]: Started Feb 29, 2024
+            - generic [ref=e62]:
+              - button "Edit" [ref=e63] [cursor=pointer]:
+                - img [ref=e64]
+                - text: Edit
+              - button "Delete project" [ref=e67] [cursor=pointer]:
+                - img [ref=e68]
+          - generic [ref=e71]:
+            - generic [ref=e72]:
+              - generic [ref=e73]:
+                - link "Shopping Mall Renovation" [ref=e75] [cursor=pointer]:
+                  - /url: /projects/bbe19ce4-9743-454e-aed0-580b163d6492
+                  - heading "Shopping Mall Renovation" [level=3] [ref=e76]
+                - generic [ref=e77]: Planning
+              - paragraph [ref=e78]:
+                - img [ref=e79]
+                - generic [ref=e82]: 321 Commerce Drive
+            - generic [ref=e85]:
+              - img [ref=e86]
+              - generic [ref=e88]: Started Jan 31, 2024
+            - generic [ref=e89]:
+              - button "Edit" [ref=e90] [cursor=pointer]:
+                - img [ref=e91]
+                - text: Edit
+              - button "Delete project" [ref=e94] [cursor=pointer]:
+                - img [ref=e95]
+          - generic [ref=e98]:
+            - generic [ref=e100]:
+              - link "Test Material 1767240137125" [ref=e102] [cursor=pointer]:
+                - /url: /projects/63b57b3a-18eb-403f-b996-69017304b30b
+                - heading "Test Material 1767240137125" [level=3] [ref=e103]
+              - generic [ref=e104]: Planning
+            - generic [ref=e106]:
+              - button "Edit" [ref=e107] [cursor=pointer]:
+                - img [ref=e108]
+                - text: Edit
+              - button "Delete project" [ref=e111] [cursor=pointer]:
+                - img [ref=e112]
+    - navigation "Main navigation" [ref=e115]:
+      - generic [ref=e116]:
+        - link "Navigate to Dashboard" [ref=e117] [cursor=pointer]:
+          - /url: /
+          - img [ref=e119]
+          - generic [ref=e124]: Home
+        - link "Navigate to Projects" [ref=e125] [cursor=pointer]:
+          - /url: /projects
+          - img [ref=e127]
+          - generic [ref=e129]: Projects
+        - link "Navigate to Messages" [ref=e130] [cursor=pointer]:
+          - /url: /messages
+          - img [ref=e132]
+          - generic [ref=e134]: Messages
+        - link "Navigate to Daily Reports" [ref=e135] [cursor=pointer]:
+          - /url: /daily-reports
+          - img [ref=e137]
+          - generic [ref=e140]: Reports
+        - button "Open navigation menu" [ref=e141] [cursor=pointer]:
+          - img [ref=e142]
+          - generic [ref=e143]: More
+  - generic:
+    - button
+    - button [ref=e144] [cursor=pointer]:
+      - img [ref=e146]
+      - generic:
+        - img
+```
