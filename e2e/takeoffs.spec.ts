@@ -17,6 +17,9 @@
 
 import { test, expect, Page } from '@playwright/test';
 
+// Use pre-authenticated session to skip login
+test.use({ storageState: 'playwright/.auth/user.json' });
+
 // Test credentials from environment
 const TEST_EMAIL = process.env.TEST_USER_EMAIL || 'test@example.com';
 const TEST_PASSWORD = process.env.TEST_USER_PASSWORD || 'testpassword123';

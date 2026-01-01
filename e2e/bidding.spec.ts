@@ -16,6 +16,9 @@
  */
 
 import { test, expect, Page } from '@playwright/test'
+
+// Use pre-authenticated session
+test.use({ storageState: 'playwright/.auth/user.json' });
 import { BiddingPage } from './pages/BiddingPage'
 
 const TEST_EMAIL = process.env.TEST_USER_EMAIL || 'test@example.com'

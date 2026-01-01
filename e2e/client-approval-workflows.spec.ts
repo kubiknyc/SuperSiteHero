@@ -9,7 +9,10 @@
  * - Rate limiting and security
  */
 
-import { test, expect, Page } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test'
+
+// Use pre-authenticated session
+test.use({ storageState: 'playwright/.auth/user.json' });;
 
 // Test credentials from environment
 const TEST_EMAIL = process.env.TEST_USER_EMAIL || 'test@example.com';

@@ -1,4 +1,7 @@
-import { test, expect, Page, ConsoleMessage } from '@playwright/test';
+import { test, expect, Page, ConsoleMessage } from '@playwright/test'
+
+// Use pre-authenticated session
+test.use({ storageState: 'playwright/.auth/user.json' });;
 import * as path from 'path';
 import * as fs from 'fs';
 

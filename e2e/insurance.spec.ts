@@ -17,6 +17,9 @@
  */
 
 import { test, expect, Page } from '@playwright/test';
+
+// Use pre-authenticated session to skip login
+test.use({ storageState: 'playwright/.auth/user.json' });
 import * as path from 'path';
 
 // Test credentials from environment

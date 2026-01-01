@@ -5,6 +5,9 @@
 
 import { test, expect, type Page } from '@playwright/test';
 
+// Use pre-authenticated session to skip login
+test.use({ storageState: 'playwright/.auth/user.json' });
+
 // Test user credentials (use test account)
 const TEST_USER = {
   email: 'test@jobsight.com',
@@ -44,7 +47,7 @@ async function login(page: Page) {
 
   await page.getByLabel(/email/i).fill(TEST_USER.email);
   await page.getByLabel(/password/i).fill(TEST_USER.password);
-  await page.getByRole('button', { name: /sign in/i }).click();
+  await page.locator('button[type="submit"]').click();
 
   // Wait for dashboard or home page
   await expect(page).toHaveURL(/\/(dashboard|home)/, { timeout: 10000 });

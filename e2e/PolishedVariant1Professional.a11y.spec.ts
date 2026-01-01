@@ -12,6 +12,9 @@
  */
 
 import { test, expect } from '@playwright/test';
+
+// Use pre-authenticated session to skip login
+test.use({ storageState: 'playwright/.auth/user.json' });
 import AxeBuilder from '@axe-core/playwright';
 
 test.describe('PolishedVariant1Professional - Accessibility', () => {

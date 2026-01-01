@@ -20,6 +20,9 @@
 
 import { test, expect, devices } from '@playwright/test';
 
+// Use pre-authenticated session to skip login
+test.use({ storageState: 'playwright/.auth/user.json' });
+
 test.describe('PolishedVariant1Professional - Cross-Browser Responsive', () => {
   const url = '/blueprint-samples/variants/1-professional';
 

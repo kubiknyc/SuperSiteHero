@@ -9,6 +9,9 @@
  */
 
 import { test, expect } from '@playwright/test';
+
+// Use pre-authenticated session to skip login
+test.use({ storageState: 'playwright/.auth/user.json' });
 import { loginAsTestUser } from './helpers/test-helpers';
 
 const TEST_EMAIL = process.env.TEST_USER_EMAIL || 'test@example.com';

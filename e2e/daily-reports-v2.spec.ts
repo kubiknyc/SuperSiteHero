@@ -11,7 +11,10 @@
  * - Safety incident OSHA compliance
  */
 
-import { test, expect, Page } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test'
+
+// Use pre-authenticated session
+test.use({ storageState: 'playwright/.auth/user.json' });;
 
 const TEST_EMAIL = process.env.TEST_USER_EMAIL || 'test@example.com';
 const TEST_PASSWORD = process.env.TEST_USER_PASSWORD || 'testpassword123';

@@ -18,6 +18,9 @@
  */
 
 import { test, expect, Page } from '@playwright/test';
+
+// Use pre-authenticated session to skip login
+test.use({ storageState: 'playwright/.auth/user.json' });
 import { loginAsTestUser, navigateToPage, waitForPageLoad } from './helpers/test-helpers';
 
 // Test credentials - use client-specific credentials or fall back to regular test user
