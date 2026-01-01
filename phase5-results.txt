@@ -1,0 +1,2042 @@
+[dotenv@17.2.3] injecting env (20) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+
+Running 70 tests using 11 workers
+
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+  x   9 [chromium] › e2e\closeout.spec.ts:222:3 › Project Closeout › should show verification status by location (39.3s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+  x   8 [chromium] › e2e\closeout.spec.ts:238:3 › Project Closeout › should show outstanding items by assignee (50.4s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+  x   2 [chromium] › e2e\closeout.spec.ts:130:3 › Project Closeout › should display closeout statistics (1.2m)
+  x   5 [chromium] › e2e\closeout.spec.ts:94:3 › Project Closeout › should display punch list status summary (1.3m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+  x  11 [chromium] › e2e\closeout.spec.ts:254:3 › Project Closeout › should handle project selection (51.9s)
+  x   3 [chromium] › e2e\closeout.spec.ts:73:3 › Project Closeout › should navigate to closeout page (1.2m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+  x   7 [chromium] › e2e\closeout.spec.ts:190:3 › Project Closeout › should show warranties section (1.3m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+  x   4 [chromium] › e2e\closeout.spec.ts:146:3 › Project Closeout › should list closeout documents (1.0m)
+  x  10 [chromium] › e2e\closeout.spec.ts:206:3 › Project Closeout › should display completion percentage (1.2m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+  x   1 [chromium] › e2e\closeout.spec.ts:114:3 › Project Closeout › should show closeout readiness indicator (1.2m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+  x  12 [chromium] › e2e\closeout.spec.ts:272:3 › Project Closeout › should show certificate of occupancy readiness (17.4s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+  x  13 [chromium] › e2e\closeout.spec.ts:287:3 › Project Closeout › should allow filtering/sorting closeout items (17.7s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔄 add secrets lifecycle management: https://dotenvx.com/ops
+  x   6 [chromium] › e2e\closeout.spec.ts:168:3 › Project Closeout › should allow adding closeout documents (1.2m)
+  x  17 [chromium] › e2e\docusign.spec.ts:59:5 › DocuSign Integration › Connection Setup › should display connection status (18.0s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+  x  15 [chromium] › e2e\closeout.spec.ts:326:3 › Project Closeout › should display last updated timestamp (23.8s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+  x  21 [chromium] › e2e\docusign.spec.ts:146:5 › DocuSign Integration › Signature Request Creation › should open signature request dialog from payment application (20.8s)
+  x  19 [chromium] › e2e\docusign.spec.ts:100:5 › DocuSign Integration › Connection Setup › should support demo mode connection (24.2s)
+  x  18 [chromium] › e2e\docusign.spec.ts:71:5 › DocuSign Integration › Connection Setup › should show connect button when not connected (25.6s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+  x  22 [chromium] › e2e\docusign.spec.ts:182:5 › DocuSign Integration › Signature Request Creation › should add signers to envelope (19.2s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+  x  20 [chromium] › e2e\docusign.spec.ts:125:5 › DocuSign Integration › Connection Setup › should display connection info when connected (17.6s)
+  x  25 [chromium] › e2e\docusign.spec.ts:317:5 › DocuSign Integration › Envelope Management › should display DocuSign dashboard (18.3s)
+  x  26 [chromium] › e2e\docusign.spec.ts:328:5 › DocuSign Integration › Envelope Management › should show envelope list (20.0s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+  x  23 [chromium] › e2e\docusign.spec.ts:226:5 › DocuSign Integration › Signature Request Creation › should validate required fields before sending (21.4s)
+  x  24 [chromium] › e2e\docusign.spec.ts:267:5 › DocuSign Integration › Signature Request Creation › should successfully create envelope with valid data (19.1s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+  x  16 [chromium] › e2e\docusign.spec.ts:46:5 › DocuSign Integration › Connection Setup › should navigate to DocuSign settings (1.1m)
+  x  29 [chromium] › e2e\docusign.spec.ts:383:5 › DocuSign Integration › Envelope Management › should show envelope statistics (19.6s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+  x  27 [chromium] › e2e\docusign.spec.ts:341:5 › DocuSign Integration › Envelope Management › should display envelope status badges (19.6s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+  x  28 [chromium] › e2e\docusign.spec.ts:358:5 › DocuSign Integration › Envelope Management › should view envelope details (19.8s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+  x  35 [chromium] › e2e\docusign.spec.ts:535:5 › DocuSign Integration › Error Handling › should handle network errors gracefully (18.5s)
+  x  31 [chromium] › e2e\docusign.spec.ts:434:5 › DocuSign Integration › Envelope Management › should allow resending envelope (19.3s)
+  x  33 [chromium] › e2e\docusign.spec.ts:502:5 › DocuSign Integration › Accessibility › should have accessible form labels (18.4s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+  x  36 [chromium] › e2e\docusign.spec.ts:552:5 › DocuSign Integration › Error Handling › should show error when connection fails (18.7s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+  x  37 [chromium] › e2e\offline.spec.ts:30:3 › Offline Mode › should register service worker (17.2s)
+  x  14 [chromium] › e2e\closeout.spec.ts:310:3 › Project Closeout › should show priority-based breakdown (1.3m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  enable debug logging with { debug: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+  x  30 [chromium] › e2e\docusign.spec.ts:396:5 › DocuSign Integration › Envelope Management › should allow voiding pending envelope (1.3m)
+  x  39 [chromium] › e2e\offline.spec.ts:72:3 › Offline Mode › should cache project data for offline access (18.0s)
+  x  38 [chromium] › e2e\offline.spec.ts:46:3 › Offline Mode › should show offline indicator when disconnected (17.6s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+  x  32 [chromium] › e2e\docusign.spec.ts:470:5 › DocuSign Integration › Disconnect › should allow disconnecting DocuSign (1.1m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+  x  40 [chromium] › e2e\offline.spec.ts:107:3 › Offline Mode › should queue form submissions when offline (20.6s)
+  x  34 [chromium] › e2e\docusign.spec.ts:515:5 › DocuSign Integration › Accessibility › should support keyboard navigation (1.1m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+  x  41 [chromium] › e2e\offline.spec.ts:130:3 › Offline Mode › should sync data when coming back online (19.5s)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+  x  44 [chromium] › e2e\punch-lists.spec.ts:79:3 › Punch Lists Management › should navigate to create punch item page (1.0m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+  x  43 [chromium] › e2e\punch-lists.spec.ts:66:3 › Punch Lists Management › should show punch list status indicators (1.1m)
+  x  42 [chromium] › e2e\punch-lists.spec.ts:44:3 › Punch Lists Management › should display punch lists page with filters (1.1m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+  x  49 [chromium] › e2e\punch-lists.spec.ts:237:3 › Punch Lists Management › should filter punch items by trade (1.1m)
+  x  46 [chromium] › e2e\punch-lists.spec.ts:174:3 › Punch Lists Management › should validate required fields on create (1.0m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+  x  47 [chromium] › e2e\punch-lists.spec.ts:195:3 › Punch Lists Management › should filter punch items by status (1.0m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔑 add access controls to secrets: https://dotenvx.com/ops
+  x  48 [chromium] › e2e\punch-lists.spec.ts:219:3 › Punch Lists Management › should filter punch items by location/area (1.1m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ✅ audit secrets and track compliance: https://dotenvx.com/ops
+  x  50 [chromium] › e2e\punch-lists.spec.ts:255:3 › Punch Lists Management › should filter punch items by assignee (1.1m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+  x  45 [chromium] › e2e\punch-lists.spec.ts:103:3 › Punch Lists Management › should create new punch item with description, location, and assignee (1.1m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 📡 add observability to secrets: https://dotenvx.com/ops
+  x  51 [chromium] › e2e\punch-lists.spec.ts:273:3 › Punch Lists Management › should open punch item detail view (1.1m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+  x  52 [chromium] › e2e\punch-lists.spec.ts:296:3 › Punch Lists Management › should display punch item details with all information (1.1m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  override existing env vars with { override: true }
+  x  53 [chromium] › e2e\punch-lists.spec.ts:316:3 › Punch Lists Management › should navigate to edit punch item page (1.1m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🗂️ backup and recover secrets: https://dotenvx.com/ops
+  x  55 [chromium] › e2e\punch-lists.spec.ts:407:3 › Punch Lists Management › should change punch item status to "In Progress" (1.1m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+  x  54 [chromium] › e2e\punch-lists.spec.ts:350:3 › Punch Lists Management › should edit punch item details (1.0m)
+  x  57 [chromium] › e2e\punch-lists.spec.ts:477:3 › Punch Lists Management › should mark punch item as verified (1.1m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: ⚙️  suppress all logs with { quiet: true }
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+  x  58 [chromium] › e2e\punch-lists.spec.ts:512:3 › Punch Lists Management › should add photos to punch items (1.1m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+  x  56 [chromium] › e2e\punch-lists.spec.ts:443:3 › Punch Lists Management › should change punch item status to "Closed" (1.1m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 👥 sync secrets across teammates & machines: https://dotenvx.com/ops
+  x  60 [chromium] › e2e\punch-lists.spec.ts:569:3 › Punch Lists Management › should search punch items (1.0m)
+[dotenv@17.2.3] injecting env (0) from .env.local -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+  x  61 [chromium] › e2e\punch-lists.spec.ts:585:3 › Punch Lists Management › should sort punch items by column (1.0m)
+  x  59 [chromium] › e2e\punch-lists.spec.ts:547:3 › Punch Lists Management › should display photo gallery in punch item detail (1.1m)
+  x  62 [chromium] › e2e\punch-lists.spec.ts:604:3 › Punch Lists Management › should display punch list summary statistics (1.5m)
+  x  64 [chromium] › e2e\punch-lists.spec.ts:653:3 › Punch Lists Management › should display empty state when no punch items match filters (1.1m)
+  x  65 [chromium] › e2e\punch-lists.spec.ts:677:3 › Punch Lists Management › should show punch item priority levels (1.1m)
+  x  63 [chromium] › e2e\punch-lists.spec.ts:614:3 › Punch Lists Management › should filter by multiple criteria simultaneously (1.1m)
+  x  66 [chromium] › e2e\punch-lists.spec.ts:690:3 › Punch Lists Management › should export punch list data (1.1m)
+  x  67 [chromium] › e2e\punch-lists.spec.ts:707:3 › Punch Lists Management › should show punch item history/activity log (1.1m)
+  x  68 [chromium] › e2e\punch-lists.spec.ts:729:3 › Punch Lists Management › should bulk update punch item status (1.2m)
+  x  70 [chromium] › e2e\punch-lists.spec.ts:770:3 › Punch Lists Management › should show due date for punch items (1.0m)
+  x  69 [chromium] › e2e\punch-lists.spec.ts:750:3 › Punch Lists Management › should show responsible party/contractor information (1.2m)
+
+
+  1) [chromium] › e2e\closeout.spec.ts:73:3 › Project Closeout › should navigate to closeout page ──
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      27 |
+      28 |   // Wait for redirect away from login (Phase 1 pattern)
+    > 29 |   await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |              ^
+      30 |   await page.waitForTimeout(500)
+      31 | }
+      32 |
+        at login (C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:29:14)
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:64:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout-should-navigate-to-closeout-page-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout-should-navigate-to-closeout-page-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\closeout-Project-Closeout-should-navigate-to-closeout-page-chromium\error-context.md
+
+  2) [chromium] › e2e\closeout.spec.ts:94:3 › Project Closeout › should display punch list status summary 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      27 |
+      28 |   // Wait for redirect away from login (Phase 1 pattern)
+    > 29 |   await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |              ^
+      30 |   await page.waitForTimeout(500)
+      31 | }
+      32 |
+        at login (C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:29:14)
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:64:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--bbcaa-y-punch-list-status-summary-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--bbcaa-y-punch-list-status-summary-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\closeout-Project-Closeout--bbcaa-y-punch-list-status-summary-chromium\error-context.md
+
+  3) [chromium] › e2e\closeout.spec.ts:114:3 › Project Closeout › should show closeout readiness indicator 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      27 |
+      28 |   // Wait for redirect away from login (Phase 1 pattern)
+    > 29 |   await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |              ^
+      30 |   await page.waitForTimeout(500)
+      31 | }
+      32 |
+        at login (C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:29:14)
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:64:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--662e3-loseout-readiness-indicator-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--662e3-loseout-readiness-indicator-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\closeout-Project-Closeout--662e3-loseout-readiness-indicator-chromium\error-context.md
+
+  4) [chromium] › e2e\closeout.spec.ts:130:3 › Project Closeout › should display closeout statistics 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      27 |
+      28 |   // Wait for redirect away from login (Phase 1 pattern)
+    > 29 |   await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |              ^
+      30 |   await page.waitForTimeout(500)
+      31 | }
+      32 |
+        at login (C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:29:14)
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:64:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout-should-display-closeout-statistics-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout-should-display-closeout-statistics-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\closeout-Project-Closeout-should-display-closeout-statistics-chromium\error-context.md
+
+  5) [chromium] › e2e\closeout.spec.ts:146:3 › Project Closeout › should list closeout documents ───
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      27 |
+      28 |   // Wait for redirect away from login (Phase 1 pattern)
+    > 29 |   await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |              ^
+      30 |   await page.waitForTimeout(500)
+      31 | }
+      32 |
+        at login (C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:29:14)
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:64:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout-should-list-closeout-documents-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout-should-list-closeout-documents-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\closeout-Project-Closeout-should-list-closeout-documents-chromium\error-context.md
+
+  6) [chromium] › e2e\closeout.spec.ts:168:3 › Project Closeout › should allow adding closeout documents 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      27 |
+      28 |   // Wait for redirect away from login (Phase 1 pattern)
+    > 29 |   await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |              ^
+      30 |   await page.waitForTimeout(500)
+      31 | }
+      32 |
+        at login (C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:29:14)
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:64:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--c92ee-w-adding-closeout-documents-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--c92ee-w-adding-closeout-documents-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\closeout-Project-Closeout--c92ee-w-adding-closeout-documents-chromium\error-context.md
+
+  7) [chromium] › e2e\closeout.spec.ts:190:3 › Project Closeout › should show warranties section ───
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      27 |
+      28 |   // Wait for redirect away from login (Phase 1 pattern)
+    > 29 |   await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |              ^
+      30 |   await page.waitForTimeout(500)
+      31 | }
+      32 |
+        at login (C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:29:14)
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:64:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout-should-show-warranties-section-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout-should-show-warranties-section-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\closeout-Project-Closeout-should-show-warranties-section-chromium\error-context.md
+
+  8) [chromium] › e2e\closeout.spec.ts:206:3 › Project Closeout › should display completion percentage 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      27 |
+      28 |   // Wait for redirect away from login (Phase 1 pattern)
+    > 29 |   await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |              ^
+      30 |   await page.waitForTimeout(500)
+      31 | }
+      32 |
+        at login (C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:29:14)
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:64:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--20e83-splay-completion-percentage-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--20e83-splay-completion-percentage-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\closeout-Project-Closeout--20e83-splay-completion-percentage-chromium\error-context.md
+
+  9) [chromium] › e2e\closeout.spec.ts:222:3 › Project Closeout › should show verification status by location 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      27 |
+      28 |   // Wait for redirect away from login (Phase 1 pattern)
+    > 29 |   await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |              ^
+      30 |   await page.waitForTimeout(500)
+      31 | }
+      32 |
+        at login (C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:29:14)
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:64:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--8f841-fication-status-by-location-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--8f841-fication-status-by-location-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\closeout-Project-Closeout--8f841-fication-status-by-location-chromium\error-context.md
+
+  10) [chromium] › e2e\closeout.spec.ts:238:3 › Project Closeout › should show outstanding items by assignee 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      27 |
+      28 |   // Wait for redirect away from login (Phase 1 pattern)
+    > 29 |   await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |              ^
+      30 |   await page.waitForTimeout(500)
+      31 | }
+      32 |
+        at login (C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:29:14)
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:64:5
+
+    attachment #1: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--0dae8-tstanding-items-by-assignee-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  11) [chromium] › e2e\closeout.spec.ts:254:3 › Project Closeout › should handle project selection ─
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      27 |
+      28 |   // Wait for redirect away from login (Phase 1 pattern)
+    > 29 |   await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |              ^
+      30 |   await page.waitForTimeout(500)
+      31 | }
+      32 |
+        at login (C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:29:14)
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:64:5
+
+    attachment #1: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout-should-handle-project-selection-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\closeout-Project-Closeout-should-handle-project-selection-chromium\error-context.md
+
+  12) [chromium] › e2e\closeout.spec.ts:272:3 › Project Closeout › should show certificate of occupancy readiness 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      27 |
+      28 |   // Wait for redirect away from login (Phase 1 pattern)
+    > 29 |   await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |              ^
+      30 |   await page.waitForTimeout(500)
+      31 | }
+      32 |
+        at login (C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:29:14)
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:64:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--d6aed-cate-of-occupancy-readiness-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--d6aed-cate-of-occupancy-readiness-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\closeout-Project-Closeout--d6aed-cate-of-occupancy-readiness-chromium\error-context.md
+
+  13) [chromium] › e2e\closeout.spec.ts:287:3 › Project Closeout › should allow filtering/sorting closeout items 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      27 |
+      28 |   // Wait for redirect away from login (Phase 1 pattern)
+    > 29 |   await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |              ^
+      30 |   await page.waitForTimeout(500)
+      31 | }
+      32 |
+        at login (C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:29:14)
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:64:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--67940-ring-sorting-closeout-items-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--67940-ring-sorting-closeout-items-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\closeout-Project-Closeout--67940-ring-sorting-closeout-items-chromium\error-context.md
+
+  14) [chromium] › e2e\closeout.spec.ts:310:3 › Project Closeout › should show priority-based breakdown 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      27 |
+      28 |   // Wait for redirect away from login (Phase 1 pattern)
+    > 29 |   await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |              ^
+      30 |   await page.waitForTimeout(500)
+      31 | }
+      32 |
+        at login (C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:29:14)
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:64:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--f9972-ow-priority-based-breakdown-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--f9972-ow-priority-based-breakdown-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\closeout-Project-Closeout--f9972-ow-priority-based-breakdown-chromium\error-context.md
+
+  15) [chromium] › e2e\closeout.spec.ts:326:3 › Project Closeout › should display last updated timestamp 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      27 |
+      28 |   // Wait for redirect away from login (Phase 1 pattern)
+    > 29 |   await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |              ^
+      30 |   await page.waitForTimeout(500)
+      31 | }
+      32 |
+        at login (C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:29:14)
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\closeout.spec.ts:64:5
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--79a95-play-last-updated-timestamp-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\closeout-Project-Closeout--79a95-play-last-updated-timestamp-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\closeout-Project-Closeout--79a95-play-last-updated-timestamp-chromium\error-context.md
+
+  16) [chromium] › e2e\docusign.spec.ts:46:5 › DocuSign Integration › Connection Setup › should navigate to DocuSign settings 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      31 |
+      32 |     // Login
+    > 33 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL)
+         |                ^
+      34 |     await page.fill('input[type="password"]', TEST_PASSWORD)
+      35 |     await page.click('button[type="submit"]')
+      36 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:33:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-9346f-vigate-to-DocuSign-settings-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-9346f-vigate-to-DocuSign-settings-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-9346f-vigate-to-DocuSign-settings-chromium\error-context.md
+
+  17) [chromium] › e2e\docusign.spec.ts:59:5 › DocuSign Integration › Connection Setup › should display connection status 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      36 |
+      37 |     // Wait for redirect after login
+    > 38 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      39 |   })
+      40 |
+      41 |   test.describe('Connection Setup', () => {
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:38:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-04885-d-display-connection-status-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-04885-d-display-connection-status-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-04885-d-display-connection-status-chromium\error-context.md
+
+  18) [chromium] › e2e\docusign.spec.ts:71:5 › DocuSign Integration › Connection Setup › should show connect button when not connected 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      36 |
+      37 |     // Wait for redirect after login
+    > 38 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      39 |   })
+      40 |
+      41 |   test.describe('Connection Setup', () => {
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:38:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-9e18a-t-button-when-not-connected-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-9e18a-t-button-when-not-connected-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-9e18a-t-button-when-not-connected-chromium\error-context.md
+
+  19) [chromium] › e2e\docusign.spec.ts:100:5 › DocuSign Integration › Connection Setup › should support demo mode connection 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      36 |
+      37 |     // Wait for redirect after login
+    > 38 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      39 |   })
+      40 |
+      41 |   test.describe('Connection Setup', () => {
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:38:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-3ea10-upport-demo-mode-connection-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-3ea10-upport-demo-mode-connection-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-3ea10-upport-demo-mode-connection-chromium\error-context.md
+
+  20) [chromium] › e2e\docusign.spec.ts:125:5 › DocuSign Integration › Connection Setup › should display connection info when connected 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      36 |
+      37 |     // Wait for redirect after login
+    > 38 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      39 |   })
+      40 |
+      41 |   test.describe('Connection Setup', () => {
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:38:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-cb8c6-nection-info-when-connected-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-cb8c6-nection-info-when-connected-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-cb8c6-nection-info-when-connected-chromium\error-context.md
+
+  21) [chromium] › e2e\docusign.spec.ts:146:5 › DocuSign Integration › Signature Request Creation › should open signature request dialog from payment application 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      36 |
+      37 |     // Wait for redirect after login
+    > 38 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      39 |   })
+      40 |
+      41 |   test.describe('Connection Setup', () => {
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:38:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-db513-og-from-payment-application-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-db513-og-from-payment-application-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-db513-og-from-payment-application-chromium\error-context.md
+
+  22) [chromium] › e2e\docusign.spec.ts:182:5 › DocuSign Integration › Signature Request Creation › should add signers to envelope 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      36 |
+      37 |     // Wait for redirect after login
+    > 38 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      39 |   })
+      40 |
+      41 |   test.describe('Connection Setup', () => {
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:38:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-ca358-uld-add-signers-to-envelope-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-ca358-uld-add-signers-to-envelope-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-ca358-uld-add-signers-to-envelope-chromium\error-context.md
+
+  23) [chromium] › e2e\docusign.spec.ts:226:5 › DocuSign Integration › Signature Request Creation › should validate required fields before sending 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      36 |
+      37 |     // Wait for redirect after login
+    > 38 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      39 |   })
+      40 |
+      41 |   test.describe('Connection Setup', () => {
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:38:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-bf509-uired-fields-before-sending-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-bf509-uired-fields-before-sending-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-bf509-uired-fields-before-sending-chromium\error-context.md
+
+  24) [chromium] › e2e\docusign.spec.ts:267:5 › DocuSign Integration › Signature Request Creation › should successfully create envelope with valid data 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      36 |
+      37 |     // Wait for redirect after login
+    > 38 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      39 |   })
+      40 |
+      41 |   test.describe('Connection Setup', () => {
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:38:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-d92d4-te-envelope-with-valid-data-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-d92d4-te-envelope-with-valid-data-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-d92d4-te-envelope-with-valid-data-chromium\error-context.md
+
+  25) [chromium] › e2e\docusign.spec.ts:317:5 › DocuSign Integration › Envelope Management › should display DocuSign dashboard 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      36 |
+      37 |     // Wait for redirect after login
+    > 38 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      39 |   })
+      40 |
+      41 |   test.describe('Connection Setup', () => {
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:38:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-bdf17--display-DocuSign-dashboard-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-bdf17--display-DocuSign-dashboard-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-bdf17--display-DocuSign-dashboard-chromium\error-context.md
+
+  26) [chromium] › e2e\docusign.spec.ts:328:5 › DocuSign Integration › Envelope Management › should show envelope list 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      36 |
+      37 |     // Wait for redirect after login
+    > 38 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      39 |   })
+      40 |
+      41 |   test.describe('Connection Setup', () => {
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:38:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-8cba2-t-should-show-envelope-list-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-8cba2-t-should-show-envelope-list-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-8cba2-t-should-show-envelope-list-chromium\error-context.md
+
+  27) [chromium] › e2e\docusign.spec.ts:341:5 › DocuSign Integration › Envelope Management › should display envelope status badges 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      36 |
+      37 |     // Wait for redirect after login
+    > 38 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      39 |   })
+      40 |
+      41 |   test.describe('Connection Setup', () => {
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:38:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-dadcf-play-envelope-status-badges-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-dadcf-play-envelope-status-badges-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-dadcf-play-envelope-status-badges-chromium\error-context.md
+
+  28) [chromium] › e2e\docusign.spec.ts:358:5 › DocuSign Integration › Envelope Management › should view envelope details 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      36 |
+      37 |     // Wait for redirect after login
+    > 38 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      39 |   })
+      40 |
+      41 |   test.describe('Connection Setup', () => {
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:38:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-7052a-hould-view-envelope-details-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-7052a-hould-view-envelope-details-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-7052a-hould-view-envelope-details-chromium\error-context.md
+
+  29) [chromium] › e2e\docusign.spec.ts:383:5 › DocuSign Integration › Envelope Management › should show envelope statistics 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      36 |
+      37 |     // Wait for redirect after login
+    > 38 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      39 |   })
+      40 |
+      41 |   test.describe('Connection Setup', () => {
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:38:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-5f59e-ld-show-envelope-statistics-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-5f59e-ld-show-envelope-statistics-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-5f59e-ld-show-envelope-statistics-chromium\error-context.md
+
+  30) [chromium] › e2e\docusign.spec.ts:396:5 › DocuSign Integration › Envelope Management › should allow voiding pending envelope 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      36 |
+      37 |     // Wait for redirect after login
+    > 38 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      39 |   })
+      40 |
+      41 |   test.describe('Connection Setup', () => {
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:38:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-f2c0b-ow-voiding-pending-envelope-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-f2c0b-ow-voiding-pending-envelope-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-f2c0b-ow-voiding-pending-envelope-chromium\error-context.md
+
+  31) [chromium] › e2e\docusign.spec.ts:434:5 › DocuSign Integration › Envelope Management › should allow resending envelope 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      36 |
+      37 |     // Wait for redirect after login
+    > 38 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      39 |   })
+      40 |
+      41 |   test.describe('Connection Setup', () => {
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:38:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-e12fb-ld-allow-resending-envelope-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-e12fb-ld-allow-resending-envelope-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-e12fb-ld-allow-resending-envelope-chromium\error-context.md
+
+  32) [chromium] › e2e\docusign.spec.ts:470:5 › DocuSign Integration › Disconnect › should allow disconnecting DocuSign 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      31 |
+      32 |     // Login
+    > 33 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL)
+         |                ^
+      34 |     await page.fill('input[type="password"]', TEST_PASSWORD)
+      35 |     await page.click('button[type="submit"]')
+      36 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:33:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-5278f-llow-disconnecting-DocuSign-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-5278f-llow-disconnecting-DocuSign-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-5278f-llow-disconnecting-DocuSign-chromium\error-context.md
+
+  33) [chromium] › e2e\docusign.spec.ts:502:5 › DocuSign Integration › Accessibility › should have accessible form labels 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      36 |
+      37 |     // Wait for redirect after login
+    > 38 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      39 |   })
+      40 |
+      41 |   test.describe('Connection Setup', () => {
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:38:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-80c9e-have-accessible-form-labels-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-80c9e-have-accessible-form-labels-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-80c9e-have-accessible-form-labels-chromium\error-context.md
+
+  34) [chromium] › e2e\docusign.spec.ts:515:5 › DocuSign Integration › Accessibility › should support keyboard navigation 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      31 |
+      32 |     // Login
+    > 33 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL)
+         |                ^
+      34 |     await page.fill('input[type="password"]', TEST_PASSWORD)
+      35 |     await page.click('button[type="submit"]')
+      36 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:33:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-fbdfe-support-keyboard-navigation-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-fbdfe-support-keyboard-navigation-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-fbdfe-support-keyboard-navigation-chromium\error-context.md
+
+  35) [chromium] › e2e\docusign.spec.ts:535:5 › DocuSign Integration › Error Handling › should handle network errors gracefully 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      36 |
+      37 |     // Wait for redirect after login
+    > 38 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      39 |   })
+      40 |
+      41 |   test.describe('Connection Setup', () => {
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:38:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-3b22d-e-network-errors-gracefully-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-3b22d-e-network-errors-gracefully-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-3b22d-e-network-errors-gracefully-chromium\error-context.md
+
+  36) [chromium] › e2e\docusign.spec.ts:552:5 › DocuSign Integration › Error Handling › should show error when connection fails 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      36 |
+      37 |     // Wait for redirect after login
+    > 38 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      39 |   })
+      40 |
+      41 |   test.describe('Connection Setup', () => {
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\docusign.spec.ts:38:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-3ba7e-error-when-connection-fails-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\docusign-DocuSign-Integrat-3ba7e-error-when-connection-fails-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\docusign-DocuSign-Integrat-3ba7e-error-when-connection-fails-chromium\error-context.md
+
+  37) [chromium] › e2e\offline.spec.ts:30:3 › Offline Mode › should register service worker ────────
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      21 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      22 |     await page.click('button[type="submit"]');
+    > 23 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      24 |
+      25 |     // Wait for service worker to register
+      26 |     await page.waitForTimeout(2000);
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\offline.spec.ts:23:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\offline-Offline-Mode-should-register-service-worker-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\offline-Offline-Mode-should-register-service-worker-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\offline-Offline-Mode-should-register-service-worker-chromium\error-context.md
+
+  38) [chromium] › e2e\offline.spec.ts:46:3 › Offline Mode › should show offline indicator when disconnected 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      21 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      22 |     await page.click('button[type="submit"]');
+    > 23 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      24 |
+      25 |     // Wait for service worker to register
+      26 |     await page.waitForTimeout(2000);
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\offline.spec.ts:23:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\offline-Offline-Mode-shoul-d37f7-indicator-when-disconnected-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\offline-Offline-Mode-shoul-d37f7-indicator-when-disconnected-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\offline-Offline-Mode-shoul-d37f7-indicator-when-disconnected-chromium\error-context.md
+
+  39) [chromium] › e2e\offline.spec.ts:72:3 › Offline Mode › should cache project data for offline access 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      21 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      22 |     await page.click('button[type="submit"]');
+    > 23 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      24 |
+      25 |     // Wait for service worker to register
+      26 |     await page.waitForTimeout(2000);
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\offline.spec.ts:23:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\offline-Offline-Mode-shoul-554ce-ect-data-for-offline-access-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\offline-Offline-Mode-shoul-554ce-ect-data-for-offline-access-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\offline-Offline-Mode-shoul-554ce-ect-data-for-offline-access-chromium\error-context.md
+
+  40) [chromium] › e2e\offline.spec.ts:107:3 › Offline Mode › should queue form submissions when offline 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      21 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      22 |     await page.click('button[type="submit"]');
+    > 23 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      24 |
+      25 |     // Wait for service worker to register
+      26 |     await page.waitForTimeout(2000);
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\offline.spec.ts:23:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\offline-Offline-Mode-shoul-f2c66-rm-submissions-when-offline-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\offline-Offline-Mode-shoul-f2c66-rm-submissions-when-offline-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\offline-Offline-Mode-shoul-f2c66-rm-submissions-when-offline-chromium\error-context.md
+
+  41) [chromium] › e2e\offline.spec.ts:130:3 › Offline Mode › should sync data when coming back online 
+
+    TimeoutError: page.waitForURL: Timeout 15000ms exceeded.
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      21 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      22 |     await page.click('button[type="submit"]');
+    > 23 |     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+         |                ^
+      24 |
+      25 |     // Wait for service worker to register
+      26 |     await page.waitForTimeout(2000);
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\offline.spec.ts:23:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\offline-Offline-Mode-shoul-3948f-ata-when-coming-back-online-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\offline-Offline-Mode-shoul-3948f-ata-when-coming-back-online-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\offline-Offline-Mode-shoul-3948f-ata-when-coming-back-online-chromium\error-context.md
+
+  42) [chromium] › e2e\punch-lists.spec.ts:44:3 › Punch Lists Management › should display punch lists page with filters 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-d04ad-nch-lists-page-with-filters-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-d04ad-nch-lists-page-with-filters-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-d04ad-nch-lists-page-with-filters-chromium\error-context.md
+
+  43) [chromium] › e2e\punch-lists.spec.ts:66:3 › Punch Lists Management › should show punch list status indicators 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-92bb5-unch-list-status-indicators-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-92bb5-unch-list-status-indicators-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-92bb5-unch-list-status-indicators-chromium\error-context.md
+
+  44) [chromium] › e2e\punch-lists.spec.ts:79:3 › Punch Lists Management › should navigate to create punch item page 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-184f2-e-to-create-punch-item-page-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-184f2-e-to-create-punch-item-page-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-184f2-e-to-create-punch-item-page-chromium\error-context.md
+
+  45) [chromium] › e2e\punch-lists.spec.ts:103:3 › Punch Lists Management › should create new punch item with description, location, and assignee 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-eb5e9-ption-location-and-assignee-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-eb5e9-ption-location-and-assignee-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-eb5e9-ption-location-and-assignee-chromium\error-context.md
+
+  46) [chromium] › e2e\punch-lists.spec.ts:174:3 › Punch Lists Management › should validate required fields on create 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-db647-e-required-fields-on-create-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-db647-e-required-fields-on-create-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-db647-e-required-fields-on-create-chromium\error-context.md
+
+  47) [chromium] › e2e\punch-lists.spec.ts:195:3 › Punch Lists Management › should filter punch items by status 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-b3719-ilter-punch-items-by-status-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-b3719-ilter-punch-items-by-status-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-b3719-ilter-punch-items-by-status-chromium\error-context.md
+
+  48) [chromium] › e2e\punch-lists.spec.ts:219:3 › Punch Lists Management › should filter punch items by location/area 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-46307-unch-items-by-location-area-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-46307-unch-items-by-location-area-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-46307-unch-items-by-location-area-chromium\error-context.md
+
+  49) [chromium] › e2e\punch-lists.spec.ts:237:3 › Punch Lists Management › should filter punch items by trade 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-ae1b8-filter-punch-items-by-trade-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-ae1b8-filter-punch-items-by-trade-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-ae1b8-filter-punch-items-by-trade-chromium\error-context.md
+
+  50) [chromium] › e2e\punch-lists.spec.ts:255:3 › Punch Lists Management › should filter punch items by assignee 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-cd6d5-ter-punch-items-by-assignee-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-cd6d5-ter-punch-items-by-assignee-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-cd6d5-ter-punch-items-by-assignee-chromium\error-context.md
+
+  51) [chromium] › e2e\punch-lists.spec.ts:273:3 › Punch Lists Management › should open punch item detail view 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-068cd-open-punch-item-detail-view-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-068cd-open-punch-item-detail-view-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-068cd-open-punch-item-detail-view-chromium\error-context.md
+
+  52) [chromium] › e2e\punch-lists.spec.ts:296:3 › Punch Lists Management › should display punch item details with all information 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-48bd9-etails-with-all-information-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-48bd9-etails-with-all-information-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-48bd9-etails-with-all-information-chromium\error-context.md
+
+  53) [chromium] › e2e\punch-lists.spec.ts:316:3 › Punch Lists Management › should navigate to edit punch item page 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-4d325-ate-to-edit-punch-item-page-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-4d325-ate-to-edit-punch-item-page-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-4d325-ate-to-edit-punch-item-page-chromium\error-context.md
+
+  54) [chromium] › e2e\punch-lists.spec.ts:350:3 › Punch Lists Management › should edit punch item details 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-4c7f3-uld-edit-punch-item-details-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-4c7f3-uld-edit-punch-item-details-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-4c7f3-uld-edit-punch-item-details-chromium\error-context.md
+
+  55) [chromium] › e2e\punch-lists.spec.ts:407:3 › Punch Lists Management › should change punch item status to "In Progress" 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-d0a5f-item-status-to-In-Progress--chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-d0a5f-item-status-to-In-Progress--chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-d0a5f-item-status-to-In-Progress--chromium\error-context.md
+
+  56) [chromium] › e2e\punch-lists.spec.ts:443:3 › Punch Lists Management › should change punch item status to "Closed" 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-55bfd-unch-item-status-to-Closed--chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-55bfd-unch-item-status-to-Closed--chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-55bfd-unch-item-status-to-Closed--chromium\error-context.md
+
+  57) [chromium] › e2e\punch-lists.spec.ts:477:3 › Punch Lists Management › should mark punch item as verified 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-65226-mark-punch-item-as-verified-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-65226-mark-punch-item-as-verified-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-65226-mark-punch-item-as-verified-chromium\error-context.md
+
+  58) [chromium] › e2e\punch-lists.spec.ts:512:3 › Punch Lists Management › should add photos to punch items 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-a155d-d-add-photos-to-punch-items-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-a155d-d-add-photos-to-punch-items-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-a155d-d-add-photos-to-punch-items-chromium\error-context.md
+
+  59) [chromium] › e2e\punch-lists.spec.ts:547:3 › Punch Lists Management › should display photo gallery in punch item detail 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-12745-allery-in-punch-item-detail-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-12745-allery-in-punch-item-detail-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-12745-allery-in-punch-item-detail-chromium\error-context.md
+
+  60) [chromium] › e2e\punch-lists.spec.ts:569:3 › Punch Lists Management › should search punch items 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Management-should-search-punch-items-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Management-should-search-punch-items-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Management-should-search-punch-items-chromium\error-context.md
+
+  61) [chromium] › e2e\punch-lists.spec.ts:585:3 › Punch Lists Management › should sort punch items by column 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-1e56d--sort-punch-items-by-column-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-1e56d--sort-punch-items-by-column-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-1e56d--sort-punch-items-by-column-chromium\error-context.md
+
+  62) [chromium] › e2e\punch-lists.spec.ts:604:3 › Punch Lists Management › should display punch list summary statistics 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-9a8c2-nch-list-summary-statistics-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-9a8c2-nch-list-summary-statistics-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-9a8c2-nch-list-summary-statistics-chromium\error-context.md
+
+  63) [chromium] › e2e\punch-lists.spec.ts:614:3 › Punch Lists Management › should filter by multiple criteria simultaneously 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-aff67-ple-criteria-simultaneously-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-aff67-ple-criteria-simultaneously-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-aff67-ple-criteria-simultaneously-chromium\error-context.md
+
+  64) [chromium] › e2e\punch-lists.spec.ts:653:3 › Punch Lists Management › should display empty state when no punch items match filters 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-935c1-o-punch-items-match-filters-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-935c1-o-punch-items-match-filters-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-935c1-o-punch-items-match-filters-chromium\error-context.md
+
+  65) [chromium] › e2e\punch-lists.spec.ts:677:3 › Punch Lists Management › should show punch item priority levels 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-119dd--punch-item-priority-levels-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-119dd--punch-item-priority-levels-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-119dd--punch-item-priority-levels-chromium\error-context.md
+
+  66) [chromium] › e2e\punch-lists.spec.ts:690:3 › Punch Lists Management › should export punch list data 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-92140-ould-export-punch-list-data-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-92140-ould-export-punch-list-data-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-92140-ould-export-punch-list-data-chromium\error-context.md
+
+  67) [chromium] › e2e\punch-lists.spec.ts:707:3 › Punch Lists Management › should show punch item history/activity log 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-20a0b-h-item-history-activity-log-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-20a0b-h-item-history-activity-log-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-20a0b-h-item-history-activity-log-chromium\error-context.md
+
+  68) [chromium] › e2e\punch-lists.spec.ts:729:3 › Punch Lists Management › should bulk update punch item status 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-934e2-lk-update-punch-item-status-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-934e2-lk-update-punch-item-status-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-934e2-lk-update-punch-item-status-chromium\error-context.md
+
+  69) [chromium] › e2e\punch-lists.spec.ts:750:3 › Punch Lists Management › should show responsible party/contractor information 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-289c5-arty-contractor-information-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-289c5-arty-contractor-information-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-289c5-arty-contractor-information-chromium\error-context.md
+
+  70) [chromium] › e2e\punch-lists.spec.ts:770:3 › Punch Lists Management › should show due date for punch items 
+
+    TimeoutError: page.fill: Timeout 60000ms exceeded.
+    Call log:
+    [2m  - waiting for locator('input[type="email"], input[name="email"]')[22m
+
+
+      27 |     // Login before each test
+      28 |     await page.goto('/');
+    > 29 |     await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
+         |                ^
+      30 |     await page.fill('input[type="password"]', TEST_PASSWORD);
+      31 |     await page.click('button[type="submit"]');
+      32 |
+        at C:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\e2e\punch-lists.spec.ts:29:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-de225-ow-due-date-for-punch-items-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\punch-lists-Punch-Lists-Ma-de225-ow-due-date-for-punch-items-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\punch-lists-Punch-Lists-Ma-de225-ow-due-date-for-punch-items-chromium\error-context.md
+
+  70 failed
+    [chromium] › e2e\closeout.spec.ts:73:3 › Project Closeout › should navigate to closeout page ───
+    [chromium] › e2e\closeout.spec.ts:94:3 › Project Closeout › should display punch list status summary 
+    [chromium] › e2e\closeout.spec.ts:114:3 › Project Closeout › should show closeout readiness indicator 
+    [chromium] › e2e\closeout.spec.ts:130:3 › Project Closeout › should display closeout statistics 
+    [chromium] › e2e\closeout.spec.ts:146:3 › Project Closeout › should list closeout documents ────
+    [chromium] › e2e\closeout.spec.ts:168:3 › Project Closeout › should allow adding closeout documents 
+    [chromium] › e2e\closeout.spec.ts:190:3 › Project Closeout › should show warranties section ────
+    [chromium] › e2e\closeout.spec.ts:206:3 › Project Closeout › should display completion percentage 
+    [chromium] › e2e\closeout.spec.ts:222:3 › Project Closeout › should show verification status by location 
+    [chromium] › e2e\closeout.spec.ts:238:3 › Project Closeout › should show outstanding items by assignee 
+    [chromium] › e2e\closeout.spec.ts:254:3 › Project Closeout › should handle project selection ───
+    [chromium] › e2e\closeout.spec.ts:272:3 › Project Closeout › should show certificate of occupancy readiness 
+    [chromium] › e2e\closeout.spec.ts:287:3 › Project Closeout › should allow filtering/sorting closeout items 
+    [chromium] › e2e\closeout.spec.ts:310:3 › Project Closeout › should show priority-based breakdown 
+    [chromium] › e2e\closeout.spec.ts:326:3 › Project Closeout › should display last updated timestamp 
+    [chromium] › e2e\docusign.spec.ts:46:5 › DocuSign Integration › Connection Setup › should navigate to DocuSign settings 
+    [chromium] › e2e\docusign.spec.ts:59:5 › DocuSign Integration › Connection Setup › should display connection status 
+    [chromium] › e2e\docusign.spec.ts:71:5 › DocuSign Integration › Connection Setup › should show connect button when not connected 
+    [chromium] › e2e\docusign.spec.ts:100:5 › DocuSign Integration › Connection Setup › should support demo mode connection 
+    [chromium] › e2e\docusign.spec.ts:125:5 › DocuSign Integration › Connection Setup › should display connection info when connected 
+    [chromium] › e2e\docusign.spec.ts:146:5 › DocuSign Integration › Signature Request Creation › should open signature request dialog from payment application 
+    [chromium] › e2e\docusign.spec.ts:182:5 › DocuSign Integration › Signature Request Creation › should add signers to envelope 
+    [chromium] › e2e\docusign.spec.ts:226:5 › DocuSign Integration › Signature Request Creation › should validate required fields before sending 
+    [chromium] › e2e\docusign.spec.ts:267:5 › DocuSign Integration › Signature Request Creation › should successfully create envelope with valid data 
+    [chromium] › e2e\docusign.spec.ts:317:5 › DocuSign Integration › Envelope Management › should display DocuSign dashboard 
+    [chromium] › e2e\docusign.spec.ts:328:5 › DocuSign Integration › Envelope Management › should show envelope list 
+    [chromium] › e2e\docusign.spec.ts:341:5 › DocuSign Integration › Envelope Management › should display envelope status badges 
+    [chromium] › e2e\docusign.spec.ts:358:5 › DocuSign Integration › Envelope Management › should view envelope details 
+    [chromium] › e2e\docusign.spec.ts:383:5 › DocuSign Integration › Envelope Management › should show envelope statistics 
+    [chromium] › e2e\docusign.spec.ts:396:5 › DocuSign Integration › Envelope Management › should allow voiding pending envelope 
+    [chromium] › e2e\docusign.spec.ts:434:5 › DocuSign Integration › Envelope Management › should allow resending envelope 
+    [chromium] › e2e\docusign.spec.ts:470:5 › DocuSign Integration › Disconnect › should allow disconnecting DocuSign 
+    [chromium] › e2e\docusign.spec.ts:502:5 › DocuSign Integration › Accessibility › should have accessible form labels 
+    [chromium] › e2e\docusign.spec.ts:515:5 › DocuSign Integration › Accessibility › should support keyboard navigation 
+    [chromium] › e2e\docusign.spec.ts:535:5 › DocuSign Integration › Error Handling › should handle network errors gracefully 
+    [chromium] › e2e\docusign.spec.ts:552:5 › DocuSign Integration › Error Handling › should show error when connection fails 
+    [chromium] › e2e\offline.spec.ts:30:3 › Offline Mode › should register service worker ──────────
+    [chromium] › e2e\offline.spec.ts:46:3 › Offline Mode › should show offline indicator when disconnected 
+    [chromium] › e2e\offline.spec.ts:72:3 › Offline Mode › should cache project data for offline access 
+    [chromium] › e2e\offline.spec.ts:107:3 › Offline Mode › should queue form submissions when offline 
+    [chromium] › e2e\offline.spec.ts:130:3 › Offline Mode › should sync data when coming back online 
+    [chromium] › e2e\punch-lists.spec.ts:44:3 › Punch Lists Management › should display punch lists page with filters 
+    [chromium] › e2e\punch-lists.spec.ts:66:3 › Punch Lists Management › should show punch list status indicators 
+    [chromium] › e2e\punch-lists.spec.ts:79:3 › Punch Lists Management › should navigate to create punch item page 
+    [chromium] › e2e\punch-lists.spec.ts:103:3 › Punch Lists Management › should create new punch item with description, location, and assignee 
+    [chromium] › e2e\punch-lists.spec.ts:174:3 › Punch Lists Management › should validate required fields on create 
+    [chromium] › e2e\punch-lists.spec.ts:195:3 › Punch Lists Management › should filter punch items by status 
+    [chromium] › e2e\punch-lists.spec.ts:219:3 › Punch Lists Management › should filter punch items by location/area 
+    [chromium] › e2e\punch-lists.spec.ts:237:3 › Punch Lists Management › should filter punch items by trade 
+    [chromium] › e2e\punch-lists.spec.ts:255:3 › Punch Lists Management › should filter punch items by assignee 
+    [chromium] › e2e\punch-lists.spec.ts:273:3 › Punch Lists Management › should open punch item detail view 
+    [chromium] › e2e\punch-lists.spec.ts:296:3 › Punch Lists Management › should display punch item details with all information 
+    [chromium] › e2e\punch-lists.spec.ts:316:3 › Punch Lists Management › should navigate to edit punch item page 
+    [chromium] › e2e\punch-lists.spec.ts:350:3 › Punch Lists Management › should edit punch item details 
+    [chromium] › e2e\punch-lists.spec.ts:407:3 › Punch Lists Management › should change punch item status to "In Progress" 
+    [chromium] › e2e\punch-lists.spec.ts:443:3 › Punch Lists Management › should change punch item status to "Closed" 
+    [chromium] › e2e\punch-lists.spec.ts:477:3 › Punch Lists Management › should mark punch item as verified 
+    [chromium] › e2e\punch-lists.spec.ts:512:3 › Punch Lists Management › should add photos to punch items 
+    [chromium] › e2e\punch-lists.spec.ts:547:3 › Punch Lists Management › should display photo gallery in punch item detail 
+    [chromium] › e2e\punch-lists.spec.ts:569:3 › Punch Lists Management › should search punch items 
+    [chromium] › e2e\punch-lists.spec.ts:585:3 › Punch Lists Management › should sort punch items by column 
+    [chromium] › e2e\punch-lists.spec.ts:604:3 › Punch Lists Management › should display punch list summary statistics 
+    [chromium] › e2e\punch-lists.spec.ts:614:3 › Punch Lists Management › should filter by multiple criteria simultaneously 
+    [chromium] › e2e\punch-lists.spec.ts:653:3 › Punch Lists Management › should display empty state when no punch items match filters 
+    [chromium] › e2e\punch-lists.spec.ts:677:3 › Punch Lists Management › should show punch item priority levels 
+    [chromium] › e2e\punch-lists.spec.ts:690:3 › Punch Lists Management › should export punch list data 
+    [chromium] › e2e\punch-lists.spec.ts:707:3 › Punch Lists Management › should show punch item history/activity log 
+    [chromium] › e2e\punch-lists.spec.ts:729:3 › Punch Lists Management › should bulk update punch item status 
+    [chromium] › e2e\punch-lists.spec.ts:750:3 › Punch Lists Management › should show responsible party/contractor information 
+    [chromium] › e2e\punch-lists.spec.ts:770:3 › Punch Lists Management › should show due date for punch items 

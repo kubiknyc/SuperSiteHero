@@ -3,14 +3,16 @@
  *
  * This script runs once before all tests to:
  * 1. Verify test environment is properly configured
- * 2. Create authenticated user sessions
- * 3. Seed necessary test data (optional)
+ * 2. Run server health checks to ensure responsiveness
+ * 3. Create authenticated user sessions
+ * 4. Seed necessary test data (optional)
  */
 
 import { chromium, FullConfig } from '@playwright/test';
 import path from 'path';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
+import { runHealthChecks, waitForHealthyServer } from './utils/server-health.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -46,6 +48,55 @@ async function globalSetup(config: FullConfig) {
   // Get base URL from config
   const baseURL = config.use?.baseURL || 'http://localhost:5173';
 
+  // ============================================
+  // SERVER HEALTH CHECKS
+  // ============================================
+  // Run pre-test verification to ensure all services are responsive
+  // This prevents test failures due to server issues vs actual bugs
+
+  const supabaseUrl = process.env.VITE_SUPABASE_URL;
+
+  // First, wait for the server to be ready (Playwright's webServer may still be starting)
+  console.log('\n📡 Verifying server responsiveness before tests...\n');
+
+  const healthResult = await waitForHealthyServer({
+    baseURL,
+    supabaseUrl,
+    timeout: 15000,      // 15s timeout per check
+    retries: 3,          // 3 retries per check
+    retryDelay: 2000,    // 2s between retries
+    maxWaitTime: 120000, // 2 minutes max wait
+    pollInterval: 5000,  // Check every 5s
+    verbose: true,
+  });
+
+  if (!healthResult.healthy) {
+    console.error('\n❌ Server health checks failed. Test run aborted.\n');
+    console.error('Failed checks:');
+    healthResult.checks
+      .filter(c => !c.passed)
+      .forEach(c => {
+        console.error(`   - ${c.name}: ${c.error}`);
+        if (c.details) {
+          console.error(`     Details: ${JSON.stringify(c.details, null, 2)}`);
+        }
+      });
+    console.error('\nTroubleshooting tips:');
+    console.error('  1. Ensure the dev server is running: npm run dev:test');
+    console.error('  2. Check Supabase project status at: https://supabase.com/dashboard');
+    console.error('  3. Verify .env.test has correct VITE_SUPABASE_URL');
+    console.error('  4. Check network connectivity and firewall settings\n');
+
+    throw new Error(
+      `Server health checks failed: ${healthResult.checks
+        .filter(c => !c.passed)
+        .map(c => c.name)
+        .join(', ')}`
+    );
+  }
+
+  console.log('✅ All server health checks passed\n');
+
   // Create authenticated sessions
   await createAuthenticatedSession({
     email: process.env.TEST_USER_EMAIL!,
@@ -54,6 +105,10 @@ async function globalSetup(config: FullConfig) {
     baseURL,
     role: 'user',
   });
+
+  // Wait between session creation to avoid overwhelming the server
+  console.log('⏳ Waiting 3 seconds before creating admin session...');
+  await new Promise(resolve => setTimeout(resolve, 3000));
 
   // Create admin session if admin credentials provided
   if (process.env.TEST_ADMIN_EMAIL && process.env.TEST_ADMIN_PASSWORD) {
@@ -93,9 +148,9 @@ async function createAuthenticatedSession(options: {
   });
 
   try {
-    // Navigate to login page
+    // Navigate to login page with longer timeout
     console.log(`   → Navigating to ${baseURL}`);
-    await page.goto(baseURL);
+    await page.goto(baseURL, { timeout: 60000, waitUntil: 'domcontentloaded' });
 
     console.log(`   → Current URL: ${page.url()}`);
 
@@ -140,7 +195,7 @@ async function createAuthenticatedSession(options: {
     // Wait for successful login (redirect away from login page)
     console.log(`   → Waiting for redirect...`);
     await page.waitForURL(url => !url.pathname.includes('/login'), {
-      timeout: 15000,
+      timeout: 30000,
     });
 
     // Verify we're logged in by checking for user menu or other authenticated indicator

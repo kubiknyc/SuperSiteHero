@@ -1,7 +1,7 @@
 // File: /src/lib/auth/AuthContextWithMFA.tsx
 // Enhanced Authentication context with MFA support
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from 'react'
 import { Session, User } from '@supabase/supabase-js'
 import { supabase } from '../supabase'
 import type { UserProfile } from '@/types/database'
@@ -13,7 +13,8 @@ import {
   type MFAFactor
 } from './mfa'
 import { MFASession } from './mfaMiddleware'
-import { logger } from '../utils/logger';
+import { logger } from '../utils/logger'
+import { withAuthRetry, isTransientError, isOnline, waitForOnline } from './auth-retry'
 
 
 interface MFAState {
@@ -56,27 +57,51 @@ export function AuthProviderWithMFA({ children }: { children: ReactNode }) {
     verified: false
   })
 
-  // Fetch user profile from database
-  const fetchUserProfile = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', userId)
-        .single()
-
-      if (error) {
-        logger.error('Error fetching user profile:', error)
+  // Fetch user profile from database with retry logic for transient failures
+  const fetchUserProfile = useCallback(async (userId: string) => {
+    // If offline, wait briefly for connectivity before attempting
+    if (!isOnline()) {
+      logger.log('[Auth] Offline detected, waiting for connectivity...')
+      const online = await waitForOnline(5000)
+      if (!online) {
+        logger.warn('[Auth] Still offline, cannot fetch user profile')
         return null
       }
+    }
 
-      setUserProfile(data)
-      return data
-    } catch (error) {
-      logger.error('Unexpected error fetching user profile:', error)
+    const result = await withAuthRetry(
+      async () => {
+        const { data, error } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', userId)
+          .single()
+
+        if (error) {
+          if (isTransientError(error)) {
+            throw error // Let retry logic handle it
+          }
+          logger.error('[Auth] Error fetching user profile:', error)
+          return null
+        }
+
+        return data
+      },
+      { maxRetries: 3, baseDelayMs: 1000 },
+      'fetch user profile (MFA)'
+    )
+
+    if (!result.success) {
+      logger.error('[Auth] Failed to fetch user profile after retries:', result.error)
       return null
     }
-  }
+
+    const data = result.data
+    if (data) {
+      setUserProfile(data)
+    }
+    return data
+  }, [])
 
   // Check and update MFA status
   const refreshMFAStatus = async () => {
@@ -191,8 +216,24 @@ export function AuthProviderWithMFA({ children }: { children: ReactNode }) {
   }, [userProfile])
 
   const signIn = async (email: string, password: string): Promise<{ requiresMFA: boolean; factorId?: string }> => {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) {throw error}
+    // Use retry logic for sign-in to handle transient network failures
+    const result = await withAuthRetry(
+      async () => {
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+        if (error) {
+          throw error
+        }
+        return data
+      },
+      { maxRetries: 2, baseDelayMs: 1000 },
+      'sign in (MFA)'
+    )
+
+    if (!result.success) {
+      throw result.error
+    }
+
+    const data = result.data!
 
     // Check if MFA is required
     if (data.session && data.user) {

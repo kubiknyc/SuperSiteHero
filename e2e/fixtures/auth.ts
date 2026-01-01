@@ -103,7 +103,7 @@ export async function login(
 
     // Wait for redirect away from login
     await page.waitForURL(url => !url.pathname.includes('/login'), {
-      timeout: 15000,
+      timeout: 30000,
     });
 
     return true;
@@ -304,7 +304,7 @@ export const test = base.extend<AuthFixtures>({
         const magicLink = await generateMagicLink(email);
         await page.goto(magicLink);
         await page.waitForURL(url => !url.pathname.includes('/login'), {
-          timeout: 15000,
+          timeout: 30000,
         });
       } catch (error) {
         console.error('Magic link login failed:', error);
