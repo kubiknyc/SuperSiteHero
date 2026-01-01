@@ -100,6 +100,21 @@ export default defineConfig({
       use: { ...devices['iPhone 12'] },
     },
 
+    /* Autonomous smoke crawl project */
+    {
+      name: 'smoke-crawl',
+      testDir: './e2e/autonomous',
+      testMatch: 'smoke-crawl.spec.ts',
+      use: {
+        ...devices['Desktop Chrome'],
+        trace: 'on',
+        video: 'retain-on-failure',
+        screenshot: 'only-on-failure',
+      },
+      timeout: 300000, // 5 minutes for full crawl
+      retries: 0, // No retries for smoke tests - they should be deterministic
+    },
+
     /* Test against branded browsers. */
     // {
     //   name: 'Microsoft Edge',

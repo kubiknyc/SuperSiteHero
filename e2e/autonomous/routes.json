@@ -1,0 +1,251 @@
+{
+  "version": "1.0.0",
+  "config": {
+    "defaultTimeout": 30000,
+    "waitStrategy": "explicit",
+    "screenshotOnError": true,
+    "traceOnError": true,
+    "videoOnError": true
+  },
+  "allowlist": {
+    "consoleErrors": [
+      "ResizeObserver loop",
+      "ResizeObserver loop completed with undelivered notifications",
+      "Non-Error promise rejection",
+      "analytics",
+      "gtag",
+      "Failed to load resource.*favicon",
+      "web-vitals",
+      "21st-extension",
+      "TwentyFirstToolbar"
+    ],
+    "networkErrors": [
+      "/analytics",
+      "/gtag",
+      "googleapis.com",
+      "google-analytics.com"
+    ]
+  },
+  "routes": [
+    {
+      "path": "/login",
+      "name": "Login Page",
+      "auth": "public",
+      "critical": true,
+      "interactions": ["focus-email", "focus-password"],
+      "waitFor": "input[type='email']"
+    },
+    {
+      "path": "/signup",
+      "name": "Signup Page",
+      "auth": "public",
+      "waitFor": "input[type='email']"
+    },
+    {
+      "path": "/forgot-password",
+      "name": "Forgot Password",
+      "auth": "public",
+      "waitFor": "input[type='email']"
+    },
+    {
+      "path": "/",
+      "name": "Dashboard",
+      "auth": "authenticated",
+      "critical": true,
+      "interactions": ["click-tabs", "hover-cards"],
+      "waitFor": "h1, h2, [data-testid='dashboard']"
+    },
+    {
+      "path": "/projects",
+      "name": "Projects List",
+      "auth": "authenticated",
+      "critical": true,
+      "interactions": ["click-tabs", "open-filters"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/daily-reports",
+      "name": "Daily Reports",
+      "auth": "authenticated",
+      "critical": true,
+      "interactions": ["click-tabs", "open-filters"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/daily-reports/new",
+      "name": "New Daily Report",
+      "auth": "authenticated",
+      "critical": true,
+      "waitFor": "form, [data-testid='daily-report-form']"
+    },
+    {
+      "path": "/punch-lists",
+      "name": "Punch Lists",
+      "auth": "authenticated",
+      "critical": true,
+      "interactions": ["click-tabs", "open-filters"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/rfis",
+      "name": "RFIs",
+      "auth": "authenticated",
+      "critical": true,
+      "interactions": ["click-tabs", "open-filters"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/submittals",
+      "name": "Submittals",
+      "auth": "authenticated",
+      "critical": true,
+      "interactions": ["click-tabs", "open-filters"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/change-orders",
+      "name": "Change Orders",
+      "auth": "authenticated",
+      "critical": true,
+      "interactions": ["click-tabs", "open-filters"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/tasks",
+      "name": "Tasks",
+      "auth": "authenticated",
+      "interactions": ["click-tabs", "open-filters"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/documents",
+      "name": "Documents",
+      "auth": "authenticated",
+      "interactions": ["click-tabs", "open-filters"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/drawings",
+      "name": "Drawings",
+      "auth": "authenticated",
+      "interactions": ["click-tabs"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/checklists/dashboard",
+      "name": "Checklists Dashboard",
+      "auth": "authenticated",
+      "interactions": ["click-tabs"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/safety",
+      "name": "Safety Incidents",
+      "auth": "authenticated",
+      "interactions": ["click-tabs", "open-filters"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/quality-control",
+      "name": "Quality Control",
+      "auth": "authenticated",
+      "interactions": ["click-tabs"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/photo-progress",
+      "name": "Photo Progress",
+      "auth": "authenticated",
+      "interactions": ["click-tabs"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/schedule",
+      "name": "Schedule/Gantt",
+      "auth": "authenticated",
+      "interactions": ["click-tabs"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/inspections",
+      "name": "Inspections",
+      "auth": "authenticated",
+      "interactions": ["click-tabs", "open-filters"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/meetings",
+      "name": "Meetings",
+      "auth": "authenticated",
+      "interactions": ["click-tabs"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/reports",
+      "name": "Reports",
+      "auth": "authenticated",
+      "interactions": ["click-tabs"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/workflows",
+      "name": "Workflows",
+      "auth": "authenticated",
+      "interactions": ["click-tabs", "open-filters"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/approvals",
+      "name": "My Approvals",
+      "auth": "authenticated",
+      "interactions": ["click-tabs"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/analytics",
+      "name": "Analytics",
+      "auth": "admin",
+      "interactions": ["click-tabs"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/settings",
+      "name": "Settings",
+      "auth": "admin",
+      "interactions": ["click-tabs"],
+      "waitFor": "h1"
+    },
+    {
+      "path": "/portal",
+      "name": "Subcontractor Portal",
+      "auth": "subcontractor",
+      "critical": true,
+      "interactions": ["click-tabs", "hover-cards"],
+      "waitFor": "h1, h2"
+    },
+    {
+      "path": "/portal/projects",
+      "name": "Subcontractor Projects",
+      "auth": "subcontractor",
+      "waitFor": "h1"
+    },
+    {
+      "path": "/portal/daily-reports",
+      "name": "Subcontractor Daily Reports",
+      "auth": "subcontractor",
+      "waitFor": "h1"
+    },
+    {
+      "path": "/portal/tasks",
+      "name": "Subcontractor Tasks",
+      "auth": "subcontractor",
+      "waitFor": "h1"
+    },
+    {
+      "path": "/portal/punch-items",
+      "name": "Subcontractor Punch Items",
+      "auth": "subcontractor",
+      "waitFor": "h1"
+    }
+  ]
+}
