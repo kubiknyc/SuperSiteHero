@@ -9,7 +9,7 @@ import { DailyReportForm, DailyReportFormData } from '@/features/daily-reports/c
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { AlertCircle } from 'lucide-react'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { useOfflineReportStore } from '@/features/daily-reports/store/offlineReportStore'
 
 export function DailyReportEditPage() {

@@ -6,7 +6,7 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { logger } from '../../../lib/utils/logger';
 
 

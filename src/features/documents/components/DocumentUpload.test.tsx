@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { DocumentUpload } from './DocumentUpload'
 import * as fileUtils from '../utils/fileUtils'
 import { documentsApi } from '@/lib/api/services/documents'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 // Mock dependencies
 vi.mock('../utils/fileUtils', () => ({

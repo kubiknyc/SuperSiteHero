@@ -38,7 +38,7 @@ import type {
   RequestChangesRequest,
   CopyFromPreviousDayRequest,
 } from '@/types/daily-reports-v2';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 
 // =============================================
 // QUERY KEYS

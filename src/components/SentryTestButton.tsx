@@ -24,7 +24,7 @@
 
 import { Button } from '@/components/ui/button'
 import { captureException, captureMessage, addSentryBreadcrumb } from '@/lib/sentry'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 export function SentryTestButton() {
   const testError = () => {

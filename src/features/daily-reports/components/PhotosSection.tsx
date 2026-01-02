@@ -6,7 +6,7 @@ import { PhotoUpload } from './PhotoUpload'
 import { PhotoGallery } from './PhotoGallery'
 import type { DailyReportPhoto } from '../types/photo'
 import { compressImage, processPhoto, generateThumbnail } from '../utils/photoUtils'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { logger } from '../../../lib/utils/logger';
 
 

@@ -11,7 +11,7 @@ import { usePreviousDayReport, extractCopyableFields } from '@/features/daily-re
 import { useDailyReportFullData } from '@/features/daily-reports/hooks/useDailyReportRelatedData'
 import { useOfflineReportStore } from '@/features/daily-reports/store/offlineReportStore'
 import { useDuplicateDetection } from '@/features/daily-reports/hooks/useDuplicateDetection'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 export function NewDailyReportPage() {
   const navigate = useNavigate()

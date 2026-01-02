@@ -2,7 +2,7 @@
 // React Query hooks for Predictive Analytics features
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { analyticsApi } from '@/lib/api/services/analytics'
 import { getPredictionService } from '@/lib/ml/inference/prediction-service'
 import type {

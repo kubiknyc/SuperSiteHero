@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/dialog'
 import { MessageSquare, Reply, Edit2, Trash2, Send, X } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 
 interface DocumentCommentsProps {

@@ -6,7 +6,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, FileText, Save, FolderOpen, ChevronLeft, ChevronRight } from 'lucide-react'
-import hotToast from 'react-hot-toast'
+import { toast as hotToast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { TakeoffCanvas, type TakeoffMeasurement } from '@/features/takeoffs/components/TakeoffCanvas'
 import { TakeoffToolbar } from '@/features/takeoffs/components/TakeoffToolbar'

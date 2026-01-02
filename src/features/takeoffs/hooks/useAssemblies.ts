@@ -4,7 +4,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { assembliesApi, type AssemblyFilters } from '@/lib/api/services/assemblies'
 import type { Database } from '@/types/database'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 type AssemblyInsert = Database['public']['Tables']['assemblies']['Insert']
 type AssemblyUpdate = Database['public']['Tables']['assemblies']['Update']

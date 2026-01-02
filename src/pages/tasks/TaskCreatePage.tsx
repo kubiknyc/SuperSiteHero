@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useCreateTask } from '@/features/tasks/hooks/useTasks'
 import { TaskForm, TaskFormData } from '@/features/tasks/components/TaskForm'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 export function TaskCreatePage() {
   const navigate = useNavigate()

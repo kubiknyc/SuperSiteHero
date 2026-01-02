@@ -10,7 +10,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
-import { toast } from 'react-hot-toast'
+import { toast } from 'sonner'
 import * as emailApi from '@/lib/api/services/email-integration'
 import type {
   EmailThread,

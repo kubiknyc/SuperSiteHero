@@ -10,7 +10,7 @@
 
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
 import { useAuth } from '@/lib/auth/AuthContext'
-import { toast } from 'react-hot-toast'
+import { toast } from 'sonner'
 import * as messagingApi from '@/lib/api/services/messaging'
 import type {
   Message,

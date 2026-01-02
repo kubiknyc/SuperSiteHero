@@ -17,7 +17,7 @@ import {
   isTemplateNameAvailable,
   type SignatureTemplate,
 } from '../utils/signatureTemplates'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { logger } from '../../../lib/utils/logger'
 import {
   AlertDialog,

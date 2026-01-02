@@ -10,7 +10,7 @@ import type {
   CreateChecklistExecutionDTO,
   ChecklistFilters,
 } from '@/types/checklists'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { logger } from '@/lib/utils/logger'
 
 /**

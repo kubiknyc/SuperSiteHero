@@ -6,7 +6,7 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { useTask, useUpdateTask } from '@/features/tasks/hooks/useTasks'
 import { TaskForm, TaskFormData } from '@/features/tasks/components/TaskForm'
 import { AlertCircle } from 'lucide-react'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 export function TaskEditPage() {
   const { id } = useParams<{ id: string }>()

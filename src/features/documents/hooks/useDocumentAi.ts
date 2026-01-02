@@ -2,7 +2,7 @@
 // React Query hooks for Document AI features (OCR, Categorization, Metadata, Similarity)
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { documentAiApi } from '@/lib/api/services/document-ai'
 import type {
   TriggerOcrRequest,

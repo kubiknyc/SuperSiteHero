@@ -9,7 +9,7 @@ import type {
   CreateDependencyDTO,
   ScheduleFilters,
 } from '@/types/schedule'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { logger } from '../../../lib/utils/logger';
 
 

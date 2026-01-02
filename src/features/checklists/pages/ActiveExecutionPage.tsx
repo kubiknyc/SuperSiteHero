@@ -34,7 +34,7 @@ import type {
   SignatureResponseData,
 } from '@/types/checklists'
 import { formatDistanceToNow } from 'date-fns'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { logger } from '@/lib/utils/logger'
 
 export function ActiveExecutionPage() {

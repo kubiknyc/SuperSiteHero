@@ -31,7 +31,7 @@ import {
 } from '@/types/milestone-notification-preferences'
 import { cn } from '@/lib/utils'
 import { AlertCircle, CheckCircle2, RotateCcw, Bell, BellOff } from 'lucide-react'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { logger } from '../../../lib/utils/logger';
 
 

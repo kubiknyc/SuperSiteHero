@@ -30,7 +30,7 @@ import { LinkMarkupDialog, type LinkableItemType } from '../LinkMarkupDialog'
 import type { AnnotationType } from '@/types/markup'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { useEnhancedMarkupState } from '../../hooks/useEnhancedMarkupState'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { useLiveCursors } from '@/hooks/useLiveCursors'
 import { RelativeCursorsContainer, OnlineUsersIndicator } from '@/components/realtime/LiveCursor'
 import { logger } from '../../../../lib/utils/logger';

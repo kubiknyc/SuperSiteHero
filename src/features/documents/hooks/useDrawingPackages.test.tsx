@@ -63,7 +63,7 @@ vi.mock('react-hot-toast', () => ({
 
 // Import mocked functions
 import * as drawingPackagesApi from '@/lib/api/services/drawing-packages';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 
 // Test data
 const mockPackage: DrawingPackage = {

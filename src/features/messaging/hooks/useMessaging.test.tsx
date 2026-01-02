@@ -55,7 +55,7 @@ vi.mock('react-hot-toast', () => ({
 
 import * as messagingApi from '@/lib/api/services/messaging'
 import { useAuth } from '@/lib/auth/AuthContext'
-import { toast } from 'react-hot-toast'
+import { toast } from 'sonner'
 import {
   useConversations,
   useConversation,

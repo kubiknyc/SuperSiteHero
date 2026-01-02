@@ -24,7 +24,7 @@ import { uploadChecklistPhoto, deleteChecklistPhoto } from '../utils/storageUtil
 import { extractPhotoMetadata, enrichMetadataWithDeviceGPS } from '../utils/exifUtils'
 import { usePhotoQueue } from '../hooks/usePhotoQueue'
 import type { PhotoOcrData } from '@/types/ocr'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { logger } from '../../../lib/utils/logger';
 
 

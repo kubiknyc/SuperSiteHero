@@ -1,11 +1,13 @@
 // File: /src/lib/notifications/ToastContext.tsx
-// Toast notification context and provider
+// Toast notification context and provider using Sonner
+// This provides a unified toast API - prefer importing { toast } from 'sonner' directly
 
-import { createContext, useContext, useState, useCallback, ReactNode } from 'react'
-import { Toast, ToastType, ToastOptions } from './types'
+import { createContext, useContext, useCallback, ReactNode } from 'react'
+import { toast as sonnerToast, Toaster } from 'sonner'
+import { ToastType, ToastOptions } from './types'
 
 interface ToastContextType {
-  toasts: Toast[]
+  toasts: never[] // Kept for backward compatibility, but Sonner manages state internally
   addToast: (type: ToastType, title: string, message?: string, options?: ToastOptions) => string
   removeToast: (id: string) => void
   clearAll: () => void
@@ -19,43 +21,51 @@ interface ToastContextType {
 const ToastContext = createContext<ToastContextType | undefined>(undefined)
 
 export function ToastProvider({ children }: { children: ReactNode }) {
-  const [toasts, setToasts] = useState<Toast[]>([])
-
-  // Define removeToast before addToast that uses it
   const removeToast = useCallback((id: string) => {
-    setToasts((prev) => prev.filter((t) => t.id !== id))
+    sonnerToast.dismiss(id)
   }, [])
 
   const addToast = useCallback(
     (type: ToastType, title: string, message?: string, options?: ToastOptions) => {
       const id = `toast-${Date.now()}-${Math.random()}`
+      const duration = options?.duration ?? (type === 'error' ? 5000 : 3000)
 
-      const toast: Toast = {
+      const toastOptions = {
         id,
-        type,
-        title,
-        message,
-        duration: options?.duration ?? (type === 'error' ? 5000 : 3000),
-        action: options?.action,
-        dismissible: true,
+        duration,
+        description: message,
+        action: options?.action
+          ? {
+              label: options.action.label,
+              onClick: options.action.onClick,
+            }
+          : undefined,
       }
 
-      setToasts((prev) => [...prev, toast])
-
-      // Auto-remove after duration
-      if (toast.duration && toast.duration > 0) {
-        setTimeout(() => {
-          removeToast(id)
-        }, toast.duration)
+      switch (type) {
+        case 'success':
+          sonnerToast.success(title, toastOptions)
+          break
+        case 'error':
+          sonnerToast.error(title, toastOptions)
+          break
+        case 'warning':
+          sonnerToast.warning(title, toastOptions)
+          break
+        case 'info':
+          sonnerToast.info(title, toastOptions)
+          break
+        default:
+          sonnerToast(title, toastOptions)
       }
 
       return id
     },
-    [removeToast]
+    []
   )
 
   const clearAll = useCallback(() => {
-    setToasts([])
+    sonnerToast.dismiss()
   }, [])
 
   const success = useCallback(
@@ -89,7 +99,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   )
 
   const value: ToastContextType = {
-    toasts,
+    toasts: [], // Sonner manages state internally
     addToast,
     removeToast,
     clearAll,
@@ -110,6 +120,9 @@ export function useToast() {
   }
   return context
 }
+
+// Export Sonner's Toaster component for use in App.tsx
+export { Toaster }
 
 // Re-export toast from sonner for convenience
 // This allows direct imports: import { toast } from '@/lib/notifications/ToastContext'

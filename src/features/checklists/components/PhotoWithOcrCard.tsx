@@ -17,7 +17,7 @@ import {
 import type { PhotoOcrData, OcrProgress } from '@/types/ocr'
 import { extractTextFromUrl, formatConfidence } from '../utils/ocrUtils'
 import { OcrTextDisplay } from './OcrTextDisplay'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import {
   Dialog,
   DialogContent,

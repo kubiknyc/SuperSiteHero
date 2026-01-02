@@ -30,7 +30,7 @@ import { FailedItemsNotification } from '../components/FailedItemsNotification'
 import { ChecklistGradeDisplay } from '../components/ChecklistGradeDisplay'
 import { format } from 'date-fns'
 import { generateChecklistPDF } from '../utils/pdfExport'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { logger } from '../../../lib/utils/logger';
 import type {
   ChecklistResponse,

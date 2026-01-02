@@ -5,7 +5,7 @@
 import { useMemo, useCallback, useEffect } from 'react'
 import { useExecutions } from './useExecutions'
 import type { ChecklistExecution, ChecklistFilters } from '@/types/checklists'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 export interface FailedItemsSummary {
   totalFailedItems: number

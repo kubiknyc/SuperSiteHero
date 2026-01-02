@@ -8,7 +8,7 @@ import type {
   ChecklistTemplateItem,
   CreateChecklistTemplateItemDTO,
 } from '@/types/checklists'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 /**
  * Fetch all items for a template

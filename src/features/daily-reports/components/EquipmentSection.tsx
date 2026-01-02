@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/c
 import { ChevronDown, ChevronUp, Plus, Trash2, Truck } from 'lucide-react'
 import { EquipmentEntry } from '@/features/daily-reports/store/offlineReportStore'
 import { equipmentEntrySchema } from '../validation/dailyReportSchema'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 interface EquipmentSectionProps {
   expanded: boolean

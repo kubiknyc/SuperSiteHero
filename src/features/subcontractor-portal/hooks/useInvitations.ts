@@ -9,7 +9,7 @@ import type {
   CreateInvitationDTO,
   UpdatePortalAccessDTO,
 } from '@/types/subcontractor-portal'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 /**
  * Hook to get portal access records for a project

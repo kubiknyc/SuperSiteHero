@@ -9,7 +9,7 @@ import type {
   CreateChecklistTemplateDTO,
   TemplateFilters,
 } from '@/types/checklists'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 /**
  * Fetch all templates with optional filters

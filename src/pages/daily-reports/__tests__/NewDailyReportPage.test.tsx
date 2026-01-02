@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { NewDailyReportPage } from '../NewDailyReportPage'
 import { useProjects } from '../../../features/projects/hooks/useProjects'
 import { useOfflineReportStore } from '../../../features/daily-reports/store/offlineReportStore'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 // Mock dependencies
 vi.mock('../../../features/projects/hooks/useProjects')

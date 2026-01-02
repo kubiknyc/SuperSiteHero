@@ -28,7 +28,7 @@ import {
   Flag,
 } from 'lucide-react'
 import { format, isPast } from 'date-fns'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 export function TaskDetailPage() {
   const { id } = useParams<{ id: string }>()

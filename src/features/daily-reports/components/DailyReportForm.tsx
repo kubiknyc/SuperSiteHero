@@ -29,7 +29,7 @@ import { TemplateSelector } from './TemplateSelector'
 import { SignatureCapture } from './SignatureCapture'
 import type { WorkforceEntry, EquipmentEntry } from '../store/offlineReportStore'
 import { dailyReportSchema, type DailyReportFormData as ValidatedFormData } from '../validation/dailyReportSchema'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 export interface DailyReportFormData {
   report_date: string

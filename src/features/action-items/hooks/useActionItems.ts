@@ -8,7 +8,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { actionItemsApi } from '@/lib/api/services/action-items'
 import { useAuth } from '@/hooks/useAuth'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import type {
   ActionItemFilters,
   CreateActionItemDTO,

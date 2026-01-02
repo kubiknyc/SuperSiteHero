@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { X, Download, FileText, Table, Loader2 } from 'lucide-react'
 import { exportReportsToCSV, fetchReportsForDateRange, calculateReportSummary, type ReportSummary } from '../services/batchExportService'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 interface BatchExportDialogProps {
   projectId: string

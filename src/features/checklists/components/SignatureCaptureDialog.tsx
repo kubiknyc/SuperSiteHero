@@ -15,7 +15,7 @@ import { SignaturePad } from './SignaturePad'
 import { SignatureTemplateManager } from './SignatureTemplateManager'
 import { uploadSignature, deleteSignature } from '../utils/storageUtils'
 import { PenTool, Save, X } from 'lucide-react'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { logger } from '../../../lib/utils/logger'
 import {
   AlertDialog,

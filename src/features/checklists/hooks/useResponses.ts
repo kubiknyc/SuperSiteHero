@@ -8,7 +8,7 @@ import type {
   ChecklistResponse,
   CreateChecklistResponseDTO,
 } from '@/types/checklists'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 /**
  * Fetch all responses for an execution

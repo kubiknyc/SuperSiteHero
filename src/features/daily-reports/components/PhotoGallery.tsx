@@ -17,7 +17,7 @@ import type { DailyReportPhoto } from '../types/photo'
 import { formatFileSize, formatGPSCoordinates, getGoogleMapsURL } from '../utils/photoUtils'
 import { format } from 'date-fns'
 import { getCharacterCount } from '../validation/validationUtils'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 interface PhotoGalleryProps {
   photos: DailyReportPhoto[]

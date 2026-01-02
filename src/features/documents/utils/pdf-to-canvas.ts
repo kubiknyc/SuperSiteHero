@@ -15,8 +15,9 @@ function ensureWorkerInitialized(): void {
   if (workerInitialized || typeof window === 'undefined') {
     return
   }
-  // Use CDN version matching react-pdf's bundled pdfjs-dist version (5.4.296)
-  pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.296/build/pdf.worker.min.mjs`
+  // IMPORTANT: react-pdf sets workerSrc to 'pdf.worker.mjs' by default which doesn't work with Vite
+  // Serve worker from public folder to avoid CORS/module issues
+  pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.mjs`
   workerInitialized = true
 }
 
@@ -59,7 +60,7 @@ export async function loadPdfDocument(url: string): Promise<pdfjs.PDFDocumentPro
   // Load the PDF
   const loadingTask = pdfjs.getDocument({
     url,
-    cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.296/cmaps/',
+    cMapUrl: 'https://unpkg.com/pdfjs-dist@5.4.296/cmaps/',
     cMapPacked: true,
   })
 

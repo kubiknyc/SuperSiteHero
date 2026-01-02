@@ -17,7 +17,7 @@ import {
 } from '@/lib/offline/photo-queue'
 import { uploadChecklistPhoto } from '../utils/storageUtils'
 import type { PhotoMetadata } from '@/types/offline'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { logger } from '@/lib/utils/logger'
 
 /**

@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useCreateDailyReport } from '@/features/daily-reports/hooks/useDailyReports'
 import { DailyReportForm, DailyReportFormData } from '@/features/daily-reports/components/DailyReportForm'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 export function DailyReportCreatePage() {
   const navigate = useNavigate()

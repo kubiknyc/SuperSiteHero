@@ -7,7 +7,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { docuSignApi } from '@/lib/api/services/docusign'
 import { useAuth } from '@/hooks/useAuth'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import type {
   DSDocumentType,
   DSEnvelopeStatus,

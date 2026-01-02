@@ -116,15 +116,12 @@ export function MarkupVersionComparison({
   const containerRef = useRef<HTMLDivElement>(null)
 
   // Initialize PDF.js worker lazily on component mount
+  // IMPORTANT: react-pdf sets workerSrc to 'pdf.worker.mjs' by default which doesn't work with Vite
+  // We must override it with the CDN URL regardless of whether it's already set
   useEffect(() => {
-    const initWorker = () => {
-      if (typeof window !== 'undefined' && !pdfjs.GlobalWorkerOptions.workerSrc) {
-        // Use CDN version matching react-pdf's bundled pdfjs-dist version (5.4.296)
-        // This avoids Vite bundler issues with worker file resolution
-        pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.296/build/pdf.worker.min.mjs`
-      }
+    if (typeof window !== 'undefined') {
+      pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.mjs`
     }
-    initWorker()
   }, [])
 
   // Page navigation handlers

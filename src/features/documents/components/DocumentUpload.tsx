@@ -14,7 +14,7 @@ import {
   getAcceptString,
   DOCUMENT_MIME_TYPES,
 } from '@/lib/utils/file-validation'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import type { Document, DocumentType } from '@/types/database'
 import { logger } from '../../../lib/utils/logger';
 

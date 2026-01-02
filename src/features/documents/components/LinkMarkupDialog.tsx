@@ -29,7 +29,7 @@ import {
   ExternalLink,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 export type LinkableItemType = 'rfi' | 'task' | 'punch_item'
 

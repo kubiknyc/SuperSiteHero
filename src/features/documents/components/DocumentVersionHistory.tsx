@@ -25,7 +25,7 @@ import { History, RotateCcw, FileText, Clock, GitCompare, MessageSquare, Activit
 import { VersionComparisonView, MarkupVersionComparison } from './comparison'
 import { DocumentComments } from './DocumentComments'
 import { DocumentAccessLog } from './DocumentAccessLog'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 interface DocumentVersionHistoryProps {
   documentId: string

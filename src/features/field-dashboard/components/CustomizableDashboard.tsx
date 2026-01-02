@@ -37,7 +37,7 @@ import { getWidget, getDefaultWidgetLayout } from '../widgets/registry'
 import { WidgetCatalog } from './WidgetCatalog'
 import { SortableWidget } from './SortableWidget'
 import { cn } from '@/lib/utils'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import type { WidgetPosition, DraggableWidget } from '@/types/dashboard'
 import { logger } from '../../../lib/utils/logger';
 

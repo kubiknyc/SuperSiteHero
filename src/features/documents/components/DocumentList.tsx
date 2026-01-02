@@ -2,7 +2,7 @@
 // Table list component for displaying documents
 
 import { format } from 'date-fns'
-import { Eye, Edit, Trash2, Loader2 } from 'lucide-react'
+import { Eye, Edit, Trash2, Loader2, ExternalLink } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -136,16 +136,33 @@ export function DocumentList({
             <TableBody>
               {documents.map((doc) => (
                 <TableRow key={doc.id}>
-                  {/* Name column with icon */}
+                  {/* Name column with icon - clickable to open file */}
                   <TableCell>
                     <div className="flex items-center space-x-3">
                       <DocumentTypeIcon type={doc.document_type} className="flex-shrink-0" />
                       <div className="min-w-0 flex-1">
-                        <p className="font-medium text-foreground truncate">
-                          {searchTerm
-                            ? highlightSearchTerm(doc.name, searchTerm)
-                            : doc.name}
-                        </p>
+                        {doc.file_url ? (
+                          <a
+                            href={doc.file_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group flex items-center gap-1 font-medium text-primary hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 truncate transition-colors"
+                            title={`Open ${doc.name} in new window`}
+                          >
+                            <span className="truncate">
+                              {searchTerm
+                                ? highlightSearchTerm(doc.name, searchTerm)
+                                : doc.name}
+                            </span>
+                            <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 flex-shrink-0 transition-opacity" />
+                          </a>
+                        ) : (
+                          <p className="font-medium text-foreground truncate">
+                            {searchTerm
+                              ? highlightSearchTerm(doc.name, searchTerm)
+                              : doc.name}
+                          </p>
+                        )}
                         <p className="text-sm text-muted truncate">
                           {searchTerm && doc.drawing_number
                             ? highlightSearchTerm(doc.drawing_number, searchTerm)

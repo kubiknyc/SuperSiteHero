@@ -32,7 +32,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { useDocumentMarkups, useCreateMarkup, useUpdateMarkup, useDeleteMarkup } from '../hooks/useMarkups'
 import type { DocumentMarkup } from '@/lib/api/services/markups'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { MarkupFilterPanel, type MarkupFilter, type MarkupType } from './MarkupFilterPanel'
 import { logger } from '../../../lib/utils/logger';
 

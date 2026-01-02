@@ -8,7 +8,7 @@ import { DraftReport } from '@/features/daily-reports/store/offlineReportStore'
 import { weatherSchema } from '../validation/dailyReportSchema'
 import { getCharacterCount } from '../validation/validationUtils'
 import { getWeatherForDate } from '../services/weatherService'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 interface WeatherSectionProps {
   expanded: boolean

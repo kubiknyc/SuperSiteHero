@@ -23,7 +23,7 @@ import {
   downloadAsTextFile,
   downloadAsJsonFile,
 } from '../utils/ocrUtils'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { logger } from '../../../lib/utils/logger';
 
 

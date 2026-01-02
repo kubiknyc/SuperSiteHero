@@ -24,7 +24,7 @@ import {
   type ReportTemplate,
 } from '../services/reportTemplates'
 import type { DraftReport, WorkforceEntry, EquipmentEntry } from '../store/offlineReportStore'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 interface TemplateSelectorProps {
   projectId: string

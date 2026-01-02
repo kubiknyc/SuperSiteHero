@@ -103,7 +103,7 @@ import {
   type TransmittalWithDetails,
 } from '@/types/transmittal';
 import { cn } from '@/lib/utils';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 
 // Status icons mapping
 const statusIcons: Record<TransmittalStatus, React.ReactNode> = {

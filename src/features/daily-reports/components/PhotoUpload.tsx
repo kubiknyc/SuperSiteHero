@@ -3,7 +3,7 @@ import { useCallback, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Camera, Upload, Loader2 } from 'lucide-react'
 import { validateImageFile, validateFileSize } from '../utils/photoUtils'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 interface PhotoUploadProps {
   onPhotosSelected: (files: File[]) => void

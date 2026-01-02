@@ -6,7 +6,7 @@ import { FormError } from '@/components/ui/form-error'
 import { ChevronDown, ChevronUp, Plus, Trash2, Edit2, Package } from 'lucide-react'
 import { DeliveryEntry } from '@/features/daily-reports/store/offlineReportStore'
 import { deliveryEntrySchema } from '../validation/dailyReportSchema'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 interface DeliveriesSectionProps {
   expanded: boolean

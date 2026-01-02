@@ -6,7 +6,7 @@ vi.unmock('@/features/daily-reports/components/DailyReportForm')
 
 import { DailyReportForm } from '../DailyReportForm'
 import { useOfflineReportStore } from '../../store/offlineReportStore'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 // Mock dependencies
 vi.mock('../../store/offlineReportStore', () => ({

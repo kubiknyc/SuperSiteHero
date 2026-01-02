@@ -6,7 +6,7 @@ import { FormError } from '@/components/ui/form-error'
 import { ChevronDown, ChevronUp, Plus, Trash2, Edit2, Users } from 'lucide-react'
 import { WorkforceEntry } from '@/features/daily-reports/store/offlineReportStore'
 import { workforceEntrySchema } from '../validation/dailyReportSchema'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 interface WorkforceSectionProps {
   expanded: boolean

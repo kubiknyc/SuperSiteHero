@@ -39,7 +39,7 @@ import { VersionHistory } from '@/features/daily-reports/components/VersionHisto
 import { SignatureCapture } from '@/features/daily-reports/components/SignatureCapture'
 import { DailyReportSummaryCard } from '@/features/summaries/components/DailyReportSummaryCard'
 import { format } from 'date-fns'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 import { logger } from '../../lib/utils/logger';
 
 

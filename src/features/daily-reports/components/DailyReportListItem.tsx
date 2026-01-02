@@ -120,7 +120,7 @@ const weatherIcons: Record<string, string> = {
   foggy: 'Foggy',
 };
 
-export function DailyReportListItem({
+export const DailyReportListItem = React.memo(function DailyReportListItem({
   report,
   onView,
   onEdit,

@@ -11,6 +11,11 @@ import { useEnhancedMarkupState } from '../../hooks/useEnhancedMarkupState'
 import 'react-pdf/dist/Page/AnnotationLayer.css'
 import 'react-pdf/dist/Page/TextLayer.css'
 
+// IMPORTANT: Set PDF.js worker at module level, before any component renders
+// react-pdf sets workerSrc to 'pdf.worker.mjs' by default which doesn't work with Vite
+// Serve worker from public folder to avoid CORS/module issues
+pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.mjs`
+
 interface PDFViewerProps {
   documentId: string
   projectId: string
@@ -90,22 +95,7 @@ export function PDFViewer({
   const [enableMarkup, setEnableMarkup] = useState(initialEnableMarkup)
   const [pageWidth, setPageWidth] = useState(800)
   const [pageHeight, setPageHeight] = useState(600)
-  const [pdfWorkerReady, setPdfWorkerReady] = useState(false)
-
   const pageContainerRef = useRef<HTMLDivElement>(null)
-
-  // Initialize PDF.js worker lazily on component mount
-  useEffect(() => {
-    const initWorker = () => {
-      if (typeof window !== 'undefined' && !pdfjs.GlobalWorkerOptions.workerSrc) {
-        // Use CDN version matching react-pdf's bundled pdfjs-dist version (5.4.296)
-        // This avoids Vite bundler issues with worker file resolution
-        pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.296/build/pdf.worker.min.mjs`
-      }
-      setPdfWorkerReady(true)
-    }
-    initWorker()
-  }, [])
 
   // Handle PDF load success
   const handleDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
@@ -296,14 +286,7 @@ export function PDFViewer({
 
       {/* PDF Viewer Area */}
       <div className="flex-1 overflow-auto bg-background p-4 flex items-center justify-center relative">
-        {!pdfWorkerReady && (
-          <div className="text-disabled text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mb-2"></div>
-            <p>Initializing PDF viewer...</p>
-          </div>
-        )}
-
-        {pdfWorkerReady && isLoading && (
+        {isLoading && (
           <div className="text-disabled text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400 mb-2"></div>
             <p>Loading PDF...</p>
@@ -317,7 +300,7 @@ export function PDFViewer({
           </div>
         )}
 
-        {pdfWorkerReady && !error && (
+        {!error && (
           <div ref={pageContainerRef} className="relative">
             <Document
               file={fileUrl}

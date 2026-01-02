@@ -16,7 +16,7 @@ import { CalendarConnectionCard } from '@/features/calendar/components/CalendarC
 import { OutlookCalendarConnect } from '@/features/calendar/components/OutlookCalendarConnect';
 import { useCompleteGCalConnection, useGCalConnectionStatus } from '@/features/calendar/hooks/useGoogleCalendar';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 
 export function CalendarIntegrationsPage() {
   const navigate = useNavigate();

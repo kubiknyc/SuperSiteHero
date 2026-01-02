@@ -6,7 +6,7 @@ import { FormError } from '@/components/ui/form-error'
 import { ChevronDown, ChevronUp, Plus, Trash2, Edit2, UserPlus } from 'lucide-react'
 import { VisitorEntry } from '@/features/daily-reports/store/offlineReportStore'
 import { visitorEntrySchema } from '../validation/dailyReportSchema'
-import toast from 'react-hot-toast'
+import { toast } from 'sonner'
 
 interface VisitorsSectionProps {
   expanded: boolean
