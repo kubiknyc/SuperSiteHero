@@ -8,6 +8,12 @@ import { useCreateDocumentWithNotification } from '@/features/documents/hooks/us
 import { cn } from '@/lib/utils'
 import { uploadFile } from '@/features/documents/utils/fileUtils'
 import { documentsApi } from '@/lib/api/services/documents'
+import {
+  validateFile,
+  FILE_VALIDATION_PRESETS,
+  getAcceptString,
+  DOCUMENT_MIME_TYPES,
+} from '@/lib/utils/file-validation'
 import toast from 'react-hot-toast'
 import type { Document, DocumentType } from '@/types/database'
 import { logger } from '../../../lib/utils/logger';
@@ -81,23 +87,41 @@ export function DocumentUpload({
     setIsDragging(false)
   }
 
+  // Validate and set file
+  const handleFileSelection = async (file: File) => {
+    // Validate file before accepting
+    const validation = await validateFile(file, FILE_VALIDATION_PRESETS.documents)
+
+    if (!validation.valid) {
+      toast.error(validation.error || 'Invalid file')
+      return
+    }
+
+    // Show warnings if any
+    if (validation.warnings) {
+      validation.warnings.forEach(warning => toast(warning, { icon: '⚠️' }))
+    }
+
+    setSelectedFile(file)
+  }
+
   // Handle drop
-  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+  const handleDrop = async (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     e.stopPropagation()
     setIsDragging(false)
 
     const files = e.dataTransfer.files
     if (files && files.length > 0) {
-      setSelectedFile(files[0])
+      await handleFileSelection(files[0])
     }
   }
 
   // Handle file input change
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (files && files.length > 0) {
-      setSelectedFile(files[0])
+      await handleFileSelection(files[0])
     }
   }
 
@@ -236,6 +260,7 @@ export function DocumentUpload({
         <input
           ref={fileInputRef}
           type="file"
+          accept={getAcceptString(DOCUMENT_MIME_TYPES)}
           onChange={handleFileChange}
           className="hidden"
           aria-label="File input"

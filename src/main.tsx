@@ -33,8 +33,10 @@ if (typeof window !== 'undefined') {
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
+      staleTime: 1000 * 60 * 5, // 5 minutes - data considered fresh
+      gcTime: 1000 * 60 * 10, // 10 minutes - unused data kept in cache
       retry: 1,
+      refetchOnWindowFocus: false, // Don't refetch on every tab switch
       // Enable network-only mode when offline
       networkMode: 'offlineFirst',
     },

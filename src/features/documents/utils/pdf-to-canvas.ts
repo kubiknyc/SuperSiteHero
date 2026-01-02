@@ -9,15 +9,14 @@ let workerInitialized = false
 /**
  * Lazily initialize the PDF.js worker.
  * Only initializes once, on first use.
+ * Uses CDN-hosted worker to avoid bundler issues with Vite.
  */
 function ensureWorkerInitialized(): void {
   if (workerInitialized || typeof window === 'undefined') {
     return
   }
-  pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-    'pdfjs-dist/build/pdf.worker.min.mjs',
-    import.meta.url
-  ).toString()
+  // Use CDN version matching react-pdf's bundled pdfjs-dist version (5.4.296)
+  pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.296/build/pdf.worker.min.mjs`
   workerInitialized = true
 }
 
@@ -60,7 +59,7 @@ export async function loadPdfDocument(url: string): Promise<pdfjs.PDFDocumentPro
   // Load the PDF
   const loadingTask = pdfjs.getDocument({
     url,
-    cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/',
+    cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.296/cmaps/',
     cMapPacked: true,
   })
 

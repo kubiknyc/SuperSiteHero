@@ -771,6 +771,24 @@ export function useSendRenewalReminder() {
 
   return useMutation({
     mutationFn: async (certificationId: string): Promise<void> => {
+      // First, fetch the certification details for the notification
+      const { data: certification, error: fetchError } = await db
+        .from('equipment_certifications')
+        .select(`
+          *,
+          operator:profiles!equipment_certifications_operator_id_fkey(
+            id, full_name, email
+          ),
+          equipment:equipment!equipment_certifications_equipment_id_fkey(
+            id, name, equipment_number
+          )
+        `)
+        .eq('id', certificationId)
+        .single();
+
+      if (fetchError) throw fetchError;
+      if (!certification) throw new Error('Certification not found');
+
       // Update reminder sent flag
       const { error } = await db
         .from('equipment_certifications')
@@ -782,7 +800,47 @@ export function useSendRenewalReminder() {
 
       if (error) throw error;
 
-      // TODO: Trigger actual notification/email via edge function
+      // Get operator ID for notification
+      const operatorId = certification.operator?.id || certification.operator_id;
+      if (!operatorId) {
+        console.warn('No operator ID for certification reminder');
+        return;
+      }
+
+      // Calculate days until expiry
+      const expirationDate = certification.expiration_date ? new Date(certification.expiration_date) : null;
+      const daysUntilExpiry = expirationDate
+        ? Math.ceil((expirationDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+        : null;
+
+      // Trigger notification via edge function
+      const { error: notificationError } = await supabase.functions.invoke('send-notification', {
+        body: {
+          user_id: operatorId,
+          type: 'equipment_certification_expiring',
+          title: 'Certification Renewal Reminder',
+          message: `Your ${certification.certification_type.replace(/_/g, ' ')} certification${
+            certification.equipment?.name ? ` for ${certification.equipment.name}` : ''
+          }${daysUntilExpiry !== null ? ` expires in ${daysUntilExpiry} days` : ' is expiring soon'}. Please renew it before it expires.`,
+          channels: ['in_app', 'email'],
+          related_to_type: 'equipment_certification',
+          related_to_id: certificationId,
+          action_url: `/safety/certifications/${certificationId}`,
+          metadata: {
+            certification_type: certification.certification_type,
+            expiration_date: certification.expiration_date,
+            days_until_expiry: daysUntilExpiry,
+            equipment_name: certification.equipment?.name,
+            equipment_number: certification.equipment?.equipment_number,
+          },
+          email_template: 'certification_renewal_reminder',
+        },
+      });
+
+      if (notificationError) {
+        console.error('Failed to send notification:', notificationError);
+        // Don't throw - the reminder flag was already updated
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: certificationKeys.all });

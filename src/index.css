@@ -60,11 +60,18 @@
   }
 
   .text-muted {
-    color: hsl(var(--muted-foreground));
+    @apply text-gray-500 dark:text-gray-400;
   }
 
   .text-disabled {
-    color: hsl(var(--muted-foreground));
+    @apply text-gray-400 dark:text-gray-500;
+  }
+
+  /* Secondary text - for subtitles, descriptions, and less prominent text */
+  /* Note: text-secondary was incorrectly using --secondary (a background color) */
+  /* This override ensures proper contrast in both light and dark modes */
+  .text-secondary {
+    @apply text-gray-600 dark:text-gray-400;
   }
 
   /* Uppercase labels (for status, badges, etc.) */

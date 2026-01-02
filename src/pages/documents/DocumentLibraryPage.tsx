@@ -34,6 +34,7 @@ import { DocumentList } from '@/features/documents/components/DocumentList'
 import { DocumentTypeIcon } from '@/features/documents/components/DocumentTypeIcon'
 import { DocumentStatusBadge } from '@/features/documents/components/DocumentStatusBadge'
 import { LiveUpdateBadge } from '@/components/realtime/LiveUpdateBadge'
+import { LocalErrorBoundary } from '@/components/errors'
 import { PresenceAvatars } from '@/components/presence/PresenceAvatars'
 import { useDocumentsRealtime } from '@/hooks/useRealtimeUpdates'
 import { usePagePresence } from '@/hooks/useRealtimePresence'
@@ -563,6 +564,10 @@ function DocumentLibraryPage() {
                 </Card>
 
                 {/* Document List */}
+                <LocalErrorBoundary
+                  title="Unable to load documents"
+                  description="There was an error loading the document list. Please try again."
+                >
                 {viewMode === 'list' ? (
                   <DocumentList
                     documents={filteredDocuments}
@@ -620,6 +625,7 @@ function DocumentLibraryPage() {
                     )}
                   </div>
                 )}
+                </LocalErrorBoundary>
               </div>
             </div>
           </div>

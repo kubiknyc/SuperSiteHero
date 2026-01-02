@@ -38,6 +38,7 @@ import {
   Building2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { LocalErrorBoundary } from '@/components/errors'
 import type { PaymentApplicationStatus, PaymentApplicationWithDetails } from '@/types/payment-application'
 
 export function PaymentApplicationsPage() {
@@ -355,16 +356,21 @@ export function PaymentApplicationsPage() {
             </CardContent>
           </Card>
         ) : (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span>Payment Applications ({filteredApplications.length})</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="divide-y">
-              {filteredApplications.map(renderApplicationCard)}
-            </CardContent>
-          </Card>
+          <LocalErrorBoundary
+            title="Unable to display applications"
+            description="There was an error rendering the payment applications list."
+          >
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span>Payment Applications ({filteredApplications.length})</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="divide-y">
+                {filteredApplications.map(renderApplicationCard)}
+              </CardContent>
+            </Card>
+          </LocalErrorBoundary>
         )}
       </div>
     </AppLayout>

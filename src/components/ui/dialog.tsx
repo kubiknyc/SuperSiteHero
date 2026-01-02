@@ -9,9 +9,13 @@ import { cn } from '@/lib/utils'
 const DialogContext = React.createContext<{
   open: boolean
   onOpenChange: (open: boolean) => void
+  titleId: string
+  descriptionId: string
 }>({
   open: false,
   onOpenChange: () => {},
+  titleId: '',
+  descriptionId: '',
 })
 
 // Dialog Root Component
@@ -23,6 +27,8 @@ export interface DialogProps {
 
 const Dialog: React.FC<DialogProps> = ({ open, onOpenChange, children }) => {
   const [isOpen, setIsOpen] = React.useState(open ?? false)
+  const titleId = React.useId()
+  const descriptionId = React.useId()
 
   React.useEffect(() => {
     if (open !== undefined) {
@@ -36,7 +42,7 @@ const Dialog: React.FC<DialogProps> = ({ open, onOpenChange, children }) => {
   }
 
   return (
-    <DialogContext.Provider value={{ open: isOpen, onOpenChange: handleOpenChange }}>
+    <DialogContext.Provider value={{ open: isOpen, onOpenChange: handleOpenChange, titleId, descriptionId }}>
       {children}
     </DialogContext.Provider>
   )
@@ -97,24 +103,51 @@ DialogOverlay.displayName = 'DialogOverlay'
 const DialogContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, children, ...props }, ref) => (
-  <DialogPortal>
-    <DialogOverlay />
-    <div className="flex items-center justify-center min-h-screen p-4 pointer-events-none">
-      <div
-        ref={ref}
-        className={cn(
-          'relative w-full max-w-lg rounded-lg border border-border bg-card p-6 shadow-lg dark:border-border dark:bg-background pointer-events-auto',
-          className
-        )}
-        onClick={(e) => e.stopPropagation()}
-        {...props}
-      >
-        {children}
+>(({ className, children, ...props }, ref) => {
+  const { titleId, descriptionId, onOpenChange } = React.useContext(DialogContext)
+
+  // Handle Escape key to close dialog
+  React.useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onOpenChange(false)
+      }
+    }
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [onOpenChange])
+
+  // Trap focus within dialog
+  React.useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement
+    return () => {
+      previouslyFocused?.focus?.()
+    }
+  }, [])
+
+  return (
+    <DialogPortal>
+      <DialogOverlay />
+      <div className="flex items-center justify-center min-h-screen p-4 pointer-events-none">
+        <div
+          ref={ref}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
+          aria-describedby={descriptionId}
+          className={cn(
+            'relative w-full max-w-lg rounded-lg border border-border bg-card p-6 shadow-lg dark:border-border dark:bg-background pointer-events-auto',
+            className
+          )}
+          onClick={(e) => e.stopPropagation()}
+          {...props}
+        >
+          {children}
+        </div>
       </div>
-    </div>
-  </DialogPortal>
-))
+    </DialogPortal>
+  )
+})
 DialogContent.displayName = 'DialogContent'
 
 const DialogHeader = React.forwardRef<
@@ -150,28 +183,36 @@ DialogFooter.displayName = 'DialogFooter'
 const DialogTitle = React.forwardRef<
   HTMLHeadingElement,
   React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <h2
-    ref={ref}
-    className={cn(
-      'text-lg font-semibold leading-none tracking-tight',
-      className
-    )}
-    {...props}
-  />
-))
+>(({ className, ...props }, ref) => {
+  const { titleId } = React.useContext(DialogContext)
+  return (
+    <h2
+      ref={ref}
+      id={titleId}
+      className={cn(
+        'text-lg font-semibold leading-none tracking-tight',
+        className
+      )}
+      {...props}
+    />
+  )
+})
 DialogTitle.displayName = 'DialogTitle'
 
 const DialogDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn('text-sm text-muted dark:text-disabled', className)}
-    {...props}
-  />
-))
+>(({ className, ...props }, ref) => {
+  const { descriptionId } = React.useContext(DialogContext)
+  return (
+    <p
+      ref={ref}
+      id={descriptionId}
+      className={cn('text-sm text-muted dark:text-disabled', className)}
+      {...props}
+    />
+  )
+})
 DialogDescription.displayName = 'DialogDescription'
 
 const DialogClose = React.forwardRef<

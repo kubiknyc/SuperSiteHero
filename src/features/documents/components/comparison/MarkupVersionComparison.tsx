@@ -119,10 +119,9 @@ export function MarkupVersionComparison({
   useEffect(() => {
     const initWorker = () => {
       if (typeof window !== 'undefined' && !pdfjs.GlobalWorkerOptions.workerSrc) {
-        pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-          'pdfjs-dist/build/pdf.worker.min.mjs',
-          import.meta.url
-        ).toString()
+        // Use CDN version matching react-pdf's bundled pdfjs-dist version (5.4.296)
+        // This avoids Vite bundler issues with worker file resolution
+        pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@5.4.296/build/pdf.worker.min.mjs`
       }
     }
     initWorker()
