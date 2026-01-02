@@ -5,6 +5,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth/AuthContext'
+import { notificationService, type NotificationRecipient } from '@/lib/notifications/notification-service'
+import { logger } from '@/lib/utils/logger'
 import type {
   Submittal,
   SubmittalInsert,
@@ -484,16 +486,54 @@ export function useAddSubmittalReview() {
         .from('submittals')
         .update(updates)
         .eq('id', submittalId)
-        .select()
+        .select(`
+          *,
+          project:project_id (id, name),
+          submitted_by:submitted_by_user (id, email, full_name)
+        `)
         .single()
 
       if (error) {throw error}
-      return data as Submittal
+      return { ...data, reviewStatus }
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.invalidateQueries({ queryKey: ['dedicated-submittals'] })
       queryClient.invalidateQueries({ queryKey: ['dedicated-submittals', 'detail', data.id] })
       queryClient.invalidateQueries({ queryKey: ['dedicated-submittals', data.id, 'reviews'] })
+
+      // Notify the submittal creator about the review result
+      if (data.submitted_by && data.submitted_by.id !== userProfile?.id) {
+        try {
+          const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+          const statusLabel = REVIEW_STATUSES.find(s => s.value === data.reviewStatus)?.label || data.reviewStatus
+
+          const recipient: NotificationRecipient = {
+            userId: data.submitted_by.id,
+            email: data.submitted_by.email,
+            name: data.submitted_by.full_name || undefined,
+          }
+
+          // Use approval completed notification for submittal reviews
+          notificationService.notifyApprovalCompleted(recipient, {
+            entityType: 'submittal',
+            entityName: data.spec_section_title || data.spec_section,
+            entityNumber: data.submittal_number?.toString(),
+            projectName: data.project?.name || 'Unknown Project',
+            status: data.reviewStatus === 'approved' || data.reviewStatus === 'approved_as_noted'
+              ? 'approved'
+              : data.reviewStatus === 'rejected'
+                ? 'rejected'
+                : 'approved_with_conditions',
+            actionBy: userProfile?.full_name || 'Reviewer',
+            comments: data.review_comments || undefined,
+            viewUrl: `${appUrl}/projects/${data.project_id}/submittals/${data.id}`,
+          }).catch(err => {
+            logger.warn('[Submittal] Failed to send review result notification:', err)
+          })
+        } catch (err) {
+          logger.warn('[Submittal] Failed to send submittal review notification:', err)
+        }
+      }
     },
   })
 }
@@ -516,15 +556,59 @@ export function useSubmitForReview() {
           ball_in_court_entity: 'architect', // Default to architect for review
         })
         .eq('id', submittalId)
-        .select()
+        .select(`
+          *,
+          project:project_id (id, name)
+        `)
         .single()
 
       if (error) {throw error}
-      return data as Submittal
+      return data
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.invalidateQueries({ queryKey: ['dedicated-submittals'] })
       queryClient.invalidateQueries({ queryKey: ['dedicated-submittals', 'detail', data.id] })
+
+      // Send notification to project team about new submittal for review
+      try {
+        // Get project managers/approvers who should be notified
+        const { data: projectUsers } = await supabase
+          .from('project_users')
+          .select(`
+            user:user_id (id, email, full_name),
+            project_role
+          `)
+          .eq('project_id', data.project_id)
+          .in('project_role', ['project_manager', 'owner', 'admin'])
+
+        if (projectUsers && projectUsers.length > 0) {
+          const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+          for (const pu of projectUsers) {
+            if (pu.user && pu.user.id !== userProfile?.id) {
+              const recipient: NotificationRecipient = {
+                userId: pu.user.id,
+                email: pu.user.email,
+                name: pu.user.full_name || undefined,
+              }
+
+              notificationService.notifyApprovalRequest([recipient], {
+                entityType: 'submittal',
+                entityName: data.spec_section_title || data.spec_section,
+                entityNumber: data.submittal_number?.toString(),
+                projectName: data.project?.name || 'Unknown Project',
+                initiatedBy: userProfile?.full_name || 'Team Member',
+                submittedAt: new Date().toLocaleDateString(),
+                approvalUrl: `${appUrl}/projects/${data.project_id}/submittals/${data.id}`,
+              }).catch(err => {
+                logger.warn('[Submittal] Failed to send review notification:', err)
+              })
+            }
+          }
+        }
+      } catch (err) {
+        logger.warn('[Submittal] Failed to send submittal notifications:', err)
+      }
     },
   })
 }

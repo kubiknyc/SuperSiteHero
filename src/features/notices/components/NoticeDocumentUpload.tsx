@@ -233,7 +233,10 @@ export function NoticeDocumentUpload({
               Drag and drop {type === 'notice' ? 'notice' : 'response'} document
             </p>
             <p className="text-xs text-muted mb-3">PDF, Word, Excel, or Images</p>
-            <Button type="button" size="sm" onClick={handleBrowseClick} disabled={disabled}>
+            <Button type="button" size="sm" onClick={(e) => {
+              e.stopPropagation()
+              handleBrowseClick()
+            }} disabled={disabled}>
               Browse Files
             </Button>
           </>

@@ -3,7 +3,7 @@
 
 import { useState, useRef, DragEvent, ChangeEvent } from 'react'
 import { Upload, X, FileIcon } from 'lucide-react'
-import { Card, CardContent, Button, Select, Label } from '@/components/ui'
+import { Card, CardContent, Button, NativeSelect, Label } from '@/components/ui'
 import { useCreateDocumentWithNotification } from '@/features/documents/hooks/useDocumentsMutations'
 import { cn } from '@/lib/utils'
 import { uploadFile } from '@/features/documents/utils/fileUtils'
@@ -265,7 +265,10 @@ export function DocumentUpload({
                 Drag and drop a file here
               </p>
               <p className="text-sm text-muted mb-4">or</p>
-              <Button type="button" onClick={handleBrowseClick}>
+              <Button type="button" onClick={(e) => {
+                e.stopPropagation()
+                handleBrowseClick()
+              }}>
                 Browse Files
               </Button>
             </>
@@ -303,7 +306,7 @@ export function DocumentUpload({
           <div className="mt-4 space-y-4">
             <div>
               <Label htmlFor="document-type">Document Type</Label>
-              <Select
+              <NativeSelect
                 id="document-type"
                 value={documentType}
                 onChange={(e) => setDocumentType(e.target.value as DocumentType)}
@@ -313,7 +316,7 @@ export function DocumentUpload({
                     {type.label}
                   </option>
                 ))}
-              </Select>
+              </NativeSelect>
             </div>
 
             <div>

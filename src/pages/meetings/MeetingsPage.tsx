@@ -4,7 +4,7 @@
 import { useState, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
-import { useMyProjects } from '@/features/projects/hooks/useProjects'
+import { useSelectedProject } from '@/hooks/useSelectedProject'
 import { useAllMeetings, useMeetings, MEETING_TYPES } from '@/features/meetings/hooks'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -30,11 +30,10 @@ import {
 import { format, parseISO, isToday, isFuture, isPast } from 'date-fns'
 
 export function MeetingsPage() {
-  const { data: projects } = useMyProjects()
+  const { selectedProjectId, setSelectedProjectId, projects } = useSelectedProject()
   const navigate = useNavigate()
 
   // Filters
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('')
   const [searchQuery, setSearchQuery] = useState('')
   const [typeFilter, setTypeFilter] = useState<string[]>([])
   const [dateFilter, setDateFilter] = useState<'all' | 'upcoming' | 'past' | 'today'>('all')

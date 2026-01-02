@@ -6,7 +6,7 @@ import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { format, differenceInDays, isPast } from 'date-fns'
 import { AppLayout } from '@/components/layout/AppLayout'
-import { useProjects } from '@/features/projects/hooks/useProjects'
+import { useSelectedProject } from '@/hooks/useSelectedProject'
 import {
   useProjectRFIs,
   useRFIStats,
@@ -52,7 +52,7 @@ type ViewMode = 'list' | 'ball-in-court'
 
 export function DedicatedRFIsPage() {
   const navigate = useNavigate()
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('')
+  const { selectedProjectId, setSelectedProjectId, projects, isLoading: projectsLoading } = useSelectedProject()
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<RFIStatus | 'all' | 'overdue'>('all')
   const [priorityFilter, setPriorityFilter] = useState<RFIPriority | 'all'>('all')
@@ -62,7 +62,6 @@ export function DedicatedRFIsPage() {
   const [isExporting, setIsExporting] = useState(false)
 
   // Fetch data
-  const { data: projects, isLoading: projectsLoading } = useProjects()
   const { data: rfis, isLoading: rfisLoading, error: rfisError } = useProjectRFIs(selectedProjectId || undefined)
   const { data: stats } = useRFIStats(selectedProjectId || undefined)
 

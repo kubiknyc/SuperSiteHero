@@ -149,3 +149,51 @@ export type {
 // Scheduled Report Templates
 export { generateScheduledReportEmail } from './scheduled-report'
 export type { ScheduledReportEmailData } from './scheduled-report'
+
+// Submittal Reminder Templates
+export {
+  generateSubmittalReminderEmail,
+  generateSubmittalReviewReminderEmail,
+  generateSubmittalAgingSummaryEmail,
+} from './submittal-reminder'
+export type {
+  SubmittalReminderEmailData,
+  SubmittalReviewReminderEmailData,
+  SubmittalAgingSummaryEmailData,
+} from './submittal-reminder'
+
+// Daily Report Alert Templates
+export {
+  generateDailyReportMissingEmail,
+  generateDailyReportSummaryEmail,
+  generateMultiProjectReportSummaryEmail,
+} from './daily-report-alert'
+export type {
+  DailyReportMissingEmailData,
+  DailyReportSummaryEmailData,
+  MultiProjectReportSummaryEmailData,
+} from './daily-report-alert'
+
+// Change Order Aging Alert Templates
+export {
+  generateChangeOrderAgingAlertEmail,
+  generateChangeOrderBudgetAlertEmail,
+  generateChangeOrderAgingSummaryEmail,
+} from './change-order-aging'
+export type {
+  ChangeOrderAgingAlertEmailData,
+  ChangeOrderBudgetAlertEmailData,
+  ChangeOrderAgingSummaryEmailData,
+} from './change-order-aging'
+
+// Drawing Revision Notification Templates
+export {
+  generateDrawingRevisionEmail,
+  generateDrawingSetRevisionEmail,
+  generateSupersededDrawingsEmail,
+} from './drawing-revision-notification'
+export type {
+  DrawingRevisionEmailData,
+  DrawingSetRevisionEmailData,
+  DrawingSupersededEmailData,
+} from './drawing-revision-notification'

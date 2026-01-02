@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from 'react'
 import { AppLayout } from '@/components/layout/AppLayout'
-import { useMyProjects } from '@/features/projects/hooks/useProjects'
+import { useSelectedProject } from '@/hooks/useSelectedProject'
 import {
   useNotices,
   useNoticeStats,
@@ -24,11 +24,10 @@ import { FileText, AlertCircle } from 'lucide-react'
 import type { NoticeFilters as FilterType } from '@/features/notices/types'
 
 export function NoticesPage() {
-  const { data: projects } = useMyProjects()
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('')
+  const { selectedProjectId, setSelectedProjectId, projects } = useSelectedProject()
   const [filters, setFilters] = useState<FilterType>({})
 
-  // Use the selected project or first active project
+  // Use persistent selected project or first active project
   const activeProjectId =
     selectedProjectId ||
     projects?.find((p) => p.status === 'active')?.id ||

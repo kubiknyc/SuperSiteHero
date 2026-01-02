@@ -5,7 +5,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { useProjects } from '@/features/projects/hooks/useProjects';
+import { useSelectedProject } from '@/hooks/useSelectedProject';
 import {
   useLienWaivers,
   useProjectWaiverSummary,
@@ -47,13 +47,12 @@ import {
 
 export function LienWaiversPage() {
   const navigate = useNavigate();
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('');
+  const { selectedProjectId, setSelectedProjectId, projects, isLoading: projectsLoading } = useSelectedProject();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<LienWaiverStatus | 'all'>('all');
   const [typeFilter, setTypeFilter] = useState<string>('all');
 
   // Fetch data
-  const { data: projects, isLoading: projectsLoading } = useProjects();
   const { data: waivers, isLoading: waiversLoading, error } = useLienWaivers({
     projectId: selectedProjectId || undefined,
     status: statusFilter !== 'all' ? statusFilter : undefined,

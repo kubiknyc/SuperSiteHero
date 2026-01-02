@@ -110,22 +110,56 @@ export function useCreateTaskWithNotification() {
  */
 export function useUpdateTaskWithNotification() {
   const queryClient = useQueryClient()
+  const { userProfile } = useAuth()
 
   return useMutationWithNotification<
     Task,
     Error,
-    { id: string; data: Partial<Omit<Task, 'id' | 'created_at' | 'updated_at'>> }
+    { id: string; data: Partial<Omit<Task, 'id' | 'created_at' | 'updated_at'>>; previousAssigneeId?: string }
   >({
     mutationFn: async ({ id, data }) => {
       return tasksApi.updateTask(id, data)
     },
     successMessage: (data) => `Task "${data.title}" updated successfully`,
     errorMessage: (error) => `Failed to update task: ${error.message}`,
-    onSuccess: (data) => {
+    onSuccess: async (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
       queryClient.invalidateQueries({ queryKey: ['tasks', data.project_id] })
       queryClient.invalidateQueries({ queryKey: ['tasks', data.id] })
       queryClient.invalidateQueries({ queryKey: ['my-tasks'] })
+
+      // Check if assignee changed - notify new assignee
+      const newAssigneeId = variables.data.assigned_to
+      const previousAssigneeId = variables.previousAssigneeId
+
+      if (newAssigneeId && newAssigneeId !== previousAssigneeId && newAssigneeId !== userProfile?.id) {
+        try {
+          const assigneeDetails = await getUserDetails(newAssigneeId)
+          if (assigneeDetails) {
+            const projectName = await getProjectName(data.project_id)
+            const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+            await sendTaskAssignedNotification(
+              {
+                userId: newAssigneeId,
+                email: assigneeDetails.email,
+                name: assigneeDetails.name,
+              },
+              {
+                taskTitle: data.title,
+                projectName,
+                assignedBy: userProfile?.full_name || userProfile?.email || 'Team Member',
+                dueDate: data.due_date ? new Date(data.due_date).toLocaleDateString() : undefined,
+                priority: data.priority || undefined,
+                description: data.description || undefined,
+                viewUrl: `${appUrl}/tasks/${data.id}`,
+              }
+            )
+          }
+        } catch (_error) {
+          logger.error('[Tasks] Failed to send task reassignment notification:', _error)
+        }
+      }
     },
   })
 }
@@ -154,18 +188,45 @@ export function useDeleteTaskWithNotification() {
  */
 export function useCompleteTaskWithNotification() {
   const queryClient = useQueryClient()
+  const { userProfile } = useAuth()
 
-  return useMutationWithNotification<Task, Error, string>({
-    mutationFn: async (taskId) => {
+  return useMutationWithNotification<Task, Error, { taskId: string; creatorId?: string }>({
+    mutationFn: async ({ taskId }) => {
       return tasksApi.completeTask(taskId)
     },
     successMessage: 'Task completed',
     errorMessage: (error) => `Failed to complete task: ${error.message}`,
-    onSuccess: (data) => {
+    onSuccess: async (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['tasks'] })
       queryClient.invalidateQueries({ queryKey: ['tasks', data.project_id] })
       queryClient.invalidateQueries({ queryKey: ['tasks', data.id] })
       queryClient.invalidateQueries({ queryKey: ['my-tasks'] })
+
+      // Notify task creator that task has been completed (if different from current user)
+      if (variables.creatorId && variables.creatorId !== userProfile?.id) {
+        try {
+          const creatorDetails = await getUserDetails(variables.creatorId)
+          if (creatorDetails) {
+            const projectName = await getProjectName(data.project_id)
+            const { sendNotification } = await import('@/lib/notifications/notification-service')
+
+            await sendNotification({
+              user_id: variables.creatorId,
+              type: 'task_completed',
+              title: 'Task Completed',
+              message: `Task "${data.title}" has been marked as completed by ${userProfile?.full_name || 'a team member'}.`,
+              link: `/tasks/${data.id}`,
+              data: {
+                projectName,
+                taskTitle: data.title,
+                completedBy: userProfile?.full_name,
+              },
+            })
+          }
+        } catch (_error) {
+          logger.error('[Tasks] Failed to send task completion notification:', _error)
+        }
+      }
     },
   })
 }

@@ -5,7 +5,7 @@
 
 import { useState, useCallback } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import { useMyProjects } from '@/features/projects/hooks/useProjects';
+import { useSelectedProject } from '@/hooks/useSelectedProject';
 import { DailyReportFormV2 } from '@/features/daily-reports/components/v2';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -25,11 +25,15 @@ import { toast } from 'sonner';
 export function NewDailyReportPageV2() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { data: projects, isLoading: projectsLoading } = useMyProjects();
+  const { selectedProjectId, setSelectedProjectId, projects, isLoading: projectsLoading } = useSelectedProject();
 
-  const [selectedProjectId, setSelectedProjectId] = useState<string>(
-    searchParams.get('projectId') || ''
-  );
+  // Sync from URL on mount if URL has projectId
+  useState(() => {
+    const urlProjectId = searchParams.get('projectId');
+    if (urlProjectId && urlProjectId !== selectedProjectId) {
+      setSelectedProjectId(urlProjectId);
+    }
+  });
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split('T')[0]
   );

@@ -3,7 +3,7 @@
 
 import { useState } from 'react'
 import { AppLayout } from '@/components/layout/AppLayout'
-import { useMyProjects } from '@/features/projects/hooks/useProjects'
+import { useSelectedProject } from '@/hooks/useSelectedProject'
 import { WorkflowsProjectView } from '@/features/workflows/components/WorkflowsProjectView'
 import { useWorkflowTypes, getWorkflowTypeIcon } from '@/features/workflows/hooks/useWorkflowTypes'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -11,11 +11,10 @@ import { AlertCircle } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export function WorkflowsPage() {
-  const { data: projects } = useMyProjects()
+  const { selectedProjectId, setSelectedProjectId, projects } = useSelectedProject()
   const { data: workflowTypes, isLoading: typesLoading, error: typesError } = useWorkflowTypes()
 
-  // Selected project
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('')
+  // Use persistent selected project or first active project
   const activeProjectId = selectedProjectId || projects?.find((p) => p.status === 'active')?.id || projects?.[0]?.id
 
   // Filter to only active workflow types

@@ -48,7 +48,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useProjects } from '@/features/projects/hooks/useProjects'
+import { useSelectedProject } from '@/hooks/useSelectedProject'
 import {
   FolderCheck,
   Building2,
@@ -191,7 +191,7 @@ function exportWarrantiesToCSV(warranties: WarrantyWithDetails[]): void {
 
 
 export function CloseoutPage() {
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('')
+  const { selectedProjectId, setSelectedProjectId, projects, isLoading: projectsLoading } = useSelectedProject()
   const [activeTab, setActiveTab] = useState('dashboard')
   const [currentTime] = useState(() => Date.now())
 
@@ -202,9 +202,6 @@ export function CloseoutPage() {
   const [editingWarranty, setEditingWarranty] = useState<WarrantyWithDetails | null>(null)
   const [, setIsExportingDocuments] = useState(false)
   const [, setIsExportingWarranties] = useState(false)
-
-  // Fetch projects
-  const { data: projects, isLoading: projectsLoading } = useProjects()
 
   // Fetch closeout data
   const {

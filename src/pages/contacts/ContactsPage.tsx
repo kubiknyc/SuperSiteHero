@@ -4,7 +4,7 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
-import { useProjects } from '@/features/projects/hooks/useProjects'
+import { useSelectedProject } from '@/hooks/useSelectedProject'
 import { useContacts, useDeleteContact } from '@/features/contacts/hooks/useContacts'
 import { ContactCard } from '@/features/contacts/components/ContactCard'
 import { Card, CardContent } from '@/components/ui/card'
@@ -38,7 +38,7 @@ type ContactTypeFilter = 'all' | 'subcontractor' | 'architect' | 'engineer' | 'i
 
 export function ContactsPage() {
   const navigate = useNavigate()
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('')
+  const { selectedProjectId, setSelectedProjectId, projects, isLoading: projectsLoading } = useSelectedProject()
   const [searchTerm, setSearchTerm] = useState('')
   const [contactTypeFilter, setContactTypeFilter] = useState<ContactTypeFilter>('all')
   const [showPrimaryOnly, setShowPrimaryOnly] = useState(false)
@@ -47,7 +47,6 @@ export function ContactsPage() {
   const [isDeleting, setIsDeleting] = useState(false)
 
   // Fetch data
-  const { data: projects, isLoading: projectsLoading } = useProjects()
   const { data: contacts, isLoading: contactsLoading, error: contactsError } = useContacts(
     selectedProjectId || undefined,
     {

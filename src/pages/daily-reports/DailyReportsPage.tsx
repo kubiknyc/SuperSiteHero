@@ -6,8 +6,8 @@ import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { LocalErrorBoundary } from '@/components/errors'
-import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import { useDailyReports } from '@/features/daily-reports/hooks/useDailyReports'
+import { useSelectedProject } from '@/hooks/useSelectedProject'
 import { DailyReportsCalendar } from '@/features/daily-reports/components/DailyReportsCalendar'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -54,7 +54,7 @@ interface WorkerRange {
 
 export function DailyReportsPage() {
   'use no memo'
-  const { data: projects } = useMyProjects()
+  const { selectedProjectId, setSelectedProjectId, projects } = useSelectedProject()
   const { user } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
@@ -62,9 +62,13 @@ export function DailyReportsPage() {
   // Initialize state from URL parameters
   const searchParams = new URLSearchParams(location.search)
 
-  const [selectedProjectId, setSelectedProjectId] = useState<string>(
-    searchParams.get('project') || ''
-  )
+  // If URL has a project param that differs from stored, update the stored value
+  useEffect(() => {
+    const urlProjectId = searchParams.get('project')
+    if (urlProjectId && urlProjectId !== selectedProjectId) {
+      setSelectedProjectId(urlProjectId)
+    }
+  }, []) // Only run on mount
   const [searchQuery, setSearchQuery] = useState(
     searchParams.get('search') || ''
   )

@@ -5,7 +5,7 @@ import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
 import { AppLayout } from '@/components/layout/AppLayout'
-import { useMyProjects } from '@/features/projects/hooks/useProjects'
+import { useSelectedProject } from '@/hooks/useSelectedProject'
 import {
   useChangeOrdersV2,
   useChangeOrderStatisticsV2,
@@ -66,8 +66,7 @@ const CHANGE_TYPES = [
 
 export function ChangeOrdersPage() {
   const navigate = useNavigate()
-  const { data: projects } = useMyProjects()
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('')
+  const { selectedProjectId, setSelectedProjectId, projects } = useSelectedProject()
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [typeFilter, setTypeFilter] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState('')

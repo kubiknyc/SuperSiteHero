@@ -11,6 +11,8 @@ import {
   changeOrderHistoryApiV2,
 } from '../../../lib/api/services/change-orders-v2';
 import { changeOrderBudgetIntegration } from '../../../lib/api/services/change-order-budget-integration';
+import { supabase } from '@/lib/supabase';
+import { sendChangeOrderStatusNotification, type NotificationRecipient } from '@/lib/notifications/notification-service';
 import type {
   CreateChangeOrderDTO,
   UpdateChangeOrderDTO,
@@ -22,6 +24,53 @@ import type {
   InternalApprovalDTO,
   OwnerApprovalDTO,
 } from '../../../types/change-order';
+
+const APP_URL = import.meta.env.VITE_APP_URL || 'https://supersitehero.com';
+
+/**
+ * Helper to get project stakeholders for change order notifications
+ * Returns project managers and other key stakeholders
+ */
+async function getChangeOrderRecipients(
+  projectId: string,
+  excludeUserId?: string
+): Promise<NotificationRecipient[]> {
+  const { data: projectMembers } = await supabase
+    .from('project_members')
+    .select('user_id, role, users!inner(id, email, full_name)')
+    .eq('project_id', projectId)
+    .in('role', ['owner', 'project_manager', 'superintendent', 'admin']);
+
+  if (!projectMembers) return [];
+
+  return projectMembers
+    .filter((pm: any) => pm.users?.id !== excludeUserId)
+    .map((pm: any) => ({
+      userId: pm.users.id,
+      email: pm.users.email,
+      name: pm.users.full_name,
+    }));
+}
+
+/**
+ * Helper to get project name
+ */
+async function getProjectName(projectId: string): Promise<string> {
+  const { data } = await supabase
+    .from('projects')
+    .select('name')
+    .eq('id', projectId)
+    .single();
+  return data?.name || 'Project';
+}
+
+/**
+ * Helper to format currency
+ */
+function formatCurrency(amount: number | null | undefined): string {
+  if (amount == null) return 'N/A';
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+}
 
 // =============================================================================
 // QUERY KEYS
@@ -189,10 +238,28 @@ export function useProcessInternalApproval() {
   return useMutation({
     mutationFn: ({ id, ...dto }: { id: string } & InternalApprovalDTO) =>
       changeOrdersApiV2.processInternalApproval(id, dto),
-    onSuccess: (data) => {
+    onSuccess: async (data, variables) => {
       queryClient.setQueryData(changeOrderKeysV2.detail(data.id), data);
       queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
       queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.statistics(data.project_id) });
+
+      // Send notification to stakeholders about approval decision
+      const recipients = await getChangeOrderRecipients(data.project_id);
+      if (recipients.length > 0) {
+        const projectName = await getProjectName(data.project_id);
+        const statusLabel = variables.approved ? 'Internally Approved' : 'Internally Rejected';
+
+        sendChangeOrderStatusNotification(recipients, {
+          changeOrderNumber: data.number || `PCO-${data.id.slice(0, 8)}`,
+          title: data.title || 'Change Order',
+          projectName,
+          previousStatus: 'pending_internal_approval',
+          newStatus: statusLabel.toLowerCase().replace(' ', '_'),
+          amount: formatCurrency(data.total_amount),
+          changedBy: 'Internal Approver',
+          viewUrl: `${APP_URL}/projects/${data.project_id}/change-orders/${data.id}`,
+        }).catch(console.error);
+      }
     },
   });
 }
@@ -205,9 +272,26 @@ export function useSubmitToOwner() {
 
   return useMutation({
     mutationFn: (id: string) => changeOrdersApiV2.submitToOwner(id),
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.setQueryData(changeOrderKeysV2.detail(data.id), data);
       queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
+
+      // Notify stakeholders that CO has been submitted to owner
+      const recipients = await getChangeOrderRecipients(data.project_id);
+      if (recipients.length > 0) {
+        const projectName = await getProjectName(data.project_id);
+
+        sendChangeOrderStatusNotification(recipients, {
+          changeOrderNumber: data.number || `CO-${data.id.slice(0, 8)}`,
+          title: data.title || 'Change Order',
+          projectName,
+          previousStatus: 'internally_approved',
+          newStatus: 'submitted_to_owner',
+          amount: formatCurrency(data.total_amount),
+          changedBy: 'Project Team',
+          viewUrl: `${APP_URL}/projects/${data.project_id}/change-orders/${data.id}`,
+        }).catch(console.error);
+      }
     },
   });
 }
@@ -222,7 +306,7 @@ export function useProcessOwnerApproval() {
   return useMutation({
     mutationFn: ({ id, ...dto }: { id: string } & OwnerApprovalDTO) =>
       changeOrdersApiV2.processOwnerApproval(id, dto),
-    onSuccess: (data) => {
+    onSuccess: async (data, variables) => {
       queryClient.setQueryData(changeOrderKeysV2.detail(data.id), data);
       queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
       queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.statistics(data.project_id) });
@@ -230,6 +314,24 @@ export function useProcessOwnerApproval() {
       queryClient.invalidateQueries({ queryKey: ['project-budgets'] });
       queryClient.invalidateQueries({ queryKey: ['cost-transactions'] });
       queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.history(data.id) });
+
+      // Notify stakeholders about owner's decision
+      const recipients = await getChangeOrderRecipients(data.project_id);
+      if (recipients.length > 0) {
+        const projectName = await getProjectName(data.project_id);
+        const statusLabel = variables.approved ? 'Owner Approved' : 'Owner Rejected';
+
+        sendChangeOrderStatusNotification(recipients, {
+          changeOrderNumber: data.number || `CO-${data.id.slice(0, 8)}`,
+          title: data.title || 'Change Order',
+          projectName,
+          previousStatus: 'submitted_to_owner',
+          newStatus: statusLabel.toLowerCase().replace(' ', '_'),
+          amount: formatCurrency(data.total_amount),
+          changedBy: 'Owner',
+          viewUrl: `${APP_URL}/projects/${data.project_id}/change-orders/${data.id}`,
+        }).catch(console.error);
+      }
     },
   });
 }
@@ -242,9 +344,26 @@ export function useExecuteChangeOrder() {
 
   return useMutation({
     mutationFn: (id: string) => changeOrdersApiV2.executeChangeOrder(id),
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.setQueryData(changeOrderKeysV2.detail(data.id), data);
       queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
+
+      // Notify stakeholders that CO has been executed
+      const recipients = await getChangeOrderRecipients(data.project_id);
+      if (recipients.length > 0) {
+        const projectName = await getProjectName(data.project_id);
+
+        sendChangeOrderStatusNotification(recipients, {
+          changeOrderNumber: data.number || `CO-${data.id.slice(0, 8)}`,
+          title: data.title || 'Change Order',
+          projectName,
+          previousStatus: 'owner_approved',
+          newStatus: 'executed',
+          amount: formatCurrency(data.total_amount),
+          changedBy: 'Project Manager',
+          viewUrl: `${APP_URL}/projects/${data.project_id}/change-orders/${data.id}`,
+        }).catch(console.error);
+      }
     },
   });
 }
@@ -259,7 +378,7 @@ export function useVoidChangeOrder() {
   return useMutation({
     mutationFn: ({ id, reason }: { id: string; reason?: string }) =>
       changeOrdersApiV2.voidChangeOrder(id, reason),
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.setQueryData(changeOrderKeysV2.detail(data.id), data);
       queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.lists() });
       queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.statistics(data.project_id) });
@@ -267,6 +386,23 @@ export function useVoidChangeOrder() {
       queryClient.invalidateQueries({ queryKey: ['project-budgets'] });
       queryClient.invalidateQueries({ queryKey: ['cost-transactions'] });
       queryClient.invalidateQueries({ queryKey: changeOrderKeysV2.history(data.id) });
+
+      // Notify stakeholders that CO has been voided
+      const recipients = await getChangeOrderRecipients(data.project_id);
+      if (recipients.length > 0) {
+        const projectName = await getProjectName(data.project_id);
+
+        sendChangeOrderStatusNotification(recipients, {
+          changeOrderNumber: data.number || `CO-${data.id.slice(0, 8)}`,
+          title: data.title || 'Change Order',
+          projectName,
+          previousStatus: data.status || 'unknown',
+          newStatus: 'voided',
+          amount: formatCurrency(data.total_amount),
+          changedBy: 'Project Manager',
+          viewUrl: `${APP_URL}/projects/${data.project_id}/change-orders/${data.id}`,
+        }).catch(console.error);
+      }
     },
   });
 }

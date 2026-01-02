@@ -37,13 +37,13 @@ import { LiveUpdateBadge } from '@/components/realtime/LiveUpdateBadge'
 import { PresenceAvatars } from '@/components/presence/PresenceAvatars'
 import { useDocumentsRealtime } from '@/hooks/useRealtimeUpdates'
 import { usePagePresence } from '@/hooks/useRealtimePresence'
+import { useSelectedProject } from '@/hooks/useSelectedProject'
 import { useDocuments, useFolders } from '@/features/documents/hooks/useDocuments'
 import {
   useCreateFolderWithNotification,
   useDeleteDocumentWithNotification,
   useUpdateDocumentWithNotification,
 } from '@/features/documents/hooks/useDocumentsMutations'
-import { useProjects } from '@/features/projects/hooks/useProjects'
 import { useAuth } from '@/lib/auth'
 import { cn } from '@/lib/utils'
 import type { Document, Folder as FolderType, DocumentStatus, DocumentType } from '@/types/database'
@@ -73,8 +73,10 @@ function DocumentLibraryPage() {
   const navigate = useNavigate()
   const { user } = useAuth()
 
+  // Persistent project selection
+  const { selectedProjectId, setSelectedProjectId, projects, isLoading: projectsLoading } = useSelectedProject()
+
   // State
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('')
   const [currentFolderId, setCurrentFolderId] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<DocumentStatus | 'all'>('all')
@@ -91,7 +93,6 @@ function DocumentLibraryPage() {
   const [editFormData, setEditFormData] = useState({ name: '', description: '' })
 
   // Queries
-  const { data: projects, isLoading: projectsLoading } = useProjects()
   const { data: allFolders, isLoading: foldersLoading } = useFolders(selectedProjectId || undefined)
   const { data: documents, isLoading: documentsLoading } = useDocuments(
     selectedProjectId || undefined,

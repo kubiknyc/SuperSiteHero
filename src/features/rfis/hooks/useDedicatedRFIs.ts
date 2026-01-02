@@ -5,6 +5,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth/AuthContext'
+import { notificationService, type NotificationRecipient } from '@/lib/notifications/notification-service'
+import { logger } from '@/lib/utils/logger'
 import type {
   RFI,
   RFIInsert,
@@ -357,19 +359,22 @@ export async function generateRFINumber(projectId: string): Promise<number> {
  */
 export function useCreateRFI() {
   const queryClient = useQueryClient()
-  const { user } = useAuth()
+  const { user, userProfile } = useAuth()
 
   return useMutation({
-    mutationFn: async (input: Omit<RFIInsert, 'company_id' | 'created_by' | 'rfi_number'>) => {
+    mutationFn: async (input: Omit<RFIInsert, 'company_id' | 'created_by' | 'rfi_number'> & { distribution_list?: string[] }) => {
       if (!user?.company_id) {throw new Error('User company not found')}
 
       // Generate RFI number
       const rfiNumber = await generateRFINumber(input.project_id)
 
+      // Extract distribution_list before inserting (not a DB column)
+      const { distribution_list, ...dbInput } = input
+
       const { data, error } = await supabase
         .from('rfis')
         .insert({
-          ...input,
+          ...dbInput,
           rfi_number: rfiNumber,
           company_id: user.company_id,
           created_by: user.id,
@@ -379,10 +384,58 @@ export function useCreateRFI() {
         .single()
 
       if (error) {throw error}
-      return data as RFI
+
+      // Return both the RFI and the distribution list for notification
+      return { rfi: data as RFI, distribution_list }
     },
-    onSuccess: () => {
+    onSuccess: async ({ rfi, distribution_list }) => {
       queryClient.invalidateQueries({ queryKey: ['dedicated-rfis'] })
+
+      // Send notifications to distribution list users (non-blocking)
+      if (distribution_list && distribution_list.length > 0) {
+        try {
+          // Fetch user details for recipients
+          const { data: users } = await supabase
+            .from('users')
+            .select('id, email, full_name')
+            .in('id', distribution_list)
+
+          if (users && users.length > 0) {
+            // Fetch project name
+            const { data: project } = await supabase
+              .from('projects')
+              .select('name')
+              .eq('id', rfi.project_id)
+              .single()
+
+            const recipients: NotificationRecipient[] = users.map(u => ({
+              userId: u.id,
+              email: u.email,
+              name: u.full_name || undefined,
+            }))
+
+            const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+            // Notify each recipient
+            for (const recipient of recipients) {
+              notificationService.notifyRfiAssigned(recipient, {
+                rfiNumber: formatRFINumber(rfi.rfi_number),
+                subject: rfi.subject,
+                question: rfi.question.substring(0, 200) + (rfi.question.length > 200 ? '...' : ''),
+                projectName: project?.name || 'Unknown Project',
+                assignedBy: userProfile?.full_name || user?.email || 'Team Member',
+                dateRequired: rfi.date_required || undefined,
+                priority: rfi.priority || 'normal',
+                viewUrl: `${appUrl}/projects/${rfi.project_id}/rfis/${rfi.id}`,
+              }).catch(err => {
+                logger.warn('[RFI] Failed to send notification:', err)
+              })
+            }
+          }
+        } catch (err) {
+          logger.warn('[RFI] Failed to send RFI notifications:', err)
+        }
+      }
     },
   })
 }
@@ -445,7 +498,7 @@ export function useSubmitRFI() {
  */
 export function useRespondToRFI() {
   const queryClient = useQueryClient()
-  const { user } = useAuth()
+  const { user, userProfile } = useAuth()
 
   return useMutation({
     mutationFn: async ({ rfiId, response }: { rfiId: string; response: string }) => {
@@ -458,14 +511,46 @@ export function useRespondToRFI() {
           responded_by: user?.id,
         })
         .eq('id', rfiId)
-        .select()
+        .select(`
+          *,
+          project:projects(id, name),
+          submitted_by_user:users!rfis_submitted_by_fkey(id, full_name, email)
+        `)
         .single()
 
       if (error) {throw error}
-      return data as RFI
+      return data
     },
-    onSuccess: () => {
+    onSuccess: async (rfi) => {
       queryClient.invalidateQueries({ queryKey: ['dedicated-rfis'] })
+
+      // Notify the RFI submitter that their RFI has been responded to
+      if (rfi.submitted_by_user && rfi.submitted_by_user.id !== user?.id) {
+        try {
+          const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+          const recipient: NotificationRecipient = {
+            userId: rfi.submitted_by_user.id,
+            email: rfi.submitted_by_user.email,
+            name: rfi.submitted_by_user.full_name || undefined,
+          }
+
+          // Create in-app notification for RFI response
+          await notificationService._createInAppNotification({
+            userId: recipient.userId,
+            type: 'rfi_responded',
+            title: 'RFI Response Received',
+            message: `${formatRFINumber(rfi.rfi_number)}: "${rfi.subject}" has been responded to by ${userProfile?.full_name || 'team member'}`,
+            link: `${appUrl}/projects/${rfi.project_id}/rfis/${rfi.id}`,
+            metadata: {
+              rfiNumber: formatRFINumber(rfi.rfi_number),
+              subject: rfi.subject,
+              projectName: rfi.project?.name,
+            },
+          })
+        } catch (err) {
+          logger.warn('[RFI] Failed to send response notification:', err)
+        }
+      }
     },
   })
 }
@@ -475,16 +560,19 @@ export function useRespondToRFI() {
  */
 export function useUpdateBallInCourt() {
   const queryClient = useQueryClient()
+  const { user, userProfile } = useAuth()
 
   return useMutation({
     mutationFn: async ({
       rfiId,
       userId,
       role,
+      previousUserId,
     }: {
       rfiId: string
       userId: string | null
       role: BallInCourtRole
+      previousUserId?: string | null
     }) => {
       const { data, error } = await supabase
         .from('rfis')
@@ -493,14 +581,65 @@ export function useUpdateBallInCourt() {
           ball_in_court_role: role,
         })
         .eq('id', rfiId)
-        .select()
+        .select(`
+          *,
+          project:projects(id, name),
+          ball_in_court_user:users!rfis_ball_in_court_fkey(id, full_name, email)
+        `)
         .single()
 
       if (error) {throw error}
-      return data as RFI
+      return { rfi: data, previousUserId }
     },
-    onSuccess: () => {
+    onSuccess: async ({ rfi, previousUserId }) => {
       queryClient.invalidateQueries({ queryKey: ['dedicated-rfis'] })
+
+      // Notify new ball-in-court user if changed
+      if (rfi.ball_in_court_user && rfi.ball_in_court !== previousUserId && rfi.ball_in_court !== user?.id) {
+        try {
+          const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+          const roleLabel = getBallInCourtLabel(rfi.ball_in_court_role)
+
+          await notificationService._createInAppNotification({
+            userId: rfi.ball_in_court_user.id,
+            type: 'rfi_ball_in_court',
+            title: 'RFI Action Required',
+            message: `${formatRFINumber(rfi.rfi_number)} "${rfi.subject}" is now in your court (${roleLabel}). Assigned by ${userProfile?.full_name || 'team member'}.`,
+            link: `${appUrl}/projects/${rfi.project_id}/rfis/${rfi.id}`,
+            priority: rfi.priority === 'urgent' || rfi.priority === 'high' ? 'high' : 'normal',
+            metadata: {
+              rfiNumber: formatRFINumber(rfi.rfi_number),
+              subject: rfi.subject,
+              projectName: rfi.project?.name,
+              role: rfi.ball_in_court_role,
+              assignedBy: userProfile?.full_name,
+            },
+          })
+
+          // Also send email notification
+          notificationService.notifyRfiAssigned(
+            {
+              userId: rfi.ball_in_court_user.id,
+              email: rfi.ball_in_court_user.email,
+              name: rfi.ball_in_court_user.full_name || undefined,
+            },
+            {
+              rfiNumber: formatRFINumber(rfi.rfi_number),
+              subject: rfi.subject,
+              question: `This RFI has been assigned to you as ${roleLabel}. Your action is required.`,
+              projectName: rfi.project?.name || 'Unknown Project',
+              assignedBy: userProfile?.full_name || 'Team Member',
+              dateRequired: rfi.date_required || undefined,
+              priority: rfi.priority || 'normal',
+              viewUrl: `${appUrl}/projects/${rfi.project_id}/rfis/${rfi.id}`,
+            }
+          ).catch(err => {
+            logger.warn('[RFI] Failed to send ball-in-court email:', err)
+          })
+        } catch (err) {
+          logger.warn('[RFI] Failed to send ball-in-court notification:', err)
+        }
+      }
     },
   })
 }
@@ -510,6 +649,7 @@ export function useUpdateBallInCourt() {
  */
 export function useCloseRFI() {
   const queryClient = useQueryClient()
+  const { user, userProfile } = useAuth()
 
   return useMutation({
     mutationFn: async (rfiId: string) => {
@@ -520,14 +660,53 @@ export function useCloseRFI() {
           date_closed: new Date().toISOString(),
         })
         .eq('id', rfiId)
-        .select()
+        .select(`
+          *,
+          project:projects(id, name),
+          submitted_by_user:users!rfis_submitted_by_fkey(id, full_name, email),
+          assigned_to_user:users!rfis_assigned_to_fkey(id, full_name, email)
+        `)
         .single()
 
       if (error) {throw error}
-      return data as RFI
+      return data
     },
-    onSuccess: () => {
+    onSuccess: async (rfi) => {
       queryClient.invalidateQueries({ queryKey: ['dedicated-rfis'] })
+
+      // Notify RFI submitter and assignee that RFI has been closed
+      try {
+        const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+        const notifyUsers: Array<{ id: string; email: string; full_name: string }> = []
+
+        // Add submitter if not current user
+        if (rfi.submitted_by_user && rfi.submitted_by_user.id !== user?.id) {
+          notifyUsers.push(rfi.submitted_by_user)
+        }
+
+        // Add assignee if different from submitter and not current user
+        if (rfi.assigned_to_user && rfi.assigned_to_user.id !== user?.id && rfi.assigned_to_user.id !== rfi.submitted_by_user?.id) {
+          notifyUsers.push(rfi.assigned_to_user)
+        }
+
+        for (const notifyUser of notifyUsers) {
+          await notificationService._createInAppNotification({
+            userId: notifyUser.id,
+            type: 'rfi_closed',
+            title: 'RFI Closed',
+            message: `${formatRFINumber(rfi.rfi_number)} "${rfi.subject}" has been closed by ${userProfile?.full_name || 'team member'}.`,
+            link: `${appUrl}/projects/${rfi.project_id}/rfis/${rfi.id}`,
+            metadata: {
+              rfiNumber: formatRFINumber(rfi.rfi_number),
+              subject: rfi.subject,
+              projectName: rfi.project?.name,
+              closedBy: userProfile?.full_name,
+            },
+          })
+        }
+      } catch (err) {
+        logger.warn('[RFI] Failed to send close notification:', err)
+      }
     },
   })
 }

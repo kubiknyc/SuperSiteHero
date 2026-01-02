@@ -4,7 +4,7 @@
 import { useState, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
-import { useMyProjects } from '@/features/projects/hooks/useProjects'
+import { useSelectedProject } from '@/hooks/useSelectedProject'
 import { usePunchItems } from '@/features/punch-lists/hooks/usePunchItems'
 import { CreatePunchItemDialog } from '@/features/punch-lists/components/CreatePunchItemDialog'
 import { EditPunchItemDialog } from '@/features/punch-lists/components/EditPunchItemDialog'
@@ -26,13 +26,12 @@ import type { PunchItem } from '@/types/database'
 
 export function PunchListsPage() {
   const navigate = useNavigate()
-  const { data: projects } = useMyProjects()
+  const { selectedProjectId, setSelectedProjectId, projects } = useSelectedProject()
 
   // Offline sync for punch items
   const { pendingCount: offlinePendingCount, syncNow, isOnline } = usePunchItemSync()
 
-  // Selected project
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('')
+  // Use persistent selected project or fall back to first active project
   const activeProjectId = selectedProjectId || projects?.find((p) => p.status === 'active')?.id || projects?.[0]?.id
 
   // Dialog states

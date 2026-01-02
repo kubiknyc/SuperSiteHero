@@ -5,7 +5,7 @@ import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { format, isPast, differenceInDays } from 'date-fns'
 import { AppLayout } from '@/components/layout/AppLayout'
-import { useProjects } from '@/features/projects/hooks/useProjects'
+import { useSelectedProject } from '@/hooks/useSelectedProject'
 import { useRFIs, useRFIWorkflowType } from '@/features/rfis/hooks/useRFIs'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -50,7 +50,7 @@ type RFIPriorityFilter = 'all' | 'low' | 'normal' | 'high'
 export function RFIsPage() {
   const navigate = useNavigate()
   const { user } = useAuth()
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('')
+  const { selectedProjectId, setSelectedProjectId, projects, isLoading: projectsLoading } = useSelectedProject()
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<RFIStatusFilter>('all')
   const [priorityFilter, setPriorityFilter] = useState<RFIPriorityFilter>('all')
@@ -58,8 +58,7 @@ export function RFIsPage() {
 
   const [isExporting, setIsExporting] = useState(false)
 
-  // Fetch projects and RFI workflow type
-  const { data: projects, isLoading: projectsLoading } = useProjects()
+  // Fetch RFI workflow type
   const { data: workflowType } = useRFIWorkflowType()
   const { data: rfis, isLoading: rfisLoading, error: rfisError } = useRFIs(
     selectedProjectId || undefined,

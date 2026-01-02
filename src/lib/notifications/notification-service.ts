@@ -22,6 +22,10 @@ import {
   generateBidSubmittedEmail,
   generatePortalInvitationEmail,
   generateChecklistFailedItemsEmail,
+  generatePunchItemAssignedEmail,
+  generateRFIAgingAlertEmail,
+  generateRFIOverdueEmail,
+  generateRFIAgingSummaryEmail,
   type ApprovalRequestEmailData,
   type ApprovalCompletedEmailData,
   type IncidentNotificationEmailData,
@@ -33,6 +37,32 @@ import {
   type BidSubmittedEmailData,
   type PortalInvitationEmailData,
   type ChecklistFailedItemsEmailData,
+  type PunchItemAssignedEmailData,
+  type RFIAgingAlertEmailData,
+  type RFIOverdueAlertEmailData,
+  type RFIAgingSummaryEmailData,
+  generateSubmittalReminderEmail,
+  generateSubmittalReviewReminderEmail,
+  generateSubmittalAgingSummaryEmail,
+  generateDailyReportMissingEmail,
+  generateDailyReportSummaryEmail,
+  generateChangeOrderAgingAlertEmail,
+  generateChangeOrderBudgetAlertEmail,
+  generateChangeOrderAgingSummaryEmail,
+  generateDrawingRevisionEmail,
+  generateDrawingSetRevisionEmail,
+  generateSupersededDrawingsEmail,
+  type SubmittalReminderEmailData,
+  type SubmittalReviewReminderEmailData,
+  type SubmittalAgingSummaryEmailData,
+  type DailyReportMissingEmailData,
+  type DailyReportSummaryEmailData,
+  type ChangeOrderAgingAlertEmailData,
+  type ChangeOrderBudgetAlertEmailData,
+  type ChangeOrderAgingSummaryEmailData,
+  type DrawingRevisionEmailData,
+  type DrawingSetRevisionEmailData,
+  type DrawingSupersededEmailData,
 } from '@/lib/email/templates'
 import {
   type NotificationPreferences,
@@ -714,6 +744,928 @@ export const notificationService = {
   },
 
   /**
+   * Send punch item assigned notification
+   */
+  async notifyPunchItemAssigned(
+    recipient: NotificationRecipient,
+    data: Omit<PunchItemAssignedEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    // Check user preferences
+    const preferences = await this._getUserPreferences(recipient.userId)
+    const shouldEmail = options.sendEmail && shouldSendEmail(preferences, 'punchItemAssigned')
+
+    const emailData: PunchItemAssignedEmailData = {
+      ...data,
+      recipientName: recipient.name || recipient.email.split('@')[0],
+      viewUrl: data.viewUrl || `${appUrl}/punch-list`,
+    }
+
+    // Send email notification
+    if (shouldEmail) {
+      try {
+        const { html, text } = generatePunchItemAssignedEmail(emailData)
+        await sendEmail({
+          to: { email: recipient.email, name: recipient.name },
+          subject: `Punch Item Assigned: ${data.itemNumber} - ${data.description.substring(0, 50)}`,
+          html,
+          text,
+          tags: ['punch-item', 'assigned', data.priority || 'normal'],
+        })
+      } catch (error) {
+        logger.error('[NotificationService] Punch item email failed:', error)
+      }
+    }
+
+    // Create in-app notification
+    if (options.sendInApp) {
+      try {
+        await this._createInAppNotification({
+          userId: recipient.userId,
+          type: 'punch_item_assigned',
+          title: 'Punch Item Assignment',
+          message: `You have been assigned to punch item ${data.itemNumber}: ${data.description.substring(0, 100)}`,
+          link: data.viewUrl,
+          priority: data.priority === 'critical' || data.priority === 'high' ? 'high' : 'normal',
+          metadata: {
+            itemNumber: data.itemNumber,
+            description: data.description,
+            projectName: data.projectName,
+            location: data.location,
+            assignedBy: data.assignedBy,
+            priority: data.priority,
+            dueDate: data.dueDate,
+          },
+        })
+      } catch (error) {
+        logger.error('[NotificationService] In-app notification failed:', error)
+      }
+    }
+  },
+
+  /**
+   * Send RFI aging alert notification (before due date)
+   * Called for 7-day, 3-day, and 1-day reminders
+   */
+  async notifyRFIAgingAlert(
+    recipients: NotificationRecipient[],
+    data: Omit<RFIAgingAlertEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    for (const recipient of recipients) {
+      // Check user preferences
+      const preferences = await this._getUserPreferences(recipient.userId)
+      const shouldEmail = options.sendEmail && shouldSendEmail(preferences, 'rfiAssigned')
+
+      const emailData: RFIAgingAlertEmailData = {
+        ...data,
+        recipientName: recipient.name || recipient.email.split('@')[0],
+        viewUrl: data.viewUrl || `${appUrl}/rfis`,
+      }
+
+      // Send email notification
+      if (shouldEmail) {
+        try {
+          const { html, text } = generateRFIAgingAlertEmail(emailData)
+          const urgencyPrefix = data.agingLevel === 'critical' ? 'URGENT: ' : data.agingLevel === 'urgent' ? 'Action Required: ' : ''
+          await sendEmail({
+            to: { email: recipient.email, name: recipient.name },
+            subject: `${urgencyPrefix}RFI ${data.rfiNumber} Due in ${data.daysUntilDue} Day${data.daysUntilDue !== 1 ? 's' : ''}`,
+            html,
+            text,
+            tags: ['rfi', 'reminder', data.agingLevel, `${data.daysUntilDue}-days`],
+          })
+        } catch (error) {
+          logger.error('[NotificationService] RFI aging alert email failed:', error)
+        }
+      }
+
+      // Create in-app notification
+      if (options.sendInApp) {
+        try {
+          await this._createInAppNotification({
+            userId: recipient.userId,
+            type: 'rfi_due_reminder',
+            title: `RFI Due in ${data.daysUntilDue} Day${data.daysUntilDue !== 1 ? 's' : ''}`,
+            message: `RFI ${data.rfiNumber} "${data.rfiTitle}" requires a response by ${data.dueDate}`,
+            link: data.viewUrl,
+            priority: data.agingLevel === 'critical' ? 'high' : data.agingLevel === 'urgent' ? 'normal' : 'low',
+            metadata: {
+              rfiNumber: data.rfiNumber,
+              rfiTitle: data.rfiTitle,
+              projectName: data.projectName,
+              daysUntilDue: data.daysUntilDue,
+              dueDate: data.dueDate,
+              priority: data.priority,
+            },
+          })
+        } catch (error) {
+          logger.error('[NotificationService] In-app notification failed:', error)
+        }
+      }
+    }
+  },
+
+  /**
+   * Send RFI overdue notification (after due date)
+   * Called daily for RFIs past their due date
+   */
+  async notifyRFIOverdue(
+    recipients: NotificationRecipient[],
+    data: Omit<RFIOverdueAlertEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    for (const recipient of recipients) {
+      // Check user preferences - always send for overdue items
+      const emailData: RFIOverdueAlertEmailData = {
+        ...data,
+        recipientName: recipient.name || recipient.email.split('@')[0],
+        viewUrl: data.viewUrl || `${appUrl}/rfis`,
+      }
+
+      // Send email notification (always for overdue)
+      if (options.sendEmail) {
+        try {
+          const { html, text } = generateRFIOverdueEmail(emailData)
+          await sendEmail({
+            to: { email: recipient.email, name: recipient.name },
+            subject: `OVERDUE: RFI ${data.rfiNumber} - ${data.daysOverdue} Day${data.daysOverdue !== 1 ? 's' : ''} Past Due`,
+            html,
+            text,
+            tags: ['rfi', 'overdue', `${data.daysOverdue}-days-overdue`],
+          })
+        } catch (error) {
+          logger.error('[NotificationService] RFI overdue email failed:', error)
+        }
+      }
+
+      // Create in-app notification
+      if (options.sendInApp) {
+        try {
+          await this._createInAppNotification({
+            userId: recipient.userId,
+            type: 'rfi_overdue',
+            title: 'RFI Overdue',
+            message: `RFI ${data.rfiNumber} "${data.rfiTitle}" is ${data.daysOverdue} day${data.daysOverdue !== 1 ? 's' : ''} overdue!`,
+            link: data.viewUrl,
+            priority: 'high',
+            metadata: {
+              rfiNumber: data.rfiNumber,
+              rfiTitle: data.rfiTitle,
+              projectName: data.projectName,
+              daysOverdue: data.daysOverdue,
+              dueDate: data.dueDate,
+              priority: data.priority,
+            },
+          })
+        } catch (error) {
+          logger.error('[NotificationService] In-app notification failed:', error)
+        }
+      }
+    }
+  },
+
+  /**
+   * Send RFI aging summary notification (daily/weekly digest)
+   * Sent to project managers and stakeholders
+   */
+  async notifyRFIAgingSummary(
+    recipient: NotificationRecipient,
+    data: Omit<RFIAgingSummaryEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    const emailData: RFIAgingSummaryEmailData = {
+      ...data,
+      recipientName: recipient.name || recipient.email.split('@')[0],
+      viewAllUrl: data.viewAllUrl || `${appUrl}/projects/${data.projectId}/rfis`,
+    }
+
+    // Send email notification
+    if (options.sendEmail) {
+      try {
+        const { html, text } = generateRFIAgingSummaryEmail(emailData)
+        const hasOverdue = data.overdueCount > 0
+        await sendEmail({
+          to: { email: recipient.email, name: recipient.name },
+          subject: hasOverdue
+            ? `⚠️ RFI Alert: ${data.overdueCount} Overdue - ${data.projectName}`
+            : `RFI Summary: ${data.dueThisWeekCount} Due This Week - ${data.projectName}`,
+          html,
+          text,
+          tags: ['rfi', 'summary', 'digest'],
+        })
+      } catch (error) {
+        logger.error('[NotificationService] RFI summary email failed:', error)
+      }
+    }
+
+    // Create in-app notification
+    if (options.sendInApp && data.overdueCount > 0) {
+      try {
+        await this._createInAppNotification({
+          userId: recipient.userId,
+          type: 'rfi_aging_summary',
+          title: 'RFI Aging Summary',
+          message: `${data.projectName}: ${data.overdueCount} overdue, ${data.dueTodayCount} due today, ${data.dueThisWeekCount} due this week`,
+          link: data.viewAllUrl,
+          priority: data.overdueCount > 0 ? 'high' : 'normal',
+          metadata: {
+            projectName: data.projectName,
+            projectId: data.projectId,
+            overdueCount: data.overdueCount,
+            dueTodayCount: data.dueTodayCount,
+            dueThisWeekCount: data.dueThisWeekCount,
+          },
+        })
+      } catch (error) {
+        logger.error('[NotificationService] In-app notification failed:', error)
+      }
+    }
+  },
+
+  /**
+   * Send submittal deadline reminder notification
+   * Called for 14-day, 7-day, and 3-day reminders
+   */
+  async notifySubmittalReminder(
+    recipients: NotificationRecipient[],
+    data: Omit<SubmittalReminderEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    for (const recipient of recipients) {
+      // Check user preferences
+      const preferences = await this._getUserPreferences(recipient.userId)
+      const shouldEmail = options.sendEmail && shouldSendEmail(preferences, 'taskAssigned') // Use taskAssigned as submittal proxy
+
+      const emailData: SubmittalReminderEmailData = {
+        ...data,
+        recipientName: recipient.name || recipient.email.split('@')[0],
+        viewUrl: data.viewUrl || `${appUrl}/submittals`,
+      }
+
+      // Send email notification
+      if (shouldEmail) {
+        try {
+          const { html, text } = generateSubmittalReminderEmail(emailData)
+          const isOverdue = data.reminderLevel === 'overdue'
+          const isCritical = data.reminderLevel === 'critical'
+          const prefix = isOverdue ? 'OVERDUE: ' : isCritical ? 'URGENT: ' : ''
+          await sendEmail({
+            to: { email: recipient.email, name: recipient.name },
+            subject: `${prefix}Submittal ${data.submittalNumber} - ${Math.abs(data.daysUntilDeadline)} day${Math.abs(data.daysUntilDeadline) !== 1 ? 's' : ''} ${isOverdue ? 'overdue' : 'until due'}`,
+            html,
+            text,
+            tags: ['submittal', 'reminder', data.reminderLevel],
+          })
+        } catch (error) {
+          logger.error('[NotificationService] Submittal reminder email failed:', error)
+        }
+      }
+
+      // Create in-app notification
+      if (options.sendInApp) {
+        try {
+          await this._createInAppNotification({
+            userId: recipient.userId,
+            type: 'submittal_reminder',
+            title: data.reminderLevel === 'overdue' ? 'Submittal Overdue' : 'Submittal Due Soon',
+            message: `Submittal ${data.submittalNumber} "${data.submittalTitle}" ${data.reminderLevel === 'overdue' ? `is ${Math.abs(data.daysUntilDeadline)} days overdue` : `is due in ${data.daysUntilDeadline} days`}`,
+            link: data.viewUrl,
+            priority: data.reminderLevel === 'overdue' || data.reminderLevel === 'critical' ? 'high' : 'normal',
+            metadata: {
+              submittalNumber: data.submittalNumber,
+              submittalTitle: data.submittalTitle,
+              projectName: data.projectName,
+              daysUntilDeadline: data.daysUntilDeadline,
+              reminderLevel: data.reminderLevel,
+            },
+          })
+        } catch (error) {
+          logger.error('[NotificationService] In-app notification failed:', error)
+        }
+      }
+    }
+  },
+
+  /**
+   * Send submittal review turnaround reminder notification
+   * Per AIA standards, architect has 14 calendar days to review
+   */
+  async notifySubmittalReviewReminder(
+    recipient: NotificationRecipient,
+    data: Omit<SubmittalReviewReminderEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    const emailData: SubmittalReviewReminderEmailData = {
+      ...data,
+      recipientName: recipient.name || recipient.email.split('@')[0],
+      viewUrl: data.viewUrl || `${appUrl}/submittals`,
+    }
+
+    // Send email notification
+    if (options.sendEmail) {
+      try {
+        const { html, text } = generateSubmittalReviewReminderEmail(emailData)
+        const subject = data.isOverdue
+          ? `Review Overdue: Submittal ${data.submittalNumber} - ${data.daysInReview} days in review`
+          : `Review Needed: Submittal ${data.submittalNumber} - ${data.daysInReview} days in review`
+        await sendEmail({
+          to: { email: recipient.email, name: recipient.name },
+          subject,
+          html,
+          text,
+          tags: ['submittal', 'review', data.isOverdue ? 'overdue' : 'pending'],
+        })
+      } catch (error) {
+        logger.error('[NotificationService] Submittal review reminder email failed:', error)
+      }
+    }
+
+    // Create in-app notification
+    if (options.sendInApp) {
+      try {
+        await this._createInAppNotification({
+          userId: recipient.userId,
+          type: 'submittal_review_reminder',
+          title: data.isOverdue ? 'Review Overdue' : 'Submittal Awaiting Review',
+          message: `Submittal ${data.submittalNumber} has been in review for ${data.daysInReview} days`,
+          link: data.viewUrl,
+          priority: data.isOverdue ? 'high' : 'normal',
+          metadata: {
+            submittalNumber: data.submittalNumber,
+            submittalTitle: data.submittalTitle,
+            projectName: data.projectName,
+            daysInReview: data.daysInReview,
+            isOverdue: data.isOverdue,
+          },
+        })
+      } catch (error) {
+        logger.error('[NotificationService] In-app notification failed:', error)
+      }
+    }
+  },
+
+  /**
+   * Send submittal aging summary notification (daily/weekly digest)
+   */
+  async notifySubmittalAgingSummary(
+    recipient: NotificationRecipient,
+    data: Omit<SubmittalAgingSummaryEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    const emailData: SubmittalAgingSummaryEmailData = {
+      ...data,
+      recipientName: recipient.name || recipient.email.split('@')[0],
+      viewAllUrl: data.viewAllUrl || `${appUrl}/projects/${data.projectId}/submittals`,
+    }
+
+    // Send email notification
+    if (options.sendEmail) {
+      try {
+        const { html, text } = generateSubmittalAgingSummaryEmail(emailData)
+        const hasOverdue = data.overdueCount > 0
+        await sendEmail({
+          to: { email: recipient.email, name: recipient.name },
+          subject: hasOverdue
+            ? `⚠️ Submittal Alert: ${data.overdueCount} Overdue - ${data.projectName}`
+            : `Submittal Summary: ${data.criticalCount} Critical - ${data.projectName}`,
+          html,
+          text,
+          tags: ['submittal', 'summary', 'digest'],
+        })
+      } catch (error) {
+        logger.error('[NotificationService] Submittal summary email failed:', error)
+      }
+    }
+
+    // Create in-app notification only if there are issues
+    if (options.sendInApp && (data.overdueCount > 0 || data.criticalCount > 0)) {
+      try {
+        await this._createInAppNotification({
+          userId: recipient.userId,
+          type: 'submittal_aging_summary',
+          title: 'Submittal Status Summary',
+          message: `${data.projectName}: ${data.overdueCount} overdue, ${data.criticalCount} critical, ${data.inReviewCount} in review`,
+          link: data.viewAllUrl,
+          priority: data.overdueCount > 0 ? 'high' : 'normal',
+          metadata: {
+            projectName: data.projectName,
+            projectId: data.projectId,
+            overdueCount: data.overdueCount,
+            criticalCount: data.criticalCount,
+            inReviewCount: data.inReviewCount,
+          },
+        })
+      } catch (error) {
+        logger.error('[NotificationService] In-app notification failed:', error)
+      }
+    }
+  },
+
+  /**
+   * Send daily report missing notification
+   * Called when a daily report is missing for a project
+   */
+  async notifyDailyReportMissing(
+    recipients: NotificationRecipient[],
+    data: Omit<DailyReportMissingEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    for (const recipient of recipients) {
+      const emailData: DailyReportMissingEmailData = {
+        ...data,
+        recipientName: recipient.name || recipient.email.split('@')[0],
+        viewUrl: data.viewUrl || `${appUrl}/daily-reports`,
+        createUrl: data.createUrl || `${appUrl}/daily-reports/new`,
+      }
+
+      // Send email notification
+      if (options.sendEmail) {
+        try {
+          const { html, text } = generateDailyReportMissingEmail(emailData)
+          const isCritical = data.daysMissing >= 3
+          await sendEmail({
+            to: { email: recipient.email, name: recipient.name },
+            subject: isCritical
+              ? `URGENT: ${data.daysMissing} Days of Daily Reports Missing - ${data.projectName}`
+              : `Daily Report Missing: ${data.projectName} - ${data.missingDate}`,
+            html,
+            text,
+            tags: ['daily-report', 'missing', isCritical ? 'critical' : 'reminder'],
+          })
+        } catch (error) {
+          logger.error('[NotificationService] Daily report missing email failed:', error)
+        }
+      }
+
+      // Create in-app notification
+      if (options.sendInApp) {
+        try {
+          await this._createInAppNotification({
+            userId: recipient.userId,
+            type: 'daily_report_missing',
+            title: 'Daily Report Missing',
+            message: `Daily report for ${data.missingDate} is missing on ${data.projectName}`,
+            link: data.createUrl,
+            priority: data.daysMissing >= 3 ? 'high' : 'normal',
+            metadata: {
+              projectName: data.projectName,
+              missingDate: data.missingDate,
+              daysMissing: data.daysMissing,
+            },
+          })
+        } catch (error) {
+          logger.error('[NotificationService] In-app notification failed:', error)
+        }
+      }
+    }
+  },
+
+  /**
+   * Send daily report compliance summary notification
+   */
+  async notifyDailyReportSummary(
+    recipient: NotificationRecipient,
+    data: Omit<DailyReportSummaryEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    const emailData: DailyReportSummaryEmailData = {
+      ...data,
+      recipientName: recipient.name || recipient.email.split('@')[0],
+      viewAllUrl: data.viewAllUrl || `${appUrl}/projects/${data.projectId}/daily-reports`,
+    }
+
+    // Send email notification
+    if (options.sendEmail) {
+      try {
+        const { html, text } = generateDailyReportSummaryEmail(emailData)
+        const isCompliant = data.compliancePercentage >= 90
+        await sendEmail({
+          to: { email: recipient.email, name: recipient.name },
+          subject: isCompliant
+            ? `Daily Report Summary: ${data.compliancePercentage}% Compliance - ${data.projectName}`
+            : `⚠️ Daily Report Alert: ${data.missingDays} Missing - ${data.projectName}`,
+          html,
+          text,
+          tags: ['daily-report', 'summary', isCompliant ? 'compliant' : 'non-compliant'],
+        })
+      } catch (error) {
+        logger.error('[NotificationService] Daily report summary email failed:', error)
+      }
+    }
+
+    // Create in-app notification only if there are missing reports
+    if (options.sendInApp && data.missingDays > 0) {
+      try {
+        await this._createInAppNotification({
+          userId: recipient.userId,
+          type: 'daily_report_summary',
+          title: 'Daily Report Summary',
+          message: `${data.projectName}: ${data.compliancePercentage}% compliance, ${data.missingDays} days missing`,
+          link: data.viewAllUrl,
+          priority: data.compliancePercentage < 70 ? 'high' : 'normal',
+          metadata: {
+            projectName: data.projectName,
+            projectId: data.projectId,
+            compliancePercentage: data.compliancePercentage,
+            missingDays: data.missingDays,
+          },
+        })
+      } catch (error) {
+        logger.error('[NotificationService] In-app notification failed:', error)
+      }
+    }
+  },
+
+  /**
+   * Send change order aging alert notification
+   * For COs pending > 14 days (urgent) or > 30 days (critical)
+   */
+  async notifyChangeOrderAging(
+    recipients: NotificationRecipient[],
+    data: Omit<ChangeOrderAgingAlertEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    for (const recipient of recipients) {
+      const emailData: ChangeOrderAgingAlertEmailData = {
+        ...data,
+        recipientName: recipient.name || recipient.email.split('@')[0],
+        viewUrl: data.viewUrl || `${appUrl}/change-orders`,
+      }
+
+      // Send email notification
+      if (options.sendEmail) {
+        try {
+          const { html, text } = generateChangeOrderAgingAlertEmail(emailData)
+          const prefix = data.isCritical ? 'CRITICAL: ' : data.isUrgent ? 'URGENT: ' : ''
+          await sendEmail({
+            to: { email: recipient.email, name: recipient.name },
+            subject: `${prefix}CO ${data.changeOrderNumber} pending ${data.daysInStatus} days - ${data.amount}`,
+            html,
+            text,
+            tags: ['change-order', 'aging', data.isCritical ? 'critical' : data.isUrgent ? 'urgent' : 'reminder'],
+          })
+        } catch (error) {
+          logger.error('[NotificationService] CO aging email failed:', error)
+        }
+      }
+
+      // Create in-app notification
+      if (options.sendInApp) {
+        try {
+          await this._createInAppNotification({
+            userId: recipient.userId,
+            type: 'change_order_aging',
+            title: data.isCritical ? 'CO Critical: Action Required' : data.isUrgent ? 'CO Pending Review' : 'CO Status Update',
+            message: `CO ${data.changeOrderNumber} has been pending for ${data.daysInStatus} days (${data.amount})`,
+            link: data.viewUrl,
+            priority: data.isCritical ? 'high' : data.isUrgent ? 'normal' : 'low',
+            metadata: {
+              changeOrderNumber: data.changeOrderNumber,
+              title: data.title,
+              projectName: data.projectName,
+              daysInStatus: data.daysInStatus,
+              amount: data.amount,
+            },
+          })
+        } catch (error) {
+          logger.error('[NotificationService] In-app notification failed:', error)
+        }
+      }
+    }
+  },
+
+  /**
+   * Send change order budget threshold alert
+   * For contingency usage warnings (50%, 75%, 100%+)
+   */
+  async notifyChangeOrderBudgetAlert(
+    recipients: NotificationRecipient[],
+    data: Omit<ChangeOrderBudgetAlertEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    for (const recipient of recipients) {
+      const emailData: ChangeOrderBudgetAlertEmailData = {
+        ...data,
+        recipientName: recipient.name || recipient.email.split('@')[0],
+        viewUrl: data.viewUrl || `${appUrl}/projects/${data.projectId}/change-orders`,
+      }
+
+      // Send email notification
+      if (options.sendEmail) {
+        try {
+          const { html, text } = generateChangeOrderBudgetAlertEmail(emailData)
+          const thresholdLabel = data.thresholdBreached === 'exceeded' ? 'EXCEEDED' : data.thresholdBreached === 'critical' ? 'CRITICAL' : 'WARNING'
+          await sendEmail({
+            to: { email: recipient.email, name: recipient.name },
+            subject: `Contingency ${thresholdLabel}: ${data.contingencyPercentUsed}% used - ${data.projectName}`,
+            html,
+            text,
+            tags: ['change-order', 'budget', data.thresholdBreached],
+          })
+        } catch (error) {
+          logger.error('[NotificationService] CO budget alert email failed:', error)
+        }
+      }
+
+      // Create in-app notification
+      if (options.sendInApp) {
+        try {
+          await this._createInAppNotification({
+            userId: recipient.userId,
+            type: 'change_order_budget_alert',
+            title: `Contingency ${data.thresholdBreached === 'exceeded' ? 'Exceeded' : 'Alert'}`,
+            message: `${data.projectName}: ${data.contingencyPercentUsed}% of contingency used. Remaining: ${data.remainingContingency}`,
+            link: data.viewUrl,
+            priority: data.thresholdBreached === 'exceeded' || data.thresholdBreached === 'critical' ? 'high' : 'normal',
+            metadata: {
+              projectName: data.projectName,
+              projectId: data.projectId,
+              contingencyPercentUsed: data.contingencyPercentUsed,
+              remainingContingency: data.remainingContingency,
+              thresholdBreached: data.thresholdBreached,
+            },
+          })
+        } catch (error) {
+          logger.error('[NotificationService] In-app notification failed:', error)
+        }
+      }
+    }
+  },
+
+  /**
+   * Send change order aging summary notification (weekly digest)
+   */
+  async notifyChangeOrderAgingSummary(
+    recipient: NotificationRecipient,
+    data: Omit<ChangeOrderAgingSummaryEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    const emailData: ChangeOrderAgingSummaryEmailData = {
+      ...data,
+      recipientName: recipient.name || recipient.email.split('@')[0],
+      viewAllUrl: data.viewAllUrl || `${appUrl}/projects/${data.projectId}/change-orders`,
+    }
+
+    // Send email notification
+    if (options.sendEmail) {
+      try {
+        const { html, text } = generateChangeOrderAgingSummaryEmail(emailData)
+        await sendEmail({
+          to: { email: recipient.email, name: recipient.name },
+          subject: `CO Summary: ${data.pendingCount} pending (${data.totalPendingAmount}) - ${data.projectName}`,
+          html,
+          text,
+          tags: ['change-order', 'summary', 'digest'],
+        })
+      } catch (error) {
+        logger.error('[NotificationService] CO summary email failed:', error)
+      }
+    }
+
+    // Create in-app notification only if there are overdue items
+    if (options.sendInApp && data.overdueCount > 0) {
+      try {
+        await this._createInAppNotification({
+          userId: recipient.userId,
+          type: 'change_order_aging_summary',
+          title: 'Change Order Summary',
+          message: `${data.projectName}: ${data.pendingCount} pending (${data.totalPendingAmount}), ${data.overdueCount} overdue`,
+          link: data.viewAllUrl,
+          priority: data.overdueCount > 0 ? 'high' : 'normal',
+          metadata: {
+            projectName: data.projectName,
+            projectId: data.projectId,
+            pendingCount: data.pendingCount,
+            totalPendingAmount: data.totalPendingAmount,
+            overdueCount: data.overdueCount,
+          },
+        })
+      } catch (error) {
+        logger.error('[NotificationService] In-app notification failed:', error)
+      }
+    }
+  },
+
+  /**
+   * Send drawing revision notification
+   * Sent when a drawing is uploaded or revised
+   */
+  async notifyDrawingRevision(
+    recipients: NotificationRecipient[],
+    data: Omit<DrawingRevisionEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const isNewDrawing = !data.previousRevision
+
+    for (const recipient of recipients) {
+      // Check user preferences
+      const preferences = await this._getUserPreferences(recipient.userId)
+      const shouldEmail = options.sendEmail && shouldSendEmail(preferences, 'documentUploaded')
+
+      const emailData: DrawingRevisionEmailData = {
+        ...data,
+        recipientName: recipient.name || recipient.email.split('@')[0],
+        viewUrl: data.viewUrl || `${appUrl}/drawings`,
+      }
+
+      // Send email notification
+      if (shouldEmail) {
+        try {
+          const { html, text } = generateDrawingRevisionEmail(emailData)
+          const subject = isNewDrawing
+            ? `New Drawing: ${data.drawingNumber} - ${data.projectName}`
+            : `Drawing Revised: ${data.drawingNumber} Rev ${data.newRevision} - ${data.projectName}`
+          await sendEmail({
+            to: { email: recipient.email, name: recipient.name },
+            subject,
+            html,
+            text,
+            tags: ['drawing', 'revision', isNewDrawing ? 'new' : 'revised'],
+          })
+        } catch (error) {
+          logger.error('[NotificationService] Drawing revision email failed:', error)
+        }
+      }
+
+      // Create in-app notification
+      if (options.sendInApp) {
+        try {
+          await this._createInAppNotification({
+            userId: recipient.userId,
+            type: isNewDrawing ? 'drawing_new' : 'drawing_revised',
+            title: isNewDrawing ? 'New Drawing Issued' : 'Drawing Revised',
+            message: isNewDrawing
+              ? `New drawing ${data.drawingNumber} "${data.drawingTitle}" issued for ${data.projectName}`
+              : `Drawing ${data.drawingNumber} revised to Rev ${data.newRevision} for ${data.projectName}`,
+            link: data.viewUrl,
+            priority: 'high', // Drawing revisions are always important
+            metadata: {
+              drawingNumber: data.drawingNumber,
+              drawingTitle: data.drawingTitle,
+              projectName: data.projectName,
+              previousRevision: data.previousRevision,
+              newRevision: data.newRevision,
+            },
+          })
+        } catch (error) {
+          logger.error('[NotificationService] In-app notification failed:', error)
+        }
+      }
+    }
+  },
+
+  /**
+   * Send drawing set revision notification
+   * Sent when multiple drawings are issued together (ASI, Addendum, etc.)
+   */
+  async notifyDrawingSetRevision(
+    recipients: NotificationRecipient[],
+    data: Omit<DrawingSetRevisionEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    for (const recipient of recipients) {
+      // Check user preferences
+      const preferences = await this._getUserPreferences(recipient.userId)
+      const shouldEmail = options.sendEmail && shouldSendEmail(preferences, 'documentUploaded')
+
+      const emailData: DrawingSetRevisionEmailData = {
+        ...data,
+        recipientName: recipient.name || recipient.email.split('@')[0],
+        viewUrl: data.viewUrl || `${appUrl}/drawings`,
+      }
+
+      // Send email notification
+      if (shouldEmail) {
+        try {
+          const { html, text } = generateDrawingSetRevisionEmail(emailData)
+          const subject = `Drawing Set Issued: ${data.setName} (${data.revisedDrawings} revised, ${data.newDrawings} new) - ${data.projectName}`
+          await sendEmail({
+            to: { email: recipient.email, name: recipient.name },
+            subject,
+            html,
+            text,
+            tags: ['drawing', 'set', 'revision', data.issueReason.toLowerCase()],
+          })
+        } catch (error) {
+          logger.error('[NotificationService] Drawing set email failed:', error)
+        }
+      }
+
+      // Create in-app notification
+      if (options.sendInApp) {
+        try {
+          await this._createInAppNotification({
+            userId: recipient.userId,
+            type: 'drawing_set_issued',
+            title: 'Drawing Set Issued',
+            message: `${data.setName}: ${data.revisedDrawings} revised, ${data.newDrawings} new drawings for ${data.projectName}`,
+            link: data.viewUrl,
+            priority: 'high',
+            metadata: {
+              setName: data.setName,
+              projectName: data.projectName,
+              issueReason: data.issueReason,
+              revisedCount: data.revisedDrawings,
+              newCount: data.newDrawings,
+            },
+          })
+        } catch (error) {
+          logger.error('[NotificationService] In-app notification failed:', error)
+        }
+      }
+    }
+  },
+
+  /**
+   * Send superseded drawings alert notification
+   * Sent when drawings are marked as superseded/voided - critical notification
+   */
+  async notifySupersededDrawings(
+    recipients: NotificationRecipient[],
+    data: Omit<DrawingSupersededEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    for (const recipient of recipients) {
+      // Always send superseded drawing alerts - these are critical
+      const emailData: DrawingSupersededEmailData = {
+        ...data,
+        recipientName: recipient.name || recipient.email.split('@')[0],
+        viewUrl: data.viewUrl || `${appUrl}/drawings`,
+      }
+
+      // Send email notification - always for superseded drawings
+      if (options.sendEmail) {
+        try {
+          const { html, text } = generateSupersededDrawingsEmail(emailData)
+          const subject = `SUPERSEDED: ${data.supersededDrawings.length} drawing${data.supersededDrawings.length !== 1 ? 's' : ''} - ${data.projectName}`
+          await sendEmail({
+            to: { email: recipient.email, name: recipient.name },
+            subject,
+            html,
+            text,
+            tags: ['drawing', 'superseded', 'urgent'],
+          })
+        } catch (error) {
+          logger.error('[NotificationService] Superseded drawings email failed:', error)
+        }
+      }
+
+      // Create in-app notification
+      if (options.sendInApp) {
+        try {
+          const drawingNumbers = data.supersededDrawings.map(d => d.drawingNumber).slice(0, 5)
+          const more = data.supersededDrawings.length > 5 ? ` +${data.supersededDrawings.length - 5} more` : ''
+          await this._createInAppNotification({
+            userId: recipient.userId,
+            type: 'drawings_superseded',
+            title: 'Drawings Superseded',
+            message: `${drawingNumbers.join(', ')}${more} superseded for ${data.projectName}`,
+            link: data.viewUrl,
+            priority: 'high', // Always high priority
+            metadata: {
+              projectName: data.projectName,
+              supersededCount: data.supersededDrawings.length,
+              drawingNumbers: data.supersededDrawings.map(d => d.drawingNumber),
+            },
+          })
+        } catch (error) {
+          logger.error('[NotificationService] In-app notification failed:', error)
+        }
+      }
+    }
+  },
+
+  /**
    * Create an in-app notification (stored in database)
    */
   async _createInAppNotification(data: {
@@ -1083,4 +2035,177 @@ export async function sendPortalInvitationNotification(
   options?: NotificationOptions
 ): Promise<void> {
   return notificationService.notifyPortalInvitation(recipientEmail, data, options)
+}
+
+/**
+ * Send punch item assigned notification
+ */
+export async function sendPunchItemAssignedNotification(
+  recipient: NotificationRecipient,
+  data: Omit<PunchItemAssignedEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifyPunchItemAssigned(recipient, data, options)
+}
+
+/**
+ * Send RFI aging alert notification (before due date)
+ * Use for 7-day, 3-day, and 1-day reminders
+ */
+export async function sendRFIAgingAlertNotification(
+  recipients: NotificationRecipient[],
+  data: Omit<RFIAgingAlertEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifyRFIAgingAlert(recipients, data, options)
+}
+
+/**
+ * Send RFI overdue notification (after due date)
+ */
+export async function sendRFIOverdueNotification(
+  recipients: NotificationRecipient[],
+  data: Omit<RFIOverdueAlertEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifyRFIOverdue(recipients, data, options)
+}
+
+/**
+ * Send RFI aging summary notification (daily/weekly digest)
+ */
+export async function sendRFIAgingSummaryNotification(
+  recipient: NotificationRecipient,
+  data: Omit<RFIAgingSummaryEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifyRFIAgingSummary(recipient, data, options)
+}
+
+/**
+ * Send submittal deadline reminder notification
+ * Use for 14-day, 7-day, and 3-day reminders
+ */
+export async function sendSubmittalReminderNotification(
+  recipients: NotificationRecipient[],
+  data: Omit<SubmittalReminderEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifySubmittalReminder(recipients, data, options)
+}
+
+/**
+ * Send submittal review turnaround reminder notification
+ * Per AIA standards, architect has 14 calendar days to review
+ */
+export async function sendSubmittalReviewReminderNotification(
+  recipient: NotificationRecipient,
+  data: Omit<SubmittalReviewReminderEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifySubmittalReviewReminder(recipient, data, options)
+}
+
+/**
+ * Send submittal aging summary notification (daily/weekly digest)
+ */
+export async function sendSubmittalAgingSummaryNotification(
+  recipient: NotificationRecipient,
+  data: Omit<SubmittalAgingSummaryEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifySubmittalAgingSummary(recipient, data, options)
+}
+
+/**
+ * Send daily report missing notification
+ */
+export async function sendDailyReportMissingNotification(
+  recipients: NotificationRecipient[],
+  data: Omit<DailyReportMissingEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifyDailyReportMissing(recipients, data, options)
+}
+
+/**
+ * Send daily report compliance summary notification
+ */
+export async function sendDailyReportSummaryNotification(
+  recipient: NotificationRecipient,
+  data: Omit<DailyReportSummaryEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifyDailyReportSummary(recipient, data, options)
+}
+
+/**
+ * Send change order aging alert notification
+ * Use for COs pending > 14 days (urgent) or > 30 days (critical)
+ */
+export async function sendChangeOrderAgingAlertNotification(
+  recipients: NotificationRecipient[],
+  data: Omit<ChangeOrderAgingAlertEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifyChangeOrderAging(recipients, data, options)
+}
+
+/**
+ * Send change order budget/contingency threshold alert notification
+ * Use when contingency usage hits 50%, 75%, or 100%
+ */
+export async function sendChangeOrderBudgetAlertNotification(
+  recipients: NotificationRecipient[],
+  data: Omit<ChangeOrderBudgetAlertEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifyChangeOrderBudgetAlert(recipients, data, options)
+}
+
+/**
+ * Send change order aging summary notification (weekly digest)
+ */
+export async function sendChangeOrderAgingSummaryNotification(
+  recipient: NotificationRecipient,
+  data: Omit<ChangeOrderAgingSummaryEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifyChangeOrderAgingSummary(recipient, data, options)
+}
+
+/**
+ * Send drawing revision notification
+ * Use when a single drawing is uploaded or revised
+ */
+export async function sendDrawingRevisionNotification(
+  recipients: NotificationRecipient[],
+  data: Omit<DrawingRevisionEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifyDrawingRevision(recipients, data, options)
+}
+
+/**
+ * Send drawing set revision notification
+ * Use when multiple drawings are issued together (ASI, Addendum, etc.)
+ */
+export async function sendDrawingSetRevisionNotification(
+  recipients: NotificationRecipient[],
+  data: Omit<DrawingSetRevisionEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifyDrawingSetRevision(recipients, data, options)
+}
+
+/**
+ * Send superseded drawings alert notification
+ * Use when drawings are marked as superseded/voided - critical notification
+ */
+export async function sendSupersededDrawingsNotification(
+  recipients: NotificationRecipient[],
+  data: Omit<DrawingSupersededEmailData, 'recipientName'>,
+  options?: NotificationOptions
+): Promise<void> {
+  return notificationService.notifySupersededDrawings(recipients, data, options)
 }

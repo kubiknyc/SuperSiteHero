@@ -4,7 +4,7 @@
 import { useState, useMemo, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
-import { useMyProjects } from '@/features/projects/hooks/useProjects'
+import { useSelectedProject } from '@/hooks/useSelectedProject'
 import { useTasks } from '@/features/tasks/hooks/useTasks'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -27,13 +27,16 @@ import { format, isPast } from 'date-fns'
 import type { Task } from '@/types/database'
 
 export function TasksPage() {
-  const { data: projects } = useMyProjects()
+  const { selectedProjectId, setSelectedProjectId, projects } = useSelectedProject()
   const [searchParams, setSearchParams] = useSearchParams()
 
-  // Initialize filters from URL params
-  const [selectedProjectId, setSelectedProjectId] = useState<string>(
-    searchParams.get('projectId') || ''
-  )
+  // Sync URL params with persistent project selection on mount
+  useEffect(() => {
+    const urlProjectId = searchParams.get('projectId')
+    if (urlProjectId && urlProjectId !== selectedProjectId) {
+      setSelectedProjectId(urlProjectId)
+    }
+  }, []) // Only run on mount
   const [statusFilter, setStatusFilter] = useState<string>(
     searchParams.get('status') || 'all'
   )

@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from 'react'
 import { AppLayout } from '@/components/layout/AppLayout'
-import { useMyProjects } from '@/features/projects/hooks/useProjects'
+import { useSelectedProject } from '@/hooks/useSelectedProject'
 import { useWeatherLogs, useWeatherStatistics, type WeatherLogFilters } from '@/features/weather-logs/hooks/useWeatherLogs'
 import { WeatherLogCard } from '@/features/weather-logs/components/WeatherLogCard'
 import { WeatherLogFormDialog } from '@/features/weather-logs/components/WeatherLogFormDialog'
@@ -29,9 +29,8 @@ import { format, subDays, startOfMonth } from 'date-fns'
 import { cn } from '@/lib/utils'
 
 export function WeatherLogsPage() {
-  const { data: projects, isLoading: projectsLoading } = useMyProjects()
+  const { selectedProjectId, setSelectedProjectId, projects, isLoading: projectsLoading } = useSelectedProject()
 
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('')
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [showFilters, setShowFilters] = useState(false)

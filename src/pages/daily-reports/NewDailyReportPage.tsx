@@ -1,5 +1,5 @@
 import { useNavigate, useSearchParams, Link } from 'react-router-dom'
-import { useMyProjects } from '@/features/projects/hooks/useProjects'
+import { useSelectedProject } from '@/hooks/useSelectedProject'
 import { DailyReportForm } from '@/features/daily-reports/components/DailyReportForm'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Card, CardContent } from '@/components/ui/card'
@@ -16,10 +16,15 @@ import toast from 'react-hot-toast'
 export function NewDailyReportPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const { data: projects } = useMyProjects()
-  const [selectedProjectId, setSelectedProjectId] = useState<string>(
-    searchParams.get('projectId') || ''
-  )
+  const { selectedProjectId, setSelectedProjectId, projects } = useSelectedProject()
+
+  // Sync from URL on mount if URL has projectId
+  useState(() => {
+    const urlProjectId = searchParams.get('projectId')
+    if (urlProjectId && urlProjectId !== selectedProjectId) {
+      setSelectedProjectId(urlProjectId)
+    }
+  })
   const [selectedDate, setSelectedDate] = useState<string>(
     new Date().toISOString().split('T')[0]
   )

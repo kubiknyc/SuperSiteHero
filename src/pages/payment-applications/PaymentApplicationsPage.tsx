@@ -6,7 +6,7 @@ import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
 import { AppLayout } from '@/components/layout/AppLayout'
-import { useProjects } from '@/features/projects/hooks/useProjects'
+import { useSelectedProject } from '@/hooks/useSelectedProject'
 import {
   useProjectPaymentApplications,
   useProjectPaymentSummary,
@@ -42,12 +42,11 @@ import type { PaymentApplicationStatus, PaymentApplicationWithDetails } from '@/
 
 export function PaymentApplicationsPage() {
   const navigate = useNavigate()
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('')
+  const { selectedProjectId, setSelectedProjectId, projects, isLoading: projectsLoading } = useSelectedProject()
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<PaymentApplicationStatus | 'all'>('all')
 
   // Fetch data
-  const { data: projects, isLoading: projectsLoading } = useProjects()
   const { data: applications, isLoading: applicationsLoading, error } = useProjectPaymentApplications(
     selectedProjectId || undefined
   )

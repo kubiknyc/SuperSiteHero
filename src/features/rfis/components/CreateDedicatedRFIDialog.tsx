@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
+import { Badge } from '@/components/ui/badge'
 import {
   Loader2,
   Calendar,
@@ -21,6 +22,8 @@ import {
   X,
   Check,
   UserPlus,
+  MapPin,
+  Image,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
@@ -28,7 +31,9 @@ import {
   RFI_PRIORITIES,
   BALL_IN_COURT_ROLES,
 } from '../hooks/useDedicatedRFIs'
+import { useAddRFIDrawingLink } from '../hooks/useRFIDrawingLinks'
 import { RFIRoutingSuggestions } from './RFIRoutingSuggestions'
+import { DrawingPickerDialog, type SelectedDrawing } from '@/components/shared/DrawingPickerDialog'
 import { useProjectUsers } from '@/features/messaging/hooks/useProjectUsers'
 import { useAuth } from '@/lib/auth/AuthContext'
 import type { RFIPriority, BallInCourtRole } from '@/types/database-extensions'
@@ -95,12 +100,17 @@ export function CreateDedicatedRFIDialog({
   const [costImpact, setCostImpact] = useState<string>('')
   const [scheduleImpactDays, setScheduleImpactDays] = useState<string>('')
 
+  // Drawing picker state
+  const [showDrawingPicker, setShowDrawingPicker] = useState(false)
+  const [selectedDrawing, setSelectedDrawing] = useState<SelectedDrawing | null>(null)
+
   // Distribution list state
   const [distributionList, setDistributionList] = useState<DistributionUser[]>([])
   const [showDistributionPicker, setShowDistributionPicker] = useState(false)
   const [distributionFilter, setDistributionFilter] = useState('')
 
   const createRFI = useCreateRFI()
+  const addDrawingLink = useAddRFIDrawingLink()
 
   // Memoize today's date to avoid calling format(new Date()) during render
   const minDate = useMemo(() => format(new Date(), 'yyyy-MM-dd'), [])
@@ -148,9 +158,24 @@ export function CreateDedicatedRFIDialog({
     setBallInCourtRole('')
     setCostImpact('')
     setScheduleImpactDays('')
+    setSelectedDrawing(null)
+    setShowDrawingPicker(false)
     setDistributionList([])
     setShowDistributionPicker(false)
     setDistributionFilter('')
+  }
+
+  // Handle drawing selection from picker
+  const handleDrawingSelect = (drawing: SelectedDrawing) => {
+    setSelectedDrawing(drawing)
+    // Also update the text reference for backward compatibility
+    setDrawingReference(drawing.drawingNumber)
+  }
+
+  // Remove selected drawing
+  const handleRemoveDrawing = () => {
+    setSelectedDrawing(null)
+    setDrawingReference('')
   }
 
   // Toggle user in distribution list
@@ -172,7 +197,7 @@ export function CreateDedicatedRFIDialog({
     }
 
     try {
-      await createRFI.mutateAsync({
+      const createdRFI = await createRFI.mutateAsync({
         project_id: projectId,
         subject: subject.trim(),
         question: question.trim(),
@@ -187,6 +212,23 @@ export function CreateDedicatedRFIDialog({
         status: 'draft',
         distribution_list: distributionList.map(u => u.id),
       })
+
+      // If a drawing was selected with the picker, create the drawing link
+      if (selectedDrawing && createdRFI?.rfi?.id) {
+        try {
+          await addDrawingLink.mutateAsync({
+            rfi_id: createdRFI.rfi.id,
+            document_id: selectedDrawing.id,
+            drawing_number: selectedDrawing.drawingNumber,
+            pin_x: selectedDrawing.pinX,
+            pin_y: selectedDrawing.pinY,
+            pin_label: selectedDrawing.pinLabel,
+          })
+        } catch (linkError) {
+          // Log but don't fail the RFI creation if linking fails
+          logger.warn('Failed to create drawing link:', linkError)
+        }
+      }
 
       resetForm()
       onOpenChange(false)
@@ -274,17 +316,76 @@ export function CreateDedicatedRFIDialog({
           {/* Drawing Reference and Spec Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="drawing-reference" className="flex items-center gap-2">
-                <FileText className="h-4 w-4 text-purple-500" />
+              <Label className="flex items-center gap-2">
+                <Image className="h-4 w-4 text-purple-500" />
                 Drawing Reference
               </Label>
-              <Input
-                id="drawing-reference"
-                value={drawingReference}
-                onChange={(e) => setDrawingReference(e.target.value)}
-                placeholder="e.g., A-101, S-201, M-301"
-                disabled={createRFI.isPending}
-              />
+
+              {selectedDrawing ? (
+                <div className="flex items-center gap-2 p-2 bg-purple-50 border border-purple-200 rounded-lg">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-sm text-purple-900">
+                        {selectedDrawing.drawingNumber}
+                      </span>
+                      {selectedDrawing.discipline && (
+                        <Badge variant="outline" className="text-xs">
+                          {selectedDrawing.discipline}
+                        </Badge>
+                      )}
+                      {selectedDrawing.pinX !== undefined && (
+                        <Badge className="text-xs bg-red-100 text-red-800">
+                          <MapPin className="h-3 w-3 mr-1" />
+                          Pin
+                        </Badge>
+                      )}
+                    </div>
+                    <p className="text-xs text-purple-700 truncate">
+                      {selectedDrawing.title}
+                    </p>
+                    {selectedDrawing.pinLabel && (
+                      <p className="text-xs text-muted-foreground">
+                        Location: {selectedDrawing.pinLabel}
+                      </p>
+                    )}
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleRemoveDrawing}
+                    disabled={createRFI.isPending}
+                    className="text-purple-600 hover:text-purple-800 hover:bg-purple-100"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <Input
+                    id="drawing-reference"
+                    value={drawingReference}
+                    onChange={(e) => setDrawingReference(e.target.value)}
+                    placeholder="e.g., A-101"
+                    disabled={createRFI.isPending}
+                    className="flex-1"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => setShowDrawingPicker(true)}
+                    disabled={createRFI.isPending}
+                    title="Select from drawings"
+                    className="flex-shrink-0"
+                  >
+                    <Image className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
+              <p className="text-xs text-muted">
+                Type a reference or click the icon to select from project drawings
+              </p>
             </div>
 
             <div className="space-y-2">
@@ -569,6 +670,17 @@ export function CreateDedicatedRFIDialog({
             </Button>
           </div>
         </form>
+
+        {/* Drawing Picker Dialog */}
+        <DrawingPickerDialog
+          projectId={projectId}
+          open={showDrawingPicker}
+          onOpenChange={setShowDrawingPicker}
+          onSelect={handleDrawingSelect}
+          enablePinPlacement={true}
+          title="Select Drawing for RFI"
+          description="Choose a drawing and optionally place a pin to mark the exact location of your question"
+        />
       </DialogContent>
     </Dialog>
   )
