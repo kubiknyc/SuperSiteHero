@@ -60,7 +60,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { useToast } from '@/hooks/use-toast'
+import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { useOfflineSync, useSyncStatusDisplay } from '@/hooks/useOfflineSync'
 import type { PendingSyncItem, SyncConflict } from '@/stores/offline-store'
@@ -361,7 +361,6 @@ function StorageUsage({ storage }: { storage: StorageInfo | null }) {
 // ============================================================================
 
 export function SyncStatusPanel({ className }: SyncStatusPanelProps) {
-  const { toast } = useToast()
   const {
     status,
     queueStats,
@@ -392,18 +391,15 @@ export function SyncStatusPanel({ className }: SyncStatusPanelProps) {
     }
   }, [syncQueue])
 
-  const handleRetry = async (id: string) => {
+  const handleRetry = async (_id: string) => {
     try {
       await retryFailed()
-      toast({
-        title: 'Retry initiated',
+      toast.success('Retry initiated', {
         description: 'Failed items will be synced shortly.',
       })
     } catch {
-      toast({
-        title: 'Retry failed',
+      toast.error('Retry failed', {
         description: 'Could not retry sync. Please try again.',
-        variant: 'destructive',
       })
     }
   }
@@ -411,15 +407,12 @@ export function SyncStatusPanel({ className }: SyncStatusPanelProps) {
   const handleRemove = async (id: string) => {
     try {
       await removePendingSync(id)
-      toast({
-        title: 'Item removed',
+      toast.success('Item removed', {
         description: 'Pending change has been discarded.',
       })
     } catch {
-      toast({
-        title: 'Remove failed',
+      toast.error('Remove failed', {
         description: 'Could not remove item. Please try again.',
-        variant: 'destructive',
       })
     }
   }
@@ -430,15 +423,12 @@ export function SyncStatusPanel({ className }: SyncStatusPanelProps) {
   ) => {
     try {
       await resolveConflict(id, resolution)
-      toast({
-        title: 'Conflict resolved',
+      toast.success('Conflict resolved', {
         description: `Used ${resolution} version to resolve the conflict.`,
       })
     } catch {
-      toast({
-        title: 'Resolution failed',
+      toast.error('Resolution failed', {
         description: 'Could not resolve conflict. Please try again.',
-        variant: 'destructive',
       })
     }
   }
@@ -446,15 +436,12 @@ export function SyncStatusPanel({ className }: SyncStatusPanelProps) {
   const handleClearQueue = async () => {
     try {
       await clearSyncQueue()
-      toast({
-        title: 'Queue cleared',
+      toast.success('Queue cleared', {
         description: 'All pending changes have been discarded.',
       })
     } catch {
-      toast({
-        title: 'Clear failed',
+      toast.error('Clear failed', {
         description: 'Could not clear sync queue. Please try again.',
-        variant: 'destructive',
       })
     }
   }
@@ -462,15 +449,12 @@ export function SyncStatusPanel({ className }: SyncStatusPanelProps) {
   const handleManualSync = async () => {
     try {
       await triggerSync()
-      toast({
-        title: 'Sync started',
+      toast.info('Sync started', {
         description: 'Syncing all pending changes...',
       })
     } catch {
-      toast({
-        title: 'Sync failed',
+      toast.error('Sync failed', {
         description: 'Could not start sync. Please try again.',
-        variant: 'destructive',
       })
     }
   }

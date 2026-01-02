@@ -13,6 +13,11 @@ import {
   CloseoutDocumentFormDialog,
   WarrantyFormDialog,
   PunchListCloseoutSummary,
+  OMManualBuilder,
+  AtticStockTracker,
+  TrainingRecords,
+  WarrantyClaims,
+  CloseoutDashboard,
   useCloseoutDocuments,
   useWarranties,
   useCloseoutStatistics,
@@ -53,6 +58,11 @@ import {
   CheckCircle2,
   Clock,
   CheckSquare,
+  BookOpen,
+  Package,
+  GraduationCap,
+  AlertTriangle,
+  LayoutDashboard,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import { format } from 'date-fns'
@@ -182,7 +192,7 @@ function exportWarrantiesToCSV(warranties: WarrantyWithDetails[]): void {
 
 export function CloseoutPage() {
   const [selectedProjectId, setSelectedProjectId] = useState<string>('')
-  const [activeTab, setActiveTab] = useState('documents')
+  const [activeTab, setActiveTab] = useState('dashboard')
   const [currentTime] = useState(() => Date.now())
 
   // Dialog state
@@ -494,9 +504,13 @@ export function CloseoutPage() {
               </Card>
             </div>
 
-            {/* Tabs for Documents, Warranties, and Punch Lists */}
+            {/* Tabs for Closeout Features */}
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="grid w-full grid-cols-3 max-w-lg">
+              <TabsList className="flex flex-wrap h-auto gap-1 p-1">
+                <TabsTrigger value="dashboard" className="flex items-center gap-2">
+                  <LayoutDashboard className="h-4 w-4" />
+                  Dashboard
+                </TabsTrigger>
                 <TabsTrigger value="documents" className="flex items-center gap-2">
                   <FileCheck className="h-4 w-4" />
                   Documents ({totalDocuments})
@@ -504,6 +518,22 @@ export function CloseoutPage() {
                 <TabsTrigger value="warranties" className="flex items-center gap-2">
                   <Shield className="h-4 w-4" />
                   Warranties ({totalWarranties})
+                </TabsTrigger>
+                <TabsTrigger value="warranty-claims" className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4" />
+                  Claims
+                </TabsTrigger>
+                <TabsTrigger value="om-manuals" className="flex items-center gap-2">
+                  <BookOpen className="h-4 w-4" />
+                  O&M Manuals
+                </TabsTrigger>
+                <TabsTrigger value="training" className="flex items-center gap-2">
+                  <GraduationCap className="h-4 w-4" />
+                  Training
+                </TabsTrigger>
+                <TabsTrigger value="attic-stock" className="flex items-center gap-2">
+                  <Package className="h-4 w-4" />
+                  Attic Stock
                 </TabsTrigger>
                 <TabsTrigger value="punchlist" className="flex items-center gap-2">
                   <CheckSquare className="h-4 w-4" />
@@ -513,6 +543,10 @@ export function CloseoutPage() {
                   )}
                 </TabsTrigger>
               </TabsList>
+
+              <TabsContent value="dashboard" className="mt-6">
+                <CloseoutDashboard projectId={selectedProjectId} />
+              </TabsContent>
 
               <TabsContent value="documents" className="mt-6">
                 <CloseoutDocumentList
@@ -532,6 +566,22 @@ export function CloseoutPage() {
                   onCreateWarranty={handleCreateWarranty}
                   onExport={handleExportWarranties}
                 />
+              </TabsContent>
+
+              <TabsContent value="warranty-claims" className="mt-6">
+                <WarrantyClaims projectId={selectedProjectId} />
+              </TabsContent>
+
+              <TabsContent value="om-manuals" className="mt-6">
+                <OMManualBuilder projectId={selectedProjectId} />
+              </TabsContent>
+
+              <TabsContent value="training" className="mt-6">
+                <TrainingRecords projectId={selectedProjectId} />
+              </TabsContent>
+
+              <TabsContent value="attic-stock" className="mt-6">
+                <AtticStockTracker projectId={selectedProjectId} />
               </TabsContent>
 
               <TabsContent value="punchlist" className="mt-6">

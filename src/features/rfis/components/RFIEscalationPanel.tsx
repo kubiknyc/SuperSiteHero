@@ -30,7 +30,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { useToast } from '@/hooks/use-toast'
+import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import {
   useOverdueRFIs,
@@ -162,7 +162,6 @@ export function RFIEscalationPanel({
   className,
 }: RFIEscalationPanelProps) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
-  const { toast } = useToast()
 
   const { data: overdueRFIs, isLoading, error } = useOverdueRFIs(
     projectId,
@@ -199,17 +198,14 @@ export function RFIEscalationPanel({
     try {
       const results = await batchEscalate.mutateAsync(Array.from(selectedIds))
 
-      toast({
-        title: 'RFIs Escalated',
+      toast.success('RFIs Escalated', {
         description: `${results.length} RFI${results.length !== 1 ? 's' : ''} escalated to high priority`,
       })
 
       setSelectedIds(new Set())
     } catch (error) {
-      toast({
-        title: 'Escalation Failed',
+      toast.error('Escalation Failed', {
         description: 'Failed to escalate some RFIs. Please try again.',
-        variant: 'destructive',
       })
     }
   }

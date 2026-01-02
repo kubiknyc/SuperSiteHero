@@ -52,7 +52,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { useToast } from '@/hooks/use-toast'
+import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { useStorageQuota } from '@/stores/offline-store'
 import {
@@ -718,7 +718,6 @@ function DownloadProjectForm({
 // ============================================================================
 
 export function ProjectCacheSettings({ className, trigger }: ProjectCacheSettingsProps) {
-  const { toast } = useToast()
   const storageQuota = useStorageQuota()
   const {
     cachedProjects,
@@ -738,15 +737,12 @@ export function ProjectCacheSettings({ className, trigger }: ProjectCacheSetting
   }) => {
     try {
       await downloadProject(projectId, options)
-      toast({
-        title: 'Download complete',
+      toast.success('Download complete', {
         description: 'Project is now available offline',
       })
-    } catch (error) {
-      toast({
-        title: 'Download failed',
+    } catch {
+      toast.error('Download failed', {
         description: 'Could not download project. Please try again.',
-        variant: 'destructive',
       })
     }
   }
@@ -754,15 +750,12 @@ export function ProjectCacheSettings({ className, trigger }: ProjectCacheSetting
   const handleClearCache = async (projectId: string) => {
     try {
       await clearProjectCache(projectId)
-      toast({
-        title: 'Cache cleared',
+      toast.success('Cache cleared', {
         description: 'Project offline data has been removed',
       })
-    } catch (error) {
-      toast({
-        title: 'Clear failed',
+    } catch {
+      toast.error('Clear failed', {
         description: 'Could not clear cache. Please try again.',
-        variant: 'destructive',
       })
     }
   }
@@ -770,15 +763,12 @@ export function ProjectCacheSettings({ className, trigger }: ProjectCacheSetting
   const handleClearAll = async () => {
     try {
       await clearAllCache()
-      toast({
-        title: 'All cache cleared',
+      toast.success('All cache cleared', {
         description: 'All offline project data has been removed',
       })
-    } catch (error) {
-      toast({
-        title: 'Clear failed',
+    } catch {
+      toast.error('Clear failed', {
         description: 'Could not clear all cache. Please try again.',
-        variant: 'destructive',
       })
     }
   }

@@ -47,7 +47,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { useToast } from '@/hooks/use-toast'
+import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { useOfflineStore, useIsOnline } from '@/stores/offline-store'
 import {
@@ -578,22 +578,18 @@ function EmptyState() {
 // ============================================================================
 
 export function UploadQueuePanel({ className, trigger }: UploadQueuePanelProps) {
-  const { toast } = useToast()
   const { queue, stats, retryUpload, cancelUpload, clearCompleted } = useUploadQueue()
   const isOnline = useOfflineStore(state => state.isOnline)
 
   const handleRetry = async (id: string) => {
     try {
       await retryUpload(id)
-      toast({
-        title: 'Retry initiated',
+      toast.success('Retry initiated', {
         description: 'Upload will be retried shortly.',
       })
-    } catch (error) {
-      toast({
-        title: 'Retry failed',
+    } catch {
+      toast.error('Retry failed', {
         description: 'Could not retry upload. Please try again.',
-        variant: 'destructive',
       })
     }
   }
@@ -601,15 +597,12 @@ export function UploadQueuePanel({ className, trigger }: UploadQueuePanelProps) 
   const handleCancel = async (id: string) => {
     try {
       await cancelUpload(id)
-      toast({
-        title: 'Upload cancelled',
+      toast.success('Upload cancelled', {
         description: 'The upload has been removed from the queue.',
       })
-    } catch (error) {
-      toast({
-        title: 'Cancel failed',
+    } catch {
+      toast.error('Cancel failed', {
         description: 'Could not cancel upload. Please try again.',
-        variant: 'destructive',
       })
     }
   }
@@ -617,15 +610,12 @@ export function UploadQueuePanel({ className, trigger }: UploadQueuePanelProps) 
   const handleClearCompleted = async () => {
     try {
       await clearCompleted()
-      toast({
-        title: 'Completed uploads cleared',
+      toast.success('Completed uploads cleared', {
         description: 'Successfully uploaded files have been removed from the queue.',
       })
-    } catch (error) {
-      toast({
-        title: 'Clear failed',
+    } catch {
+      toast.error('Clear failed', {
         description: 'Could not clear completed uploads. Please try again.',
-        variant: 'destructive',
       })
     }
   }

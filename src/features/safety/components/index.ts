@@ -32,3 +32,20 @@ export {
   AlertsList,
   RecommendationsList,
 } from './PatternInsights'
+
+// JHA / Job Hazard Analysis components
+export { JHAForm } from './JHAForm'
+export { JHAManager } from './JHAManager'
+
+// Equipment Certification components
+export { EquipmentCertifications } from './EquipmentCertifications'
+
+// Enhanced Safety Observations components
+export { SafetyObservations } from './SafetyObservations'
+export { SafetyObservationTrends } from './SafetyObservationTrends'
+
+// OSHA 300A Summary components
+export { OSHA300ASummary } from './OSHA300ASummary'
+
+// Toolbox Talk Manager components
+export { ToolboxTalkManager } from './ToolboxTalkManager'

@@ -68,7 +68,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { useToast } from '@/hooks/use-toast'
+import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { useOfflineSync } from '@/hooks/useOfflineSync'
 import type { PendingSyncItem, SyncConflict, SyncPreferences } from '@/stores/offline-store'
@@ -471,7 +471,6 @@ function SyncSettings({
 // ============================================================================
 
 export function GlobalSyncStatusPanel({ className, trigger }: GlobalSyncStatusPanelProps) {
-  const { toast } = useToast()
   const {
     status,
     queueStats,
@@ -503,18 +502,15 @@ export function GlobalSyncStatusPanel({ className, trigger }: GlobalSyncStatusPa
       .sort((a, b) => b.count - a.count)
   }, [queueStats.byEntityType])
 
-  const handleRetry = async (id: string) => {
+  const handleRetry = async (_id: string) => {
     try {
       await retryFailed()
-      toast({
-        title: 'Retry initiated',
+      toast.success('Retry initiated', {
         description: 'Failed items will be synced shortly.',
       })
-    } catch (error) {
-      toast({
-        title: 'Retry failed',
+    } catch {
+      toast.error('Retry failed', {
         description: 'Could not retry sync. Please try again.',
-        variant: 'destructive',
       })
     }
   }
@@ -522,15 +518,12 @@ export function GlobalSyncStatusPanel({ className, trigger }: GlobalSyncStatusPa
   const handleRemove = async (id: string) => {
     try {
       await removePendingSync(id)
-      toast({
-        title: 'Item removed',
+      toast.success('Item removed', {
         description: 'Pending change has been discarded.',
       })
-    } catch (error) {
-      toast({
-        title: 'Remove failed',
+    } catch {
+      toast.error('Remove failed', {
         description: 'Could not remove item. Please try again.',
-        variant: 'destructive',
       })
     }
   }
@@ -541,15 +534,12 @@ export function GlobalSyncStatusPanel({ className, trigger }: GlobalSyncStatusPa
   ) => {
     try {
       await resolveConflict(id, resolution)
-      toast({
-        title: 'Conflict resolved',
+      toast.success('Conflict resolved', {
         description: `Used ${resolution} version to resolve the conflict.`,
       })
-    } catch (error) {
-      toast({
-        title: 'Resolution failed',
+    } catch {
+      toast.error('Resolution failed', {
         description: 'Could not resolve conflict. Please try again.',
-        variant: 'destructive',
       })
     }
   }
@@ -557,15 +547,12 @@ export function GlobalSyncStatusPanel({ className, trigger }: GlobalSyncStatusPa
   const handleClearQueue = async () => {
     try {
       await clearSyncQueue()
-      toast({
-        title: 'Queue cleared',
+      toast.success('Queue cleared', {
         description: 'All pending changes have been discarded.',
       })
-    } catch (error) {
-      toast({
-        title: 'Clear failed',
+    } catch {
+      toast.error('Clear failed', {
         description: 'Could not clear sync queue. Please try again.',
-        variant: 'destructive',
       })
     }
   }
@@ -573,23 +560,19 @@ export function GlobalSyncStatusPanel({ className, trigger }: GlobalSyncStatusPa
   const handleManualSync = async () => {
     try {
       await triggerSync()
-      toast({
-        title: 'Sync started',
+      toast.info('Sync started', {
         description: 'Syncing all pending changes...',
       })
-    } catch (error) {
-      toast({
-        title: 'Sync failed',
+    } catch {
+      toast.error('Sync failed', {
         description: 'Could not start sync. Please try again.',
-        variant: 'destructive',
       })
     }
   }
 
   const handleUpdatePreferences = (prefs: Partial<SyncPreferences>) => {
     updateSyncPreferences(prefs)
-    toast({
-      title: 'Settings updated',
+    toast.success('Settings updated', {
       description: 'Sync preferences have been saved.',
     })
   }

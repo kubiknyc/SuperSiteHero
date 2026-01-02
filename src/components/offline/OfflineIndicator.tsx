@@ -13,7 +13,7 @@ import { WifiOff, Wifi, CloudOff, Cloud, AlertTriangle } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { useIsOnline, usePendingSyncs } from '@/stores/offline-store'
-import { useToast } from '@/hooks/use-toast'
+import { toast } from 'sonner'
 
 interface OfflineIndicatorProps {
   className?: string
@@ -28,7 +28,6 @@ export function OfflineIndicator({
 }: OfflineIndicatorProps) {
   const isOnline = useIsOnline()
   const pendingSyncs = usePendingSyncs()
-  const { toast } = useToast()
   const [previousOnlineState, setPreviousOnlineState] = useState<boolean | null>(null)
 
   // Show toast notification on connection change
@@ -42,8 +41,7 @@ export function OfflineIndicator({
     if (previousOnlineState !== isOnline) {
       if (isOnline) {
         // Coming back online
-        toast({
-          title: 'Back online',
+        toast.success('Back online', {
           description: pendingSyncs > 0
             ? `Syncing ${pendingSyncs} pending change${pendingSyncs !== 1 ? 's' : ''}...`
             : 'Connection restored',
@@ -51,16 +49,14 @@ export function OfflineIndicator({
         })
       } else {
         // Going offline
-        toast({
-          title: 'You are offline',
+        toast.info('You are offline', {
           description: 'Changes will be saved locally and synced when you reconnect',
-          variant: 'default',
           duration: 4000,
         })
       }
       setPreviousOnlineState(isOnline)
     }
-  }, [isOnline, previousOnlineState, pendingSyncs, toast])
+  }, [isOnline, previousOnlineState, pendingSyncs])
 
   // Badge variant - minimal indicator
   if (variant === 'badge') {

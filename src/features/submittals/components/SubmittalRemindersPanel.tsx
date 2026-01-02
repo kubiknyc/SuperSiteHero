@@ -69,7 +69,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useToast } from '@/hooks/use-toast'
+import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import {
   useSubmittalsWithReminders,
@@ -534,7 +534,6 @@ export function SubmittalRemindersPanel({
   className,
   showSettings = false,
 }: SubmittalRemindersPanelProps) {
-  const { toast } = useToast()
   const { data: submittals, isLoading, error } = useSubmittalsWithReminders(projectId, workflowTypeId)
   const stats = useSubmittalReminderStats(projectId, workflowTypeId)
   const recordReminder = useRecordSubmittalReminder()
@@ -564,15 +563,12 @@ export function SubmittalRemindersPanel({
         recipients: submittal.assignees,
       })
 
-      toast({
-        title: 'Reminder Sent',
+      toast.success('Reminder Sent', {
         description: `Reminder recorded for ${formatSubmittalNumber(submittal.number)}`,
       })
     } catch {
-      toast({
-        title: 'Failed to Send',
+      toast.error('Failed to Send', {
         description: 'Could not send the reminder. Please try again.',
-        variant: 'destructive',
       })
     }
   }
@@ -581,15 +577,12 @@ export function SubmittalRemindersPanel({
     try {
       await snoozeReminder.mutateAsync({ submittalId, snoozeDays: days })
 
-      toast({
-        title: 'Reminder Snoozed',
+      toast.success('Reminder Snoozed', {
         description: `Reminder snoozed for ${days} day${days !== 1 ? 's' : ''}`,
       })
     } catch {
-      toast({
-        title: 'Snooze Failed',
+      toast.error('Snooze Failed', {
         description: 'Could not snooze the reminder. Please try again.',
-        variant: 'destructive',
       })
     }
   }
@@ -601,20 +594,18 @@ export function SubmittalRemindersPanel({
     }
     setCustomReminders(prev => [...prev, newReminder])
 
-    toast({
-      title: 'Reminder Created',
+    toast.success('Reminder Created', {
       description: `Custom reminder added for ${format(reminder.reminderDate, 'MMM d, yyyy')}`,
     })
-  }, [toast])
+  }, [])
 
   const handleDeleteReminder = useCallback((reminderId: string) => {
     setCustomReminders(prev => prev.filter(r => r.id !== reminderId))
 
-    toast({
-      title: 'Reminder Deleted',
+    toast.success('Reminder Deleted', {
       description: 'Custom reminder has been removed',
     })
-  }, [toast])
+  }, [])
 
   const handleToggleReminder = useCallback((reminderId: string) => {
     setCustomReminders(prev => prev.map(r =>
@@ -924,8 +915,7 @@ export function SubmittalRemindersPanel({
                 <Button
                   className="w-full"
                   onClick={() => {
-                    toast({
-                      title: 'Preferences Saved',
+                    toast.success('Preferences Saved', {
                       description: 'Your notification preferences have been updated',
                     })
                   }}

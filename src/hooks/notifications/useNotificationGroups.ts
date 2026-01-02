@@ -7,7 +7,7 @@
 import { useMemo } from 'react'
 import { isToday, isYesterday, isThisWeek } from 'date-fns'
 
-export type GroupByType = 'type' | 'project' | 'time' | 'priority'
+export type GroupByType = 'type' | 'project' | 'time' | 'priority' | 'sender' | 'date'
 
 export interface GroupedNotification {
   id: string
@@ -20,6 +20,9 @@ export interface GroupedNotification {
   priority?: 'low' | 'normal' | 'high' | 'urgent'
   project_id?: string | null
   project_name?: string | null
+  sender_id?: string | null
+  sender_name?: string | null
+  sender_avatar_url?: string | null
   category?: string
 }
 
@@ -73,6 +76,9 @@ export function useNotificationGroups(
         return groupByProject(notifications)
       case 'priority':
         return groupByPriority(notifications)
+      case 'sender':
+        return groupBySender(notifications)
+      case 'date':
       case 'time':
       default:
         return groupByTime(notifications)
@@ -165,6 +171,33 @@ function groupByPriority(notifications: GroupedNotification[]): NotificationGrou
       unreadCount: groups[priority].filter(n => !n.is_read).length,
     }))
     .filter(g => g.count > 0)
+}
+
+function groupBySender(notifications: GroupedNotification[]): NotificationGroup[] {
+  const groups: Record<string, { name: string; avatar?: string; items: GroupedNotification[] }> = {}
+
+  notifications.forEach(n => {
+    const senderId = n.sender_id || 'system'
+    const senderName = n.sender_name || 'System'
+    if (!groups[senderId]) {
+      groups[senderId] = {
+        name: senderName,
+        avatar: n.sender_avatar_url || undefined,
+        items: [],
+      }
+    }
+    groups[senderId].items.push(n)
+  })
+
+  return Object.entries(groups)
+    .map(([senderId, { name, items }]) => ({
+      key: senderId,
+      label: name,
+      notifications: items,
+      count: items.length,
+      unreadCount: items.filter(n => !n.is_read).length,
+    }))
+    .sort((a, b) => b.unreadCount - a.unreadCount)
 }
 
 function getTypeFromNotificationType(type: string): string {

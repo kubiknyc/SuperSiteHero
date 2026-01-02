@@ -18,3 +18,11 @@ export { HistoricalBidAnalysis } from './HistoricalBidAnalysis'
 export { VendorPerformanceCard } from './VendorPerformanceCard'
 export { BidAccuracyChart } from './BidAccuracyChart'
 export { BidTrendChart } from './BidTrendChart'
+
+// Bid Leveling & Scope Templates
+export { BidLevelingMatrix } from './BidLevelingMatrix'
+export { ScopeTemplateManager } from './ScopeTemplateManager'
+
+// Re-export from subcontractors for convenience
+export { PreQualificationForm } from '@/features/subcontractors/components/PreQualificationForm'
+

@@ -43,7 +43,20 @@ export { ToastProvider, useToast, toast } from './ToastContext'
 export { useNotifications } from './useNotifications'
 
 // Types
-export type { Toast, ToastType, ToastOptions } from './types'
+export type {
+  Toast,
+  ToastType,
+  ToastOptions,
+  NotificationType,
+  NotificationPriority,
+  NotificationChannel,
+  NotificationAction,
+  NotificationMetadata,
+  EnhancedNotification,
+  NotificationPreferences,
+  NotificationBatch,
+  MentionMatch,
+} from './types'
 
 // Webhook Service
 export {
@@ -53,3 +66,6 @@ export {
   type WebhookConfig,
   type WebhookNotification,
 } from './webhooks'
+
+// Batching Service
+export { batchingService } from './batchingService'
