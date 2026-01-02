@@ -44,3 +44,12 @@ export { useNotifications } from './useNotifications'
 
 // Types
 export type { Toast, ToastType, ToastOptions } from './types'
+
+// Webhook Service
+export {
+  webhookService,
+  type WebhookProvider,
+  type WebhookEventType,
+  type WebhookConfig,
+  type WebhookNotification,
+} from './webhooks'

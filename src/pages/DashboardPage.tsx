@@ -2,7 +2,7 @@
 // Professional Blueprint Dashboard - Polished, production-ready design
 
 import { useState, useCallback, useMemo, memo } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import { useAuth } from '@/lib/auth/AuthContext'
@@ -24,18 +24,39 @@ import {
   BarChart3,
   Loader2,
   Bell,
-  ChevronRight
+  ChevronRight,
+  ExternalLink
 } from 'lucide-react'
 import { NoticesWidget } from '@/features/notices/components'
 import { format } from 'date-fns'
 import { colors as themeColors, chartColors, getStatusVariant } from '@/lib/theme/tokens'
+import {
+  MorningBriefingWidget,
+  AlertSystemWidget,
+  WeatherForecastWidget,
+  StatDrilldownPanel,
+  type DrilldownType
+} from '@/features/dashboard'
 
 export function DashboardPage() {
   const { data: projects } = useMyProjects()
   const { userProfile } = useAuth()
+  const navigate = useNavigate()
   const dashboardView = useDashboardView()
   const [selectedProjectId, _setSelectedProjectId] = useState<string>('')
   const [focusedCard, setFocusedCard] = useState<string | null>(null)
+
+  // Drilldown panel state
+  const [drilldownOpen, setDrilldownOpen] = useState(false)
+  const [drilldownType, setDrilldownType] = useState<DrilldownType>('tasks')
+  const [drilldownTitle, setDrilldownTitle] = useState('')
+
+  // Handler to open drilldown panel
+  const openDrilldown = useCallback((type: DrilldownType, title: string) => {
+    setDrilldownType(type)
+    setDrilldownTitle(title)
+    setDrilldownOpen(true)
+  }, [])
 
   // Get the selected project or the first active project
   const selectedProject = selectedProjectId
@@ -154,7 +175,9 @@ export function DashboardPage() {
         link: '/tasks',
         filterLink: `/tasks?status=pending${projectFilter}`,
         overdueLink: tasks.overdue > 0 ? `/tasks?overdue=true${projectFilter}` : null,
-        overdueCount: tasks.overdue
+        overdueCount: tasks.overdue,
+        drilldownType: 'tasks' as DrilldownType,
+        drilldownTitle: 'Tasks Pending'
       },
       {
         label: 'Open RFIs',
@@ -169,7 +192,9 @@ export function DashboardPage() {
         link: '/rfis',
         filterLink: `/rfis?status=open${projectFilter}`,
         overdueLink: rfis.overdue > 0 ? `/rfis?overdue=true${projectFilter}` : null,
-        overdueCount: rfis.overdue
+        overdueCount: rfis.overdue,
+        drilldownType: 'rfis' as DrilldownType,
+        drilldownTitle: 'Open RFIs'
       },
       {
         label: 'Punch Items',
@@ -184,7 +209,9 @@ export function DashboardPage() {
         link: '/punch-lists',
         filterLink: `/punch-lists?status=open${projectFilter}`,
         overdueLink: null,
-        overdueCount: 0
+        overdueCount: 0,
+        drilldownType: 'punch_items' as DrilldownType,
+        drilldownTitle: 'Punch Items'
       },
       {
         label: 'Days Since Incident',
@@ -199,7 +226,9 @@ export function DashboardPage() {
         link: '/safety',
         filterLink: `/safety${selectedProject?.id ? `?projectId=${selectedProject.id}` : ''}`,
         overdueLink: null,
-        overdueCount: 0
+        overdueCount: 0,
+        drilldownType: 'safety' as DrilldownType,
+        drilldownTitle: 'Safety Incidents'
       }
     ]
   }, [dashboardStats, selectedProject?.id])
@@ -307,15 +336,26 @@ export function DashboardPage() {
                 const Icon = stat.icon
                 const percentage = stat.target > 0 ? (parseInt(stat.value) / stat.target) * 100 : 0
                 const isFocused = focusedCard === stat.label
+                const hasOverdue = 'overdueCount' in stat && stat.overdueCount && stat.overdueCount > 0
 
                 return (
-                  <Link
+                  <div
                     key={stat.label}
-                    to={stat.filterLink || stat.link}
                     role="article"
                     aria-label={stat.ariaLabel}
+                    tabIndex={0}
                     onFocus={() => handleCardFocus(stat.label)}
                     onBlur={handleCardBlur}
+                    onClick={() => {
+                      if ('drilldownType' in stat && stat.drilldownType) {
+                        openDrilldown(stat.drilldownType, stat.drilldownTitle || stat.label)
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && 'drilldownType' in stat && stat.drilldownType) {
+                        openDrilldown(stat.drilldownType, stat.drilldownTitle || stat.label)
+                      }
+                    }}
                     style={{
                       backgroundColor: '#FFFFFF',
                       border: `1px solid ${isFocused ? stat.color : '#E2E8F0'}`,
@@ -436,13 +476,79 @@ export function DashboardPage() {
                         </div>
                       </div>
                     </div>
-                  </Link>
+
+                    {/* Overdue badge and View link */}
+                    <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100">
+                      {hasOverdue ? (
+                        <Link
+                          to={'overdueLink' in stat && stat.overdueLink ? stat.overdueLink : stat.filterLink}
+                          onClick={(e) => e.stopPropagation()}
+                          className="flex items-center gap-1.5 text-xs font-medium text-red-600 hover:text-red-700 bg-red-50 px-2 py-1 rounded-md border border-red-100"
+                        >
+                          <AlertCircle className="w-3 h-3" />
+                          {stat.overdueCount} Overdue
+                        </Link>
+                      ) : (
+                        <span />
+                      )}
+                      <Link
+                        to={stat.filterLink || stat.link}
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex items-center gap-1 text-xs font-medium text-primary hover:text-primary-600 transition-colors"
+                      >
+                        View All
+                        <ExternalLink className="w-3 h-3" />
+                      </Link>
+                    </div>
+                  </div>
                 )
               })}
               </div>
             </LocalErrorBoundary>
 
-            {/* Two Column Layout */}
+            {/* Morning Briefing Widget - Full Width */}
+            <LocalErrorBoundary
+              title="Unable to load morning briefing"
+              description="We couldn't load your daily summary. Please try again."
+            >
+              <div className="mb-8">
+                <MorningBriefingWidget projectId={selectedProject?.id} />
+              </div>
+            </LocalErrorBoundary>
+
+            {/* Three Column Layout: Projects | Weather | Alerts */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr 1fr',
+              gap: '1.5rem',
+              marginBottom: '2rem'
+            }}>
+              {/* Weather Forecast Widget */}
+              <LocalErrorBoundary
+                title="Unable to load weather"
+                description="We couldn't load weather data. Please try again."
+              >
+                <WeatherForecastWidget projectId={selectedProject?.id} />
+              </LocalErrorBoundary>
+
+              {/* Alert System Widget */}
+              <LocalErrorBoundary
+                title="Unable to load alerts"
+                description="We couldn't load system alerts. Please try again."
+              >
+                <AlertSystemWidget projectId={selectedProject?.id} />
+              </LocalErrorBoundary>
+
+              {/* Notices Widget */}
+              <LocalErrorBoundary
+                title="Unable to load notices"
+                description="We couldn't load notices. Please try again."
+              >
+                <NoticesWidget projectId={selectedProject?.id} />
+              </LocalErrorBoundary>
+            </div>
+
+            {/* Two Column Layout: Projects | Actions */}
             <div style={{
               display: 'grid',
               gridTemplateColumns: '2fr 1fr',
@@ -653,17 +759,18 @@ export function DashboardPage() {
                     )}
                   </div>
                 </LocalErrorBoundary>
-
-                {/* Notices Widget */}
-                <LocalErrorBoundary
-                  title="Unable to load notices"
-                  description="We couldn't load notices. Please try again."
-                >
-                  <NoticesWidget projectId={selectedProject?.id} />
-                </LocalErrorBoundary>
               </div>
             </div>
           </div>
+
+          {/* Stat Drilldown Panel */}
+          <StatDrilldownPanel
+            open={drilldownOpen}
+            onOpenChange={setDrilldownOpen}
+            type={drilldownType}
+            title={drilldownTitle}
+            projectId={selectedProject?.id}
+          />
 
           {/* Animations */}
           <style>{`

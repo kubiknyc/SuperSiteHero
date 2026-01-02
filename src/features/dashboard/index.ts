@@ -1,3 +1,3 @@
 // Dashboard feature exports
 export * from './hooks'
-export { DashboardCustomizer } from './components/DashboardCustomizer'
+export * from './components'
