@@ -129,7 +129,7 @@ const priorityConfig: Record<Priority, { label: string; color: string }> = {
   high: { label: 'High', color: 'bg-error-light text-error-dark' },
 };
 
-export function PunchListItem({
+export const PunchListItem = React.memo(function PunchListItem({
   item,
   onComplete,
   onEdit,
@@ -384,6 +384,6 @@ export function PunchListItem({
   }
 
   return content;
-}
+});
 
 export default PunchListItem;

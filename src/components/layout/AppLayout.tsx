@@ -90,11 +90,11 @@ export function AppLayout({ children }: AppLayoutProps) {
         </button>
       )}
 
-      {/* Sidebar Navigation */}
+      {/* Sidebar Navigation - Always dark for consistent branding */}
       <aside
         className={cn(
-          // Base styles
-          "fixed inset-y-0 left-0 bg-background text-white flex-col z-50",
+          // Base styles - explicitly dark sidebar regardless of theme
+          "fixed inset-y-0 left-0 bg-gray-900 text-white flex-col z-50",
           // Desktop: always visible
           !isTablet && "hidden md:flex w-64",
           // Tablet landscape: persistent sidebar (slightly narrower)
@@ -128,7 +128,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                 )}>
                   JobSight
                 </h1>
-                <p className="text-xs text-disabled">Field Management</p>
+                <p className="text-xs text-gray-400">Field Management</p>
               </div>
             </div>
             {/* Close button for tablet portrait drawer */}
@@ -136,7 +136,7 @@ export function AppLayout({ children }: AppLayoutProps) {
               <button
                 onClick={closeSidebar}
                 className={cn(
-                  "p-2 rounded-lg hover:bg-surface transition-colors",
+                  "p-2 rounded-lg hover:bg-gray-800 transition-colors",
                   isTouchDevice && "min-h-[44px] min-w-[44px] flex items-center justify-center"
                 )}
                 aria-label="Close navigation menu"
@@ -176,10 +176,10 @@ export function AppLayout({ children }: AppLayoutProps) {
                   to={item.path}
                   className={cn(
                     'flex items-center gap-3 rounded-md font-medium transition-colors',
-                    // Base styles
+                    // Base styles - explicit colors for dark sidebar
                     isActive
-                      ? 'bg-surface text-white'
-                      : 'text-gray-300 hover:bg-surface hover:text-white',
+                      ? 'bg-gray-800 text-white'
+                      : 'text-gray-300 hover:bg-gray-800 hover:text-white',
                     // Tablet: larger touch targets
                     isTablet ? 'px-3 py-3 text-base min-h-[44px]' : 'px-3 py-2 text-sm',
                     // Touch feedback
@@ -220,8 +220,8 @@ export function AppLayout({ children }: AppLayoutProps) {
                 className={cn(
                   'flex items-center gap-3 rounded-md font-medium transition-colors',
                   location.pathname.includes('/takeoffs')
-                    ? 'bg-surface text-white'
-                    : 'text-gray-300 hover:bg-surface hover:text-white',
+                    ? 'bg-gray-800 text-white'
+                    : 'text-gray-300 hover:bg-gray-800 hover:text-white',
                   isTablet ? 'px-3 py-3 text-base min-h-[44px]' : 'px-3 py-2 text-sm',
                   isTouchDevice && 'active:bg-gray-700'
                 )}
@@ -243,7 +243,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
           {/* Theme toggle */}
           <div className="pb-2 flex items-center justify-between gap-2">
-            <span className="text-sm text-disabled">Theme</span>
+            <span className="text-sm text-gray-400">Theme</span>
             <ThemeToggle compact />
           </div>
 
@@ -253,8 +253,8 @@ export function AppLayout({ children }: AppLayoutProps) {
               <p className="font-medium text-white">
                 {userProfile.first_name} {userProfile.last_name}
               </p>
-              <p className="text-xs text-disabled">{userProfile.email}</p>
-              <p className="text-xs text-muted capitalize">{userProfile.role}</p>
+              <p className="text-xs text-gray-400">{userProfile.email}</p>
+              <p className="text-xs text-gray-500 capitalize">{userProfile.role}</p>
             </div>
           )}
 

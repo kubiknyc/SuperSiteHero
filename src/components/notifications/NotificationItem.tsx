@@ -5,7 +5,7 @@
  * and type-specific action buttons (RFI, Task, Approval, etc.)
  */
 
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, memo } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import {
   Bell, Check, MessageSquare, FileText, Shield, DollarSign,
@@ -104,7 +104,7 @@ function getNotificationCategory(type: string | null): string {
   return 'general'
 }
 
-export function NotificationItem({
+export const NotificationItem = memo(function NotificationItem({
   notification,
   onMarkAsRead,
   onClick,
@@ -448,6 +448,6 @@ export function NotificationItem({
       </div>
     </div>
   )
-}
+})
 
 export default NotificationItem

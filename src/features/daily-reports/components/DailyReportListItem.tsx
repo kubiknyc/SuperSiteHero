@@ -390,6 +390,6 @@ export const DailyReportListItem = React.memo(function DailyReportListItem({
   }
 
   return content;
-}
+});
 
 export default DailyReportListItem;

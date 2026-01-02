@@ -68,13 +68,13 @@ export function NavigationGroup({
 
   return (
     <div className="space-y-1">
-      {/* Group Header */}
+      {/* Group Header - uses explicit colors for dark sidebar */}
       <button
         onClick={toggleExpanded}
         className={cn(
           'flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
-          'hover:bg-accent hover:text-accent-foreground',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+          'text-gray-300 hover:bg-gray-800 hover:text-white',
+          'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900'
         )}
         aria-expanded={isExpanded}
       >
@@ -87,9 +87,9 @@ export function NavigationGroup({
         )}
       </button>
 
-      {/* Group Items */}
+      {/* Group Items - uses explicit colors for dark sidebar */}
       {isExpanded && (
-        <div className="ml-4 space-y-1 border-l-2 border-muted pl-4">
+        <div className="ml-4 space-y-1 border-l-2 border-gray-700 pl-4">
           {items.map((item) => {
             const isActive = location.pathname === item.path;
             const ItemIcon = item.icon;
@@ -103,9 +103,9 @@ export function NavigationGroup({
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                   isActive
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
-                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-300 hover:bg-gray-800 hover:text-white',
+                  'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900'
                 )}
                 aria-current={isActive ? 'page' : undefined}
               >
