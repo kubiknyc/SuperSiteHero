@@ -1,14 +1,15 @@
 // File: /src/pages/tasks/TasksPage.tsx
 // Tasks list and management page
 
-import { useState, useMemo } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useMemo, useEffect } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import { useTasks } from '@/features/tasks/hooks/useTasks'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
 import { NativeSelect as Select } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -27,10 +28,35 @@ import type { Task } from '@/types/database'
 
 export function TasksPage() {
   const { data: projects } = useMyProjects()
-  const [selectedProjectId, setSelectedProjectId] = useState<string>('')
-  const [statusFilter, setStatusFilter] = useState<string>('all')
-  const [priorityFilter, setPriorityFilter] = useState<string>('all')
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  // Initialize filters from URL params
+  const [selectedProjectId, setSelectedProjectId] = useState<string>(
+    searchParams.get('projectId') || ''
+  )
+  const [statusFilter, setStatusFilter] = useState<string>(
+    searchParams.get('status') || 'all'
+  )
+  const [priorityFilter, setPriorityFilter] = useState<string>(
+    searchParams.get('priority') || 'all'
+  )
+  const [searchQuery, setSearchQuery] = useState(
+    searchParams.get('search') || ''
+  )
+  const [showOverdue, setShowOverdue] = useState<boolean>(
+    searchParams.get('overdue') === 'true'
+  )
+
+  // Update URL params when filters change
+  useEffect(() => {
+    const params = new URLSearchParams()
+    if (selectedProjectId) params.set('projectId', selectedProjectId)
+    if (statusFilter !== 'all') params.set('status', statusFilter)
+    if (priorityFilter !== 'all') params.set('priority', priorityFilter)
+    if (searchQuery) params.set('search', searchQuery)
+    if (showOverdue) params.set('overdue', 'true')
+    setSearchParams(params, { replace: true })
+  }, [selectedProjectId, statusFilter, priorityFilter, searchQuery, showOverdue, setSearchParams])
 
   // Use the selected project or first active project
   const activeProjectId = selectedProjectId || projects?.find((p) => p.status === 'active')?.id || projects?.[0]?.id
@@ -42,6 +68,12 @@ export function TasksPage() {
     if (!tasks) {return []}
 
     return tasks.filter((task) => {
+      // Overdue filter (takes precedence)
+      if (showOverdue) {
+        const isOverdue = task.due_date && isPast(new Date(task.due_date)) && task.status !== 'completed'
+        if (!isOverdue) return false
+      }
+
       // Status filter
       if (statusFilter !== 'all' && task.status !== statusFilter) {return false}
 
@@ -61,7 +93,7 @@ export function TasksPage() {
 
       return true
     })
-  }, [tasks, statusFilter, priorityFilter, searchQuery])
+  }, [tasks, statusFilter, priorityFilter, searchQuery, showOverdue])
 
   // Calculate statistics
   const stats = useMemo(() => {
@@ -202,7 +234,7 @@ export function TasksPage() {
         {/* Filters */}
         <Card>
           <CardContent className="p-4">
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
               {/* Project selector */}
               {projects && projects.length > 0 && (
                 <div className="space-y-2">
@@ -228,7 +260,11 @@ export function TasksPage() {
                 <Select
                   id="status-filter"
                   value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value)}
+                  onChange={(e) => {
+                    setStatusFilter(e.target.value)
+                    if (e.target.value !== 'all') setShowOverdue(false)
+                  }}
+                  disabled={showOverdue}
                 >
                   <option value="all">All Statuses</option>
                   <option value="pending">Pending</option>
@@ -263,6 +299,23 @@ export function TasksPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
+              </div>
+
+              {/* Overdue toggle */}
+              <div className="space-y-2">
+                <Label>Quick Filters</Label>
+                <Button
+                  variant={showOverdue ? 'destructive' : 'outline'}
+                  size="sm"
+                  className="w-full"
+                  onClick={() => {
+                    setShowOverdue(!showOverdue)
+                    if (!showOverdue) setStatusFilter('all')
+                  }}
+                >
+                  <AlertCircle className="h-4 w-4 mr-2" />
+                  {showOverdue ? 'Showing Overdue' : 'Show Overdue Only'}
+                </Button>
               </div>
             </div>
           </CardContent>

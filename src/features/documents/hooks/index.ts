@@ -97,3 +97,27 @@ export {
   usePackageTypeInfo,
   usePackageStatusInfo,
 } from './useDrawingPackages'
+
+// Drawing Revisions and Transmittals hooks
+export {
+  useDrawingRegister,
+  useDrawingRevisionHistory,
+  useDocumentRevisions,
+  useCreateDocumentRevision,
+  useTransmittals,
+  useTransmittal,
+  useCreateTransmittal,
+  useUpdateTransmittalStatus,
+  useDrawingsAffectedByASI,
+  useProjectASIs,
+  useCompareRevisions,
+  useRevisionStats,
+  useBulkCreateRevisions,
+  DRAWING_DISCIPLINES,
+  DOCUMENT_SETS,
+  type DrawingDocument,
+  type DocumentRevision,
+  type DocumentTransmittal,
+  type TransmittalItem,
+  type RevisionComparison,
+} from './useDrawingRevisions'

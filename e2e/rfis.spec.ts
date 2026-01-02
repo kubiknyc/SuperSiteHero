@@ -18,13 +18,7 @@ const TEST_EMAIL = process.env.TEST_USER_EMAIL || 'test@example.com';
 const TEST_PASSWORD = process.env.TEST_USER_PASSWORD || 'testpassword123';
 
 test.describe('RFIs', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
-    await page.fill('input[type="password"]', TEST_PASSWORD);
-    await page.click('button[type="submit"]');
-    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
-  });
+  // Pre-authenticated session is used via storageState above - no manual login needed
 
   test('should navigate to RFIs from project', async ({ page }) => {
     await page.goto('/projects');

@@ -17,36 +17,10 @@ test.use({ storageState: 'playwright/.auth/user.json' });;
 const TEST_EMAIL = process.env.TEST_USER_EMAIL || 'test@example.com';
 const TEST_PASSWORD = process.env.TEST_USER_PASSWORD || 'testpassword123';
 
-// Helper to login
-async function login(page) {
-  await page.goto('/login');
-  await page.fill('input[type="email"], input[name="email"]', TEST_EMAIL);
-  await page.fill('input[type="password"]', TEST_PASSWORD);
-
-  // Wait for auth response
-  const responsePromise = page.waitForResponse(
-    resp => (resp.url().includes('auth') || resp.url().includes('session')) && resp.status() === 200,
-    { timeout: 15000 }
-  ).catch(() => null);
-
-  await page.click('button[type="submit"]');
-  await responsePromise;
-
-  // Wait for redirect away from login (login redirects to "/" which is the dashboard)
-  // Use flexible check: just verify we're NOT on login page anymore
-  await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
-
-  // Verify authenticated state by looking for user menu
-  await page.waitForSelector('[data-testid="user-menu"], [aria-label="User menu"], button:has-text("Logout"), button:has-text("Sign out")', { timeout: 10000 });
-
-  // Wait for page to be fully loaded
-  await page.waitForLoadState('networkidle');
-}
+// Pre-authenticated session is used via storageState above - no manual login needed
 
 test.describe('Daily Reports', () => {
-  test.beforeEach(async ({ page }) => {
-    await login(page);
-  });
+  // Pre-authenticated session handles login - no beforeEach login needed
 
   test('should navigate to daily reports from project', async ({ page }) => {
     // Navigate directly to daily reports page

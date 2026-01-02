@@ -1,54 +1,147 @@
-# Construction Management Platform
+# JobSight - Construction Management Platform
 
 A comprehensive, offline-first construction field management platform designed specifically for construction superintendents and their teams.
 
 ## Overview
 
-This platform consolidates fragmented construction workflows (daily reports, RFIs, change orders, punch lists, safety tracking, etc.) into one unified system optimized for field use with robust offline capabilities.
+JobSight consolidates fragmented construction workflows (daily reports, RFIs, change orders, punch lists, safety tracking, etc.) into one unified system optimized for field use with robust offline capabilities.
 
 ## Features
 
-### Phase 1 (Current - 96% Complete)
+### Core Platform (100% Complete)
 
-#### ✅ **Fully Implemented**
-- **User Authentication** - Secure login with role-based access, signup, password reset, MFA
-- **Multi-tenant Architecture** - Support for multiple construction companies
-- **Project Management** - Create, view, edit projects with full detail pages
-- **Daily Reports** - Comprehensive field documentation with all sections (weather, workforce, equipment, deliveries, visitors, photos)
-- **Document Management** - Upload, view, organize documents with version control and PDF viewing
-- **Tasks** - Create, assign, track tasks with detail pages and status management
-- **Workflows** - RFIs, Change Orders, Submittals with custom statuses and detail pages
-- **Punch Lists** - Deficiency tracking by area and trade with status management
-- **Checklists** - Template builder, executions, responses with photo support and EXIF metadata
-- **Submittals** - CSI spec section tracking, review workflow with ball-in-court
-- **Reports** - Financial summary, project health, punch list, and safety incident reports
-- **Approvals** - Approval workflow system with history and status tracking
-- **Analytics** - Predictive analytics and project insights
-- **Safety Management** - OSHA-compliant incident tracking with create/list/detail pages
-- **Messaging** - Internal messaging system for team communication
-- **Notices** - Correspondence log for formal notices
-- **Subcontractor Portal** - Dashboard, bids, tasks, and punch items for subs
-- **Schedule** - Gantt chart visualization
-- **Inspections & Permits** - Scheduling and compliance tracking ✅
-- **Takeoff** - 9 measurement types with templates ✅
-- **Weather API** - Open-Meteo integration with GPS support ✅
-- **Drawing Markup** - 7 annotation tools (arrow, rect, circle, text, etc.) ✅
-- **Payment Applications** - AIA G702/G703 support, Schedule of Values ✅
-- **Lien Waivers** - State templates (10 states), collection workflow ✅
-- **Cost Tracking** - Cost codes, budgets, transactions ✅
-- **Equipment Tracking** - Assignments, maintenance schedules ✅
-- **Material Receiving** - Storage location, bin tracking, photos ✅
-- **Meetings** - Scheduling, minutes, action items, toolbox talks ✅
+#### ✅ **Authentication & Multi-tenancy**
+- Secure login with role-based access, signup, password reset, MFA
+- Company-based user approval system with admin workflow
+- Multi-tenant architecture with Row Level Security (RLS)
 
-#### 🚧 **Partially Implemented**
-- **Change Orders** - Full PCO→CO lifecycle, cost breakdown (PDF export pending)
-- **Offline Support** - Full IndexedDB infrastructure (service worker registration pending)
-- **Photos** - Complete with EXIF/GPS (organizer upload pending)
+#### ✅ **Project Management**
+- Create, view, edit projects with full detail pages
+- Project templates for quick setup
+- Budget tracking with contingency management
+- Project health scoring and analytics
+- Presence tracking (see who's viewing)
 
-#### ⬜ **Planned (P1 Priority)**
-- **Look-Ahead Planning** - 3-week rolling schedule view
-- **Real-time Collaboration** - Live updates via Supabase Realtime
-- **Mobile PWA Optimization** - Touch-friendly UI enhancements
+#### ✅ **Daily Reports**
+- Comprehensive field documentation
+- Weather integration (Open-Meteo API with GPS)
+- Workforce, equipment, deliveries, visitors sections
+- Photo gallery with EXIF metadata extraction
+- OSHA-compliant manpower tracking
+
+#### ✅ **Document Management**
+- Upload, view, organize with version control
+- PDF viewing with markup tools (7 annotation types)
+- Drawing register (AIA G810-style) with revision tracking
+- Transmittal management
+- ASI (Architect's Supplemental Instructions) tracking
+
+#### ✅ **RFIs (Requests for Information)**
+- Ball-in-court tracking with role assignment
+- Response types (Answered, Clarification Needed, Design Change)
+- RFI register with filtering and export
+- Full audit trail with timestamps
+
+#### ✅ **Submittals**
+- CSI spec section tracking (MasterFormat codes)
+- Lead time calculator (fabrication + review cycles)
+- Approval codes (Approved, Approved as Noted, Revise & Resubmit, Rejected)
+- Submittal register with status filtering
+
+#### ✅ **Change Orders**
+- Full PCO→CO lifecycle workflow
+- Multi-level approval (internal + owner)
+- Cost breakdown by line item
+- Contingency tracking with visual health indicators
+- Backup documentation attachments
+
+#### ✅ **Tasks & Scheduling**
+- Task creation, assignment, and tracking
+- Gantt chart visualization with dependencies
+- Look-ahead planning (3-week rolling view)
+- Predecessor/successor relationships
+
+#### ✅ **Punch Lists**
+- Deficiency tracking by area and trade
+- Before/after photo documentation
+- Status management with responsibility assignment
+- Floor plan location marking
+
+#### ✅ **Checklists**
+- Template builder with sections
+- Field execution with photo support
+- Digital signature capture
+- EXIF metadata extraction from photos
+
+#### ✅ **Safety Management**
+- OSHA-compliant incident tracking
+- OSHA 300 Log (Annual Summary)
+- OSHA 300A Form (Summary of Injuries)
+- OSHA 301 Form (Injury and Illness Incident Report)
+- Job Safety Analysis (JSA) forms
+- Toolbox talk management
+
+#### ✅ **Financial Management**
+- Payment Applications (AIA G702/G703)
+- Schedule of Values with progress tracking
+- Lien Waivers (10 state templates)
+- Cost codes (CSI MasterFormat)
+- Budget vs. actual tracking
+- Contingency management with auto-calculation
+
+#### ✅ **Equipment & Materials**
+- Equipment tracking with assignments
+- Maintenance schedules
+- Material receiving with storage location
+- Bin tracking and photos
+
+#### ✅ **Communication**
+- Internal messaging system
+- Correspondence log for formal notices
+- Meeting scheduling with minutes
+- Action item tracking
+
+#### ✅ **Portals**
+- Subcontractor Portal (bids, tasks, punch items)
+- Client Portal (project visibility)
+
+#### ✅ **Reports & Analytics**
+- Financial summary reports
+- Project health dashboards
+- Punch list reports
+- Safety incident reports
+- Predictive analytics
+- Dashboard with real-time stats and action items
+
+#### ✅ **Inspections & Compliance**
+- Inspection scheduling
+- Permit tracking
+- Compliance documentation
+
+### Recent Enhancements (Phases 1-4 Complete)
+
+| Phase | Feature | Status |
+|-------|---------|--------|
+| 1.1 | Dashboard real data integration | ✅ Complete |
+| 1.2 | RFI ball-in-court tracking | ✅ Complete |
+| 1.3 | Change order backup documents | ✅ Complete |
+| 1.4 | Project budget tracking | ✅ Complete |
+| 2.1 | Submittal lead time calculator | ✅ Complete |
+| 2.2 | Tasks Gantt chart view | ✅ Complete |
+| 2.3 | Document revision tracking | ✅ Complete |
+| 2.4 | OSHA 301 incident form | ✅ Complete |
+| 3.1 | Daily reports photo gallery | ✅ Complete |
+| 3.2 | Punch list before/after photos | ✅ Complete |
+| 3.3 | Checklist signature capture | ✅ Complete |
+| 4.1 | Dashboard action required widget | ✅ Complete |
+| 4.2 | Change order contingency tracking | ✅ Complete |
+
+### Planned (Phase 5 - Enterprise)
+
+- **SSO/SAML Authentication** - Enterprise single sign-on
+- **Audit Trails** - Comprehensive change logging
+- **Custom Fields** - User-defined data fields
+- **API Keys** - Third-party integrations
 
 *Legend: ✅ Implemented | 🚧 In Progress | ⬜ Planned*
 
@@ -535,7 +628,7 @@ See [.github/workflows/test.yml](.github/workflows/test.yml) for complete CI/CD 
 
 ## Database
 
-The database schema includes 42 tables covering:
+The database schema includes 172+ migrations and 60+ tables covering:
 
 - **Core**: companies, users, projects, contacts, subcontractors
 - **Documents**: folders, documents, document_markups
@@ -631,15 +724,20 @@ This project uses Vitest 2.1.8 for testing, which has known moderate-severity vu
 
 ## Roadmap
 
-### Phase 2 (Future)
-- Time & resource management
-- Budget & cost tracking
-- Advanced analytics
-- Enhanced scheduling
-- Owner/stakeholder portal
-- AI-powered features
+### Completed Phases (1-4)
+- ✅ Critical fixes and data integration
+- ✅ Industry-standard construction features
+- ✅ Field enhancement tools
+- ✅ Analytics and reporting improvements
 
-See `masterplan.md` for complete feature roadmap.
+### Phase 5 (Enterprise - Planned)
+- SSO/SAML authentication
+- Comprehensive audit trails
+- Custom field system
+- API key management
+- Advanced integrations
+
+See `FEATURE_ROADMAP.md` for detailed feature roadmap.
 
 ## Documentation
 
@@ -661,5 +759,5 @@ For issues, questions, or contributions:
 
 ---
 
-**Version**: 1.0.0 (Phase 1 - Production Ready)
-**Last Updated**: 2025-12-07
+**Version**: 2.0.0 (Phases 1-4 Complete - Production Ready)
+**Last Updated**: 2026-01-01

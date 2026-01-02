@@ -12,3 +12,211 @@
 
    Attempt 1...
    Still waiting: Login Page
+   Attempt 2...
+   Still waiting: Login Page
+   Attempt 3...
+   Still waiting: Login Page
+   Attempt 4...
+   Still waiting: Login Page
+   Attempt 5...
+   Still waiting: Login Page
+   Attempt 6...
+   Still waiting: Login Page
+   Attempt 7...
+   Still waiting: Login Page
+   Attempt 8...
+   Still waiting: Login Page
+   Attempt 9...
+   Still waiting: Login Page
+   Attempt 10...
+   Still waiting: Login Page
+   Attempt 11...
+   Still waiting: Login Page
+   Attempt 12...
+   Still waiting: Login Page
+   Attempt 13...
+   Still waiting: Login Page
+   Attempt 14...
+   Still waiting: Login Page
+   Attempt 15...
+   Still waiting: Login Page
+   Attempt 16...
+   Still waiting: Login Page
+   Attempt 17...
+   Still waiting: Login Page
+   Attempt 18...
+   Still waiting: Login Page
+   Attempt 19...
+   Still waiting: Login Page
+   Attempt 20...
+   Still waiting: Login Page
+   Attempt 21...
+   Still waiting: Login Page
+   Attempt 22...
+   Still waiting: Login Page
+
+❌ Server did not become healthy within 120s
+
+
+❌ Server health checks failed. Test run aborted.
+
+Failed checks:
+   - Login Page: undefined
+     Details: {
+  "hasEmailInput": false,
+  "hasPasswordInput": false,
+  "hasSubmitButton": false,
+  "contentLength": 9612
+}
+
+Troubleshooting tips:
+  1. Ensure the dev server is running: npm run dev:test
+  2. Check Supabase project status at: https://supabase.com/dashboard
+  3. Verify .env.test has correct VITE_SUPABASE_URL
+  4. Check network connectivity and firewall settings
+
+{
+  "config": {
+    "configFile": "C:\\Users\\kubik\\iCloudDrive\\JobSiight\\SuperSiteHero\\playwright.config.ts",
+    "rootDir": "C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/e2e",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": "C:\\Users\\kubik\\iCloudDrive\\JobSiight\\SuperSiteHero\\e2e\\global-setup.ts",
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "Mobile Chrome",
+        "name": "Mobile Chrome",
+        "testDir": "C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "Mobile Safari",
+        "name": "Mobile Safari",
+        "testDir": "C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 90000
+      },
+      {
+        "outputDir": "C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "smoke-crawl",
+        "name": "smoke-crawl",
+        "testDir": "C:/Users/kubik/iCloudDrive/JobSiight/SuperSiteHero/e2e/autonomous",
+        "testIgnore": [],
+        "testMatch": [
+          "smoke-crawl.spec.ts"
+        ],
+        "timeout": 300000
+      }
+    ],
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.57.0",
+    "workers": 11,
+    "webServer": {
+      "command": "npm run dev:test",
+      "url": "http://localhost:5173",
+      "reuseExistingServer": true,
+      "timeout": 180000
+    }
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "Error: Server health checks failed: Login Page",
+      "stack": "Error: Server health checks failed: Login Page\n    at globalSetup (C:\\Users\\kubik\\iCloudDrive\\JobSiight\\SuperSiteHero\\e2e\\global-setup.ts:90:11)",
+      "location": {
+        "file": "C:\\Users\\kubik\\iCloudDrive\\JobSiight\\SuperSiteHero\\e2e\\global-setup.ts",
+        "column": 11,
+        "line": 90
+      },
+      "snippet": "\u001b[90m   at \u001b[39mglobal-setup.ts:90\n\n\u001b[0m \u001b[90m 88 |\u001b[39m     console\u001b[33m.\u001b[39merror(\u001b[32m'  4. Check network connectivity and firewall settings\\n'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 89 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 90 |\u001b[39m     \u001b[36mthrow\u001b[39m \u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\n \u001b[90m    |\u001b[39m           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 91 |\u001b[39m       \u001b[32m`Server health checks failed: ${healthResult.checks\u001b[39m\n \u001b[90m 92 |\u001b[39m \u001b[32m        .filter(c => !c.passed)\u001b[39m\n \u001b[90m 93 |\u001b[39m \u001b[32m        .map(c => c.name)\u001b[39m\u001b[0m"
+    }
+  ],
+  "stats": {
+    "startTime": "2026-01-01T15:18:35.337Z",
+    "duration": 125623.151,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

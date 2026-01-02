@@ -9,6 +9,7 @@ export { IncidentReportForm } from './IncidentReportForm'
 export { OSHA300Log } from './OSHA300Log'
 export { OSHA300ACertificationDialog } from './OSHA300ACertificationDialog'
 export { BatchOSHAOperations } from './BatchOSHAOperations'
+export { OSHA301Form, type OSHA301FormData } from './OSHA301Form'
 
 // Safety metrics components
 export { SafetyMetricsDashboard } from './SafetyMetricsDashboard'

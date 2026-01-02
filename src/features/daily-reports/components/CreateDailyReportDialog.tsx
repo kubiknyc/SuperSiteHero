@@ -1,14 +1,19 @@
 // File: /src/features/daily-reports/components/CreateDailyReportDialog.tsx
-// Dialog for creating a new daily report
+// Dialog for creating a new daily report with copy from previous feature
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useCreateDailyReportWithNotification } from '../hooks/useDailyReportsMutations'
+import { usePreviousDayReport, extractCopyableFields } from '../hooks/useDailyReports'
 import { useFormValidation, dailyReportCreateSchema } from '@/lib/validation'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
+import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { InputWithError, TextareaWithError } from '@/components/form/ValidationError'
+import { CompactPhotoCapture, type CapturedPhoto } from '@/components/ui/photo-capture'
+import { Copy, Calendar, Loader2 } from 'lucide-react'
+import { format } from 'date-fns'
 import { logger } from '../../../lib/utils/logger';
 
 
@@ -37,22 +42,48 @@ export function CreateDailyReportDialog({
     notes: '',
     status: 'draft' as const,
   })
+  const [copiedFromPrevious, setCopiedFromPrevious] = useState(false)
+  const [photos, setPhotos] = useState<CapturedPhoto[]>([])
 
   const { userProfile } = useAuth()
   const createReport = useCreateDailyReportWithNotification()
   const { validate, getFieldError, clearErrors } = useFormValidation(dailyReportCreateSchema)
 
+  // Fetch previous day's report for copy feature
+  const today = new Date().toISOString().split('T')[0]
+  const { data: previousReport, isLoading: previousLoading } = usePreviousDayReport(projectId, today)
+
+  // Copy from previous report handler
+  const handleCopyFromPrevious = useCallback(() => {
+    if (!previousReport) return
+
+    const copyableFields = extractCopyableFields(previousReport)
+    setFormData((prev) => ({
+      ...prev,
+      weather_condition: copyableFields.weather_condition as string || '',
+      temperature_high: copyableFields.temperature_high?.toString() || '',
+      temperature_low: copyableFields.temperature_low?.toString() || '',
+      total_workers: copyableFields.total_workers?.toString() || '',
+      weather_delays: copyableFields.weather_delays as boolean || false,
+      other_delays: copyableFields.other_delays as string || '',
+      notes: '', // Don't copy notes - each day should have fresh notes
+    }))
+    setCopiedFromPrevious(true)
+  }, [previousReport])
+
   // Initialize form and set today's date
   useEffect(() => {
     if (open) {
-      const today = new Date().toISOString().split('T')[0]
+      const todayDate = new Date().toISOString().split('T')[0]
       setTimeout(() => {
         setFormData((prev) => ({
           ...prev,
           project_id: projectId,
-          report_date: today,
+          report_date: todayDate,
         }))
         clearErrors()
+        setCopiedFromPrevious(false)
+        setPhotos([])
       }, 0)
     }
   }, [open, projectId, clearErrors])
@@ -94,7 +125,7 @@ export function CreateDailyReportDialog({
       // Step 3: Success! Toast shown automatically by mutation hook
       onSuccess?.()
       onOpenChange(false)
-    } catch (_error) {
+    } catch (error) {
       // Error toast shown automatically by mutation hook
       logger.error('Failed to create daily report:', error)
     }
@@ -116,6 +147,49 @@ export function CreateDailyReportDialog({
             <DialogDescription>
               Document today's activities, weather, and workforce
             </DialogDescription>
+
+            {/* Copy from Previous Report */}
+            {previousReport && (
+              <div className="mt-3 p-3 bg-muted/50 rounded-lg border">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">
+                      Previous report: {format(new Date(previousReport.report_date), 'MMM d, yyyy')}
+                    </span>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleCopyFromPrevious}
+                    disabled={createReport.isPending || previousLoading || copiedFromPrevious}
+                    className="gap-2"
+                  >
+                    {previousLoading ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : copiedFromPrevious ? (
+                      <>
+                        <Copy className="h-4 w-4" />
+                        Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-4 w-4" />
+                        Copy from Previous
+                      </>
+                    )}
+                  </Button>
+                </div>
+                {copiedFromPrevious && (
+                  <div className="mt-2 flex items-center gap-2">
+                    <Badge variant="secondary" className="text-xs">
+                      Weather, temperatures, and worker count copied
+                    </Badge>
+                  </div>
+                )}
+              </div>
+            )}
           </DialogHeader>
 
           <div className="space-y-4 py-4">
@@ -214,6 +288,21 @@ export function CreateDailyReportDialog({
                   disabled={createReport.isPending}
                 />
               </div>
+            </div>
+
+            {/* Site Photos Section */}
+            <div className="border-t pt-4">
+              <h3 className="font-semibold text-foreground mb-4 heading-subsection">Site Photos</h3>
+              <p className="text-sm text-muted-foreground mb-3">
+                Capture photos of site conditions, progress, or issues
+              </p>
+              <CompactPhotoCapture
+                photos={photos}
+                onPhotosChange={setPhotos}
+                maxPhotos={10}
+                disabled={createReport.isPending}
+                label="Site Photos"
+              />
             </div>
 
             {/* Delays and Notes Section */}

@@ -7,6 +7,8 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { DashboardSelector, useDashboardView } from '@/features/dashboards'
+import { useDashboardStats, useActionItems } from '@/features/dashboard/hooks/useDashboardStats'
+import { useProjectsProgress } from '@/features/dashboard/hooks/useProjectProgress'
 import { Badge } from '@/components/ui/badge'
 import { LocalErrorBoundary } from '@/components/errors'
 import {
@@ -19,7 +21,10 @@ import {
   Clock,
   Building2,
   TrendingDown,
-  BarChart3
+  BarChart3,
+  Loader2,
+  Bell,
+  ChevronRight
 } from 'lucide-react'
 import { NoticesWidget } from '@/features/notices/components'
 import { format } from 'date-fns'
@@ -40,53 +45,164 @@ export function DashboardPage() {
   // Check if user has a role-based dashboard
   const hasRoleDashboard = dashboardView !== 'default'
 
-  // Professional Blueprint stats with sparklines - Using design tokens
-  const stats = [
-    {
-      label: 'Tasks Pending',
-      value: '12',
-      target: 15,
-      change: '+3',
-      trend: 'up' as const,
-      icon: ClipboardList,
-      color: themeColors.primary.DEFAULT,
-      sparkline: [8, 10, 9, 11, 12],
-      ariaLabel: '12 tasks pending out of 15 target, up 3 from last period'
-    },
-    {
-      label: 'Open RFIs',
-      value: '5',
-      target: 3,
-      change: '+2',
-      trend: 'up' as const,
-      icon: AlertCircle,
-      color: chartColors.orange,
-      sparkline: [2, 3, 4, 4, 5],
-      ariaLabel: '5 open RFIs with target of 3, up 2 from last period'
-    },
-    {
-      label: 'Punch Items',
-      value: '23',
-      target: 15,
-      change: '-8',
-      trend: 'down' as const,
-      icon: ListChecks,
-      color: chartColors.purple,
-      sparkline: [35, 30, 28, 25, 23],
-      ariaLabel: '23 punch items with target of 15, down 8 from last period'
-    },
-    {
-      label: 'Days Since Incident',
-      value: '127',
-      target: 365,
-      change: '+1',
-      trend: 'up' as const,
-      icon: Shield,
-      color: themeColors.semantic.success,
-      sparkline: [123, 124, 125, 126, 127],
-      ariaLabel: '127 days since last incident with target of 365'
+  // Fetch real dashboard statistics
+  const { data: dashboardStats, isLoading: statsLoading } = useDashboardStats(selectedProject?.id)
+  const { data: actionItems, isLoading: actionsLoading } = useActionItems(selectedProject?.id)
+
+  // Fetch real project progress for all projects
+  const projectIds = useMemo(() => projects?.map(p => p.id) || [], [projects])
+  const { data: projectsProgress } = useProjectsProgress(projectIds)
+
+  // Build stats from real data - Using design tokens
+  // Generate filter query strings for clickable stats
+  const buildFilteredLink = (basePath: string, filters: Record<string, string>) => {
+    const params = new URLSearchParams(filters)
+    return `${basePath}?${params.toString()}`
+  }
+
+  const stats = useMemo(() => {
+    if (!dashboardStats) {
+      // Loading state - show skeleton values
+      return [
+        {
+          label: 'Tasks Pending',
+          value: '-',
+          target: 0,
+          change: '-',
+          trend: 'up' as const,
+          icon: ClipboardList,
+          color: themeColors.primary.DEFAULT,
+          sparkline: [0, 0, 0, 0, 0],
+          ariaLabel: 'Loading tasks...',
+          link: '/tasks',
+          filterLink: '/tasks?status=pending'
+        },
+        {
+          label: 'Open RFIs',
+          value: '-',
+          target: 0,
+          change: '-',
+          trend: 'up' as const,
+          icon: AlertCircle,
+          color: chartColors.orange,
+          sparkline: [0, 0, 0, 0, 0],
+          ariaLabel: 'Loading RFIs...',
+          link: '/rfis',
+          filterLink: '/rfis?status=open'
+        },
+        {
+          label: 'Punch Items',
+          value: '-',
+          target: 0,
+          change: '-',
+          trend: 'down' as const,
+          icon: ListChecks,
+          color: chartColors.purple,
+          sparkline: [0, 0, 0, 0, 0],
+          ariaLabel: 'Loading punch items...',
+          link: '/punch-lists',
+          filterLink: '/punch-lists?status=open'
+        },
+        {
+          label: 'Days Since Incident',
+          value: '-',
+          target: 365,
+          change: '-',
+          trend: 'up' as const,
+          icon: Shield,
+          color: themeColors.semantic.success,
+          sparkline: [0, 0, 0, 0, 0],
+          ariaLabel: 'Loading safety stats...',
+          link: '/safety',
+          filterLink: '/safety'
+        }
+      ]
     }
-  ]
+
+    const { tasks, rfis, punchItems, safety } = dashboardStats
+
+    // Calculate changes from trend
+    const getChange = (trend: number[]) => {
+      if (trend.length < 2) return { value: '0', direction: 'up' as const }
+      const current = trend[trend.length - 1]
+      const previous = trend[trend.length - 2]
+      const diff = current - previous
+      return {
+        value: diff >= 0 ? `+${diff}` : `${diff}`,
+        direction: diff >= 0 ? 'up' as const : 'down' as const
+      }
+    }
+
+    const taskChange = getChange(tasks.trend)
+    const rfiChange = getChange(rfis.trend)
+    const punchChange = getChange(punchItems.trend)
+
+    // Build filter links with project context
+    const projectFilter = selectedProject?.id ? `&projectId=${selectedProject.id}` : ''
+
+    return [
+      {
+        label: 'Tasks Pending',
+        value: String(tasks.pending + tasks.inProgress),
+        target: tasks.total || 1,
+        change: taskChange.value,
+        trend: taskChange.direction,
+        icon: ClipboardList,
+        color: themeColors.primary.DEFAULT,
+        sparkline: tasks.trend.length > 0 ? tasks.trend : [0],
+        ariaLabel: `${tasks.pending + tasks.inProgress} tasks pending out of ${tasks.total} total, ${taskChange.value} from last period`,
+        link: '/tasks',
+        filterLink: `/tasks?status=pending${projectFilter}`,
+        overdueLink: tasks.overdue > 0 ? `/tasks?overdue=true${projectFilter}` : null,
+        overdueCount: tasks.overdue
+      },
+      {
+        label: 'Open RFIs',
+        value: String(rfis.open + rfis.pendingResponse),
+        target: Math.max(rfis.total, 1),
+        change: rfiChange.value,
+        trend: rfiChange.direction,
+        icon: AlertCircle,
+        color: chartColors.orange,
+        sparkline: rfis.trend.length > 0 ? rfis.trend : [0],
+        ariaLabel: `${rfis.open + rfis.pendingResponse} open RFIs, ${rfis.overdue} overdue`,
+        link: '/rfis',
+        filterLink: `/rfis?status=open${projectFilter}`,
+        overdueLink: rfis.overdue > 0 ? `/rfis?overdue=true${projectFilter}` : null,
+        overdueCount: rfis.overdue
+      },
+      {
+        label: 'Punch Items',
+        value: String(punchItems.open + punchItems.inProgress),
+        target: Math.max(punchItems.total, 1),
+        change: punchChange.value,
+        trend: punchChange.direction,
+        icon: ListChecks,
+        color: chartColors.purple,
+        sparkline: punchItems.trend.length > 0 ? punchItems.trend : [0],
+        ariaLabel: `${punchItems.open + punchItems.inProgress} punch items open, ${punchItems.verified} verified`,
+        link: '/punch-lists',
+        filterLink: `/punch-lists?status=open${projectFilter}`,
+        overdueLink: null,
+        overdueCount: 0
+      },
+      {
+        label: 'Days Since Incident',
+        value: String(safety.daysSinceIncident),
+        target: 365,
+        change: '+1',
+        trend: 'up' as const,
+        icon: Shield,
+        color: themeColors.semantic.success,
+        sparkline: safety.trend.length > 0 ? safety.trend : [safety.daysSinceIncident],
+        ariaLabel: `${safety.daysSinceIncident} days since last incident`,
+        link: '/safety',
+        filterLink: `/safety${selectedProject?.id ? `?projectId=${selectedProject.id}` : ''}`,
+        overdueLink: null,
+        overdueCount: 0
+      }
+    ]
+  }, [dashboardStats, selectedProject?.id])
 
   // Memoized sparkline component to prevent unnecessary re-renders
   const Sparkline = useMemo(() => {
@@ -189,15 +305,15 @@ export function DashboardPage() {
               >
                 {stats.map((stat) => {
                 const Icon = stat.icon
-                const percentage = (parseInt(stat.value) / stat.target) * 100
+                const percentage = stat.target > 0 ? (parseInt(stat.value) / stat.target) * 100 : 0
                 const isFocused = focusedCard === stat.label
 
                 return (
-                  <div
+                  <Link
                     key={stat.label}
+                    to={stat.filterLink || stat.link}
                     role="article"
                     aria-label={stat.ariaLabel}
-                    tabIndex={0}
                     onFocus={() => handleCardFocus(stat.label)}
                     onBlur={handleCardBlur}
                     style={{
@@ -212,7 +328,9 @@ export function DashboardPage() {
                       boxShadow: isFocused
                         ? `0 8px 16px -4px ${stat.color}20, 0 4px 6px -2px ${stat.color}15`
                         : '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-                      transform: isFocused ? 'translateY(-4px) scale(1.01)' : 'translateY(0) scale(1)'
+                      transform: isFocused ? 'translateY(-4px) scale(1.01)' : 'translateY(0) scale(1)',
+                      textDecoration: 'none',
+                      display: 'block'
                     }}
                     onMouseEnter={() => handleCardFocus(stat.label)}
                     onMouseLeave={handleCardBlur}
@@ -318,7 +436,7 @@ export function DashboardPage() {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </Link>
                 )
               })}
               </div>
@@ -364,7 +482,10 @@ export function DashboardPage() {
                   {projects && projects.length > 0 ? (
                     projects.slice(0, 3).map((project) => {
                       const healthColor = getHealthColor(project.status)
-                      const progress = 75 // Mock progress
+                      // Get real progress from projectsProgress data
+                      const projectProgress = projectsProgress?.find(p => p.projectId === project.id)
+                      const progress = projectProgress?.progress ?? 0
+                      const healthStatus = projectProgress?.healthStatus ?? 'fair'
 
                       return (
                         <Link
@@ -457,6 +578,82 @@ export function DashboardPage() {
 
               {/* Sidebar */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                {/* Action Required Widget */}
+                <LocalErrorBoundary
+                  title="Unable to load action items"
+                  description="We couldn't load action items. Please try again."
+                >
+                  <div style={{
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid #E2E8F0',
+                    borderRadius: '12px',
+                    padding: '1.5rem',
+                    boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)'
+                  }}>
+                    <div className="flex justify-between items-center mb-4">
+                      <div className="flex items-center gap-2">
+                        <Bell className="w-5 h-5 text-primary" />
+                        <h3 className="heading-card text-base font-semibold">Action Required</h3>
+                      </div>
+                      {actionItems && actionItems.length > 0 && (
+                        <Badge variant="destructive" className="text-xs">
+                          {actionItems.length}
+                        </Badge>
+                      )}
+                    </div>
+
+                    {actionsLoading ? (
+                      <div className="flex justify-center py-6">
+                        <Loader2 className="w-6 h-6 animate-spin text-muted" />
+                      </div>
+                    ) : actionItems && actionItems.length > 0 ? (
+                      <div className="space-y-3">
+                        {actionItems.slice(0, 5).map((item) => (
+                          <Link
+                            key={item.id}
+                            to={item.link}
+                            className="block p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors border border-slate-100"
+                          >
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <Badge
+                                    variant={item.isOverdue ? 'destructive' : item.priority === 'urgent' ? 'destructive' : item.priority === 'high' ? 'secondary' : 'outline'}
+                                    className="text-[10px] uppercase"
+                                  >
+                                    {item.isOverdue ? 'Overdue' : item.type.replace('_', ' ')}
+                                  </Badge>
+                                </div>
+                                <p className="text-sm font-medium text-foreground truncate">
+                                  {item.title}
+                                </p>
+                                <p className="text-xs text-muted truncate">
+                                  {item.projectName}
+                                </p>
+                              </div>
+                              <ChevronRight className="w-4 h-4 text-muted flex-shrink-0 mt-1" />
+                            </div>
+                          </Link>
+                        ))}
+                        {actionItems.length > 5 && (
+                          <Link
+                            to="/tasks"
+                            className="block text-center text-sm text-primary font-medium py-2 hover:underline"
+                          >
+                            View all {actionItems.length} items
+                          </Link>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="text-center py-6">
+                        <Shield className="w-10 h-10 mx-auto mb-2 text-green-500" />
+                        <p className="text-sm text-muted">All caught up!</p>
+                        <p className="text-xs text-muted">No items need your attention</p>
+                      </div>
+                    )}
+                  </div>
+                </LocalErrorBoundary>
+
                 {/* Notices Widget */}
                 <LocalErrorBoundary
                   title="Unable to load notices"

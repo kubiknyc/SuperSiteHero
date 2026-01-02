@@ -10,11 +10,14 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Loader2, Calendar, AlertTriangle, DollarSign, Clock } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Loader2, Calendar, AlertTriangle, DollarSign, Clock, FileText, X } from 'lucide-react'
 import { useCreateRFIWithNotification } from '../hooks/useRFIMutations'
 import { cn } from '@/lib/utils'
 import { DistributionListPicker } from '@/components/distribution/DistributionListPicker'
+import { RFITemplateSelector } from './RFITemplateSelector'
 import type { DistributionSelection } from '@/types/distribution-list'
+import type { RFITemplate } from '../utils/rfiTemplates'
 import { logger } from '../../../lib/utils/logger';
 
 
@@ -65,7 +68,32 @@ export function CreateRFIDialog({
     externalContacts: [],
   })
 
+  // Template state
+  const [showTemplateSelector, setShowTemplateSelector] = useState(false)
+  const [selectedTemplate, setSelectedTemplate] = useState<RFITemplate | null>(null)
+
   const createRFI = useCreateRFIWithNotification()
+
+  // Handle template selection
+  const handleSelectTemplate = (template: RFITemplate) => {
+    setSelectedTemplate(template)
+    setTitle(template.titleTemplate)
+    setDescription(template.descriptionTemplate)
+    setPriority(template.priority)
+    setDiscipline(template.discipline)
+    setHasCostImpact(template.hasCostImpact)
+    setHasScheduleImpact(template.hasScheduleImpact)
+    // Add prompts to additional info if any
+    if (template.additionalInfoPrompts.length > 0) {
+      const prompts = template.additionalInfoPrompts.map(p => `- ${p}`).join('\n')
+      setMoreInformation(`Consider including:\n${prompts}`)
+    }
+  }
+
+  // Clear template
+  const handleClearTemplate = () => {
+    setSelectedTemplate(null)
+  }
 
   // Reset form when dialog opens
   useEffect(() => {
@@ -88,6 +116,7 @@ export function CreateRFIDialog({
     setHasCostImpact(false)
     setHasScheduleImpact(false)
     setDistribution({ listIds: [], userIds: [], externalContacts: [] })
+    setSelectedTemplate(null)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -144,11 +173,53 @@ export function CreateRFIDialog({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Create RFI (Request for Information)</DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle>Create RFI (Request for Information)</DialogTitle>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setShowTemplateSelector(true)}
+              disabled={createRFI.isPending}
+              className="gap-2"
+            >
+              <FileText className="h-4 w-4" />
+              Use Template
+            </Button>
+          </div>
           <DialogDescription>
             Submit a request for clarification from the design team or owner
           </DialogDescription>
+
+          {/* Template indicator */}
+          {selectedTemplate && (
+            <div className="mt-2 p-2 bg-primary/10 rounded-lg flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <FileText className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium text-primary">
+                  Using template: {selectedTemplate.name}
+                </span>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                onClick={handleClearTemplate}
+                disabled={createRFI.isPending}
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </div>
+          )}
         </DialogHeader>
+
+        {/* Template Selector Dialog */}
+        <RFITemplateSelector
+          open={showTemplateSelector}
+          onOpenChange={setShowTemplateSelector}
+          onSelectTemplate={handleSelectTemplate}
+        />
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Title */}

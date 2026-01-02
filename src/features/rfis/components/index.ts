@@ -1,9 +1,18 @@
 // File: /src/features/rfis/components/index.ts
 // Central export for all RFI components
 
-export { RFIsList } from './RFIsList'
+// ============================================================
+// LEGACY COMPONENTS (workflow_items-based) - DEPRECATED
+// For new code, use CreateDedicatedRFIDialog instead
+// ============================================================
+/** @deprecated Use CreateDedicatedRFIDialog instead */
 export { CreateRFIDialog } from './CreateRFIDialog'
+
+// ============================================================
+// RECOMMENDED: Dedicated RFI Components
+// ============================================================
 export { CreateDedicatedRFIDialog } from './CreateDedicatedRFIDialog'
+export { RFIsList } from './RFIsList'
 export { RFIStatusBadge } from './RFIStatusBadge'
 export type { RFIStatus, RFIStatusBadgeProps } from './RFIStatusBadge'
 export { RFIPriorityBadge } from './RFIPriorityBadge'
@@ -21,3 +30,7 @@ export type { RFIAttachmentsProps } from './RFIAttachments'
 export { RFIAgingAlerts } from './RFIAgingAlerts'
 export { RFITrendReport } from './RFITrendReport'
 export { RFITrendChart, RFIPriorityChart, RFIAssigneeChart, RFIOnTimeTrendChart } from './RFITrendChart'
+export { RFIEscalationPanel } from './RFIEscalationPanel'
+export { RFITemplateSelector } from './RFITemplateSelector'
+export { RFIResponseTimeline } from './RFIResponseTimeline'
+export type { RFIResponseTimelineProps } from './RFIResponseTimeline'

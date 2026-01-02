@@ -6,6 +6,7 @@
 
 // Report data hooks
 export {
+  useExecutiveSummary,
   useProjectHealthReport,
   useDailyReportAnalytics,
   useWorkflowSummary,
@@ -13,6 +14,12 @@ export {
   useSafetyIncidentReport,
   useFinancialSummary,
   useDocumentSummary,
+} from './useReports'
+
+export type {
+  ExecutiveSummary,
+  ReportHighlight,
+  ReportConcern,
 } from './useReports'
 
 // Report builder hooks

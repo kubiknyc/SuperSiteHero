@@ -20,6 +20,7 @@ export { ProjectHealthReport } from "./ProjectHealthReport"
 export { SafetyIncidentReport } from "./SafetyIncidentReport"
 export { FinancialSummaryReport } from "./FinancialSummaryReport"
 export { PunchListReport } from "./PunchListReport"
+export { ExecutiveSummaryReport } from "./ExecutiveSummaryReport"
 
 // Weather delay suggestion components
 export {

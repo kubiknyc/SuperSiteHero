@@ -1,7 +1,7 @@
 # JobSight Design System
 
-**Version:** 1.0
-**Last Updated:** December 2025
+**Version:** 2.0
+**Last Updated:** January 2026
 
 ## Table of Contents
 
@@ -1373,6 +1373,18 @@ Design tokens are the foundational design decisions (colors, spacing, typography
 ---
 
 ## Changelog
+
+### Version 2.0 (January 2026)
+- Added new construction-specific components:
+  - **SignaturePad**: Digital signature capture for checklists and approvals
+  - **ContingencyTracker**: Budget and contingency monitoring with health indicators
+  - **LeadTimeCalculator**: Submittal lead time calculations
+  - **GanttChart**: Interactive task timeline with dependencies
+  - **DrawingRegister**: AIA G810-style drawing log with revision tracking
+  - **TransmittalForm**: Document transmittal management
+  - **OSHA301Form**: Injury and Illness Incident Report
+- Updated component documentation
+- Added construction-specific color guidance for status indicators
 
 ### Version 1.0 (December 2025)
 - Initial design system documentation

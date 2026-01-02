@@ -20,3 +20,6 @@ export { SyncStatusBar } from './SyncStatusBar';
 export { EntitySyncBadge } from './EntitySyncBadge';
 export { SyncProgressBar } from './SyncProgressBar';
 export type { EntitySyncStatus } from './EntitySyncBadge';
+
+// Comprehensive Sync Status Panel
+export { SyncStatusPanel } from './SyncStatusPanel';

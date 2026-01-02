@@ -17,3 +17,7 @@ export * from './comparison'
 export { DrawingPackageWizard } from './DrawingPackageWizard'
 export { PackageCoverSheet, generateCoverSheetHTML } from './PackageCoverSheet'
 export { PackageDistributionDialog } from './PackageDistributionDialog'
+
+// Drawing Register and Transmittals
+export { DrawingRegister } from './DrawingRegister'
+export { TransmittalForm, TransmittalList, PrintableTransmittal } from './TransmittalForm'

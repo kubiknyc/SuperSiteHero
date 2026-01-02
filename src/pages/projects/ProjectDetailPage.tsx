@@ -13,6 +13,7 @@ import { SubmittalsList } from '@/features/submittals/components'
 import { SubcontractorPortalAccessList } from '@/features/subcontractor-portal/components'
 import { Button } from '@/components/ui/button'
 import { PunchListsProjectView } from '@/features/punch-lists/components'
+import { ContingencyTracker } from '@/features/change-orders'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { PresenceAvatars } from '@/components/presence/PresenceAvatars'
@@ -284,6 +285,9 @@ export function ProjectDetailPage() {
 
           {/* Sidebar */}
           <div className="space-y-8">
+            {/* Contingency Tracking */}
+            <ContingencyTracker projectId={project.id} />
+
             {/* Timeline */}
             <Card>
               <CardHeader>
