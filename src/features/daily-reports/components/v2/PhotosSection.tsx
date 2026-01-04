@@ -1,6 +1,12 @@
 /**
  * PhotosSection - Photo documentation with categorization
  * Supports upload, GPS metadata, and linking to other entries
+ *
+ * Mobile UX Features:
+ * - Long-press context menu (replaces hover actions)
+ * - Multi-select mode with bulk category assignment
+ * - Swipeable lightbox for photo viewing
+ * - Touch-friendly 48px+ targets
  */
 
 import { useState, useCallback, useRef, useMemo, useEffect } from 'react';
@@ -11,6 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
@@ -36,6 +43,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
   Camera,
   ChevronDown,
   ChevronUp,
@@ -50,12 +64,21 @@ import {
   CheckCircle2,
   Navigation,
   MapPinOff,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  MoreVertical,
+  CheckSquare,
+  Square,
+  FolderOpen,
+  ZoomIn,
 } from 'lucide-react';
 import { useDailyReportStoreV2 } from '../../store/dailyReportStoreV2';
 import { usePhotoUploadManager, type ProcessedPhoto } from '../../hooks/usePhotoUploadManager';
 import { useGeolocation, formatCoordinates } from '../../hooks/useGeolocation';
 import { BatchUploadProgress } from './BatchUploadProgress';
 import type { PhotoEntryV2, PhotoCategory } from '@/types/daily-reports-v2';
+import { cn } from '@/lib/utils';
 
 const PHOTO_CATEGORIES: { value: PhotoCategory; label: string; color: string }[] = [
   { value: 'progress', label: 'Progress', color: 'bg-info-light text-primary-hover' },
@@ -111,6 +134,17 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [autoGpsEnabled, setAutoGpsEnabled] = useState(true); // Auto-capture GPS for photos without EXIF GPS
+
+  // Mobile UX state
+  const [multiSelectMode, setMultiSelectMode] = useState(false);
+  const [selectedPhotos, setSelectedPhotos] = useState<Set<string>>(new Set());
+  const [bulkCategoryDialogOpen, setBulkCategoryDialogOpen] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [touchStartTime, setTouchStartTime] = useState<number>(0);
+  const [touchStartPos, setTouchStartPos] = useState<{ x: number; y: number } | null>(null);
+  const longPressTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const LONG_PRESS_DURATION = 500; // ms
 
   // Pre-fetch GPS when section is expanded and auto-GPS is enabled
   useEffect(() => {
@@ -247,6 +281,140 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
       setDeleteDialogOpen(false);
     }
   }, [photoToDelete, removePhoto]);
+
+  // =============================================
+  // Mobile UX Handlers
+  // =============================================
+
+  // Toggle photo selection
+  const togglePhotoSelection = useCallback((photoId: string) => {
+    setSelectedPhotos((prev) => {
+      const next = new Set(prev);
+      if (next.has(photoId)) {
+        next.delete(photoId);
+      } else {
+        next.add(photoId);
+      }
+      return next;
+    });
+  }, []);
+
+  // Select all photos
+  const selectAllPhotos = useCallback(() => {
+    setSelectedPhotos(new Set(photos.map((p) => p.id)));
+  }, [photos]);
+
+  // Clear selection and exit multi-select mode
+  const exitMultiSelectMode = useCallback(() => {
+    setMultiSelectMode(false);
+    setSelectedPhotos(new Set());
+  }, []);
+
+  // Delete selected photos
+  const deleteSelectedPhotos = useCallback(() => {
+    selectedPhotos.forEach((id) => removePhoto(id));
+    toast.success(`Deleted ${selectedPhotos.size} photo${selectedPhotos.size > 1 ? 's' : ''}`);
+    exitMultiSelectMode();
+  }, [selectedPhotos, removePhoto, exitMultiSelectMode]);
+
+  // Bulk category update
+  const handleBulkCategoryChange = useCallback((category: PhotoCategory) => {
+    selectedPhotos.forEach((id) => updatePhoto(id, { category }));
+    toast.success(`Updated ${selectedPhotos.size} photo${selectedPhotos.size > 1 ? 's' : ''} to ${category}`);
+    setBulkCategoryDialogOpen(false);
+    exitMultiSelectMode();
+  }, [selectedPhotos, updatePhoto, exitMultiSelectMode]);
+
+  // Long-press detection for touch devices
+  const handleTouchStart = useCallback((e: React.TouchEvent, photoId: string) => {
+    const touch = e.touches[0];
+    setTouchStartTime(Date.now());
+    setTouchStartPos({ x: touch.clientX, y: touch.clientY });
+
+    longPressTimeoutRef.current = setTimeout(() => {
+      // Vibrate if supported (haptic feedback)
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+      // Enter multi-select mode and select this photo
+      setMultiSelectMode(true);
+      setSelectedPhotos(new Set([photoId]));
+    }, LONG_PRESS_DURATION);
+  }, [LONG_PRESS_DURATION]);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!touchStartPos) return;
+
+    const touch = e.touches[0];
+    const dx = Math.abs(touch.clientX - touchStartPos.x);
+    const dy = Math.abs(touch.clientY - touchStartPos.y);
+
+    // Cancel long-press if finger moved more than 10px
+    if (dx > 10 || dy > 10) {
+      if (longPressTimeoutRef.current) {
+        clearTimeout(longPressTimeoutRef.current);
+        longPressTimeoutRef.current = null;
+      }
+    }
+  }, [touchStartPos]);
+
+  const handleTouchEnd = useCallback(() => {
+    if (longPressTimeoutRef.current) {
+      clearTimeout(longPressTimeoutRef.current);
+      longPressTimeoutRef.current = null;
+    }
+    setTouchStartPos(null);
+  }, []);
+
+  // Lightbox navigation
+  const openLightbox = useCallback((index: number) => {
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  }, []);
+
+  const closeLightbox = useCallback(() => {
+    setLightboxOpen(false);
+  }, []);
+
+  const nextPhoto = useCallback(() => {
+    setLightboxIndex((prev) => (prev + 1) % photos.length);
+  }, [photos.length]);
+
+  const prevPhoto = useCallback(() => {
+    setLightboxIndex((prev) => (prev - 1 + photos.length) % photos.length);
+  }, [photos.length]);
+
+  // Swipe handling for lightbox
+  const [swipeStartX, setSwipeStartX] = useState<number | null>(null);
+
+  const handleLightboxTouchStart = useCallback((e: React.TouchEvent) => {
+    setSwipeStartX(e.touches[0].clientX);
+  }, []);
+
+  const handleLightboxTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (swipeStartX === null) return;
+
+    const endX = e.changedTouches[0].clientX;
+    const diff = swipeStartX - endX;
+
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        nextPhoto();
+      } else {
+        prevPhoto();
+      }
+    }
+    setSwipeStartX(null);
+  }, [swipeStartX, nextPhoto, prevPhoto]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (longPressTimeoutRef.current) {
+        clearTimeout(longPressTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -394,29 +562,114 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
               )}
             </div>
 
+            {/* Multi-select toolbar */}
+            {multiSelectMode && (
+              <div className="p-3 bg-primary/10 border-b flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={exitMultiSelectMode}
+                    className="h-9 w-9 p-0"
+                    aria-label="Cancel selection"
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
+                  <span className="text-sm font-medium">
+                    {selectedPhotos.size} selected
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={selectAllPhotos}
+                    className="h-9 text-xs"
+                  >
+                    Select All
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setBulkCategoryDialogOpen(true)}
+                    disabled={selectedPhotos.size === 0}
+                    className="h-9 text-xs"
+                  >
+                    <FolderOpen className="h-4 w-4 mr-1" />
+                    Category
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={deleteSelectedPhotos}
+                    disabled={selectedPhotos.size === 0}
+                    className="h-9 text-xs"
+                  >
+                    <Trash2 className="h-4 w-4 mr-1" />
+                    Delete
+                  </Button>
+                </div>
+              </div>
+            )}
+
             {/* Photo Grid */}
             {photos.length > 0 && (
               <div className="p-4">
+                {!multiSelectMode && (
+                  <p className="text-xs text-muted-foreground mb-3 md:hidden">
+                    Long-press a photo to select multiple
+                  </p>
+                )}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {photos.map((photo) => {
+                  {photos.map((photo, index) => {
                     const catInfo = getCategoryInfo(photo.category);
                     const progress = uploadProgress[photo.id];
                     const isPending = photo.upload_status === 'pending';
                     const isFailed = photo.upload_status === 'failed' || progress?.status === 'failed';
                     const isCurrentlyUploading = progress?.status === 'uploading' || progress?.status === 'compressing';
+                    const isSelected = selectedPhotos.has(photo.id);
 
                     return (
                       <div
                         key={photo.id}
-                        className={`relative group rounded-lg overflow-hidden border ${
-                          isFailed ? 'border-red-300' : isPending ? 'border-yellow-300' : ''
-                        }`}
+                        className={cn(
+                          'relative group rounded-lg overflow-hidden border transition-all',
+                          isFailed ? 'border-red-300' : isPending ? 'border-yellow-300' : 'border-border',
+                          isSelected && 'ring-2 ring-primary ring-offset-2',
+                          multiSelectMode && 'cursor-pointer'
+                        )}
+                        onTouchStart={(e) => !multiSelectMode && handleTouchStart(e, photo.id)}
+                        onTouchMove={handleTouchMove}
+                        onTouchEnd={handleTouchEnd}
+                        onClick={() => {
+                          if (multiSelectMode) {
+                            togglePhotoSelection(photo.id);
+                          }
+                        }}
                       >
                         <img
                           src={photo.thumbnail_url || photo.file_url}
                           alt={photo.caption || 'Photo'}
                           className="w-full h-32 object-cover"
                         />
+
+                        {/* Selection checkbox (multi-select mode) */}
+                        {multiSelectMode && (
+                          <div className="absolute top-2 left-2 z-20">
+                            <div
+                              className={cn(
+                                'w-6 h-6 rounded-full flex items-center justify-center',
+                                isSelected ? 'bg-primary text-primary-foreground' : 'bg-white/90 text-muted-foreground border'
+                              )}
+                            >
+                              {isSelected ? (
+                                <CheckCircle2 className="h-4 w-4" />
+                              ) : (
+                                <div className="w-4 h-4 rounded-full border-2" />
+                              )}
+                            </div>
+                          </div>
+                        )}
 
                         {/* Upload Status Overlay */}
                         {(isPending || isCurrentlyUploading || isFailed) && (
@@ -445,33 +698,85 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                         )}
 
                         {/* Success Indicator */}
-                        {photo.upload_status === 'uploaded' && progress?.status === 'uploaded' && (
+                        {photo.upload_status === 'uploaded' && progress?.status === 'uploaded' && !multiSelectMode && (
                           <div className="absolute top-2 right-2">
                             <CheckCircle2 className="h-4 w-4 text-success bg-card rounded-full" />
                           </div>
                         )}
 
-                        {/* Overlay for actions */}
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors">
-                          <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
-                            <button
-                              type="button"
-                              onClick={() => handleEdit(photo)}
-                              className="p-1.5 bg-card rounded shadow hover:bg-blue-50"
-                              aria-label="Edit photo"
-                            >
-                              <Pencil className="h-3 w-3" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteClick(photo.id)}
-                              className="p-1.5 bg-card rounded shadow hover:bg-error-light"
-                              aria-label="Delete photo"
-                            >
-                              <Trash2 className="h-3 w-3 text-error" />
-                            </button>
+                        {/* Desktop: Overlay for actions on hover */}
+                        {!multiSelectMode && (
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors hidden md:block">
+                            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                              <button
+                                type="button"
+                                onClick={() => openLightbox(index)}
+                                className="p-2 bg-card rounded shadow hover:bg-blue-50 min-h-[36px] min-w-[36px] flex items-center justify-center"
+                                aria-label="View photo"
+                              >
+                                <ZoomIn className="h-4 w-4" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleEdit(photo)}
+                                className="p-2 bg-card rounded shadow hover:bg-blue-50 min-h-[36px] min-w-[36px] flex items-center justify-center"
+                                aria-label="Edit photo"
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleDeleteClick(photo.id)}
+                                className="p-2 bg-card rounded shadow hover:bg-error-light min-h-[36px] min-w-[36px] flex items-center justify-center"
+                                aria-label="Delete photo"
+                              >
+                                <Trash2 className="h-4 w-4 text-error" />
+                              </button>
+                            </div>
                           </div>
-                        </div>
+                        )}
+
+                        {/* Mobile: Context menu button */}
+                        {!multiSelectMode && (
+                          <div className="absolute top-2 right-2 md:hidden">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <button
+                                  type="button"
+                                  className="p-2 bg-black/50 rounded-full min-h-[36px] min-w-[36px] flex items-center justify-center"
+                                  aria-label="Photo options"
+                                >
+                                  <MoreVertical className="h-4 w-4 text-white" />
+                                </button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => openLightbox(index)}>
+                                  <ZoomIn className="h-4 w-4 mr-2" />
+                                  View Full Size
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleEdit(photo)}>
+                                  <Pencil className="h-4 w-4 mr-2" />
+                                  Edit Details
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => {
+                                  setMultiSelectMode(true);
+                                  setSelectedPhotos(new Set([photo.id]));
+                                }}>
+                                  <CheckSquare className="h-4 w-4 mr-2" />
+                                  Select Multiple
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                  onClick={() => handleDeleteClick(photo.id)}
+                                  className="text-destructive focus:text-destructive"
+                                >
+                                  <Trash2 className="h-4 w-4 mr-2" />
+                                  Delete
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        )}
 
                         {/* Category Badge */}
                         <div className="absolute bottom-2 left-2">
@@ -481,7 +786,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                         </div>
 
                         {/* GPS Indicator */}
-                        {photo.gps_latitude && photo.gps_longitude && (
+                        {photo.gps_latitude && photo.gps_longitude && !multiSelectMode && (
                           <div className="absolute top-2 left-2">
                             <MapPin className="h-4 w-4 text-white drop-shadow" />
                           </div>
@@ -736,6 +1041,134 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Bulk Category Dialog */}
+      <Dialog open={bulkCategoryDialogOpen} onOpenChange={setBulkCategoryDialogOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Set Category</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            Update category for {selectedPhotos.size} photo{selectedPhotos.size > 1 ? 's' : ''}
+          </p>
+          <div className="grid grid-cols-2 gap-2 py-4">
+            {PHOTO_CATEGORIES.map((cat) => (
+              <Button
+                key={cat.value}
+                variant="outline"
+                className={cn('justify-start h-12', cat.color)}
+                onClick={() => handleBulkCategoryChange(cat.value)}
+              >
+                <span className={`w-3 h-3 rounded-full mr-2 ${cat.color.split(' ')[0]}`} />
+                {cat.label}
+              </Button>
+            ))}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setBulkCategoryDialogOpen(false)}>
+              Cancel
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Swipeable Lightbox */}
+      {lightboxOpen && photos.length > 0 && (
+        <div
+          className="fixed inset-0 z-50 bg-black"
+          onTouchStart={handleLightboxTouchStart}
+          onTouchEnd={handleLightboxTouchEnd}
+        >
+          {/* Header */}
+          <div className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 bg-gradient-to-b from-black/80 to-transparent">
+            <span className="text-white text-sm">
+              {lightboxIndex + 1} / {photos.length}
+            </span>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => handleEdit(photos[lightboxIndex])}
+                className="text-white hover:bg-white/20 h-10 w-10"
+                aria-label="Edit photo"
+              >
+                <Pencil className="h-5 w-5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={closeLightbox}
+                className="text-white hover:bg-white/20 h-10 w-10"
+                aria-label="Close lightbox"
+              >
+                <X className="h-6 w-6" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Main image */}
+          <div className="absolute inset-0 flex items-center justify-center p-4 pt-16 pb-24">
+            <img
+              src={photos[lightboxIndex]?.file_url || photos[lightboxIndex]?.thumbnail_url}
+              alt={photos[lightboxIndex]?.caption || 'Photo'}
+              className="max-w-full max-h-full object-contain"
+            />
+          </div>
+
+          {/* Navigation buttons (desktop) */}
+          <div className="absolute inset-y-0 left-0 hidden md:flex items-center p-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={prevPhoto}
+              disabled={photos.length <= 1}
+              className="text-white hover:bg-white/20 h-12 w-12"
+              aria-label="Previous photo"
+            >
+              <ChevronLeft className="h-8 w-8" />
+            </Button>
+          </div>
+          <div className="absolute inset-y-0 right-0 hidden md:flex items-center p-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={nextPhoto}
+              disabled={photos.length <= 1}
+              className="text-white hover:bg-white/20 h-12 w-12"
+              aria-label="Next photo"
+            >
+              <ChevronRight className="h-8 w-8" />
+            </Button>
+          </div>
+
+          {/* Footer with photo info */}
+          <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                {photos[lightboxIndex]?.caption && (
+                  <p className="text-white text-sm mb-1">{photos[lightboxIndex].caption}</p>
+                )}
+                <div className="flex items-center gap-2">
+                  <Badge className={getCategoryInfo(photos[lightboxIndex]?.category).color}>
+                    {getCategoryInfo(photos[lightboxIndex]?.category).label}
+                  </Badge>
+                  {photos[lightboxIndex]?.gps_latitude && photos[lightboxIndex]?.gps_longitude && (
+                    <span className="text-white/70 text-xs flex items-center gap-1">
+                      <MapPin className="h-3 w-3" />
+                      GPS
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Swipe hint (mobile only) */}
+            <p className="text-white/50 text-xs text-center mt-2 md:hidden">
+              Swipe left or right to navigate
+            </p>
+          </div>
+        </div>
+      )}
     </>
   );
 }

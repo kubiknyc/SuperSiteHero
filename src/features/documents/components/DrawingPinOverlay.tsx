@@ -11,11 +11,17 @@
  * - Click to navigate to RFI/Submittal detail
  * - Responsive positioning with zoom support
  * - Toggle visibility of pin types
+ *
+ * Enhanced Features:
+ * - Zoom-dependent label sizing
+ * - Drag-to-move pins after placement
+ * - Compact side panel instead of large tooltips
+ * - Touch-friendly 44px+ targets
  */
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { MapPin, FileQuestion, FileCheck, Eye, EyeOff, AlertCircle, AlertTriangle, Info, CheckCircle } from 'lucide-react'
+import { MapPin, FileQuestion, FileCheck, Eye, EyeOff, AlertCircle, AlertTriangle, Info, CheckCircle, X, ExternalLink, GripVertical, Move } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -31,6 +37,7 @@ import {
 } from '@/components/ui/popover'
 import { Badge } from '@/components/ui/badge'
 import { Switch } from '@/components/ui/switch'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { useRFIsByDrawing, normalizedToPixel as rfiNormalizedToPixel } from '@/features/rfis/hooks/useRFIDrawingLinks'
 import { useSubmittalsByDrawing, normalizedToPixel as submittalNormalizedToPixel } from '@/features/submittals/hooks/useSubmittalDrawingLinks'
 
@@ -55,6 +62,12 @@ interface DrawingPinOverlayProps {
   enableAddPin?: boolean
   /** Callback when user clicks to add a new pin */
   onAddPin?: (type: 'rfi' | 'submittal', normalizedX: number, normalizedY: number) => void
+  /** Callback when a pin is moved (drag-to-move) */
+  onMovePin?: (linkId: string, type: 'rfi' | 'submittal', normalizedX: number, normalizedY: number) => void
+  /** Enable drag-to-move for existing pins */
+  enableMovePin?: boolean
+  /** Show compact side panel instead of tooltips */
+  useSidePanel?: boolean
   /** Optional class name for the overlay container */
   className?: string
 }
@@ -147,86 +160,214 @@ function getSubmittalStatusLabel(status: string): string {
 interface PinMarkerProps {
   pin: PinData
   onClick: () => void
+  onSelect?: () => void
+  zoom: number
+  enableDrag?: boolean
+  onDragStart?: () => void
+  onDragEnd?: (newX: number, newY: number) => void
+  isSelected?: boolean
+  showTooltip?: boolean
 }
 
-function PinMarker({ pin, onClick }: PinMarkerProps) {
+function PinMarker({
+  pin,
+  onClick,
+  onSelect,
+  zoom,
+  enableDrag = false,
+  onDragStart,
+  onDragEnd,
+  isSelected = false,
+  showTooltip = true,
+}: PinMarkerProps) {
   const [isHovered, setIsHovered] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
+  const dragStartRef = useRef<{ x: number; y: number; pinX: number; pinY: number } | null>(null)
 
   const Icon = pin.type === 'rfi' ? FileQuestion : FileCheck
+
+  // Zoom-dependent sizing
+  const scale = Math.max(0.6, Math.min(1.2, 100 / zoom))
+  const pinSize = 32 * scale
+  const pinHeight = 40 * scale
+  const iconSize = 16 * scale
+  const labelSize = 20 * scale
+
+  // Drag handlers
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    if (!enableDrag) return
+    e.preventDefault()
+    e.stopPropagation()
+
+    setIsDragging(true)
+    dragStartRef.current = {
+      x: e.clientX,
+      y: e.clientY,
+      pinX: pin.x,
+      pinY: pin.y,
+    }
+    onDragStart?.()
+  }, [enableDrag, pin.x, pin.y, onDragStart])
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!isDragging || !dragStartRef.current) return
+
+    // Calculate new position (this is visual feedback only)
+    // Actual position update happens on mouse up
+  }, [isDragging])
+
+  const handleMouseUp = useCallback((e: MouseEvent) => {
+    if (!isDragging || !dragStartRef.current) return
+
+    const deltaX = e.clientX - dragStartRef.current.x
+    const deltaY = e.clientY - dragStartRef.current.y
+    const newX = dragStartRef.current.pinX + deltaX
+    const newY = dragStartRef.current.pinY + deltaY
+
+    setIsDragging(false)
+    dragStartRef.current = null
+    onDragEnd?.(newX, newY)
+  }, [isDragging, onDragEnd])
+
+  // Touch drag handlers
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (!enableDrag) return
+
+    const touch = e.touches[0]
+    setIsDragging(true)
+    dragStartRef.current = {
+      x: touch.clientX,
+      y: touch.clientY,
+      pinX: pin.x,
+      pinY: pin.y,
+    }
+    onDragStart?.()
+  }, [enableDrag, pin.x, pin.y, onDragStart])
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!isDragging || !dragStartRef.current) return
+
+    const touch = e.changedTouches[0]
+    const deltaX = touch.clientX - dragStartRef.current.x
+    const deltaY = touch.clientY - dragStartRef.current.y
+    const newX = dragStartRef.current.pinX + deltaX
+    const newY = dragStartRef.current.pinY + deltaY
+
+    setIsDragging(false)
+    dragStartRef.current = null
+    onDragEnd?.(newX, newY)
+  }, [isDragging, onDragEnd])
+
+  const pinButton = (
+    <button
+      onClick={(e) => {
+        if (isDragging) return
+        if (onSelect) {
+          e.stopPropagation()
+          onSelect()
+        } else {
+          onClick()
+        }
+      }}
+      onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={cn(
+        'absolute transform -translate-x-1/2 -translate-y-full',
+        'transition-all duration-150 ease-out',
+        'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary',
+        'cursor-pointer z-10',
+        'min-w-[44px] min-h-[44px] flex items-end justify-center',
+        (isHovered || isSelected) && 'scale-110 z-20',
+        isDragging && 'cursor-grabbing opacity-75',
+        enableDrag && !isDragging && 'cursor-grab'
+      )}
+      style={{
+        left: pin.x,
+        top: pin.y,
+        filter: (isHovered || isSelected) ? 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
+      }}
+      aria-label={`${pin.type === 'rfi' ? 'RFI' : 'Submittal'} ${pin.number}: ${pin.title}`}
+    >
+      {/* Pin shape with drop shadow */}
+      <div className="relative">
+        {/* Pin body */}
+        <svg
+          width={pinSize}
+          height={pinHeight}
+          viewBox="0 0 32 40"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          {/* Pin shadow */}
+          <ellipse
+            cx="16"
+            cy="38"
+            rx="6"
+            ry="2"
+            fill="rgba(0,0,0,0.2)"
+          />
+          {/* Pin body */}
+          <path
+            d="M16 0C7.163 0 0 7.163 0 16c0 8.837 16 24 16 24s16-15.163 16-24C32 7.163 24.837 0 16 0z"
+            fill={pin.color}
+            stroke={isSelected ? '#fff' : 'transparent'}
+            strokeWidth="2"
+          />
+          {/* Pin highlight */}
+          <path
+            d="M16 2C8.268 2 2 8.268 2 16c0 3.5 2 8 6 13"
+            stroke="rgba(255,255,255,0.3)"
+            strokeWidth="2"
+            strokeLinecap="round"
+            fill="none"
+          />
+        </svg>
+
+        {/* Icon in center */}
+        <div
+          className="absolute left-1/2 transform -translate-x-1/2 text-white"
+          style={{ top: 6 * scale }}
+        >
+          <Icon style={{ width: iconSize, height: iconSize }} />
+        </div>
+
+        {/* Label badge */}
+        {pin.label && (
+          <div
+            className="absolute -top-1 -right-1 bg-white text-gray-800 font-bold rounded-full flex items-center justify-center border-2"
+            style={{
+              borderColor: pin.color,
+              width: labelSize,
+              height: labelSize,
+              fontSize: 10 * scale,
+            }}
+          >
+            {pin.label}
+          </div>
+        )}
+
+        {/* Drag indicator when in drag mode */}
+        {enableDrag && isHovered && !isDragging && (
+          <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
+            <Move className="w-3 h-3 text-white drop-shadow" />
+          </div>
+        )}
+      </div>
+    </button>
+  )
+
+  if (!showTooltip) {
+    return pinButton
+  }
 
   return (
     <TooltipProvider>
       <Tooltip delayDuration={200}>
         <TooltipTrigger asChild>
-          <button
-            onClick={onClick}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            className={cn(
-              'absolute transform -translate-x-1/2 -translate-y-full',
-              'transition-all duration-150 ease-out',
-              'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary',
-              'cursor-pointer z-10',
-              isHovered && 'scale-125 z-20'
-            )}
-            style={{
-              left: pin.x,
-              top: pin.y,
-              filter: isHovered ? 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
-            }}
-            aria-label={`${pin.type === 'rfi' ? 'RFI' : 'Submittal'} ${pin.number}: ${pin.title}`}
-          >
-            {/* Pin shape with drop shadow */}
-            <div className="relative">
-              {/* Pin body */}
-              <svg
-                width="32"
-                height="40"
-                viewBox="0 0 32 40"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                {/* Pin shadow */}
-                <ellipse
-                  cx="16"
-                  cy="38"
-                  rx="6"
-                  ry="2"
-                  fill="rgba(0,0,0,0.2)"
-                />
-                {/* Pin body */}
-                <path
-                  d="M16 0C7.163 0 0 7.163 0 16c0 8.837 16 24 16 24s16-15.163 16-24C32 7.163 24.837 0 16 0z"
-                  fill={pin.color}
-                />
-                {/* Pin highlight */}
-                <path
-                  d="M16 2C8.268 2 2 8.268 2 16c0 3.5 2 8 6 13"
-                  stroke="rgba(255,255,255,0.3)"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  fill="none"
-                />
-              </svg>
-
-              {/* Icon in center */}
-              <div
-                className="absolute top-1.5 left-1/2 transform -translate-x-1/2 text-white"
-              >
-                <Icon className="w-4 h-4" />
-              </div>
-
-              {/* Label badge */}
-              {pin.label && (
-                <div
-                  className="absolute -top-1 -right-1 bg-white text-gray-800 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center border-2"
-                  style={{ borderColor: pin.color }}
-                >
-                  {pin.label}
-                </div>
-              )}
-            </div>
-          </button>
+          {pinButton}
         </TooltipTrigger>
 
         <TooltipContent
@@ -277,11 +418,124 @@ function PinMarker({ pin, onClick }: PinMarkerProps) {
               )}
             </div>
 
-            <p className="text-xs text-primary">Click to view details</p>
+            <p className="text-xs text-primary">
+              {enableDrag ? 'Drag to move • Click for details' : 'Click to view details'}
+            </p>
           </div>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
+  )
+}
+
+// =============================================
+// Main Component
+// =============================================
+
+// =============================================
+// Side Panel Component
+// =============================================
+
+interface PinSidePanelProps {
+  pin: PinData | null
+  onClose: () => void
+  onNavigate: () => void
+}
+
+function PinSidePanel({ pin, onClose, onNavigate }: PinSidePanelProps) {
+  if (!pin) return null
+
+  const Icon = pin.type === 'rfi' ? FileQuestion : FileCheck
+
+  return (
+    <div className="absolute top-0 right-0 h-full w-72 bg-card border-l shadow-lg z-40 pointer-events-auto">
+      <div className="flex flex-col h-full">
+        {/* Header */}
+        <div className="flex items-center justify-between p-3 border-b">
+          <div className="flex items-center gap-2">
+            <Icon className="w-4 h-4" style={{ color: pin.color }} />
+            <span className="font-medium text-sm">
+              {pin.type === 'rfi' ? 'RFI' : 'Submittal'} {pin.number}
+            </span>
+          </div>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="h-8 w-8"
+            aria-label="Close panel"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+
+        {/* Content */}
+        <ScrollArea className="flex-1 p-3">
+          <div className="space-y-4">
+            {/* Title */}
+            <div>
+              <h3 className="font-medium text-sm mb-1">{pin.title}</h3>
+              <div className="flex flex-wrap gap-1">
+                <Badge
+                  variant="outline"
+                  className="text-xs"
+                  style={{ borderColor: pin.color, color: pin.color }}
+                >
+                  {pin.type === 'rfi' ? 'RFI' : 'Submittal'}
+                </Badge>
+                {pin.type === 'rfi' && pin.priority && (
+                  <Badge
+                    variant="outline"
+                    className="text-xs capitalize"
+                    style={{
+                      borderColor: getRFIPinColor(pin.priority),
+                      color: getRFIPinColor(pin.priority)
+                    }}
+                  >
+                    {pin.priority}
+                  </Badge>
+                )}
+              </div>
+            </div>
+
+            {/* Status */}
+            <div>
+              <p className="text-xs text-muted-foreground mb-1">Status</p>
+              <div className="flex items-center gap-2">
+                {pin.type === 'rfi' ? (
+                  <>
+                    {getRFIStatusIcon(pin.status)}
+                    <span className="text-sm capitalize">{pin.status.replace(/_/g, ' ')}</span>
+                  </>
+                ) : (
+                  <span className="text-sm">{getSubmittalStatusLabel(pin.status)}</span>
+                )}
+              </div>
+            </div>
+
+            {/* Due Date */}
+            {pin.dateRequired && (
+              <div>
+                <p className="text-xs text-muted-foreground mb-1">Due Date</p>
+                <p className="text-sm">{new Date(pin.dateRequired).toLocaleDateString()}</p>
+              </div>
+            )}
+          </div>
+        </ScrollArea>
+
+        {/* Footer */}
+        <div className="p-3 border-t">
+          <Button
+            onClick={onNavigate}
+            className="w-full gap-2"
+            size="sm"
+          >
+            <ExternalLink className="h-4 w-4" />
+            View Full Details
+          </Button>
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -298,12 +552,17 @@ export function DrawingPinOverlay({
   showSubmittals = true,
   enableAddPin = false,
   onAddPin,
+  onMovePin,
+  enableMovePin = false,
+  useSidePanel = false,
   className,
 }: DrawingPinOverlayProps) {
   const navigate = useNavigate()
   const [rfiVisible, setRfiVisible] = useState(showRFIs)
   const [submittalVisible, setSubmittalVisible] = useState(showSubmittals)
   const [addPinMode, setAddPinMode] = useState<'rfi' | 'submittal' | null>(null)
+  const [selectedPin, setSelectedPin] = useState<PinData | null>(null)
+  const [isDraggingPin, setIsDraggingPin] = useState(false)
 
   // Fetch linked RFIs and Submittals
   const { data: rfiLinks, isLoading: rfisLoading } = useRFIsByDrawing(documentId)
@@ -376,14 +635,49 @@ export function DrawingPinOverlay({
     return allPins
   }, [rfiLinks, submittalLinks, rfiVisible, submittalVisible, containerWidth, containerHeight, scale])
 
-  // Handle pin click - navigate to detail page
+  // Handle pin click - navigate to detail page or select for side panel
   const handlePinClick = useCallback((pin: PinData) => {
-    if (pin.type === 'rfi') {
-      navigate(`/rfis/${pin.id}`)
+    if (useSidePanel) {
+      setSelectedPin(pin)
     } else {
-      navigate(`/submittals/${pin.id}`)
+      if (pin.type === 'rfi') {
+        navigate(`/rfis/${pin.id}`)
+      } else {
+        navigate(`/submittals/${pin.id}`)
+      }
     }
-  }, [navigate])
+  }, [navigate, useSidePanel])
+
+  // Handle pin selection (for side panel mode)
+  const handlePinSelect = useCallback((pin: PinData) => {
+    setSelectedPin(pin)
+  }, [])
+
+  // Navigate from side panel
+  const handleNavigateFromPanel = useCallback(() => {
+    if (!selectedPin) return
+    if (selectedPin.type === 'rfi') {
+      navigate(`/rfis/${selectedPin.id}`)
+    } else {
+      navigate(`/submittals/${selectedPin.id}`)
+    }
+  }, [selectedPin, navigate])
+
+  // Handle pin drag end
+  const handlePinDragEnd = useCallback((pin: PinData, newX: number, newY: number) => {
+    if (!onMovePin) return
+
+    // Convert pixel position back to normalized coordinates
+    const normalizedX = newX / (containerWidth * scale)
+    const normalizedY = newY / (containerHeight * scale)
+
+    // Clamp to valid range
+    const clampedX = Math.max(0, Math.min(1, normalizedX))
+    const clampedY = Math.max(0, Math.min(1, normalizedY))
+
+    onMovePin(pin.linkId, pin.type, clampedX, clampedY)
+    setIsDraggingPin(false)
+  }, [onMovePin, containerWidth, containerHeight, scale])
 
   // Handle overlay click for adding new pins
   const handleOverlayClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -414,7 +708,7 @@ export function DrawingPinOverlay({
       <div
         className={cn(
           'absolute inset-0',
-          addPinMode ? 'pointer-events-auto' : 'pointer-events-none'
+          (addPinMode || isDraggingPin) ? 'pointer-events-auto' : 'pointer-events-none'
         )}
         onClick={handleOverlayClick}
       >
@@ -423,10 +717,26 @@ export function DrawingPinOverlay({
             <PinMarker
               pin={pin}
               onClick={() => handlePinClick(pin)}
+              onSelect={useSidePanel ? () => handlePinSelect(pin) : undefined}
+              zoom={zoom}
+              enableDrag={enableMovePin && !!onMovePin}
+              onDragStart={() => setIsDraggingPin(true)}
+              onDragEnd={(newX, newY) => handlePinDragEnd(pin, newX, newY)}
+              isSelected={selectedPin?.linkId === pin.linkId}
+              showTooltip={!useSidePanel}
             />
           </div>
         ))}
       </div>
+
+      {/* Side Panel */}
+      {useSidePanel && (
+        <PinSidePanel
+          pin={selectedPin}
+          onClose={() => setSelectedPin(null)}
+          onNavigate={handleNavigateFromPanel}
+        />
+      )}
 
       {/* Controls panel */}
       <div className="absolute top-2 right-2 pointer-events-auto z-30">
