@@ -48,6 +48,8 @@ export {
   useUpdateMeasurement,
   useDeleteMeasurement,
   useClearMeasurements,
+  useEnhancedMeasurements,
+  useCountMarkers,
 } from './useMeasurements'
 
 // Document comparison hooks
@@ -121,3 +123,66 @@ export {
   type TransmittalItem,
   type RevisionComparison,
 } from './useDrawingRevisions'
+
+// Smart markup features - Auto-numbering
+export {
+  useAutoNumbering,
+  NUMBERING_PREFIX_OPTIONS,
+} from './useAutoNumbering'
+
+// Smart markup features - Templates
+export {
+  useMarkupTemplates,
+  useMarkupTemplate,
+  useTemplateCategoryOptions,
+  markupTemplateKeys,
+} from './useMarkupTemplates'
+
+// Drawing Set Management hooks
+export {
+  // Sheet reference/hyperlink hooks
+  useSheetReferences,
+  useSheetBacklinks,
+  useCreateSheetReference,
+  useDeleteSheetReference,
+  useAutoDetectSheetReferences,
+  // Revision cloud hooks
+  useRevisionClouds,
+  useCreateRevisionCloud,
+  useDeleteRevisionCloud,
+  useGenerateRevisionClouds,
+  // Bulk markup hooks
+  useBulkApplyMarkups,
+  // Migration hooks
+  useNewRevisionDetection,
+  useMigratableMarkups,
+  useMigrateMarkups,
+  // Comparison state hook
+  useDrawingComparisonState,
+  // Index hooks
+  useDrawingSetIndex,
+  useDrawingSetStats,
+  // Utilities
+  parseDrawingReferences,
+  getDrawingDiscipline,
+} from './useDrawingSetManagement'
+
+// Sheet Navigation History hooks
+export {
+  useSheetNavigationHistory,
+  type SheetNavigationHistoryHook,
+} from './useSheetNavigationHistory'
+
+// Drawing Bookmarks hooks
+export {
+  useDrawingBookmarks,
+  useDrawingBookmark,
+  useBookmarkFolders,
+  useCreateDrawingBookmark,
+  useUpdateDrawingBookmark,
+  useDeleteDrawingBookmark,
+  useDrawingBookmarksWithUtilities,
+  drawingBookmarkKeys,
+  type DrawingBookmarksHook,
+  type DrawingBookmarksWithUtilitiesHook,
+} from './useDrawingBookmarks'

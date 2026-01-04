@@ -12,6 +12,7 @@ export { CreateSubmittalDialog } from './CreateSubmittalDialog'
 // RECOMMENDED: Dedicated Submittal Components
 // ============================================================
 export { CreateDedicatedSubmittalDialog } from './CreateDedicatedSubmittalDialog'
+export { CreateSubmittalFromDrawingDialog, type DrawingContext as SubmittalDrawingContext } from './CreateSubmittalFromDrawingDialog'
 export { SubmittalsList } from './SubmittalsList'
 export { SubmittalStatusBadge } from './SubmittalStatusBadge'
 
@@ -24,3 +25,12 @@ export { LeadTimeCalculator } from './LeadTimeCalculator'
 
 // Submittal Reminders
 export { SubmittalRemindersPanel } from './SubmittalRemindersPanel'
+
+// Submittal Approval Signature
+export {
+  SubmittalApprovalSignatureDialog,
+  APPROVAL_CODES,
+  type ApprovalCode,
+  type ApprovalCodeConfig,
+  type SubmittalApprovalData,
+} from './SubmittalApprovalSignatureDialog'

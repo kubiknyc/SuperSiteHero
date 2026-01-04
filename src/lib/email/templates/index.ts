@@ -38,6 +38,10 @@ export type { PunchItemAssignedEmailData } from './punch-item-assigned'
 export { generateDocumentCommentEmail } from './document-comment'
 export type { DocumentCommentEmailData } from './document-comment'
 
+// Comment Mention Templates
+export { generateCommentMentionEmail, generateBatchMentionEmail } from './comment-mention'
+export type { CommentMentionEmailData, BatchMentionEmailData } from './comment-mention'
+
 // Notice Templates
 export { generateNoticeResponseReminderEmail } from './notice-response-reminder'
 export type { NoticeResponseReminderEmailData } from './notice-response-reminder'
@@ -161,6 +165,10 @@ export type {
   SubmittalReviewReminderEmailData,
   SubmittalAgingSummaryEmailData,
 } from './submittal-reminder'
+
+// Submittal Status Templates
+export { generateSubmittalStatusEmail } from './submittal-status'
+export type { SubmittalStatusEmailData } from './submittal-status'
 
 // Daily Report Alert Templates
 export {

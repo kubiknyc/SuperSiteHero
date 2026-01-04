@@ -1,8 +1,9 @@
 // File: /src/features/documents/components/DocumentList.tsx
 // Table list component for displaying documents
 
+import { useCallback } from 'react'
 import { format } from 'date-fns'
-import { Eye, Edit, Trash2, Loader2, ExternalLink } from 'lucide-react'
+import { Eye, Edit, Trash2, Loader2, Maximize2 } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -17,6 +18,7 @@ import {
 import { DocumentTypeIcon } from './DocumentTypeIcon'
 import { DocumentStatusBadge } from './DocumentStatusBadge'
 import { highlightSearchTerm } from '../hooks/useDocumentSearch'
+import { openDocumentPopup } from '@/lib/utils/openDocumentPopup'
 import type { Document } from '@/types/database'
 
 
@@ -64,6 +66,19 @@ export function DocumentList({
   onView,
   searchTerm = '',
 }: DocumentListProps) {
+  // Handle opening document in popup viewer
+  const handleOpenInPopup = useCallback((doc: Document) => {
+    const popup = openDocumentPopup(doc.id, {
+      width: Math.min(1400, window.screen.width - 100),
+      height: Math.min(900, window.screen.height - 100),
+    })
+
+    // If popup was blocked, fall back to onView callback
+    if (!popup) {
+      onView(doc)
+    }
+  }, [onView])
+
   // Format file size in human-readable format
   const formatFileSize = (bytes: number | null): string => {
     if (!bytes || bytes === 0) {return 'N/A'}
@@ -136,33 +151,23 @@ export function DocumentList({
             <TableBody>
               {documents.map((doc) => (
                 <TableRow key={doc.id}>
-                  {/* Name column with icon - clickable to open file */}
+                  {/* Name column with icon - clickable to open in popup viewer */}
                   <TableCell>
                     <div className="flex items-center space-x-3">
                       <DocumentTypeIcon type={doc.document_type} className="flex-shrink-0" />
                       <div className="min-w-0 flex-1">
-                        {doc.file_url ? (
-                          <a
-                            href={doc.file_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="group flex items-center gap-1 font-medium text-primary hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 truncate transition-colors"
-                            title={`Open ${doc.name} in new window`}
-                          >
-                            <span className="truncate">
-                              {searchTerm
-                                ? highlightSearchTerm(doc.name, searchTerm)
-                                : doc.name}
-                            </span>
-                            <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 flex-shrink-0 transition-opacity" />
-                          </a>
-                        ) : (
-                          <p className="font-medium text-foreground truncate">
+                        <button
+                          onClick={() => handleOpenInPopup(doc)}
+                          className="group flex items-center gap-1 font-medium text-primary hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 truncate transition-colors text-left"
+                          title={`Open ${doc.name} in viewer (popup window)`}
+                        >
+                          <span className="truncate">
                             {searchTerm
                               ? highlightSearchTerm(doc.name, searchTerm)
                               : doc.name}
-                          </p>
-                        )}
+                          </span>
+                          <Maximize2 className="w-3 h-3 opacity-0 group-hover:opacity-100 flex-shrink-0 transition-opacity" />
+                        </button>
                         <p className="text-sm text-muted truncate">
                           {searchTerm && doc.drawing_number
                             ? highlightSearchTerm(doc.drawing_number, searchTerm)

@@ -1,5 +1,5 @@
 // File: /src/features/documents/components/markup/EnhancedMarkupToolbar.tsx
-// Enhanced markup toolbar with color picker, layers, measurements, stamps, and history
+// Enhanced markup toolbar with color picker, layers, measurements, stamps, history, symbols, and templates
 
 import { Button } from '@/components/ui/button'
 import {
@@ -31,6 +31,9 @@ import { LayerManager } from './LayerManager'
 import { MeasurementTools } from './MeasurementTools'
 import { StampTools } from './StampTools'
 import { MarkupHistoryPanel } from './MarkupHistoryPanel'
+import { SymbolLibrary } from './SymbolLibrary'
+import { MarkupTemplateManager } from './MarkupTemplateManager'
+import { AutoNumberingControls } from './AutoNumberingControls'
 import type {
   ExtendedAnnotationType,
   MarkupLayer,
@@ -42,6 +45,9 @@ import type {
   EnhancedShape,
   MarkupAuthor,
   LayerOrderAction,
+  ConstructionSymbol,
+  AutoNumberingConfig,
+  MarkupAnnotationData,
 } from '../../types/markup'
 
 type Tool = ExtendedAnnotationType | 'select' | 'pan' | 'eraser' | 'measure-distance' | 'measure-area' | 'calibrate'
@@ -112,6 +118,26 @@ interface EnhancedMarkupToolbarProps {
   onZoomOut: () => void
   onResetView: () => void
   currentZoom?: number
+
+  // Auto-numbering (optional)
+  autoNumberingConfig?: AutoNumberingConfig
+  currentAutoNumber?: number
+  isAutoNumberingEnabled?: boolean
+  onAutoNumberingToggle?: (enabled: boolean) => void
+  onAutoNumberingPrefixChange?: (prefix: string) => void
+  onAutoNumberingStartChange?: (num: number) => void
+  onAutoNumberingResetOnNewPageChange?: (reset: boolean) => void
+  onAutoNumberingReset?: (startNumber?: number) => void
+  formatAutoNumber?: (num: number) => string
+
+  // Symbol library (optional)
+  onSymbolSelect?: (symbol: ConstructionSymbol, options: { width: number; height: number; rotation: number; color: string }) => void
+
+  // Templates (optional)
+  canvasWidth?: number
+  canvasHeight?: number
+  onLoadTemplate?: (markups: MarkupAnnotationData[], canvasWidth: number, canvasHeight: number) => void
+  projectId?: string
 
   // General
   disabled?: boolean
@@ -203,6 +229,24 @@ export function EnhancedMarkupToolbar({
   onZoomOut,
   onResetView,
   currentZoom = 100,
+  // Auto-numbering
+  autoNumberingConfig,
+  currentAutoNumber = 1,
+  isAutoNumberingEnabled = false,
+  onAutoNumberingToggle,
+  onAutoNumberingPrefixChange,
+  onAutoNumberingStartChange,
+  onAutoNumberingResetOnNewPageChange,
+  onAutoNumberingReset,
+  formatAutoNumber = (n: number) => `${n}`,
+  // Symbol library
+  onSymbolSelect,
+  // Templates
+  canvasWidth = 800,
+  canvasHeight = 600,
+  onLoadTemplate,
+  projectId,
+  // General
   disabled = false,
   className,
 }: EnhancedMarkupToolbarProps) {
@@ -322,6 +366,45 @@ export function EnhancedMarkupToolbar({
           onCustomStampTextChange={onCustomStampTextChange}
           disabled={disabled}
         />
+
+        {/* Symbol Library */}
+        {onSymbolSelect && (
+          <SymbolLibrary
+            onSymbolSelect={onSymbolSelect}
+            selectedColor={selectedColor}
+            disabled={disabled}
+          />
+        )}
+
+        <div className="w-px h-6 bg-gray-300 mx-1" />
+
+        {/* Auto-Numbering Controls */}
+        {autoNumberingConfig && onAutoNumberingToggle && (
+          <AutoNumberingControls
+            config={autoNumberingConfig}
+            currentNumber={currentAutoNumber}
+            isEnabled={isAutoNumberingEnabled}
+            onToggleEnabled={onAutoNumberingToggle}
+            onPrefixChange={onAutoNumberingPrefixChange || (() => {})}
+            onStartNumberChange={onAutoNumberingStartChange || (() => {})}
+            onResetOnNewPageChange={onAutoNumberingResetOnNewPageChange || (() => {})}
+            onReset={onAutoNumberingReset || (() => {})}
+            formatNumber={formatAutoNumber}
+            disabled={disabled}
+          />
+        )}
+
+        {/* Template Manager */}
+        {onLoadTemplate && (
+          <MarkupTemplateManager
+            currentMarkups={markups}
+            canvasWidth={canvasWidth}
+            canvasHeight={canvasHeight}
+            onLoadTemplate={onLoadTemplate}
+            projectId={projectId}
+            disabled={disabled}
+          />
+        )}
 
         <div className="w-px h-6 bg-gray-300 mx-1" />
 

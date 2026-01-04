@@ -1,7 +1,7 @@
 // File: /src/features/documents/components/DocumentsList.tsx
 // Documents list with filtering and actions
 
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,6 +23,7 @@ import { useDocuments } from '../hooks/useDocuments'
 import { useDeleteDocumentWithNotification } from '../hooks/useDocumentMutations'
 import { DocumentUpload } from './DocumentUpload'
 import { formatFileSize, getFileTypeIcon } from '../utils/fileUtils'
+import { openDocumentPopup } from '@/lib/utils/openDocumentPopup'
 import {
   Download,
   Trash2,
@@ -32,6 +33,7 @@ import {
   Image as ImageIcon,
   Loader2,
   AlertCircle,
+  Maximize2,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { Document, DocumentType } from '@/types/database'
@@ -97,6 +99,14 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
     }
   }
 
+  // Handle opening document in popup viewer
+  const handleOpenInPopup = useCallback((doc: Document) => {
+    openDocumentPopup(doc.id, {
+      width: Math.min(1400, window.screen.width - 100),
+      height: Math.min(900, window.screen.height - 100),
+    })
+  }, [])
+
   const tableColumns = [
     {
       key: 'name',
@@ -105,7 +115,14 @@ export function DocumentsList({ projectId, folderId }: DocumentsListProps) {
         <div className="flex items-center gap-2">
           {getIconForType(doc.file_name)}
           <div className="flex-1 min-w-0">
-            <p className="font-medium text-foreground truncate">{doc.name}</p>
+            <button
+              onClick={() => handleOpenInPopup(doc)}
+              className="group flex items-center gap-1 font-medium text-primary hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 truncate transition-colors text-left"
+              title={`Open ${doc.name} in viewer (popup window)`}
+            >
+              <span className="truncate">{doc.name}</span>
+              <Maximize2 className="w-3 h-3 opacity-0 group-hover:opacity-100 flex-shrink-0 transition-opacity" />
+            </button>
             {doc.drawing_number && (
               <p className="text-xs text-secondary">#{doc.drawing_number}</p>
             )}

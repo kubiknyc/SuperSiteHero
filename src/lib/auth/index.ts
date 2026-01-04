@@ -48,3 +48,26 @@ export {
   AuthProviderWithMFA,
   useAuthWithMFA,
 } from './AuthContextWithMFA'
+
+// Authorization utilities
+export {
+  // Types
+  type UserRole,
+  type Permission,
+  type AuthContext,
+  type AuthorizationGuard,
+  type ServiceAuthConfig,
+  // Constants
+  ROLE_HIERARCHY,
+  PERMISSION_MATRIX,
+  // Functions
+  hasPermission,
+  getRolePermissions,
+  hasEqualOrHigherAccess,
+  getRoleLevel,
+  isAdminRole,
+  isManagementRole,
+  createAuthContext,
+  createAuthGuard,
+  createServiceAuthHooks,
+} from './authorization'

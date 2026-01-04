@@ -21,5 +21,10 @@ export { EntitySyncBadge } from './EntitySyncBadge';
 export { SyncProgressBar } from './SyncProgressBar';
 export type { EntitySyncStatus } from './EntitySyncBadge';
 
-// Comprehensive Sync Status Panel
+// Comprehensive Sync Status Panels
 export { SyncStatusPanel } from './SyncStatusPanel';
+export { GlobalSyncStatusPanel } from './GlobalSyncStatusPanel';
+export { UploadQueuePanel } from './UploadQueuePanel';
+export { ProjectCacheSettings } from './ProjectCacheSettings';
+export { ConflictResolutionDialog } from './ConflictResolutionDialog';
+export { OfflineIndicator } from './OfflineIndicator';

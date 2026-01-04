@@ -15,6 +15,7 @@ vi.mock('@/lib/supabase', () => ({
 
 describe('QuickBooks API', () => {
   beforeEach(() => {
+    vi.restoreAllMocks()
     vi.clearAllMocks()
   })
 
@@ -406,6 +407,200 @@ describe('QuickBooks API', () => {
 
       expect(result.connection).toEqual(mockConnection)
       expect(result.stats).toEqual(mockStats)
+    })
+  })
+
+  // ============================================
+  // Error Handling Tests
+  // ============================================
+
+  describe('Error Handling', () => {
+    describe('Token Expiration Handling', () => {
+      it('should detect expired tokens', async () => {
+        const expiredConnection = {
+          id: 'conn1',
+          company_name: 'Test Company',
+          realm_id: 'realm123',
+          is_sandbox: false,
+          is_active: true,
+          token_expires_at: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+          auto_sync_enabled: true,
+          last_sync_at: null,
+          connection_error: null,
+          sync_frequency_hours: 24,
+        }
+
+        const mockQuery = {
+          select: vi.fn().mockReturnThis(),
+          eq: vi.fn().mockReturnThis(),
+          maybeSingle: vi.fn().mockResolvedValue({ data: expiredConnection, error: null }),
+        }
+
+        vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+
+        const result = await quickbooksApi.getConnectionStatus('comp1')
+
+        expect(result.isConnected).toBe(true)
+        expect(result.tokenExpiresAt).toBeTruthy()
+        // Token is expired - app should handle refreshing
+        const tokenExpiry = new Date(result.tokenExpiresAt!)
+        expect(tokenExpiry.getTime()).toBeLessThan(Date.now())
+      })
+    })
+
+    describe('Network Error Handling', () => {
+      it('should handle network errors during OAuth', async () => {
+        vi.mocked(supabase.functions.invoke).mockResolvedValue({
+          data: null,
+          error: { message: 'Network error' },
+        })
+
+        await expect(quickbooksApi.getAuthUrl('comp1', false)).rejects.toThrow()
+      })
+
+      it('should handle API rate limiting errors', async () => {
+        vi.mocked(supabase.functions.invoke).mockResolvedValue({
+          data: null,
+          error: { message: 'Rate limit exceeded', details: { retryAfter: 60 } },
+        })
+
+        await expect(quickbooksApi.syncEntity('conn1', {
+          localEntityType: 'invoice',
+          localEntityId: 'inv1',
+          direction: 'to_quickbooks',
+        })).rejects.toThrow()
+      })
+    })
+
+    describe('Data Validation', () => {
+      it('should handle missing connection ID', async () => {
+        const mockQuery = {
+          select: vi.fn().mockReturnThis(),
+          eq: vi.fn().mockReturnThis(),
+          maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+        }
+
+        vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+
+        const result = await quickbooksApi.getConnectionStatus('comp1')
+
+        expect(result.isConnected).toBe(false)
+        expect(result.connectionId).toBeNull()
+      })
+
+      it('should handle database errors', async () => {
+        const mockQuery = {
+          select: vi.fn().mockReturnThis(),
+          eq: vi.fn().mockReturnThis(),
+          order: vi.fn().mockResolvedValue({
+            data: null,
+            error: { message: 'Database connection failed' }
+          }),
+        }
+
+        vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+
+        await expect(quickbooksApi.getAccountMappings('comp1')).rejects.toThrow()
+      })
+    })
+
+    describe('Sync Failure Recovery', () => {
+      it('should handle partial sync failures', async () => {
+        const mockResult = {
+          success: 3,
+          failed: 7,
+          logId: 'log123',
+          errors: [
+            { entityId: 'inv1', error: 'Invalid amount' },
+            { entityId: 'inv2', error: 'Missing required field' },
+          ],
+        }
+
+        vi.mocked(supabase.functions.invoke).mockResolvedValue({
+          data: mockResult,
+          error: null,
+        })
+
+        const result = await quickbooksApi.bulkSync('conn1', {
+          entityType: 'invoice',
+          entityIds: ['inv1', 'inv2', 'inv3'],
+          direction: 'to_quickbooks',
+        })
+
+        expect(result.success).toBe(3)
+        expect(result.failed).toBe(7)
+      })
+
+      it('should reset sync queue on retry', async () => {
+        const mockQuery = {
+          update: vi.fn().mockReturnThis(),
+          eq: vi.fn().mockResolvedValue({ error: null }),
+        }
+
+        vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+
+        await quickbooksApi.retrySync('queue1')
+
+        expect(mockQuery.update).toHaveBeenCalledWith({
+          status: 'pending',
+          last_error: null,
+        })
+      })
+    })
+
+    describe('Connection State Edge Cases', () => {
+      it('should handle sandbox mode correctly', async () => {
+        const sandboxConnection = {
+          id: 'conn1',
+          company_name: 'Sandbox Company',
+          realm_id: 'sandbox123',
+          is_sandbox: true,
+          is_active: true,
+          token_expires_at: new Date(Date.now() + 3600000).toISOString(),
+          auto_sync_enabled: false,
+          last_sync_at: null,
+          connection_error: null,
+        }
+
+        const mockQuery = {
+          select: vi.fn().mockReturnThis(),
+          eq: vi.fn().mockReturnThis(),
+          maybeSingle: vi.fn().mockResolvedValue({ data: sandboxConnection, error: null }),
+        }
+
+        vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+
+        const result = await quickbooksApi.getConnectionStatus('comp1')
+
+        expect(result.isSandbox).toBe(true)
+        expect(result.autoSyncEnabled).toBe(false)
+      })
+
+      it('should handle null auto_sync_enabled', async () => {
+        const connectionWithNull = {
+          id: 'conn1',
+          company_name: 'Test Company',
+          realm_id: 'realm123',
+          is_sandbox: false,
+          is_active: true,
+          token_expires_at: new Date(Date.now() + 3600000).toISOString(),
+          auto_sync_enabled: null,
+          last_sync_at: null,
+          connection_error: null,
+        }
+
+        const mockQuery = {
+          select: vi.fn().mockReturnThis(),
+          eq: vi.fn().mockReturnThis(),
+          maybeSingle: vi.fn().mockResolvedValue({ data: connectionWithNull, error: null }),
+        }
+
+        vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+
+        const result = await quickbooksApi.getConnectionStatus('comp1')
+
+        expect(result.autoSyncEnabled).toBeFalsy()
+      })
     })
   })
 })

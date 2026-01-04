@@ -367,9 +367,10 @@ function drawArchitectCertificate(doc: jsPDF, data: G702PDFData, startY: number)
 // Footer function removed - now using centralized JobSight branding from pdfBranding.ts
 
 /**
- * Generate G702 PDF with JobSight branding
+ * Generate G702 PDF document (returns jsPDF instance for merging)
+ * Use this when you need to add more pages to the document
  */
-export async function generateG702PDF(data: G702PDFData): Promise<Blob> {
+export async function generateG702PDFDocument(data: G702PDFData): Promise<jsPDF> {
   // Fetch company info for branding
   const gcCompany = data.gcCompany || await getCompanyInfo(data.projectId)
 
@@ -396,6 +397,15 @@ export async function generateG702PDF(data: G702PDFData): Promise<Blob> {
   y = drawChangeOrderSummary(doc, data, y)
   y = drawContractorCertification(doc, data, y)
   drawArchitectCertificate(doc, data, y)
+
+  return doc
+}
+
+/**
+ * Generate G702 PDF with JobSight branding
+ */
+export async function generateG702PDF(data: G702PDFData): Promise<Blob> {
+  const doc = await generateG702PDFDocument(data)
 
   // Add JobSight footer to all pages with "Powered by JobSightApp.com"
   addFootersToAllPages(doc)

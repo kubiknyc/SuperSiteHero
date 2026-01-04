@@ -2,11 +2,12 @@
 // Image viewer with zoom and pan capabilities
 
 import { useState, useRef } from 'react'
-import { ZoomIn, ZoomOut, Download, Maximize2, Pencil } from 'lucide-react'
+import { ZoomIn, ZoomOut, Download, Maximize2, Pencil, MapPin } from 'lucide-react'
 import { Button } from '@/components/ui'
 import { cn } from '@/lib/utils'
 import { LazyDrawingCanvas } from '../LazyDrawingCanvas'
 import { LazyUnifiedDrawingCanvas as UnifiedDrawingCanvas } from '../markup/LazyUnifiedDrawingCanvas'
+import { DrawingPinOverlay } from '../DrawingPinOverlay'
 import { logger } from '../../../../lib/utils/logger';
 
 
@@ -24,6 +25,10 @@ interface ImageViewerProps {
   enableMarkup?: boolean
   /** Enable real-time collaborative markup with other users */
   collaborative?: boolean
+  /** Show RFI/Submittal pins on the drawing (default: false) */
+  showDrawingPins?: boolean
+  /** Callback when user adds a new pin */
+  onAddDrawingPin?: (type: 'rfi' | 'submittal', normalizedX: number, normalizedY: number) => void
 }
 
 /**
@@ -61,6 +66,8 @@ export function ImageViewer({
   height = 'h-screen',
   enableMarkup: initialEnableMarkup = false,
   collaborative = false,
+  showDrawingPins = false,
+  onAddDrawingPin,
 }: ImageViewerProps) {
   const [zoom, setZoom] = useState(100)
   const [isFullscreen, setIsFullscreen] = useState(false)
@@ -71,6 +78,7 @@ export function ImageViewer({
   const [isDragging, setIsDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
   const [enableMarkup, setEnableMarkup] = useState(initialEnableMarkup)
+  const [showPins, setShowPins] = useState(showDrawingPins)
   const [imageWidth, setImageWidth] = useState(800)
   const [imageHeight, setImageHeight] = useState(600)
 
@@ -261,6 +269,18 @@ export function ImageViewer({
               </Button>
             </>
           )}
+
+          {/* Drawing Pins toggle */}
+          <div className="w-px h-4 bg-gray-600" />
+          <Button
+            variant={showPins ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => setShowPins(!showPins)}
+            title={showPins ? 'Hide RFI/Submittal pins' : 'Show RFI/Submittal pins'}
+            className={showPins ? '' : 'text-white hover:bg-gray-700'}
+          >
+            <MapPin className="w-4 h-4" />
+          </Button>
         </div>
       </div>
 
@@ -329,6 +349,27 @@ export function ImageViewer({
                     readOnly={false}
                   />
                 )}
+              </div>
+            )}
+
+            {/* RFI/Submittal Pin Overlay */}
+            {showPins && (
+              <div
+                className="absolute top-1/2 left-1/2"
+                style={{
+                  transform: `translate(-50%, -50%)`,
+                  width: imageWidth * (zoom / 100),
+                  height: imageHeight * (zoom / 100),
+                }}
+              >
+                <DrawingPinOverlay
+                  documentId={documentId}
+                  containerWidth={imageWidth}
+                  containerHeight={imageHeight}
+                  zoom={zoom}
+                  enableAddPin={!!onAddDrawingPin}
+                  onAddPin={onAddDrawingPin}
+                />
               </div>
             )}
           </div>

@@ -268,6 +268,145 @@ describe('biometric', () => {
     })
   })
 
+  describe('Fallback and error handling', () => {
+    describe('WebAuthn not supported fallback', () => {
+      it('isWebAuthnSupported returns false when PublicKeyCredential is undefined', () => {
+        Object.defineProperty(window, 'PublicKeyCredential', {
+          value: undefined,
+          writable: true,
+        })
+        expect(isWebAuthnSupported()).toBe(false)
+      })
+
+      it('isWebAuthnSupported handles missing function gracefully', () => {
+        Object.defineProperty(window, 'PublicKeyCredential', {
+          value: {},
+          writable: true,
+        })
+        expect(isWebAuthnSupported()).toBe(false)
+      })
+    })
+
+    describe('Platform authenticator fallback', () => {
+      it('returns false when platform check times out', async () => {
+        // Simulate a timeout by rejecting with timeout error
+        mockIsUserVerifyingPlatformAuthenticatorAvailable.mockRejectedValue(
+          new Error('Timeout')
+        )
+        const result = await isPlatformAuthenticatorAvailable()
+        expect(result).toBe(false)
+      })
+
+      it('returns false when security error occurs', async () => {
+        mockIsUserVerifyingPlatformAuthenticatorAvailable.mockRejectedValue(
+          new DOMException('Security check failed', 'SecurityError')
+        )
+        const result = await isPlatformAuthenticatorAvailable()
+        expect(result).toBe(false)
+      })
+
+      it('returns false when AbortError occurs', async () => {
+        mockIsUserVerifyingPlatformAuthenticatorAvailable.mockRejectedValue(
+          new DOMException('User cancelled', 'AbortError')
+        )
+        const result = await isPlatformAuthenticatorAvailable()
+        expect(result).toBe(false)
+      })
+
+      it('returns false when NotAllowedError occurs', async () => {
+        mockIsUserVerifyingPlatformAuthenticatorAvailable.mockRejectedValue(
+          new DOMException('Permission denied', 'NotAllowedError')
+        )
+        const result = await isPlatformAuthenticatorAvailable()
+        expect(result).toBe(false)
+      })
+    })
+
+    describe('Conditional mediation fallback', () => {
+      it('returns false when function throws', async () => {
+        mockIsConditionalMediationAvailable.mockRejectedValue(
+          new Error('Not implemented')
+        )
+        const result = await isConditionalMediationAvailable()
+        expect(result).toBe(false)
+      })
+
+      it('returns false when WebAuthn is not defined at all', async () => {
+        Object.defineProperty(window, 'PublicKeyCredential', {
+          value: undefined,
+          writable: true,
+        })
+        const result = await isConditionalMediationAvailable()
+        expect(result).toBe(false)
+      })
+
+      it('returns false when isConditionalMediationAvailable is not a function', async () => {
+        Object.defineProperty(window, 'PublicKeyCredential', {
+          value: {
+            isUserVerifyingPlatformAuthenticatorAvailable: mockIsUserVerifyingPlatformAuthenticatorAvailable,
+            isConditionalMediationAvailable: 'not-a-function',
+          },
+          writable: true,
+        })
+        const result = await isConditionalMediationAvailable()
+        expect(result).toBe(false)
+      })
+    })
+
+    describe('Edge case handling', () => {
+      it('handles empty user agent gracefully', () => {
+        Object.defineProperty(navigator, 'userAgent', {
+          value: '',
+          writable: true,
+        })
+        // Should not throw and should return a reasonable default
+        const result = getDeviceInfo()
+        expect(result).toBe('Unknown Device')
+      })
+
+      it('handles malformed session storage data', () => {
+        sessionStorage.setItem('last_biometric_auth', 'invalid-date')
+        const result = getLastBiometricAuthTime()
+        // Should return an Invalid Date object
+        expect(result).toBeInstanceOf(Date)
+        expect(Number.isNaN(result?.getTime())).toBe(true)
+      })
+
+      it('handles null in session storage', () => {
+        // Simulate corrupted session storage
+        sessionStorage.setItem('last_biometric_auth', 'null')
+        const result = getLastBiometricAuthTime()
+        // Should still return a Date object (though invalid)
+        expect(result).toBeInstanceOf(Date)
+      })
+    })
+
+    describe('Re-authentication boundary conditions', () => {
+      it('handles exact boundary time for 15min interval', () => {
+        // Exactly at the boundary - should NOT need reauth (< not <=)
+        const exactBoundary = new Date(Date.now() - 15 * 60 * 1000)
+        expect(isReauthenticationNeeded(exactBoundary, '15min')).toBe(true)
+      })
+
+      it('handles just before boundary for 15min interval', () => {
+        const justBefore = new Date(Date.now() - (15 * 60 * 1000 - 1))
+        expect(isReauthenticationNeeded(justBefore, '15min')).toBe(false)
+      })
+
+      it('handles future time gracefully', () => {
+        const futureTime = new Date(Date.now() + 60 * 1000)
+        expect(isReauthenticationNeeded(futureTime, '15min')).toBe(false)
+      })
+
+      it('handles very old time correctly', () => {
+        const veryOld = new Date(0) // Unix epoch
+        expect(isReauthenticationNeeded(veryOld, '15min')).toBe(true)
+        expect(isReauthenticationNeeded(veryOld, '4hours')).toBe(true)
+        expect(isReauthenticationNeeded(veryOld, 'never')).toBe(false)
+      })
+    })
+  })
+
   describe('Session management', () => {
     describe('setLastBiometricAuthTime', () => {
       it('stores current time in session storage', () => {

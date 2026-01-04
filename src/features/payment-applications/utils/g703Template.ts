@@ -7,7 +7,7 @@
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 import { format } from 'date-fns'
-import type { G703PDFData, ScheduleOfValuesItem } from '@/types/payment-application'
+import type { G702PDFData, G703PDFData, ScheduleOfValuesItem } from '@/types/payment-application'
 import {
   PAGE_WIDTH_LANDSCAPE,
   PAGE_HEIGHT_LANDSCAPE,
@@ -24,6 +24,7 @@ import {
   addFootersToAllPages,
   getCompanyInfo,
 } from '@/lib/utils/pdfBranding'
+import { generateG702PDFDocument } from './g702Template'
 
 const CONTENT_WIDTH = PAGE_WIDTH_LANDSCAPE - 2 * MARGIN
 
@@ -306,13 +307,76 @@ export async function downloadG703PDF(data: G703PDFData): Promise<void> {
 }
 
 /**
+ * Add G703 content to an existing jsPDF document (for merging with G702)
+ * Adds new landscape pages with the G703 Schedule of Values
+ */
+async function addG703ToDocument(
+  doc: jsPDF,
+  data: G703PDFData,
+  gcCompany: Awaited<ReturnType<typeof getCompanyInfo>>
+): Promise<void> {
+  // Add a new landscape page for G703
+  doc.addPage('letter', 'landscape')
+
+  // Add JobSight branded header
+  const appNumber = data.application.application_number
+
+  let y = await addDocumentHeader(doc, {
+    gcCompany,
+    documentTitle: `Schedule of Values - Application #${appNumber}`,
+    documentType: 'PAYMENT APPLICATION',
+  })
+
+  // Draw G703 sections
+  y = drawApplicationInfo(doc, data, y)
+  y = drawSOVTable(doc, data, y)
+  drawInstructions(doc, y)
+}
+
+/**
  * Generate combined G702/G703 PDF package
+ * Creates a single PDF with G702 (portrait) followed by G703 (landscape) pages
  */
 export async function generatePaymentApplicationPackage(
-  _g702Data: import('@/types/payment-application').G702PDFData,
+  g702Data: G702PDFData,
   g703Data: G703PDFData
 ): Promise<Blob> {
-  // TODO: Implement PDF merging. For now, we return just the G703
-  // A more complete implementation would merge the G702 and G703 PDFs
-  return generateG703PDF(g703Data)
+  // Fetch company info once for both documents
+  const gcCompany = g702Data.gcCompany || await getCompanyInfo(g702Data.projectId)
+
+  // Generate G702 document first (portrait orientation)
+  const doc = await generateG702PDFDocument({ ...g702Data, gcCompany })
+
+  // Add G703 pages to the same document (landscape orientation)
+  await addG703ToDocument(doc, { ...g703Data, gcCompany }, gcCompany)
+
+  // Add footers to all pages
+  addFootersToAllPages(doc)
+
+  return doc.output('blob')
+}
+
+/**
+ * Download combined G702/G703 PDF package
+ */
+export async function downloadPaymentApplicationPackage(
+  g702Data: G702PDFData,
+  g703Data: G703PDFData
+): Promise<void> {
+  const blob = await generatePaymentApplicationPackage(g702Data, g703Data)
+
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+
+  const appNum = g702Data.application.application_number
+  const projectName = (g702Data.project.name || 'Project').replace(/[^a-zA-Z0-9]/g, '_').substring(0, 30)
+  const date = format(new Date(), 'yyyy-MM-dd')
+  link.download = `PaymentApp${appNum}_${projectName}_${date}.pdf`
+
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+
+  URL.revokeObjectURL(url)
 }

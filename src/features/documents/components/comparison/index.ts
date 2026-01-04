@@ -8,3 +8,6 @@ export { ChangeNavigator, ChangeNavigatorCompact } from './ChangeNavigator'
 export { MarkupVersionComparison } from './MarkupVersionComparison'
 export { MarkupChangesList } from './MarkupChangesList'
 export { MarkupDiffViewer } from './MarkupDiffViewer'
+
+// Enhanced drawing comparison with flicker mode, overlay controls, etc.
+export { EnhancedDrawingComparison } from './EnhancedDrawingComparison'

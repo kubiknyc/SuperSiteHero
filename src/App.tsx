@@ -15,6 +15,7 @@ import { ProtectedRoute } from './components/auth/ProtectedRoute'
 import { RouteLoadingFallback } from './components/loading/RouteLoadingFallback'
 import { PWAInstallBanner } from './components/PWAInstallPrompt'
 import { PWAUpdateNotification } from './components/PWAUpdateNotification'
+import { KeyboardShortcutsProvider } from './components/ui/keyboard-shortcuts-provider'
 import { initDatabase, requestPersistentStorage } from './lib/offline/indexeddb'
 import { initSyncManager } from './lib/offline/sync-manager'
 import { logger } from './lib/utils/logger'
@@ -67,6 +68,7 @@ const ChangeOrderDetailPage = lazy(() => import('./pages/change-orders/ChangeOrd
 const DocumentLibraryPage = lazy(() => import('./pages/documents/DocumentLibraryPage'))
 const DocumentDetailPage = lazy(() => import('./pages/documents/DocumentDetailPage').then(m => ({ default: m.DocumentDetailPage })))
 const DrawingMarkupPage = lazy(() => import('./pages/documents/DrawingMarkupPage').then(m => ({ default: m.DrawingMarkupPage })))
+const DocumentPopupViewerPage = lazy(() => import('./pages/documents/DocumentPopupViewerPage').then(m => ({ default: m.DocumentPopupViewerPage })))
 
 // Drawing Register feature
 const DrawingRegisterPage = lazy(() => import('./pages/drawings/DrawingRegisterPage'))
@@ -86,6 +88,10 @@ const SubmittalDetailPage = lazy(() => import('./pages/submittals/SubmittalDetai
 // NEW: Dedicated submittals with CSI spec section organization
 const DedicatedSubmittalsPage = lazy(() => import('./pages/submittals/DedicatedSubmittalsPage').then(m => ({ default: m.DedicatedSubmittalsPage })))
 const DedicatedSubmittalDetailPage = lazy(() => import('./pages/submittals/DedicatedSubmittalDetailPage').then(m => ({ default: m.DedicatedSubmittalDetailPage })))
+
+// Shop Drawings feature (subtype of submittals with specialized workflow)
+const ShopDrawingsPage = lazy(() => import('./pages/shop-drawings/ShopDrawingsPage').then(m => ({ default: m.ShopDrawingsPage })))
+const ShopDrawingDetailPage = lazy(() => import('./pages/shop-drawings/ShopDrawingDetailPage').then(m => ({ default: m.ShopDrawingDetailPage })))
 
 // Punch Lists feature
 const PunchListsPage = lazy(() => import('./pages/punch-lists/PunchListsPage').then(m => ({ default: m.PunchListsPage })))
@@ -416,6 +422,7 @@ function App() {
         >
           <ToastProvider>
             <AuthProvider>
+              <KeyboardShortcutsProvider>
               <Suspense fallback={<RouteLoadingFallback />}>
               <Routes>
                 {/* Public routes - loaded eagerly */}
@@ -477,6 +484,7 @@ function App() {
                 <Route path="/documents" element={<ProtectedRoute><DocumentLibraryPage /></ProtectedRoute>} />
                 <Route path="/documents/:documentId" element={<ProtectedRoute><DocumentDetailPage /></ProtectedRoute>} />
                 <Route path="/documents/:documentId/markup" element={<ProtectedRoute><DrawingMarkupPage /></ProtectedRoute>} />
+                <Route path="/documents/:documentId/popup" element={<ProtectedRoute><DocumentPopupViewerPage /></ProtectedRoute>} />
 
                 {/* Drawing Register feature */}
                 <Route path="/projects/:projectId/drawings" element={<ProtectedRoute><DrawingRegisterPage /></ProtectedRoute>} />
@@ -500,6 +508,10 @@ function App() {
                 {/* NEW: Dedicated submittals with CSI spec section organization */}
                 <Route path="/submittals-v2" element={<ProtectedRoute><DedicatedSubmittalsPage /></ProtectedRoute>} />
                 <Route path="/submittals-v2/:submittalId" element={<ProtectedRoute><DedicatedSubmittalDetailPage /></ProtectedRoute>} />
+
+                {/* Shop Drawings feature (specialized submittal workflow) */}
+                <Route path="/shop-drawings" element={<ProtectedRoute><ShopDrawingsPage /></ProtectedRoute>} />
+                <Route path="/shop-drawings/:shopDrawingId" element={<ProtectedRoute><ShopDrawingDetailPage /></ProtectedRoute>} />
 
                 {/* Punch Lists feature */}
                 <Route path="/punch-lists" element={<ProtectedRoute><PunchListsPage /></ProtectedRoute>} />
@@ -772,6 +784,7 @@ function App() {
 
               {/* PWA Update Notification - shows toast when new version available */}
               <PWAUpdateNotification />
+              </KeyboardShortcutsProvider>
             </AuthProvider>
           </ToastProvider>
         </BrowserRouter>

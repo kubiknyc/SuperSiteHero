@@ -42,3 +42,9 @@ export * from './components/ApprovalAuthorityDisplay';
 
 // Audit Log UI
 export * from './components/ChangeOrderAuditLog';
+
+// Signature Block
+export * from './components/ChangeOrderSignatureBlock';
+
+// DocuSign Integration
+export * from './components/ChangeOrderDocuSignIntegration';

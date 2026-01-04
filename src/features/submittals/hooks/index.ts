@@ -73,3 +73,25 @@ export {
   type SubmittalWithReminder,
   type ReminderStats,
 } from './useSubmittalReminders'
+
+// Drawing Links hooks (for linking submittals to drawings with pins)
+export {
+  // Query hooks
+  useSubmittalDrawingLinks,
+  useSubmittalsByDrawing,
+  // Mutation hooks
+  useAddSubmittalDrawingLink,
+  useUpdateSubmittalDrawingLink,
+  useRemoveSubmittalDrawingLink,
+  // Query keys
+  submittalDrawingLinkKeys,
+  // Utility functions
+  pixelToNormalized,
+  normalizedToPixel,
+  getPinColorForStatus,
+  getPinColorForType,
+  // Types
+  type SubmittalDrawingLink,
+  type CreateSubmittalDrawingLinkInput,
+  type UpdateSubmittalDrawingLinkInput,
+} from './useSubmittalDrawingLinks'

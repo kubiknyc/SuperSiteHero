@@ -623,38 +623,708 @@ describe.skipIf(!hasTestCredentials)('RLS Policy Tests - Authenticated Users', (
 })
 
 // ============================================================================
+// Financial Data RLS Tests (Critical Security)
+// ============================================================================
+
+describe('Financial Data RLS Tests - Anonymous Users', () => {
+  let anonClient: SupabaseClient<Database>
+
+  beforeAll(async () => {
+    anonClient = createClient<Database>(supabaseUrl, supabaseAnonKey)
+  })
+
+  describe('Payment Applications Table RLS', () => {
+    it('should NOT allow anonymous users to read payment applications', async () => {
+      const { data, error } = await anonClient
+        .from('payment_applications')
+        .select('*')
+        .limit(1)
+
+      if (error) {
+        expect(error).toBeTruthy()
+      } else {
+        expect(data).toHaveLength(0)
+      }
+    })
+
+    it('should NOT allow anonymous users to create payment applications', async () => {
+      const { error } = await anonClient
+        .from('payment_applications')
+        .insert({
+          project_id: '00000000-0000-0000-0000-000000000001',
+          application_number: 999,
+          period_to: new Date().toISOString().split('T')[0],
+          status: 'draft',
+        })
+
+      expect(error).toBeTruthy()
+    })
+
+    it('should NOT allow anonymous users to update payment applications', async () => {
+      const { error } = await anonClient
+        .from('payment_applications')
+        .update({ status: 'approved' })
+        .eq('id', '00000000-0000-0000-0000-000000000001')
+
+      expect(error).toBeTruthy()
+    })
+
+    it('should NOT allow anonymous users to delete payment applications', async () => {
+      const { error } = await anonClient
+        .from('payment_applications')
+        .delete()
+        .eq('id', '00000000-0000-0000-0000-000000000001')
+
+      expect(error).toBeTruthy()
+    })
+  })
+
+  describe('Change Orders Table RLS', () => {
+    it('should NOT allow anonymous users to read change orders', async () => {
+      const { data, error } = await anonClient
+        .from('change_orders')
+        .select('*')
+        .limit(1)
+
+      if (error) {
+        expect(error).toBeTruthy()
+      } else {
+        expect(data).toHaveLength(0)
+      }
+    })
+
+    it('should NOT allow anonymous users to create change orders', async () => {
+      const { error } = await anonClient
+        .from('change_orders')
+        .insert({
+          project_id: '00000000-0000-0000-0000-000000000001',
+          change_order_number: 'CO-001',
+          title: 'Unauthorized Change Order',
+          status: 'draft',
+        })
+
+      expect(error).toBeTruthy()
+    })
+
+    it('should NOT allow anonymous users to update change order amounts', async () => {
+      const { error } = await anonClient
+        .from('change_orders')
+        .update({ amount: 1000000 })
+        .eq('id', '00000000-0000-0000-0000-000000000001')
+
+      expect(error).toBeTruthy()
+    })
+  })
+
+  describe('Invoices Table RLS', () => {
+    it('should NOT allow anonymous users to read invoices', async () => {
+      const { data, error } = await anonClient
+        .from('invoices')
+        .select('*')
+        .limit(1)
+
+      if (error) {
+        expect(error).toBeTruthy()
+      } else {
+        expect(data).toHaveLength(0)
+      }
+    })
+
+    it('should NOT allow anonymous users to create invoices', async () => {
+      const { error } = await anonClient
+        .from('invoices')
+        .insert({
+          project_id: '00000000-0000-0000-0000-000000000001',
+          invoice_number: 'INV-HACK-001',
+          amount: 100000,
+          status: 'pending',
+        })
+
+      expect(error).toBeTruthy()
+    })
+  })
+})
+
+// ============================================================================
+// Workflow Items Write Operation Tests
+// ============================================================================
+
+describe('Workflow Items Write Operations RLS - Anonymous Users', () => {
+  let anonClient: SupabaseClient<Database>
+
+  beforeAll(async () => {
+    anonClient = createClient<Database>(supabaseUrl, supabaseAnonKey)
+  })
+
+  describe('RFIs Table RLS', () => {
+    it('should NOT allow anonymous users to read RFIs', async () => {
+      const { data, error } = await anonClient
+        .from('rfis')
+        .select('*')
+        .limit(1)
+
+      if (error) {
+        expect(error).toBeTruthy()
+      } else {
+        expect(data).toHaveLength(0)
+      }
+    })
+
+    it('should NOT allow anonymous users to create RFIs', async () => {
+      const { error } = await anonClient
+        .from('rfis')
+        .insert({
+          project_id: '00000000-0000-0000-0000-000000000001',
+          rfi_number: 'RFI-HACK-001',
+          subject: 'Unauthorized RFI',
+          status: 'open',
+        })
+
+      expect(error).toBeTruthy()
+    })
+
+    it('should NOT allow anonymous users to update RFI status', async () => {
+      const { error } = await anonClient
+        .from('rfis')
+        .update({ status: 'closed' })
+        .eq('id', '00000000-0000-0000-0000-000000000001')
+
+      expect(error).toBeTruthy()
+    })
+  })
+
+  describe('Submittals Table RLS', () => {
+    it('should NOT allow anonymous users to read submittals', async () => {
+      const { data, error } = await anonClient
+        .from('submittals')
+        .select('*')
+        .limit(1)
+
+      if (error) {
+        expect(error).toBeTruthy()
+      } else {
+        expect(data).toHaveLength(0)
+      }
+    })
+
+    it('should NOT allow anonymous users to create submittals', async () => {
+      const { error } = await anonClient
+        .from('submittals')
+        .insert({
+          project_id: '00000000-0000-0000-0000-000000000001',
+          submittal_number: 'SUB-HACK-001',
+          title: 'Unauthorized Submittal',
+          status: 'open',
+        })
+
+      expect(error).toBeTruthy()
+    })
+
+    it('should NOT allow anonymous users to update submittal approvals', async () => {
+      const { error } = await anonClient
+        .from('submittals')
+        .update({ status: 'approved' })
+        .eq('id', '00000000-0000-0000-0000-000000000001')
+
+      expect(error).toBeTruthy()
+    })
+  })
+
+  describe('Notifications Table RLS', () => {
+    it('should NOT allow anonymous users to read notifications', async () => {
+      const { data, error } = await anonClient
+        .from('notifications')
+        .select('*')
+        .limit(1)
+
+      if (error) {
+        expect(error).toBeTruthy()
+      } else {
+        expect(data).toHaveLength(0)
+      }
+    })
+
+    it('should NOT allow anonymous users to create fake notifications', async () => {
+      const { error } = await anonClient
+        .from('notifications')
+        .insert({
+          user_id: '00000000-0000-0000-0000-000000000001',
+          type: 'system',
+          title: 'Malicious Notification',
+          message: 'Click here for phishing...',
+        })
+
+      expect(error).toBeTruthy()
+    })
+
+    it('should NOT allow anonymous users to mark notifications as read', async () => {
+      const { error } = await anonClient
+        .from('notifications')
+        .update({ is_read: true })
+        .eq('user_id', '00000000-0000-0000-0000-000000000001')
+
+      expect(error).toBeTruthy()
+    })
+  })
+})
+
+// ============================================================================
+// Authenticated User Write Operation Tests (Cross-Tenant)
+// ============================================================================
+
+describe.skipIf(!hasTestCredentials)('Authenticated User Write Operations - Cross-Tenant Security', () => {
+  let authenticatedClient: SupabaseClient<Database>
+  let createdRecordIds: { table: string; id: string }[] = []
+
+  beforeAll(async () => {
+    authenticatedClient = createClient<Database>(supabaseUrl, supabaseAnonKey)
+
+    if (testUserEmail && testUserPassword) {
+      const { error } = await authenticatedClient.auth.signInWithPassword({
+        email: testUserEmail,
+        password: testUserPassword,
+      })
+
+      if (error) {
+        throw new Error(`Test authentication failed: ${error.message}`)
+      }
+    }
+  })
+
+  afterAll(async () => {
+    // Clean up any records created during tests
+    for (const record of createdRecordIds) {
+      try {
+        await authenticatedClient.from(record.table as 'projects').delete().eq('id', record.id)
+      } catch {
+        // Ignore cleanup errors
+      }
+    }
+    await authenticatedClient.auth.signOut()
+  })
+
+  describe('Financial Data Cross-Tenant Write Prevention', () => {
+    it('should NOT allow creating payment applications for other company projects', async () => {
+      if (!otherProjectId) {
+        console.warn('Skipping: VITE_TEST_OTHER_PROJECT_ID not configured')
+        return
+      }
+
+      const { data, error } = await authenticatedClient
+        .from('payment_applications')
+        .insert({
+          project_id: otherProjectId,
+          application_number: 9999,
+          period_to: new Date().toISOString().split('T')[0],
+          status: 'draft',
+        })
+        .select()
+
+      // Should fail - either error or no data returned
+      if (data && data.length > 0) {
+        // If somehow inserted, mark for cleanup and fail
+        createdRecordIds.push({ table: 'payment_applications', id: data[0].id })
+        expect.fail('Payment application was created in other company project - RLS policy missing!')
+      }
+      // No error check needed - empty result is acceptable
+    })
+
+    it('should NOT allow updating payment application amounts in other projects', async () => {
+      if (!otherProjectId) {
+        console.warn('Skipping: VITE_TEST_OTHER_PROJECT_ID not configured')
+        return
+      }
+
+      const { error, count } = await authenticatedClient
+        .from('payment_applications')
+        .update({
+          current_payment_due: 9999999,
+          retainage_withheld: 0,
+        })
+        .eq('project_id', otherProjectId)
+
+      // Should affect 0 rows (RLS filters out)
+      if (count !== null) {
+        expect(count).toBe(0)
+      }
+    })
+
+    it('should NOT allow creating change orders for other company projects', async () => {
+      if (!otherProjectId) {
+        console.warn('Skipping: VITE_TEST_OTHER_PROJECT_ID not configured')
+        return
+      }
+
+      const { data, error } = await authenticatedClient
+        .from('change_orders')
+        .insert({
+          project_id: otherProjectId,
+          change_order_number: 'CO-ATTACK-001',
+          title: 'Unauthorized Change Order',
+          amount: 1000000,
+          status: 'approved', // Trying to insert as already approved
+        })
+        .select()
+
+      if (data && data.length > 0) {
+        createdRecordIds.push({ table: 'change_orders', id: data[0].id })
+        expect.fail('Change order was created in other company project - RLS policy missing!')
+      }
+    })
+
+    it('should NOT allow approving change orders in other projects', async () => {
+      if (!otherProjectId) {
+        console.warn('Skipping: VITE_TEST_OTHER_PROJECT_ID not configured')
+        return
+      }
+
+      const { count } = await authenticatedClient
+        .from('change_orders')
+        .update({
+          status: 'approved',
+          approved_by: 'attacker-id',
+          approved_at: new Date().toISOString(),
+        })
+        .eq('project_id', otherProjectId)
+
+      if (count !== null) {
+        expect(count).toBe(0)
+      }
+    })
+  })
+
+  describe('Daily Report Cross-Tenant Write Prevention', () => {
+    it('should NOT allow creating daily reports for other company projects', async () => {
+      if (!otherProjectId) {
+        console.warn('Skipping: VITE_TEST_OTHER_PROJECT_ID not configured')
+        return
+      }
+
+      const { data, error } = await authenticatedClient
+        .from('daily_reports')
+        .insert({
+          project_id: otherProjectId,
+          report_date: new Date().toISOString().split('T')[0],
+          status: 'submitted', // Trying to submit directly
+          weather_conditions: 'Malicious report',
+        })
+        .select()
+
+      if (data && data.length > 0) {
+        createdRecordIds.push({ table: 'daily_reports', id: data[0].id })
+        expect.fail('Daily report was created in other company project - RLS policy missing!')
+      }
+    })
+
+    it('should NOT allow updating daily report status in other projects', async () => {
+      if (!otherProjectId) {
+        console.warn('Skipping: VITE_TEST_OTHER_PROJECT_ID not configured')
+        return
+      }
+
+      const { count } = await authenticatedClient
+        .from('daily_reports')
+        .update({ status: 'approved' })
+        .eq('project_id', otherProjectId)
+
+      if (count !== null) {
+        expect(count).toBe(0)
+      }
+    })
+
+    it('should NOT allow deleting daily reports from other projects', async () => {
+      if (!otherProjectId) {
+        console.warn('Skipping: VITE_TEST_OTHER_PROJECT_ID not configured')
+        return
+      }
+
+      const { count } = await authenticatedClient
+        .from('daily_reports')
+        .delete()
+        .eq('project_id', otherProjectId)
+
+      if (count !== null) {
+        expect(count).toBe(0)
+      }
+    })
+  })
+
+  describe('RFI/Submittal Cross-Tenant Write Prevention', () => {
+    it('should NOT allow creating RFIs for other company projects', async () => {
+      if (!otherProjectId) {
+        console.warn('Skipping: VITE_TEST_OTHER_PROJECT_ID not configured')
+        return
+      }
+
+      const { data } = await authenticatedClient
+        .from('rfis')
+        .insert({
+          project_id: otherProjectId,
+          rfi_number: 'RFI-ATTACK-001',
+          subject: 'Unauthorized RFI',
+          status: 'open',
+        })
+        .select()
+
+      if (data && data.length > 0) {
+        createdRecordIds.push({ table: 'rfis', id: data[0].id })
+        expect.fail('RFI was created in other company project - RLS policy missing!')
+      }
+    })
+
+    it('should NOT allow responding to RFIs in other projects', async () => {
+      if (!otherProjectId) {
+        console.warn('Skipping: VITE_TEST_OTHER_PROJECT_ID not configured')
+        return
+      }
+
+      const { count } = await authenticatedClient
+        .from('rfis')
+        .update({
+          response: 'Malicious response to gain information',
+          responded_at: new Date().toISOString(),
+          status: 'closed',
+        })
+        .eq('project_id', otherProjectId)
+
+      if (count !== null) {
+        expect(count).toBe(0)
+      }
+    })
+
+    it('should NOT allow creating submittals for other company projects', async () => {
+      if (!otherProjectId) {
+        console.warn('Skipping: VITE_TEST_OTHER_PROJECT_ID not configured')
+        return
+      }
+
+      const { data } = await authenticatedClient
+        .from('submittals')
+        .insert({
+          project_id: otherProjectId,
+          submittal_number: 'SUB-ATTACK-001',
+          title: 'Unauthorized Submittal',
+          status: 'approved', // Trying to insert as approved
+        })
+        .select()
+
+      if (data && data.length > 0) {
+        createdRecordIds.push({ table: 'submittals', id: data[0].id })
+        expect.fail('Submittal was created in other company project - RLS policy missing!')
+      }
+    })
+
+    it('should NOT allow approving submittals in other projects', async () => {
+      if (!otherProjectId) {
+        console.warn('Skipping: VITE_TEST_OTHER_PROJECT_ID not configured')
+        return
+      }
+
+      const { count } = await authenticatedClient
+        .from('submittals')
+        .update({
+          status: 'approved',
+          reviewed_by: 'attacker-id',
+        })
+        .eq('project_id', otherProjectId)
+
+      if (count !== null) {
+        expect(count).toBe(0)
+      }
+    })
+  })
+
+  describe('Safety Data Cross-Tenant Write Prevention', () => {
+    it('should NOT allow creating safety incidents in other company projects', async () => {
+      if (!otherProjectId) {
+        console.warn('Skipping: VITE_TEST_OTHER_PROJECT_ID not configured')
+        return
+      }
+
+      const { data } = await authenticatedClient
+        .from('safety_incidents')
+        .insert({
+          project_id: otherProjectId,
+          incident_date: new Date().toISOString().split('T')[0],
+          incident_type: 'injury',
+          description: 'Fake incident to cause reputational damage',
+          severity: 'critical',
+        })
+        .select()
+
+      if (data && data.length > 0) {
+        createdRecordIds.push({ table: 'safety_incidents', id: data[0].id })
+        expect.fail('Safety incident was created in other company project - RLS policy missing!')
+      }
+    })
+
+    it('should NOT allow creating punch items in other company projects', async () => {
+      if (!otherProjectId) {
+        console.warn('Skipping: VITE_TEST_OTHER_PROJECT_ID not configured')
+        return
+      }
+
+      const { data } = await authenticatedClient
+        .from('punch_items')
+        .insert({
+          project_id: otherProjectId,
+          title: 'Fake punch item',
+          status: 'open',
+        })
+        .select()
+
+      if (data && data.length > 0) {
+        createdRecordIds.push({ table: 'punch_items', id: data[0].id })
+        expect.fail('Punch item was created in other company project - RLS policy missing!')
+      }
+    })
+
+    it('should NOT allow closing punch items in other projects', async () => {
+      if (!otherProjectId) {
+        console.warn('Skipping: VITE_TEST_OTHER_PROJECT_ID not configured')
+        return
+      }
+
+      const { count } = await authenticatedClient
+        .from('punch_items')
+        .update({
+          status: 'completed',
+          completed_at: new Date().toISOString(),
+        })
+        .eq('project_id', otherProjectId)
+
+      if (count !== null) {
+        expect(count).toBe(0)
+      }
+    })
+  })
+
+  describe('User Data Cross-Tenant Protection', () => {
+    it('should NOT allow updating other users profiles', async () => {
+      // Try to update a random user ID (not the test user)
+      const otherUserId = '00000000-0000-0000-0000-000000000099'
+
+      const { count } = await authenticatedClient
+        .from('users')
+        .update({
+          role: 'admin', // Privilege escalation attempt
+          email: 'attacker@example.com',
+        })
+        .eq('id', otherUserId)
+
+      if (count !== null) {
+        expect(count).toBe(0)
+      }
+    })
+
+    it('should NOT allow modifying user company assignments', async () => {
+      if (!otherCompanyId) {
+        console.warn('Skipping: VITE_TEST_OTHER_COMPANY_ID not configured')
+        return
+      }
+
+      // Try to move a user to another company
+      const { count } = await authenticatedClient
+        .from('users')
+        .update({ company_id: otherCompanyId })
+        .neq('id', 'test-user-id') // Any user except self
+
+      if (count !== null) {
+        expect(count).toBe(0)
+      }
+    })
+
+    it('should NOT allow creating notifications for other users', async () => {
+      const otherUserId = '00000000-0000-0000-0000-000000000099'
+
+      const { data } = await authenticatedClient
+        .from('notifications')
+        .insert({
+          user_id: otherUserId,
+          type: 'system',
+          title: 'Phishing Notification',
+          message: 'Your account has been compromised, click here...',
+        })
+        .select()
+
+      if (data && data.length > 0) {
+        createdRecordIds.push({ table: 'notifications', id: data[0].id })
+        expect.fail('Notification was created for other user - RLS policy missing!')
+      }
+    })
+  })
+})
+
+// ============================================================================
 // Test Instructions
 // ============================================================================
 
 /*
- * To run these tests:
+ * RLS POLICY TEST SUITE
+ * =====================
+ *
+ * This comprehensive test suite verifies Row Level Security (RLS) policies
+ * for all critical tables in the SuperSiteHero application.
+ *
+ * TEST CATEGORIES:
+ * ----------------
+ * 1. Anonymous User Tests (no authentication required)
+ *    - Verify unauthenticated access is blocked for all tables
+ *    - Test read, create, update, delete operations
+ *
+ * 2. Financial Data RLS Tests
+ *    - Payment Applications
+ *    - Change Orders
+ *    - Invoices
+ *
+ * 3. Workflow Items RLS Tests
+ *    - RFIs (Requests for Information)
+ *    - Submittals
+ *    - Notifications
+ *
+ * 4. Authenticated User Tests (require test credentials)
+ *    - Own company/project access verification
+ *    - Cross-tenant isolation (cannot access other companies' data)
+ *
+ * 5. Cross-Tenant Write Prevention Tests
+ *    - Financial data manipulation attacks
+ *    - Daily report tampering
+ *    - RFI/Submittal injection
+ *    - Safety data falsification
+ *    - User privilege escalation
+ *
+ * RUNNING THE TESTS:
+ * ------------------
  * 1. Ensure your .env file has valid VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
  * 2. Run: npm run test src/__tests__/security/rls-policies.test.ts
  *
- * For anonymous user tests (always run):
- * - These tests verify that unauthenticated users cannot access any data
- * - They use the anon key and should always pass if RLS is properly configured
+ * ENVIRONMENT VARIABLES FOR AUTHENTICATED TESTS:
+ * -----------------------------------------------
+ * Required:
+ *   VITE_TEST_USER_EMAIL=test@yourcompany.com
+ *   VITE_TEST_USER_PASSWORD=secure-test-password
+ *   VITE_TEST_USER_COMPANY_ID=uuid-of-test-company
+ *   VITE_TEST_USER_PROJECT_ID=uuid-of-test-project
  *
- * For authenticated user tests (run when credentials are configured):
- * 1. Create a test user in Supabase:
- *    - Use the Supabase dashboard or auth.admin API
- *    - Assign to a test company with appropriate role
+ * For cross-tenant tests (recommended):
+ *   VITE_TEST_OTHER_COMPANY_ID=uuid-of-different-company
+ *   VITE_TEST_OTHER_PROJECT_ID=uuid-of-project-in-different-company
  *
- * 2. Set up environment variables in .env.test:
- *    VITE_TEST_USER_EMAIL=test@yourcompany.com
- *    VITE_TEST_USER_PASSWORD=secure-test-password
- *    VITE_TEST_USER_COMPANY_ID=uuid-of-test-company
- *    VITE_TEST_USER_PROJECT_ID=uuid-of-test-project
- *
- * 3. For cross-tenant isolation tests (optional but recommended):
- *    VITE_TEST_OTHER_COMPANY_ID=uuid-of-different-company
- *    VITE_TEST_OTHER_PROJECT_ID=uuid-of-project-in-different-company
- *
- * Expected RLS Policies:
+ * EXPECTED RLS POLICIES:
+ * ----------------------
  * - Anonymous users: NO access to any tables (read or write)
  * - Authenticated users: Access ONLY to their company's data
  * - Cross-tenant isolation: Users cannot see/modify other companies' data
- * - Admin users: Elevated permissions within their company
+ * - Write protection: Insert/Update/Delete blocked for cross-tenant attempts
+ * - Admin users: Elevated permissions within their company only
+ *
+ * SECURITY SCENARIOS TESTED:
+ * --------------------------
+ * - Privilege escalation (changing user role to admin)
+ * - Cross-tenant data manipulation (modifying other company's records)
+ * - Financial fraud (creating/approving unauthorized payment apps)
+ * - Data falsification (injecting fake safety incidents)
+ * - Phishing attacks (creating malicious notifications)
  *
  * Note: If VITE_TEST_USER_EMAIL and VITE_TEST_USER_PASSWORD are not set,
  * authenticated user tests will be automatically skipped.

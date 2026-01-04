@@ -1230,3 +1230,79 @@ export type LienWaiverRequirementDbUpdate = LienWaiverRequirementsTable['Update'
 export type LienWaiverHistoryRow = LienWaiverHistoryTable['Row']
 export type LienWaiverHistoryDbInsert = LienWaiverHistoryTable['Insert']
 export type LienWaiverHistoryDbUpdate = LienWaiverHistoryTable['Update']
+
+// Drawing Bookmarks (Migration 169)
+export interface DrawingBookmarksTable {
+  Row: {
+    id: string
+    project_id: string
+    user_id: string
+    document_id: string
+    page_number: number
+    viewport: {
+      x: number
+      y: number
+      zoom: number
+    }
+    name: string
+    folder: string | null
+    shared: boolean
+    created_at: string
+    updated_at: string
+  }
+  Insert: {
+    id?: string
+    project_id: string
+    user_id?: string
+    document_id: string
+    page_number?: number
+    viewport?: {
+      x: number
+      y: number
+      zoom: number
+    }
+    name: string
+    folder?: string | null
+    shared?: boolean
+    created_at?: string
+    updated_at?: string
+  }
+  Update: {
+    name?: string
+    folder?: string | null
+    shared?: boolean
+    viewport?: {
+      x: number
+      y: number
+      zoom: number
+    }
+    updated_at?: string
+  }
+  Relationships: [
+    {
+      foreignKeyName: "drawing_bookmarks_project_id_fkey"
+      columns: ["project_id"]
+      isOneToOne: false
+      referencedRelation: "projects"
+      referencedColumns: ["id"]
+    },
+    {
+      foreignKeyName: "drawing_bookmarks_user_id_fkey"
+      columns: ["user_id"]
+      isOneToOne: false
+      referencedRelation: "users"
+      referencedColumns: ["id"]
+    },
+    {
+      foreignKeyName: "drawing_bookmarks_document_id_fkey"
+      columns: ["document_id"]
+      isOneToOne: false
+      referencedRelation: "documents"
+      referencedColumns: ["id"]
+    }
+  ]
+}
+
+export type DrawingBookmarkRow = DrawingBookmarksTable['Row']
+export type DrawingBookmarkInsert = DrawingBookmarksTable['Insert']
+export type DrawingBookmarkUpdate = DrawingBookmarksTable['Update']

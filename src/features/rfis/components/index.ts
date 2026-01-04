@@ -12,6 +12,7 @@ export { CreateRFIDialog } from './CreateRFIDialog'
 // RECOMMENDED: Dedicated RFI Components
 // ============================================================
 export { CreateDedicatedRFIDialog } from './CreateDedicatedRFIDialog'
+export { CreateRFIFromDrawingDialog, type DrawingContext } from './CreateRFIFromDrawingDialog'
 export { RFIsList } from './RFIsList'
 export { RFIStatusBadge } from './RFIStatusBadge'
 export type { RFIStatus, RFIStatusBadgeProps } from './RFIStatusBadge'

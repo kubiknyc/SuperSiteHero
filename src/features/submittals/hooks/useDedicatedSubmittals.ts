@@ -865,6 +865,15 @@ export function useSubmitReviewWithCode() {
 
       const reviewStatus = codeToStatus[approvalCode]
 
+      // Get the current submittal to capture previous status
+      const { data: currentSubmittal } = await supabase
+        .from('submittals')
+        .select('review_status')
+        .eq('id', submittalId)
+        .single()
+
+      const previousStatus = currentSubmittal?.review_status
+
       // Insert review record with approval code
       const { error: reviewError } = await supabase
         .from('submittal_reviews')
@@ -900,16 +909,53 @@ export function useSubmitReviewWithCode() {
         .from('submittals')
         .update(updates)
         .eq('id', submittalId)
-        .select()
+        .select(`
+          *,
+          project:project_id (id, name),
+          submitted_by_user:submitted_by_user (id, email, full_name)
+        `)
         .single()
 
       if (error) {throw error}
-      return data as Submittal
+      return { ...(data as Submittal), previousStatus, approvalCode, project: data.project, submitted_by_user: data.submitted_by_user }
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       queryClient.invalidateQueries({ queryKey: ['dedicated-submittals'] })
       queryClient.invalidateQueries({ queryKey: ['dedicated-submittals', 'detail', data.id] })
       queryClient.invalidateQueries({ queryKey: ['dedicated-submittals', data.id, 'reviews'] })
+
+      // Send notification to the original submitter
+      if (data.submitted_by_user && data.submitted_by_user.id !== userProfile?.id) {
+        try {
+          const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+          const recipient: NotificationRecipient = {
+            userId: data.submitted_by_user.id,
+            email: data.submitted_by_user.email,
+            name: data.submitted_by_user.full_name || undefined,
+          }
+
+          notificationService.notifySubmittalStatusChange([recipient], {
+            submittalNumber: data.submittal_number?.toString() || 'N/A',
+            specSection: data.spec_section,
+            specSectionTitle: data.spec_section_title || undefined,
+            projectName: data.project?.name || 'Unknown Project',
+            previousStatus: data.previousStatus,
+            newStatus: data.review_status,
+            approvalCode: data.approvalCode,
+            reviewedBy: userProfile?.full_name || 'Reviewer',
+            comments: data.review_comments || undefined,
+            revisionNumber: data.revision_number || undefined,
+            submittedDate: data.date_submitted ? new Date(data.date_submitted).toLocaleDateString() : undefined,
+            returnedDate: new Date().toLocaleDateString(),
+            viewUrl: `${appUrl}/projects/${data.project_id}/submittals/${data.id}`,
+          }).catch(err => {
+            logger.warn('[Submittal] Failed to send status change notification:', err)
+          })
+        } catch (err) {
+          logger.warn('[Submittal] Failed to send submittal status notification:', err)
+        }
+      }
     },
   })
 }

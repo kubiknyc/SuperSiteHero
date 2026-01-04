@@ -3,6 +3,31 @@
 
 export { apiClient } from './client'
 export { ApiErrorClass, withErrorHandling, getErrorMessage } from './errors'
+
+// Base CRUD service utilities
+export {
+  createCrudService,
+  createExtendedCrudService,
+  validateRequired,
+  validateRequiredFields,
+  wrapServiceOperation,
+  buildListFilters,
+  getErrorCode,
+  getUserDetails,
+  getProjectName,
+  getCompanyName,
+  detectFieldChange,
+  detectAssignmentChange,
+} from './base-service'
+export type {
+  BaseEntity,
+  CreateInput,
+  UpdateInput,
+  CrudServiceConfig,
+  CrudQueryOptions,
+  CrudService,
+  ExtendedCrudService,
+} from './base-service'
 export { projectsApi } from './services/projects'
 export { dailyReportsApi } from './services/daily-reports'
 export { changeOrdersApi } from './services/change-orders'

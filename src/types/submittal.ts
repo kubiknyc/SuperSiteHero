@@ -125,6 +125,95 @@ export const SUBMITTAL_DISCIPLINES = [
   'General',
 ];
 
+// =============================================
+// Shop Drawing Specific Types
+// =============================================
+
+/**
+ * Shop Drawing Priority levels
+ */
+export type ShopDrawingPriority = 'critical_path' | 'standard' | 'non_critical';
+
+export const SHOP_DRAWING_PRIORITIES: { value: ShopDrawingPriority; label: string; color: string; description: string }[] = [
+  { value: 'critical_path', label: 'Critical Path', color: 'red', description: 'On critical path - delays affect project schedule' },
+  { value: 'standard', label: 'Standard', color: 'blue', description: 'Normal priority item' },
+  { value: 'non_critical', label: 'Non-Critical', color: 'gray', description: 'Can be delayed without schedule impact' },
+];
+
+/**
+ * Shop Drawing Disciplines (specific to shop drawings)
+ */
+export type ShopDrawingDiscipline =
+  | 'Structural'
+  | 'Mechanical'
+  | 'Electrical'
+  | 'Plumbing'
+  | 'Architectural'
+  | 'Fire Protection'
+  | 'Civil'
+  | 'Other';
+
+export const SHOP_DRAWING_DISCIPLINES: { value: ShopDrawingDiscipline; label: string; prefix: string }[] = [
+  { value: 'Structural', label: 'Structural', prefix: 'SD-S' },
+  { value: 'Mechanical', label: 'Mechanical', prefix: 'SD-M' },
+  { value: 'Electrical', label: 'Electrical', prefix: 'SD-E' },
+  { value: 'Plumbing', label: 'Plumbing', prefix: 'SD-P' },
+  { value: 'Fire Protection', label: 'Fire Protection', prefix: 'SD-FP' },
+  { value: 'Architectural', label: 'Architectural', prefix: 'SD-A' },
+  { value: 'Civil', label: 'Civil', prefix: 'SD-C' },
+  { value: 'Other', label: 'Other', prefix: 'SD' },
+];
+
+/**
+ * Valid status transitions for shop drawings
+ * Terminal states (approved, approved_as_noted) cannot transition to other states
+ */
+export const SHOP_DRAWING_VALID_TRANSITIONS: Record<SubmittalReviewStatus, SubmittalReviewStatus[]> = {
+  'not_submitted': ['submitted'],
+  'submitted': ['under_gc_review'],
+  'under_gc_review': ['approved', 'approved_as_noted', 'revise_resubmit', 'rejected', 'submitted_to_architect'],
+  'submitted_to_architect': ['approved', 'approved_as_noted', 'revise_resubmit', 'rejected'],
+  'revise_resubmit': ['submitted'], // Creates new revision
+  'rejected': ['submitted'], // As new product
+  'approved': [], // TERMINAL - locked
+  'approved_as_noted': [], // TERMINAL - locked
+};
+
+/**
+ * Check if a status transition is valid for shop drawings
+ */
+export function isValidShopDrawingTransition(
+  currentStatus: SubmittalReviewStatus,
+  newStatus: SubmittalReviewStatus
+): boolean {
+  const validNextStatuses = SHOP_DRAWING_VALID_TRANSITIONS[currentStatus] || [];
+  return validNextStatuses.includes(newStatus);
+}
+
+/**
+ * Check if a shop drawing is in a terminal (locked) state
+ */
+export function isShopDrawingLocked(status: SubmittalReviewStatus): boolean {
+  return ['approved', 'approved_as_noted'].includes(status);
+}
+
+/**
+ * Get valid next status options for a shop drawing
+ */
+export function getShopDrawingNextStatusOptions(currentStatus: SubmittalReviewStatus): SubmittalReviewStatus[] {
+  return SHOP_DRAWING_VALID_TRANSITIONS[currentStatus] || [];
+}
+
+/**
+ * Get revision label from revision number
+ */
+export function getRevisionLabel(revisionNumber: number): string {
+  if (revisionNumber === 0) {
+    return 'Original';
+  }
+  return `Rev ${revisionNumber}`;
+}
+
 // Common spec sections (CSI MasterFormat)
 export const COMMON_SPEC_SECTIONS = [
   { code: '03 30 00', title: 'Cast-in-Place Concrete' },

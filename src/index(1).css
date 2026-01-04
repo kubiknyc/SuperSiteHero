@@ -1,0 +1,561 @@
+/* File: /src/index.css */
+/* Global styles and Tailwind CSS directives */
+
+/* Import tablet-specific styles - must be before tailwind directives */
+@import './styles/tablet.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Typography Hierarchy Utilities */
+/* Based on DESIGN_SYSTEM.md specifications */
+@layer utilities {
+  /* Page-level headings */
+  .heading-page {
+    @apply text-3xl font-bold tracking-tight leading-tight text-gray-900 dark:text-gray-50;
+  }
+
+  /* Section headings */
+  .heading-section {
+    @apply text-2xl font-semibold tracking-tight leading-snug text-gray-900 dark:text-gray-50;
+  }
+
+  /* Card/component headings */
+  .heading-card {
+    @apply text-xl font-semibold leading-snug text-gray-900 dark:text-gray-50;
+  }
+
+  /* Subheadings */
+  .heading-sub {
+    @apply text-lg font-medium leading-normal text-gray-700 dark:text-gray-200;
+  }
+
+  /* Body text variants */
+  .body-large {
+    @apply text-lg leading-relaxed text-gray-700 dark:text-gray-300;
+  }
+
+  .body-base {
+    @apply text-base leading-normal text-gray-600 dark:text-gray-400;
+  }
+
+  .body-small {
+    @apply text-sm leading-normal text-gray-600 dark:text-gray-400;
+  }
+
+  /* Label and caption text */
+  .text-label {
+    @apply text-sm font-medium leading-normal text-gray-700 dark:text-gray-300;
+  }
+
+  .text-caption {
+    @apply text-xs leading-tight;
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* Emphasized/muted text */
+  .text-emphasized {
+    @apply font-semibold text-gray-900 dark:text-gray-50;
+  }
+
+  .text-muted {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .text-disabled {
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* Uppercase labels (for status, badges, etc.) */
+  .text-uppercase-label {
+    @apply text-xs font-medium uppercase tracking-wider;
+    color: hsl(var(--muted-foreground));
+  }
+
+  /* Error code display (for 404, 500, etc.) */
+  .heading-error-code {
+    @apply text-9xl font-bold leading-none tracking-tighter;
+  }
+}
+
+@layer base {
+  /* Global theme transition for smooth theme switching */
+  html {
+    transition: color 0.2s ease, background-color 0.2s ease;
+  }
+
+  /* Light mode body styles */
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
+
+  /* Dark mode body styles */
+  .dark body {
+    @apply bg-gray-950 text-gray-50;
+  }
+
+  :root {
+    /* Light mode - softer whites and better differentiation */
+    --background: 0 0% 98%;
+    --foreground: 0 0% 9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+    --primary: 217 70% 38%; /* Professional Blueprint blue - darkened for WCAG AA (4.65:1 contrast) */
+    --primary-foreground: 0 0% 100%; /* Pure white for maximum contrast */
+    --secondary: 217 20% 92%; /* Light blue-gray for better differentiation */
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 35%; /* Darkened from 40% for better contrast (~3.5:1) */
+    --accent: 217 60% 88%; /* Soft blueprint blue accent */
+    --accent-foreground: 217 70% 20%;
+    --destructive: 0 84% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 217 15% 85%;
+    --input: 217 15% 85%;
+    --ring: 217 70% 42%; /* Professional Blueprint blue - matches primary */
+    /* Light mode chart colors - vibrant and accessible */
+    --chart-1: 217 91% 60%;
+    --chart-2: 142 71% 45%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 262 83% 58%;
+    --chart-5: 0 84% 60%;
+    /* Additional chart colors for extended palettes */
+    --chart-6: 189 94% 43%;
+    --chart-7: 326 100% 74%;
+    --chart-8: 45 93% 47%;
+    --radius: 0.5rem;
+    /* Success, warning, info semantic colors */
+    --success: 142 71% 30%; /* Darkened for WCAG AA contrast (4.51:1 with white) */
+    --success-foreground: 0 0% 100%; /* Pure white for maximum contrast */
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 9%;
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 98%;
+  }
+
+  .dark {
+    /* Dark mode - softer blacks with better contrast and visibility */
+    --background: 0 0% 8%;
+    --foreground: 0 0% 95%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 217 85% 68%; /* Professional Blueprint blue - lightened for WCAG AA (4.52:1 contrast) */
+    --primary-foreground: 0 0% 5%; /* Darker text for better contrast */
+    --secondary: 217 20% 20%; /* Dark blue-gray for better differentiation */
+    --secondary-foreground: 0 0% 95%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%; /* Lightened from 60% for better contrast (~3.2:1) */
+    --accent: 217 60% 25%; /* Deep blueprint blue accent */
+    --accent-foreground: 217 85% 80%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 217 15% 22%;
+    --input: 217 15% 22%;
+    --ring: 217 85% 65%; /* Professional Blueprint blue - matches primary */
+    /* Dark mode chart colors - brighter for dark backgrounds */
+    --chart-1: 217 91% 65%;
+    --chart-2: 142 71% 55%;
+    --chart-3: 38 92% 60%;
+    --chart-4: 262 83% 68%;
+    --chart-5: 0 84% 65%;
+    /* Additional chart colors for extended palettes */
+    --chart-6: 189 94% 53%;
+    --chart-7: 326 100% 74%;
+    --chart-8: 45 93% 57%;
+    /* Success, warning, info semantic colors for dark mode */
+    --success: 142 71% 55%; /* Lightened for WCAG AA contrast (4.53:1) */
+    --success-foreground: 0 0% 5%; /* Darker text for better contrast */
+    --warning: 38 92% 60%;
+    --warning-foreground: 0 0% 9%;
+    --info: 199 89% 65%;
+    --info-foreground: 0 0% 9%;
+  }
+}
+
+@layer components {
+  /* Touch-friendly button and interactive element styles */
+  .touch-target {
+    /* Minimum 44px touch target as per WCAG guidelines */
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Mobile-safe areas for notched devices */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top, 0);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left, 0);
+  }
+
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right, 0);
+  }
+
+  .safe-area-all {
+    padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+  }
+
+  /* Mobile card with larger touch targets */
+  .mobile-card {
+    @apply p-4 rounded-xl bg-white dark:bg-gray-900 shadow-sm border border-gray-100 dark:border-gray-800;
+  }
+
+  .mobile-card-interactive {
+    @apply mobile-card cursor-pointer active:bg-gray-50 dark:active:bg-gray-800 transition-colors;
+  }
+
+  /* Mobile list item */
+  .mobile-list-item {
+    @apply flex items-center gap-4 px-4 py-4 border-b border-gray-100 dark:border-gray-800 last:border-b-0;
+  }
+
+  /* Bottom sheet styles */
+  .bottom-sheet {
+    @apply fixed inset-x-0 bottom-0 z-50 bg-white dark:bg-gray-900 rounded-t-2xl shadow-2xl;
+    max-height: 90vh;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .bottom-sheet-handle {
+    @apply w-12 h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full mx-auto my-3;
+  }
+}
+
+/* =============================================
+ * GLOVE MODE - Enhanced touch targets for field workers
+ * Activates when .glove-mode class is on the html element
+ * ============================================= */
+
+:root {
+  /* Standard touch target sizes */
+  --touch-target-min: 44px;
+  --touch-padding: 12px;
+  --button-height: 40px;
+  --input-height: 40px;
+  --font-size-base: 14px;
+}
+
+/* Glove mode variables - 1.4x larger touch targets */
+.glove-mode {
+  --touch-target-min: 60px;
+  --touch-padding: 16px;
+  --button-height: 56px;
+  --input-height: 56px;
+  --font-size-base: 18px;
+}
+
+/* Glove mode button overrides */
+.glove-mode button,
+.glove-mode [role="button"],
+.glove-mode .btn {
+  min-height: var(--button-height);
+  min-width: var(--touch-target-min);
+  padding: var(--touch-padding) calc(var(--touch-padding) * 1.5);
+  font-size: var(--font-size-base);
+}
+
+/* Glove mode form inputs */
+.glove-mode input,
+.glove-mode textarea,
+.glove-mode select {
+  min-height: var(--input-height);
+  padding: var(--touch-padding);
+  font-size: var(--font-size-base);
+}
+
+/* Glove mode interactive elements */
+.glove-mode .touch-target,
+.glove-mode [data-touch-target],
+.glove-mode a {
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+}
+
+/* Glove mode checkbox/radio */
+.glove-mode input[type="checkbox"],
+.glove-mode input[type="radio"] {
+  min-height: 24px;
+  min-width: 24px;
+}
+
+/* Glove mode list items */
+.glove-mode .mobile-list-item,
+.glove-mode li {
+  min-height: var(--touch-target-min);
+  padding: var(--touch-padding);
+}
+
+/* Glove mode icon buttons */
+.glove-mode [data-icon-button],
+.glove-mode button[class*="icon"] {
+  min-height: var(--touch-target-min);
+  min-width: var(--touch-target-min);
+}
+
+/* Glove mode cards */
+.glove-mode .mobile-card,
+.glove-mode .card {
+  padding: calc(var(--touch-padding) * 1.25);
+}
+
+/* Glove mode spacing */
+.glove-mode .gap-2 { gap: 0.75rem; }
+.glove-mode .gap-3 { gap: 1rem; }
+.glove-mode .gap-4 { gap: 1.25rem; }
+
+/* Glove mode larger text for readability */
+.glove-mode p,
+.glove-mode label,
+.glove-mode span {
+  font-size: var(--font-size-base);
+}
+
+/* Glove mode indicator (optional visual cue) */
+.glove-mode::after {
+  content: '';
+  position: fixed;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* Dark mode specific glove mode indicator */
+.dark.glove-mode::after {
+  background-color: #4ade80;
+  box-shadow: 0 0 4px rgba(74, 222, 128, 0.5);
+}
+
+@layer utilities {
+  /* Touch-friendly spacing utilities */
+  .touch-spacing {
+    @apply p-4 gap-4;
+  }
+
+  /* Prevent text selection on interactive elements */
+  .no-select {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  /* Smooth scrolling for mobile */
+  .scroll-smooth-touch {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* Prevent pull-to-refresh on certain elements */
+  .no-overscroll {
+    overscroll-behavior: none;
+  }
+
+  /* Active state for touch devices */
+  .touch-active {
+    @apply active:scale-[0.98] active:opacity-80 transition-transform;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Animation for mobile drawer slide-in */
+  .animate-slide-in-right {
+    animation: slideInRight 0.25s ease-out;
+  }
+
+  .animate-slide-in-bottom {
+    animation: slideInBottom 0.3s ease-out;
+  }
+
+  @keyframes slideInRight {
+    from {
+      transform: translateX(100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideInBottom {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+
+  /* Mobile-first responsive padding for content areas */
+  .content-padding {
+    @apply px-4 py-4 md:px-6 md:py-6 lg:px-8;
+  }
+
+  /* Gradient for offline mode visual indicator */
+  .offline-gradient {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  }
+
+  /* Dark mode offline gradient */
+  .dark .offline-gradient {
+    background: linear-gradient(135deg, #78350f 0%, #92400e 100%);
+  }
+
+  /* Theme transition utility - apply to elements that should animate color changes */
+  .theme-transition {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, fill 0.2s ease, stroke 0.2s ease;
+  }
+
+  /* Prevent FOUC (Flash of Unstyled Content) on theme change */
+  .theme-loading * {
+    transition: none !important;
+  }
+
+  /* Dark mode text hierarchy utilities */
+  .dark .text-primary-muted {
+    @apply text-gray-400;
+  }
+
+  .dark .text-secondary-muted {
+    @apply text-gray-500;
+  }
+
+  /* Dark mode surface elevation utilities */
+  .surface-elevated-1 {
+    @apply bg-white dark:bg-gray-900;
+  }
+
+  .surface-elevated-2 {
+    @apply bg-gray-50 dark:bg-gray-800;
+  }
+
+  .surface-elevated-3 {
+    @apply bg-gray-100 dark:bg-gray-700;
+  }
+
+  /* Dark mode compatible shadows */
+  .shadow-theme-sm {
+    @apply shadow-sm dark:shadow-lg dark:shadow-black/20;
+  }
+
+  .shadow-theme-md {
+    @apply shadow-md dark:shadow-xl dark:shadow-black/25;
+  }
+
+  .shadow-theme-lg {
+    @apply shadow-lg dark:shadow-2xl dark:shadow-black/30;
+  }
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* Accessibility: Ensure ALL interactive elements meet WCAG touch target requirements on mobile */
+  /* WCAG 2.1 Success Criterion 2.5.5 (AAA) and 2.5.8 (AA) require minimum 44x44px touch targets */
+  @media (max-width: 767px) {
+    /* Apply to all buttons and links on mobile viewports */
+    button,
+    a,
+    input[type="button"],
+    input[type="submit"],
+    input[type="reset"],
+    [role="button"] {
+      min-height: 44px !important;
+      min-width: 44px !important;
+    }
+
+    /* Ensure buttons have adequate padding to reach min height naturally */
+    button {
+      padding-top: 10px !important;
+      padding-bottom: 10px !important;
+    }
+  }
+
+  /* Accessibility: Fix orange-600 text contrast in dark mode */
+  /* WCAG 2.1 AA requires 4.5:1 contrast ratio for normal text */
+  /* Orange-600 (#ea580c) has only 1.17:1 contrast with white */
+  /* Using orange-700 (#c2410c) provides 4.83:1 contrast with white */
+  .dark .bg-orange-600,
+  .dark button.bg-orange-600,
+  .dark [class*="bg-orange-600"],
+  html.dark .bg-orange-600,
+  html.dark button.bg-orange-600,
+  html.dark [class*="bg-orange-600"],
+  .dark .bg-orange-600.bg-orange-600,
+  html.dark .bg-orange-600.bg-orange-600 {
+    background-color: #c2410c !important;
+  }
+
+  /* Ensure white text on orange backgrounds */
+  .dark .bg-orange-600,
+  .dark button.bg-orange-600,
+  .dark [class*="bg-orange-600"],
+  html.dark .bg-orange-600,
+  html.dark button.bg-orange-600,
+  html.dark [class*="bg-orange-600"] {
+    color: white !important;
+  }
+
+  /* WCAG AA fix: Override any orange-600 buttons with compliant colors */
+  /* Target pattern: button.bg-orange-600 with text that resolves to light text */
+  /* Dark mode button overrides */
+  html.dark button.bg-orange-600,
+  .dark button.bg-orange-600,
+  html.dark button[class*="bg-orange-600"],
+  .dark button[class*="bg-orange-600"],
+  html.dark [class*="bg-orange-6"] button,
+  .dark [class*="bg-orange-6"] button {
+    background-color: #c2410c !important; /* orange-700 for 4.83:1 contrast with white */
+    color: rgb(255, 255, 255) !important;
+  }
+
+  /* Apply to all child elements within the button as well */
+  html.dark button.bg-orange-600 *,
+  .dark button.bg-orange-600 *,
+  html.dark button[class*="bg-orange-600"] *,
+  .dark button[class*="bg-orange-600"] *,
+  html.dark [class*="bg-orange-6"] button *,
+  .dark [class*="bg-orange-6"] button * {
+    color: rgb(255, 255, 255) !important;
+  }
+
+  /* Light mode: ensure orange buttons also have proper contrast */
+  button.bg-orange-600,
+  button[class*="bg-orange-600"] {
+    background-color: #c2410c !important; /* orange-700 */
+    color: rgb(255, 255, 255) !important;
+  }
+
+  button.bg-orange-600 *,
+  button[class*="bg-orange-600"] * {
+    color: rgb(255, 255, 255) !important;
+  }
+}

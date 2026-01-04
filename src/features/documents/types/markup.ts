@@ -66,9 +66,17 @@ export type LayerOrderAction = 'bring-to-front' | 'send-to-back' | 'move-up' | '
 // MEASUREMENT TOOLS
 // ============================================================
 
-export type MeasurementType = 'distance' | 'area' | 'perimeter'
+export type MeasurementType = 'distance' | 'area' | 'perimeter' | 'angle' | 'volume' | 'count'
 
 export type MeasurementUnit = 'feet' | 'inches' | 'meters' | 'centimeters' | 'millimeters'
+
+export type VolumeUnit = 'cubic_feet' | 'cubic_meters' | 'cubic_yards' | 'cubic_inches' | 'liters' | 'gallons'
+
+// Point type for positions
+export interface Point {
+  x: number
+  y: number
+}
 
 export interface ScaleCalibration {
   id: string
@@ -94,6 +102,14 @@ export interface MeasurementAnnotation {
   fontSize: number
   showLabel: boolean
   labelPosition: { x: number; y: number }
+  // Volume-specific fields
+  depth?: number
+  depthUnit?: MeasurementUnit
+  volumeValue?: number
+  volumeUnit?: VolumeUnit
+  // Angle-specific fields
+  angleValue?: number
+  isInteriorAngle?: boolean
 }
 
 export interface MeasurementState {
@@ -103,6 +119,156 @@ export interface MeasurementState {
   scale: ScaleCalibration | null
   currentMeasurement: MeasurementAnnotation | null
   measurements: MeasurementAnnotation[]
+}
+
+// ============================================================
+// COUNT TOOL TYPES
+// ============================================================
+
+export interface CountMarker {
+  id: string
+  position: { x: number; y: number }
+  category: string
+  categoryId: string
+  number: number
+  label?: string
+  color: string
+  pageNumber: number
+  createdAt: string
+  createdBy: string
+}
+
+export interface CountCategory {
+  id: string
+  name: string
+  color: string
+  icon?: string
+  count: number
+  description?: string
+}
+
+export const DEFAULT_COUNT_CATEGORIES: Omit<CountCategory, 'count'>[] = [
+  { id: 'doors', name: 'Doors', color: '#FF6B6B', icon: 'door' },
+  { id: 'windows', name: 'Windows', color: '#4ECDC4', icon: 'window' },
+  { id: 'outlets', name: 'Electrical Outlets', color: '#FFE66D', icon: 'outlet' },
+  { id: 'switches', name: 'Light Switches', color: '#95E1D3', icon: 'switch' },
+  { id: 'fixtures', name: 'Light Fixtures', color: '#F38181', icon: 'light' },
+  { id: 'plumbing', name: 'Plumbing Fixtures', color: '#3D5A80', icon: 'plumbing' },
+  { id: 'hvac', name: 'HVAC Components', color: '#00CC66', icon: 'hvac' },
+  { id: 'fire', name: 'Fire Safety', color: '#FF0000', icon: 'fire' },
+  { id: 'custom', name: 'Custom', color: '#9B59B6', icon: 'custom' },
+]
+
+export interface CountState {
+  isActive: boolean
+  activeCategory: CountCategory | null
+  markers: CountMarker[]
+  categories: CountCategory[]
+}
+
+// Count measurement data structure (for unified measurement handling)
+export interface CountMeasurement {
+  id: string
+  markers: CountMarker[]
+  categories: CountCategory[]
+  totalCount: number
+}
+
+// ============================================================
+// ANGLE MEASUREMENT TYPES
+// ============================================================
+
+export interface AngleMeasurement {
+  id: string
+  vertex: Point
+  point1: Point
+  point2: Point
+  angleDegrees: number
+  isInteriorAngle: boolean
+  color: string
+  strokeWidth: number
+  fontSize: number
+  showLabel: boolean
+  snapIncrement?: number // For snapping to angle increments (e.g., 15 degrees)
+}
+
+// Extended angle measurement with 3 points (start, vertex, end) for the task requirement
+export interface AngleMeasurementPoints {
+  id: string
+  points: [Point, Point, Point] // Start, vertex, end
+  angle: number // degrees
+  isInterior: boolean
+}
+
+export const COMMON_ANGLES = [15, 30, 45, 60, 90, 120, 135, 150, 180] as const
+
+// Default snap increments for angle measurement
+export const ANGLE_SNAP_INCREMENTS = [5, 10, 15, 30, 45, 90] as const
+
+// ============================================================
+// RUNNING TOTALS TYPES
+// ============================================================
+
+export interface RunningTotal {
+  type: MeasurementType
+  value: number
+  unit: MeasurementUnit
+  count: number
+}
+
+export interface RunningTotalsState {
+  distanceTotal: number
+  areaTotal: number
+  volumeTotal: number
+  angleCount: number
+  countsByCategory: Record<string, number>
+  measurementCount: number
+}
+
+// Enhanced running totals with grouping and labels
+export interface EnhancedRunningTotals extends RunningTotalsState {
+  groups: RunningTotalsGroup[]
+  lastUpdated: string
+}
+
+export interface RunningTotalsGroup {
+  id: string
+  label: string
+  type: MeasurementType
+  total: number
+  unit: MeasurementUnit
+  count: number
+  measurements: string[] // measurement IDs
+}
+
+// ============================================================
+// MEASUREMENT EXPORT TYPES
+// ============================================================
+
+export interface MeasurementExportData {
+  id: string
+  type: MeasurementType
+  value: number
+  unit: string
+  displayValue: string
+  pageNumber: number
+  sheetName?: string
+  timestamp: string
+  createdBy?: string
+  depth?: number
+  volumeValue?: number
+  volumeUnit?: string
+  categoryName?: string
+  label?: string
+}
+
+export interface MeasurementExportOptions {
+  format: 'csv' | 'xlsx' | 'json'
+  includeScale: boolean
+  groupByPage: boolean
+  groupByType: boolean
+  includeTimestamps: boolean
+  includeUserInfo: boolean
 }
 
 // ============================================================
@@ -370,4 +536,291 @@ export interface EnhancedMarkupFilter {
   searchText?: string
   showSharedOnly?: boolean
   permissionLevel?: MarkupPermissionLevel[]
+}
+
+// ============================================================
+// DRAWING PHOTO PIN TYPES
+// ============================================================
+
+export interface DrawingPhotoPin {
+  id: string
+  documentId: string
+  page: number
+  position: { x: number; y: number }
+  photoIds: string[]
+  label?: string
+  createdAt: string
+  createdBy: string
+  updatedAt?: string
+}
+
+export interface DrawingPhotoPinWithPhotos extends DrawingPhotoPin {
+  photos: Array<{
+    id: string
+    url: string
+    thumbnailUrl?: string
+    caption?: string
+    capturedAt?: string
+  }>
+}
+
+// ============================================================
+// VOICE NOTE TYPES
+// ============================================================
+
+export interface VoiceNote {
+  id: string
+  markupId: string
+  audioUrl: string
+  duration: number // seconds
+  transcription?: string
+  transcriptionStatus?: 'pending' | 'processing' | 'completed' | 'failed'
+  createdAt: string
+  createdBy: string
+  fileName?: string
+  fileSize?: number
+  mimeType?: string
+}
+
+export interface VoiceNoteRecordingState {
+  isRecording: boolean
+  isPaused: boolean
+  duration: number
+  audioLevel: number
+  error?: string
+}
+
+// ============================================================
+// DRAWING QR CODE TYPES
+// ============================================================
+
+export interface DrawingQRCode {
+  id: string
+  documentId: string
+  page: number
+  viewport?: { x: number; y: number; zoom: number }
+  label: string
+  url: string
+  createdAt: string
+  createdBy?: string
+  description?: string
+  expiresAt?: string
+}
+
+export interface QRCodeGenerationOptions {
+  size?: number // QR code size in pixels
+  errorCorrection?: 'L' | 'M' | 'Q' | 'H'
+  includeViewport?: boolean
+  includeLabel?: boolean
+  format?: 'svg' | 'png' | 'dataUrl'
+}
+
+// ============================================================
+// GPS LOCATION OVERLAY TYPES
+// ============================================================
+
+export interface GeoReference {
+  documentId: string
+  page: number
+  referencePoints: Array<{
+    pixelX: number
+    pixelY: number
+    lat: number
+    lng: number
+  }>
+  calibratedAt?: string
+  calibratedBy?: string
+  accuracy?: number // meters
+}
+
+export interface GPSOverlayState {
+  isTracking: boolean
+  currentPosition?: {
+    lat: number
+    lng: number
+    accuracy: number
+    heading?: number
+    speed?: number
+  }
+  pixelPosition?: {
+    x: number
+    y: number
+  }
+  lastUpdated?: string
+  error?: string
+}
+
+export interface GPSTrackPoint {
+  lat: number
+  lng: number
+  timestamp: string
+  accuracy: number
+  pixelX?: number
+  pixelY?: number
+}
+
+// ============================================================
+// OFFLINE MARKUP SYNC TYPES
+// ============================================================
+
+export interface OfflineMarkup {
+  id: string
+  localId: string
+  documentId: string
+  page: number
+  data: EnhancedShape
+  syncStatus: 'pending' | 'syncing' | 'synced' | 'conflict' | 'failed'
+  createdAt: string
+  updatedAt: string
+  lastSyncAttempt?: string
+  syncError?: string
+  version: number
+  serverVersion?: number
+}
+
+export interface MarkupSyncConflict {
+  id: string
+  localMarkup: OfflineMarkup
+  serverMarkup: EnhancedShape
+  conflictType: 'modified' | 'deleted' | 'concurrent'
+  detectedAt: string
+  resolution?: 'local' | 'server' | 'merged' | 'pending'
+}
+
+export interface OfflineMarkupQueue {
+  markups: OfflineMarkup[]
+  conflicts: MarkupSyncConflict[]
+  lastSyncTime?: string
+  isOnline: boolean
+  isSyncing: boolean
+}
+
+// ============================================================
+// AUTO-NUMBERING SYSTEM
+// ============================================================
+
+export interface NumberedAnnotation {
+  autoNumber?: number
+  numberPrefix?: string // e.g., "RFI-", "PC-", "SI-"
+  showNumber?: boolean
+}
+
+export interface AutoNumberingState {
+  documentId: string
+  pageNumber?: number
+  currentNumber: number
+  prefix: string
+  enabled: boolean
+  resetOnNewPage: boolean
+}
+
+export interface AutoNumberingConfig {
+  prefix: string
+  startNumber: number
+  enabled: boolean
+  resetOnNewPage: boolean
+  applicableTypes: ExtendedAnnotationType[] // Which annotation types get auto-numbered
+}
+
+// ============================================================
+// SYMBOL LIBRARY
+// ============================================================
+
+export type SymbolCategory = 'general' | 'architectural' | 'mep' | 'structural' | 'civil'
+
+export interface ConstructionSymbol {
+  id: string
+  name: string
+  category: SymbolCategory
+  svgPath: string // SVG path data for the symbol
+  viewBox: string // SVG viewBox attribute
+  defaultWidth: number
+  defaultHeight: number
+  defaultColor?: string
+  description?: string
+  tags?: string[]
+}
+
+export interface SymbolAnnotation {
+  id: string
+  type: 'symbol'
+  symbolId: string
+  x: number
+  y: number
+  width: number
+  height: number
+  rotation: number
+  color: string
+  opacity: number
+  text?: string // For symbols that have text labels (e.g., section markers)
+  label?: string // Additional label beneath symbol
+}
+
+// ============================================================
+// MARKUP TEMPLATES
+// ============================================================
+
+export type MarkupTemplateCategory =
+  | 'qc_review'
+  | 'site_walk'
+  | 'punch_list'
+  | 'coordination'
+  | 'safety_inspection'
+  | 'custom'
+
+export interface MarkupTemplate {
+  id: string
+  name: string
+  description?: string
+  category: MarkupTemplateCategory
+  markups: MarkupAnnotationData[]
+  created_by: string
+  created_at: string
+  updated_at: string
+  is_shared: boolean
+  project_id?: string | null // If null, template is available across all projects
+  thumbnail_url?: string
+  usage_count: number
+  tags?: string[]
+}
+
+export interface MarkupAnnotationData {
+  type: ExtendedAnnotationType
+  // Position is relative (0-1) so templates can be applied to any size document
+  relativeX: number
+  relativeY: number
+  relativeWidth?: number
+  relativeHeight?: number
+  // Visual properties
+  stroke: string
+  strokeWidth: number
+  fill?: string
+  opacity?: number
+  rotation?: number
+  // Type-specific data
+  text?: string
+  points?: number[] // Relative points for freehand/arrows
+  stampType?: StampType
+  symbolId?: string
+  autoNumber?: number
+  numberPrefix?: string
+}
+
+export interface CreateMarkupTemplateInput {
+  name: string
+  description?: string
+  category: MarkupTemplateCategory
+  markups: MarkupAnnotationData[]
+  is_shared: boolean
+  project_id?: string | null
+  tags?: string[]
+}
+
+export interface UpdateMarkupTemplateInput {
+  name?: string
+  description?: string
+  category?: MarkupTemplateCategory
+  markups?: MarkupAnnotationData[]
+  is_shared?: boolean
+  tags?: string[]
 }

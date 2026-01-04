@@ -202,3 +202,23 @@ export type {
   TabletTableCellProps,
   TabletTableEmptyProps,
 } from './tablet-table'
+
+// Command Palette and Keyboard Shortcuts
+export { CommandPalette, useCommandPalette } from './command-palette'
+export type { default as CommandPaletteProps } from './command-palette'
+
+export {
+  KeyboardShortcutsHelp,
+  QuickShortcut,
+  ShortcutHint,
+} from './keyboard-shortcuts-help'
+
+export {
+  KeyboardShortcutsProvider,
+  useKeyboardShortcutsContext,
+  CommandPaletteButton,
+  ShortcutsHelpButton,
+} from './keyboard-shortcuts-provider'
+
+// Collapsible
+export { Collapsible, CollapsibleTrigger, CollapsibleContent } from './collapsible'

@@ -44,6 +44,8 @@ import {
   generateSubmittalReminderEmail,
   generateSubmittalReviewReminderEmail,
   generateSubmittalAgingSummaryEmail,
+  generateSubmittalStatusEmail,
+  generateCommentMentionEmail,
   generateDailyReportMissingEmail,
   generateDailyReportSummaryEmail,
   generateChangeOrderAgingAlertEmail,
@@ -55,6 +57,8 @@ import {
   type SubmittalReminderEmailData,
   type SubmittalReviewReminderEmailData,
   type SubmittalAgingSummaryEmailData,
+  type SubmittalStatusEmailData,
+  type CommentMentionEmailData,
   type DailyReportMissingEmailData,
   type DailyReportSummaryEmailData,
   type ChangeOrderAgingAlertEmailData,
@@ -1172,6 +1176,194 @@ export const notificationService = {
         })
       } catch (error) {
         logger.error('[NotificationService] In-app notification failed:', error)
+      }
+    }
+  },
+
+  /**
+   * Send submittal status change notification
+   * Called when a submittal review status changes (approved, rejected, etc.)
+   */
+  async notifySubmittalStatusChange(
+    recipients: NotificationRecipient[],
+    data: Omit<SubmittalStatusEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    // Determine notification urgency
+    const _isApproved = ['approved', 'approved_as_noted'].includes(data.newStatus)
+    const isRejected = data.newStatus === 'rejected'
+    const needsRevision = data.newStatus === 'revise_resubmit'
+
+    for (const recipient of recipients) {
+      const emailData: SubmittalStatusEmailData = {
+        ...data,
+        recipientName: recipient.name || recipient.email.split('@')[0],
+        viewUrl: data.viewUrl || `${appUrl}/submittals`,
+      }
+
+      // Send email notification
+      if (options.sendEmail) {
+        try {
+          const { html, text } = generateSubmittalStatusEmail(emailData)
+          const approvalCodeText = data.approvalCode ? ` (Code ${data.approvalCode})` : ''
+          const statusLabel = data.newStatus.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+
+          await sendEmail({
+            to: { email: recipient.email, name: recipient.name },
+            subject: isRejected || needsRevision
+              ? `⚠️ Submittal ${data.submittalNumber} ${statusLabel}${approvalCodeText} - ${data.projectName}`
+              : `✅ Submittal ${data.submittalNumber} ${statusLabel}${approvalCodeText} - ${data.projectName}`,
+            html,
+            text,
+            tags: ['submittal', 'status-change', data.newStatus],
+          })
+        } catch (error) {
+          logger.error('[NotificationService] Submittal status email failed:', error)
+        }
+      }
+
+      // Create in-app notification
+      if (options.sendInApp) {
+        try {
+          const statusLabel = data.newStatus.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+          await this._createInAppNotification({
+            userId: recipient.userId,
+            type: 'submittal_status_change',
+            title: `Submittal ${statusLabel}`,
+            message: `Submittal ${data.submittalNumber}${data.specSectionTitle ? ` - ${data.specSectionTitle}` : ''} has been ${statusLabel.toLowerCase()} by ${data.reviewedBy}`,
+            link: data.viewUrl,
+            priority: isRejected || needsRevision ? 'high' : 'normal',
+            metadata: {
+              submittalNumber: data.submittalNumber,
+              specSection: data.specSection,
+              specSectionTitle: data.specSectionTitle,
+              projectName: data.projectName,
+              newStatus: data.newStatus,
+              approvalCode: data.approvalCode,
+              reviewedBy: data.reviewedBy,
+            },
+          })
+        } catch (error) {
+          logger.error('[NotificationService] In-app notification failed:', error)
+        }
+      }
+
+      // Send push notification
+      if (options.sendPush && isPushSupported()) {
+        try {
+          const statusLabel = data.newStatus.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+          const approvalCodeText = data.approvalCode ? ` (${data.approvalCode})` : ''
+          await showPushNotification({
+            title: `Submittal ${statusLabel}${approvalCodeText}`,
+            body: `${data.submittalNumber} on ${data.projectName} has been ${statusLabel.toLowerCase()}`,
+            tag: `submittal-status-${data.submittalNumber}`,
+            data: { url: data.viewUrl },
+          })
+        } catch (error) {
+          logger.error('[NotificationService] Push notification failed:', error)
+        }
+      }
+    }
+  },
+
+  /**
+   * Send comment mention notification
+   * Called when a user is @mentioned in a comment on any entity type
+   */
+  async notifyCommentMention(
+    recipients: NotificationRecipient[],
+    data: Omit<CommentMentionEmailData, 'recipientName'>,
+    options: NotificationOptions = DEFAULT_OPTIONS
+  ): Promise<void> {
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+
+    // Entity type labels for notifications
+    const entityLabels: Record<string, string> = {
+      rfi: 'RFI',
+      submittal: 'Submittal',
+      change_order: 'Change Order',
+      document: 'Document',
+      task: 'Task',
+      daily_report: 'Daily Report',
+      punch_item: 'Punch Item',
+      message: 'Message',
+      general: 'Comment',
+    }
+
+    const entityLabel = entityLabels[data.entityType] || 'Comment'
+
+    for (const recipient of recipients) {
+      const emailData: CommentMentionEmailData = {
+        ...data,
+        recipientName: recipient.name || recipient.email.split('@')[0],
+        viewUrl: data.viewUrl || `${appUrl}`,
+      }
+
+      // Send email notification
+      if (options.sendEmail) {
+        try {
+          const { html, text } = generateCommentMentionEmail(emailData)
+          const entityDisplay = data.entityNumber
+            ? `${entityLabel} ${data.entityNumber}`
+            : entityLabel
+
+          await sendEmail({
+            to: { email: recipient.email, name: recipient.name },
+            subject: `@Mention: ${data.mentionedBy} mentioned you in ${entityDisplay} - ${data.projectName}`,
+            html,
+            text,
+            tags: ['mention', 'comment', data.entityType],
+          })
+        } catch (error) {
+          logger.error('[NotificationService] Comment mention email failed:', error)
+        }
+      }
+
+      // Create in-app notification
+      if (options.sendInApp) {
+        try {
+          const commentPreview = data.commentText.length > 100
+            ? data.commentText.substring(0, 100) + '...'
+            : data.commentText
+
+          await this._createInAppNotification({
+            userId: recipient.userId,
+            type: 'comment_mention',
+            title: `${data.mentionedBy} mentioned you`,
+            message: `In ${entityLabel}${data.entityNumber ? ` ${data.entityNumber}` : ''}: "${commentPreview}"`,
+            link: data.viewUrl,
+            priority: 'high', // Mentions are important
+            metadata: {
+              entityType: data.entityType,
+              entityName: data.entityName,
+              entityNumber: data.entityNumber,
+              projectName: data.projectName,
+              mentionedBy: data.mentionedBy,
+            },
+          })
+        } catch (error) {
+          logger.error('[NotificationService] In-app notification failed:', error)
+        }
+      }
+
+      // Send push notification
+      if (options.sendPush && isPushSupported()) {
+        try {
+          const commentPreview = data.commentText.length > 50
+            ? data.commentText.substring(0, 50) + '...'
+            : data.commentText
+
+          await showPushNotification({
+            title: `${data.mentionedBy} mentioned you`,
+            body: `${entityLabel}${data.entityNumber ? ` ${data.entityNumber}` : ''}: ${commentPreview}`,
+            tag: `mention-${data.entityType}-${data.entityNumber || Date.now()}`,
+            data: { url: data.viewUrl },
+          })
+        } catch (error) {
+          logger.error('[NotificationService] Push notification failed:', error)
+        }
       }
     }
   },
