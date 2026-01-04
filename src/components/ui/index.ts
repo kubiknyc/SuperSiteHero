@@ -222,3 +222,80 @@ export {
 
 // Collapsible
 export { Collapsible, CollapsibleTrigger, CollapsibleContent } from './collapsible'
+
+// New UI Redesign Components
+export {
+  Skeleton,
+  TableSkeleton,
+  CardSkeleton,
+  CardGridSkeleton,
+  ListSkeleton,
+  FormSkeleton,
+  StatSkeleton,
+  StatsGridSkeleton,
+  PageSkeleton,
+  DetailPageSkeleton,
+} from './loading-skeleton'
+export type {
+  SkeletonProps,
+  TableSkeletonProps,
+  CardSkeletonProps,
+  CardGridSkeletonProps,
+  ListSkeletonProps,
+  FormSkeletonProps,
+  StatSkeletonProps,
+  StatsGridSkeletonProps,
+  PageSkeletonProps,
+  DetailPageSkeletonProps,
+} from './loading-skeleton'
+
+export {
+  AutoSaveIndicator,
+  useAutoSave,
+  useUnsavedChangesWarning,
+} from './auto-save-indicator'
+export type {
+  SaveStatus,
+  AutoSaveIndicatorProps,
+  UseAutoSaveOptions,
+  UseAutoSaveReturn,
+  UnsavedChangesWarningProps,
+} from './auto-save-indicator'
+
+export {
+  ProgressStepper,
+  CompactStepper,
+  DotStepper,
+} from './progress-stepper'
+export type {
+  Step,
+  StepStatus,
+  ProgressStepperProps,
+  CompactStepperProps,
+  DotStepperProps,
+} from './progress-stepper'
+
+export { TimePicker, TimeRangePicker } from './time-picker'
+export type {
+  TimeValue,
+  TimePickerProps,
+  TimeRangeValue,
+  TimeRangePickerProps,
+} from './time-picker'
+
+export {
+  SortableList,
+  ReorderControls,
+  NumberedItem,
+  moveItem,
+  moveItemUp,
+  moveItemDown,
+  moveItemToStart,
+  moveItemToEnd,
+} from './sortable-list'
+export type {
+  SortableItem,
+  SortableListProps,
+  ReorderControlsProps,
+  NumberedItemProps,
+} from './sortable-list'

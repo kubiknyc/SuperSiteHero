@@ -28,3 +28,7 @@ export { UploadQueuePanel } from './UploadQueuePanel';
 export { ProjectCacheSettings } from './ProjectCacheSettings';
 export { ConflictResolutionDialog } from './ConflictResolutionDialog';
 export { OfflineIndicator } from './OfflineIndicator';
+
+// Sync Retry Manager
+export { SyncRetryManager, useSyncRetry } from './SyncRetryManager';
+export type { SyncItem, SyncRetryManagerProps, UseSyncRetryOptions } from './SyncRetryManager';
