@@ -114,6 +114,7 @@ const ProjectTemplatesPage = lazy(() => import('./pages/settings/ProjectTemplate
 const DistributionListsPage = lazy(() => import('./pages/settings/DistributionListsPage').then(m => ({ default: m.DistributionListsPage })));
 const RolesPermissionsPage = lazy(() => import('./pages/settings/RolesPermissionsPage').then(m => ({ default: m.RolesPermissionsPage })));
 const AISettingsPage = lazy(() => import('./pages/settings/AISettingsPage'));
+const AuditLogsPage = lazy(() => import('./pages/settings/AuditLogsPage').then(m => ({ default: m.AuditLogsPage })));
 const CostCodesPage = lazy(() => import('./pages/settings/CostCodesPage').then(m => ({ default: m.CostCodesPage })));
 const DocuSignIntegrationPage = lazy(() => import('./pages/settings/DocuSignIntegrationPage').then(m => ({ default: m.DocuSignIntegrationPage })));
 const DocuSignCallbackPage = lazy(() => import('./pages/auth/DocuSignCallbackPage').then(m => ({ default: m.DocuSignCallbackPage })));
@@ -463,6 +464,7 @@ export function DesktopApp() {
         <Route path="/settings/quickbooks/callback" element={<ProtectedRoute><QuickBooksCallbackPage /></ProtectedRoute>} />
         <Route path="/settings/calendar" element={<ProtectedRoute><CalendarIntegrationsPage /></ProtectedRoute>} />
         <Route path="/settings/ai" element={<ProtectedRoute><AISettingsPage /></ProtectedRoute>} />
+        <Route path="/settings/audit-logs" element={<ProtectedRoute><AuditLogsPage /></ProtectedRoute>} />
         <Route path="/settings/cost-codes" element={<ProtectedRoute><CostCodesPage /></ProtectedRoute>} />
         <Route path="/settings/docusign" element={<ProtectedRoute><DocuSignIntegrationPage /></ProtectedRoute>} />
         <Route path="/auth/docusign/callback" element={<DocuSignCallbackPage />} />

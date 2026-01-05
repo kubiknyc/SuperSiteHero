@@ -4,14 +4,14 @@
  * Provides:
  * - Mobile header with hamburger menu and project selector
  * - Safe area support for notched devices
- * - Bottom navigation bar
+ * - Bottom navigation bar with central camera action
  * - Offline indicator
  * - Quick action FAB
  */
 
 import { useState, type ReactNode } from 'react';
 import { MobileHeader } from './MobileHeader';
-import { MobileBottomNav } from './MobileBottomNav';
+import { MobileBottomNavV2 } from './MobileBottomNavV2';
 import { MobileNavDrawer } from './MobileNavDrawer';
 import { MobileOfflineIndicator } from '../../components/mobile/MobileOfflineIndicator';
 
@@ -35,8 +35,8 @@ export function MobileLayout({ children }: MobileLayoutProps) {
         {children}
       </main>
 
-      {/* Bottom navigation */}
-      <MobileBottomNav onMoreClick={() => setIsDrawerOpen(true)} />
+      {/* Bottom navigation with enhanced camera action */}
+      <MobileBottomNavV2 onMoreClick={() => setIsDrawerOpen(true)} />
 
       {/* Navigation drawer */}
       <MobileNavDrawer

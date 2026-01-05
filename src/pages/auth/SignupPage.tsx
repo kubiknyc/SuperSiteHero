@@ -1,5 +1,5 @@
 // File: /src/pages/auth/SignupPage.tsx
-// Signup page for new user registration
+// Signup page for new user registration with rate limiting
 
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
@@ -9,7 +9,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/lib/notifications/ToastContext'
-import { HardHat } from 'lucide-react'
+import { HardHat, Loader2 } from 'lucide-react'
+import { useRateLimit } from '@/lib/auth/rate-limiter'
+import { RateLimitWarning } from '@/components/auth/RateLimitWarning'
 
 export function SignupPage() {
   const [formData, setFormData] = useState({
@@ -25,6 +27,14 @@ export function SignupPage() {
   const navigate = useNavigate()
   const { success, error: showError } = useToast()
 
+  // Rate limiting for signup attempts
+  const rateLimit = useRateLimit({
+    action: 'signup',
+    identifier: formData.email || undefined,
+  })
+
+  const isDisabled = loading || !rateLimit.isAllowed
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({
       ...prev,
@@ -34,6 +44,13 @@ export function SignupPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Check rate limit
+    if (!rateLimit.isAllowed) {
+      showError('Too Many Attempts', `Please wait ${rateLimit.formattedLockoutTime} before trying again.`)
+      return
+    }
+
     setLoading(true)
 
     // Validate passwords match
@@ -86,12 +103,21 @@ export function SignupPage() {
 
       if (authError) {throw authError}
 
+      // Reset rate limit on success
+      rateLimit.reset()
       success('Success', 'Account created successfully. Please check your email to verify your account.')
 
       // Redirect to login page
       navigate('/login')
     } catch (err) {
-      showError('Error', err instanceof Error ? err.message : 'Failed to create account')
+      // Record failed attempt
+      const state = rateLimit.recordAttempt()
+
+      if (state.isLocked) {
+        showError('Too Many Attempts', `Please try again in ${rateLimit.formattedLockoutTime}.`)
+      } else {
+        showError('Error', err instanceof Error ? err.message : 'Failed to create account')
+      }
     } finally {
       setLoading(false)
     }
@@ -112,6 +138,11 @@ export function SignupPage() {
           </CardDescription>
         </CardHeader>
 
+        {/* Rate Limit Warning */}
+        <CardContent className="pb-0">
+          <RateLimitWarning state={rateLimit.state} action="signup" />
+        </CardContent>
+
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
@@ -125,7 +156,7 @@ export function SignupPage() {
                   required
                   value={formData.firstName}
                   onChange={handleChange}
-                  disabled={loading}
+                  disabled={isDisabled}
                 />
               </div>
 
@@ -139,7 +170,7 @@ export function SignupPage() {
                   required
                   value={formData.lastName}
                   onChange={handleChange}
-                  disabled={loading}
+                  disabled={isDisabled}
                 />
               </div>
             </div>
@@ -154,7 +185,7 @@ export function SignupPage() {
                 required
                 value={formData.companyName}
                 onChange={handleChange}
-                disabled={loading}
+                disabled={isDisabled}
               />
             </div>
 
@@ -168,7 +199,7 @@ export function SignupPage() {
                 required
                 value={formData.email}
                 onChange={handleChange}
-                disabled={loading}
+                disabled={isDisabled}
               />
             </div>
 
@@ -182,7 +213,7 @@ export function SignupPage() {
                 required
                 value={formData.password}
                 onChange={handleChange}
-                disabled={loading}
+                disabled={isDisabled}
               />
               <p className="text-caption text-muted dark:text-disabled">Must be at least 8 characters with uppercase, lowercase, number, and special character</p>
             </div>
@@ -197,14 +228,21 @@ export function SignupPage() {
                 required
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                disabled={loading}
+                disabled={isDisabled}
               />
             </div>
           </CardContent>
 
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Creating account...' : 'Create account'}
+            <Button type="submit" className="w-full" disabled={isDisabled}>
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Creating account...
+                </>
+              ) : (
+                'Create account'
+              )}
             </Button>
 
             <p className="body-small text-center text-secondary dark:text-disabled">

@@ -15,6 +15,7 @@ import {
   startActivityMonitoring,
   SecurityCheckResult,
 } from './session-security'
+import { logAuthEvent, logSecurityEvent } from '@/lib/audit/audit-logger'
 
 interface AuthContextType {
   session: Session | null
@@ -155,12 +156,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Initialize security on new sign in
         if (event === 'SIGNED_IN') {
           initializeSessionSecurity()
+          // Log successful login
+          logAuthEvent('login', {
+            user_id: session.user.id,
+            email: session.user.email,
+            provider: session.user.app_metadata?.provider || 'email',
+          })
+        }
+
+        // Log token refresh
+        if (event === 'TOKEN_REFRESHED') {
+          logAuthEvent('session_refresh', {
+            user_id: session.user.id,
+          })
         }
       } else {
         setUserProfile(null)
         // Clear security data on sign out
         if (event === 'SIGNED_OUT') {
           clearSessionSecurityData()
+          // Log logout
+          logAuthEvent('logout')
         }
       }
     })
@@ -170,6 +186,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!result.passed) {
         logger.warn('[Auth] Security issue detected:', result.reason)
         setSecurityWarning(result)
+
+        // Log security event
+        logSecurityEvent(
+          result.riskLevel === 'high' ? 'suspicious_activity' : 'security_warning',
+          {
+            reason: result.reason,
+            riskLevel: result.riskLevel,
+            action: result.action,
+          }
+        )
 
         // Auto-logout on high risk
         if (result.action === 'logout') {

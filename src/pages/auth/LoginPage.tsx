@@ -1,5 +1,5 @@
 // File: /src/pages/auth/LoginPage.tsx
-// Login page for user authentication with biometric support
+// Login page for user authentication with biometric support and rate limiting
 
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
@@ -19,7 +19,9 @@ import {
   verifyBiometricAuthentication,
   setLastBiometricAuthTime,
 } from '@/lib/auth/biometric'
-import { logger } from '../../lib/utils/logger';
+import { useRateLimit } from '@/lib/auth/rate-limiter'
+import { RateLimitWarning } from '@/components/auth/RateLimitWarning'
+import { logger } from '../../lib/utils/logger'
 
 
 export function LoginPage() {
@@ -33,6 +35,15 @@ export function LoginPage() {
   const { signIn } = useAuth()
   const navigate = useNavigate()
   const { success, error } = useToast()
+
+  // Rate limiting for login attempts
+  const rateLimit = useRateLimit({
+    action: 'login',
+    identifier: email || undefined,
+    onLockoutExpired: () => {
+      logger.log('[LoginPage] Rate limit lockout expired')
+    },
+  })
 
   // Check if biometric authentication is available
   useEffect(() => {
@@ -56,14 +67,30 @@ export function LoginPage() {
   // Handle password login
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Check rate limit before attempting login
+    if (!rateLimit.isAllowed) {
+      error('Too Many Attempts', `Please wait ${rateLimit.formattedLockoutTime} before trying again.`)
+      return
+    }
+
     setLoading(true)
 
     try {
       await signIn(email, password)
+      // Reset rate limit on successful login
+      rateLimit.reset()
       success('Success', 'You have been signed in successfully.')
       navigate('/')
     } catch (err) {
-      error('Error', err instanceof Error ? err.message : 'Failed to sign in')
+      // Record failed attempt for rate limiting
+      const state = rateLimit.recordAttempt()
+
+      if (state.isLocked) {
+        error('Account Locked', `Too many failed attempts. Please try again in ${rateLimit.formattedLockoutTime}.`)
+      } else {
+        error('Error', err instanceof Error ? err.message : 'Failed to sign in')
+      }
     } finally {
       setLoading(false)
     }
@@ -117,6 +144,7 @@ export function LoginPage() {
   }, [error, success])
 
   const isLoading = loading || biometricLoading
+  const isDisabled = isLoading || !rateLimit.isAllowed
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface dark:bg-gray-950 px-4">
@@ -128,8 +156,13 @@ export function LoginPage() {
           </CardDescription>
         </CardHeader>
 
+        {/* Rate Limit Warning */}
+        <CardContent className="pb-0">
+          <RateLimitWarning state={rateLimit.state} action="login" />
+        </CardContent>
+
         {/* Biometric Login Option */}
-        {biometricAvailable && !checkingBiometric && (
+        {biometricAvailable && !checkingBiometric && !rateLimit.state.isLocked && (
           <>
             <CardContent className="pb-0">
               <Button
@@ -137,7 +170,7 @@ export function LoginPage() {
                 variant="outline"
                 className="w-full h-14 text-base"
                 onClick={handleBiometricLogin}
-                disabled={isLoading}
+                disabled={isDisabled}
               >
                 {biometricLoading ? (
                   <>
@@ -167,7 +200,7 @@ export function LoginPage() {
         )}
 
         <form onSubmit={handleSubmit}>
-          <CardContent className={`space-y-4 ${biometricAvailable && !checkingBiometric ? 'pt-0' : ''}`}>
+          <CardContent className={`space-y-4 ${biometricAvailable && !checkingBiometric && !rateLimit.state.isLocked ? 'pt-0' : ''}`}>
             <div className="space-y-2">
               <Label htmlFor="email">Email address</Label>
               <Input
@@ -178,7 +211,7 @@ export function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                disabled={isLoading}
+                disabled={isDisabled}
                 autoComplete="email webauthn"
               />
             </div>
@@ -201,14 +234,14 @@ export function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                disabled={isLoading}
+                disabled={isDisabled}
                 autoComplete="current-password webauthn"
               />
             </div>
           </CardContent>
 
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full bg-primary hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80" disabled={isLoading}>
+            <Button type="submit" className="w-full bg-primary hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80" disabled={isDisabled}>
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />

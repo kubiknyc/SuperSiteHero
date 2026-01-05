@@ -4,7 +4,7 @@ import { LayoutVersionToggle } from '@/components/layout/LayoutVersionToggle'
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Bell, Workflow, Receipt, ChevronRight, Building2, Users, LayoutTemplate, UsersRound, Shield, Bot, Moon, Calendar, FileSignature, Pencil, ShieldCheck } from 'lucide-react'
+import { Bell, Workflow, Receipt, ChevronRight, Building2, Users, LayoutTemplate, UsersRound, Shield, Bot, Moon, Calendar, FileSignature, Pencil, ShieldCheck, ClipboardList } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { ThemeSelector } from '@/components/ThemeToggle'
 import { PWAInstallButton } from '@/components/PWAInstallPrompt'
@@ -115,6 +115,15 @@ const settingsSections: SettingsSection[] = [
     icon: Bot,
     iconBgColor: 'bg-violet-100',
     iconColor: 'text-violet-600',
+    adminOnly: true,
+  },
+  {
+    title: 'Audit Logs',
+    description: 'View security and compliance audit trail for all sensitive operations',
+    href: '/settings/audit-logs',
+    icon: ClipboardList,
+    iconBgColor: 'bg-slate-100',
+    iconColor: 'text-slate-600',
     adminOnly: true,
   },
 ]

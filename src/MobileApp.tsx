@@ -41,7 +41,7 @@ const MobileDailyReportDetail = lazy(() => import('./pages/mobile/MobileDailyRep
 
 // Mobile Photo Progress
 const MobilePhotoProgressList = lazy(() => import('./pages/mobile/MobilePhotoProgress').then(m => ({ default: m.MobilePhotoProgressList })));
-const MobilePhotoCapture = lazy(() => import('./pages/mobile/MobilePhotoProgress').then(m => ({ default: m.MobilePhotoCapture })));
+const MobilePhotoCapture = lazy(() => import('./pages/mobile/MobilePhotoCapture').then(m => ({ default: m.MobilePhotoCapture })));
 
 // Mobile Punch Lists
 const MobilePunchListsList = lazy(() => import('./pages/mobile/MobilePunchLists').then(m => ({ default: m.MobilePunchListsList })));
@@ -114,35 +114,66 @@ export function MobileApp() {
         {/* Protected mobile routes with MobileLayout */}
         <Route path="/" element={<MobileProtectedRoute><MobileDashboard /></MobileProtectedRoute>} />
 
-        {/* Daily Reports */}
+        {/* Mobile prefixed routes (primary mobile navigation) */}
+        <Route path="/mobile/dashboard" element={<MobileProtectedRoute><MobileDashboard /></MobileProtectedRoute>} />
+
+        {/* Daily Reports - mobile prefixed */}
+        <Route path="/mobile/daily-reports" element={<MobileProtectedRoute><MobileDailyReportsList /></MobileProtectedRoute>} />
+        <Route path="/mobile/daily-reports/new" element={<MobileProtectedRoute><MobileDailyReportForm /></MobileProtectedRoute>} />
+        <Route path="/mobile/daily-reports/:id" element={<MobileProtectedRoute><MobileDailyReportDetail /></MobileProtectedRoute>} />
+        <Route path="/mobile/daily-reports/:id/edit" element={<MobileProtectedRoute><MobileDailyReportForm /></MobileProtectedRoute>} />
+
+        {/* Photo Progress - mobile prefixed */}
+        <Route path="/mobile/photo-progress" element={<MobileProtectedRoute><MobilePhotoProgressList /></MobileProtectedRoute>} />
+        <Route path="/mobile/photo-progress/capture" element={<ProtectedRoute><MobilePhotoCapture /></ProtectedRoute>} />
+
+        {/* Punch Lists - mobile prefixed */}
+        <Route path="/mobile/punch-lists" element={<MobileProtectedRoute><MobilePunchListsList /></MobileProtectedRoute>} />
+        <Route path="/mobile/punch-lists/new" element={<MobileProtectedRoute><MobilePunchItemForm /></MobileProtectedRoute>} />
+        <Route path="/mobile/punch-lists/:id" element={<MobileProtectedRoute><MobilePunchItemDetail /></MobileProtectedRoute>} />
+        <Route path="/mobile/punch-lists/:id/edit" element={<MobileProtectedRoute><MobilePunchItemForm /></MobileProtectedRoute>} />
+
+        {/* Inspections - mobile prefixed */}
+        <Route path="/mobile/inspections" element={<MobileProtectedRoute><MobileInspectionsList /></MobileProtectedRoute>} />
+        <Route path="/mobile/inspections/new" element={<MobileProtectedRoute><MobileInspectionForm /></MobileProtectedRoute>} />
+        <Route path="/mobile/inspections/:id" element={<MobileProtectedRoute><MobileInspectionDetail /></MobileProtectedRoute>} />
+        <Route path="/mobile/inspections/:id/edit" element={<MobileProtectedRoute><MobileInspectionForm /></MobileProtectedRoute>} />
+
+        {/* Tasks - mobile prefixed */}
+        <Route path="/mobile/tasks" element={<MobileProtectedRoute><MobileTasksList /></MobileProtectedRoute>} />
+        <Route path="/mobile/tasks/:id" element={<MobileProtectedRoute><MobileTaskDetail /></MobileProtectedRoute>} />
+
+        {/* Projects - mobile prefixed */}
+        <Route path="/mobile/projects" element={<MobileProtectedRoute><MobileProjectsList /></MobileProtectedRoute>} />
+        <Route path="/mobile/projects/:projectId" element={<MobileProtectedRoute><MobileProjectDetail /></MobileProtectedRoute>} />
+
+        {/* Settings - mobile prefixed */}
+        <Route path="/mobile/settings" element={<MobileProtectedRoute><MobileSettings /></MobileProtectedRoute>} />
+
+        {/* Legacy routes (without /mobile prefix) - redirect or support both */}
         <Route path="/daily-reports" element={<MobileProtectedRoute><MobileDailyReportsList /></MobileProtectedRoute>} />
         <Route path="/daily-reports/new" element={<MobileProtectedRoute><MobileDailyReportForm /></MobileProtectedRoute>} />
         <Route path="/daily-reports/:id" element={<MobileProtectedRoute><MobileDailyReportDetail /></MobileProtectedRoute>} />
         <Route path="/daily-reports/:id/edit" element={<MobileProtectedRoute><MobileDailyReportForm /></MobileProtectedRoute>} />
 
-        {/* Photo Progress */}
         <Route path="/photo-progress" element={<MobileProtectedRoute><MobilePhotoProgressList /></MobileProtectedRoute>} />
-        <Route path="/photo-progress/capture" element={<MobileProtectedRoute><MobilePhotoCapture /></MobileProtectedRoute>} />
+        <Route path="/photo-progress/capture" element={<ProtectedRoute><MobilePhotoCapture /></ProtectedRoute>} />
         <Route path="/projects/:projectId/photo-progress" element={<MobileProtectedRoute><MobilePhotoProgressList /></MobileProtectedRoute>} />
-        <Route path="/projects/:projectId/photo-progress/capture" element={<MobileProtectedRoute><MobilePhotoCapture /></MobileProtectedRoute>} />
+        <Route path="/projects/:projectId/photo-progress/capture" element={<ProtectedRoute><MobilePhotoCapture /></ProtectedRoute>} />
 
-        {/* Punch Lists */}
         <Route path="/punch-lists" element={<MobileProtectedRoute><MobilePunchListsList /></MobileProtectedRoute>} />
         <Route path="/punch-lists/new" element={<MobileProtectedRoute><MobilePunchItemForm /></MobileProtectedRoute>} />
         <Route path="/punch-lists/:id" element={<MobileProtectedRoute><MobilePunchItemDetail /></MobileProtectedRoute>} />
         <Route path="/punch-lists/:id/edit" element={<MobileProtectedRoute><MobilePunchItemForm /></MobileProtectedRoute>} />
 
-        {/* Inspections */}
         <Route path="/inspections" element={<MobileProtectedRoute><MobileInspectionsList /></MobileProtectedRoute>} />
         <Route path="/inspections/new" element={<MobileProtectedRoute><MobileInspectionForm /></MobileProtectedRoute>} />
         <Route path="/inspections/:id" element={<MobileProtectedRoute><MobileInspectionDetail /></MobileProtectedRoute>} />
         <Route path="/inspections/:id/edit" element={<MobileProtectedRoute><MobileInspectionForm /></MobileProtectedRoute>} />
 
-        {/* Tasks */}
         <Route path="/tasks" element={<MobileProtectedRoute><MobileTasksList /></MobileProtectedRoute>} />
         <Route path="/tasks/:id" element={<MobileProtectedRoute><MobileTaskDetail /></MobileProtectedRoute>} />
 
-        {/* Projects */}
         <Route path="/projects" element={<MobileProtectedRoute><MobileProjectsList /></MobileProtectedRoute>} />
         <Route path="/projects/:projectId" element={<MobileProtectedRoute><MobileProjectDetail /></MobileProtectedRoute>} />
 
