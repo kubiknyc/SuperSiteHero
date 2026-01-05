@@ -2,7 +2,7 @@
 
 **Last Updated:** 2025-11-25
 
-This document provides comprehensive guidance for developers working with the offline-first architecture in SuperSiteHero.
+This document provides comprehensive guidance for developers working with the offline-first architecture in JobSight.
 
 ---
 
@@ -21,7 +21,7 @@ This document provides comprehensive guidance for developers working with the of
 
 ## Overview
 
-SuperSiteHero implements a comprehensive offline-first architecture that allows users to continue working even without network connectivity. Changes made offline are automatically queued and synced when connectivity is restored.
+JobSight implements a comprehensive offline-first architecture that allows users to continue working even without network connectivity. Changes made offline are automatically queued and synced when connectivity is restored.
 
 ### Key Features
 
@@ -414,7 +414,7 @@ useEffect(() => {
 
 1. **Open DevTools** (F12)
 2. **Network Tab** → Set throttling to "Offline"
-3. **Application Tab** → IndexedDB → `supersitehero-offline`
+3. **Application Tab** → IndexedDB → `JobSight-offline`
    - Inspect `cachedData`, `syncQueue`, `downloads`, `conflicts` stores
 
 ### Testing Workflow
@@ -674,7 +674,7 @@ class SyncManager {
 
 For issues or questions:
 
-1. Check [GitHub Issues](https://github.com/yourusername/supersitehero/issues)
+1. Check [GitHub Issues](https://github.com/yourusername/JobSight/issues)
 2. Review [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
 3. Contact the development team
 
@@ -682,4 +682,4 @@ For issues or questions:
 
 **Last Updated:** 2025-11-25
 **Version:** 1.0.0
-**Maintainer:** SuperSiteHero Development Team
+**Maintainer:** JobSight Development Team

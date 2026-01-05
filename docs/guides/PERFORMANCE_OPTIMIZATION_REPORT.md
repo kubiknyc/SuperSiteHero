@@ -1,5 +1,5 @@
 # Supabase Performance Optimization Report
-**Construction Management Platform - SuperSiteHero**
+**Construction Management Platform - JobSight**
 **Date:** 2025-01-20
 **Focus Area:** Query Optimization, Indexing Strategy, Performance Tuning
 **Database:** PostgreSQL via Supabase

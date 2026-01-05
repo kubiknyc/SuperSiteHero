@@ -180,7 +180,7 @@ await page.waitForURL(/\/(projects|dashboard)/, { timeout: 15000 });
 1. **Test Environment Setup**
    - .env.test properly configured
    - Supabase cloud connection working
-   - Test users exist (test@supersitehero.local, admin@supersitehero.local)
+   - Test users exist (test@JobSight.local, admin@JobSight.local)
 
 2. **Playwright Configuration**
    - Version 1.57.0 installed

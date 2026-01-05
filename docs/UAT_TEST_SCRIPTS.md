@@ -4,7 +4,7 @@
 
 These test scripts are designed for field testing by superintendents and project managers. Each script covers a critical workflow with step-by-step instructions and expected results.
 
-**Test Environment:** Staging (https://staging.supersitehero.com)
+**Test Environment:** Staging (https://staging.JobSight.com)
 **Test Duration:** 2-3 hours total
 **Testers Required:** 2-3 field users
 

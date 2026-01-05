@@ -1,6 +1,6 @@
 # Change Order Process
 
-This document outlines the complete workflow for Change Orders (COs) and Potential Change Orders (PCOs) in the SuperSiteHero construction management platform.
+This document outlines the complete workflow for Change Orders (COs) and Potential Change Orders (PCOs) in the JobSight construction management platform.
 
 ---
 

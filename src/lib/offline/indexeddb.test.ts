@@ -144,7 +144,7 @@ describe('IndexedDB Module', () => {
       await initDatabase()
       await deleteDatabase()
 
-      expect(mockDeleteDatabase).toHaveBeenCalledWith('supersitehero-offline')
+      expect(mockDeleteDatabase).toHaveBeenCalledWith('JobSight-offline')
     })
 
     it('should close database before deleting', async () => {

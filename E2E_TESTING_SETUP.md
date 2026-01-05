@@ -1,6 +1,6 @@
 # E2E Testing Setup Guide
 
-This guide explains how to set up and run end-to-end (E2E) tests for the SuperSiteHero application using Playwright.
+This guide explains how to set up and run end-to-end (E2E) tests for the JobSight application using Playwright.
 
 ## Prerequisites
 

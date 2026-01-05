@@ -94,7 +94,7 @@ Use these codes if you lose access to your authenticator app.
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = 'supersitehero-backup-codes.txt'
+    a.download = 'JobSight-backup-codes.txt'
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)

@@ -399,7 +399,7 @@ export function LookAheadPrintView({
           </div>
         </div>
         <div>
-          SuperSiteHero | {projectName} | Page 1 of 1
+          JobSight | {projectName} | Page 1 of 1
         </div>
       </div>
     </div>

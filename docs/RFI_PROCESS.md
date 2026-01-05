@@ -1,6 +1,6 @@
 # RFI (Request for Information) Process
 
-This document outlines the complete workflow for RFIs (Requests for Information) in the SuperSiteHero construction management platform.
+This document outlines the complete workflow for RFIs (Requests for Information) in the JobSight construction management platform.
 
 ---
 

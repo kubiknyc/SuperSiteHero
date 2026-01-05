@@ -298,7 +298,7 @@ export const rfiAgingService = {
     agingLevel: AgingLevel,
     config: RFIAgingConfig = DEFAULT_RFI_AGING_CONFIG
   ): Promise<AgingAlertResult> {
-    const appUrl = import.meta.env?.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env?.VITE_APP_URL || 'https://JobSight.com'
     const daysFromDue = calculateDaysFromDue(rfi.due_date!)
     const rfiNumber = formatRFINumber(rfi.number)
 
@@ -625,7 +625,7 @@ export const rfiAgingService = {
       }
 
       const overdueRFIs = await this.getOverdueRFIs(projectId, workflowTypeId)
-      const appUrl = import.meta.env?.VITE_APP_URL || 'https://supersitehero.com'
+      const appUrl = import.meta.env?.VITE_APP_URL || 'https://JobSight.com'
 
       // Get project name
       const { data: project } = await supabase

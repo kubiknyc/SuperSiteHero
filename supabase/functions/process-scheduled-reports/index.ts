@@ -125,7 +125,7 @@ function generateReportEmail(
         <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;" />
 
         <p style="font-size: 12px; color: #9ca3af; text-align: center;">
-          This is an automated report from SuperSiteHero.<br/>
+          This is an automated report from JobSight.<br/>
           To manage your scheduled reports, visit your <a href="${appUrl}/reports" style="color: #3b82f6;">Reports Dashboard</a>.
         </p>
       </div>
@@ -148,7 +148,7 @@ Your report is attached to this email.
 View Reports Dashboard: ${appUrl}/reports
 
 ---
-This is an automated report from SuperSiteHero.
+This is an automated report from JobSight.
 To manage your scheduled reports, visit your Reports Dashboard.
   `.trim()
 
@@ -376,7 +376,7 @@ serve(async (req) => {
     // Get environment variables
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    const appUrl = Deno.env.get('APP_URL') || 'https://supersitehero.com'
+    const appUrl = Deno.env.get('APP_URL') || 'https://JobSight.com'
 
     // Create Supabase client with service role key (bypasses RLS)
     const supabase = createClient(supabaseUrl, supabaseServiceKey)

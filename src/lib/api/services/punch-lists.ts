@@ -221,7 +221,7 @@ export const punchListsApi = {
 
       if (!assignee?.email) {return}
 
-      const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+      const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
       const { html, text} = generatePunchItemAssignedEmail({
         recipientName: assignee.full_name || assignee.email.split('@')[0],
         itemNumber: punchItem.number?.toString() || punchItem.id.slice(0, 8),
@@ -262,7 +262,7 @@ export const punchListsApi = {
 
       if (!subcontractor?.email) {return}
 
-      const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+      const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
       // Build location string
       const locationParts = [punchItem.building, punchItem.floor, punchItem.room, punchItem.area].filter(Boolean)

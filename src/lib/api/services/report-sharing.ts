@@ -252,7 +252,7 @@ export async function regenerateShareToken(shareId: string): Promise<string> {
 export function getShareUrl(token: string): string {
   const baseUrl = typeof window !== 'undefined'
     ? window.location.origin
-    : import.meta.env.VITE_APP_URL || 'https://app.supersitehero.com'
+    : import.meta.env.VITE_APP_URL || 'https://app.JobSight.com'
   return `${baseUrl}/reports/public/${token}`
 }
 

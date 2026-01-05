@@ -1,4 +1,4 @@
-# SuperSiteHero Environment Setup Guide
+# JobSight Environment Setup Guide
 
 This guide documents the required configuration for email notifications, push notifications, and other services.
 
@@ -28,7 +28,7 @@ npm run dev
 
 ### Configure Email Domain (Production)
 1. In Resend dashboard, go to Domains
-2. Add your domain (e.g., `supersitehero.com`)
+2. Add your domain (e.g., `JobSight.com`)
 3. Follow DNS verification steps
 4. Wait for domain verification
 
@@ -38,7 +38,7 @@ npm run dev
 supabase secrets set RESEND_API_KEY=re_your_api_key_here
 
 # Set the from address (must be verified domain in production)
-supabase secrets set EMAIL_FROM="SuperSiteHero <noreply@supersitehero.com>"
+supabase secrets set EMAIL_FROM="JobSight <noreply@JobSight.com>"
 
 # Verify secrets are set
 supabase secrets list
@@ -150,7 +150,7 @@ VITE_SENTRY_ENVIRONMENT=development
 ```bash
 # Email (Required for email notifications)
 RESEND_API_KEY=re_your_key
-EMAIL_FROM=SuperSiteHero <noreply@yourdomain.com>
+EMAIL_FROM=JobSight <noreply@yourdomain.com>
 
 # Push Notifications (Required for push)
 VAPID_PRIVATE_KEY=your-private-key

@@ -1,4 +1,4 @@
-# SuperSiteHero Development Plan
+# JobSight Development Plan
 ## Construction Management Platform - Continuation Strategy
 
 **Date:** December 26, 2025

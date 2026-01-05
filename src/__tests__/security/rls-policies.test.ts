@@ -1264,7 +1264,7 @@ describe.skipIf(!hasTestCredentials)('Authenticated User Write Operations - Cros
  * =====================
  *
  * This comprehensive test suite verifies Row Level Security (RLS) policies
- * for all critical tables in the SuperSiteHero application.
+ * for all critical tables in the JobSight application.
  *
  * TEST CATEGORIES:
  * ----------------

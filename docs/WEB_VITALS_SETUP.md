@@ -1,6 +1,6 @@
 # Web Vitals Configuration Guide
 
-This guide explains how to set up and configure Web Vitals monitoring for your SuperSiteHero application with Google Analytics integration.
+This guide explains how to set up and configure Web Vitals monitoring for your JobSight application with Google Analytics integration.
 
 ## Overview
 

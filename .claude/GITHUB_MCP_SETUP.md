@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project now has **persistent MCP access** to the GitHub repository `kubiknyc/SuperSiteHero` through the MCP (Model Context Protocol) remote server.
+This project now has **persistent MCP access** to the GitHub repository `kubiknyc/JobSight` through the MCP (Model Context Protocol) remote server.
 
 ## What Was Configured
 
@@ -30,12 +30,12 @@ The `.mcp.json` file now includes two MCP servers:
         "SUPABASE_ACCESS_TOKEN": "sbp_***"
       }
     },
-    "github-supersitehero": {
+    "github-jobsight": {
       "command": "npx",
       "args": [
         "-y",
         "mcp-remote@latest",
-        "https://gitmcp.io/kubiknyc/SuperSiteHero"
+        "https://gitmcp.io/kubiknyc/JobSight"
       ]
     }
   }
@@ -85,7 +85,7 @@ After restarting, the MCP servers should be available. You can verify by:
 | Server Name | Purpose | Status |
 |------------|---------|---------|
 | `supabase` | Database schema and query access | ✅ Configured |
-| `github-supersitehero` | GitHub repository access | ✅ Configured |
+| `github-jobsight` | GitHub repository access | ✅ Configured |
 
 ## Troubleshooting
 
@@ -101,7 +101,7 @@ If the GitHub MCP server doesn't start:
 
 2. **Test Manually**:
    ```bash
-   npx mcp-remote@latest https://gitmcp.io/kubiknyc/SuperSiteHero
+   npx mcp-remote@latest https://gitmcp.io/kubiknyc/JobSight
    ```
 
 3. **Check Logs**: Look for MCP-related errors in Claude Code output panel
@@ -110,7 +110,7 @@ If the GitHub MCP server doesn't start:
 
 If connection fails:
 
-- Verify the repository exists: https://github.com/kubiknyc/SuperSiteHero
+- Verify the repository exists: https://github.com/kubiknyc/JobSight
 - Check internet connectivity
 - Ensure firewall isn't blocking the connection
 - Try restarting Claude Code
@@ -124,7 +124,7 @@ To reset the MCP configuration:
    cp .mcp.json.backup .mcp.json
    ```
 
-2. Or manually edit `.mcp.json` and remove the `github-supersitehero` entry
+2. Or manually edit `.mcp.json` and remove the `github-jobsight` entry
 
 ## Security Notes
 
@@ -151,13 +151,13 @@ If you need to specify a custom callback port:
 
 ```json
 {
-  "github-supersitehero": {
+  "github-jobsight": {
     "command": "npx",
     "args": [
       "-y",
       "mcp-remote@latest",
       "--port=4353",
-      "https://gitmcp.io/kubiknyc/SuperSiteHero"
+      "https://gitmcp.io/kubiknyc/JobSight"
     ]
   }
 }

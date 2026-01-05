@@ -298,7 +298,7 @@ serve(async (req) => {
     // Get environment variables
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    const appUrl = Deno.env.get('APP_URL') || 'https://supersitehero.com'
+    const appUrl = Deno.env.get('APP_URL') || 'https://JobSight.com'
 
     // Create Supabase client with service role key (bypasses RLS)
     const supabase = createClient(supabaseUrl, supabaseServiceKey)

@@ -504,7 +504,7 @@ export function useAddSubmittalReview() {
       // Notify the submittal creator about the review result
       if (data.submitted_by && data.submitted_by.id !== userProfile?.id) {
         try {
-          const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+          const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
           const statusLabel = REVIEW_STATUSES.find(s => s.value === data.reviewStatus)?.label || data.reviewStatus
 
           const recipient: NotificationRecipient = {
@@ -582,7 +582,7 @@ export function useSubmitForReview() {
           .in('project_role', ['project_manager', 'owner', 'admin'])
 
         if (projectUsers && projectUsers.length > 0) {
-          const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+          const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
           for (const pu of projectUsers) {
             if (pu.user && pu.user.id !== userProfile?.id) {
@@ -927,7 +927,7 @@ export function useSubmitReviewWithCode() {
       // Send notification to the original submitter
       if (data.submitted_by_user && data.submitted_by_user.id !== userProfile?.id) {
         try {
-          const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+          const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
           const recipient: NotificationRecipient = {
             userId: data.submitted_by_user.id,

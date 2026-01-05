@@ -1,4 +1,4 @@
-# SuperSiteHero Improvement Tasks
+# JobSight Improvement Tasks
 
 Generated: 2025-12-28
 

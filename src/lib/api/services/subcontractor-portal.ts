@@ -770,7 +770,7 @@ export const subcontractorPortalApi = {
                 hour: 'numeric',
                 minute: '2-digit',
               }),
-              viewUrl: `${import.meta.env.VITE_APP_URL || 'https://supersitehero.com'}/change-orders/${fullBid.workflow_item_id}`,
+              viewUrl: `${import.meta.env.VITE_APP_URL || 'https://JobSight.com'}/change-orders/${fullBid.workflow_item_id}`,
             })
           }
         }

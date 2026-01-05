@@ -25,7 +25,7 @@ import type {
   OwnerApprovalDTO,
 } from '../../../types/change-order';
 
-const APP_URL = import.meta.env.VITE_APP_URL || 'https://supersitehero.com';
+const APP_URL = import.meta.env.VITE_APP_URL || 'https://JobSight.com';
 
 /**
  * Helper to get project stakeholders for change order notifications

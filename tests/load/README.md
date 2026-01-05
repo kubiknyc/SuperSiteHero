@@ -1,6 +1,6 @@
 # Load Testing with k6
 
-Comprehensive load testing infrastructure for SuperSiteHero using k6.
+Comprehensive load testing infrastructure for JobSight using k6.
 
 ## Prerequisites
 

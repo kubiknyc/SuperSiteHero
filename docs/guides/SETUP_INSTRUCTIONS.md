@@ -1,4 +1,4 @@
-# Complete Setup Instructions - SuperSiteHero
+# Complete Setup Instructions - JobSight
 
 **Last Updated:** 2025-01-20
 **Status:** Ready to deploy
@@ -18,7 +18,7 @@ You need to run the database migrations in your Supabase instance. I've prepared
 
 1. Go to [https://supabase.com/dashboard](https://supabase.com/dashboard)
 2. Sign in to your account
-3. Select your **SuperSiteHero** project
+3. Select your **JobSight** project
 
 ### Step 2: Navigate to SQL Editor
 

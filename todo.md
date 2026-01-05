@@ -1,4 +1,4 @@
-# SuperSiteHero - Consolidated TODO List
+# JobSight - Consolidated TODO List
 
 **Last Updated:** December 9, 2025 (AI Agents Integration Complete)
 **Current Status:** P0 ✅ + P1 ✅ + P2 ✅ (except QuickBooks) + Quick Wins ✅ + AI Agents ✅ + All Stubs Verified

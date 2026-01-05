@@ -12,12 +12,12 @@
         "SUPABASE_ACCESS_TOKEN": "YOUR_SUPABASE_ACCESS_TOKEN"
       }
     },
-    "github-supersitehero": {
+    "github-jobsight": {
       "command": "npx",
       "args": [
         "-y",
         "mcp-remote@latest",
-        "https://gitmcp.io/YOUR_GITHUB_USERNAME/SuperSiteHero"
+        "https://gitmcp.io/YOUR_GITHUB_USERNAME/JobSight"
       ]
     }
   }

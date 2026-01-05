@@ -1,5 +1,5 @@
 # Supabase Security Audit Report
-**Construction Management Platform - SuperSiteHero**
+**Construction Management Platform - JobSight**
 **Date:** 2025-01-20
 **Audit Type:** Comprehensive Security Assessment
 **Scope:** RLS Policies, Authentication, API Security, Multi-Tenant Isolation

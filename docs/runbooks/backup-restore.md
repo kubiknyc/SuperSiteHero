@@ -2,13 +2,13 @@
 
 **Last Updated:** December 7, 2025
 
-This document outlines backup and restore procedures for SuperSiteHero.
+This document outlines backup and restore procedures for JobSight.
 
 ---
 
 ## Overview
 
-SuperSiteHero uses:
+JobSight uses:
 - **Supabase** for database and file storage
 - **Vercel** for application hosting
 - **GitHub** for source code
@@ -143,10 +143,10 @@ Source code is backed up via Git:
 
 ```bash
 # Clone full repository with all branches
-git clone --mirror https://github.com/your-org/supersitehero.git backup-repo.git
+git clone --mirror https://github.com/your-org/JobSight.git backup-repo.git
 
 # Or create a bundle
-git bundle create supersitehero_$(date +%Y%m%d).bundle --all
+git bundle create JobSight_$(date +%Y%m%d).bundle --all
 ```
 
 ### Vercel Configuration
@@ -253,7 +253,7 @@ aws s3 sync ./backup/storage/ s3://your-bucket/ \
 
 ```bash
 # Clone from bundle
-git clone supersitehero_20251207.bundle restored-repo
+git clone JobSight_20251207.bundle restored-repo
 
 # Or restore mirror
 git clone --mirror backup-repo.git restored-repo.git

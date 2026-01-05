@@ -389,4 +389,4 @@ Potential improvements:
 
 ## License
 
-Part of the SuperSiteHero construction management platform.
+Part of the JobSight construction management platform.

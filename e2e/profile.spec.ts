@@ -15,7 +15,7 @@ import * as path from 'path'
 // Use authenticated state
 test.use({ storageState: 'playwright/.auth/user.json' })
 
-const TEST_EMAIL = 'test@supersitehero.local'
+const TEST_EMAIL = 'test@JobSight.local'
 const TEST_PASSWORD = 'Test123!@#'
 
 // Pre-authenticated session is used via storageState above - no manual login needed

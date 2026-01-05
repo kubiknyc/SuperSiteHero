@@ -226,7 +226,7 @@ export function useUpdateChangeOrderStatusWithNotification() {
         try {
           const projectName = await getProjectName(data.project_id)
           const recipients = await getChangeOrderRecipients(data)
-          const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+          const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
           // Filter out the person who made the change
           const recipientsToNotify = recipients.filter(r => r.userId !== userProfile?.id)

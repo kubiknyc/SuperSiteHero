@@ -110,7 +110,7 @@ export const notificationService = {
     data: Omit<ApprovalRequestEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     for (const recipient of recipients) {
       const emailData: ApprovalRequestEmailData = {
@@ -294,7 +294,7 @@ export const notificationService = {
     data: Omit<NoticeResponseReminderEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     for (const recipient of recipients) {
       const emailData: NoticeResponseReminderEmailData = {
@@ -353,7 +353,7 @@ export const notificationService = {
     data: Omit<NoticeOverdueEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     for (const recipient of recipients) {
       const emailData: NoticeOverdueEmailData = {
@@ -432,7 +432,7 @@ export const notificationService = {
     data: Omit<TaskAssignedEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     // Check user preferences
     const preferences = await this._getUserPreferences(recipient.userId)
@@ -490,7 +490,7 @@ export const notificationService = {
     data: Omit<RfiAssignedEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     // Check user preferences
     const preferences = await this._getUserPreferences(recipient.userId)
@@ -548,7 +548,7 @@ export const notificationService = {
     data: Omit<ChangeOrderStatusEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     for (const recipient of recipients) {
       // Check user preferences (we don't have a specific CO preference, so we'll always send for now)
@@ -606,7 +606,7 @@ export const notificationService = {
     data: Omit<BidSubmittedEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     for (const recipient of recipients) {
       const emailData: BidSubmittedEmailData = {
@@ -694,7 +694,7 @@ export const notificationService = {
     data: Omit<ChecklistFailedItemsEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
     const isCritical = data.severityLevel === 'high' || data.severityLevel === 'critical'
 
     for (const recipient of recipients) {
@@ -755,7 +755,7 @@ export const notificationService = {
     data: Omit<PunchItemAssignedEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     // Check user preferences
     const preferences = await this._getUserPreferences(recipient.userId)
@@ -818,7 +818,7 @@ export const notificationService = {
     data: Omit<RFIAgingAlertEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     for (const recipient of recipients) {
       // Check user preferences
@@ -883,7 +883,7 @@ export const notificationService = {
     data: Omit<RFIOverdueAlertEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     for (const recipient of recipients) {
       // Check user preferences - always send for overdue items
@@ -944,7 +944,7 @@ export const notificationService = {
     data: Omit<RFIAgingSummaryEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     const emailData: RFIAgingSummaryEmailData = {
       ...data,
@@ -1004,7 +1004,7 @@ export const notificationService = {
     data: Omit<SubmittalReminderEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     for (const recipient of recipients) {
       // Check user preferences
@@ -1070,7 +1070,7 @@ export const notificationService = {
     data: Omit<SubmittalReviewReminderEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     const emailData: SubmittalReviewReminderEmailData = {
       ...data,
@@ -1129,7 +1129,7 @@ export const notificationService = {
     data: Omit<SubmittalAgingSummaryEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     const emailData: SubmittalAgingSummaryEmailData = {
       ...data,
@@ -1189,7 +1189,7 @@ export const notificationService = {
     data: Omit<SubmittalStatusEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     // Determine notification urgency
     const _isApproved = ['approved', 'approved_as_noted'].includes(data.newStatus)
@@ -1277,7 +1277,7 @@ export const notificationService = {
     data: Omit<CommentMentionEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     // Entity type labels for notifications
     const entityLabels: Record<string, string> = {
@@ -1377,7 +1377,7 @@ export const notificationService = {
     data: Omit<DailyReportMissingEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     for (const recipient of recipients) {
       const emailData: DailyReportMissingEmailData = {
@@ -1437,7 +1437,7 @@ export const notificationService = {
     data: Omit<DailyReportSummaryEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     const emailData: DailyReportSummaryEmailData = {
       ...data,
@@ -1496,7 +1496,7 @@ export const notificationService = {
     data: Omit<ChangeOrderAgingAlertEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     for (const recipient of recipients) {
       const emailData: ChangeOrderAgingAlertEmailData = {
@@ -1556,7 +1556,7 @@ export const notificationService = {
     data: Omit<ChangeOrderBudgetAlertEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     for (const recipient of recipients) {
       const emailData: ChangeOrderBudgetAlertEmailData = {
@@ -1615,7 +1615,7 @@ export const notificationService = {
     data: Omit<ChangeOrderAgingSummaryEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     const emailData: ChangeOrderAgingSummaryEmailData = {
       ...data,
@@ -1672,7 +1672,7 @@ export const notificationService = {
     data: Omit<DrawingRevisionEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
     const isNewDrawing = !data.previousRevision
 
     for (const recipient of recipients) {
@@ -1741,7 +1741,7 @@ export const notificationService = {
     data: Omit<DrawingSetRevisionEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     for (const recipient of recipients) {
       // Check user preferences
@@ -1805,7 +1805,7 @@ export const notificationService = {
     data: Omit<DrawingSupersededEmailData, 'recipientName'>,
     options: NotificationOptions = DEFAULT_OPTIONS
   ): Promise<void> {
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
     for (const recipient of recipients) {
       // Always send superseded drawing alerts - these are critical

@@ -52,7 +52,7 @@ Body:
 - `userName`: User's first + last name (fallback to email)
 - `companyName`: From companies table
 - `adminName`: Approving admin's name
-- `loginUrl`: ${APP_URL}/login (default: https://supersitehero.com/login)
+- `loginUrl`: ${APP_URL}/login (default: https://JobSight.com/login)
 - `year`: Current year
 
 #### ✅ Rejection Email Template (reject-user/index.ts)

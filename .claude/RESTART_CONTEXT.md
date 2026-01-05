@@ -38,13 +38,13 @@
 
 **What Was Configured**:
 - ✅ Added GitHub MCP server to `.mcp.json`
-- ✅ Server: `github-supersitehero`
-- ✅ URL: `https://gitmcp.io/kubiknyc/SuperSiteHero`
+- ✅ Server: `github-jobsight`
+- ✅ URL: `https://gitmcp.io/kubiknyc/JobSight`
 - ✅ Created documentation: `GITHUB_MCP_SETUP.md`
 
 **MCP Servers Active After Restart**:
 1. `supabase` - Database access
-2. `github-supersitehero` - GitHub repository access
+2. `github-jobsight` - GitHub repository access
 
 ---
 

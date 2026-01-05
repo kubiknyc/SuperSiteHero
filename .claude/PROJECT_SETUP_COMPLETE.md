@@ -405,4 +405,4 @@ Your construction management platform now has:
 
 *Setup completed on: 2025-11-20*
 *Claude Code Version: Latest*
-*Project: SuperSiteHero Construction Management Platform*
+*Project: JobSight Construction Management Platform*

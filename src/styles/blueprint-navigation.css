@@ -1,0 +1,806 @@
+/* =============================================================================
+ * BLUEPRINT NAVIGATION DESIGN SYSTEM
+ *
+ * A premium, construction-industry-focused design system for drawing navigation.
+ * Inspired by technical drafting, cyanotype blueprints, and precision engineering.
+ *
+ * Design Philosophy:
+ * - Dark mode primary (reduces glare on tablets in bright field conditions)
+ * - Touch-friendly (44px minimum touch targets for field use with gloves)
+ * - Technical precision aesthetic (monospace numbers, grid patterns, clean lines)
+ * - Discipline color coding for instant visual recognition
+ * ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+ * CSS Custom Properties - Blueprint Theme
+ * ----------------------------------------------------------------------------- */
+:root {
+  /* Blueprint Base Colors */
+  --blueprint-bg-deep: #0a1628;
+  --blueprint-bg-panel: #0d1f35;
+  --blueprint-bg-surface: #122742;
+  --blueprint-bg-hover: #1a3454;
+  --blueprint-bg-active: #234567;
+
+  /* Blueprint Accent Colors */
+  --blueprint-cyan: #00d4ff;
+  --blueprint-cyan-dim: #0099cc;
+  --blueprint-cyan-glow: rgba(0, 212, 255, 0.15);
+
+  /* Grid Pattern */
+  --blueprint-grid-color: rgba(0, 180, 216, 0.08);
+  --blueprint-grid-line: rgba(0, 180, 216, 0.15);
+
+  /* Text Colors */
+  --blueprint-text-primary: #e8f4f8;
+  --blueprint-text-secondary: #8ba4b5;
+  --blueprint-text-muted: #5a7a8a;
+
+  /* Border Colors */
+  --blueprint-border: rgba(0, 180, 216, 0.2);
+  --blueprint-border-bright: rgba(0, 212, 255, 0.4);
+
+  /* Discipline Colors - High Contrast for Field Visibility */
+  --discipline-architectural: #3b82f6;    /* Blue */
+  --discipline-structural: #ef4444;        /* Red */
+  --discipline-mechanical: #22c55e;        /* Green */
+  --discipline-electrical: #eab308;        /* Yellow */
+  --discipline-plumbing: #a855f7;          /* Purple */
+  --discipline-fire-protection: #f97316;   /* Orange */
+  --discipline-civil: #06b6d4;             /* Cyan */
+  --discipline-landscape: #10b981;         /* Emerald */
+  --discipline-general: #6b7280;           /* Gray */
+
+  /* Animation Timing */
+  --blueprint-transition-fast: 150ms;
+  --blueprint-transition-normal: 250ms;
+  --blueprint-transition-slow: 400ms;
+}
+
+/* -----------------------------------------------------------------------------
+ * Blueprint Grid Background Pattern
+ * ----------------------------------------------------------------------------- */
+.blueprint-grid-bg {
+  background-color: var(--blueprint-bg-panel);
+  background-image:
+    /* Major grid lines */
+    linear-gradient(var(--blueprint-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blueprint-grid-line) 1px, transparent 1px),
+    /* Minor grid lines */
+    linear-gradient(var(--blueprint-grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blueprint-grid-color) 1px, transparent 1px);
+  background-size:
+    80px 80px,
+    80px 80px,
+    16px 16px,
+    16px 16px;
+  background-position: -1px -1px;
+}
+
+.blueprint-grid-bg-subtle {
+  background-color: var(--blueprint-bg-panel);
+  background-image:
+    linear-gradient(var(--blueprint-grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blueprint-grid-color) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* -----------------------------------------------------------------------------
+ * Drawing Index Panel - Premium Styling
+ * ----------------------------------------------------------------------------- */
+.drawing-index-panel {
+  background: var(--blueprint-bg-panel);
+  border-left: 1px solid var(--blueprint-border);
+  box-shadow:
+    -4px 0 24px rgba(0, 0, 0, 0.4),
+    inset 1px 0 0 var(--blueprint-border-bright);
+}
+
+.drawing-index-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--blueprint-cyan) 20%,
+    var(--blueprint-cyan) 80%,
+    transparent 100%
+  );
+  opacity: 0.6;
+}
+
+/* Panel Header */
+.drawing-index-header {
+  background: linear-gradient(180deg,
+    var(--blueprint-bg-surface) 0%,
+    var(--blueprint-bg-panel) 100%
+  );
+  border-bottom: 1px solid var(--blueprint-border);
+  padding: 1rem 1.25rem;
+}
+
+.drawing-index-title {
+  font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--blueprint-cyan);
+}
+
+/* Search Input - Blueprint Style */
+.blueprint-search-container {
+  position: relative;
+  background: var(--blueprint-bg-deep);
+  border: 1px solid var(--blueprint-border);
+  border-radius: 6px;
+  transition: all var(--blueprint-transition-fast) ease;
+}
+
+.blueprint-search-container:focus-within {
+  border-color: var(--blueprint-cyan);
+  box-shadow:
+    0 0 0 3px var(--blueprint-cyan-glow),
+    inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.blueprint-search-input {
+  background: transparent;
+  border: none;
+  color: var(--blueprint-text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.875rem;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  width: 100%;
+  min-height: 44px; /* Touch-friendly */
+}
+
+.blueprint-search-input::placeholder {
+  color: var(--blueprint-text-muted);
+}
+
+.blueprint-search-icon {
+  position: absolute;
+  left: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--blueprint-text-muted);
+  width: 16px;
+  height: 16px;
+  transition: color var(--blueprint-transition-fast) ease;
+}
+
+.blueprint-search-container:focus-within .blueprint-search-icon {
+  color: var(--blueprint-cyan);
+}
+
+/* -----------------------------------------------------------------------------
+ * Discipline Group Styling
+ * ----------------------------------------------------------------------------- */
+.discipline-group {
+  margin-bottom: 0.25rem;
+}
+
+.discipline-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.625rem 0.75rem;
+  min-height: 44px; /* Touch-friendly */
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--blueprint-transition-fast) ease;
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+.discipline-header:hover {
+  background: var(--blueprint-bg-hover);
+  border-color: var(--blueprint-border);
+}
+
+.discipline-header:active {
+  background: var(--blueprint-bg-active);
+}
+
+.discipline-name {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--blueprint-text-primary);
+  letter-spacing: 0.01em;
+}
+
+.discipline-chevron {
+  color: var(--blueprint-text-muted);
+  width: 16px;
+  height: 16px;
+  transition: transform var(--blueprint-transition-fast) ease;
+}
+
+.discipline-header[data-state="open"] .discipline-chevron {
+  transform: rotate(90deg);
+}
+
+/* Discipline Count Badge - Color Coded */
+.discipline-badge {
+  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  min-width: 28px;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+/* Discipline-specific badge colors */
+.discipline-badge-A {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+.discipline-badge-S {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.discipline-badge-M {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+.discipline-badge-E {
+  background: rgba(234, 179, 8, 0.2);
+  color: #facc15;
+  border: 1px solid rgba(234, 179, 8, 0.3);
+}
+.discipline-badge-P {
+  background: rgba(168, 85, 247, 0.2);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+.discipline-badge-FP {
+  background: rgba(249, 115, 22, 0.2);
+  color: #fb923c;
+  border: 1px solid rgba(249, 115, 22, 0.3);
+}
+.discipline-badge-C {
+  background: rgba(6, 182, 212, 0.2);
+  color: #22d3ee;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+.discipline-badge-L {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.discipline-badge-G {
+  background: rgba(107, 114, 128, 0.2);
+  color: #9ca3af;
+  border: 1px solid rgba(107, 114, 128, 0.3);
+}
+
+/* -----------------------------------------------------------------------------
+ * Sheet List Item Styling
+ * ----------------------------------------------------------------------------- */
+.sheet-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  min-height: 52px; /* Touch-friendly with content */
+  margin-left: 1.25rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all var(--blueprint-transition-fast) ease;
+  border: 1px solid transparent;
+  position: relative;
+}
+
+.sheet-list-item:hover {
+  background: var(--blueprint-bg-hover);
+  border-color: var(--blueprint-border);
+}
+
+.sheet-list-item:active {
+  background: var(--blueprint-bg-active);
+}
+
+/* Current/Active Sheet */
+.sheet-list-item--current {
+  background: var(--blueprint-cyan-glow);
+  border-color: var(--blueprint-cyan);
+  border-left-width: 3px;
+}
+
+.sheet-list-item--current::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--blueprint-cyan);
+  border-radius: 3px 0 0 3px;
+}
+
+/* Sheet Number - Monospace Technical Style */
+.sheet-number {
+  font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--blueprint-text-primary);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.sheet-list-item--current .sheet-number {
+  color: var(--blueprint-cyan);
+}
+
+/* Sheet Title */
+.sheet-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.75rem;
+  color: var(--blueprint-text-secondary);
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Sheet Icon */
+.sheet-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: var(--blueprint-text-muted);
+  margin-top: 2px;
+}
+
+.sheet-list-item--current .sheet-icon {
+  color: var(--blueprint-cyan);
+}
+
+/* Active Indicator Dot */
+.sheet-active-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--blueprint-cyan);
+  box-shadow: 0 0 8px var(--blueprint-cyan);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--blueprint-cyan); }
+  50% { opacity: 0.6; box-shadow: 0 0 4px var(--blueprint-cyan); }
+}
+
+/* -----------------------------------------------------------------------------
+ * Navigation Toolbar - Blueprint Style
+ * ----------------------------------------------------------------------------- */
+.blueprint-nav-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: var(--blueprint-bg-surface);
+  border-radius: 8px;
+  border: 1px solid var(--blueprint-border);
+}
+
+.blueprint-nav-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--blueprint-text-secondary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--blueprint-transition-fast) ease;
+  gap: 0.375rem;
+}
+
+.blueprint-nav-button:hover:not(:disabled) {
+  background: var(--blueprint-bg-hover);
+  border-color: var(--blueprint-border);
+  color: var(--blueprint-text-primary);
+}
+
+.blueprint-nav-button:active:not(:disabled) {
+  background: var(--blueprint-bg-active);
+}
+
+.blueprint-nav-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.blueprint-nav-button--active {
+  background: var(--blueprint-cyan-glow);
+  border-color: var(--blueprint-cyan);
+  color: var(--blueprint-cyan);
+}
+
+.blueprint-nav-button-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Navigation Separator */
+.blueprint-nav-separator {
+  width: 1px;
+  height: 24px;
+  background: var(--blueprint-border);
+  margin: 0 0.25rem;
+}
+
+/* Sheet Selector Dropdown Trigger */
+.blueprint-sheet-selector {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  min-height: 44px;
+  border-radius: 6px;
+  border: 1px solid var(--blueprint-border);
+  background: var(--blueprint-bg-deep);
+  color: var(--blueprint-text-primary);
+  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--blueprint-transition-fast) ease;
+}
+
+.blueprint-sheet-selector:hover {
+  border-color: var(--blueprint-cyan);
+  background: var(--blueprint-bg-hover);
+}
+
+.blueprint-sheet-selector-label {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--blueprint-text-muted);
+  margin-right: 0.25rem;
+}
+
+.blueprint-sheet-selector-value {
+  color: var(--blueprint-cyan);
+}
+
+/* -----------------------------------------------------------------------------
+ * Bookmark Manager - Premium Styling
+ * ----------------------------------------------------------------------------- */
+.blueprint-bookmark-dropdown {
+  background: var(--blueprint-bg-panel);
+  border: 1px solid var(--blueprint-border);
+  border-radius: 8px;
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.5),
+    0 0 0 1px var(--blueprint-border-bright);
+  overflow: hidden;
+}
+
+.blueprint-bookmark-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1rem;
+  background: linear-gradient(180deg,
+    var(--blueprint-bg-surface) 0%,
+    var(--blueprint-bg-panel) 100%
+  );
+  border-bottom: 1px solid var(--blueprint-border);
+}
+
+.blueprint-bookmark-title {
+  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--blueprint-cyan);
+}
+
+.blueprint-bookmark-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 4px;
+  border: 1px solid var(--blueprint-cyan);
+  background: var(--blueprint-cyan-glow);
+  color: var(--blueprint-cyan);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all var(--blueprint-transition-fast) ease;
+}
+
+.blueprint-bookmark-add-btn:hover {
+  background: var(--blueprint-cyan);
+  color: var(--blueprint-bg-deep);
+}
+
+/* Bookmark Item */
+.blueprint-bookmark-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  min-height: 48px;
+  cursor: pointer;
+  transition: all var(--blueprint-transition-fast) ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.blueprint-bookmark-item:hover {
+  background: var(--blueprint-bg-hover);
+}
+
+.blueprint-bookmark-item:last-child {
+  border-bottom: none;
+}
+
+.blueprint-bookmark-star {
+  width: 16px;
+  height: 16px;
+  color: var(--blueprint-text-muted);
+}
+
+.blueprint-bookmark-star--shared {
+  color: #facc15;
+  fill: #facc15;
+}
+
+.blueprint-bookmark-name {
+  flex: 1;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8125rem;
+  color: var(--blueprint-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.blueprint-bookmark-page {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  color: var(--blueprint-text-muted);
+  white-space: nowrap;
+}
+
+/* Bookmark Folder Header */
+.blueprint-bookmark-folder {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--blueprint-text-muted);
+  background: var(--blueprint-bg-surface);
+  border-bottom: 1px solid var(--blueprint-border);
+}
+
+.blueprint-bookmark-folder-icon {
+  width: 12px;
+  height: 12px;
+}
+
+/* -----------------------------------------------------------------------------
+ * Sheet Reference Hotspot - Drawing Callout Style
+ * ----------------------------------------------------------------------------- */
+.sheet-reference-hotspot {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.625rem;
+  background: var(--blueprint-bg-surface);
+  border: 2px solid var(--blueprint-cyan);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all var(--blueprint-transition-fast) ease;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(0, 212, 255, 0.2);
+  z-index: 10;
+}
+
+.sheet-reference-hotspot:hover {
+  background: var(--blueprint-cyan);
+  color: var(--blueprint-bg-deep);
+  transform: scale(1.05);
+  box-shadow:
+    0 4px 16px rgba(0, 212, 255, 0.4),
+    0 0 20px rgba(0, 212, 255, 0.2);
+}
+
+.sheet-reference-hotspot::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--blueprint-cyan);
+}
+
+.sheet-reference-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--blueprint-cyan);
+  letter-spacing: 0.02em;
+}
+
+.sheet-reference-hotspot:hover .sheet-reference-label {
+  color: var(--blueprint-bg-deep);
+}
+
+.sheet-reference-icon {
+  width: 14px;
+  height: 14px;
+  color: var(--blueprint-cyan);
+}
+
+.sheet-reference-hotspot:hover .sheet-reference-icon {
+  color: var(--blueprint-bg-deep);
+}
+
+/* -----------------------------------------------------------------------------
+ * Panel Footer - Stats Display
+ * ----------------------------------------------------------------------------- */
+.blueprint-panel-footer {
+  padding: 0.75rem 1rem;
+  background: var(--blueprint-bg-surface);
+  border-top: 1px solid var(--blueprint-border);
+}
+
+.blueprint-panel-stats {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6875rem;
+  color: var(--blueprint-text-muted);
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.blueprint-panel-stats-highlight {
+  color: var(--blueprint-cyan);
+  font-weight: 600;
+}
+
+/* -----------------------------------------------------------------------------
+ * Empty State
+ * ----------------------------------------------------------------------------- */
+.blueprint-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.blueprint-empty-icon {
+  width: 48px;
+  height: 48px;
+  color: var(--blueprint-text-muted);
+  opacity: 0.5;
+  margin-bottom: 1rem;
+}
+
+.blueprint-empty-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8125rem;
+  color: var(--blueprint-text-muted);
+}
+
+/* -----------------------------------------------------------------------------
+ * Animations
+ * ----------------------------------------------------------------------------- */
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-out-right {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.blueprint-panel-enter {
+  animation: slide-in-right 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.blueprint-panel-exit {
+  animation: slide-out-right 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.blueprint-backdrop-enter {
+  animation: fade-in 200ms ease-out;
+}
+
+/* -----------------------------------------------------------------------------
+ * Responsive Adjustments
+ * ----------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .drawing-index-panel {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .blueprint-nav-toolbar {
+    padding: 0.375rem;
+    gap: 0.25rem;
+  }
+
+  .blueprint-nav-button {
+    padding: 0.5rem;
+  }
+
+  .blueprint-sheet-selector {
+    padding: 0.5rem 0.625rem;
+  }
+
+  .blueprint-sheet-selector-label {
+    display: none;
+  }
+}
+
+/* High contrast mode for outdoor use */
+@media (prefers-contrast: more) {
+  :root {
+    --blueprint-text-primary: #ffffff;
+    --blueprint-text-secondary: #c0d0e0;
+    --blueprint-border: rgba(0, 212, 255, 0.4);
+  }
+
+  .sheet-list-item--current {
+    border-width: 2px;
+  }
+
+  .discipline-badge {
+    border-width: 2px;
+  }
+}

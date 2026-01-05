@@ -785,7 +785,7 @@ export const safetyIncidentsApi = {
         return
       }
 
-      const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+      const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
       // Prepare notification recipients
       const recipients: NotificationRecipient[] = (users || []).map((user: any) => ({

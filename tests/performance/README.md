@@ -1,6 +1,6 @@
 # Performance Testing
 
-Comprehensive performance testing and monitoring for SuperSiteHero.
+Comprehensive performance testing and monitoring for JobSight.
 
 ## Overview
 

@@ -1,14 +1,14 @@
-# SuperSiteHero - Current Status
+# JobSight - Current Status
 
 **Last Updated:** December 7, 2025
-**Repository:** https://github.com/kubiknyc/SuperSiteHero
+**Repository:** https://github.com/kubiknyc/JobSight
 **Project:** Construction Field Management Platform
 
 ---
 
 ## Executive Summary
 
-SuperSiteHero is a comprehensive, multi-tenant SaaS construction management platform at **~96% completion**. All core features are fully implemented with production-ready infrastructure. Recent additions include Payment Applications, Lien Waivers, and Weather API.
+JobSight is a comprehensive, multi-tenant SaaS construction management platform at **~96% completion**. All core features are fully implemented with production-ready infrastructure. Recent additions include Payment Applications, Lien Waivers, and Weather API.
 
 ### Quick Stats
 | Metric | Value |
@@ -150,7 +150,7 @@ SuperSiteHero is a comprehensive, multi-tenant SaaS construction management plat
 ## PROJECT STRUCTURE
 
 ```
-SuperSiteHero/
+JobSight/
 ├── src/
 │   ├── features/          # 38 feature modules
 │   │   ├── alerts/
@@ -271,7 +271,7 @@ SuperSiteHero/
 
 ## LINKS
 
-- **Repository:** https://github.com/kubiknyc/SuperSiteHero
+- **Repository:** https://github.com/kubiknyc/JobSight
 - **Supabase Project:** https://nxlznnrocrffnbzjaaae.supabase.co
 - **Master Plan:** `masterplan.md`
 - **Roadmap:** `ROADMAP_SUMMARY.md`

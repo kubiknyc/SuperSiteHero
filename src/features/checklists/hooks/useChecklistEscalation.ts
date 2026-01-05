@@ -475,7 +475,7 @@ export function useChecklistEscalation() {
     const failedItems = getFailedItems(responses)
 
     // Build the app URL for viewing the checklist
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
     const viewUrl = `${appUrl}/checklists/executions/${execution.id}`
 
     // Send escalation notifications

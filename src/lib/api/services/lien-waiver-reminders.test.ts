@@ -55,7 +55,7 @@ describe('lienWaiverReminderService', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     // Mock environment variable
-    vi.stubEnv('VITE_APP_URL', 'https://test.supersitehero.com')
+    vi.stubEnv('VITE_APP_URL', 'https://test.JobSight.com')
   })
 
   afterEach(() => {

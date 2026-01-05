@@ -15,7 +15,7 @@ import { test, expect, Page } from '@playwright/test'
 // Use authenticated state
 test.use({ storageState: 'playwright/.auth/user.json' })
 
-const TEST_EMAIL = 'test@supersitehero.local'
+const TEST_EMAIL = 'test@JobSight.local'
 const TEST_PASSWORD = 'Test123!@#'
 
 // Helper function for consistent login

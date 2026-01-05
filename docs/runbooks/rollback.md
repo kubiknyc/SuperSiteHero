@@ -2,7 +2,7 @@
 
 **Last Updated:** December 7, 2025
 
-This document outlines rollback procedures for SuperSiteHero when issues are detected in production.
+This document outlines rollback procedures for JobSight when issues are detected in production.
 
 ---
 
@@ -22,7 +22,7 @@ This document outlines rollback procedures for SuperSiteHero when issues are det
 ### Instant Rollback via Dashboard
 
 1. Go to [Vercel Dashboard](https://vercel.com)
-2. Select the **SuperSiteHero** project
+2. Select the **JobSight** project
 3. Navigate to **Deployments**
 4. Find the last known good deployment
 5. Click the **...** menu
@@ -35,10 +35,10 @@ This document outlines rollback procedures for SuperSiteHero when issues are det
 
 ```bash
 # List recent deployments
-vercel ls supersitehero
+vercel ls JobSight
 
 # Get deployment URL of last good version
-# Format: supersitehero-xxxxx.vercel.app
+# Format: JobSight-xxxxx.vercel.app
 
 # Promote specific deployment to production
 vercel promote [deployment-url] --yes
@@ -282,13 +282,13 @@ DROP TABLE IF EXISTS new_feature CASCADE;
 
 ```bash
 # 1. Identify last working deployment
-vercel ls supersitehero | head -5
+vercel ls JobSight | head -5
 
 # 2. Rollback immediately
 vercel promote [last-good-deployment-url] --yes
 
 # 3. Verify login works
-curl -I https://supersitehero.com/login
+curl -I https://JobSight.com/login
 ```
 
 ### Scenario 2: Migration Causes Data Issues

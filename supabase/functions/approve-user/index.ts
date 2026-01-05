@@ -279,7 +279,7 @@ serve(async (req) => {
 
     // Send email notification to user
     try {
-      const appUrl = Deno.env.get('APP_URL') || 'https://supersitehero.com'
+      const appUrl = Deno.env.get('APP_URL') || 'https://JobSight.com'
       const userName = `${userToApprove.first_name || ''} ${userToApprove.last_name || ''}`.trim() || userToApprove.email
       const adminName = `${adminProfile.first_name || ''} ${adminProfile.last_name || ''}`.trim() || 'Company Admin'
       const companyName = company?.name || 'your company'

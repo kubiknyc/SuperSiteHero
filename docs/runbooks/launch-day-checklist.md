@@ -2,7 +2,7 @@
 
 **Last Updated:** December 7, 2025
 
-Complete verification checklist for SuperSiteHero production deployment.
+Complete verification checklist for JobSight production deployment.
 
 ---
 

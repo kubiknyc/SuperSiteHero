@@ -216,7 +216,7 @@ export const rfisApi = {
 
       if (!assignee?.email) {return}
 
-      const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+      const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
       const { html, text } = generateRfiAssignedEmail({
         recipientName: assignee.full_name || assignee.email.split('@')[0],
         rfiNumber: `RFI-${rfi.number}`,
@@ -350,7 +350,7 @@ export const rfisApi = {
 
       if (!creator?.email) {return}
 
-      const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+      const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
       const { html, text } = generateRfiAnsweredEmail({
         recipientName: creator.full_name || creator.email.split('@')[0],
         rfiNumber: `RFI-${rfi.number}`,

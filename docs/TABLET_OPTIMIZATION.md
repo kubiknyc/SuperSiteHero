@@ -1,6 +1,6 @@
 # Tablet Optimization Guide
 
-This document describes the tablet-specific optimizations implemented in SuperSiteHero for iPad, Android tablets, and similar devices.
+This document describes the tablet-specific optimizations implemented in JobSight for iPad, Android tablets, and similar devices.
 
 ## Overview
 

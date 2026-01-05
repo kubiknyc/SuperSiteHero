@@ -58,7 +58,7 @@ export const WEB_VITALS_THRESHOLDS = {
 } as const;
 
 /**
- * Performance targets for SuperSiteHero
+ * Performance targets for JobSight
  *
  * These are our application-specific targets
  */

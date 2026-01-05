@@ -1,6 +1,6 @@
 # Custom Claude Code Commands for Construction Management
 
-This directory contains construction-specific slash commands to accelerate development of the SuperSiteHero platform.
+This directory contains construction-specific slash commands to accelerate development of the JobSight platform.
 
 ## Available Commands
 

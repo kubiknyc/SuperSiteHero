@@ -293,7 +293,7 @@ export function ReportShareDialog({
                     <div className="space-y-0.5">
                       <Label>Show Branding</Label>
                       <p className="text-sm text-muted-foreground">
-                        Display &quot;Powered by SuperSiteHero&quot; footer
+                        Display &quot;Powered by JobSight&quot; footer
                       </p>
                     </div>
                     <Switch checked={showBranding} onCheckedChange={setShowBranding} />
@@ -510,7 +510,7 @@ export function ReportShareDialog({
                       <div className="space-y-0.5">
                         <Label>Show Branding</Label>
                         <p className="text-sm text-muted-foreground">
-                          Display SuperSiteHero footer
+                          Display JobSight footer
                         </p>
                       </div>
                       <Switch

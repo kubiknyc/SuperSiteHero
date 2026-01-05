@@ -1,6 +1,6 @@
 # Shop Drawings Submittal/Review/Approval Process
 
-This document outlines the complete workflow for shop drawings and other submittals in the SuperSiteHero construction management platform.
+This document outlines the complete workflow for shop drawings and other submittals in the JobSight construction management platform.
 
 ---
 

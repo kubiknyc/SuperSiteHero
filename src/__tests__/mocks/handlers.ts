@@ -13,7 +13,7 @@ const SUPABASE_URL = import.meta.env?.VITE_SUPABASE_URL || 'https://test.supabas
 // Mock data factories
 const mockUser = {
   id: 'test-user-id-123',
-  email: 'test@supersitehero.com',
+  email: 'test@JobSight.com',
   full_name: 'Test User',
   role: 'superintendent' as const,
   company_id: 'company-id-123',

@@ -7,7 +7,7 @@ import { supabase } from '@/lib/supabase'
 import { sendPunchItemAssignedNotification } from '@/lib/notifications/notification-service'
 import type { PunchItem } from '@/types/database'
 
-const APP_URL = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+const APP_URL = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
 /**
  * Helper to get user details for notifications

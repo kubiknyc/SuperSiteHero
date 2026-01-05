@@ -219,7 +219,7 @@ export const tasksApi = {
 
       if (!assignee?.email) {return}
 
-      const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+      const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
       const { html, text } = generateTaskAssignedEmail({
         recipientName: assignee.full_name || assignee.email.split('@')[0],
         taskTitle: task.title,
@@ -259,7 +259,7 @@ export const tasksApi = {
 
       if (!subcontractor?.email) {return}
 
-      const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+      const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
       const { html, text } = generateTaskAssignedEmail({
         recipientName: subcontractor.company_name,
         taskTitle: task.title,

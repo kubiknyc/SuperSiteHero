@@ -1,6 +1,6 @@
 # Staging Environment Setup Guide
 
-This guide walks through setting up a staging environment for SuperSiteHero.
+This guide walks through setting up a staging environment for JobSight.
 
 ## Prerequisites
 
@@ -13,7 +13,7 @@ This guide walks through setting up a staging environment for SuperSiteHero.
 1. Go to [Supabase Dashboard](https://supabase.com/dashboard)
 2. Click "New project"
 3. Configure:
-   - **Name:** `supersitehero-staging`
+   - **Name:** `JobSight-staging`
    - **Database Password:** Generate a strong password
    - **Region:** Same as production
    - **Pricing Plan:** Free tier is sufficient for staging
@@ -75,7 +75,7 @@ VITE_APP_ENV=staging
 VITE_EMAIL_PROVIDER=console
 
 # App URL
-VITE_APP_URL=https://staging.supersitehero.com
+VITE_APP_URL=https://staging.JobSight.com
 
 # Sentry (use staging environment)
 VITE_SENTRY_DSN=your-sentry-dsn
@@ -186,7 +186,7 @@ deploy-staging:
 
 ### Checklist
 
-- [ ] Staging URL accessible (e.g., https://staging.supersitehero.com)
+- [ ] Staging URL accessible (e.g., https://staging.JobSight.com)
 - [ ] Login works with test credentials
 - [ ] Data is isolated from production
 - [ ] Error monitoring (Sentry) shows "staging" environment
@@ -197,10 +197,10 @@ deploy-staging:
 
 ```bash
 # Run E2E tests against staging
-PLAYWRIGHT_BASE_URL=https://staging.supersitehero.com npm run test:e2e
+PLAYWRIGHT_BASE_URL=https://staging.JobSight.com npm run test:e2e
 
 # Verify environment
-curl https://staging.supersitehero.com/api/health
+curl https://staging.JobSight.com/api/health
 ```
 
 ## Maintenance

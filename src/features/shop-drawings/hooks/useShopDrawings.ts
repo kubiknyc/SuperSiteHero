@@ -517,7 +517,7 @@ export function useTransitionShopDrawingStatus() {
       // Send notification for status changes
       if (data.submitted_by_user && data.submitted_by_user.id !== data.approval_code_set_by) {
         try {
-          const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+          const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
           const statusLabel = SUBMITTAL_REVIEW_STATUSES.find(s => s.value === data.review_status)?.label
 
           const recipient: NotificationRecipient = {

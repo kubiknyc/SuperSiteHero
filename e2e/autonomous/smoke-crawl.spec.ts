@@ -429,7 +429,7 @@ test.describe('Autonomous Smoke Crawl', () => {
   });
 
   // Subcontractor routes - login fresh for each test since no pre-saved auth
-  // To enable these tests: ensure sub@supersitehero.local exists (run: npx tsx scripts/seed-test-users.ts)
+  // To enable these tests: ensure sub@JobSight.local exists (run: npx tsx scripts/seed-test-users.ts)
   test.describe('Subcontractor Routes', () => {
     const subRoutes = routeGroups.get('subcontractor') || [];
 

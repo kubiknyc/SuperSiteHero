@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest a new feature for SuperSiteHero
+about: Suggest a new feature for JobSight
 title: '[FEATURE] '
 labels: enhancement
 assignees: ''

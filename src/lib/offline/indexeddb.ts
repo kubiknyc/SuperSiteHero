@@ -12,7 +12,7 @@ import type {
 import { logger } from '@/lib/utils/logger';
 
 // Database name and version
-const DB_NAME = 'supersitehero-offline';
+const DB_NAME = 'JobSight-offline';
 const DB_VERSION = 2; // Incremented for photo queue store
 
 // Store names

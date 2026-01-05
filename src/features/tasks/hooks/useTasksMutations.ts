@@ -78,7 +78,7 @@ export function useCreateTaskWithNotification() {
           const assigneeDetails = await getUserDetails(data.assigned_to)
           if (assigneeDetails) {
             const projectName = await getProjectName(data.project_id)
-            const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+            const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
             await sendTaskAssignedNotification(
               {
@@ -137,7 +137,7 @@ export function useUpdateTaskWithNotification() {
           const assigneeDetails = await getUserDetails(newAssigneeId)
           if (assigneeDetails) {
             const projectName = await getProjectName(data.project_id)
-            const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+            const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
             await sendTaskAssignedNotification(
               {

@@ -813,7 +813,7 @@ self.addEventListener('sync', (event) => {
 
 async function syncDailyReports() {
   // Get pending items from IndexedDB
-  const db = await openDB('supersitehero', 1)
+  const db = await openDB('JobSight', 1)
   const tx = db.transaction('sync_queue', 'readonly')
   const queue = await tx.store.getAll()
 

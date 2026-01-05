@@ -1,5 +1,5 @@
 # Security Assessment Report
-**Construction Management Application (JobSight/SuperSiteHero)**
+**Construction Management Application (JobSight/JobSight)**
 **Assessment Date:** December 31, 2024
 **Assessed By:** Security Specialist (Claude Code)
 
@@ -33,12 +33,12 @@ This security review assessed the authentication, authorization, data protection
 
 #### Strengths:
 1. **Supabase Authentication** - Using industry-standard authentication provider
-   - File: `c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\src\lib\auth\AuthContext.tsx`
+   - File: `c:\Users\kubik\iCloudDrive\JobSiight\JobSight\src\lib\auth\AuthContext.tsx`
    - Proper session management with automatic token refresh
    - Secure storage in localStorage (acceptable for Supabase anon key)
 
 2. **Multi-Factor Authentication (MFA)** - Comprehensive TOTP implementation
-   - File: `c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\src\lib\auth\mfa.ts`
+   - File: `c:\Users\kubik\iCloudDrive\JobSiight\JobSight\src\lib\auth\mfa.ts`
    - TOTP-based 2FA with QR code enrollment
    - Backup codes with cryptographically secure generation using `crypto.getRandomValues()`
    - Role-based MFA requirements (required for admin, project_manager, superintendent, etc.)
@@ -98,9 +98,9 @@ This security review assessed the authentication, authorization, data protection
 #### Strengths:
 
 1. **Comprehensive RLS Coverage** - Extensive policies across all tables
-   - Migration: `c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\migrations\012_rls_policies.sql`
-   - Migration: `c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\migrations\013_critical_security_and_performance_fixes.sql`
-   - Migration: `c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\migrations\021_rls_policy_optimization.sql`
+   - Migration: `c:\Users\kubik\iCloudDrive\JobSiight\JobSight\migrations\012_rls_policies.sql`
+   - Migration: `c:\Users\kubik\iCloudDrive\JobSiight\JobSight\migrations\013_critical_security_and_performance_fixes.sql`
+   - Migration: `c:\Users\kubik\iCloudDrive\JobSiight\JobSight\migrations\021_rls_policy_optimization.sql`
 
 2. **Multi-Tenant Isolation** - Proper company_id enforcement
    ```sql
@@ -135,7 +135,7 @@ This security review assessed the authentication, authorization, data protection
    ```
 
 6. **Comprehensive Test Coverage** - Security-focused testing
-   - File: `c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\src\__tests__\security\rls-policies.test.ts`
+   - File: `c:\Users\kubik\iCloudDrive\JobSiight\JobSight\src\__tests__\security\rls-policies.test.ts`
    - Tests for anonymous users (should be blocked)
    - Tests for cross-tenant isolation
    - Tests for authenticated user access
@@ -168,7 +168,7 @@ This security review assessed the authentication, authorization, data protection
 #### Strengths:
 
 1. **Well-Defined Role Hierarchy** - 8 distinct roles
-   - File: `c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\src\lib\auth\rbac.test.ts`
+   - File: `c:\Users\kubik\iCloudDrive\JobSiight\JobSight\src\lib\auth\rbac.test.ts`
    ```
    admin (100) > company_admin (90) > project_manager (70) >
    superintendent (60) > foreman (50) > field_worker (30) >
@@ -221,7 +221,7 @@ This security review assessed the authentication, authorization, data protection
 #### Strengths:
 
 1. **Comprehensive Zod Schemas** - Type-safe validation
-   - File: `c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\src\lib\validation\schemas.ts`
+   - File: `c:\Users\kubik\iCloudDrive\JobSiight\JobSight\src\lib\validation\schemas.ts`
    - Email validation with proper regex
    - Password complexity requirements
    - UUID validation to prevent injection
@@ -422,7 +422,7 @@ This security review assessed the authentication, authorization, data protection
 #### Strengths:
 
 1. **File Type Validation** - Whitelist approach
-   - File: `c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\src\features\documents\utils\fileUtils.ts`
+   - File: `c:\Users\kubik\iCloudDrive\JobSiight\JobSight\src\features\documents\utils\fileUtils.ts`
    ```typescript
    const allowedTypes = [
      'application/pdf',
@@ -727,12 +727,12 @@ The application is production-ready from a security perspective, with the unders
 **Next Review Recommended:** March 31, 2025 (Quarterly)
 
 **Key Files Reviewed:**
-- `c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\src\lib\auth\AuthContext.tsx`
-- `c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\src\lib\auth\mfa.ts`
-- `c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\src\lib\supabase.ts`
-- `c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\migrations\012_rls_policies.sql`
-- `c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\migrations\013_critical_security_and_performance_fixes.sql`
-- `c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\src\lib\validation\schemas.ts`
-- `c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\src\features\documents\utils\fileUtils.ts`
-- `c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\src\__tests__\security\rls-policies.test.ts`
-- `c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero\src\lib\auth\rbac.test.ts`
+- `c:\Users\kubik\iCloudDrive\JobSiight\JobSight\src\lib\auth\AuthContext.tsx`
+- `c:\Users\kubik\iCloudDrive\JobSiight\JobSight\src\lib\auth\mfa.ts`
+- `c:\Users\kubik\iCloudDrive\JobSiight\JobSight\src\lib\supabase.ts`
+- `c:\Users\kubik\iCloudDrive\JobSiight\JobSight\migrations\012_rls_policies.sql`
+- `c:\Users\kubik\iCloudDrive\JobSiight\JobSight\migrations\013_critical_security_and_performance_fixes.sql`
+- `c:\Users\kubik\iCloudDrive\JobSiight\JobSight\src\lib\validation\schemas.ts`
+- `c:\Users\kubik\iCloudDrive\JobSiight\JobSight\src\features\documents\utils\fileUtils.ts`
+- `c:\Users\kubik\iCloudDrive\JobSiight\JobSight\src\__tests__\security\rls-policies.test.ts`
+- `c:\Users\kubik\iCloudDrive\JobSiight\JobSight\src\lib\auth\rbac.test.ts`

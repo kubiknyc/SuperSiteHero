@@ -268,7 +268,7 @@ export const lienWaiverReminderService = {
     escalationLevel: EscalationLevel,
     config: WaiverReminderConfig = DEFAULT_REMINDER_CONFIG
   ): Promise<ReminderResult> {
-    const appUrl = import.meta.env?.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env?.VITE_APP_URL || 'https://JobSight.com'
     const daysFromDue = calculateDaysFromDue(waiver.due_date!)
 
     // Determine recipient - vendor email, subcontractor email, or escalate to PM

@@ -90,7 +90,7 @@ npm run test:e2e:ui
 ## File Structure
 
 ```
-SuperSiteHero/
+JobSight/
 ├── vitest.config.ts              # Vitest configuration
 ├── playwright.config.ts          # Playwright configuration
 ├── TESTING.md                    # Complete testing guide

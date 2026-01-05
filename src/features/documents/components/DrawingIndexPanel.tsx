@@ -1,12 +1,15 @@
 // File: /src/features/documents/components/DrawingIndexPanel.tsx
-// Collapsible sidebar panel for quick sheet navigation in drawing sets
+// Premium blueprint-styled collapsible sidebar panel for sheet navigation
 
 import { useState, useMemo } from 'react'
-import { X, Search, ChevronDown, ChevronRight, FileText } from 'lucide-react'
-import { Button, Input, ScrollArea, Badge } from '@/components/ui'
+import { X, Search, ChevronRight, FileText } from 'lucide-react'
+import { Button, ScrollArea } from '@/components/ui'
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible'
 import { cn } from '@/lib/utils'
 import type { Document } from '@/types/database'
+
+// Import blueprint styles
+import '@/styles/blueprint-navigation.css'
 
 interface DrawingIndexPanelProps {
   documents: Document[]
@@ -18,68 +21,44 @@ interface DrawingIndexPanelProps {
 }
 
 /**
- * Discipline mapping for sheet prefixes
+ * Discipline mapping with premium color scheme
+ * Colors optimized for field visibility on tablets
  */
-const DISCIPLINE_MAP: Record<string, { name: string; color: string }> = {
-  A: { name: 'Architectural', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' },
-  S: { name: 'Structural', color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300' },
-  M: { name: 'Mechanical', color: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300' },
-  E: { name: 'Electrical', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300' },
-  P: { name: 'Plumbing', color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300' },
-  FP: { name: 'Fire Protection', color: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300' },
-  C: { name: 'Civil', color: 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300' },
-  L: { name: 'Landscape', color: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300' },
-  G: { name: 'General', color: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300' },
+const DISCIPLINE_MAP: Record<string, { name: string; code: string }> = {
+  A: { name: 'Architectural', code: 'A' },
+  S: { name: 'Structural', code: 'S' },
+  M: { name: 'Mechanical', code: 'M' },
+  E: { name: 'Electrical', code: 'E' },
+  P: { name: 'Plumbing', code: 'P' },
+  FP: { name: 'Fire Protection', code: 'FP' },
+  C: { name: 'Civil', code: 'C' },
+  L: { name: 'Landscape', code: 'L' },
+  G: { name: 'General', code: 'G' },
 }
 
-/**
- * Extract discipline from sheet number
- * Handles formats like:
- * - A-001, A001 (Architectural)
- * - S-100, S100 (Structural)
- * - FP-001 (Fire Protection)
- */
 function extractDiscipline(fileName: string): string {
   const match = fileName.match(/^([A-Z]{1,2})[-\s]?(\d+)/)
-  if (match) {
-    return match[1]
-  }
-  // Fallback to first letter
+  if (match) return match[1]
   const firstLetter = fileName.charAt(0).toUpperCase()
   return /[A-Z]/.test(firstLetter) ? firstLetter : 'G'
 }
 
-/**
- * Extract sheet number from filename
- */
 function extractSheetNumber(fileName: string): string {
-  // Remove file extension
   const nameWithoutExt = fileName.replace(/\.(pdf|png|jpg|jpeg|dwg|dxf)$/i, '')
-  // Try to extract standard sheet number pattern
   const match = nameWithoutExt.match(/^([A-Z]{1,2}[-\s]?\d+)/)
-  if (match) {
-    return match[1]
-  }
+  if (match) return match[1]
   return nameWithoutExt
 }
 
-/**
- * Extract sheet title (everything after the sheet number)
- */
 function extractSheetTitle(fileName: string): string {
   const nameWithoutExt = fileName.replace(/\.(pdf|png|jpg|jpeg|dwg|dxf)$/i, '')
-  // Remove sheet number prefix
   const withoutNumber = nameWithoutExt.replace(/^[A-Z]{1,2}[-\s]?\d+[-\s]*/, '')
   return withoutNumber || nameWithoutExt
 }
 
-/**
- * Group documents by discipline
- */
 interface GroupedDocuments {
   discipline: string
   disciplineName: string
-  disciplineColor: string
   documents: Array<{
     id: string
     sheetNumber: string
@@ -88,32 +67,6 @@ interface GroupedDocuments {
   }>
 }
 
-/**
- * DrawingIndexPanel Component
- *
- * A collapsible sidebar panel that shows all sheets in a drawing set,
- * grouped by discipline for quick navigation.
- *
- * Features:
- * - Search/filter by sheet number or title
- * - Group sheets by discipline (A=Architectural, S=Structural, etc.)
- * - Collapsible discipline groups
- * - Highlight current sheet
- * - Click to navigate to any sheet
- * - Sheet count badges per discipline
- * - Responsive slide-out panel
- *
- * Usage:
- * ```tsx
- * <DrawingIndexPanel
- *   documents={drawingDocuments}
- *   currentDocumentId={currentDoc?.id}
- *   onNavigate={(docId) => navigateToDocument(docId)}
- *   isOpen={isPanelOpen}
- *   onClose={() => setIsPanelOpen(false)}
- * />
- * ```
- */
 export function DrawingIndexPanel({
   documents,
   currentDocumentId,
@@ -127,11 +80,9 @@ export function DrawingIndexPanel({
     new Set(Object.keys(DISCIPLINE_MAP))
   )
 
-  // Group and filter documents
   const groupedDocuments = useMemo(() => {
-    // Filter by search term
     const filtered = documents.filter((doc) => {
-      if (!searchTerm) {return true}
+      if (!searchTerm) return true
       const lower = searchTerm.toLowerCase()
       return (
         doc.file_name?.toLowerCase().includes(lower) ||
@@ -139,7 +90,6 @@ export function DrawingIndexPanel({
       )
     })
 
-    // Group by discipline
     const groups = new Map<string, GroupedDocuments>()
 
     filtered.forEach((doc) => {
@@ -151,7 +101,6 @@ export function DrawingIndexPanel({
         groups.set(discipline, {
           discipline,
           disciplineName: disciplineInfo.name,
-          disciplineColor: disciplineInfo.color,
           documents: [],
         })
       }
@@ -164,24 +113,19 @@ export function DrawingIndexPanel({
       })
     })
 
-    // Sort documents within each group by sheet number
     groups.forEach((group) => {
       group.documents.sort((a, b) => {
-        // Extract numeric part for proper sorting
         const aNum = parseInt(a.sheetNumber.replace(/\D/g, ''), 10) || 0
         const bNum = parseInt(b.sheetNumber.replace(/\D/g, ''), 10) || 0
         return aNum - bNum
       })
     })
 
-    // Convert to array and sort by discipline
     const disciplineOrder = ['A', 'S', 'M', 'E', 'P', 'FP', 'C', 'L', 'G']
     return Array.from(groups.values()).sort((a, b) => {
       const aIndex = disciplineOrder.indexOf(a.discipline)
       const bIndex = disciplineOrder.indexOf(b.discipline)
-      const aOrder = aIndex === -1 ? 999 : aIndex
-      const bOrder = bIndex === -1 ? 999 : bIndex
-      return aOrder - bOrder
+      return (aIndex === -1 ? 999 : aIndex) - (bIndex === -1 ? 999 : bIndex)
     })
   }, [documents, searchTerm])
 
@@ -199,21 +143,20 @@ export function DrawingIndexPanel({
 
   const handleNavigate = (documentId: string) => {
     onNavigate(documentId)
-    // On mobile, close panel after navigation
     if (window.innerWidth < 768) {
       onClose()
     }
   }
 
-  if (!isOpen) {
-    return null
-  }
+  if (!isOpen) return null
+
+  const totalMatching = groupedDocuments.reduce((sum, g) => sum + g.documents.length, 0)
 
   return (
     <>
       {/* Backdrop (mobile only) */}
       <div
-        className="fixed inset-0 bg-black/50 z-40 md:hidden"
+        className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 md:hidden blueprint-backdrop-enter"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -221,48 +164,65 @@ export function DrawingIndexPanel({
       {/* Panel */}
       <div
         className={cn(
-          'fixed top-0 right-0 h-full w-80 bg-card border-l border-border shadow-lg z-50',
+          'fixed top-0 right-0 h-full w-80 z-50',
           'flex flex-col',
-          'md:relative md:w-80 md:shadow-none',
-          'transition-transform duration-300 ease-in-out',
+          'md:relative md:w-80',
+          'drawing-index-panel blueprint-panel-enter',
           isOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-border">
-          <h2 className="text-lg font-semibold text-secondary">Drawing Index</h2>
+        <div className="drawing-index-header flex items-center justify-between">
+          <h2 className="drawing-index-title flex items-center gap-2">
+            <svg
+              className="w-4 h-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14,2 14,8 20,8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10,9 9,9 8,9" />
+            </svg>
+            Drawing Index
+          </h2>
           <Button
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="h-8 w-8 p-0"
+            className="h-10 w-10 p-0 text-[var(--blueprint-text-muted)] hover:text-[var(--blueprint-text-primary)] hover:bg-[var(--blueprint-bg-hover)]"
             aria-label="Close panel"
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </Button>
         </div>
 
         {/* Search */}
-        <div className="p-4 border-b border-border">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted" />
-            <Input
+        <div className="p-4 border-b border-[var(--blueprint-border)]">
+          <div className="blueprint-search-container">
+            <Search className="blueprint-search-icon" />
+            <input
               type="text"
               placeholder="Search sheets..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9"
+              className="blueprint-search-input"
             />
           </div>
         </div>
 
         {/* Sheet List */}
         <ScrollArea className="flex-1">
-          <div className="p-2">
+          <div className="p-3 blueprint-grid-bg-subtle min-h-full">
             {groupedDocuments.length === 0 ? (
-              <div className="p-8 text-center text-muted">
-                <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p className="text-sm">
+              <div className="blueprint-empty-state">
+                <FileText className="blueprint-empty-icon" />
+                <p className="blueprint-empty-text">
                   {searchTerm ? 'No sheets found' : 'No drawings available'}
                 </p>
               </div>
@@ -277,33 +237,23 @@ export function DrawingIndexPanel({
                     <CollapsibleTrigger asChild>
                       <button
                         type="button"
-                        className={cn(
-                          'flex items-center justify-between w-full px-3 py-2 rounded-md',
-                          'hover:bg-surface transition-colors',
-                          'text-left font-medium text-sm'
-                        )}
+                        className="discipline-header w-full"
+                        data-state={expandedDisciplines.has(group.discipline) ? 'open' : 'closed'}
                       >
-                        <div className="flex items-center gap-2 flex-1 min-w-0">
-                          {expandedDisciplines.has(group.discipline) ? (
-                            <ChevronDown className="h-4 w-4 flex-shrink-0 text-muted" />
-                          ) : (
-                            <ChevronRight className="h-4 w-4 flex-shrink-0 text-muted" />
-                          )}
-                          <span className="truncate text-secondary">
+                        <div className="flex items-center gap-2.5 flex-1 min-w-0">
+                          <ChevronRight className="discipline-chevron" />
+                          <span className="discipline-name truncate">
                             {group.disciplineName}
                           </span>
                         </div>
-                        <Badge
-                          variant="outline"
-                          className={cn('ml-2 flex-shrink-0', group.disciplineColor)}
-                        >
+                        <span className={cn('discipline-badge', `discipline-badge-${group.discipline}`)}>
                           {group.documents.length}
-                        </Badge>
+                        </span>
                       </button>
                     </CollapsibleTrigger>
 
                     <CollapsibleContent>
-                      <div className="ml-6 mt-1 space-y-0.5">
+                      <div className="mt-1 space-y-0.5">
                         {group.documents.map((doc) => {
                           const isCurrent = doc.id === currentDocumentId
                           return (
@@ -312,33 +262,21 @@ export function DrawingIndexPanel({
                               type="button"
                               onClick={() => handleNavigate(doc.id)}
                               className={cn(
-                                'w-full px-3 py-2 rounded-md text-left',
-                                'hover:bg-surface transition-colors',
-                                'flex items-start gap-2 group',
-                                isCurrent && 'bg-primary/10 border-l-2 border-primary'
+                                'sheet-list-item w-full text-left',
+                                isCurrent && 'sheet-list-item--current'
                               )}
                             >
-                              <FileText
-                                className={cn(
-                                  'h-4 w-4 mt-0.5 flex-shrink-0',
-                                  isCurrent ? 'text-primary' : 'text-muted group-hover:text-secondary'
-                                )}
-                              />
+                              <FileText className="sheet-icon" />
                               <div className="flex-1 min-w-0">
-                                <div
-                                  className={cn(
-                                    'text-xs font-medium mb-0.5',
-                                    isCurrent ? 'text-primary' : 'text-secondary'
-                                  )}
-                                >
+                                <div className="sheet-number">
                                   {doc.sheetNumber}
                                 </div>
-                                <div className="text-xs text-muted truncate">
+                                <div className="sheet-title">
                                   {doc.sheetTitle}
                                 </div>
                               </div>
                               {isCurrent && (
-                                <div className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-primary mt-1.5" />
+                                <div className="sheet-active-indicator" />
                               )}
                             </button>
                           )
@@ -353,14 +291,15 @@ export function DrawingIndexPanel({
         </ScrollArea>
 
         {/* Footer with stats */}
-        <div className="p-3 border-t border-border bg-surface/50">
-          <div className="text-xs text-muted text-center">
-            {documents.length} sheet{documents.length !== 1 ? 's' : ''} total
-            {searchTerm && groupedDocuments.length > 0 && (
+        <div className="blueprint-panel-footer">
+          <div className="blueprint-panel-stats">
+            <span className="blueprint-panel-stats-highlight">{documents.length}</span>
+            {' sheet'}{documents.length !== 1 ? 's' : ''} total
+            {searchTerm && totalMatching > 0 && (
               <span>
-                {' '}
-                • {groupedDocuments.reduce((sum, g) => sum + g.documents.length, 0)}{' '}
-                matching
+                {' · '}
+                <span className="blueprint-panel-stats-highlight">{totalMatching}</span>
+                {' matching'}
               </span>
             )}
           </div>

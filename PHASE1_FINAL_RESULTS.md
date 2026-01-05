@@ -164,7 +164,7 @@ npm run seed:test
 ```
 
 **What it creates:**
-- User profile for test@supersitehero.local
+- User profile for test@JobSight.local
 - Company record linkage
 - 3 sample projects with full details
 - 2 contact records

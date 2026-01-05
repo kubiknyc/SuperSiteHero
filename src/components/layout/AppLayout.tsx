@@ -90,19 +90,23 @@ export function AppLayout({ children }: AppLayoutProps) {
         </button>
       )}
 
-      {/* Sidebar Navigation - Always dark for consistent branding */}
+      {/* Sidebar Navigation - Premium dark gradient with refined styling */}
       <aside
         className={cn(
-          // Base styles - explicitly dark sidebar regardless of theme
-          "fixed inset-y-0 left-0 bg-gray-900 text-white flex-col z-50",
+          // Base styles - premium dark sidebar with gradient
+          "fixed inset-y-0 left-0 text-white flex-col z-50",
+          // Premium gradient background
+          "bg-gradient-to-b from-gray-900 via-gray-900 to-gray-950",
+          // Subtle inner border for depth
+          "border-r border-gray-800/50",
           // Desktop: always visible
           !isTablet && "hidden md:flex w-64",
           // Tablet landscape: persistent sidebar (slightly narrower)
           isTablet && isLandscape && "flex w-60",
-          // Tablet portrait: drawer sidebar
+          // Tablet portrait: drawer sidebar with smooth animation
           showDrawerSidebar && [
-            "flex w-72 transform transition-transform duration-300 ease-in-out",
-            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+            "flex w-72 transform transition-all duration-300 ease-out",
+            isSidebarOpen ? "translate-x-0 shadow-2xl shadow-black/50" : "-translate-x-full"
           ],
           // Touch-friendly scrolling
           isTouchDevice && "overflow-y-auto overscroll-contain"
@@ -175,18 +179,21 @@ export function AppLayout({ children }: AppLayoutProps) {
                   key={item.path}
                   to={item.path}
                   className={cn(
-                    'flex items-center gap-3 rounded-md font-medium transition-colors',
-                    // Base styles - explicit colors for dark sidebar
+                    'flex items-center gap-3 rounded-lg font-medium transition-all duration-200',
+                    // Premium styles - refined hover and active states
                     isActive
-                      ? 'bg-gray-800 text-white'
-                      : 'text-gray-300 hover:bg-gray-800 hover:text-white',
+                      ? 'bg-gradient-to-r from-primary/20 to-primary/10 text-white border-l-2 border-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]'
+                      : 'text-gray-400 hover:text-white hover:bg-white/5 border-l-2 border-transparent',
                     // Tablet: larger touch targets
-                    isTablet ? 'px-3 py-3 text-base min-h-[44px]' : 'px-3 py-2 text-sm',
-                    // Touch feedback
-                    isTouchDevice && 'active:bg-gray-700'
+                    isTablet ? 'px-3 py-3 text-base min-h-[44px]' : 'px-3 py-2.5 text-sm',
+                    // Touch feedback with subtle scale
+                    isTouchDevice && 'active:scale-[0.98] active:bg-white/10'
                   )}
                 >
-                  <Icon className="h-5 w-5" />
+                  <Icon className={cn(
+                    "h-5 w-5 transition-colors",
+                    isActive ? "text-primary" : "text-gray-500 group-hover:text-gray-300"
+                  )} />
                   <span className="flex-1">{item.label}</span>
                   {Badge && <Badge />}
                 </Link>
@@ -194,8 +201,8 @@ export function AppLayout({ children }: AppLayoutProps) {
             })}
           </div>
 
-          {/* Divider */}
-          <div className="border-t border-gray-800 my-3" />
+          {/* Premium Divider */}
+          <div className="my-4 mx-3 h-px bg-gradient-to-r from-transparent via-gray-700/50 to-transparent" />
 
           {/* Grouped Navigation (collapsible) */}
           <div className="space-y-2">
@@ -214,27 +221,30 @@ export function AppLayout({ children }: AppLayoutProps) {
           {/* Conditional Takeoffs navigation - only show when viewing a project and user is internal */}
           {currentProjectId && userRole !== 'client' && userRole !== 'subcontractor' && (
             <>
-              <div className="border-t border-gray-800 my-3" />
+              <div className="my-4 mx-3 h-px bg-gradient-to-r from-transparent via-gray-700/50 to-transparent" />
               <Link
                 to={`/projects/${currentProjectId}/takeoffs`}
                 className={cn(
-                  'flex items-center gap-3 rounded-md font-medium transition-colors',
+                  'flex items-center gap-3 rounded-lg font-medium transition-all duration-200',
                   location.pathname.includes('/takeoffs')
-                    ? 'bg-gray-800 text-white'
-                    : 'text-gray-300 hover:bg-gray-800 hover:text-white',
-                  isTablet ? 'px-3 py-3 text-base min-h-[44px]' : 'px-3 py-2 text-sm',
-                  isTouchDevice && 'active:bg-gray-700'
+                    ? 'bg-gradient-to-r from-primary/20 to-primary/10 text-white border-l-2 border-primary'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5 border-l-2 border-transparent',
+                  isTablet ? 'px-3 py-3 text-base min-h-[44px]' : 'px-3 py-2.5 text-sm',
+                  isTouchDevice && 'active:scale-[0.98] active:bg-white/10'
                 )}
               >
-                <Ruler className="h-5 w-5" />
+                <Ruler className={cn(
+                  "h-5 w-5 transition-colors",
+                  location.pathname.includes('/takeoffs') ? "text-primary" : "text-gray-500"
+                )} />
                 <span className="flex-1">Takeoffs</span>
               </Link>
             </>
           )}
         </nav>
 
-        {/* User profile and settings */}
-        <div className="p-4 border-t border-gray-800 space-y-3">
+        {/* User profile and settings - Premium styling */}
+        <div className="p-4 border-t border-gray-800/50 space-y-3 bg-gradient-to-t from-gray-950/50 to-transparent">
           {/* Sync status indicators */}
           <div className="pb-2 flex items-center justify-between gap-2">
             <SyncStatusBar />
@@ -242,37 +252,39 @@ export function AppLayout({ children }: AppLayoutProps) {
           </div>
 
           {/* Theme toggle */}
-          <div className="pb-2 flex items-center justify-between gap-2">
-            <span className="text-sm text-gray-400">Theme</span>
+          <div className="pb-2 flex items-center justify-between gap-2 px-1">
+            <span className="text-sm text-gray-500">Theme</span>
             <ThemeToggle compact />
           </div>
 
-          {/* User info */}
+          {/* User info - Premium card style */}
           {userProfile && (
-            <div className="px-3 py-2 text-sm">
-              <p className="font-medium text-white">
+            <div className="px-3 py-3 rounded-lg bg-white/5 border border-white/5">
+              <p className="font-semibold text-white">
                 {userProfile.first_name} {userProfile.last_name}
               </p>
-              <p className="text-xs text-gray-400">{userProfile.email}</p>
-              <p className="text-xs text-gray-500 capitalize">{userProfile.role}</p>
+              <p className="text-xs text-gray-400 mt-0.5">{userProfile.email}</p>
+              <span className="inline-flex mt-2 px-2 py-0.5 text-xs font-medium text-primary bg-primary/10 rounded-full capitalize">
+                {userProfile.role}
+              </span>
             </div>
           )}
 
-          {/* Settings and sign out */}
+          {/* Settings and sign out - refined styling */}
           <Link
             to="/settings"
-            className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-surface hover:text-white transition-colors"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-200"
           >
-            <Settings className="h-5 w-5" />
+            <Settings className="h-5 w-5 text-gray-500" />
             Settings
           </Link>
 
           <Button
             onClick={() => signOut()}
             variant="ghost"
-            className="w-full justify-start gap-3 text-gray-300 hover:bg-surface hover:text-white"
+            className="w-full justify-start gap-3 px-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg"
           >
-            <LogOut className="h-5 w-5" />
+            <LogOut className="h-5 w-5 text-gray-500" />
             Sign Out
           </Button>
         </div>

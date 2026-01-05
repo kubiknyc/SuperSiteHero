@@ -39,7 +39,7 @@ This document provides a comprehensive, step-by-step plan for executing all E2E 
 #### A. Install Dependencies
 ```bash
 # Navigate to project root
-cd c:\Users\kubik\iCloudDrive\JobSiight\SuperSiteHero
+cd c:\Users\kubik\iCloudDrive\JobSiight\JobSight
 
 # Install all dependencies
 npm install

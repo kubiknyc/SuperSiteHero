@@ -1,5 +1,5 @@
 # Offline-First Architecture Design
-**Project:** SuperSiteHero Construction Management Platform
+**Project:** JobSight Construction Management Platform
 **Created:** 2025-11-25
 **Priority:** P0 - CRITICAL (Without this, field adoption will FAIL)
 **Effort:** 3-4 weeks
@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-This document outlines the technical architecture for implementing a robust offline-first system for SuperSiteHero. Construction sites often have poor or no connectivity, making offline capability **the #1 critical feature** for field adoption.
+This document outlines the technical architecture for implementing a robust offline-first system for JobSight. Construction sites often have poor or no connectivity, making offline capability **the #1 critical feature** for field adoption.
 
 ### Current State (Updated January 2026)
 - ✅ Basic PWA setup with Vite PWA plugin
@@ -186,7 +186,7 @@ When Online Again → SyncQueue → Process Queue → Retry Failed → Update UI
 ### IndexedDB Schema
 
 ```typescript
-// Database: supersitehero-offline-v1
+// Database: JobSight-offline-v1
 
 // Store 1: Cached Data
 interface CachedData {
@@ -573,7 +573,7 @@ export default defineConfig({
       filename: 'sw.ts', // Custom service worker
       includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
       manifest: {
-        name: 'SuperSiteHero',
+        name: 'JobSight',
         short_name: 'SSH',
         description: 'Offline-first construction management',
         theme_color: '#2563eb',
@@ -782,7 +782,7 @@ class OfflineAPIClient {
   private syncQueue: SyncQueueManager;
 
   async init() {
-    this.db = await openDB('supersitehero-offline-v1', 1, {
+    this.db = await openDB('JobSight-offline-v1', 1, {
       upgrade(db) {
         // Cached Data store
         if (!db.objectStoreNames.contains('cachedData')) {

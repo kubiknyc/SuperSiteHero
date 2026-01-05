@@ -267,7 +267,7 @@ export const certificateReminderService = {
     escalationLevel: EscalationLevel,
     config: ReminderConfig = DEFAULT_REMINDER_CONFIG
   ): Promise<ReminderResult> {
-    const appUrl = import.meta.env?.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env?.VITE_APP_URL || 'https://JobSight.com'
     const daysFromExpiration = calculateDaysFromExpiration(certificate.expiration_date)
 
     // Determine recipient

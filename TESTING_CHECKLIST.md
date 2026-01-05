@@ -1,4 +1,4 @@
-# SuperSiteHero Testing Checklist
+# JobSight Testing Checklist
 
 ## Pre-Testing Configuration
 
@@ -13,7 +13,7 @@ Run these commands in your terminal:
 ```bash
 # Email (Resend)
 supabase secrets set RESEND_API_KEY=re_your_key_here
-supabase secrets set EMAIL_FROM="SuperSiteHero <noreply@yourdomain.com>"
+supabase secrets set EMAIL_FROM="JobSight <noreply@yourdomain.com>"
 
 # Push Notifications (VAPID)
 # Generate keys: npx web-push generate-vapid-keys

@@ -414,7 +414,7 @@ export function useCreateRFI() {
               name: u.full_name || undefined,
             }))
 
-            const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+            const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
             // Notify each recipient
             for (const recipient of recipients) {
@@ -527,7 +527,7 @@ export function useRespondToRFI() {
       // Notify the RFI submitter that their RFI has been responded to
       if (rfi.submitted_by_user && rfi.submitted_by_user.id !== user?.id) {
         try {
-          const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+          const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
           const recipient: NotificationRecipient = {
             userId: rfi.submitted_by_user.id,
             email: rfi.submitted_by_user.email,
@@ -597,7 +597,7 @@ export function useUpdateBallInCourt() {
       // Notify new ball-in-court user if changed
       if (rfi.ball_in_court_user && rfi.ball_in_court !== previousUserId && rfi.ball_in_court !== user?.id) {
         try {
-          const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+          const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
           const roleLabel = getBallInCourtLabel(rfi.ball_in_court_role)
 
           await notificationService._createInAppNotification({
@@ -676,7 +676,7 @@ export function useCloseRFI() {
 
       // Notify RFI submitter and assignee that RFI has been closed
       try {
-        const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+        const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
         const notifyUsers: Array<{ id: string; email: string; full_name: string }> = []
 
         // Add submitter if not current user

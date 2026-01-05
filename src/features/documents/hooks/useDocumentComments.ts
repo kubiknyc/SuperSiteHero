@@ -68,7 +68,7 @@ async function notifyDocumentComment(
 
     if (!documentOwner?.email) {return}
 
-    const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+    const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
     const { html, text } = generateDocumentCommentEmail({
       recipientName: documentOwner.full_name || documentOwner.email.split('@')[0],
       documentName: document.name,

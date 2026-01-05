@@ -2,7 +2,7 @@
 
 **Last Updated:** December 7, 2025
 
-This document lists all required environment variables for SuperSiteHero across different environments.
+This document lists all required environment variables for JobSight across different environments.
 
 ---
 

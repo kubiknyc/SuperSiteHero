@@ -62,7 +62,7 @@ async function sendRfiNotificationsToAssignees(
   assignedBy: string,
   projectName: string
 ): Promise<void> {
-  const appUrl = import.meta.env.VITE_APP_URL || 'https://supersitehero.com'
+  const appUrl = import.meta.env.VITE_APP_URL || 'https://JobSight.com'
 
   for (const assigneeId of assignees) {
     try {

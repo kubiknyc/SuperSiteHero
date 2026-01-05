@@ -7,7 +7,7 @@
  * - Company branding (logo, name)
  * - Export to PDF/Excel/CSV (if allowed)
  * - Custom message display
- * - SuperSiteHero branding (if enabled)
+ * - JobSight branding (if enabled)
  * - Error handling for expired/invalid tokens
  */
 
@@ -281,9 +281,9 @@ export function PublicReportViewer() {
               Please contact the person who shared this link with you.
             </p>
             <Button asChild variant="outline">
-              <a href="https://supersitehero.com" target="_blank" rel="noopener noreferrer">
+              <a href="https://JobSight.com" target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="h-4 w-4 mr-2" />
-                Learn About SuperSiteHero
+                Learn About JobSight
               </a>
             </Button>
           </CardContent>
@@ -580,12 +580,12 @@ export function PublicReportViewer() {
 
             {sharedReport.showBranding && (
               <a
-                href="https://supersitehero.com"
+                href="https://JobSight.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-primary hover:text-primary-hover"
               >
-                Powered by SuperSiteHero
+                Powered by JobSight
                 <ExternalLink className="h-3 w-3" />
               </a>
             )}
