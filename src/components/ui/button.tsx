@@ -7,18 +7,78 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
-  // Base styles with touch-friendly defaults
+  // Base styles with touch-friendly defaults and premium transitions
   // Using min-h-[44px] for WCAG 2.1 compliant touch targets on mobile
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none touch-manipulation dark:ring-offset-gray-950 dark:focus-visible:outline-primary',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-semibold transition-all duration-200 ease-out focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 select-none touch-manipulation dark:ring-offset-gray-950 dark:focus-visible:outline-primary relative overflow-hidden',
   {
     variants: {
       variant: {
-        default: 'bg-primary text-white hover:bg-primary/90 focus-visible:ring-primary active:bg-primary/80 dark:bg-primary dark:hover:bg-primary/90 dark:active:bg-primary/80',
-        destructive: 'bg-error text-white hover:bg-red-700 focus-visible:ring-red-600 active:bg-red-800 dark:bg-red-500 dark:hover:bg-error dark:active:bg-red-700',
-        outline: 'border border-input bg-card hover:bg-surface text-foreground focus-visible:ring-gray-400 active:bg-muted dark:border-gray-700 dark:bg-gray-950 dark:text-gray-100 dark:hover:bg-surface dark:active:bg-gray-700',
-        secondary: 'bg-muted text-foreground hover:bg-muted focus-visible:ring-gray-400 active:bg-gray-300 dark:bg-surface dark:text-gray-100 dark:hover:bg-gray-700 dark:active:bg-gray-600',
-        ghost: 'hover:bg-muted text-foreground focus-visible:ring-gray-400 active:bg-muted dark:text-gray-100 dark:hover:bg-surface dark:active:bg-gray-700',
-        link: 'text-primary underline-offset-4 hover:underline focus-visible:ring-primary dark:text-primary-400',
+        // Premium default with gradient, shadow, and glow
+        default: [
+          'bg-gradient-to-b from-primary to-primary/90 text-white',
+          'shadow-[0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.1)]',
+          'hover:shadow-[0_4px_12px_rgba(30,64,175,0.25),0_2px_4px_rgba(0,0,0,0.1)]',
+          'hover:from-primary/95 hover:to-primary/85 hover:-translate-y-0.5',
+          'active:translate-y-0 active:shadow-[0_1px_2px_rgba(0,0,0,0.1)]',
+          'focus-visible:ring-primary',
+          'dark:from-primary dark:to-primary/80',
+          'dark:hover:shadow-[0_4px_20px_rgba(96,165,250,0.3),0_2px_4px_rgba(0,0,0,0.2)]',
+        ].join(' '),
+        // Destructive with red gradient and glow
+        destructive: [
+          'bg-gradient-to-b from-red-500 to-red-600 text-white',
+          'shadow-[0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.1)]',
+          'hover:shadow-[0_4px_12px_rgba(239,68,68,0.3),0_2px_4px_rgba(0,0,0,0.1)]',
+          'hover:from-red-400 hover:to-red-500 hover:-translate-y-0.5',
+          'active:translate-y-0 active:shadow-[0_1px_2px_rgba(0,0,0,0.1)]',
+          'focus-visible:ring-red-500',
+          'dark:from-red-500 dark:to-red-600',
+          'dark:hover:shadow-[0_4px_20px_rgba(248,113,113,0.35)]',
+        ].join(' '),
+        // Refined outline with subtle hover glow
+        outline: [
+          'border-2 border-gray-200 bg-white text-gray-700',
+          'shadow-[0_1px_2px_rgba(0,0,0,0.04)]',
+          'hover:border-primary/50 hover:bg-primary/5 hover:text-primary',
+          'hover:shadow-[0_2px_8px_rgba(30,64,175,0.1)]',
+          'active:bg-primary/10',
+          'focus-visible:ring-gray-400',
+          'dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100',
+          'dark:hover:border-primary/50 dark:hover:bg-primary/10',
+          'dark:hover:shadow-[0_2px_12px_rgba(96,165,250,0.15)]',
+        ].join(' '),
+        // Secondary with refined muted styling
+        secondary: [
+          'bg-gray-100 text-gray-700',
+          'shadow-[0_1px_2px_rgba(0,0,0,0.04)]',
+          'hover:bg-gray-200/80 hover:shadow-[0_2px_4px_rgba(0,0,0,0.06)]',
+          'active:bg-gray-200',
+          'focus-visible:ring-gray-400',
+          'dark:bg-gray-800 dark:text-gray-100',
+          'dark:hover:bg-gray-700 dark:hover:shadow-[0_2px_8px_rgba(0,0,0,0.2)]',
+        ].join(' '),
+        // Ghost with smooth transitions
+        ghost: [
+          'text-gray-600 hover:bg-gray-100 hover:text-gray-900',
+          'active:bg-gray-200',
+          'focus-visible:ring-gray-400',
+          'dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100',
+        ].join(' '),
+        // Premium link with animated underline
+        link: [
+          'text-primary underline-offset-4 hover:underline',
+          'focus-visible:ring-primary',
+          'dark:text-blue-400',
+        ].join(' '),
+        // NEW: Success variant
+        success: [
+          'bg-gradient-to-b from-emerald-500 to-emerald-600 text-white',
+          'shadow-[0_1px_3px_rgba(0,0,0,0.12),0_1px_2px_rgba(0,0,0,0.08),inset_0_1px_0_rgba(255,255,255,0.1)]',
+          'hover:shadow-[0_4px_12px_rgba(16,185,129,0.3),0_2px_4px_rgba(0,0,0,0.1)]',
+          'hover:from-emerald-400 hover:to-emerald-500 hover:-translate-y-0.5',
+          'active:translate-y-0',
+          'focus-visible:ring-emerald-500',
+        ].join(' '),
       },
       size: {
         // Default: 40px height on desktop, 44px on mobile (WCAG compliant)
