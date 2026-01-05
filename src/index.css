@@ -1,11 +1,20 @@
 /* File: /src/index.css */
 /* Global styles and Tailwind CSS directives */
 
+/* Import Google Fonts - Typography System */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
 /* Import tablet-specific styles - must be before tailwind directives */
 @import './styles/tablet.css';
 
 /* Import premium blueprint navigation styles for document viewer */
 @import './styles/blueprint-navigation.css';
+
+/* Import industrial theme patterns and utilities */
+@import './styles/industrial-theme.css';
+
+/* Import industrial form input styles */
+@import './styles/industrial-inputs.css';
 
 @tailwind base;
 @tailwind components;
@@ -14,23 +23,68 @@
 /* Typography Hierarchy Utilities */
 /* Based on DESIGN_SYSTEM.md specifications */
 @layer utilities {
+  /* ========== TYPOGRAPHY SYSTEM ========== */
+
+  /* Display headings - bold, geometric */
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  /* Monospace for data/numbers - technical precision */
+  .font-mono-data {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+
+  /* Large stat numbers - industrial instrument style */
+  .stat-number {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+
+  /* Blueprint annotation style labels */
+  .label-blueprint {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.6875rem;
+    font-weight: 600;
+  }
+
+  /* Technical data labels */
+  .label-technical {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
   /* Page-level headings */
   .heading-page {
+    font-family: var(--font-display);
     @apply text-3xl font-bold tracking-tight leading-tight text-gray-900 dark:text-gray-50;
   }
 
   /* Section headings */
   .heading-section {
+    font-family: var(--font-display);
     @apply text-2xl font-semibold tracking-tight leading-snug text-gray-900 dark:text-gray-50;
   }
 
   /* Card/component headings */
   .heading-card {
+    font-family: var(--font-display);
     @apply text-xl font-semibold leading-snug text-gray-900 dark:text-gray-50;
   }
 
   /* Subheadings */
   .heading-sub {
+    font-family: var(--font-display);
     @apply text-lg font-medium leading-normal text-gray-700 dark:text-gray-200;
   }
 
@@ -92,6 +146,7 @@
 @layer base {
   /* Global theme transition for smooth theme switching */
   html {
+    font-family: var(--font-body);
     transition: color 0.2s ease, background-color 0.2s ease;
     /* Prevent iOS text size adjustment */
     -webkit-text-size-adjust: 100%;
@@ -152,6 +207,12 @@
   }
 
   :root {
+    /* ========== TYPOGRAPHY SYSTEM ========== */
+    /* Font family custom properties */
+    --font-display: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+
     /* Light mode - softer whites and better differentiation */
     --background: 0 0% 98%;
     --foreground: 0 0% 9%;
@@ -190,6 +251,27 @@
     --warning-foreground: 0 0% 9%;
     --info: 199 89% 48%;
     --info-foreground: 0 0% 98%;
+
+    /* ========== INDUSTRIAL CONSTRUCTION PALETTE ========== */
+    /* High-visibility and industrial-themed colors for JobSight */
+    --safety-orange: 24 95% 53%;        /* #F97316 - High-vis safety */
+    --safety-orange-foreground: 0 0% 100%;
+    --steel-gray: 215 16% 47%;          /* #64748B - Industrial neutral */
+    --concrete: 210 40% 96%;            /* #F1F5F9 - Textured backgrounds */
+    --concrete-dark: 215 25% 27%;       /* #374151 - Dark concrete */
+    --rebar-rust: 28 80% 37%;           /* #B45309 - Aged metal accent */
+    --caution-yellow: 43 96% 56%;       /* #FBBF24 - Alerts, warnings */
+    --caution-yellow-foreground: 0 0% 9%;
+
+    /* Blueprint technical elements */
+    --blueprint-line: 217 70% 38% / 0.15;
+    --blueprint-grid: 217 70% 38% / 0.08;
+    --blueprint-glow: 217 70% 50% / 0.12;
+
+    /* Industrial surface colors */
+    --surface-industrial: 220 14% 96%;
+    --surface-steel: 215 20% 65%;
+    --surface-weathered: 30 10% 90%;
 
     /* ========== PREMIUM UI TOKENS ========== */
     /* Layered shadows for depth and elevation */
@@ -262,6 +344,27 @@
     --warning-foreground: 0 0% 9%;
     --info: 199 89% 65%;
     --info-foreground: 0 0% 9%;
+
+    /* ========== INDUSTRIAL CONSTRUCTION PALETTE (DARK MODE) ========== */
+    /* High-visibility and industrial-themed colors for JobSight */
+    --safety-orange: 24 95% 58%;
+    --safety-orange-foreground: 0 0% 5%;
+    --steel-gray: 215 20% 55%;
+    --concrete: 220 15% 18%;
+    --concrete-dark: 220 15% 12%;
+    --rebar-rust: 28 75% 50%;
+    --caution-yellow: 43 96% 65%;
+    --caution-yellow-foreground: 0 0% 9%;
+
+    /* Blueprint technical elements - Dark Mode */
+    --blueprint-line: 217 85% 65% / 0.15;
+    --blueprint-grid: 217 85% 65% / 0.06;
+    --blueprint-glow: 217 85% 70% / 0.15;
+
+    /* Industrial surface colors - Dark Mode */
+    --surface-industrial: 220 15% 12%;
+    --surface-steel: 215 15% 35%;
+    --surface-weathered: 30 5% 20%;
 
     /* ========== PREMIUM UI TOKENS (DARK MODE) ========== */
     /* Layered shadows - more dramatic for dark mode */
@@ -771,6 +874,187 @@
       hsl(var(--border)) 20%,
       hsl(var(--border)) 80%,
       transparent 100%
+    );
+  }
+
+  /* ========== INDUSTRIAL COLOR UTILITIES ========== */
+
+  /* Safety Orange - High-visibility safety elements */
+  .bg-safety-orange { background-color: hsl(var(--safety-orange)); }
+  .text-safety-orange { color: hsl(var(--safety-orange)); }
+  .border-safety-orange { border-color: hsl(var(--safety-orange)); }
+
+  /* Steel Gray - Industrial neutral tones */
+  .bg-steel-gray { background-color: hsl(var(--steel-gray)); }
+  .text-steel-gray { color: hsl(var(--steel-gray)); }
+  .border-steel-gray { border-color: hsl(var(--steel-gray)); }
+
+  /* Concrete - Textured backgrounds */
+  .bg-concrete { background-color: hsl(var(--concrete)); }
+  .bg-concrete-dark { background-color: hsl(var(--concrete-dark)); }
+  .text-concrete { color: hsl(var(--concrete)); }
+  .border-concrete { border-color: hsl(var(--concrete)); }
+
+  /* Caution Yellow - Alerts and warnings */
+  .bg-caution-yellow { background-color: hsl(var(--caution-yellow)); }
+  .text-caution-yellow { color: hsl(var(--caution-yellow)); }
+  .border-caution-yellow { border-color: hsl(var(--caution-yellow)); }
+
+  /* Rebar Rust - Aged metal accent */
+  .text-rebar-rust { color: hsl(var(--rebar-rust)); }
+  .border-rebar-rust { border-color: hsl(var(--rebar-rust)); }
+  .bg-rebar-rust { background-color: hsl(var(--rebar-rust)); }
+
+  /* Blueprint technical elements */
+  .blueprint-grid-bg {
+    background-image:
+      linear-gradient(hsl(var(--blueprint-line)), hsl(var(--blueprint-line)) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--blueprint-line)), hsl(var(--blueprint-line)) 1px, transparent 1px),
+      linear-gradient(hsl(var(--blueprint-grid)), hsl(var(--blueprint-grid)) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--blueprint-grid)), hsl(var(--blueprint-grid)) 1px, transparent 1px);
+    background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+  }
+
+  .blueprint-glow {
+    box-shadow: 0 0 30px hsl(var(--blueprint-glow));
+  }
+
+  /* ========== INDUSTRIAL BACKGROUND PATTERNS ========== */
+
+  /* Blueprint grid pattern - for data-heavy sections */
+  .bg-blueprint-grid {
+    background-image:
+      linear-gradient(hsl(var(--blueprint-line)) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--blueprint-line)) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Finer blueprint grid for detailed areas */
+  .bg-blueprint-grid-fine {
+    background-image:
+      linear-gradient(hsl(var(--blueprint-grid)) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--blueprint-grid)) 1px, transparent 1px);
+    background-size: 12px 12px;
+  }
+
+  /* Blueprint grid with accent lines every 5th line */
+  .bg-blueprint-grid-major {
+    background-image:
+      linear-gradient(hsl(var(--blueprint-line)) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--blueprint-line)) 1px, transparent 1px),
+      linear-gradient(hsl(var(--blueprint-grid)) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--blueprint-grid)) 1px, transparent 1px);
+    background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+  }
+
+  /* Concrete noise texture overlay */
+  .bg-concrete-texture {
+    position: relative;
+  }
+  .bg-concrete-texture::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+
+  /* Steel mesh diagonal pattern */
+  .bg-steel-mesh {
+    background-image:
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 10px,
+        hsl(var(--steel-gray) / 0.03) 10px,
+        hsl(var(--steel-gray) / 0.03) 11px
+      ),
+      repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 10px,
+        hsl(var(--steel-gray) / 0.03) 10px,
+        hsl(var(--steel-gray) / 0.03) 11px
+      );
+  }
+
+  /* Dotted grid pattern - subtle technical */
+  .bg-dot-grid {
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      hsl(var(--steel-gray) / 0.15) 1px,
+      transparent 0
+    );
+    background-size: 20px 20px;
+  }
+
+  /* Industrial stripe pattern for headers/accents */
+  .bg-industrial-stripe {
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 8px,
+      hsl(var(--caution-yellow) / 0.1) 8px,
+      hsl(var(--caution-yellow) / 0.1) 16px
+    );
+  }
+
+  /* Hazard stripe for warnings */
+  .bg-hazard-stripe {
+    background: repeating-linear-gradient(
+      -45deg,
+      hsl(var(--caution-yellow)),
+      hsl(var(--caution-yellow)) 10px,
+      hsl(0 0% 10%) 10px,
+      hsl(0 0% 10%) 20px
+    );
+  }
+
+  /* Measurement marks pattern - like a ruler */
+  .bg-measurement-marks {
+    background-image:
+      repeating-linear-gradient(
+        90deg,
+        hsl(var(--blueprint-line)) 0px,
+        hsl(var(--blueprint-line)) 1px,
+        transparent 1px,
+        transparent 12px
+      );
+    background-position: 0 100%;
+    background-size: 12px 8px;
+    background-repeat: repeat-x;
+  }
+
+  /* Technical crosshatch */
+  .bg-crosshatch {
+    background-image:
+      linear-gradient(45deg, hsl(var(--steel-gray) / 0.02) 25%, transparent 25%),
+      linear-gradient(-45deg, hsl(var(--steel-gray) / 0.02) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, hsl(var(--steel-gray) / 0.02) 75%),
+      linear-gradient(-45deg, transparent 75%, hsl(var(--steel-gray) / 0.02) 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 8px 0, 8px -8px, 0 8px;
+  }
+
+  /* Gradient overlays for industrial depth */
+  .bg-industrial-gradient {
+    background: linear-gradient(
+      180deg,
+      hsl(var(--concrete)) 0%,
+      hsl(var(--surface-industrial)) 50%,
+      hsl(var(--concrete)) 100%
+    );
+  }
+
+  /* Dark industrial gradient */
+  .dark .bg-industrial-gradient {
+    background: linear-gradient(
+      180deg,
+      hsl(220 15% 10%) 0%,
+      hsl(220 15% 14%) 50%,
+      hsl(220 15% 10%) 100%
     );
   }
 }

@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useContact, useCreateContact, useUpdateContact } from '@/features/contacts/hooks/useContacts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -107,16 +107,16 @@ export function ContactFormPage() {
 
   if (contactLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Contact">
         <div className="p-6 flex items-center justify-center min-h-96">
           <Loader2 className="h-12 w-12 text-disabled animate-spin" />
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Contact">
       <div className="p-6 max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-6">
@@ -367,6 +367,6 @@ export function ContactFormPage() {
           </Card>
         </form>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

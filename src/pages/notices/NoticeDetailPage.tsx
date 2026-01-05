@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { format } from 'date-fns'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useNotice, useDeleteNoticeWithNotification } from '@/features/notices/hooks'
 import {
   NoticeStatusBadge,
@@ -67,18 +67,18 @@ export function NoticeDetailPage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Notice Details">
         <div className="p-6 space-y-6">
           <Skeleton className="h-8 w-48" />
           <Skeleton className="h-64 w-full" />
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !notice) {
     return (
-      <AppLayout>
+      <SmartLayout title="Notice Details">
         <div className="p-6">
           <Card>
             <CardContent className="p-12 text-center">
@@ -98,14 +98,14 @@ export function NoticeDetailPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   const overdue = isResponseOverdue(notice)
 
   return (
-    <AppLayout>
+    <SmartLayout title="Notice Details">
       <div className="p-6 space-y-6">
         {/* Back button and actions */}
         <div className="flex items-center justify-between">
@@ -386,6 +386,6 @@ export function NoticeDetailPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </AppLayout>
+    </SmartLayout>
   )
 }

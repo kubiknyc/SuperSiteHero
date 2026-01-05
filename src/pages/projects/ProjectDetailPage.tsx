@@ -3,7 +3,7 @@
 
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useProject } from '@/features/projects/hooks/useProjects'
 import { EditProjectDialog } from '@/features/projects/components/EditProjectDialog'
 import { DeleteProjectConfirmation } from '@/features/projects/components/DeleteProjectConfirmation'
@@ -52,32 +52,32 @@ export function ProjectDetailPage() {
   // Early return after all hooks are called
   if (!projectId) {
     return (
-      <AppLayout>
+      <SmartLayout title="Project Details">
         <div className="p-6">
           <div className="text-center">
             <p className="text-error">Project ID not found</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Project Details">
         <div className="p-6">
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-disabled" />
             <p className="ml-2 text-muted">Loading project details...</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !project) {
     return (
-      <AppLayout>
+      <SmartLayout title="Project Details">
         <div className="p-6">
           <div className="mb-6">
             <Button variant="outline" onClick={() => navigate('/projects')}>
@@ -91,7 +91,7 @@ export function ProjectDetailPage() {
             </p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
@@ -117,7 +117,7 @@ export function ProjectDetailPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Project Details">
       <div className="p-6">
         {/* Back button */}
         <div className="mb-6">
@@ -348,6 +348,6 @@ export function ProjectDetailPage() {
           />
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

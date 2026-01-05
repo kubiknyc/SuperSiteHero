@@ -42,7 +42,7 @@ import {
   CheckCircle2,
   Circle,
 } from 'lucide-react';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { SmartLayout } from '@/components/layout/SmartLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -326,7 +326,7 @@ export function TransmittalDetailPage() {
   // Missing params check
   if (!projectId || !transmittalId) {
     return (
-      <AppLayout>
+      <SmartLayout title="Transmittal Details">
         <div className="p-6">
           <Card>
             <CardContent className="py-12 text-center">
@@ -342,25 +342,25 @@ export function TransmittalDetailPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
   // Loading state
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Transmittal Details">
         <div className="p-6">
           <TransmittalDetailSkeleton />
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
   // Error state
   if (error || !transmittal) {
     return (
-      <AppLayout>
+      <SmartLayout title="Transmittal Details">
         <div className="p-6 space-y-6">
           <Breadcrumb
             projectId={projectId}
@@ -383,7 +383,7 @@ export function TransmittalDetailPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
@@ -534,7 +534,7 @@ export function TransmittalDetailPage() {
   };
 
   return (
-    <AppLayout>
+    <SmartLayout title="Transmittal Details">
       <div className="p-6 space-y-6">
         {/* Breadcrumb Navigation */}
         <Breadcrumb
@@ -1262,7 +1262,7 @@ export function TransmittalDetailPage() {
           </div>
         </div>
       </div>
-    </AppLayout>
+    </SmartLayout>
   );
 }
 

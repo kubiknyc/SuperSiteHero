@@ -18,3 +18,11 @@ export {
   useIsDesktopMode,
   useResponsiveLayout,
 } from './DeviceContext';
+
+export {
+  isDesktopOnlyRoute,
+  mapUrlToDeviceMode,
+  getMobileUrl,
+  getDesktopUrl,
+  normalizeUrlForDevice,
+} from './urlMapping';

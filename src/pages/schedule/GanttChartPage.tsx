@@ -4,7 +4,7 @@
 import { useState, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Plus, Settings, FileDown } from 'lucide-react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
 import { GanttChart } from '@/features/gantt/components/GanttChart'
@@ -135,20 +135,20 @@ export function GanttChartPage() {
 
   if (projectLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Gantt Chart">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
             <p className="mt-4 text-secondary">Loading project...</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (!project) {
     return (
-      <AppLayout>
+      <SmartLayout title="Gantt Chart">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <h2 className="text-xl font-semibold text-foreground mb-2 heading-section">Project not found</h2>
@@ -159,12 +159,12 @@ export function GanttChartPage() {
             </Button>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Gantt Chart">
       <div className="flex flex-col h-[calc(100vh-64px)]">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b bg-card">
@@ -297,7 +297,7 @@ export function GanttChartPage() {
           isImporting={isImporting}
         />
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

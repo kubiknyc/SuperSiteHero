@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { useParams, useNavigate } from 'react-router-dom'
 import { format, differenceInDays } from 'date-fns'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -198,32 +198,32 @@ export function DedicatedSubmittalDetailPage() {
   // Loading state
   if (!submittalId) {
     return (
-      <AppLayout>
+      <SmartLayout title="Submittal Details">
         <div className="p-6">
           <div className="text-center">
             <p className="text-error">Submittal ID not found</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Submittal Details">
         <div className="p-6">
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-disabled" />
             <p className="ml-2 text-muted">Loading submittal...</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !submittal) {
     return (
-      <AppLayout>
+      <SmartLayout title="Submittal Details">
         <div className="p-6">
           <div className="mb-6">
             <Button variant="outline" onClick={() => navigate(-1)}>
@@ -239,14 +239,14 @@ export function DedicatedSubmittalDetailPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   const typeInfo = SUBMITTAL_TYPES.find((t) => t.value === submittal.submittal_type)
 
   return (
-    <AppLayout>
+    <SmartLayout title="Submittal Details">
       <div className="p-6 space-y-6">
         {/* Back button */}
         <div>
@@ -738,7 +738,7 @@ export function DedicatedSubmittalDetailPage() {
           // Submittal data will auto-refresh via React Query
         }}
       />
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

@@ -4,7 +4,7 @@
  */
 
 import * as React from 'react';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { SmartLayout } from '@/components/layout/SmartLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -133,7 +133,7 @@ export function RolesPermissionsPage() {
   // Not authorized
   if (!isAdmin) {
     return (
-      <AppLayout>
+      <SmartLayout title="Roles & Permissions" subtitle="Access control">
         <div className="container max-w-5xl py-6">
           <div className="text-center py-12">
             <Lock className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
@@ -142,12 +142,12 @@ export function RolesPermissionsPage() {
             </p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Roles & Permissions" subtitle="Access control">
       <div className="container max-w-5xl py-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -396,7 +396,7 @@ export function RolesPermissionsPage() {
           </AlertDialogContent>
         </AlertDialog>
       </div>
-    </AppLayout>
+    </SmartLayout>
   );
 }
 

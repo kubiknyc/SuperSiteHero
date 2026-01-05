@@ -7,7 +7,7 @@
 
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -213,7 +213,7 @@ export function ToolboxTalkFormPage() {
 
   if (!currentProject) {
     return (
-      <AppLayout>
+      <SmartLayout title="Toolbox Talk">
         <div className="p-6">
           <div className="text-center py-12">
             <AlertTriangle className="h-12 w-12 mx-auto text-yellow-400 mb-4" />
@@ -226,12 +226,12 @@ export function ToolboxTalkFormPage() {
             </Link>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Toolbox Talk">
       <div className="p-6 max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-6">
@@ -506,7 +506,7 @@ export function ToolboxTalkFormPage() {
           </form>
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

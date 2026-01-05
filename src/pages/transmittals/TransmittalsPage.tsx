@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { SmartLayout } from '@/components/layout/SmartLayout';
 import {
   Dialog,
   DialogContent,
@@ -21,7 +21,7 @@ export function TransmittalsPage() {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
 
   if (!projectId) {
-    return <AppLayout><div className="p-6">Project ID is required</div></AppLayout>;
+    return <SmartLayout title="Transmittals" subtitle="Document transmittals"><div className="p-6">Project ID is required</div></SmartLayout>;
   }
 
   const handleCreateSuccess = (transmittal: Transmittal) => {
@@ -30,7 +30,7 @@ export function TransmittalsPage() {
   };
 
   return (
-    <AppLayout>
+    <SmartLayout title="Transmittals" subtitle="Document transmittals">
       <div className="p-6 space-y-6">
         <TransmittalList
           projectId={projectId}
@@ -50,7 +50,7 @@ export function TransmittalsPage() {
           </DialogContent>
         </Dialog>
       </div>
-    </AppLayout>
+    </SmartLayout>
   );
 }
 

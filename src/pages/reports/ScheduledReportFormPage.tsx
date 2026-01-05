@@ -5,7 +5,7 @@
  */
 
 import { useParams, Link } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { ScheduledReportForm } from '@/features/reports/components/ScheduledReportForm'
 import { Calendar, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -15,7 +15,7 @@ export function ScheduledReportFormPage() {
   const isEditing = !!id
 
   return (
-    <AppLayout>
+    <SmartLayout title="Scheduled Report">
       <div className="p-6 space-y-6 max-w-3xl mx-auto">
         {/* Header */}
         <div>
@@ -40,7 +40,7 @@ export function ScheduledReportFormPage() {
         {/* Form */}
         <ScheduledReportForm scheduleId={id} />
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

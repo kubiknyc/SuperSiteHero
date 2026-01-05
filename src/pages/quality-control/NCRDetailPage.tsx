@@ -10,7 +10,7 @@
 
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { SmartLayout } from '@/components/layout/SmartLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -145,7 +145,7 @@ export function NCRDetailPage() {
   // Loading state
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Non-Conformance Report">
         <div className="p-6">
           <Skeleton className="h-8 w-48 mb-6" />
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -157,14 +157,14 @@ export function NCRDetailPage() {
             <Skeleton className="h-96" />
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
   // Error state
   if (error || !ncr) {
     return (
-      <AppLayout>
+      <SmartLayout title="Non-Conformance Report">
         <div className="p-6">
           <div className="text-center py-12 bg-card rounded-lg border">
             <FileWarning className="h-12 w-12 text-gray-300 mx-auto" />
@@ -180,7 +180,7 @@ export function NCRDetailPage() {
             </Link>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
@@ -188,7 +188,7 @@ export function NCRDetailPage() {
   const canVoid = ncr.status !== NCRStatus.VOIDED && ncr.status !== NCRStatus.CLOSED;
 
   return (
-    <AppLayout>
+    <SmartLayout title="Non-Conformance Report">
       <div className="p-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -646,7 +646,7 @@ export function NCRDetailPage() {
           </AlertDialogContent>
         </AlertDialog>
       </div>
-    </AppLayout>
+    </SmartLayout>
   );
 }
 

@@ -2,7 +2,7 @@
 // Edit task page
 
 import { useNavigate, useParams } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useTask, useUpdateTask } from '@/features/tasks/hooks/useTasks'
 import { TaskForm, TaskFormData } from '@/features/tasks/components/TaskForm'
 import { AlertCircle } from 'lucide-react'
@@ -16,38 +16,38 @@ export function TaskEditPage() {
 
   if (!id) {
     return (
-      <AppLayout>
+      <SmartLayout title="Edit Task">
         <div className="p-6">
           <div className="text-center py-12">
             <p className="text-error">Task ID not found</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Edit Task">
         <div className="p-6">
           <div className="text-center py-12">
             <p className="text-muted">Loading task...</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !task) {
     return (
-      <AppLayout>
+      <SmartLayout title="Edit Task">
         <div className="p-6">
           <div className="text-center py-12">
             <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
             <p className="text-error">Error loading task: {error?.message}</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
@@ -66,7 +66,7 @@ export function TaskEditPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Edit Task">
       <div className="p-6 space-y-6 max-w-4xl">
         <div>
           <h1 className="text-3xl font-bold text-foreground heading-page">Edit Task</h1>
@@ -80,6 +80,6 @@ export function TaskEditPage() {
           isLoading={updateMutation.isPending}
         />
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

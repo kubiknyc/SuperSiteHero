@@ -8,7 +8,7 @@
 import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { format } from 'date-fns'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
@@ -123,20 +123,20 @@ export function InspectionDetailPage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Inspection Details">
         <div className="p-6">
           <div className="text-center py-12">
             <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto" />
             <p className="text-muted mt-4">Loading inspection...</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !inspection) {
     return (
-      <AppLayout>
+      <SmartLayout title="Inspection Details">
         <div className="p-6">
           <div className="text-center py-12 bg-card rounded-lg border">
             <AlertTriangle className="h-12 w-12 text-red-400 mx-auto" />
@@ -154,7 +154,7 @@ export function InspectionDetailPage() {
             </Link>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
@@ -163,7 +163,7 @@ export function InspectionDetailPage() {
   const canEdit = inspection.status !== 'cancelled'
 
   return (
-    <AppLayout>
+    <SmartLayout title="Inspection Details">
       <div className="p-6">
         {/* Header */}
         <div className="flex items-start justify-between mb-6">
@@ -538,7 +538,7 @@ export function InspectionDetailPage() {
           isSubmitting={recordResultMutation.isPending}
         />
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

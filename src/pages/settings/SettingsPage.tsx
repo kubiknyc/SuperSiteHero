@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
+import { LayoutVersionToggle } from '@/components/layout/LayoutVersionToggle'
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
@@ -135,7 +136,7 @@ export function SettingsPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Settings" subtitle="Manage your account settings and preferences">
       <div className="container max-w-4xl py-6 space-y-6">
         <div>
           <h1 className="text-2xl font-bold heading-page">Settings</h1>
@@ -198,6 +199,9 @@ export function SettingsPage() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Layout Version Toggle */}
+          <LayoutVersionToggle />
 
           {/* Glove Mode Toggle */}
           <Card>
@@ -276,7 +280,7 @@ export function SettingsPage() {
           </div>
         </div>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

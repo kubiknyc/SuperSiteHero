@@ -7,7 +7,7 @@
 
 import { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -160,7 +160,7 @@ export function ReportsPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Reports" subtitle="Generate reports">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -555,7 +555,7 @@ export function ReportsPage() {
           template={selectedTemplate}
         />
       )}
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

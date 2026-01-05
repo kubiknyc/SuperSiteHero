@@ -19,7 +19,7 @@ import {
   Loader2,
   Filter,
 } from 'lucide-react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -295,7 +295,7 @@ export function CostCodesPage() {
 
   if (!userProfile?.company_id) {
     return (
-      <AppLayout>
+      <SmartLayout title="Cost Codes" subtitle="Budget categories">
         <div className="p-6">
           <Card>
             <CardContent className="pt-6">
@@ -309,12 +309,12 @@ export function CostCodesPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Cost Codes" subtitle="Budget categories">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -653,7 +653,7 @@ export function CostCodesPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

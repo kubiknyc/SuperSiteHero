@@ -6,12 +6,12 @@
 
 import { PendingUsersManager } from '@/features/user-management/components/PendingUsersManager';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { SmartLayout } from '@/components/layout/SmartLayout';
 import { InfoIcon } from 'lucide-react';
 
 export default function UserApprovalsPage() {
   return (
-    <AppLayout>
+    <SmartLayout title="User Approvals" subtitle="Pending user requests">
       <div className="p-6 space-y-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">User Approvals</h1>
@@ -32,6 +32,6 @@ export default function UserApprovalsPage() {
 
         <PendingUsersManager />
       </div>
-    </AppLayout>
+    </SmartLayout>
   );
 }

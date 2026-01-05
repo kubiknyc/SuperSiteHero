@@ -7,7 +7,7 @@
 
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { SmartLayout } from '@/components/layout/SmartLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -72,7 +72,7 @@ export function CalendarIntegrationsPage() {
   }, [searchParams]);
 
   return (
-    <AppLayout>
+    <SmartLayout title="Calendar Integrations" subtitle="Sync calendars">
       <div className="container max-w-4xl py-6 space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4">
@@ -207,7 +207,7 @@ export function CalendarIntegrationsPage() {
           </CardContent>
         </Card>
       </div>
-    </AppLayout>
+    </SmartLayout>
   );
 }
 

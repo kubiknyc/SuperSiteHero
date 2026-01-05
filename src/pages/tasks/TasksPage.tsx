@@ -3,7 +3,7 @@
 
 import { useState, useMemo, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useSelectedProject } from '@/hooks/useSelectedProject'
 import { useTasks } from '@/features/tasks/hooks/useTasks'
 import { Card, CardContent } from '@/components/ui/card'
@@ -151,7 +151,7 @@ export function TasksPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Tasks" subtitle="Track work items">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -435,6 +435,6 @@ export function TasksPage() {
           />
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

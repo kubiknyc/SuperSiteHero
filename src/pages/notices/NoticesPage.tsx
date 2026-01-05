@@ -2,7 +2,7 @@
 // Notices list and management page
 
 import { useState, useMemo } from 'react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useSelectedProject } from '@/hooks/useSelectedProject'
 import {
   useNotices,
@@ -50,7 +50,7 @@ export function NoticesPage() {
   }, [notices])
 
   return (
-    <AppLayout>
+    <SmartLayout title="Notices" subtitle="Project notices">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -173,6 +173,6 @@ export function NoticesPage() {
           </div>
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

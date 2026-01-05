@@ -6,7 +6,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { SmartLayout } from '@/components/layout/SmartLayout';
 import {
   Dialog,
   DialogContent,
@@ -54,7 +54,7 @@ export function JSAListPage() {
 
   if (!projectId) {
     return (
-      <AppLayout>
+      <SmartLayout title="Job Safety Analysis" subtitle="Safety assessments">
         <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
           <Shield className="h-16 w-16 text-muted-foreground opacity-50" />
           <div className="text-center">
@@ -65,7 +65,7 @@ export function JSAListPage() {
           </div>
           <Button onClick={() => navigate('/projects')}>Go to Projects</Button>
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
@@ -98,7 +98,7 @@ export function JSAListPage() {
   const hasPendingReview = stats && stats.pending_review > 0;
 
   return (
-    <AppLayout>
+    <SmartLayout title="Job Safety Analysis" subtitle="Safety assessments">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -282,7 +282,7 @@ export function JSAListPage() {
           </DialogContent>
         </Dialog>
       </div>
-    </AppLayout>
+    </SmartLayout>
   );
 }
 

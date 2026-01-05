@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -54,7 +54,7 @@ export function ShopDrawingsPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Shop Drawings" subtitle="Technical drawings">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -330,7 +330,7 @@ export function ShopDrawingsPage() {
           }}
         />
       )}
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

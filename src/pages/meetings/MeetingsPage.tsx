@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useSelectedProject } from '@/hooks/useSelectedProject'
 import { useAllMeetings, useMeetings, MEETING_TYPES } from '@/features/meetings/hooks'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -144,7 +144,7 @@ export function MeetingsPage() {
   }, [filteredMeetings])
 
   return (
-    <AppLayout>
+    <SmartLayout title="Meetings" subtitle="Project meetings">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -452,6 +452,6 @@ export function MeetingsPage() {
           </div>
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

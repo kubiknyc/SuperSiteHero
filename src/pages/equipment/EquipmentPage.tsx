@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -643,7 +643,7 @@ export function EquipmentPage() {
   // Error state
   if (equipmentError) {
     return (
-      <AppLayout>
+      <SmartLayout title="Equipment" subtitle="Equipment management">
         <div className="p-6">
           <Card className="border-error">
             <CardContent className="p-6 text-center">
@@ -663,12 +663,12 @@ export function EquipmentPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Equipment" subtitle="Equipment management">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -996,7 +996,7 @@ export function EquipmentPage() {
         open={photoDialogOpen}
         onOpenChange={setPhotoDialogOpen}
       />
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

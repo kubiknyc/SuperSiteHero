@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -141,17 +141,17 @@ export function PermitDetailPage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Permit Details">
         <div className="p-6">
           <div className="text-center py-12 text-muted">Loading permit...</div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (!permit) {
     return (
-      <AppLayout>
+      <SmartLayout title="Permit Details">
         <div className="p-6">
           <div className="text-center py-12">
             <FileCheck className="h-12 w-12 text-gray-300 mx-auto mb-4" />
@@ -161,7 +161,7 @@ export function PermitDetailPage() {
             </Button>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
@@ -171,7 +171,7 @@ export function PermitDetailPage() {
   const nextStatusOptions = getNextPermitStatusOptions(permit.status)
 
   return (
-    <AppLayout>
+    <SmartLayout title="Permit Details">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -666,7 +666,7 @@ export function PermitDetailPage() {
           </DialogContent>
         </Dialog>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

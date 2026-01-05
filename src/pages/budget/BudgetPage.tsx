@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -282,7 +282,7 @@ export function BudgetPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Budget" subtitle="Cost tracking">
       <div className="p-4 md:p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -585,7 +585,7 @@ export function BudgetPage() {
           </CardContent>
         </Card>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

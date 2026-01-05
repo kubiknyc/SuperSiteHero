@@ -1,0 +1,163 @@
+/* ========== INDUSTRIAL MICRO-INTERACTIONS ========== */
+/* Add this section to src/index.css in the @layer utilities section, before the closing brace */
+
+/* Mechanical lift hover - like hydraulic platform */
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.25s ease-out;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+}
+.hover-lift:active {
+  transform: translateY(-2px);
+  transition-duration: 0.1s;
+}
+
+/* Industrial press effect - like stamping machine */
+.hover-press {
+  transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+}
+.hover-press:hover {
+  transform: scale(1.02);
+}
+.hover-press:active {
+  transform: scale(0.98);
+  transition-duration: 0.05s;
+}
+
+/* Mechanical counter number animation */
+@keyframes counter-flip {
+  0% { transform: translateY(-100%); opacity: 0; }
+  50% { transform: translateY(10%); }
+  100% { transform: translateY(0); opacity: 1; }
+}
+.animate-counter {
+  animation: counter-flip 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Progress bar fill - like concrete pour */
+@keyframes progress-fill {
+  from {
+    width: 0;
+    background-position: 100% 0;
+  }
+  to {
+    width: var(--progress, 100%);
+    background-position: 0 0;
+  }
+}
+.animate-progress-fill {
+  animation: progress-fill 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Industrial shimmer - metal reflection */
+@keyframes industrial-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer-industrial {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    hsl(var(--steel-gray) / 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: industrial-shimmer 2s infinite;
+}
+
+/* Pulse glow - like warning beacon */
+@keyframes beacon-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 hsl(var(--safety-orange) / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px hsl(var(--safety-orange) / 0);
+  }
+}
+.animate-beacon {
+  animation: beacon-pulse 2s ease-in-out infinite;
+}
+
+/* Caution pulse for warnings */
+@keyframes caution-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+.animate-caution {
+  animation: caution-pulse 1.5s ease-in-out infinite;
+}
+
+/* Slide in from left - like drawer mechanism */
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+.animate-slide-in-left {
+  animation: slide-in-left 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Staggered fade in for lists */
+.stagger-fade-in > * {
+  opacity: 0;
+  animation: fadeInUp var(--duration-normal, 250ms) var(--ease-premium) forwards;
+}
+.stagger-fade-in > *:nth-child(1) { animation-delay: 0ms; }
+.stagger-fade-in > *:nth-child(2) { animation-delay: 50ms; }
+.stagger-fade-in > *:nth-child(3) { animation-delay: 100ms; }
+.stagger-fade-in > *:nth-child(4) { animation-delay: 150ms; }
+.stagger-fade-in > *:nth-child(5) { animation-delay: 200ms; }
+.stagger-fade-in > *:nth-child(6) { animation-delay: 250ms; }
+.stagger-fade-in > *:nth-child(7) { animation-delay: 300ms; }
+.stagger-fade-in > *:nth-child(8) { animation-delay: 350ms; }
+
+/* Card entrance with mechanical feel */
+@keyframes card-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  60% {
+    transform: translateY(-4px) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.animate-card-enter {
+  animation: card-enter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Industrial border glow on focus/hover */
+.glow-industrial {
+  transition: box-shadow 0.2s ease-out;
+}
+.glow-industrial:hover,
+.glow-industrial:focus-within {
+  box-shadow:
+    0 0 0 1px hsl(var(--primary)),
+    0 0 20px hsl(var(--blueprint-glow));
+}
+
+/* Tooltip/popover entrance */
+@keyframes tooltip-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+.animate-tooltip {
+  animation: tooltip-enter 0.15s ease-out forwards;
+}

@@ -5,7 +5,7 @@
 
 import { useState, useMemo } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -355,7 +355,7 @@ export function LookAheadPage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Look Ahead" subtitle="Short-term planning">
         <div className="p-6 space-y-6">
           <div className="flex items-center justify-between">
             <Skeleton className="h-8 w-48" />
@@ -367,12 +367,12 @@ export function LookAheadPage() {
             ))}
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Look Ahead" subtitle="Short-term planning">
       <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -599,7 +599,7 @@ export function LookAheadPage() {
         isLoading={createActivity.isPending || updateActivity.isPending}
       />
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

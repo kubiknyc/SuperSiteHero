@@ -26,7 +26,7 @@ import { Badge } from '@/components/ui/badge';
 import DailyPhotoChecklist from '@/features/photos/components/DailyPhotoChecklist';
 import { useDailyPhotoChecklist } from '@/features/photos/hooks/usePhotoTemplates';
 import { useProject } from '@/features/projects/hooks/useProjects';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { SmartLayout } from '@/components/layout/SmartLayout';
 import { cn } from '@/lib/utils';
 
 interface StatCardProps {
@@ -74,7 +74,7 @@ export default function DailyPhotoChecklistPage() {
 
   if (!projectId) {
     return (
-      <AppLayout>
+      <SmartLayout title="Daily Photo Checklist">
         <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
           <Image className="h-16 w-16 text-muted-foreground opacity-50" />
           <div className="text-center">
@@ -85,7 +85,7 @@ export default function DailyPhotoChecklistPage() {
           </div>
           <Button onClick={() => navigate('/projects')}>Go to Projects</Button>
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
@@ -105,7 +105,7 @@ export default function DailyPhotoChecklistPage() {
   const stats = checklist?.stats || { total: 0, completed: 0, pending: 0, overdue: 0, skipped: 0 };
 
   return (
-    <AppLayout>
+    <SmartLayout title="Daily Photo Checklist">
       <div className="container mx-auto py-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -269,6 +269,6 @@ export default function DailyPhotoChecklistPage() {
           </Card>
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   );
 }

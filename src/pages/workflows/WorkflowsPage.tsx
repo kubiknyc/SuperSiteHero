@@ -2,7 +2,7 @@
 // Main workflows page with workflow types and items
 
 import { useState } from 'react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useSelectedProject } from '@/hooks/useSelectedProject'
 import { WorkflowsProjectView } from '@/features/workflows/components/WorkflowsProjectView'
 import { useWorkflowTypes, getWorkflowTypeIcon } from '@/features/workflows/hooks/useWorkflowTypes'
@@ -22,7 +22,7 @@ export function WorkflowsPage() {
 
   if (!activeProjectId) {
     return (
-      <AppLayout>
+      <SmartLayout title="Workflows" subtitle="Process management">
         <div className="p-6">
           <Card className="border-yellow-200 bg-warning-light">
             <CardHeader>
@@ -33,12 +33,12 @@ export function WorkflowsPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Workflows" subtitle="Process management">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -136,6 +136,6 @@ export function WorkflowsPage() {
           ))}
         </div>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

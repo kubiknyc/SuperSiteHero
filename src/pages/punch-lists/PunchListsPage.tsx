@@ -3,7 +3,7 @@
 
 import { useState, useMemo, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useSelectedProject } from '@/hooks/useSelectedProject'
 import { usePunchItems } from '@/features/punch-lists/hooks/usePunchItems'
 import { CreatePunchItemDialog } from '@/features/punch-lists/components/CreatePunchItemDialog'
@@ -158,7 +158,7 @@ export function PunchListsPage() {
   ]
 
   return (
-    <AppLayout>
+    <SmartLayout title="Punch Lists" subtitle="Deficiency tracking">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -521,6 +521,6 @@ export function PunchListsPage() {
         {/* Floating scan button for mobile */}
         <FloatingScanButton />
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

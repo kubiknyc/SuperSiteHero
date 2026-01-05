@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import {
   Ruler,
   FileText,
@@ -133,16 +133,16 @@ export default function TakeoffsListPage() {
 
   if (!projectId) {
     return (
-      <AppLayout>
+      <SmartLayout title="Takeoffs" subtitle="Quantity takeoffs">
         <div className="flex items-center justify-center h-screen">
           <p className="text-muted-foreground">Project not found</p>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Takeoffs" subtitle="Quantity takeoffs">
       <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
@@ -353,6 +353,6 @@ export default function TakeoffsListPage() {
         />
       )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

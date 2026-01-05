@@ -4,7 +4,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { SmartLayout } from '@/components/layout/SmartLayout';
 import { useSelectedProject } from '@/hooks/useSelectedProject';
 import {
   useLienWaivers,
@@ -186,7 +186,7 @@ export function LienWaiversPage() {
   };
 
   return (
-    <AppLayout>
+    <SmartLayout title="Lien Waivers" subtitle="Payment documentation">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -375,7 +375,7 @@ export function LienWaiversPage() {
           </Card>
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   );
 }
 

@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -147,40 +147,40 @@ export function ProjectTemplatesPage() {
   // Loading state
   if (!companyId) {
     return (
-      <AppLayout>
+      <SmartLayout title="Project Templates" subtitle="Reusable templates">
         <div className="flex items-center justify-center h-64">
           <p className="text-muted-foreground">Please log in to manage project templates.</p>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Project Templates" subtitle="Reusable templates">
         <div className="flex items-center justify-center h-64">
           <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error) {
     return (
-      <AppLayout>
+      <SmartLayout title="Project Templates" subtitle="Reusable templates">
         <div className="flex flex-col items-center justify-center h-64 gap-4">
           <AlertCircle className="w-12 h-12 text-destructive" />
           <p className="text-muted-foreground">Failed to load project templates</p>
           <Button onClick={() => window.location.reload()}>Retry</Button>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   const activeTemplateCount = templates?.filter((t) => t.is_active).length || 0
 
   return (
-    <AppLayout>
+    <SmartLayout title="Project Templates" subtitle="Reusable templates">
       <div className="container max-w-6xl py-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -347,7 +347,7 @@ export function ProjectTemplatesPage() {
           </AlertDialogContent>
         </AlertDialog>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

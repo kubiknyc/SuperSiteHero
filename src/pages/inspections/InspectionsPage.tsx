@@ -7,7 +7,7 @@
 
 import { useState, useMemo } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import {
   RadixSelect as Select,
@@ -83,7 +83,7 @@ export function InspectionsPage() {
   // Show project selector if no project selected
   if (!isLoadingProjects && !selectedProjectId && projects?.length === 0) {
     return (
-      <AppLayout>
+      <SmartLayout title="Inspections" subtitle="Quality inspections">
         <div className="p-6">
           <div className="text-center py-12 bg-card rounded-lg border">
             <ClipboardCheck className="h-12 w-12 text-gray-300 mx-auto" />
@@ -95,12 +95,12 @@ export function InspectionsPage() {
             </p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Inspections" subtitle="Quality inspections">
       <div className="p-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -295,7 +295,7 @@ export function InspectionsPage() {
           </>
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

@@ -94,7 +94,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       <aside
         className={cn(
           // Base styles - premium dark sidebar with gradient
-          "fixed inset-y-0 left-0 text-white flex-col z-50",
+          "fixed inset-y-0 left-0 text-white flex-col z-50 relative",
           // Premium gradient background
           "bg-gradient-to-b from-gray-900 via-gray-900 to-gray-950",
           // Subtle inner border for depth
@@ -112,6 +112,8 @@ export function AppLayout({ children }: AppLayoutProps) {
           isTouchDevice && "overflow-y-auto overscroll-contain"
         )}
       >
+        {/* Subtle concrete texture overlay */}
+        <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-concrete-texture" />
         {/* Logo */}
         <div className={cn(
           "border-b border-gray-800",
@@ -120,7 +122,8 @@ export function AppLayout({ children }: AppLayoutProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className={cn(
-                "rounded-lg",
+                "rounded-lg transition-all duration-200",
+                "hover:shadow-[0_0_12px_rgba(96,165,250,0.3)]",
                 isTablet ? "p-1.5" : "p-2"
               )}>
                 <LogoIconLight className={cn(isTablet ? "h-5 w-5" : "h-6 w-6")} />
@@ -180,10 +183,10 @@ export function AppLayout({ children }: AppLayoutProps) {
                   to={item.path}
                   className={cn(
                     'flex items-center gap-3 rounded-lg font-medium transition-all duration-200',
-                    // Premium styles - refined hover and active states
+                    // Premium styles - refined hover and active states with industrial edge
                     isActive
-                      ? 'bg-gradient-to-r from-primary/20 to-primary/10 text-white border-l-2 border-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]'
-                      : 'text-gray-400 hover:text-white hover:bg-white/5 border-l-2 border-transparent',
+                      ? 'bg-gradient-to-r from-primary/20 to-primary/10 text-white border-l-[4px] border-primary shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)]'
+                      : 'text-gray-400 hover:text-white hover:bg-white/[0.07] hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] border-l-[4px] border-transparent',
                     // Tablet: larger touch targets
                     isTablet ? 'px-3 py-3 text-base min-h-[44px]' : 'px-3 py-2.5 text-sm',
                     // Touch feedback with subtle scale
@@ -201,8 +204,12 @@ export function AppLayout({ children }: AppLayoutProps) {
             })}
           </div>
 
-          {/* Premium Divider */}
-          <div className="my-4 mx-3 h-px bg-gradient-to-r from-transparent via-gray-700/50 to-transparent" />
+          {/* Technical divider with notches */}
+          <div className="my-4 mx-3 relative">
+            <div className="h-px bg-gray-700/40" />
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-gray-600 rounded-full" />
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-gray-600 rounded-full" />
+          </div>
 
           {/* Grouped Navigation (collapsible) */}
           <div className="space-y-2">
@@ -221,14 +228,19 @@ export function AppLayout({ children }: AppLayoutProps) {
           {/* Conditional Takeoffs navigation - only show when viewing a project and user is internal */}
           {currentProjectId && userRole !== 'client' && userRole !== 'subcontractor' && (
             <>
-              <div className="my-4 mx-3 h-px bg-gradient-to-r from-transparent via-gray-700/50 to-transparent" />
+              {/* Technical divider with notches */}
+              <div className="my-4 mx-3 relative">
+                <div className="h-px bg-gray-700/40" />
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-gray-600 rounded-full" />
+                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-gray-600 rounded-full" />
+              </div>
               <Link
                 to={`/projects/${currentProjectId}/takeoffs`}
                 className={cn(
                   'flex items-center gap-3 rounded-lg font-medium transition-all duration-200',
                   location.pathname.includes('/takeoffs')
-                    ? 'bg-gradient-to-r from-primary/20 to-primary/10 text-white border-l-2 border-primary'
-                    : 'text-gray-400 hover:text-white hover:bg-white/5 border-l-2 border-transparent',
+                    ? 'bg-gradient-to-r from-primary/20 to-primary/10 text-white border-l-[4px] border-primary shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)]'
+                    : 'text-gray-400 hover:text-white hover:bg-white/[0.07] hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] border-l-[4px] border-transparent',
                   isTablet ? 'px-3 py-3 text-base min-h-[44px]' : 'px-3 py-2.5 text-sm',
                   isTouchDevice && 'active:scale-[0.98] active:bg-white/10'
                 )}
@@ -244,7 +256,10 @@ export function AppLayout({ children }: AppLayoutProps) {
         </nav>
 
         {/* User profile and settings - Premium styling */}
-        <div className="p-4 border-t border-gray-800/50 space-y-3 bg-gradient-to-t from-gray-950/50 to-transparent">
+        <div className="p-4 border-t border-gray-800/50 space-y-3 bg-gradient-to-t from-gray-950/50 to-transparent relative">
+          {/* Measurement marks decoration */}
+          <div className="h-2 mx-4 mb-2 bg-measurement-marks opacity-20" />
+
           {/* Sync status indicators */}
           <div className="pb-2 flex items-center justify-between gap-2">
             <SyncStatusBar />
@@ -257,9 +272,9 @@ export function AppLayout({ children }: AppLayoutProps) {
             <ThemeToggle compact />
           </div>
 
-          {/* User info - Premium card style */}
+          {/* User info - Premium card style with industrial border */}
           {userProfile && (
-            <div className="px-3 py-3 rounded-lg bg-white/5 border border-white/5">
+            <div className="px-3 py-3 rounded-lg bg-white/5 border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
               <p className="font-semibold text-white">
                 {userProfile.first_name} {userProfile.last_name}
               </p>
@@ -273,7 +288,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           {/* Settings and sign out - refined styling */}
           <Link
             to="/settings"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all duration-200"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-white/[0.07] hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] transition-all duration-200"
           >
             <Settings className="h-5 w-5 text-gray-500" />
             Settings
@@ -282,7 +297,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           <Button
             onClick={() => signOut()}
             variant="ghost"
-            className="w-full justify-start gap-3 px-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg"
+            className="w-full justify-start gap-3 px-3 text-gray-400 hover:text-white hover:bg-white/[0.07] hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] rounded-lg"
           >
             <LogOut className="h-5 w-5 text-gray-500" />
             Sign Out

@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import {
   useProjectSubmittals,
@@ -186,7 +186,7 @@ export function DedicatedSubmittalsPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Submittals" subtitle="Document submissions">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
@@ -653,7 +653,7 @@ export function DedicatedSubmittalsPage() {
           onSuccess={() => setState({ ...state, searchTerm: '' })}
         />
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

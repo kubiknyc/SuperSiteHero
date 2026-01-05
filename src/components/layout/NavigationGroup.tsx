@@ -87,9 +87,9 @@ export function NavigationGroup({
         )}
       </button>
 
-      {/* Group Items - uses explicit colors for dark sidebar */}
+      {/* Group Items - uses explicit colors for dark sidebar with industrial styling */}
       {isExpanded && (
-        <div className="ml-4 space-y-1 border-l-2 border-gray-700 pl-4">
+        <div className="ml-4 space-y-1 border-l-[4px] border-gray-700/40 pl-4">
           {items.map((item) => {
             const isActive = location.pathname === item.path;
             const ItemIcon = item.icon;
@@ -101,15 +101,18 @@ export function NavigationGroup({
                 to={item.path}
                 onClick={() => onItemClick?.(item)}
                 className={cn(
-                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                  'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200',
                   isActive
-                    ? 'bg-blue-600 text-white'
-                    : 'text-gray-300 hover:bg-gray-800 hover:text-white',
+                    ? 'bg-gradient-to-r from-primary/20 to-primary/10 text-white border-l-[4px] border-primary shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)]'
+                    : 'text-gray-400 hover:text-white hover:bg-white/[0.07] hover:shadow-[inset_0_0_0_1px_rgba(255,255,255,0.05)] border-l-[4px] border-transparent',
                   'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-gray-900'
                 )}
                 aria-current={isActive ? 'page' : undefined}
               >
-                <ItemIcon className="h-4 w-4 flex-shrink-0" />
+                <ItemIcon className={cn(
+                  "h-4 w-4 flex-shrink-0 transition-colors",
+                  isActive ? "text-primary" : "text-gray-500"
+                )} />
                 <span className="flex-1">{item.label}</span>
                 {Badge && (
                   <span className="flex-shrink-0">

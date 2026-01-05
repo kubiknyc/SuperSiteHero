@@ -5,7 +5,7 @@
 
 import { useState, useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -205,7 +205,7 @@ export function CostTrackingPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Cost Tracking" subtitle="Financial monitoring">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -423,7 +423,7 @@ export function CostTrackingPage() {
           isSubmitting={createTransaction.isPending || updateTransaction.isPending}
         />
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

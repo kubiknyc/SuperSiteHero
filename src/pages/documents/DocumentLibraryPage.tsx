@@ -15,7 +15,7 @@ import {
   Loader2,
   FileText
 } from 'lucide-react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import {
   Card,
   CardContent,
@@ -312,7 +312,7 @@ function DocumentLibraryPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Documents" subtitle="Project documentation">
       <div className="h-screen flex flex-col">
         {/* Realtime update banner */}
         {pendingUpdates > 0 && (
@@ -776,7 +776,7 @@ function DocumentLibraryPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

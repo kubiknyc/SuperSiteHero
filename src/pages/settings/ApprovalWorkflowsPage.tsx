@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -334,18 +334,18 @@ export function ApprovalWorkflowsPage() {
 
   if (!companyId) {
     return (
-      <AppLayout>
+      <SmartLayout title="Approval Workflows" subtitle="Workflow configuration">
         <div className="p-6 max-w-6xl mx-auto">
           <div className="text-center py-12 text-muted">
             Please log in to manage approval workflows.
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Approval Workflows" subtitle="Workflow configuration">
       <div className="p-6 max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -574,7 +574,7 @@ export function ApprovalWorkflowsPage() {
           </DialogContent>
         </Dialog>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

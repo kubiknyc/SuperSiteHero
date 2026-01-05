@@ -6,7 +6,7 @@
  */
 
 import { useState } from 'react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import {
   CloseoutDocumentList,
   WarrantyList,
@@ -337,7 +337,7 @@ export function CloseoutPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Closeout" subtitle="Project closeout">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -616,7 +616,7 @@ export function CloseoutPage() {
           isLoading={createWarranty.isPending || updateWarranty.isPending}
         />
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

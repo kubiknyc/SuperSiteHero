@@ -71,33 +71,43 @@ function getWindDirection(degrees: number): string {
 }
 
 /**
- * Fetch weather from OpenWeatherMap API
+ * Fetch weather via Edge Function (keeps API key secure)
  */
-async function fetchFromOpenWeatherMap(
+async function fetchWeatherViaEdgeFunction(
   lat: number,
-  lon: number,
-  apiKey: string
+  lon: number
 ): Promise<WeatherData> {
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+  // Import supabase dynamically to avoid circular dependencies
+  const { supabase } = await import('@/lib/supabase');
 
-  const response = await fetch(url);
+  const { data: sessionData } = await supabase.auth.getSession();
+  const accessToken = sessionData?.session?.access_token;
 
-  if (!response.ok) {
-    throw new Error(`Weather API error: ${response.status} ${response.statusText}`);
+  if (!accessToken) {
+    throw new Error('Not authenticated');
   }
 
-  const data = await response.json();
+  const response = await fetch(
+    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/weather-api/weather`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        latitude: lat,
+        longitude: lon,
+      }),
+    }
+  );
 
-  return {
-    temperature: kelvinToFahrenheit(data.main.temp),
-    conditions: data.weather[0]?.description || 'Unknown',
-    humidity: data.main.humidity,
-    windSpeed: mpsToMph(data.wind.speed),
-    windDirection: getWindDirection(data.wind.deg),
-    precipitation: data.rain?.['1h'] || data.snow?.['1h'] || 0,
-    icon: getWeatherIcon(data.weather[0]?.main || ''),
-    fetchedAt: new Date().toISOString(),
-  };
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(`Weather API error: ${errorData.error || response.status}`);
+  }
+
+  return response.json();
 }
 
 /**
@@ -133,14 +143,8 @@ export async function getWeather(location: GeoLocation): Promise<WeatherData> {
     return cached.data;
   }
 
-  // Get API key from environment or settings
-  const apiKey = import.meta.env.VITE_OPENWEATHERMAP_API_KEY;
-
-  if (!apiKey) {
-    throw new Error('Weather API key not configured. Please add VITE_OPENWEATHERMAP_API_KEY to your environment.');
-  }
-
-  const data = await fetchFromOpenWeatherMap(location.latitude, location.longitude, apiKey);
+  // Fetch via Edge Function (API key is kept server-side)
+  const data = await fetchWeatherViaEdgeFunction(location.latitude, location.longitude);
 
   // Cache the result
   weatherCache.set(cacheKey, {
@@ -198,18 +202,32 @@ export async function getWeatherForProject(projectId: string): Promise<WeatherDa
 }
 
 /**
- * Geocode an address to coordinates
+ * Geocode an address to coordinates via Edge Function
  */
 async function geocodeAddress(address: string): Promise<GeoLocation | null> {
-  const apiKey = import.meta.env.VITE_OPENWEATHERMAP_API_KEY;
-
-  if (!apiKey) {
-    return null;
-  }
-
   try {
-    const url = `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(address)}&limit=1&appid=${apiKey}`;
-    const response = await fetch(url);
+    // Import supabase dynamically to avoid circular dependencies
+    const { supabase } = await import('@/lib/supabase');
+
+    const { data: sessionData } = await supabase.auth.getSession();
+    const accessToken = sessionData?.session?.access_token;
+
+    if (!accessToken) {
+      logger.warn('Not authenticated for geocoding');
+      return null;
+    }
+
+    const response = await fetch(
+      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/weather-api/geocode`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ address }),
+      }
+    );
 
     if (!response.ok) {
       return null;
@@ -217,10 +235,10 @@ async function geocodeAddress(address: string): Promise<GeoLocation | null> {
 
     const data = await response.json();
 
-    if (data.length > 0) {
+    if (data.latitude && data.longitude) {
       return {
-        latitude: data[0].lat,
-        longitude: data[0].lon,
+        latitude: data.latitude,
+        longitude: data.longitude,
       };
     }
 

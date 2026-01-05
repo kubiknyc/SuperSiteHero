@@ -6,7 +6,7 @@
 
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { SmartLayout } from '@/components/layout/SmartLayout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -104,7 +104,7 @@ export function PhotoLocationDetailPage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Photo Location Details">
         <div className="p-6">
           <div className="flex items-center gap-4 mb-6">
             <Skeleton className="h-10 w-10" />
@@ -115,13 +115,13 @@ export function PhotoLocationDetailPage() {
           </div>
           <Skeleton className="h-96 w-full" />
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
   if (!location) {
     return (
-      <AppLayout>
+      <SmartLayout title="Photo Location Details">
         <div className="p-6">
           <div className="text-center py-12">
             <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
@@ -132,12 +132,12 @@ export function PhotoLocationDetailPage() {
             <Button onClick={() => navigate(-1)}>Go Back</Button>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Photo Location Details">
       <div className="p-6">
         {/* Header */}
         <div className="flex items-start justify-between mb-6">
@@ -417,7 +417,7 @@ export function PhotoLocationDetailPage() {
           </TabsContent>
         </Tabs>
       </div>
-    </AppLayout>
+    </SmartLayout>
   );
 }
 

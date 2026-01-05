@@ -28,6 +28,12 @@ export default {
   		// Touch device query (coarse pointer)
   		'touch': {'raw': '(pointer: coarse)'},
   	},
+  	// Typography System - Google Fonts
+  	fontFamily: {
+  		display: ['DM Sans', 'system-ui', 'sans-serif'],
+  		mono: ['JetBrains Mono', 'SF Mono', 'Fira Code', 'monospace'],
+  		body: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+  	},
   	extend: {
   		// Tablet-specific spacing utilities
   		spacing: {
@@ -70,6 +76,13 @@ export default {
   				'900': '#18181b',
   				'950': '#09090b',
   			},
+  			// Industrial Construction Palette
+  			'safety-orange': 'hsl(var(--safety-orange))',
+  			'steel-gray': 'hsl(var(--steel-gray))',
+  			'concrete': 'hsl(var(--concrete))',
+  			'concrete-dark': 'hsl(var(--concrete-dark))',
+  			'caution-yellow': 'hsl(var(--caution-yellow))',
+  			'rebar-rust': 'hsl(var(--rebar-rust))',
   			primary: {
   				'50': '#eff6ff',
   				'100': '#dbeafe',

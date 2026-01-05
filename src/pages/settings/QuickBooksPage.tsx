@@ -4,7 +4,7 @@
  * Manage QuickBooks Online connection and sync settings.
  */
 
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -28,7 +28,7 @@ export function QuickBooksPage() {
   const isConnected = connectionStatus?.isConnected ?? false
 
   return (
-    <AppLayout>
+    <SmartLayout title="QuickBooks" subtitle="Financial sync">
       <div className="space-y-6">
         {/* Page Header */}
         <div className="flex items-center justify-between">
@@ -238,7 +238,7 @@ export function QuickBooksPage() {
           </Card>
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

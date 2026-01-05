@@ -3,7 +3,7 @@
 
 import { useNavigate, useParams, useBlocker } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useDailyReport, useUpdateDailyReport } from '@/features/daily-reports/hooks/useDailyReports'
 import { DailyReportForm, DailyReportFormData } from '@/features/daily-reports/components/DailyReportForm'
 import { Button } from '@/components/ui/button'
@@ -72,45 +72,45 @@ export function DailyReportEditPage() {
 
   if (!id) {
     return (
-      <AppLayout>
+      <SmartLayout title="Edit Daily Report">
         <div className="p-6">
           <div className="text-center py-12">
             <p className="text-error">Report ID not found</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Edit Daily Report">
         <div className="p-6">
           <div className="text-center py-12">
             <p className="text-muted">Loading report...</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !report) {
     return (
-      <AppLayout>
+      <SmartLayout title="Edit Daily Report">
         <div className="p-6">
           <div className="text-center py-12">
             <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
             <p className="text-error">Error loading report: {error?.message}</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   // Only allow editing draft reports
   if (report.status !== 'draft') {
     return (
-      <AppLayout>
+      <SmartLayout title="Edit Daily Report">
         <div className="p-6">
           <div className="text-center py-12">
             <AlertCircle className="h-12 w-12 text-orange-500 mx-auto mb-4" />
@@ -118,7 +118,7 @@ export function DailyReportEditPage() {
             <p className="text-secondary mt-2">Only draft reports can be edited</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
@@ -143,7 +143,7 @@ export function DailyReportEditPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Edit Daily Report">
       {/* Unsaved Changes Confirmation Modal */}
       {blocker.state === 'blocked' && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -202,6 +202,6 @@ export function DailyReportEditPage() {
           isLoading={updateMutation.isPending}
         />
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

@@ -2,7 +2,7 @@
 // Create new daily report page
 
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useCreateDailyReport } from '@/features/daily-reports/hooks/useDailyReports'
 import { DailyReportForm, DailyReportFormData } from '@/features/daily-reports/components/DailyReportForm'
 import { toast } from 'sonner'
@@ -34,7 +34,7 @@ export function DailyReportCreatePage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="New Daily Report">
       <div className="p-6 space-y-6 max-w-4xl">
         <div>
           <h1 className="text-3xl font-bold text-foreground heading-page">Create Daily Report</h1>
@@ -49,6 +49,6 @@ export function DailyReportCreatePage() {
           isLoading={createMutation.isPending}
         />
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

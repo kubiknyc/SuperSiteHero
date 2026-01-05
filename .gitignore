@@ -139,3 +139,13 @@ migrations/COMBINED*.sql
 # Temporary directories
 C/
 ~/
+
+dev-debug.log
+# Dependency directories
+node_modules/
+.vscode
+# OS specific
+
+# Task files
+# tasks.json
+# tasks/ 

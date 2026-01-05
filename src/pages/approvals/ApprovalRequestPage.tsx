@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import {
   ApprovalStatusBadge,
@@ -133,19 +133,19 @@ export function ApprovalRequestPage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Approval Request">
         <div className="p-6 max-w-4xl mx-auto">
           <div className="text-center py-12 text-muted">
             Loading approval details...
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !request) {
     return (
-      <AppLayout>
+      <SmartLayout title="Approval Request">
         <div className="p-6 max-w-4xl mx-auto">
           <div className="text-center py-12">
             <h2 className="text-xl font-semibold text-foreground mb-2 heading-section">
@@ -160,7 +160,7 @@ export function ApprovalRequestPage() {
             </Button>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
@@ -176,7 +176,7 @@ export function ApprovalRequestPage() {
   )
 
   return (
-    <AppLayout>
+    <SmartLayout title="Approval Request">
       <div className="p-6 max-w-4xl mx-auto">
         {/* Back link */}
         <Link
@@ -414,7 +414,7 @@ export function ApprovalRequestPage() {
           isLoading={isMutating}
         />
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

@@ -6,7 +6,7 @@
  */
 
 import { useParams, useNavigate } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { PunchByAreaReport } from '@/features/punch-lists/components'
 
 export function PunchByAreaReportPage() {
@@ -20,9 +20,9 @@ export function PunchByAreaReportPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Punch by Area Report">
       <PunchByAreaReport projectId={projectId} />
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

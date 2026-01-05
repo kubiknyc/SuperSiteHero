@@ -3,7 +3,7 @@
 
 import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useWeatherLog, useDeleteWeatherLog } from '@/features/weather-logs/hooks/useWeatherLogs'
 import { WeatherLogFormDialog } from '@/features/weather-logs/components/WeatherLogFormDialog'
 import { WeatherConditionsIcon, getWeatherConditionLabel } from '@/features/weather-logs/components/WeatherConditionsIcon'
@@ -53,20 +53,20 @@ export function WeatherLogDetailPage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Weather Log Details">
         <div className="flex items-center justify-center h-full">
           <div className="text-center">
             <Loader2 className="w-8 h-8 animate-spin text-primary mx-auto mb-4" />
             <p className="text-secondary">Loading weather log...</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !weatherLog) {
     return (
-      <AppLayout>
+      <SmartLayout title="Weather Log Details">
         <div className="p-6">
           <Card>
             <CardContent className="py-12 text-center">
@@ -82,12 +82,12 @@ export function WeatherLogDetailPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Weather Log Details">
       <div className="h-full overflow-y-auto">
         {/* Header */}
         <div className="bg-card border-b px-6 py-4 sticky top-0 z-10">
@@ -423,6 +423,6 @@ export function WeatherLogDetailPage() {
           </Card>
         </div>
       )}
-    </AppLayout>
+    </SmartLayout>
   )
 }

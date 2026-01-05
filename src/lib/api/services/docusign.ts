@@ -175,43 +175,36 @@ export async function completeConnection(
   const state = stateData as unknown as { is_demo: boolean; return_url?: string }
   const isDemo = state.is_demo
 
-  // Exchange code for tokens
-  const tokenUrl = getDSTokenUrl(isDemo)
-  const tokenResponse = await fetch(tokenUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: `Basic ${btoa(
-        `${import.meta.env.VITE_DOCUSIGN_CLIENT_ID}:${import.meta.env.VITE_DOCUSIGN_CLIENT_SECRET}`
-      )}`,
-    },
-    body: new URLSearchParams({
-      grant_type: 'authorization_code',
-      code: dto.code,
-      redirect_uri: import.meta.env.VITE_DOCUSIGN_REDIRECT_URI || '',
-    }),
-  })
+  // Exchange code for tokens via Edge Function (keeps client_secret secure)
+  const { data: sessionData } = await supabaseUntyped.auth.getSession()
+  const accessToken = sessionData?.session?.access_token
+
+  if (!accessToken) {
+    throw new Error('Not authenticated')
+  }
+
+  const tokenResponse = await fetch(
+    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/docusign-token-exchange/exchange`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        code: dto.code,
+        redirect_uri: import.meta.env.VITE_DOCUSIGN_REDIRECT_URI || '',
+        is_demo: isDemo,
+      }),
+    }
+  )
 
   if (!tokenResponse.ok) {
-    const errorText = await tokenResponse.text()
-    throw new Error(`Failed to exchange code for tokens: ${errorText}`)
+    const errorData = await tokenResponse.json().catch(() => ({}))
+    throw new Error(`Failed to exchange code for tokens: ${errorData.error || tokenResponse.status}`)
   }
 
-  const tokens: DSOAuthTokens = await tokenResponse.json()
-
-  // Get user info to find account
-  const userInfoUrl = getDSUserInfoUrl(isDemo)
-  const userInfoResponse = await fetch(userInfoUrl, {
-    headers: {
-      Authorization: `Bearer ${tokens.access_token}`,
-    },
-  })
-
-  if (!userInfoResponse.ok) {
-    throw new Error('Failed to get DocuSign user info')
-  }
-
-  const userInfo: DSUserInfo = await userInfoResponse.json()
+  const { tokens, user_info: userInfo }: { tokens: DSOAuthTokens; user_info: DSUserInfo } = await tokenResponse.json()
   const account = userInfo.accounts.find(a => a.is_default) || userInfo.accounts[0]
 
   if (!account) {
@@ -272,41 +265,32 @@ export async function refreshToken(connectionId: string): Promise<void> {
     throw new Error('No refresh token available')
   }
 
-  const tokenUrl = getDSTokenUrl(connection.is_demo)
-  const tokenResponse = await fetch(tokenUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      Authorization: `Basic ${btoa(
-        `${import.meta.env.VITE_DOCUSIGN_CLIENT_ID}:${import.meta.env.VITE_DOCUSIGN_CLIENT_SECRET}`
-      )}`,
-    },
-    body: new URLSearchParams({
-      grant_type: 'refresh_token',
-      refresh_token: connection.refresh_token,
-    }),
-  })
+  // Refresh token via Edge Function (keeps client_secret secure)
+  const { data: sessionData } = await supabaseUntyped.auth.getSession()
+  const accessToken = sessionData?.session?.access_token
 
-  if (!tokenResponse.ok) {
-    const errorText = await tokenResponse.text()
-    await supabase
-      .from('docusign_connections' as any)
-      .update({ connection_error: errorText })
-      .eq('id', connectionId)
-    throw new Error(`Failed to refresh token: ${errorText}`)
+  if (!accessToken) {
+    throw new Error('Not authenticated')
   }
 
-  const tokens: DSOAuthTokens = await tokenResponse.json()
+  const tokenResponse = await fetch(
+    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/docusign-token-exchange/refresh`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({
+        connection_id: connectionId,
+      }),
+    }
+  )
 
-  await supabase
-    .from('docusign_connections' as any)
-    .update({
-      access_token: tokens.access_token,
-      refresh_token: tokens.refresh_token,
-      token_expires_at: new Date(Date.now() + tokens.expires_in * 1000).toISOString(),
-      connection_error: null,
-    })
-    .eq('id', connectionId)
+  if (!tokenResponse.ok) {
+    const errorData = await tokenResponse.json().catch(() => ({}))
+    throw new Error(`Failed to refresh token: ${errorData.error || tokenResponse.status}`)
+  }
 }
 
 /**

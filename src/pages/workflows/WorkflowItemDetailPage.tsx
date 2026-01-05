@@ -3,7 +3,7 @@
 
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useWorkflowItem, useDeleteWorkflowItem, useUpdateWorkflowItemStatus } from '@/features/workflows/hooks/useWorkflowItems'
 import { EditWorkflowItemDialog } from '@/features/workflows/components/EditWorkflowItemDialog'
 import { WorkflowItemStatusBadge } from '@/features/workflows/components/WorkflowItemStatusBadge'
@@ -42,7 +42,7 @@ export function WorkflowItemDetailPage() {
 
   if (!id) {
     return (
-      <AppLayout>
+      <SmartLayout title="Workflow Item">
         <div className="p-6">
           <Card className="border-red-200 bg-error-light">
             <CardContent className="pt-6">
@@ -50,25 +50,25 @@ export function WorkflowItemDetailPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Workflow Item">
         <div className="p-6">
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-disabled" />
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !item) {
     return (
-      <AppLayout>
+      <SmartLayout title="Workflow Item">
         <div className="p-6">
           <Card className="border-red-200 bg-error-light">
             <CardContent className="pt-6">
@@ -78,12 +78,12 @@ export function WorkflowItemDetailPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Workflow Item">
       <div className="p-6 space-y-6">
         {/* Back Button */}
         <Button
@@ -286,6 +286,6 @@ export function WorkflowItemDetailPage() {
           />
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

@@ -85,6 +85,69 @@ const badgeVariants = cva(
           'hover:bg-red-500/15',
           'dark:bg-red-500/20 dark:text-red-400',
         ].join(' '),
+        // Industrial tag style - bold left bar
+        'industrial': [
+          'pl-3 pr-2.5 py-1 rounded-sm',
+          'bg-slate-100 dark:bg-slate-800',
+          'border-l-4 border-primary',
+          'font-semibold uppercase tracking-wide text-[10px]',
+          'text-slate-700 dark:text-slate-200',
+        ].join(' '),
+        // Safety badge - high visibility
+        'safety': [
+          'px-2.5 py-1 rounded-md',
+          'bg-gradient-to-r from-amber-400 to-amber-500',
+          'text-amber-950 font-bold uppercase tracking-wide text-[10px]',
+          'shadow-sm',
+          'border border-amber-600/20',
+        ].join(' '),
+        // Danger industrial - with warning indicator
+        'danger-industrial': [
+          'pl-3 pr-2.5 py-1 rounded-sm',
+          'bg-red-50 dark:bg-red-950/50',
+          'border-l-4 border-red-500',
+          'font-semibold uppercase tracking-wide text-[10px]',
+          'text-red-700 dark:text-red-300',
+        ].join(' '),
+        // Success industrial
+        'success-industrial': [
+          'pl-3 pr-2.5 py-1 rounded-sm',
+          'bg-emerald-50 dark:bg-emerald-950/50',
+          'border-l-4 border-emerald-500',
+          'font-semibold uppercase tracking-wide text-[10px]',
+          'text-emerald-700 dark:text-emerald-300',
+        ].join(' '),
+        // Status with dot indicator
+        'status-dot': [
+          'inline-flex items-center gap-1.5',
+          'px-2.5 py-1 rounded-full',
+          'bg-slate-100 dark:bg-slate-800',
+          'text-slate-700 dark:text-slate-300',
+          'text-xs font-medium',
+        ].join(' '),
+        // Blueprint annotation style
+        'blueprint': [
+          'px-2 py-0.5 rounded-none',
+          'bg-blue-50 dark:bg-blue-950/30',
+          'border border-dashed border-blue-300 dark:border-blue-700',
+          'text-blue-700 dark:text-blue-300',
+          'font-mono text-[10px] uppercase tracking-wider',
+        ].join(' '),
+        // Overdue/urgent - pulsing attention
+        'urgent': [
+          'px-2.5 py-1 rounded-md',
+          'bg-gradient-to-r from-red-500 to-red-600',
+          'text-white font-bold uppercase tracking-wide text-[10px]',
+          'shadow-md shadow-red-500/30',
+          'animate-pulse',
+        ].join(' '),
+        // Pending/in-progress with subtle animation
+        'in-progress': [
+          'px-2.5 py-1 rounded-md',
+          'bg-gradient-to-r from-blue-500 to-blue-600',
+          'text-white font-semibold uppercase tracking-wide text-[10px]',
+          'shadow-sm',
+        ].join(' '),
       },
       size: {
         default: 'px-2.5 py-0.5 text-xs',
@@ -109,4 +172,32 @@ function Badge({ className, variant, size, ...props }: BadgeProps) {
   )
 }
 
-export { Badge, badgeVariants }
+// StatusDot component for composing with badges or standalone use
+export type StatusDotStatus = 'active' | 'pending' | 'error' | 'success'
+
+export interface StatusDotProps {
+  status: StatusDotStatus
+  className?: string
+}
+
+function StatusDot({ status, className }: StatusDotProps) {
+  const colors = {
+    active: 'bg-emerald-500',
+    pending: 'bg-amber-500',
+    error: 'bg-red-500',
+    success: 'bg-emerald-500'
+  }
+
+  return (
+    <span
+      className={cn(
+        'inline-block w-2 h-2 rounded-full',
+        colors[status],
+        status === 'active' && 'animate-pulse',
+        className
+      )}
+    />
+  )
+}
+
+export { Badge, badgeVariants, StatusDot }

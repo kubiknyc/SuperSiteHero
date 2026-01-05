@@ -8,7 +8,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { format } from 'date-fns';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { SmartLayout } from '@/components/layout/SmartLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -145,7 +145,7 @@ export function QCInspectionDetailPage() {
   // Loading state
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="QC Inspection Details">
         <div className="p-6 space-y-6">
           <Skeleton className="h-10 w-32" />
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -159,14 +159,14 @@ export function QCInspectionDetailPage() {
             </div>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
   // Error state
   if (error || !inspection) {
     return (
-      <AppLayout>
+      <SmartLayout title="QC Inspection Details">
         <div className="p-6">
           <div className="mb-6">
             <Button variant="outline" onClick={() => navigate(-1)}>
@@ -186,7 +186,7 @@ export function QCInspectionDetailPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
@@ -212,7 +212,7 @@ export function QCInspectionDetailPage() {
   ).length;
 
   return (
-    <AppLayout>
+    <SmartLayout title="QC Inspection Details">
       <div className="p-6 space-y-6">
         {/* Back button */}
         <div className="flex items-center justify-between">
@@ -865,7 +865,7 @@ export function QCInspectionDetailPage() {
           </div>
         </div>
       </div>
-    </AppLayout>
+    </SmartLayout>
   );
 }
 

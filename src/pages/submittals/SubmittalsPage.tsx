@@ -2,7 +2,7 @@
 // Main submittals page showing all submittals
 
 import { useState } from 'react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import { useSubmittalWorkflowType, useSubmittals } from '@/features/submittals/hooks'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -109,7 +109,7 @@ export function SubmittalsPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Submittals" subtitle="Document submissions">
       <div className="p-6 space-y-6">
         {/* Realtime update banner */}
         {pendingUpdates > 0 && (
@@ -372,6 +372,6 @@ export function SubmittalsPage() {
           onSuccess={() => setState({ ...state, searchTerm: '' })}
         />
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

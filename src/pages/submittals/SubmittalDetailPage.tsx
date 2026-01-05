@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { useParams, useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useSubmittal, useSubmittalComments, useSubmittalProcurement } from '@/features/submittals/hooks/useSubmittals'
 import { useUpdateSubmittalStatusWithNotification, useDeleteSubmittalWithNotification, useUpdateSubmittalProcurementStatusWithNotification } from '@/features/submittals/hooks/useSubmittalMutations'
 import { useEditConflictDetection } from '@/hooks/useEditConflictDetection'
@@ -131,32 +131,32 @@ export function SubmittalDetailPage() {
 
   if (!submittalId) {
     return (
-      <AppLayout>
+      <SmartLayout title="Submittal Details">
         <div className="p-6">
           <div className="text-center">
             <p className="text-error">Submittal ID not found</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Submittal Details">
         <div className="p-6">
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-disabled" />
             <p className="ml-2 text-muted">Loading submittal...</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !submittal) {
     return (
-      <AppLayout>
+      <SmartLayout title="Submittal Details">
         <div className="p-6">
           <div className="mb-6">
             <Button variant="outline" onClick={() => navigate(-1)}>
@@ -172,12 +172,12 @@ export function SubmittalDetailPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Submittal Details">
       <div className="p-6 space-y-6">
         {/* Conflict detection banner */}
         {hasConflict && (
@@ -443,6 +443,6 @@ export function SubmittalDetailPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </AppLayout>
+    </SmartLayout>
   )
 }

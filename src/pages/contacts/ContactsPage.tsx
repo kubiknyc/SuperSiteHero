@@ -3,7 +3,7 @@
 
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useSelectedProject } from '@/hooks/useSelectedProject'
 import { useContacts, useDeleteContact } from '@/features/contacts/hooks/useContacts'
 import { ContactCard } from '@/features/contacts/components/ContactCard'
@@ -94,7 +94,7 @@ export function ContactsPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Contacts" subtitle="Directory">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -352,6 +352,6 @@ export function ContactsPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </AppLayout>
+    </SmartLayout>
   )
 }

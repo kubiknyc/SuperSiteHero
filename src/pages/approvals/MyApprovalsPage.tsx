@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import {
   ApprovalRequestCard,
@@ -110,7 +110,7 @@ export function MyApprovalsPage() {
     cancelMutation.isPending
 
   return (
-    <AppLayout>
+    <SmartLayout title="Approvals" subtitle="Pending approvals">
       <div className="p-6 max-w-5xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -239,7 +239,7 @@ export function MyApprovalsPage() {
           </div>
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

@@ -5,7 +5,7 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import {
   usePaymentApplication,
   useScheduleOfValues,
@@ -262,17 +262,17 @@ export function PaymentApplicationDetailPage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Payment Application Details">
         <div className="flex items-center justify-center h-64">
           <Loader2 className="h-8 w-8 animate-spin text-disabled" />
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !application) {
     return (
-      <AppLayout>
+      <SmartLayout title="Payment Application Details">
         <div className="p-6">
           <Card className="border-red-200 bg-error-light">
             <CardContent className="py-8 text-center">
@@ -286,7 +286,7 @@ export function PaymentApplicationDetailPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
@@ -297,7 +297,7 @@ export function PaymentApplicationDetailPage() {
   const canDelete = application.status === 'draft'
 
   return (
-    <AppLayout>
+    <SmartLayout title="Payment Application Details">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -932,7 +932,7 @@ export function PaymentApplicationDetailPage() {
         requireSignerInfo={true}
         allowDocuSign={true}
       />
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

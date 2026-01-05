@@ -3,7 +3,7 @@
 
 import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useProject, useUpdateProject } from '@/features/projects/hooks/useProjects'
 import { ProjectTeamManagement } from '@/features/projects/components/ProjectTeamManagement'
 import { DeleteProjectConfirmation } from '@/features/projects/components/DeleteProjectConfirmation'
@@ -71,17 +71,17 @@ export function ProjectSettingsPage() {
 
   if (!projectId) {
     return (
-      <AppLayout>
+      <SmartLayout title="Project Settings">
         <div className="p-6 text-center">
           <p className="text-destructive">Project ID not found</p>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Project Settings">
         <div className="container max-w-4xl py-6 space-y-6">
           <div className="flex items-center gap-4">
             <Skeleton className="h-10 w-10" />
@@ -102,13 +102,13 @@ export function ProjectSettingsPage() {
             </Card>
           ))}
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !project) {
     return (
-      <AppLayout>
+      <SmartLayout title="Project Settings">
         <div className="container max-w-4xl py-6">
           <Button variant="outline" onClick={() => navigate(`/projects/${projectId}`)}>
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -121,7 +121,7 @@ export function ProjectSettingsPage() {
             </AlertDescription>
           </Alert>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
@@ -150,7 +150,7 @@ export function ProjectSettingsPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Project Settings">
       <div className="container max-w-4xl py-6 space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4">
@@ -340,7 +340,7 @@ export function ProjectSettingsPage() {
           </Card>
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

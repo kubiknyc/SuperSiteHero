@@ -30,7 +30,7 @@ import {
   SheetTitle,
   SheetDescription,
 } from '@/components/ui/sheet'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import {
   Plus,
   FileText,
@@ -708,7 +708,7 @@ export default function SiteInstructionsPage() {
   // Loading state for projects
   if (projectsLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Site Instructions" subtitle="Field directives">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -719,12 +719,12 @@ export default function SiteInstructionsPage() {
           </div>
           <StatsSkeleton />
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Site Instructions" subtitle="Field directives">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -1190,6 +1190,6 @@ export default function SiteInstructionsPage() {
           </SheetContent>
         </Sheet>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

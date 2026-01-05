@@ -11,7 +11,7 @@
 import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { format } from 'date-fns'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import {
   TalkStatusBadge,
@@ -57,7 +57,7 @@ export function ToolboxTalkDetailPage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Toolbox Talk Details">
         <div className="p-6">
           <div className="animate-pulse">
             <div className="h-8 bg-muted rounded w-1/4 mb-4" />
@@ -81,13 +81,13 @@ export function ToolboxTalkDetailPage() {
             </div>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !talk) {
     return (
-      <AppLayout>
+      <SmartLayout title="Toolbox Talk Details">
         <div className="p-6">
           <div className="text-center py-12">
             <AlertTriangle className="h-12 w-12 mx-auto text-red-400 mb-4" />
@@ -103,7 +103,7 @@ export function ToolboxTalkDetailPage() {
             </Link>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
@@ -141,7 +141,7 @@ export function ToolboxTalkDetailPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Toolbox Talk Details">
       <div className="p-6">
         {/* Header */}
         <div className="flex items-start justify-between mb-6">
@@ -487,7 +487,7 @@ export function ToolboxTalkDetailPage() {
           </div>
         </div>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

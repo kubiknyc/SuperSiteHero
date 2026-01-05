@@ -2,7 +2,7 @@
 // Create new task page
 
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useCreateTask } from '@/features/tasks/hooks/useTasks'
 import { TaskForm, TaskFormData } from '@/features/tasks/components/TaskForm'
 import { toast } from 'sonner'
@@ -33,7 +33,7 @@ export function TaskCreatePage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="New Task">
       <div className="p-6 space-y-6 max-w-4xl">
         <div>
           <h1 className="text-3xl font-bold text-foreground heading-page">Create Task</h1>
@@ -46,6 +46,6 @@ export function TaskCreatePage() {
           isLoading={createMutation.isPending}
         />
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

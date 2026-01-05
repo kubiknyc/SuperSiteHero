@@ -13,7 +13,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { useNavigate, useParams, Link } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useDailyReport, useUpdateDailyReport, useDeleteDailyReport } from '@/features/daily-reports/hooks/useDailyReports'
 import { useDailyReportFullData } from '@/features/daily-reports/hooks/useDailyReportRelatedData'
 import { downloadDailyReportPDF } from '@/features/daily-reports/utils/pdfExport'
@@ -76,31 +76,31 @@ export function DailyReportDetailPage() {
 
   if (!id) {
     return (
-      <AppLayout>
+      <SmartLayout title="Daily Report">
         <div className="p-6">
           <div className="text-center py-12">
             <p className="text-error">Report ID not found</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Daily Report">
         <div className="p-6">
           <div className="text-center py-12">
             <p className="text-muted">Loading report...</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !report) {
     return (
-      <AppLayout>
+      <SmartLayout title="Daily Report">
         <div className="p-6">
           <div className="text-center py-12">
             <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
@@ -110,7 +110,7 @@ export function DailyReportDetailPage() {
             </Link>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
@@ -189,7 +189,7 @@ export function DailyReportDetailPage() {
   const issuesText: string | null = typeof report.issues === 'string' ? report.issues : null
 
   return (
-    <AppLayout>
+    <SmartLayout title="Daily Report">
       <div className="p-6 space-y-6 max-w-4xl">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -468,6 +468,6 @@ export function DailyReportDetailPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </AppLayout>
+    </SmartLayout>
   )
 }

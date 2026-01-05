@@ -1,0 +1,231 @@
+<context>
+# Overview
+JobSight is a comprehensive, offline-first construction field management platform designed specifically for construction superintendents and their teams. It consolidates fragmented construction workflows (daily reports, RFIs, change orders, punch lists, safety tracking, etc.) into one unified system optimized for field use with robust offline capabilities.
+
+The platform is at 96% Phase 1 completion with strong architecture, comprehensive test coverage, and well-organized feature modules. The current focus is completing remaining Phase 1 features and preparing for production deployment.
+
+# Core Features (Already Implemented - 96% Complete)
+- User Authentication with MFA and role-based access
+- Multi-tenant architecture with company management
+- Project Management with comprehensive detail pages
+- Daily Reports with field documentation and weather integration
+- Document Management with version control and PDF viewing
+- Task Management with assignment and status tracking
+- RFI, Change Order, and Submittal workflows
+- Punch Lists with deficiency tracking
+- Safety Management with OSHA compliance (300, 300A, 301 forms)
+- Payment Applications (AIA G702/G703)
+- Lien Waivers with state templates
+- Cost Tracking with cost codes and budgets
+- Equipment and Material Tracking
+- Meetings with minutes and action items
+- Drawing Markup with 7+ annotation tools
+- Takeoff measurements (9 types)
+- Subcontractor Portal with compliance tracking
+- Insurance Certificate Tracking
+- Look-Ahead Planning (3-week view)
+- Real-time Collaboration with presence tracking
+- Mobile PWA Optimization
+- Custom Report Builder
+- Toolbox Talks Module
+- Advanced Permissions System
+- Distribution Lists
+- Meeting Minutes
+- Closeout Documents
+- AI Agents (RFI routing, smart summaries, risk prediction, schedule optimization)
+
+# User Experience
+## User Personas
+- **Superintendent** - Full access, assigned projects only
+- **Project Manager** - Full access, assigned projects only
+- **Office Admin** - Documentation and data entry
+- **Field Employee** - Photo upload, notes, task updates
+- **Subcontractor** - View only their scope and items
+- **Architect** - Review and respond to submittals, RFIs
+
+## Key User Flows
+- Field documentation (daily reports, photos, punch lists)
+- Document review and markup
+- RFI/Submittal workflow management
+- Safety incident reporting
+- Payment application processing
+- Offline data capture and sync
+
+## UI/UX Considerations
+- Mobile-first design optimized for field use
+- Touch-friendly UI with 44px minimum touch targets
+- Offline-first architecture
+- PWA with install prompt and push notifications
+</context>
+<PRD>
+# Technical Architecture
+
+## System Components
+- **Frontend**: React 18, TypeScript, Vite, TailwindCSS, TanStack Query, Zustand
+- **Backend**: Supabase (PostgreSQL, Auth, Storage, Realtime, Edge Functions)
+- **Offline**: Service Workers, IndexedDB, Sync Queue
+- **PWA**: Vite PWA Plugin, Push Notifications
+
+## Data Models
+- 172+ database migrations, 60+ tables
+- Row-level security on all tables
+- Multi-tenant architecture with company isolation
+
+## APIs and Integrations
+- Supabase REST API for data operations
+- Supabase Realtime for live updates
+- Open-Meteo API for weather data
+- AI providers (OpenAI, Anthropic) for smart features
+
+## Infrastructure Requirements
+- Supabase project (staging + production)
+- Vercel deployment
+- Sentry for error monitoring
+- GitHub Actions for CI/CD
+
+# Development Roadmap
+
+## Phase 1 Completion (Remaining 4% - Current Sprint)
+
+### Sprint 1: Foundation & Security
+1. Verify RLS policies working with different user roles
+2. Session management improvements
+3. Rate limiting on auth endpoints
+4. Audit logging for sensitive operations
+
+### Sprint 2: Offline & PWA
+1. PWA install prompt handling
+2. Push notification opt-in flow
+3. Notification preferences UI
+4. App badge updates
+5. Offline page fallback
+6. Web share target
+
+### Sprint 3: Workflow Enhancements
+1. RFI ball-in-court notifications
+2. Submittal revision comparison view
+3. Cost/schedule impact tracking for RFIs
+4. Email distribution workflows
+5. Daily report integration with RFIs/Submittals
+
+### Sprint 4: Drawing & Markup
+1. Live cursor sharing (real-time collaboration)
+2. Layer visibility controls
+3. Export markups to PDF
+4. Markup templates
+5. Measurement annotations
+
+### Sprint 5: Takeoff & Calibration
+1. Scale persistence per sheet
+2. Unit conversion (metric/imperial)
+3. Calibration history
+4. Auto-detect scale from drawing
+
+### Sprint 6: Performance & Polish
+1. Query optimization for large projects
+2. Image lazy loading improvements
+3. Virtual scrolling for long lists
+4. Bundle size analysis and reduction
+5. Accessibility audit (WCAG 2.1 AA)
+
+## Phase 2: Production Deployment
+1. Apply all pending migrations to production
+2. DNS configuration
+3. SSL certificates
+4. Backup procedures
+5. Rollback plan documentation
+6. Launch monitoring setup
+
+## Phase 3: Enterprise Features (P3 - 2026+)
+1. BIM Model Viewer (IFC file support)
+2. IoT Sensor Integration
+3. AR/VR Site Walkthroughs
+4. Native Mobile Apps (React Native)
+5. QuickBooks Integration
+
+# Logical Dependency Chain
+
+## Foundation (Must Complete First)
+1. RLS policy verification - Critical security baseline
+2. Session management - Required for production
+3. Rate limiting - Production security
+
+## User-Visible Features (Build on Foundation)
+4. PWA install prompt - Improves mobile adoption
+5. Push notifications - Enables real-time alerts
+6. Notification preferences - User control over alerts
+
+## Workflow Improvements (Builds on Notifications)
+7. RFI ball-in-court notifications - Core workflow improvement
+8. Email distribution - Extends notification system
+9. Submittal revision comparison - Document workflow
+
+## Advanced Features (Builds on Workflows)
+10. Live cursor sharing - Collaboration enhancement
+11. Export markups to PDF - Document output
+12. Scale persistence - Takeoff improvements
+
+## Polish & Optimization (Final Layer)
+13. Performance optimization - User experience
+14. Accessibility audit - Compliance
+15. Production deployment - Launch
+
+# Risks and Mitigations
+
+## Technical Challenges
+| Risk | Impact | Mitigation |
+|------|--------|------------|
+| RLS policy gaps | HIGH | Security audit post-migration |
+| Offline sync data loss | HIGH | Conflict resolution UI implemented |
+| Performance regression | MEDIUM | Monitor Web Vitals, bundle size |
+| Push notification delivery | MEDIUM | Fallback to in-app notifications |
+
+## MVP Definition
+The current platform at 96% is the MVP. Remaining work focuses on:
+- Security hardening (RLS, rate limiting, audit logging)
+- PWA polish (install prompt, notifications)
+- Workflow notifications (ball-in-court)
+- Performance optimization
+
+## Resource Constraints
+- Single developer team - prioritize high-impact features
+- Supabase limits - monitor usage, optimize queries
+- Bundle size - code splitting, lazy loading
+
+# Appendix
+
+## Key Files Modified (In Progress)
+- Insurance Compliance Enhancement - Migration 150
+- MFA Backup Codes - Migration 148
+- Markup Sharing RLS - Migration 149
+- Offline Data Prefetching - `useDataPrefetch.ts`
+- PWA Update Notifications - `PWAUpdateNotification.tsx`
+- Enhanced Sync Management - `sync-manager.ts`
+- Takeoff Calibration - Line capture mode
+
+## Testing Requirements
+| Area | Test Type | Coverage Goal |
+|------|-----------|---------------|
+| Insurance hooks | Unit | 90% |
+| Offline sync | Integration | 80% |
+| MFA flows | E2E | Critical paths |
+| PWA features | E2E | Install/update |
+| RFI workflow | E2E | Ball-in-court |
+| Payment holds | Integration | Override flow |
+
+## Commands Reference
+```bash
+npm run dev           # Development server
+npm run build         # Production build
+npm run typecheck     # TypeScript checking
+npm run test          # Run tests
+npm run test:e2e      # E2E tests
+npx supabase db push  # Apply migrations
+```
+
+## Environment Variables Required
+- VITE_SUPABASE_URL
+- VITE_SUPABASE_ANON_KEY
+- VITE_SENTRY_DSN
+- VITE_VAPID_PUBLIC_KEY
+</PRD>

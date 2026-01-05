@@ -2,7 +2,7 @@
 // Contact detail view page
 
 import { useNavigate, useParams } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useContact, useDeleteContact } from '@/features/contacts/hooks/useContacts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -62,17 +62,17 @@ export function ContactDetailPage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Contact Details">
         <div className="p-6 flex items-center justify-center min-h-96">
           <Loader2 className="h-12 w-12 text-disabled animate-spin" />
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !contact) {
     return (
-      <AppLayout>
+      <SmartLayout title="Contact Details">
         <div className="p-6">
           <Card>
             <CardContent className="p-12 text-center">
@@ -86,7 +86,7 @@ export function ContactDetailPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
@@ -94,7 +94,7 @@ export function ContactDetailPage() {
   const displayName = fullName || contact.company_name || 'Unnamed Contact'
 
   return (
-    <AppLayout>
+    <SmartLayout title="Contact Details">
       <div className="p-6 max-w-4xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
@@ -252,6 +252,6 @@ export function ContactDetailPage() {
           </Card>
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

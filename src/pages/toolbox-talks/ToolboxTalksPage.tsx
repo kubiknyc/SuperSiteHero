@@ -7,7 +7,7 @@
 
 import { useState, useMemo } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -98,7 +98,7 @@ export function ToolboxTalksPage() {
 
   if (!currentProject) {
     return (
-      <AppLayout>
+      <SmartLayout title="Toolbox Talks" subtitle="Safety briefings">
         <div className="p-6">
           <div className="text-center py-12">
             <ClipboardList className="h-12 w-12 mx-auto text-gray-300 mb-4" />
@@ -108,12 +108,12 @@ export function ToolboxTalksPage() {
             </p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Toolbox Talks" subtitle="Safety briefings">
       <div className="p-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -329,7 +329,7 @@ export function ToolboxTalksPage() {
           </div>
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

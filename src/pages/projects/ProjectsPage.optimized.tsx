@@ -4,7 +4,7 @@
 
 import { useState, useMemo, useCallback } from 'react'
 import { Link } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -86,7 +86,7 @@ export function ProjectsPage() {
   }, [refetch])
 
   return (
-    <AppLayout>
+    <SmartLayout>
       <div className="p-6">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
@@ -220,6 +220,6 @@ export function ProjectsPage() {
           />
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

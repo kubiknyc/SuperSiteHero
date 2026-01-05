@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { useParams, useNavigate } from 'react-router-dom'
 import { format, differenceInDays } from 'date-fns'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -306,32 +306,32 @@ export function DedicatedRFIDetailPage() {
   // Loading state
   if (!rfiId) {
     return (
-      <AppLayout>
+      <SmartLayout title="RFI Details">
         <div className="p-6">
           <div className="text-center">
             <p className="text-error">RFI ID not found</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="RFI Details">
         <div className="p-6">
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-disabled" />
             <p className="ml-2 text-muted">Loading RFI...</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !rfi) {
     return (
-      <AppLayout>
+      <SmartLayout title="RFI Details">
         <div className="p-6">
           <div className="mb-6">
             <Button variant="outline" onClick={() => navigate(-1)}>
@@ -347,12 +347,12 @@ export function DedicatedRFIDetailPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="RFI Details">
       <div className="p-6 space-y-6">
         {/* Back button */}
         <div>
@@ -1127,7 +1127,7 @@ export function DedicatedRFIDetailPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import {
   useMeeting,
@@ -316,16 +316,16 @@ export function MeetingFormPage() {
 
   if (isEditing && loadingMeeting) {
     return (
-      <AppLayout>
+      <SmartLayout title="Meeting">
         <div className="p-6 text-center">
           <p className="text-muted">Loading meeting...</p>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Meeting">
       <form onSubmit={handleSubmit} className="p-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -909,6 +909,6 @@ export function MeetingFormPage() {
           </div>
         </div>
       </form>
-    </AppLayout>
+    </SmartLayout>
   )
 }

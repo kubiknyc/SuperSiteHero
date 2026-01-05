@@ -5,7 +5,7 @@
  */
 
 import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { InspectionForm } from '@/features/inspections/components'
@@ -88,14 +88,14 @@ export function CreateInspectionPage() {
   // Show loading state when fetching existing inspection
   if (isEditMode && isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="New Inspection">
         <div className="p-6">
           <div className="text-center py-12">
             <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto" />
             <p className="text-muted mt-4">Loading inspection...</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
@@ -106,7 +106,7 @@ export function CreateInspectionPage() {
 
   if (!effectiveProjectId) {
     return (
-      <AppLayout>
+      <SmartLayout title="New Inspection">
         <div className="p-6">
           <div className="text-center py-12 bg-card rounded-lg border">
             <ClipboardCheck className="h-12 w-12 text-gray-300 mx-auto" />
@@ -124,12 +124,12 @@ export function CreateInspectionPage() {
             </Link>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="New Inspection">
       <div className="p-6">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
@@ -186,7 +186,7 @@ export function CreateInspectionPage() {
           </CardContent>
         </Card>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

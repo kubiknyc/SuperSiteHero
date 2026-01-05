@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { format } from 'date-fns'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import {
   useChangeOrderV2,
   useChangeOrderItems,
@@ -240,21 +240,21 @@ export function ChangeOrderDetailPage() {
   // Loading state
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Change Order Details">
         <div className="p-6">
           <div className="text-center py-12">
             <Loader2 className="h-8 w-8 animate-spin mx-auto text-disabled mb-4" />
             <p className="text-muted">Loading change order...</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   // Error state
   if (error || !changeOrder) {
     return (
-      <AppLayout>
+      <SmartLayout title="Change Order Details">
         <div className="p-6">
           <Card className="border-red-200 bg-error-light">
             <CardContent className="py-8 text-center">
@@ -267,7 +267,7 @@ export function ChangeOrderDetailPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
@@ -280,7 +280,7 @@ export function ChangeOrderDetailPage() {
   const isPendingOwner = changeOrder.status === ChangeOrderStatus.PENDING_OWNER_REVIEW
 
   return (
-    <AppLayout>
+    <SmartLayout title="Change Order Details">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex items-start justify-between">
@@ -1008,7 +1008,7 @@ export function ChangeOrderDetailPage() {
         requireSignerInfo={true}
         allowDocuSign={true}
       />
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

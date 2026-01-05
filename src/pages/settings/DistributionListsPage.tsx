@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -158,21 +158,21 @@ export function DistributionListsPage() {
   // Not authenticated
   if (!companyId) {
     return (
-      <AppLayout>
+      <SmartLayout title="Distribution Lists" subtitle="Contact groups">
         <div className="container max-w-5xl py-6">
           <div className="text-center py-12">
             <AlertCircle className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
             <p className="text-muted-foreground">Please log in to manage distribution lists</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   // Error state
   if (error) {
     return (
-      <AppLayout>
+      <SmartLayout title="Distribution Lists" subtitle="Contact groups">
         <div className="container max-w-5xl py-6">
           <div className="text-center py-12">
             <AlertCircle className="h-12 w-12 mx-auto text-error mb-4" />
@@ -180,12 +180,12 @@ export function DistributionListsPage() {
             <p className="text-sm text-muted-foreground mt-2">{error.message}</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Distribution Lists" subtitle="Contact groups">
       <div className="container max-w-5xl py-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -364,7 +364,7 @@ export function DistributionListsPage() {
           </AlertDialogContent>
         </AlertDialog>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

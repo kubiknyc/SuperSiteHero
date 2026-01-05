@@ -3,7 +3,7 @@
 
 import { useState } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useTask, useUpdateTask, useDeleteTask } from '@/features/tasks/hooks/useTasks'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -40,31 +40,31 @@ export function TaskDetailPage() {
 
   if (!id) {
     return (
-      <AppLayout>
+      <SmartLayout title="Task Details">
         <div className="p-6">
           <div className="text-center py-12">
             <p className="text-error">Task ID not found</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Task Details">
         <div className="p-6">
           <div className="text-center py-12">
             <p className="text-muted">Loading task...</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !task) {
     return (
-      <AppLayout>
+      <SmartLayout title="Task Details">
         <div className="p-6">
           <div className="text-center py-12">
             <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
@@ -74,7 +74,7 @@ export function TaskDetailPage() {
             </Link>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
@@ -134,7 +134,7 @@ export function TaskDetailPage() {
   const isOverdue = task.due_date && isPast(new Date(task.due_date)) && task.status !== 'completed'
 
   return (
-    <AppLayout>
+    <SmartLayout title="Task Details">
       <div className="p-6 space-y-6 max-w-4xl">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -276,6 +276,6 @@ export function TaskDetailPage() {
           </CardContent>
         </Card>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

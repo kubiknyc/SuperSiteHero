@@ -3,7 +3,7 @@
 
 import { useParams, Link } from 'react-router-dom'
 import { Card, CardContent } from '@/components/ui'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { PredictiveAnalyticsDashboard } from '@/features/analytics/components'
 import { useProjects } from '@/features/projects/hooks/useProjects'
 
@@ -25,7 +25,7 @@ export function AnalyticsPage() {
   // If no projectId in URL, show project selector
   if (!projectId) {
     return (
-      <AppLayout>
+      <SmartLayout title="Analytics" subtitle="Project insights">
         <div className="p-6 space-y-6">
           <h1 className="text-2xl font-bold text-foreground heading-page">
             Predictive Analytics
@@ -66,12 +66,12 @@ export function AnalyticsPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Analytics" subtitle="Project insights">
       <div className="p-6 space-y-6">
         {/* Breadcrumb */}
         <nav className="text-sm">
@@ -95,7 +95,7 @@ export function AnalyticsPage() {
         {/* Dashboard */}
         <PredictiveAnalyticsDashboard projectId={projectId} />
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

@@ -7,7 +7,7 @@ import { useState, useCallback } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useSelectedProject } from '@/hooks/useSelectedProject';
 import { DailyReportFormV2 } from '@/features/daily-reports/components/v2';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { SmartLayout } from '@/components/layout/SmartLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FormField } from '@/components/ui/form-field';
@@ -98,7 +98,7 @@ export function NewDailyReportPageV2() {
 
   // Project selection screen
   return (
-    <AppLayout>
+    <SmartLayout>
       <div className="p-6 max-w-2xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center gap-4">
@@ -247,7 +247,7 @@ export function NewDailyReportPageV2() {
           </CardContent>
         </Card>
       </div>
-    </AppLayout>
+    </SmartLayout>
   );
 }
 

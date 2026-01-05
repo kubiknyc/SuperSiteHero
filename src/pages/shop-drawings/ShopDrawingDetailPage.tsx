@@ -2,7 +2,7 @@
 // Shop Drawing detail page with status transitions and revision history
 
 import { useParams, useNavigate } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -44,7 +44,7 @@ export function ShopDrawingDetailPage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Shop Drawing Details">
         <div className="space-y-6">
           <div className="flex items-center gap-4">
             <Skeleton className="h-10 w-10" />
@@ -64,13 +64,13 @@ export function ShopDrawingDetailPage() {
             </div>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !shopDrawing) {
     return (
-      <AppLayout>
+      <SmartLayout title="Shop Drawing Details">
         <div className="flex flex-col items-center justify-center py-12">
           <AlertCircle className="h-12 w-12 text-destructive mb-4" />
           <h2 className="text-xl font-semibold">Shop Drawing Not Found</h2>
@@ -82,14 +82,14 @@ export function ShopDrawingDetailPage() {
             Back to Shop Drawings
           </Button>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   const isLocked = isShopDrawingLocked(shopDrawing.review_status as SubmittalReviewStatus)
 
   return (
-    <AppLayout>
+    <SmartLayout title="Shop Drawing Details">
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
@@ -386,7 +386,7 @@ export function ShopDrawingDetailPage() {
           </div>
         </div>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

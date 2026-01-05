@@ -5,7 +5,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { supabase } from '@/lib/supabase'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -217,7 +217,7 @@ export function ProfileEditPage() {
   const displayAvatar = avatarPreview || avatarUrl
 
   return (
-    <AppLayout>
+    <SmartLayout title="Edit Profile">
       <div className="container max-w-2xl py-6">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
@@ -440,7 +440,7 @@ export function ProfileEditPage() {
           </div>
         </form>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

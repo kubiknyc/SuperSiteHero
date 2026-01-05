@@ -7,7 +7,7 @@
 
 import { useState, useMemo } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { SmartLayout } from '@/components/layout/SmartLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -149,7 +149,7 @@ export function PhotoProgressPage() {
   // Show project selector if no project selected
   if (!isLoadingProjects && !selectedProjectId && projects?.length === 0) {
     return (
-      <AppLayout>
+      <SmartLayout title="Photo Progress" subtitle="Visual documentation">
         <div className="p-6">
           <div className="text-center py-12 bg-card rounded-lg border">
             <Camera className="h-12 w-12 text-gray-300 mx-auto" />
@@ -161,12 +161,12 @@ export function PhotoProgressPage() {
             </p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Photo Progress" subtitle="Visual documentation">
       <div className="p-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -546,7 +546,7 @@ export function PhotoProgressPage() {
           </>
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   );
 }
 

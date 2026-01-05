@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { SmartLayout } from '@/components/layout/SmartLayout';
 import {
   useLienWaiver,
   useLienWaiverHistory,
@@ -56,6 +56,7 @@ import {
 } from 'lucide-react';
 import { DocumentSignatureDialog, type SignatureData } from '@/components/shared';
 import { cn } from '@/lib/utils';
+import DOMPurify from 'dompurify';
 import { downloadLienWaiverPDF } from '@/features/lien-waivers/utils/pdfExport';
 import { SendViaDocuSignButton } from '@/features/docusign/components';
 import { formatWaiverAmount, isWaiverOverdue, type LienWaiverHistory } from '@/types/lien-waiver';
@@ -92,17 +93,17 @@ export function LienWaiverDetailPage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Lien Waiver Details">
         <div className="flex items-center justify-center h-64">
           <Loader2 className="h-8 w-8 animate-spin text-disabled" />
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
   if (error || !waiver) {
     return (
-      <AppLayout>
+      <SmartLayout title="Lien Waiver Details">
         <div className="p-6">
           <Card className="border-red-200 bg-error-light">
             <CardContent className="py-8 text-center">
@@ -116,7 +117,7 @@ export function LienWaiverDetailPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
@@ -407,7 +408,7 @@ export function LienWaiverDetailPage() {
   };
 
   return (
-    <AppLayout>
+    <SmartLayout title="Lien Waiver Details">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
@@ -738,7 +739,7 @@ export function LienWaiverDetailPage() {
                 ) : waiver.rendered_content ? (
                   <div
                     className="prose max-w-none border rounded-lg p-6 bg-card"
-                    dangerouslySetInnerHTML={{ __html: waiver.rendered_content }}
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(waiver.rendered_content) }}
                   />
                 ) : (
                   <div className="text-center py-8 text-muted">
@@ -826,7 +827,7 @@ export function LienWaiverDetailPage() {
         disabled={signWaiver.isPending}
         allowDocuSign={true}
       />
-    </AppLayout>
+    </SmartLayout>
   );
 }
 

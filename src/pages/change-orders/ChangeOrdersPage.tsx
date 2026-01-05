@@ -4,7 +4,7 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useSelectedProject } from '@/hooks/useSelectedProject'
 import {
   useChangeOrdersV2,
@@ -206,7 +206,7 @@ export function ChangeOrdersPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Change Orders" subtitle="Contract modifications">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -463,6 +463,6 @@ export function ChangeOrdersPage() {
           </Card>
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

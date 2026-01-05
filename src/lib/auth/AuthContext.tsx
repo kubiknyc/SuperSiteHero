@@ -1,5 +1,5 @@
 // File: /src/lib/auth/AuthContext.tsx
-// Authentication context and provider
+// Authentication context and provider with enhanced session management
 
 import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from 'react'
 import { Session, User } from '@supabase/supabase-js'
@@ -8,6 +8,13 @@ import type { UserProfile } from '@/types/database'
 import { logger } from '@/lib/utils/logger'
 import { setSentryUser, clearSentryUser } from '../sentry'
 import { withAuthRetry, isTransientError, isOnline, waitForOnline } from './auth-retry'
+import { sessionManager } from './session-manager'
+import {
+  initializeSessionSecurity,
+  clearSessionSecurityData,
+  startActivityMonitoring,
+  SecurityCheckResult,
+} from './session-security'
 
 interface AuthContextType {
   session: Session | null
@@ -15,9 +22,13 @@ interface AuthContextType {
   userProfile: UserProfile | null
   loading: boolean
   isPending: boolean
+  /** Security warning if session appears hijacked */
+  securityWarning: SecurityCheckResult | null
   signIn: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
   refreshUserProfile: () => Promise<void>
+  /** Dismiss the security warning */
+  dismissSecurityWarning: () => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -27,6 +38,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
+  const [securityWarning, setSecurityWarning] = useState<SecurityCheckResult | null>(null)
 
   // Fetch user profile from database with retry logic for transient failures
   const fetchUserProfile = useCallback(async (userId: string): Promise<boolean> => {
@@ -103,6 +115,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => {
+    // Initialize session manager
+    sessionManager.initialize().catch((error) => {
+      logger.error('[Auth] Failed to initialize session manager:', error)
+    })
+
     // Get initial session
     supabase.auth.getSession()
       .then(({ data: { session } }) => {
@@ -112,6 +129,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Fetch user profile from database
         if (session?.user) {
           fetchUserProfile(session.user.id)
+          // Initialize session security on existing session
+          initializeSessionSecurity()
         }
 
         setLoading(false)
@@ -125,19 +144,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       })
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session)
       setUser(session?.user ?? null)
 
       // Fetch/clear user profile
       if (session?.user) {
         fetchUserProfile(session.user.id)
+
+        // Initialize security on new sign in
+        if (event === 'SIGNED_IN') {
+          initializeSessionSecurity()
+        }
       } else {
         setUserProfile(null)
+        // Clear security data on sign out
+        if (event === 'SIGNED_OUT') {
+          clearSessionSecurityData()
+        }
       }
     })
 
-    return () => subscription.unsubscribe()
+    // Start activity monitoring for session security
+    const stopActivityMonitoring = startActivityMonitoring((result) => {
+      if (!result.passed) {
+        logger.warn('[Auth] Security issue detected:', result.reason)
+        setSecurityWarning(result)
+
+        // Auto-logout on high risk
+        if (result.action === 'logout') {
+          logger.warn('[Auth] Auto-logout triggered due to security concern')
+          supabase.auth.signOut()
+        }
+      }
+    })
+
+    return () => {
+      subscription.unsubscribe()
+      stopActivityMonitoring()
+      sessionManager.destroy()
+    }
   }, [])
 
   const signIn = async (email: string, password: string) => {
@@ -177,6 +223,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Clear Sentry user context
     clearSentryUser()
 
+    // Clear session security data
+    clearSessionSecurityData()
+
     // Clear sensitive data from localStorage on logout
     try {
       localStorage.removeItem('checklist-signature-templates')
@@ -187,6 +236,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Ignore errors if localStorage is not available
     }
   }
+
+  // Dismiss security warning
+  const dismissSecurityWarning = useCallback(() => {
+    setSecurityWarning(null)
+  }, [])
 
   const isPending = userProfile?.approval_status === 'pending'
 
@@ -203,9 +257,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     userProfile,
     loading,
     isPending,
+    securityWarning,
     signIn,
     signOut,
     refreshUserProfile,
+    dismissSecurityWarning,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

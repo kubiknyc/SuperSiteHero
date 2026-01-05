@@ -4,7 +4,7 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { format, isPast, differenceInDays } from 'date-fns'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useSelectedProject } from '@/hooks/useSelectedProject'
 import { useRFIs, useRFIWorkflowType } from '@/features/rfis/hooks/useRFIs'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -183,7 +183,7 @@ export function RFIsPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="RFIs" subtitle="Requests for information">
       <div className="p-6 space-y-6">
         {/* Realtime update banner */}
         {pendingUpdates > 0 && (
@@ -506,6 +506,6 @@ export function RFIsPage() {
           // Dialog will close automatically
         }}
       />
-    </AppLayout>
+    </SmartLayout>
   )
 }

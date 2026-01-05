@@ -7,7 +7,7 @@
 
 import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { SmartLayout } from '@/components/layout/SmartLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -90,7 +90,7 @@ export function ProcurementPage() {
   // Show message if no projects
   if (!isLoadingProjects && !selectedProjectId && projects?.length === 0) {
     return (
-      <AppLayout>
+      <SmartLayout title="Procurement" subtitle="Material procurement">
         <div className="p-6">
           <div className="text-center py-12 bg-card rounded-lg border">
             <ShoppingCart className="h-12 w-12 text-gray-300 mx-auto" />
@@ -102,12 +102,12 @@ export function ProcurementPage() {
             </p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Procurement" subtitle="Material procurement">
       <div className="p-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -331,7 +331,7 @@ export function ProcurementPage() {
           onOpenChange={setShowVendorDialog}
         />
       </div>
-    </AppLayout>
+    </SmartLayout>
   );
 }
 

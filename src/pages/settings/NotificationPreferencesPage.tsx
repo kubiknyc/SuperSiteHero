@@ -4,7 +4,7 @@
  * Allows users to manage their email and in-app notification preferences.
  */
 
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
 import { Button } from '@/components/ui/button'
@@ -111,23 +111,23 @@ export function NotificationPreferencesPage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Notifications" subtitle="Notification preferences">
         <div className="flex items-center justify-center h-64">
           <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error) {
     return (
-      <AppLayout>
+      <SmartLayout title="Notifications" subtitle="Notification preferences">
         <div className="flex flex-col items-center justify-center h-64 gap-4">
           <AlertCircle className="w-12 h-12 text-destructive" />
           <p className="text-muted-foreground">Failed to load notification preferences</p>
           <Button onClick={() => window.location.reload()}>Retry</Button>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
@@ -136,7 +136,7 @@ export function NotificationPreferencesPage() {
   const totalCount = emailPreferenceKeys.length
 
   return (
-    <AppLayout>
+    <SmartLayout title="Notifications" subtitle="Notification preferences">
       <div className="container max-w-4xl py-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -347,7 +347,7 @@ export function NotificationPreferencesPage() {
           </CardContent>
         </Card>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

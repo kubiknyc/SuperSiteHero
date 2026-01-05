@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useRef } from 'react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -110,7 +110,7 @@ export function CompanyProfilePage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Company Profile" subtitle="Company information">
         <div className="container max-w-4xl py-6 space-y-6">
           <div>
             <Skeleton className="h-8 w-48" />
@@ -119,13 +119,13 @@ export function CompanyProfilePage() {
           <Skeleton className="h-64" />
           <Skeleton className="h-64" />
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error) {
     return (
-      <AppLayout>
+      <SmartLayout title="Company Profile" subtitle="Company information">
         <div className="container max-w-4xl py-6">
           <Card className="border-destructive">
             <CardContent className="pt-6">
@@ -133,12 +133,12 @@ export function CompanyProfilePage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Company Profile" subtitle="Company information">
       <div className="container max-w-4xl py-6 space-y-6">
         {/* Header */}
         <div>
@@ -386,7 +386,7 @@ export function CompanyProfilePage() {
           </CardContent>
         </Card>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

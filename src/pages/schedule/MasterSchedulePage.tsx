@@ -23,7 +23,7 @@ import {
   ArrowRight,
   Printer,
 } from 'lucide-react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui'
 import { Badge } from '@/components/ui/badge'
@@ -279,21 +279,21 @@ export function MasterSchedulePage() {
   // Loading state
   if (projectLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Master Schedule" subtitle="Project timeline">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto" />
             <p className="mt-4 text-secondary">Loading project...</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   // Project not found
   if (!project) {
     return (
-      <AppLayout>
+      <SmartLayout title="Master Schedule" subtitle="Project timeline">
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <h2 className="text-xl font-semibold text-foreground mb-2 heading-section">
@@ -308,12 +308,12 @@ export function MasterSchedulePage() {
             </Button>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Master Schedule" subtitle="Project timeline">
       <div className="flex flex-col h-[calc(100vh-64px)]">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b bg-card">
@@ -639,7 +639,7 @@ export function MasterSchedulePage() {
           </SheetContent>
         </Sheet>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

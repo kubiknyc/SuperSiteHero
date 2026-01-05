@@ -1,9 +1,11 @@
 // File: /src/pages/DashboardPage.tsx
-// Professional Blueprint Dashboard - Polished, production-ready design
+// Industrial Blueprint Dashboard - Refactored with design system classes
 
 import { useState, useCallback, useMemo, memo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
+import { QuickActions } from '@/components/layout/QuickActions'
+import { useLayoutVersion } from '@/hooks/useLayoutVersion'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { DashboardSelector, useDashboardView } from '@/features/dashboards'
@@ -244,7 +246,7 @@ export function DashboardPage() {
       }).join(' ')
 
       return (
-        <svg width="80" height="24" viewBox="0 0 100 100" preserveAspectRatio="none" style={{ overflow: 'visible' }}>
+        <svg width="80" height="24" viewBox="0 0 100 100" preserveAspectRatio="none" className="overflow-visible">
           <polyline
             points={points}
             fill="none"
@@ -281,8 +283,11 @@ export function DashboardPage() {
     return statusColors[status as keyof typeof statusColors] || statusColors.active
   }
 
+  // Get layout version for conditional rendering
+  const { isV2 } = useLayoutVersion()
+
   return (
-    <AppLayout>
+    <SmartLayout showHeaderStats={true}>
       {/* Role-based Dashboard */}
       {hasRoleDashboard ? (
         <div className="p-6">
@@ -293,31 +298,36 @@ export function DashboardPage() {
           />
         </div>
       ) : (
-        <div style={{
-          minHeight: '100vh',
-          backgroundColor: '#F8FAFC',
-          fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
-        }}>
+        <div className="min-h-screen bg-concrete dark:bg-gray-950 bg-blueprint-grid-fine">
           {/* Main Content */}
           <div className="max-w-7xl mx-auto px-8 py-8">
-            {/* Page Title - Using typography utilities */}
-            <div className="mb-12">
-              <h1 className="heading-page mb-3">
-                Dashboard
-              </h1>
-              <div className="flex items-center gap-4">
-                <p className="body-base">
-                  Welcome back, {userProfile?.first_name || 'User'}
-                </p>
-                <span className="text-muted">•</span>
-                <p className="text-caption flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5" />
-                  {format(new Date(), 'EEEE, MMMM d, yyyy')}
-                </p>
+            {/* Quick Actions - Only show in V2 layout (V1 shows stats instead) */}
+            {isV2 && (
+              <div className="mb-8">
+                <QuickActions projectId={selectedProject?.id} />
               </div>
-            </div>
+            )}
 
-            {/* Stats Grid - Enhanced with sparklines, better interactions, accessibility */}
+            {/* Page Title - Only show in V1 layout (V2 has it in header) */}
+            {!isV2 && (
+              <div className="mb-12">
+                <h1 className="font-display text-3xl font-bold tracking-tight text-foreground mb-3">
+                  Dashboard
+                </h1>
+                <div className="flex items-center gap-4">
+                  <p className="font-body text-base text-steel-gray dark:text-gray-400">
+                    Welcome back, {userProfile?.first_name || 'User'}
+                  </p>
+                  <span className="text-slate-300 dark:text-gray-600">•</span>
+                  <p className="font-mono text-xs text-steel-gray dark:text-gray-500 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5" />
+                    {format(new Date(), 'EEEE, MMMM d, yyyy')}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Stats Grid */}
             <LocalErrorBoundary
               title="Unable to load statistics"
               description="We couldn't load the dashboard statistics. Please try refreshing the page."
@@ -325,14 +335,9 @@ export function DashboardPage() {
               <div
                 role="region"
                 aria-label="Project statistics overview"
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-                  gap: '1.5rem',
-                  marginBottom: '3rem'
-                }}
+                className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-12"
               >
-                {stats.map((stat) => {
+                {stats.map((stat, index) => {
                 const Icon = stat.icon
                 const percentage = stat.target > 0 ? (parseInt(stat.value) / stat.target) * 100 : 0
                 const isFocused = focusedCard === stat.label
@@ -356,77 +361,68 @@ export function DashboardPage() {
                         openDrilldown(stat.drilldownType, stat.drilldownTitle || stat.label)
                       }
                     }}
+                    className={`
+                      group relative bg-white dark:bg-gray-900
+                      border border-slate-200 dark:border-gray-800
+                      rounded-xl p-6 cursor-pointer
+                      transition-all duration-300 ease-out
+                      hover:shadow-lg hover:-translate-y-1 hover:scale-[1.01]
+                      ${isFocused ? 'shadow-lg -translate-y-1 scale-[1.01]' : 'shadow-sm'}
+                    `}
                     style={{
-                      backgroundColor: '#FFFFFF',
-                      border: `1px solid ${isFocused ? stat.color : '#E2E8F0'}`,
-                      borderRadius: '12px',
-                      padding: '1.75rem',
-                      transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-                      cursor: 'pointer',
-                      position: 'relative',
-                      overflow: 'hidden',
                       boxShadow: isFocused
                         ? `0 8px 16px -4px ${stat.color}20, 0 4px 6px -2px ${stat.color}15`
-                        : '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-                      transform: isFocused ? 'translateY(-4px) scale(1.01)' : 'translateY(0) scale(1)',
-                      textDecoration: 'none',
-                      display: 'block'
+                        : undefined,
+                      borderColor: isFocused ? stat.color : undefined
                     }}
                     onMouseEnter={() => handleCardFocus(stat.label)}
                     onMouseLeave={handleCardBlur}
                   >
                     {/* Top accent bar */}
-                    <div style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: '3px',
-                      background: `linear-gradient(90deg, ${stat.color} 0%, ${stat.color}80 100%)`,
-                      opacity: isFocused ? 1 : 0,
-                      transition: 'opacity 0.25s'
-                    }} />
+                    <div
+                      className={`absolute top-0 left-0 right-0 h-[3px] rounded-t-xl transition-opacity duration-300 ${isFocused ? 'opacity-100' : 'opacity-0'}`}
+                      style={{
+                        background: `linear-gradient(90deg, ${stat.color} 0%, ${stat.color}80 100%)`
+                      }}
+                    />
 
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1.25rem' }}>
-                      <div style={{
-                        width: '56px',
-                        height: '56px',
-                        backgroundColor: `${stat.color}08`,
-                        borderRadius: '12px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        border: `1px solid ${stat.color}15`,
-                        transition: 'all 0.25s',
-                        transform: isFocused ? 'scale(1.05)' : 'scale(1)'
-                      }}>
+                    <div className="flex justify-between items-start mb-5">
+                      <div
+                        className={`
+                          w-14 h-14 rounded-xl flex items-center justify-center
+                          border transition-all duration-300
+                          ${isFocused ? 'scale-105' : 'scale-100'}
+                        `}
+                        style={{
+                          backgroundColor: `${stat.color}08`,
+                          borderColor: `${stat.color}15`
+                        }}
+                      >
                         <Icon className="w-6 h-6" style={{ color: stat.color, strokeWidth: 2 }} />
                       </div>
 
-                      <div style={{
-                        padding: '0.5rem 0.875rem',
-                        backgroundColor: stat.trend === 'up' ? '#ECFDF5' : '#FEF2F2',
-                        color: stat.trend === 'up' ? '#059669' : '#DC2626',
-                        borderRadius: '8px',
-                        fontSize: '0.8125rem',
-                        fontWeight: '600',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.375rem',
-                        border: `1px solid ${stat.trend === 'up' ? '#A7F3D0' : '#FECACA'}`
-                      }}>
+                      <div
+                        className={`
+                          px-3.5 py-2 rounded-lg text-xs font-semibold
+                          flex items-center gap-1.5 border
+                          ${stat.trend === 'up'
+                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-400 dark:border-emerald-800'
+                            : 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-400 dark:border-red-800'
+                          }
+                        `}
+                      >
                         {stat.trend === 'up' ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
                         {stat.change}
                       </div>
                     </div>
 
-                    <div style={{ marginBottom: '1.25rem' }}>
-                      <p className="text-uppercase-label mb-2.5">
+                    <div className="mb-5">
+                      <p className="label-blueprint text-steel-gray dark:text-gray-400 mb-2.5">
                         {stat.label}
                       </p>
 
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                        <p className="text-4xl font-bold text-foreground dark:text-gray-50 leading-none tracking-tight">
+                      <div className="flex items-baseline gap-3 mb-3">
+                        <p className="stat-number text-4xl text-foreground">
                           {stat.value}
                         </p>
                         <p className="text-base text-muted font-medium">
@@ -435,55 +431,44 @@ export function DashboardPage() {
                       </div>
 
                       {/* Sparkline */}
-                      <div style={{ marginBottom: '0.75rem' }}>
+                      <div className="mb-3">
                         <Sparkline data={stat.sparkline} color={stat.color} />
                       </div>
                     </div>
 
-                    {/* Enhanced Progress Bar */}
+                    {/* Progress Bar */}
                     <div>
                       <div className="flex justify-between mb-2 text-xs text-muted font-medium">
                         <span>Progress to Target</span>
-                        <span className="text-foreground dark:text-gray-50 font-semibold">{Math.round(percentage)}%</span>
+                        <span className="text-foreground font-semibold">{Math.round(percentage)}%</span>
                       </div>
-                      <div style={{
-                        width: '100%',
-                        height: '8px',
-                        backgroundColor: '#F1F5F9',
-                        borderRadius: '4px',
-                        overflow: 'hidden',
-                        position: 'relative'
-                      }}>
-                        <div style={{
-                          width: `${percentage}%`,
-                          height: '100%',
-                          background: `linear-gradient(90deg, ${stat.color} 0%, ${stat.color}CC 100%)`,
-                          borderRadius: '4px',
-                          transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                          position: 'relative',
-                          boxShadow: `0 0 8px ${stat.color}40`
-                        }}>
+                      <div className="w-full h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden relative">
+                        <div
+                          className="h-full rounded-full transition-all duration-700 ease-out relative"
+                          style={{
+                            width: `${percentage}%`,
+                            background: `linear-gradient(90deg, ${stat.color} 0%, ${stat.color}CC 100%)`,
+                            boxShadow: `0 0 8px ${stat.color}40`
+                          }}
+                        >
                           {/* Shimmer effect */}
-                          <div style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: '-100%',
-                            width: '100%',
-                            height: '100%',
-                            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
-                            animation: 'shimmer 2s infinite'
-                          }} />
+                          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer"
+                            style={{
+                              backgroundSize: '200% 100%',
+                              animation: 'shimmer 2s infinite'
+                            }}
+                          />
                         </div>
                       </div>
                     </div>
 
                     {/* Overdue badge and View link */}
-                    <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100">
+                    <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 dark:border-gray-800">
                       {hasOverdue ? (
                         <Link
                           to={'overdueLink' in stat && stat.overdueLink ? stat.overdueLink : stat.filterLink}
                           onClick={(e) => e.stopPropagation()}
-                          className="flex items-center gap-1.5 text-xs font-medium text-red-600 hover:text-red-700 bg-red-50 px-2 py-1 rounded-md border border-red-100"
+                          className="flex items-center gap-1.5 text-xs font-medium text-red-600 hover:text-red-700 bg-red-50 px-2 py-1 rounded-md border border-red-100 dark:bg-red-950 dark:text-red-400 dark:border-red-800"
                         >
                           <AlertCircle className="w-3 h-3" />
                           {stat.overdueCount} Overdue
@@ -516,13 +501,8 @@ export function DashboardPage() {
               </div>
             </LocalErrorBoundary>
 
-            {/* Three Column Layout: Projects | Weather | Alerts */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr 1fr',
-              gap: '1.5rem',
-              marginBottom: '2rem'
-            }}>
+            {/* Three Column Layout: Weather | Alerts | Notices */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               {/* Weather Forecast Widget */}
               <LocalErrorBoundary
                 title="Unable to load weather"
@@ -549,153 +529,119 @@ export function DashboardPage() {
             </div>
 
             {/* Two Column Layout: Projects | Actions */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: '2fr 1fr',
-              gap: '2rem'
-            }}>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Active Projects */}
               <LocalErrorBoundary
                 title="Unable to load projects"
                 description="We couldn't load the projects list. Please try again."
               >
-                <div style={{
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid #E2E8F0',
-                  borderRadius: '12px',
-                  padding: '2rem',
-                  boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)'
-                }}>
+                <div className="lg:col-span-2 bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl p-8 shadow-sm">
                   <div className="flex justify-between items-center mb-8">
-                  <div>
-                    <h2 className="heading-card mb-1 heading-section">
-                      Active Projects
-                    </h2>
-                    <p className="body-small text-muted">
-                      {projects?.length || 0} projects in progress
-                    </p>
+                    <div>
+                      <h2 className="heading-card mb-1">
+                        Active Projects
+                      </h2>
+                      <p className="body-small text-muted">
+                        {projects?.length || 0} projects in progress
+                      </p>
+                    </div>
+                    <Link
+                      to="/projects"
+                      className="text-primary text-sm font-semibold bg-primary-50 border border-primary-200 hover:bg-primary-100 dark:bg-primary-950 dark:border-primary-800 dark:hover:bg-primary-900 cursor-pointer px-4 py-2 rounded-lg transition-all flex items-center gap-2 no-underline"
+                    >
+                      View All
+                      <BarChart3 className="w-4 h-4" />
+                    </Link>
                   </div>
-                  <Link
-                    to="/projects"
-                    className="text-primary text-sm font-semibold bg-primary-50 border border-primary-200 hover:bg-primary-100 dark:bg-primary-950 dark:border-primary-800 dark:hover:bg-primary-900 cursor-pointer px-4 py-2 rounded-lg transition-all flex items-center gap-2 no-underline"
-                  >
-                    View All
-                    <BarChart3 className="w-4 h-4" />
-                  </Link>
-                </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-                  {projects && projects.length > 0 ? (
-                    projects.slice(0, 3).map((project) => {
-                      const healthColor = getHealthColor(project.status)
-                      // Get real progress from projectsProgress data
-                      const projectProgress = projectsProgress?.find(p => p.projectId === project.id)
-                      const progress = projectProgress?.progress ?? 0
-                      const healthStatus = projectProgress?.healthStatus ?? 'fair'
+                  <div className="flex flex-col gap-5">
+                    {projects && projects.length > 0 ? (
+                      projects.slice(0, 3).map((project) => {
+                        const healthColor = getHealthColor(project.status)
+                        // Get real progress from projectsProgress data
+                        const projectProgress = projectsProgress?.find(p => p.projectId === project.id)
+                        const progress = projectProgress?.progress ?? 0
+                        const healthStatus = projectProgress?.healthStatus ?? 'fair'
 
-                      return (
-                        <Link
-                          key={project.id}
-                          to={`/projects/${project.id}`}
-                          style={{
-                            padding: '1.5rem',
-                            backgroundColor: '#F8FAFC',
-                            borderRadius: '10px',
-                            border: '1px solid #F1F5F9',
-                            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                            cursor: 'pointer',
-                            textDecoration: 'none',
-                            display: 'block'
-                          }}
-                        >
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
-                            <div style={{ flex: 1 }}>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-                                <h3 className="text-lg font-semibold text-foreground dark:text-gray-50 heading-subsection">
-                                  {project.name}
-                                </h3>
-                                {/* Health indicator */}
-                                <div style={{
-                                  width: '8px',
-                                  height: '8px',
-                                  borderRadius: '50%',
-                                  backgroundColor: healthColor,
-                                  boxShadow: `0 0 0 3px ${healthColor}20`,
-                                  animation: 'pulse 2s infinite'
-                                }}
-                                title={`Project health: ${project.status}`}
+                        return (
+                          <Link
+                            key={project.id}
+                            to={`/projects/${project.id}`}
+                            className="block p-5 bg-concrete dark:bg-gray-800/50 rounded-lg border border-slate-100 dark:border-gray-700 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 no-underline"
+                          >
+                            <div className="flex justify-between items-start mb-4">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-3 mb-2">
+                                  <h3 className="text-lg font-semibold text-foreground">
+                                    {project.name}
+                                  </h3>
+                                  {/* Health indicator */}
+                                  <div
+                                    className="w-2 h-2 rounded-full animate-pulse"
+                                    style={{
+                                      backgroundColor: healthColor,
+                                      boxShadow: `0 0 0 3px ${healthColor}20`
+                                    }}
+                                    title={`Project health: ${project.status}`}
+                                  />
+                                </div>
+                                <div className="flex items-center gap-5 text-label text-muted flex-wrap">
+                                  {project.start_date && (
+                                    <>
+                                      <span className="flex items-center gap-1.5">
+                                        <Calendar className="w-3.5 h-3.5" />
+                                        Started {format(new Date(project.start_date), 'MMM d, yyyy')}
+                                      </span>
+                                      <span>•</span>
+                                    </>
+                                  )}
+                                  <span className="text-caption">
+                                    Updated recently
+                                  </span>
+                                </div>
+                              </div>
+
+                              <Badge variant={getStatusVariant(project.status || 'unknown')}>
+                                {(project.status ?? 'unknown').replace('_', ' ').toUpperCase()}
+                              </Badge>
+                            </div>
+
+                            {/* Progress Bar */}
+                            <div>
+                              <div className="flex justify-between mb-2 text-xs text-muted">
+                                <span>Progress</span>
+                                <span className="text-foreground font-semibold">{progress}%</span>
+                              </div>
+                              <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                <div
+                                  className="h-full rounded-full transition-all duration-700 ease-out"
+                                  style={{
+                                    width: `${progress}%`,
+                                    background: 'linear-gradient(90deg, #1E40AF 0%, #1E40AFCC 100%)'
+                                  }}
                                 />
                               </div>
-                              <div className="flex items-center gap-5 text-label text-muted flex-wrap">
-                                {project.start_date && (
-                                  <>
-                                    <span className="flex items-center gap-1.5">
-                                      <Calendar className="w-3.5 h-3.5" />
-                                      Started {format(new Date(project.start_date), 'MMM d, yyyy')}
-                                    </span>
-                                    <span>•</span>
-                                  </>
-                                )}
-                                <span className="text-caption">
-                                  Updated recently
-                                </span>
-                              </div>
                             </div>
-
-                            <Badge variant={getStatusVariant(project.status || 'unknown')}>
-                              {(project.status ?? 'unknown').replace('_', ' ').toUpperCase()}
-                            </Badge>
-                          </div>
-
-                          {/* Progress Bar */}
-                          <div>
-                            <div className="flex justify-between mb-2 text-xs text-muted">
-                              <span>Progress</span>
-                              <span className="text-foreground dark:text-gray-50 font-semibold">{progress}%</span>
-                            </div>
-                            <div style={{
-                              width: '100%',
-                              height: '6px',
-                              backgroundColor: '#F1F5F9',
-                              borderRadius: '3px',
-                              overflow: 'hidden'
-                            }}>
-                              <div style={{
-                                width: `${progress}%`,
-                                height: '100%',
-                                background: 'linear-gradient(90deg, #1E40AF 0%, #1E40AFCC 100%)',
-                                borderRadius: '3px',
-                                transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
-                              }} />
-                            </div>
-                          </div>
-                        </Link>
-                      )
-                    })
-                  ) : (
-                    <div className="p-12 text-center">
-                      <Building2 className="w-12 h-12 mx-auto mb-3 text-gray-300 dark:text-secondary" />
-                      <p className="body-small text-muted">No active projects</p>
-                    </div>
-                  )}
+                          </Link>
+                        )
+                      })
+                    ) : (
+                      <div className="p-12 text-center">
+                        <Building2 className="w-12 h-12 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
+                        <p className="body-small text-muted">No active projects</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </LocalErrorBoundary>
 
-              {/* Sidebar */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                {/* Action Required Widget */}
+              {/* Sidebar - Action Required Widget */}
+              <div className="lg:col-span-1">
                 <LocalErrorBoundary
                   title="Unable to load action items"
                   description="We couldn't load action items. Please try again."
                 >
-                  <div style={{
-                    backgroundColor: '#FFFFFF',
-                    border: '1px solid #E2E8F0',
-                    borderRadius: '12px',
-                    padding: '1.5rem',
-                    boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)'
-                  }}>
+                  <div className="bg-white dark:bg-gray-900 border border-slate-200 dark:border-gray-800 rounded-xl p-6 shadow-sm">
                     <div className="flex justify-between items-center mb-4">
                       <div className="flex items-center gap-2">
                         <Bell className="w-5 h-5 text-primary" />
@@ -718,7 +664,7 @@ export function DashboardPage() {
                           <Link
                             key={item.id}
                             to={item.link}
-                            className="block p-3 rounded-lg bg-slate-50 hover:bg-slate-100 transition-colors border border-slate-100"
+                            className="block p-3 rounded-lg bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors border border-slate-100 dark:border-slate-700 no-underline"
                           >
                             <div className="flex items-start justify-between gap-2">
                               <div className="flex-1 min-w-0">
@@ -771,20 +717,8 @@ export function DashboardPage() {
             title={drilldownTitle}
             projectId={selectedProject?.id}
           />
-
-          {/* Animations */}
-          <style>{`
-            @keyframes shimmer {
-              0% { left: -100%; }
-              100% { left: 100%; }
-            }
-            @keyframes pulse {
-              0%, 100% { opacity: 1; }
-              50% { opacity: 0.5; }
-            }
-          `}</style>
         </div>
       )}
-    </AppLayout>
+    </SmartLayout>
   )
 }

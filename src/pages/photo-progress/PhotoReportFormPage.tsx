@@ -6,7 +6,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { SmartLayout } from '@/components/layout/SmartLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -219,17 +219,17 @@ export function PhotoReportFormPage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Photo Report">
         <div className="p-6 max-w-4xl mx-auto">
           <Skeleton className="h-8 w-64 mb-6" />
           <Skeleton className="h-96 w-full" />
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Photo Report">
       <div className="p-6 max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
@@ -572,7 +572,7 @@ export function PhotoReportFormPage() {
           </div>
         </form>
       </div>
-    </AppLayout>
+    </SmartLayout>
   );
 }
 

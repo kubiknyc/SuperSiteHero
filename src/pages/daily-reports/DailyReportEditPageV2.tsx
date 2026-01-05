@@ -13,7 +13,7 @@ import {
   useLockReportV2,
 } from '@/features/daily-reports/hooks/useDailyReportsV2';
 import { DailyReportFormV2, ApprovalWorkflowPanel } from '@/features/daily-reports/components/v2';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { SmartLayout } from '@/components/layout/SmartLayout';
 import { AlertCircle, Lock, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/lib/auth/AuthContext';
@@ -87,7 +87,7 @@ export function DailyReportEditPageV2() {
 
   if (!id) {
     return (
-      <AppLayout>
+      <SmartLayout>
         <div className="p-6">
           <div className="text-center py-12">
             <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
@@ -97,26 +97,26 @@ export function DailyReportEditPageV2() {
             </Button>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout>
         <div className="p-6">
           <div className="flex flex-col items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
             <p className="text-muted">Loading report...</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
   if (error || !report) {
     return (
-      <AppLayout>
+      <SmartLayout>
         <div className="p-6">
           <div className="text-center py-12">
             <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
@@ -127,7 +127,7 @@ export function DailyReportEditPageV2() {
             </Button>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 
@@ -143,7 +143,7 @@ export function DailyReportEditPageV2() {
     };
 
     return (
-      <AppLayout>
+      <SmartLayout>
         <div className="p-6">
           <div className="max-w-md mx-auto text-center py-12">
             <div className="bg-muted rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
@@ -162,7 +162,7 @@ export function DailyReportEditPageV2() {
             </div>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     );
   }
 

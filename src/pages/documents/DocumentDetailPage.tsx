@@ -21,7 +21,7 @@ import {
   XCircle,
   Pencil,
 } from 'lucide-react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { LocalErrorBoundary } from '@/components/errors'
 import {
   Card,
@@ -183,21 +183,21 @@ export function DocumentDetailPage() {
   // Loading state
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Document Details">
         <div className="p-6">
           <div className="flex items-center justify-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-disabled" />
             <p className="ml-3 text-muted">Loading document...</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   // Error state
   if (error || !document) {
     return (
-      <AppLayout>
+      <SmartLayout title="Document Details">
         <div className="p-6 space-y-6">
           <Button variant="outline" onClick={() => navigate('/documents')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
@@ -215,12 +215,12 @@ export function DocumentDetailPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Document Details">
       <div className="p-6 space-y-6">
         {/* Back Button */}
         <div>
@@ -817,6 +817,6 @@ export function DocumentDetailPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </AppLayout>
+    </SmartLayout>
   )
 }

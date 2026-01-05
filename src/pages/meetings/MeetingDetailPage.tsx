@@ -3,7 +3,7 @@
 
 import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import {
   useMeeting,
   useDeleteMeeting,
@@ -144,24 +144,24 @@ export function MeetingDetailPage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Meeting Details">
         <div className="p-6 text-center">
           <p className="text-muted">Loading meeting details...</p>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !meeting) {
     return (
-      <AppLayout>
+      <SmartLayout title="Meeting Details">
         <div className="p-6 text-center">
           <p className="text-error">Failed to load meeting</p>
           <Button variant="outline" onClick={() => navigate('/meetings')} className="mt-4">
             Back to Meetings
           </Button>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
@@ -169,7 +169,7 @@ export function MeetingDetailPage() {
   const actionItems = meeting.action_items as MeetingActionItem[] | null
 
   return (
-    <AppLayout>
+    <SmartLayout title="Meeting Details">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex items-start justify-between">
@@ -774,6 +774,6 @@ export function MeetingDetailPage() {
           </div>
         </div>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

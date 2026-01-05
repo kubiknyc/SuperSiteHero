@@ -336,3 +336,95 @@ export function searchNavItems(query: string): NavItem[] {
 export function getNavItemByPath(path: string): NavItem | undefined {
   return allNavItems.find((item) => item.path === path);
 }
+
+/**
+ * Mobile-specific navigation configuration
+ * These are field-focused items for the mobile app
+ */
+export const mobileNavConfig = {
+  // Bottom navigation items (5 max for thumb-friendly access)
+  bottomNav: [
+    {
+      label: 'Dashboard',
+      icon: LayoutDashboard,
+      path: '/mobile/dashboard',
+    },
+    {
+      label: 'Reports',
+      icon: ClipboardList,
+      path: '/mobile/daily-reports',
+    },
+    {
+      label: 'Camera',
+      icon: Camera,
+      path: '/mobile/photo-progress/capture',
+      isAction: true, // Highlighted action button
+    },
+    {
+      label: 'Punch Lists',
+      icon: ListChecks,
+      path: '/mobile/punch-lists',
+    },
+    {
+      label: 'More',
+      icon: Settings,
+      path: '#more', // Opens drawer
+      isDrawerTrigger: true,
+    },
+  ],
+
+  // Drawer navigation sections for mobile
+  drawerSections: [
+    {
+      title: 'Field Work',
+      items: [
+        { label: 'Dashboard', icon: LayoutDashboard, path: '/mobile/dashboard' },
+        { label: 'Daily Reports', icon: ClipboardList, path: '/mobile/daily-reports' },
+        { label: 'Photo Progress', icon: Camera, path: '/mobile/photo-progress' },
+        { label: 'Punch Lists', icon: ListChecks, path: '/mobile/punch-lists' },
+        { label: 'Inspections', icon: FileCheck, path: '/mobile/inspections' },
+        { label: 'Tasks', icon: CheckSquare, path: '/mobile/tasks' },
+      ],
+    },
+    {
+      title: 'Projects',
+      items: [
+        { label: 'My Projects', icon: FolderKanban, path: '/mobile/projects' },
+      ],
+    },
+    {
+      title: 'Account',
+      items: [
+        { label: 'Settings', icon: Settings, path: '/mobile/settings' },
+      ],
+    },
+  ],
+
+  // Quick actions for mobile dashboard
+  quickActions: [
+    {
+      label: 'Take Photo',
+      icon: Camera,
+      path: '/mobile/photo-progress/capture',
+      color: 'bg-blue-500',
+    },
+    {
+      label: 'Daily Report',
+      icon: ClipboardList,
+      path: '/mobile/daily-reports/new',
+      color: 'bg-green-500',
+    },
+    {
+      label: 'Punch Item',
+      icon: ListChecks,
+      path: '/mobile/punch-lists/new',
+      color: 'bg-orange-500',
+    },
+    {
+      label: 'Inspection',
+      icon: FileCheck,
+      path: '/mobile/inspections/new',
+      color: 'bg-purple-500',
+    },
+  ],
+};

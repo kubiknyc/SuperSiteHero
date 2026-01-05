@@ -4,7 +4,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { LocalErrorBoundary } from '@/components/errors'
 import { useDailyReports } from '@/features/daily-reports/hooks/useDailyReports'
 import { useSelectedProject } from '@/hooks/useSelectedProject'
@@ -399,7 +399,7 @@ export function DailyReportsPage() {
   ]
 
   return (
-    <AppLayout>
+    <SmartLayout title="Daily Reports" subtitle="Field activity logs">
       <div className="p-6 space-y-6">
         {/* Realtime update banner */}
         {pendingUpdates > 0 && (
@@ -744,6 +744,6 @@ export function DailyReportsPage() {
           />
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

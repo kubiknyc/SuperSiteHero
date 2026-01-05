@@ -299,3 +299,6 @@ export type {
   ReorderControlsProps,
   NumberedItemProps,
 } from './sortable-list'
+
+// Dashboard Components
+export { StatCard } from './stat-card'

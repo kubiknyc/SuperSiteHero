@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { useParams, useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { usePunchItem, useUpdatePunchItemStatus } from '@/features/punch-lists/hooks/usePunchItems'
 import { useDeletePunchItemWithNotification } from '@/features/punch-lists/hooks/usePunchItemsMutations'
 import { EditPunchItemDialog } from '@/features/punch-lists/components/EditPunchItemDialog'
@@ -81,32 +81,32 @@ export function PunchItemDetailPage() {
 
   if (!punchItemId) {
     return (
-      <AppLayout>
+      <SmartLayout title="Punch Item">
         <div className="p-6">
           <div className="text-center">
             <p className="text-error">Punch item ID not found</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Punch Item">
         <div className="p-6">
           <div className="flex items-center justify-center py-12">
             <Loader2 className="h-8 w-8 animate-spin text-disabled" />
             <p className="ml-2 text-muted">Loading punch item...</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error || !punchItem) {
     return (
-      <AppLayout>
+      <SmartLayout title="Punch Item">
         <div className="p-6">
           <div className="mb-6">
             <Button variant="outline" onClick={() => navigate('/punch-lists')}>
@@ -122,12 +122,12 @@ export function PunchItemDetailPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Punch Item">
       <div className="p-6 space-y-6">
         {/* Back button */}
         <div>
@@ -439,6 +439,6 @@ export function PunchItemDetailPage() {
           </AlertDialogContent>
         </AlertDialog>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

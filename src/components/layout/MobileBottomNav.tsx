@@ -43,32 +43,40 @@ export const MobileBottomNav = memo(function MobileBottomNav() {
                 aria-current={isActive ? 'page' : undefined}
                 className={cn(
                   'flex flex-col items-center justify-center flex-1 h-full min-w-[64px] touch-target',
-                  'transition-colors duration-200',
+                  'transition-all duration-200 ease-out',
+                  'active:scale-95',
                   isActive
                     ? 'text-primary dark:text-blue-400'
                     : 'text-muted dark:text-disabled active:text-secondary dark:active:text-gray-300'
                 )}
               >
-                <div className="relative">
+                <div className={cn(
+                  'relative transition-transform duration-200',
+                  isActive && 'scale-110'
+                )}>
                   <Icon
                     className={cn(
-                      'h-6 w-6 mb-1',
+                      'h-6 w-6 mb-1 transition-all duration-200',
                       isActive && 'stroke-[2.5px]'
                     )}
                     aria-hidden="true"
                   />
                   {Badge && (
-                    <div className="absolute -top-1 -right-1" aria-hidden="true">
+                    <div className="absolute -top-1 -right-1 animate-pulse" aria-hidden="true">
                       <Badge />
                     </div>
                   )}
                 </div>
                 <span className={cn(
-                  'text-xs',
+                  'text-xs transition-all duration-200',
                   isActive ? 'font-semibold' : 'font-medium'
                 )}>
                   {displayName}
                 </span>
+                {/* Active indicator dot */}
+                {isActive && (
+                  <div className="absolute bottom-1 w-1 h-1 bg-primary rounded-full" />
+                )}
               </Link>
             )
           })}

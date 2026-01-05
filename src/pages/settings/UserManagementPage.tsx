@@ -6,7 +6,7 @@
  */
 
 import { useState } from 'react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -115,7 +115,7 @@ export function UserManagementPage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="User Management" subtitle="Manage team members">
         <div className="container max-w-6xl py-6 space-y-6">
           <div className="flex items-center justify-between">
             <div>
@@ -126,13 +126,13 @@ export function UserManagementPage() {
           </div>
           <Skeleton className="h-96" />
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (error) {
     return (
-      <AppLayout>
+      <SmartLayout title="User Management" subtitle="Manage team members">
         <div className="container max-w-6xl py-6">
           <Card className="border-destructive">
             <CardContent className="pt-6">
@@ -140,12 +140,12 @@ export function UserManagementPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="User Management" subtitle="Manage team members">
       <div className="container max-w-6xl py-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -334,7 +334,7 @@ export function UserManagementPage() {
           </AlertDialogContent>
         </AlertDialog>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

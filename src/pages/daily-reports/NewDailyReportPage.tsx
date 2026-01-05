@@ -1,7 +1,7 @@
 import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import { useSelectedProject } from '@/hooks/useSelectedProject'
 import { DailyReportForm } from '@/features/daily-reports/components/DailyReportForm'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Card, CardContent } from '@/components/ui/card'
 import { FormField } from '@/components/ui/form-field'
 import { AlertCircle, Copy, Calendar, Users, Wrench, Package, UserPlus, AlertTriangle } from 'lucide-react'
@@ -149,7 +149,7 @@ export function NewDailyReportPage() {
   // Project selection screen - show if no project selected OR validation failed
   if (!selectedProjectId || (hasValidated && !validateBeforeProceed())) {
     return (
-      <AppLayout>
+      <SmartLayout title="New Daily Report">
         <div className="p-6 space-y-6">
           <div>
             <h1 className="text-3xl font-bold text-foreground heading-page">New Daily Report</h1>
@@ -347,12 +347,12 @@ export function NewDailyReportPage() {
             </CardContent>
           </Card>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="New Daily Report">
       <div className="p-6 space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-foreground heading-page">New Daily Report</h1>
@@ -366,6 +366,6 @@ export function NewDailyReportPage() {
           onCancel={handleCancel}
         />
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }

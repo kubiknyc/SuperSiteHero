@@ -5,7 +5,7 @@
  * viewing dashboard and envelope activity.
  */
 
-import { AppLayout } from '@/components/layout/AppLayout';
+import { SmartLayout } from '@/components/layout/SmartLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DocuSignConnectionSettings } from '@/features/docusign/components/DocuSignConnectionSettings';
@@ -218,7 +218,7 @@ export function DocuSignIntegrationPage() {
   const { data: status, isLoading } = useDocuSignConnectionStatus();
 
   return (
-    <AppLayout>
+    <SmartLayout title="DocuSign Integration" subtitle="Electronic signatures">
       <div className="p-6 max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
@@ -300,7 +300,7 @@ export function DocuSignIntegrationPage() {
           </CardContent>
         </Card>
       </div>
-    </AppLayout>
+    </SmartLayout>
   );
 }
 

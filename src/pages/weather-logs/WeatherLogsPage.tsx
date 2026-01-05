@@ -2,7 +2,7 @@
 // Main weather logs page with list, filters, and statistics
 
 import { useState, useMemo } from 'react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useSelectedProject } from '@/hooks/useSelectedProject'
 import { useWeatherLogs, useWeatherStatistics, type WeatherLogFilters } from '@/features/weather-logs/hooks/useWeatherLogs'
 import { WeatherLogCard } from '@/features/weather-logs/components/WeatherLogCard'
@@ -95,7 +95,7 @@ export function WeatherLogsPage() {
   const isLoading = projectsLoading || logsLoading
 
   return (
-    <AppLayout>
+    <SmartLayout title="Weather Logs" subtitle="Weather tracking">
       <div className="flex flex-col h-full">
         {/* Header */}
         <div className="bg-card border-b px-6 py-4">
@@ -417,6 +417,6 @@ export function WeatherLogsPage() {
           projectId={activeProjectId}
         />
       )}
-    </AppLayout>
+    </SmartLayout>
   )
 }

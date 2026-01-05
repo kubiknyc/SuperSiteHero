@@ -7,7 +7,7 @@
 
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -282,16 +282,16 @@ export function ReportBuilderPage() {
 
   if (templateLoading) {
     return (
-      <AppLayout>
+      <SmartLayout title="Report Builder">
         <div className="p-6 flex items-center justify-center min-h-[400px]">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Report Builder">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -574,7 +574,7 @@ export function ReportBuilderPage() {
           )}
         </div>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

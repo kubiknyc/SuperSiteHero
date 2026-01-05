@@ -5,7 +5,7 @@
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { format, differenceInDays, isPast } from 'date-fns'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useSelectedProject } from '@/hooks/useSelectedProject'
 import {
   useProjectRFIs,
@@ -250,7 +250,7 @@ export function DedicatedRFIsPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="RFIs" subtitle="Requests for information">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -632,7 +632,7 @@ export function DedicatedRFIsPage() {
         onOpenChange={setCreateDialogOpen}
         onSuccess={() => setCreateDialogOpen(false)}
       />
-    </AppLayout>
+    </SmartLayout>
   )
 }
 
