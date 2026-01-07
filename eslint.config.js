@@ -28,6 +28,11 @@ export default tseslint.config(
       '.lighthouserc.js',
       // Supabase generated files
       'supabase/.temp/**',
+      // Vendor files in public directory (minified libraries)
+      'public/*.min.js',
+      'public/*.min.mjs',
+      // Docker demo project (separate codebase)
+      'welcome-to-docker/**',
     ],
   },
 
@@ -159,6 +164,8 @@ export default tseslint.config(
       '@typescript-eslint/ban-ts-comment': 'off',
       'no-console': 'off',
       'prefer-const': 'off',
+      // Disable React hooks rules for E2E tests - Playwright uses `use` as a fixture callback
+      'react-hooks/rules-of-hooks': 'off',
     },
   },
 

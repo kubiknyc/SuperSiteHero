@@ -720,7 +720,7 @@ test.describe('AI Features - RFI Auto-Routing', () => {
     await waitForContentLoad(page);
 
     // Look for confidence indicator
-    const confidenceScore = page.locator('text=/confidence|probability|\d+%/i').first();
+    const confidenceScore = page.locator('text=/confidence|probability|\\d+%/i').first();
     const progressBar = page.locator('[role="progressbar"], .progress').first();
 
     const hasConfidence = await confidenceScore.isVisible({ timeout: 2000 }).catch(() => false);
@@ -747,7 +747,7 @@ test.describe('AI Features - Budget and Rate Limiting', () => {
 
       // Look for budget progress indicator
       const budgetProgress = page.locator('[role="progressbar"], .progress').first();
-      const budgetText = page.locator('text=/budget.*used|\$\d+.*\/.*\$/i').first();
+      const budgetText = page.locator('text=/budget.*used|\\$\\d+.*\\/.*\\$/i').first();
 
       const hasProgress = await budgetProgress.isVisible({ timeout: 2000 }).catch(() => false);
       const hasBudgetText = await budgetText.isVisible({ timeout: 2000 }).catch(() => false);
@@ -789,7 +789,7 @@ test.describe('AI Features - Budget and Rate Limiting', () => {
 
       // Look for cost estimates
       const costEstimates = page.locator('text=/cost.*estimate|estimated.*cost/i').first();
-      const pricingInfo = page.locator('text=/\$\d+.*month|\d+.*token/i').first();
+      const pricingInfo = page.locator('text=/\\$\\d+.*month|\\d+.*token/i').first();
 
       const hasEstimates = await costEstimates.isVisible({ timeout: 2000 }).catch(() => false);
       const hasPricing = await pricingInfo.isVisible({ timeout: 2000 }).catch(() => false);
