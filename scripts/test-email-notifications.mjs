@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 
 /**
  * Email Notification Testing Script
