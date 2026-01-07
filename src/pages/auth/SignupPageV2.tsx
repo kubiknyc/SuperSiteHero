@@ -138,7 +138,7 @@ export function SignupPageV2() {
 
       rateLimit.reset()
       success('Account Created', 'Please check your email to verify your account.')
-      navigate('/login-v2')
+      navigate('/login')
     } catch (err) {
       const state = rateLimit.recordAttempt()
       if (state.isLocked) {
@@ -546,7 +546,7 @@ export function SignupPageV2() {
           <p className="mt-8 text-center text-slate-500">
             Already have an account?{' '}
             <Link
-              to="/login-v2"
+              to="/login"
               className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
             >
               Sign in
