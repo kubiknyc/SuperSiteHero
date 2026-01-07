@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /**
  * Complete Database Wipe Script
  * Deletes all users from authentication and all data from the database

@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-/* eslint-disable @typescript-eslint/no-unused-vars */
 
 /**
  * Direct SQL execution script for approval system migrations
