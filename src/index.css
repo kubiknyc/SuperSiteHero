@@ -16,6 +16,9 @@
 /* Import industrial form input styles */
 @import './styles/industrial-inputs.css';
 
+/* Import premium login page styles */
+@import './styles/login-v2.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -207,6 +210,15 @@
   }
 
   :root {
+    /* ========== DESIGN SYSTEM COLOR STRATEGY ========== */
+    /*
+     * COLOR PALETTE SPLIT:
+     * - Main content areas use `gray-*` (neutral, warm undertones)
+     * - Sidebar/navigation chrome uses `slate-*` (cooler, darker tones)
+     * This creates visual hierarchy and separates navigation from content.
+     * See CollapsibleSidebar.tsx for implementation details.
+     */
+
     /* ========== TYPOGRAPHY SYSTEM ========== */
     /* Font family custom properties */
     --font-display: 'DM Sans', system-ui, sans-serif;
@@ -304,6 +316,10 @@
     --duration-fast: 150ms;
     --duration-normal: 250ms;
     --duration-slow: 400ms;
+
+    /* Noise texture for premium surfaces */
+    --noise-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+    --noise-opacity: 0.015;
   }
 
   .dark {
@@ -805,31 +821,6 @@
     box-shadow: var(--shadow-sm), var(--glow-primary);
   }
 
-  /* Staggered animation utilities */
-  .stagger-1 { animation-delay: 50ms; }
-  .stagger-2 { animation-delay: 100ms; }
-  .stagger-3 { animation-delay: 150ms; }
-  .stagger-4 { animation-delay: 200ms; }
-  .stagger-5 { animation-delay: 250ms; }
-  .stagger-6 { animation-delay: 300ms; }
-
-  /* Fade in up animation */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .animate-fade-in-up {
-    animation: fadeInUp var(--duration-normal) var(--ease-premium) forwards;
-    opacity: 0;
-  }
-
   /* Scale in animation */
   @keyframes scaleIn {
     from {
@@ -845,23 +836,6 @@
   .animate-scale-in {
     animation: scaleIn var(--duration-normal) var(--ease-bounce) forwards;
     opacity: 0;
-  }
-
-  /* Shimmer loading effect */
-  @keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
-  }
-
-  .shimmer {
-    background: linear-gradient(
-      90deg,
-      hsl(var(--muted)) 0%,
-      hsl(var(--background)) 50%,
-      hsl(var(--muted)) 100%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
   }
 
   /* Premium divider */
@@ -1149,4 +1123,389 @@
   button[class*="bg-orange-600"] * {
     color: rgb(255, 255, 255) !important;
   }
+}
+
+/* ========== GLASS MORPHISM SYSTEM ========== */
+/* Premium glass effects for modern card designs */
+
+@layer utilities {
+  /* Glass morphism - Light mode */
+  .glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Glass morphism - Dark mode */
+  .glass-dark {
+    background: rgba(17, 24, 39, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Glass with colored tint */
+  .glass-primary {
+    background: rgba(30, 64, 175, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(30, 64, 175, 0.15);
+  }
+
+  .glass-success {
+    background: rgba(16, 185, 129, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(16, 185, 129, 0.15);
+  }
+
+  .glass-warning {
+    background: rgba(245, 158, 11, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(245, 158, 11, 0.15);
+  }
+
+  .glass-danger {
+    background: rgba(239, 68, 68, 0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(239, 68, 68, 0.15);
+  }
+
+  /* Glass card with premium shadow */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.05),
+      0 2px 4px -1px rgba(0, 0, 0, 0.03),
+      0 0 0 1px rgba(0, 0, 0, 0.02);
+    transition: all 200ms ease;
+  }
+
+  .glass-card:hover {
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow:
+      0 10px 25px -5px rgba(0, 0, 0, 0.08),
+      0 4px 6px -2px rgba(0, 0, 0, 0.04),
+      0 0 0 1px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Dark mode glass card - refined for better visibility */
+  .dark .glass-card {
+    background: rgba(31, 41, 55, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+      0 4px 6px -1px rgba(0, 0, 0, 0.2),
+      0 2px 4px -1px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .dark .glass-card:hover {
+    background: rgba(55, 65, 81, 0.8);
+    box-shadow:
+      0 10px 25px -5px rgba(0, 0, 0, 0.3),
+      0 4px 6px -2px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  /* Stat card specific glass */
+  .glass-stat {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.04),
+      0 0 0 1px rgba(0, 0, 0, 0.02);
+    transition: all 150ms ease;
+  }
+
+  .glass-stat:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 8px 20px -4px rgba(0, 0, 0, 0.08),
+      0 4px 8px -2px rgba(0, 0, 0, 0.04);
+  }
+
+  .dark .glass-stat {
+    background: rgba(31, 41, 55, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .dark .glass-stat:hover {
+    background: rgba(55, 65, 81, 0.85);
+    box-shadow:
+      0 8px 20px -4px rgba(0, 0, 0, 0.25),
+      0 4px 8px -2px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  /* Icon glow effect for glass cards */
+  .icon-glow-primary {
+    filter: drop-shadow(0 0 6px rgba(30, 64, 175, 0.4));
+  }
+
+  .icon-glow-success {
+    filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.4));
+  }
+
+  .icon-glow-warning {
+    filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.4));
+  }
+
+  .icon-glow-danger {
+    filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.4));
+  }
+}
+
+/* ========== SUBTLE ANIMATIONS ========== */
+/* Professional, refined micro-interactions */
+
+@layer utilities {
+  /* Fade in animation */
+  .animate-fade-in {
+    animation: fadeIn 200ms ease-out forwards;
+  }
+
+  /* Fade in up animation */
+  .animate-fade-in-up {
+    animation: fadeInUp 200ms ease-out forwards;
+  }
+
+  /* Stagger animation delays */
+  .stagger-1 { animation-delay: 50ms; }
+  .stagger-2 { animation-delay: 100ms; }
+  .stagger-3 { animation-delay: 150ms; }
+  .stagger-4 { animation-delay: 200ms; }
+
+  /* Shimmer for skeleton loaders - visible in both modes */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.04) 50%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+
+  .dark .shimmer::after {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.06) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ========== REDUCED MOTION SUPPORT ========== */
+/* Respect user preferences for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-fade-in-up,
+  .animate-scale-in,
+  .shimmer,
+  .shimmer::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .hover-lift:hover,
+  .hover-scale:hover {
+    transform: none !important;
+  }
+
+  /* Disable pulse animations */
+  .animate-pulse,
+  [class*="animate-pulse"] {
+    animation: none !important;
+  }
+
+  /* Disable ping animations (notification badges) */
+  .animate-ping {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+}
+
+/* ========== PERFORMANCE OPTIMIZATIONS ========== */
+/* Will-change hints for smoother animations */
+@layer utilities {
+  .will-change-transform {
+    will-change: transform;
+  }
+
+  .will-change-opacity {
+    will-change: opacity;
+  }
+
+  /* Glass elements benefit from will-change on scroll-heavy pages */
+  .glass-optimized {
+    will-change: backdrop-filter;
+    contain: layout style paint;
+  }
+}
+
+/* ========== PREMIUM SPRING TRANSITIONS ========== */
+/* Smooth spring-like easing for premium interactions */
+
+@layer utilities {
+  /* Spring easing for transforms */
+  .ease-spring {
+    transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  /* Bouncy spring for playful interactions */
+  .ease-spring-bounce {
+    transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Smooth deceleration */
+  .ease-out-expo {
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Premium hover lift effect */
+  .hover-lift {
+    @apply transition-all duration-200;
+    transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .hover-lift:hover {
+    @apply -translate-y-1 shadow-lg;
+  }
+
+  /* Subtle scale on hover */
+  .hover-scale {
+    @apply transition-transform duration-200;
+    transition-timing-function: cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .hover-scale:hover {
+    @apply scale-[1.02];
+  }
+
+  /* Active press effect */
+  .active-press:active {
+    @apply scale-[0.98];
+  }
+
+  /* Premium focus ring */
+  .focus-ring-premium {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2;
+    @apply dark:focus-visible:ring-offset-slate-900;
+  }
+
+  /* Scrollbar styling */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  /* Light mode scrollbar */
+  .scrollbar-light {
+    scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+  }
+
+  .scrollbar-light::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .scrollbar-light::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  /* Premium backdrop blur layers */
+  .backdrop-blur-premium {
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  /* Subtle noise overlay for texture - uses CSS variable for reusability */
+  .texture-noise {
+    position: relative;
+  }
+
+  .texture-noise::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--noise-texture);
+    opacity: var(--noise-opacity);
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+
+  .dark .texture-noise::before {
+    opacity: 0.03;
+  }
+
+  /* Icon size utilities */
+  .w-4\.5 { width: 1.125rem; }
+  .h-4\.5 { height: 1.125rem; }
+  .w-5\.5 { width: 1.375rem; }
+  .h-5\.5 { height: 1.375rem; }
 }

@@ -301,4 +301,5 @@ export type {
 } from './sortable-list'
 
 // Dashboard Components
-export { StatCard } from './stat-card'
+export { StatCard, StatCardSkeleton } from './stat-card'
+export type { default as StatCardProps } from './stat-card'

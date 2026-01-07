@@ -1,0 +1,300 @@
+/**
+ * LoginPageV2 - Premium Construction Industry Login Styles
+ * Blueprint aesthetic with industrial textures and dramatic animations
+ */
+
+/* Blueprint scanning line animation */
+@keyframes blueprint-scan {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
+
+.blueprint-scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(59, 130, 246, 0.3) 20%,
+    rgba(59, 130, 246, 0.8) 50%,
+    rgba(59, 130, 246, 0.3) 80%,
+    transparent 100%
+  );
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  animation: blueprint-scan 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Measurement marks animation */
+@keyframes measure-slide {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 60px 0;
+  }
+}
+
+.measurement-marks-animated {
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0px,
+    transparent 4px,
+    rgba(59, 130, 246, 0.3) 4px,
+    rgba(59, 130, 246, 0.3) 5px,
+    transparent 5px,
+    transparent 14px,
+    rgba(59, 130, 246, 0.2) 14px,
+    rgba(59, 130, 246, 0.2) 15px,
+    transparent 15px,
+    transparent 29px,
+    rgba(59, 130, 246, 0.4) 29px,
+    rgba(59, 130, 246, 0.4) 31px
+  );
+  background-size: 60px 100%;
+  animation: measure-slide 20s linear infinite;
+}
+
+/* Glow pulse for interactive elements */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.4);
+  }
+}
+
+.glow-pulse-blue {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* Construction crane loading animation */
+@keyframes crane-lift {
+  0%, 100% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+}
+
+.crane-animation {
+  transform-origin: bottom center;
+  animation: crane-lift 4s ease-in-out infinite;
+}
+
+/* Steel beam shimmer */
+@keyframes steel-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.steel-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: steel-shimmer 3s ease-in-out infinite;
+}
+
+/* Input field industrial focus glow */
+.input-industrial-focus:focus {
+  box-shadow:
+    0 0 0 1px rgba(59, 130, 246, 0.5),
+    0 0 20px rgba(59, 130, 246, 0.15),
+    inset 0 0 0 1px rgba(59, 130, 246, 0.1);
+}
+
+/* Button construction press effect */
+.btn-construction {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-construction::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  transition: left 0.5s ease;
+}
+
+.btn-construction:hover::before {
+  left: 100%;
+}
+
+/* Concrete texture overlay */
+.concrete-texture {
+  position: relative;
+}
+
+.concrete-texture::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.015;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* Corner bracket decorations */
+.corner-bracket {
+  position: relative;
+}
+
+.corner-bracket::before,
+.corner-bracket::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: rgba(59, 130, 246, 0.3);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.corner-bracket::before {
+  top: -1px;
+  left: -1px;
+  border-width: 2px 0 0 2px;
+}
+
+.corner-bracket::after {
+  bottom: -1px;
+  right: -1px;
+  border-width: 0 2px 2px 0;
+}
+
+/* Technical label style */
+.label-technical {
+  font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(148, 163, 184, 0.8);
+}
+
+/* Blueprint annotation style */
+.annotation-blueprint {
+  position: relative;
+  padding-left: 1rem;
+}
+
+.annotation-blueprint::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 50%;
+}
+
+/* Grid intersection markers */
+.grid-marker {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: rgba(59, 130, 246, 0.3);
+  border-radius: 50%;
+}
+
+.grid-marker::before,
+.grid-marker::after {
+  content: '';
+  position: absolute;
+  background: rgba(59, 130, 246, 0.2);
+}
+
+.grid-marker::before {
+  top: 50%;
+  left: -20px;
+  right: -20px;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.grid-marker::after {
+  left: 50%;
+  top: -20px;
+  bottom: -20px;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+/* Subtle parallax effect on scroll */
+@supports (animation-timeline: scroll()) {
+  .parallax-subtle {
+    animation: parallax-move linear;
+    animation-timeline: scroll();
+  }
+
+  @keyframes parallax-move {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-20px);
+    }
+  }
+}
+
+/* Responsive adjustments */
+@media (prefers-reduced-motion: reduce) {
+  .blueprint-scan-line,
+  .measurement-marks-animated,
+  .glow-pulse-blue,
+  .crane-animation,
+  .steel-shimmer {
+    animation: none;
+  }
+
+  .btn-construction::before {
+    display: none;
+  }
+}
+
+/* Dark mode specific enhancements */
+@media (prefers-color-scheme: dark) {
+  .input-industrial-focus:focus {
+    box-shadow:
+      0 0 0 1px rgba(96, 165, 250, 0.5),
+      0 0 30px rgba(96, 165, 250, 0.2),
+      inset 0 0 0 1px rgba(96, 165, 250, 0.1);
+  }
+}

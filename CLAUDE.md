@@ -4,182 +4,207 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a JavaScript/TypeScript project optimized for modern web development. The project uses industry-standard tools and follows best practices for scalable application development.
+JobSight is an offline-first, multi-tenant construction field management platform for superintendents. It consolidates daily reports, RFIs, change orders, punch lists, safety tracking, and other construction workflows into one unified system optimized for field use.
+
+**Tech Stack:**
+- Frontend: React 19 + TypeScript + Vite + TailwindCSS
+- State: TanStack Query (react-query) + Zustand
+- Backend: Supabase (PostgreSQL + Auth + Storage + Realtime)
+- Offline: IndexedDB + Service Workers (Vite PWA plugin)
+- Mobile: Capacitor (iOS/Android)
+- Testing: Vitest (unit) + Playwright (E2E)
 
 ## Development Commands
 
-### Package Management
-- `npm install` or `yarn install` - Install dependencies
-- `npm ci` or `yarn install --frozen-lockfile` - Install dependencies for CI/CD
-- `npm update` or `yarn upgrade` - Update dependencies
+```bash
+# Development
+npm run dev                # Start dev server (http://localhost:5173)
+npm run build              # Production build
+npm run preview            # Preview production build
 
-### Build Commands
-- `npm run build` - Build the project for production
-- `npm run dev` or `npm start` - Start development server
-- `npm run preview` - Preview production build locally
+# Type Checking & Linting
+npm run type-check         # TypeScript type checking (tsc --noEmit)
+npm run lint               # ESLint
+npm run lint:fix           # ESLint with auto-fix
 
-### Testing Commands
-- `npm test` or `npm run test` - Run all tests
-- `npm run test:watch` - Run tests in watch mode
-- `npm run test:coverage` - Run tests with coverage report
-- `npm run test:unit` - Run unit tests only
-- `npm run test:integration` - Run integration tests only
-- `npm run test:e2e` - Run end-to-end tests
+# Unit Tests (Vitest)
+npm run test               # Watch mode
+npm run test:unit          # Single run with verbose output
+npm run test:coverage      # With coverage report
+npm run test:ui            # Vitest UI
 
-### Code Quality Commands
-- `npm run lint` - Run ESLint for code linting
-- `npm run lint:fix` - Run ESLint with auto-fix
-- `npm run format` - Format code with Prettier
-- `npm run format:check` - Check code formatting
-- `npm run typecheck` - Run TypeScript type checking
+# E2E Tests (Playwright)
+npm run test:e2e           # Run all E2E tests
+npm run test:e2e:ui        # Playwright UI mode
+npm run test:e2e:headed    # Headed mode (see browser)
+npm run test:e2e:debug     # Debug mode
+npm run test:e2e:chromium  # Chromium only
 
-### Development Tools
-- `npm run storybook` - Start Storybook (if available)
-- `npm run analyze` - Analyze bundle size
-- `npm run clean` - Clean build artifacts
+# Visual Regression
+npm run test:visual        # Run visual regression tests
+npm run test:visual:update # Update baseline screenshots
 
-## Technology Stack
+# Seed Test Data
+npm run seed:test          # Seed test data
+npm run seed:test-users    # Seed test users only
 
-### Core Technologies
-- **JavaScript/TypeScript** - Primary programming languages
-- **Node.js** - Runtime environment
-- **npm/yarn** - Package management
+# Mobile (Capacitor)
+npm run cap:sync           # Sync web assets to native projects
+npm run cap:build:ios      # Build and sync iOS
+npm run cap:open:ios       # Open Xcode
+npm run cap:run:ios        # Run on iOS simulator
+```
 
-### Common Frameworks
-- **React** - UI library with hooks and functional components
-- **Vue.js** - Progressive framework for building user interfaces
-- **Angular** - Full-featured framework for web applications
-- **Express.js** - Web application framework for Node.js
-- **Next.js** - React framework with SSR/SSG capabilities
+## Architecture
 
-### Build Tools
-- **Vite** - Fast build tool and development server
-- **Webpack** - Module bundler
-- **Rollup** - Module bundler for libraries
-- **esbuild** - Extremely fast JavaScript bundler
+### Key Directories
 
-### Testing Framework
-- **Jest** - JavaScript testing framework
-- **Vitest** - Fast unit test framework
-- **Testing Library** - Simple and complete testing utilities
-- **Cypress** - End-to-end testing framework
-- **Playwright** - Cross-browser testing
-
-### Code Quality Tools
-- **ESLint** - JavaScript/TypeScript linter
-- **Prettier** - Code formatter
-- **TypeScript** - Static type checking
-- **Husky** - Git hooks
-
-## Project Structure Guidelines
-
-### File Organization
 ```
 src/
-├── components/     # Reusable UI components
-├── pages/         # Page components or routes
-├── hooks/         # Custom React hooks
-├── utils/         # Utility functions
-├── services/      # API calls and external services
-├── types/         # TypeScript type definitions
-├── constants/     # Application constants
-├── styles/        # Global styles and themes
-└── tests/         # Test files
+├── features/           # Feature modules (70+ features)
+│   ├── daily-reports/  # Each feature has hooks/, components/, pages/
+│   ├── workflows/      # RFIs, submittals, change orders
+│   ├── punch-lists/
+│   └── ...
+├── lib/
+│   ├── supabase.ts     # Supabase client (typed + untyped exports)
+│   ├── api/            # API services and clients
+│   │   ├── services/   # Typed service layer
+│   │   └── offline-client.ts
+│   └── offline/        # Offline sync infrastructure
+│       ├── sync-manager.ts
+│       ├── conflict-resolver.ts
+│       ├── indexeddb.ts
+│       └── priority-queue.ts
+├── types/
+│   ├── database.generated.ts  # Supabase-generated types (source of truth)
+│   └── database-extensions.ts # Extended/custom types
+├── stores/             # Zustand stores
+├── hooks/              # Global custom hooks
+└── components/         # Shared UI components
 ```
 
-### Naming Conventions
-- **Files**: Use kebab-case for file names (`user-profile.component.ts`)
-- **Components**: Use PascalCase for component names (`UserProfile`)
-- **Functions**: Use camelCase for function names (`getUserData`)
-- **Constants**: Use UPPER_SNAKE_CASE for constants (`API_BASE_URL`)
-- **Types/Interfaces**: Use PascalCase with descriptive names (`UserData`, `ApiResponse`)
+### Data Flow
 
-## TypeScript Guidelines
+1. **React Component** → TanStack Query hook → API service → Supabase client
+2. **Offline**: IndexedDB cache ← sync-manager → Supabase (when online)
+3. **Realtime**: Supabase Realtime channels → React Query cache invalidation
 
-### Type Safety
-- Enable strict mode in `tsconfig.json`
-- Use explicit types for function parameters and return values
-- Prefer interfaces over types for object shapes
-- Use union types for multiple possible values
-- Avoid `any` type - use `unknown` when type is truly unknown
+### Supabase Client Usage
 
-### Best Practices
-- Use type guards for runtime type checking
-- Leverage utility types (`Partial`, `Pick`, `Omit`, etc.)
-- Create custom types for domain-specific data
-- Use enums for finite sets of values
-- Document complex types with JSDoc comments
+```typescript
+// Typed client for tables in database.generated.ts
+import { supabase } from '@/lib/supabase'
+const { data } = await supabase.from('projects').select('*')
 
-## Code Quality Standards
+// Untyped client for tables not yet in generated types
+// (insurance_certificates, lien_waivers, etc.)
+import { supabaseUntyped } from '@/lib/supabase'
+const { data } = await supabaseUntyped.from('insurance_certificates').select('*')
+```
 
-### ESLint Configuration
-- Use recommended ESLint rules for JavaScript/TypeScript
-- Enable React-specific rules if using React
-- Configure import/export rules for consistent module usage
-- Set up accessibility rules for inclusive development
+### Path Alias
 
-### Prettier Configuration
-- Use consistent indentation (2 spaces recommended)
-- Set maximum line length (80-100 characters)
-- Use single quotes for strings
-- Add trailing commas for better git diffs
+Use `@/` for imports from `src/`:
+```typescript
+import { supabase } from '@/lib/supabase'
+import { Button } from '@/components/ui/button'
+```
 
-### Testing Standards
-- Aim for 80%+ test coverage
-- Write unit tests for utilities and business logic
-- Use integration tests for component interactions
-- Implement e2e tests for critical user flows
-- Follow AAA pattern (Arrange, Act, Assert)
+## Adding Features
 
-## Performance Optimization
+1. Create feature directory: `src/features/<feature>/`
+2. Add hooks in `features/<feature>/hooks/`
+3. Create components in `features/<feature>/components/`
+4. Add pages in `src/pages/<feature>/`
+5. Update routing in `src/App.tsx`
+6. Add navigation in `src/components/layout/AppLayout.tsx`
 
-### Bundle Optimization
-- Use code splitting for large applications
-- Implement lazy loading for routes and components
-- Optimize images and assets
-- Use tree shaking to eliminate dead code
-- Analyze bundle size regularly
+## Database Changes
 
-### Runtime Performance
-- Implement proper memoization (React.memo, useMemo, useCallback)
-- Use virtualization for large lists
-- Optimize re-renders in React applications
-- Implement proper error boundaries
-- Use web workers for heavy computations
+1. Create migration SQL in `migrations/` (numbered: `XXX_description.sql`)
+2. Run migration in Supabase SQL Editor
+3. Update `src/types/database.generated.ts` (or regenerate)
+4. Update API service in `src/lib/api/services/`
+5. Add tests
 
-## Security Guidelines
+## Testing Patterns
 
-### Dependencies
-- Regularly audit dependencies with `npm audit`
-- Keep dependencies updated
-- Use lock files (`package-lock.json`, `yarn.lock`)
-- Avoid dependencies with known vulnerabilities
+### Unit Tests
+Place test files next to the code: `Component.test.tsx` alongside `Component.tsx`
 
-### Code Security
-- Sanitize user inputs
-- Use HTTPS for API calls
-- Implement proper authentication and authorization
-- Store sensitive data securely (environment variables)
-- Use Content Security Policy (CSP) headers
+```typescript
+import { describe, it, expect } from 'vitest'
+import { render, screen } from '@testing-library/react'
 
-## Development Workflow
+describe('Component', () => {
+  it('renders', () => {
+    render(<Component />)
+    expect(screen.getByText('Hello')).toBeInTheDocument()
+  })
+})
+```
 
-### Before Starting
-1. Check Node.js version compatibility
-2. Install dependencies with `npm install`
-3. Copy environment variables from `.env.example`
-4. Run type checking with `npm run typecheck`
+### E2E Tests
+Place in `e2e/` directory. Tests use seeded test users.
 
-### During Development
-1. Use TypeScript for type safety
-2. Run linter frequently to catch issues early
-3. Write tests for new features
-4. Use meaningful commit messages
-5. Review code changes before committing
+```typescript
+import { test, expect } from '@playwright/test'
 
-### Before Committing
-1. Run full test suite: `npm test`
-2. Check linting: `npm run lint`
-3. Verify formatting: `npm run format:check`
-4. Run type checking: `npm run typecheck`
-5. Test production build: `npm run build`
+test('user flow', async ({ page }) => {
+  await page.goto('/projects')
+  await expect(page.locator('h1')).toContainText('Projects')
+})
+```
+
+### Offline Tests
+Use `fake-indexeddb` and MSW for mocking:
+```typescript
+import 'fake-indexeddb/auto'
+import { setupServer } from 'msw/node'
+```
+
+## Environment Variables
+
+Required in `.env` (copy from `.env.example`):
+```
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
+```
+
+For E2E tests (`.env.test`):
+```
+TEST_USER_EMAIL=test@example.com
+TEST_USER_PASSWORD=testpassword
+```
+
+## Offline Sync
+
+Tables synced for offline use are defined in `src/lib/supabase.ts`:
+- `projects`, `daily_reports`, `workflow_items`, `tasks`
+- `documents`, `punch_items`, `checklists`, `safety_incidents`
+
+Offline patterns are in `src/lib/offline/`:
+- `sync-manager.ts` - Orchestrates sync operations
+- `conflict-resolver.ts` - Handles concurrent edits
+- `indexeddb.ts` - IndexedDB wrapper
+- `priority-queue.ts` - Prioritized sync queue
+
+## CI/CD
+
+GitHub Actions runs on PRs and pushes to main/develop:
+1. `npm run lint`
+2. `npm run type-check`
+3. `npm run test:coverage`
+4. `npm run test:e2e` (Chromium only in CI)
+
+## Key Files Reference
+
+- **App entry**: `src/main.tsx`
+- **Routing**: `src/App.tsx`
+- **Supabase client**: `src/lib/supabase.ts`
+- **Database types**: `src/types/database.generated.ts`
+- **Vite config**: `vite.config.ts` (includes PWA, chunking)
+- **Vitest config**: `vitest.config.ts`
+- **Playwright config**: `playwright.config.ts`
+- **Migrations**: `migrations/` directory

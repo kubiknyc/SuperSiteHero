@@ -26,6 +26,7 @@ import {
   ChevronDown,
   LayoutDashboard,
 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import type { Project } from '@/types/database'
 
 export type DashboardView = 'superintendent' | 'project_manager' | 'executive' | 'default'
@@ -66,8 +67,8 @@ const VIEW_CONFIG = {
     label: 'Executive Overview',
     icon: Building2,
     description: 'Portfolio, financials, KPIs, risk assessment',
-    color: 'text-indigo-600',
-    bgColor: 'bg-indigo-100',
+    color: 'text-accent-foreground',
+    bgColor: 'bg-accent',
   },
   default: {
     label: 'General Dashboard',
@@ -165,7 +166,10 @@ export function DashboardSelector({
                   <DropdownMenuItem
                     key={view}
                     onClick={() => setCurrentView(view)}
-                    className="flex items-start gap-3 py-2"
+                    className={cn(
+                      "flex items-start gap-3 py-2",
+                      currentView === view && "bg-accent/50 border-l-2 border-primary"
+                    )}
                   >
                     <div className={`p-2 rounded ${config.bgColor}`}>
                       <Icon className={`h-4 w-4 ${config.color}`} />

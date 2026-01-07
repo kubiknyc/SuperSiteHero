@@ -19,6 +19,14 @@ export {
   SIDEBAR_COLLAPSED_WIDTH,
   SIDEBAR_EXPANDED_WIDTH,
 } from './CollapsibleSidebar'
+
+// V2 Blueprint Command Center Sidebar (experimental)
+export {
+  CollapsibleSidebarV2,
+  useSidebarStateV2,
+  SIDEBAR_COLLAPSED_WIDTH_V2,
+  SIDEBAR_EXPANDED_WIDTH_V2,
+} from './CollapsibleSidebarV2'
 export { StickyHeader } from './StickyHeader'
 export { ActionPanel } from './ActionPanel'
 export { QuickActions, projectQuickActions } from './QuickActions'

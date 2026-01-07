@@ -11,8 +11,9 @@ import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { RouteLoadingFallback } from './components/loading/RouteLoadingFallback';
 
 // Auth pages - loaded eagerly as they are the first pages users see
-import { LoginPage } from './pages/auth/LoginPage';
-import { SignupPage } from './pages/auth/SignupPage';
+// Using V2 versions with premium construction industry design
+import { LoginPageV2 as LoginPage } from './pages/auth/LoginPageV2';
+import { SignupPageV2 as SignupPage } from './pages/auth/SignupPageV2';
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/auth/ResetPasswordPage';
 
@@ -307,6 +308,9 @@ const DemoPage = lazy(() => import('./pages/DemoPage').then(m => ({ default: m.D
 const ColorPaletteDemo = lazy(() => import('./pages/ColorPaletteDemo').then(m => ({ default: m.ColorPaletteDemo })));
 const RefinedPaletteDemo = lazy(() => import('./pages/RefinedPaletteDemo').then(m => ({ default: m.RefinedPaletteDemo })));
 const DesignConceptsDemo = lazy(() => import('./pages/DesignConceptsDemo').then(m => ({ default: m.DesignConceptsDemo })));
+const SidebarV2Demo = lazy(() => import('./pages/SidebarV2Demo').then(m => ({ default: m.default })));
+const SidebarConceptsDemo = lazy(() => import('./components/layout/SidebarConcepts').then(m => ({ default: m.SidebarConceptsDemo })));
+const NavigationDemo = lazy(() => import('./pages/NavigationDemo').then(m => ({ default: m.NavigationDemo })));
 
 // Design Concepts
 const ConceptsIndex = lazy(() => import('./pages/design-concepts/ConceptsIndex').then(m => ({ default: m.default })));
@@ -653,6 +657,10 @@ export function DesktopApp() {
         <Route path="/demo/colors" element={<ColorPaletteDemo />} />
         <Route path="/demo/refined" element={<RefinedPaletteDemo />} />
         <Route path="/demo/concepts" element={<DesignConceptsDemo />} />
+        <Route path="/demo/sidebar-v2" element={<SidebarV2Demo />} />
+        <Route path="/demo/sidebar-v2/*" element={<SidebarV2Demo />} />
+        <Route path="/demo/sidebar-concepts" element={<SidebarConceptsDemo />} />
+        <Route path="/demo/navigation" element={<NavigationDemo />} />
 
         {/* Design Concepts */}
         <Route path="/design-concepts" element={<ConceptsIndex />} />

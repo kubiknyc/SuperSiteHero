@@ -10,6 +10,7 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { waitForContentLoad } from './helpers/test-helpers';
 
 // Use pre-authenticated session to skip login
 test.use({ storageState: 'playwright/.auth/user.json' });
@@ -102,7 +103,7 @@ test.describe('RFIs', () => {
     }
 
     await createButton.first().click();
-    await page.waitForTimeout(1500);
+    await waitForContentLoad(page);
 
     // Check for form, dialog, OR URL change (new page)
     const formOrDialog = page.locator('[role="dialog"], .modal, form, input[name="subject"], input[name="title"], [data-testid*="create"], [data-testid*="form"]');

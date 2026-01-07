@@ -1,5 +1,5 @@
 // File: src/components/ui/stat-card.tsx
-// Industrial-styled stat card for dashboard metrics
+// Glass morphism stat card with premium styling for dashboard metrics
 
 import * as React from 'react'
 import { cn } from '@/lib/utils'
@@ -22,10 +22,35 @@ interface StatCardProps {
   ariaLabel?: string
   onClick?: () => void
   className?: string
+  /** Animation delay index for staggered animations (0-3) */
+  animationIndex?: number
 }
 
-// Sparkline component
+// Color to glow class mapping
+const colorToGlow: Record<string, string> = {
+  '#3B82F6': 'icon-glow-primary',    // Blue
+  '#1E40AF': 'icon-glow-primary',    // Blue dark
+  '#10B981': 'icon-glow-success',    // Green
+  '#059669': 'icon-glow-success',    // Green dark
+  '#F59E0B': 'icon-glow-warning',    // Amber
+  '#D97706': 'icon-glow-warning',    // Amber dark
+  '#EF4444': 'icon-glow-danger',     // Red
+  '#DC2626': 'icon-glow-danger',     // Red dark
+  '#8B5CF6': 'icon-glow-primary',    // Purple (use primary glow)
+  '#7C3AED': 'icon-glow-primary',    // Purple dark
+}
+
+// Counter for generating unique gradient IDs (avoids Math.random() on every render)
+let gradientIdCounter = 0
+
+// Sparkline component with improved styling
 function Sparkline({ data, color }: { data: number[]; color: string }) {
+  // Generate stable ID on mount using counter
+  const gradientId = React.useMemo(() => {
+    const id = `sparkline-gradient-${color.replace('#', '')}-${++gradientIdCounter}`
+    return id
+  }, [color])
+
   if (!data || data.length < 2) return null
 
   const max = Math.max(...data)
@@ -41,23 +66,23 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
   return (
     <svg
       width="100%"
-      height="32"
+      height="36"
       viewBox="0 0 100 100"
       preserveAspectRatio="none"
-      className="overflow-visible"
+      className="overflow-visible opacity-80"
     >
       {/* Gradient fill under line */}
       <defs>
-        <linearGradient id={`gradient-${color.replace('#', '')}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.2" />
-          <stop offset="100%" stopColor={color} stopOpacity="0" />
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.25" />
+          <stop offset="100%" stopColor={color} stopOpacity="0.02" />
         </linearGradient>
       </defs>
 
       {/* Area fill */}
       <polygon
         points={`0,100 ${points} 100,100`}
-        fill={`url(#gradient-${color.replace('#', '')})`}
+        fill={`url(#${gradientId})`}
       />
 
       {/* Line */}
@@ -65,52 +90,44 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
         points={points}
         fill="none"
         stroke={color}
-        strokeWidth="2.5"
+        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        style={{ filter: `drop-shadow(0 0 3px ${color}40)` }}
+        className="drop-shadow-sm"
       />
 
-      {/* End dot */}
+      {/* End dot with pulse effect */}
       <circle
         cx="100"
         cy={100 - ((data[data.length - 1] - min) / range) * 80 - 10}
-        r="3"
+        r="3.5"
         fill={color}
+        className="animate-pulse"
         style={{ filter: `drop-shadow(0 0 4px ${color})` }}
       />
     </svg>
   )
 }
 
-// Progress bar component
+// Progress bar component with refined styling
 function ProgressBar({ value, max, color }: { value: number; max: number; color: string }) {
   const percentage = max > 0 ? Math.min((value / max) * 100, 100) : 0
 
   return (
     <div className="relative">
       <div className="flex justify-between mb-1.5 text-xs">
-        <span className="text-steel-gray dark:text-gray-400 font-medium">Progress</span>
-        <span className="font-mono font-semibold text-foreground">{Math.round(percentage)}%</span>
+        <span className="text-gray-500 dark:text-gray-400 font-medium">Progress</span>
+        <span className="font-mono font-bold text-gray-900 dark:text-white">{Math.round(percentage)}%</span>
       </div>
-      <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
         <div
           className="h-full rounded-full transition-all duration-700 ease-out relative"
           style={{
             width: `${percentage}%`,
             background: `linear-gradient(90deg, ${color} 0%, ${color}CC 100%)`,
-            boxShadow: `0 0 8px ${color}40`
+            boxShadow: `0 0 12px ${color}50`
           }}
-        >
-          {/* Shimmer effect */}
-          <div
-            className="absolute inset-0 animate-[shimmer_2s_infinite]"
-            style={{
-              background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
-              backgroundSize: '200% 100%',
-            }}
-          />
-        </div>
+        />
       </div>
     </div>
   )
@@ -132,11 +149,14 @@ export function StatCard({
   ariaLabel,
   onClick,
   className,
+  animationIndex = 0,
 }: StatCardProps) {
   const [isHovered, setIsHovered] = React.useState(false)
 
   const numericValue = typeof value === 'string' ? parseInt(value, 10) : value
   const hasOverdue = overdueCount && overdueCount > 0
+  const glowClass = colorToGlow[color] || 'icon-glow-primary'
+  const staggerClass = `stagger-${Math.min(animationIndex + 1, 4)}`
 
   return (
     <div
@@ -148,76 +168,90 @@ export function StatCard({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={cn(
-        // Base styles
-        'relative overflow-hidden rounded-xl p-6 cursor-pointer',
-        'bg-white dark:bg-gray-900',
-        'border border-slate-200 dark:border-gray-800',
-        // Shadow and hover effects
-        'shadow-sm hover:shadow-lg',
-        'transition-all duration-300 ease-out',
-        'hover:-translate-y-1',
+        // Glass morphism base
+        'glass-stat',
+        // Rounded and padding - rounded-xl (12px) for refined look
+        'rounded-xl p-6',
+        // Layout
+        'relative overflow-hidden cursor-pointer',
+        // Transitions including border-color
+        'transition-[transform,box-shadow,border-color] duration-200',
+        // Animations
+        'animate-fade-in-up',
+        staggerClass,
         // Focus styles
-        'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
+        'focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-transparent',
         className
       )}
       style={{
-        boxShadow: isHovered
-          ? `0 12px 24px -8px ${color}20, 0 4px 8px rgba(0,0,0,0.08)`
-          : undefined
+        // Dynamic border color on hover
+        borderColor: isHovered ? `${color}40` : undefined,
       }}
     >
-      {/* Top colored accent bar */}
+      {/* Colored accent - left border */}
       <div
-        className="absolute top-0 left-0 right-0 h-1 transition-opacity duration-300"
+        className="absolute left-0 top-4 bottom-4 w-1 rounded-full transition-all duration-300"
         style={{
-          background: `linear-gradient(90deg, ${color} 0%, ${color}80 100%)`,
-          opacity: isHovered ? 1 : 0
+          background: `linear-gradient(180deg, ${color} 0%, ${color}80 100%)`,
+          opacity: isHovered ? 1 : 0.6,
+          boxShadow: isHovered ? `0 0 12px ${color}60` : 'none'
         }}
       />
 
       {/* Header row */}
       <div className="flex justify-between items-start mb-5">
-        {/* Icon */}
+        {/* Icon with glow effect */}
         <div
-          className="w-14 h-14 rounded-xl flex items-center justify-center transition-transform duration-300"
+          className={cn(
+            'w-12 h-12 rounded-xl flex items-center justify-center',
+            'transition-all duration-300',
+            'bg-white/60 dark:bg-white/5',
+            'border border-gray-200/50 dark:border-white/10',
+            isHovered && 'scale-105'
+          )}
           style={{
-            backgroundColor: `${color}08`,
-            border: `1px solid ${color}15`,
-            transform: isHovered ? 'scale(1.05)' : 'scale(1)'
+            backgroundColor: isHovered ? `${color}10` : undefined,
+            borderColor: isHovered ? `${color}30` : undefined
           }}
         >
-          <Icon className="w-6 h-6" style={{ color }} />
+          <Icon
+            className={cn(
+              'w-5 h-5 transition-all duration-300',
+              isHovered && glowClass
+            )}
+            style={{ color }}
+          />
         </div>
 
         {/* Trend badge */}
         {change && (
           <div
             className={cn(
-              'px-2.5 py-1.5 rounded-lg text-xs font-bold flex items-center gap-1.5',
-              'border',
+              'px-2.5 py-1 rounded-lg text-xs font-bold flex items-center gap-1',
+              'backdrop-blur-sm transition-all duration-200',
               trend === 'up'
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-400 dark:border-emerald-800'
-                : 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950/50 dark:text-red-400 dark:border-red-800'
+                ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
+                : 'bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20'
             )}
           >
-            {trend === 'up' ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
+            {trend === 'up' ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
             {change}
           </div>
         )}
       </div>
 
-      {/* Label */}
-      <p className="label-blueprint text-steel-gray dark:text-gray-400 mb-2">
+      {/* Label - uppercase with letter spacing */}
+      <p className="text-[10px] uppercase tracking-wider font-semibold text-gray-500 dark:text-gray-400 mb-2">
         {label}
       </p>
 
-      {/* Value display */}
-      <div className="flex items-baseline gap-3 mb-4">
-        <span className="stat-number text-4xl text-foreground">
+      {/* Value display - larger, bolder */}
+      <div className="flex items-baseline gap-2 mb-4">
+        <span className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white tabular-nums">
           {value}
         </span>
         {target && (
-          <span className="text-base font-medium text-slate-400 dark:text-gray-500">
+          <span className="text-sm font-medium text-gray-400 dark:text-gray-500">
             / {target}
           </span>
         )}
@@ -225,7 +259,7 @@ export function StatCard({
 
       {/* Sparkline */}
       {sparklineData && sparklineData.length > 1 && (
-        <div className="mb-4">
+        <div className="mb-4 -mx-1">
           <Sparkline data={sparklineData} color={color} />
         </div>
       )}
@@ -236,12 +270,19 @@ export function StatCard({
       )}
 
       {/* Footer with overdue and link */}
-      <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 dark:border-gray-800">
+      <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-200/50 dark:border-white/5">
         {hasOverdue ? (
           <Link
             to={overdueLink || filterLink || '#'}
             onClick={(e) => e.stopPropagation()}
-            className="flex items-center gap-1.5 text-xs font-semibold text-red-600 dark:text-red-400 hover:text-red-700 bg-red-50 dark:bg-red-950/50 px-2.5 py-1 rounded-md border border-red-100 dark:border-red-900"
+            className={cn(
+              'flex items-center gap-1.5 text-xs font-semibold',
+              'text-red-600 dark:text-red-400',
+              'hover:text-red-700 dark:hover:text-red-300',
+              'bg-red-500/10 px-2 py-1 rounded-md',
+              'border border-red-500/20',
+              'transition-colors duration-200'
+            )}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
             {overdueCount} Overdue
@@ -254,12 +295,53 @@ export function StatCard({
           <Link
             to={filterLink || link || '#'}
             onClick={(e) => e.stopPropagation()}
-            className="flex items-center gap-1 text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
+            className={cn(
+              'flex items-center gap-1 text-xs font-semibold',
+              'text-gray-500 dark:text-gray-400',
+              'hover:text-primary dark:hover:text-primary',
+              'transition-colors duration-200'
+            )}
           >
             View All
             <ExternalLink className="w-3 h-3" />
           </Link>
         )}
+      </div>
+    </div>
+  )
+}
+
+// Skeleton loader for stat cards
+export function StatCardSkeleton({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn(
+        'glass-stat rounded-xl p-6 animate-pulse',
+        className
+      )}
+    >
+      {/* Icon placeholder */}
+      <div className="flex justify-between items-start mb-5">
+        <div className="w-12 h-12 rounded-xl bg-gray-200 dark:bg-gray-700 shimmer" />
+        <div className="w-16 h-6 rounded-lg bg-gray-200 dark:bg-gray-700 shimmer" />
+      </div>
+
+      {/* Label placeholder */}
+      <div className="w-20 h-3 rounded bg-gray-200 dark:bg-gray-700 mb-3 shimmer" />
+
+      {/* Value placeholder */}
+      <div className="w-24 h-8 rounded bg-gray-200 dark:bg-gray-700 mb-4 shimmer" />
+
+      {/* Sparkline placeholder */}
+      <div className="w-full h-9 rounded bg-gray-100 dark:bg-gray-800 mb-4 shimmer" />
+
+      {/* Progress bar placeholder */}
+      <div className="space-y-1.5">
+        <div className="flex justify-between">
+          <div className="w-12 h-3 rounded bg-gray-200 dark:bg-gray-700 shimmer" />
+          <div className="w-8 h-3 rounded bg-gray-200 dark:bg-gray-700 shimmer" />
+        </div>
+        <div className="w-full h-1.5 rounded-full bg-gray-200 dark:bg-gray-700 shimmer" />
       </div>
     </div>
   )

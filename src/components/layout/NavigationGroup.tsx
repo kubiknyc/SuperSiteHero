@@ -93,7 +93,6 @@ export function NavigationGroup({
           {items.map((item) => {
             const isActive = location.pathname === item.path;
             const ItemIcon = item.icon;
-            const Badge = item.badge;
 
             return (
               <Link
@@ -114,9 +113,15 @@ export function NavigationGroup({
                   isActive ? "text-primary" : "text-gray-500"
                 )} />
                 <span className="flex-1">{item.label}</span>
-                {Badge && (
+                {/* Handle badge as number or component */}
+                {typeof item.badge === 'number' && item.badge > 0 && (
+                  <span className="px-1.5 py-0.5 text-xs font-medium bg-red-500 text-white rounded-full min-w-[18px] text-center flex-shrink-0">
+                    {item.badge}
+                  </span>
+                )}
+                {typeof item.badge === 'function' && (
                   <span className="flex-shrink-0">
-                    <Badge />
+                    <item.badge />
                   </span>
                 )}
               </Link>

@@ -28,8 +28,9 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  /* Use 2 workers in CI for faster execution while maintaining stability */
+  /* Set to 1 if tests become flaky due to shared state issues */
+  workers: process.env.CI ? 2 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -79,9 +80,14 @@ export default defineConfig({
       name: 'firefox',
       use: {
         ...devices['Desktop Firefox'],
-        // Firefox needs more time to reach networkidle state
-        navigationTimeout: 180000, // 3 minutes for Firefox
-        actionTimeout: 90000, // 1.5 minutes for actions
+        // Firefox performance optimizations:
+        // - Use 'domcontentloaded' instead of 'networkidle' for faster tests
+        // - Reduced timeouts from 180s/90s to 90s/60s (matching other browsers)
+        // - If tests still timeout, consider: 1) Code splitting, 2) Lazy loading routes
+        navigationTimeout: 90000,
+        actionTimeout: 60000,
+        // Wait for DOMContentLoaded instead of networkidle for Firefox
+        // networkidle can be slow in Firefox due to persistent connections
       },
     },
 

@@ -111,7 +111,69 @@ export async function submitForm(page: Page) {
   ).first();
 
   await submitButton.click();
-  await page.waitForTimeout(2000);
+  // Wait for form submission response instead of fixed timeout
+  await waitForFormResponse(page);
+}
+
+/**
+ * Wait for form submission response - replaces fixed timeouts after form actions
+ * Waits for either: success message, error message, URL change, or loading state to complete
+ */
+export async function waitForFormResponse(page: Page, timeout: number = 5000): Promise<void> {
+  try {
+    await Promise.race([
+      // Wait for success/error toast
+      page.locator('[role="alert"], [data-testid="toast"], .toast, .notification').first().waitFor({ state: 'visible', timeout }),
+      // Wait for URL change (navigation after success)
+      page.waitForURL(url => url !== page.url(), { timeout }),
+      // Wait for loading indicator to disappear
+      page.locator('[data-testid="loader"], .loading, .spinner, [aria-busy="true"]').first().waitFor({ state: 'hidden', timeout }),
+      // Wait for dialog/modal to close
+      page.locator('[role="dialog"], .modal').first().waitFor({ state: 'hidden', timeout }),
+    ]);
+  } catch {
+    // If none of the conditions are met within timeout, continue
+    // This is acceptable as the form may have succeeded without visible feedback
+  }
+}
+
+/**
+ * Wait for content to load - replaces waitForTimeout after navigation
+ * Uses smart detection of page readiness
+ */
+export async function waitForContentLoad(page: Page, timeout: number = 5000): Promise<void> {
+  try {
+    // Wait for any loading indicators to disappear
+    const loadingIndicators = page.locator('[data-testid="loader"], .loading, .spinner, [aria-busy="true"], .skeleton');
+    const hasLoader = await loadingIndicators.first().isVisible({ timeout: 500 }).catch(() => false);
+
+    if (hasLoader) {
+      await loadingIndicators.first().waitFor({ state: 'hidden', timeout });
+    }
+
+    // Wait for main content to be visible
+    const mainContent = page.locator('main, [role="main"], .page-content, [data-testid="page-content"]');
+    await mainContent.first().waitFor({ state: 'visible', timeout });
+  } catch {
+    // Content may already be loaded or use different patterns
+  }
+}
+
+/**
+ * Wait for list items to load - replaces waitForTimeout when expecting list data
+ */
+export async function waitForListLoad(page: Page, itemSelector: string, timeout: number = 5000): Promise<boolean> {
+  try {
+    // First wait for any loading state to complete
+    await waitForContentLoad(page, timeout);
+
+    // Then check if items are visible
+    const items = page.locator(itemSelector);
+    await items.first().waitFor({ state: 'visible', timeout });
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -136,7 +198,8 @@ export async function expectErrorMessage(page: Page, timeout: number = 5000) {
  * Click the first item in a list
  */
 export async function clickFirstListItem(page: Page, itemSelector: string) {
-  await page.waitForTimeout(2000);
+  // Wait for list to load instead of fixed timeout
+  await waitForListLoad(page, itemSelector);
   const firstItem = page.locator(itemSelector).first();
 
   if (await firstItem.isVisible()) {
@@ -160,7 +223,8 @@ export async function applyFilter(
 
   if (await filter.isVisible()) {
     await filter.selectOption({ index: optionIndex });
-    await page.waitForTimeout(1000);
+    // Wait for filtered content to load instead of fixed timeout
+    await waitForContentLoad(page);
     return true;
   }
   return false;
@@ -174,7 +238,8 @@ export async function searchFor(page: Page, searchTerm: string) {
 
   if (await searchInput.isVisible()) {
     await searchInput.fill(searchTerm);
-    await page.waitForTimeout(1000);
+    // Wait for search results to load instead of fixed timeout
+    await waitForContentLoad(page);
     return true;
   }
   return false;

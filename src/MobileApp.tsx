@@ -16,9 +16,9 @@ import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { RouteLoadingFallback } from './components/loading/RouteLoadingFallback';
 import { MobileLayout } from './components/layout/MobileLayout';
 
-// Auth pages - shared with desktop
-import { LoginPage } from './pages/auth/LoginPage';
-import { SignupPage } from './pages/auth/SignupPage';
+// Auth pages - shared with desktop (using V2 premium design)
+import { LoginPageV2 as LoginPage } from './pages/auth/LoginPageV2';
+import { SignupPageV2 as SignupPage } from './pages/auth/SignupPageV2';
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/auth/ResetPasswordPage';
 

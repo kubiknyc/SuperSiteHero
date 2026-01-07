@@ -1,8 +1,8 @@
 // File: /src/pages/DashboardPageV2.tsx
-// Dashboard with V2 layout - collapsible sidebar, sticky header, quick actions
+// Dashboard with V2 layout - glass morphism, improved spacing, premium design
 
-import { useState, useCallback, useMemo, memo } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useCallback, useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import { AppLayoutV2 } from '@/components/layout/AppLayoutV2'
 import { QuickActions } from '@/components/layout/QuickActions'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
@@ -14,11 +14,9 @@ import { Badge } from '@/components/ui/badge'
 import { LocalErrorBoundary } from '@/components/errors'
 import {
   Calendar,
-  Clock,
   Building2,
-  BarChart3,
-  Loader2,
   ChevronRight,
+  TrendingUp,
 } from 'lucide-react'
 import { NoticesWidget } from '@/features/notices/components'
 import { format } from 'date-fns'
@@ -30,11 +28,11 @@ import {
   StatDrilldownPanel,
   type DrilldownType
 } from '@/features/dashboard'
+import { cn } from '@/lib/utils'
 
 export function DashboardPageV2() {
   const { data: projects } = useMyProjects()
   const { userProfile } = useAuth()
-  const navigate = useNavigate()
   const dashboardView = useDashboardView()
   const [selectedProjectId, _setSelectedProjectId] = useState<string>('')
 
@@ -81,7 +79,7 @@ export function DashboardPageV2() {
     <AppLayoutV2 showHeaderStats={true}>
       {/* Role-based Dashboard */}
       {hasRoleDashboard ? (
-        <div className="p-6">
+        <div className="p-6 lg:p-8">
           <DashboardSelector
             project={selectedProject}
             projectId={selectedProject?.id}
@@ -89,61 +87,76 @@ export function DashboardPageV2() {
           />
         </div>
       ) : (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-          {/* Main Content */}
-          <div className="max-w-7xl mx-auto px-6 py-6">
+        <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
+          {/* Main Content Container with max width */}
+          <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
             {/* Quick Actions - New in V2 */}
-            <div className="mb-6">
+            <section className="mb-8 animate-fade-in">
               <QuickActions projectId={selectedProject?.id} />
-            </div>
+            </section>
 
-            {/* Morning Briefing Widget - Full Width */}
+            {/* Morning Briefing Widget - Full Width with glass */}
             <LocalErrorBoundary
               title="Unable to load morning briefing"
               description="We couldn't load your daily summary. Please try again."
             >
-              <div className="mb-6">
+              <section className="mb-8 animate-fade-in-up stagger-1">
                 <MorningBriefingWidget projectId={selectedProject?.id} />
-              </div>
+              </section>
             </LocalErrorBoundary>
 
             {/* Two Column Layout: Weather + Projects */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
               {/* Weather Widget */}
               <LocalErrorBoundary
                 title="Unable to load weather"
                 description="We couldn't load weather data. Please try again."
               >
-                <WeatherForecastWidget projectId={selectedProject?.id} />
+                <div className="animate-fade-in-up stagger-2">
+                  <WeatherForecastWidget projectId={selectedProject?.id} />
+                </div>
               </LocalErrorBoundary>
 
-              {/* Active Projects - Takes 2 columns */}
+              {/* Active Projects - Takes 2 columns with glass effect */}
               <LocalErrorBoundary
                 title="Unable to load projects"
                 description="We couldn't load the projects list. Please try again."
               >
-                <div className="lg:col-span-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
-                  <div className="flex justify-between items-center p-5 border-b border-gray-100 dark:border-gray-800">
+                <div className={cn(
+                  'lg:col-span-2',
+                  'glass-card',
+                  'rounded-2xl overflow-hidden',
+                  'animate-fade-in-up stagger-3'
+                )}>
+                  {/* Header */}
+                  <div className="flex justify-between items-center p-6 border-b border-gray-200/50 dark:border-white/5">
                     <div>
                       <h2 className="text-base font-semibold text-gray-900 dark:text-white">
                         Active Projects
                       </h2>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
                         {projects?.length || 0} projects in progress
                       </p>
                     </div>
                     <Link
                       to="/projects"
-                      className="text-sm font-medium text-primary hover:text-primary/80 flex items-center gap-1"
+                      className={cn(
+                        'text-sm font-semibold',
+                        'text-gray-600 dark:text-gray-400',
+                        'hover:text-primary dark:hover:text-primary',
+                        'flex items-center gap-1',
+                        'transition-colors duration-200'
+                      )}
                     >
                       View All
                       <ChevronRight className="w-4 h-4" />
                     </Link>
                   </div>
 
-                  <div className="divide-y divide-gray-100 dark:divide-gray-800">
+                  {/* Projects List */}
+                  <div className="divide-y divide-gray-200/50 dark:divide-white/5">
                     {projects && projects.length > 0 ? (
-                      projects.slice(0, 3).map((project) => {
+                      projects.slice(0, 3).map((project, index) => {
                         const healthColor = getHealthColor(project.status)
                         const projectProgress = projectsProgress?.find(p => p.projectId === project.id)
                         const progress = projectProgress?.progress ?? 0
@@ -152,19 +165,25 @@ export function DashboardPageV2() {
                           <Link
                             key={project.id}
                             to={`/projects/${project.id}`}
-                            className="block p-5 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                            className={cn(
+                              'block p-6',
+                              'hover:bg-white/50 dark:hover:bg-white/5',
+                              'transition-all duration-200',
+                              'group'
+                            )}
                           >
-                            <div className="flex justify-between items-start mb-3">
+                            <div className="flex justify-between items-start mb-4">
                               <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-1">
+                                <div className="flex items-center gap-2.5 mb-1.5">
+                                  {/* Health indicator with glow */}
                                   <div
-                                    className="w-2 h-2 rounded-full"
+                                    className="w-2.5 h-2.5 rounded-full transition-all duration-200 group-hover:scale-125"
                                     style={{
                                       backgroundColor: healthColor,
-                                      boxShadow: `0 0 0 3px ${healthColor}20`
+                                      boxShadow: `0 0 8px ${healthColor}60`
                                     }}
                                   />
-                                  <h3 className="font-medium text-gray-900 dark:text-white">
+                                  <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
                                     {project.name}
                                   </h3>
                                 </div>
@@ -182,16 +201,20 @@ export function DashboardPageV2() {
                               </Badge>
                             </div>
 
-                            {/* Progress Bar */}
+                            {/* Progress Bar with refined styling */}
                             <div>
-                              <div className="flex justify-between mb-1.5 text-xs">
-                                <span className="text-gray-500 dark:text-gray-400">Progress</span>
-                                <span className="font-medium text-gray-700 dark:text-gray-300">{progress}%</span>
+                              <div className="flex justify-between mb-2 text-xs">
+                                <span className="text-gray-500 dark:text-gray-400 font-medium">Progress</span>
+                                <span className="font-bold text-gray-700 dark:text-gray-300 tabular-nums">{progress}%</span>
                               </div>
                               <div className="w-full h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                                 <div
-                                  className="h-full rounded-full bg-primary transition-all duration-500"
-                                  style={{ width: `${progress}%` }}
+                                  className="h-full rounded-full transition-all duration-700 ease-out"
+                                  style={{
+                                    width: `${progress}%`,
+                                    background: `linear-gradient(90deg, ${healthColor} 0%, ${healthColor}CC 100%)`,
+                                    boxShadow: `0 0 8px ${healthColor}40`
+                                  }}
                                 />
                               </div>
                             </div>
@@ -199,9 +222,12 @@ export function DashboardPageV2() {
                         )
                       })
                     ) : (
-                      <div className="p-12 text-center">
-                        <Building2 className="w-10 h-10 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
-                        <p className="text-sm text-gray-500 dark:text-gray-400">No active projects</p>
+                      <div className="p-16 text-center">
+                        <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                          <Building2 className="w-8 h-8 text-gray-400 dark:text-gray-500" />
+                        </div>
+                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">No active projects</p>
+                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Create a project to get started</p>
                       </div>
                     )}
                   </div>
@@ -209,14 +235,16 @@ export function DashboardPageV2() {
               </LocalErrorBoundary>
             </div>
 
-            {/* Three Column Layout: Alerts | Notices */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Two Column Layout: Alerts | Notices */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Alert System Widget */}
               <LocalErrorBoundary
                 title="Unable to load alerts"
                 description="We couldn't load system alerts. Please try again."
               >
-                <AlertSystemWidget projectId={selectedProject?.id} />
+                <div className="animate-fade-in-up stagger-4">
+                  <AlertSystemWidget projectId={selectedProject?.id} />
+                </div>
               </LocalErrorBoundary>
 
               {/* Notices Widget */}
@@ -224,7 +252,9 @@ export function DashboardPageV2() {
                 title="Unable to load notices"
                 description="We couldn't load notices. Please try again."
               >
-                <NoticesWidget projectId={selectedProject?.id} />
+                <div className="animate-fade-in-up stagger-4">
+                  <NoticesWidget projectId={selectedProject?.id} />
+                </div>
               </LocalErrorBoundary>
             </div>
           </div>

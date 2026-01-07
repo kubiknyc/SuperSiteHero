@@ -1,6 +1,7 @@
 // File: /src/components/layout/AppLayoutV2.tsx
 // V2 Application layout with collapsible sidebar, sticky header, and action panel
 // Desktop layout redesign for improved UX
+// Enhanced with Industrial Precision design system
 
 import { type ReactNode, useEffect, useState, useCallback } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -20,6 +21,9 @@ import {
 } from './CollapsibleSidebar'
 import { StickyHeader } from './StickyHeader'
 import { ActionPanel } from './ActionPanel'
+
+// Premium easing
+const SPRING_EASING = 'cubic-bezier(0.32, 0.72, 0, 1)'
 
 // Page title map for auto-detection
 const pageTitles: Record<string, { title: string; subtitle?: string }> = {
@@ -151,10 +155,24 @@ export function AppLayoutV2({
   return (
     <div
       className={cn(
-        'min-h-screen bg-gray-50 dark:bg-gray-950',
+        'min-h-screen',
+        // Premium gradient background
+        'bg-gradient-to-br from-gray-50 via-gray-50 to-gray-100',
+        'dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-950 dark:to-slate-900',
+        // Subtle pattern overlay
+        'relative',
         isTablet && isLandscape && 'tablet-landscape-sidebar'
       )}
     >
+      {/* Subtle dot pattern overlay */}
+      <div
+        className="fixed inset-0 pointer-events-none opacity-[0.015] dark:opacity-[0.03]"
+        style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)`,
+          backgroundSize: '24px 24px',
+        }}
+      />
+
       {/* Mobile Offline Banner */}
       <MobileOfflineBanner />
 
@@ -203,7 +221,9 @@ export function AppLayoutV2({
       {/* Main content wrapper */}
       <div
         className={cn(
-          'min-h-screen transition-[margin-left] duration-300 ease-out',
+          'relative min-h-screen',
+          'transition-[margin-left] duration-300',
+          '[transition-timing-function:cubic-bezier(0.32,0.72,0,1)]',
           // Desktop: dynamic margin based on sidebar state
           !isTablet && 'hidden md:block'
         )}
@@ -223,23 +243,26 @@ export function AppLayoutV2({
           />
         )}
 
-        {/* Main content */}
+        {/* Main content with enhanced spacing */}
         <main
           className={cn(
-            'min-h-[calc(100vh-4rem)]',
+            'relative min-h-[calc(100vh-72px)]',
             // Mobile bottom padding for nav
-            'pb-20 md:pb-0',
+            'pb-24 md:pb-6',
             // Tablet portrait: add top padding for menu button
             isTablet && isPortrait && 'pt-16'
           )}
         >
-          {children}
+          {/* Content container with max-width for readability */}
+          <div className="relative">
+            {children}
+          </div>
         </main>
       </div>
 
       {/* Mobile layout fallback */}
       <div className="md:hidden">
-        <main className="min-h-screen pb-20">{children}</main>
+        <main className="relative min-h-screen pb-24">{children}</main>
       </div>
 
       {/* Action Panel (slide-out) */}

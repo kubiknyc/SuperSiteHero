@@ -1,5 +1,5 @@
 // File: /src/components/ui/loading-skeleton.tsx
-// Comprehensive loading skeleton components for consistent loading states
+// Glass morphism skeleton components with shimmer effect
 
 import * as React from 'react'
 import { cn } from '@/lib/utils'
@@ -8,19 +8,27 @@ import { cn } from '@/lib/utils'
 export interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Animation variant */
   animation?: 'pulse' | 'shimmer' | 'none'
+  /** Use glass morphism styling */
+  glass?: boolean
 }
 
 export function Skeleton({
   className,
-  animation = 'pulse',
+  animation = 'shimmer',
+  glass = false,
   ...props
 }: SkeletonProps) {
   return (
     <div
       className={cn(
-        'rounded-md bg-muted',
+        'rounded-md',
+        // Background based on glass option
+        glass
+          ? 'bg-white/50 dark:bg-white/5'
+          : 'bg-gray-200 dark:bg-gray-700',
+        // Animation classes
         animation === 'pulse' && 'animate-pulse',
-        animation === 'shimmer' && 'animate-shimmer bg-gradient-to-r from-muted via-muted/50 to-muted bg-[length:200%_100%]',
+        animation === 'shimmer' && 'shimmer',
         className
       )}
       {...props}
@@ -74,7 +82,7 @@ export function TableSkeleton({
   )
 }
 
-// Card skeleton
+// Card skeleton with glass morphism
 export interface CardSkeletonProps {
   showImage?: boolean
   showTitle?: boolean
@@ -93,36 +101,46 @@ export function CardSkeleton({
   return (
     <div
       className={cn(
-        'rounded-lg border border-border bg-card p-4 space-y-4',
+        'glass-card rounded-2xl p-6 space-y-4',
         className
       )}
     >
       {showImage && (
-        <Skeleton className="h-40 w-full rounded-md" />
+        <Skeleton className="h-40 w-full rounded-xl" />
       )}
       {showTitle && (
-        <Skeleton className="h-5 w-3/4" />
+        <Skeleton className="h-5 w-3/4 rounded" />
       )}
       {showDescription && (
         <div className="space-y-2">
-          <Skeleton className="h-4 w-full" />
-          <Skeleton className="h-4 w-5/6" />
+          <Skeleton className="h-4 w-full rounded" />
+          <Skeleton className="h-4 w-5/6 rounded" />
         </div>
       )}
       {showFooter && (
-        <div className="flex items-center justify-between pt-2">
-          <Skeleton className="h-8 w-20" />
-          <Skeleton className="h-8 w-24" />
+        <div className="flex items-center justify-between pt-2 border-t border-gray-200/50 dark:border-white/5">
+          <Skeleton className="h-8 w-20 rounded-lg" />
+          <Skeleton className="h-8 w-24 rounded-lg" />
         </div>
       )}
     </div>
   )
 }
 
+// Grid column count type and responsive class mapping
+type GridColumnCount = 1 | 2 | 3 | 4
+
+const GRID_COLUMN_CLASSES: Record<GridColumnCount, string> = {
+  1: 'grid-cols-1',
+  2: 'grid-cols-1 sm:grid-cols-2',
+  3: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
+  4: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+}
+
 // Card grid skeleton
 export interface CardGridSkeletonProps {
   cards?: number
-  columns?: 1 | 2 | 3 | 4
+  columns?: GridColumnCount
   showImage?: boolean
   className?: string
 }
@@ -133,15 +151,8 @@ export function CardGridSkeleton({
   showImage = false,
   className,
 }: CardGridSkeletonProps) {
-  const gridCols = {
-    1: 'grid-cols-1',
-    2: 'grid-cols-1 sm:grid-cols-2',
-    3: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3',
-    4: 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-  }
-
   return (
-    <div className={cn('grid gap-4', gridCols[columns], className)}>
+    <div className={cn('grid gap-4', GRID_COLUMN_CLASSES[columns], className)}>
       {Array.from({ length: cards }).map((_, i) => (
         <CardSkeleton key={i} showImage={showImage} />
       ))}
@@ -213,7 +224,7 @@ export function FormSkeleton({
   )
 }
 
-// Stats/Dashboard skeleton
+// Stats/Dashboard skeleton with glass morphism
 export interface StatSkeletonProps {
   className?: string
 }
@@ -222,13 +233,33 @@ export function StatSkeleton({ className }: StatSkeletonProps) {
   return (
     <div
       className={cn(
-        'rounded-lg border border-border bg-card p-6 space-y-2',
+        'glass-stat rounded-2xl p-6',
         className
       )}
     >
-      <Skeleton className="h-4 w-1/2" />
-      <Skeleton className="h-8 w-3/4" />
-      <Skeleton className="h-3 w-1/3" />
+      {/* Header row */}
+      <div className="flex justify-between items-start mb-5">
+        <Skeleton className="w-12 h-12 rounded-xl" />
+        <Skeleton className="w-16 h-6 rounded-lg" />
+      </div>
+
+      {/* Label */}
+      <Skeleton className="w-20 h-3 rounded mb-3" />
+
+      {/* Value */}
+      <Skeleton className="w-24 h-8 rounded mb-4" />
+
+      {/* Sparkline area */}
+      <Skeleton className="w-full h-9 rounded mb-4" />
+
+      {/* Progress bar */}
+      <div className="space-y-1.5">
+        <div className="flex justify-between">
+          <Skeleton className="w-12 h-3 rounded" />
+          <Skeleton className="w-8 h-3 rounded" />
+        </div>
+        <Skeleton className="w-full h-1.5 rounded-full" />
+      </div>
     </div>
   )
 }

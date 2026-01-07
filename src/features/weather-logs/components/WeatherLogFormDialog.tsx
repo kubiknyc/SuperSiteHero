@@ -1,7 +1,7 @@
 // File: /src/features/weather-logs/components/WeatherLogFormDialog.tsx
 // Form dialog for creating and editing weather logs
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -11,9 +11,41 @@ import { Select } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useToast } from '@/lib/notifications/ToastContext'
 import { useCreateWeatherLog, useUpdateWeatherLog, useWeatherLogByDate } from '../hooks/useWeatherLogs'
+import { useProjectLocation } from '@/features/daily-reports/hooks/useWeather'
+import { getWeatherForLocation, getCurrentLocation } from '@/features/daily-reports/services/weatherService'
 import type { WeatherLog, WeatherCondition, PrecipitationType, WindDirection, WorkImpact } from '@/types/database-extensions'
 import { format } from 'date-fns'
-import { Loader2 } from 'lucide-react'
+import { Loader2, MapPin } from 'lucide-react'
+
+// Map Open-Meteo text conditions to WeatherCondition enum values
+function mapWeatherConditionToEnum(condition: string): WeatherCondition {
+  const lower = condition.toLowerCase()
+  if (lower.includes('clear') || lower.includes('sunny')) return 'sunny'
+  if (lower.includes('partly')) return 'partly_cloudy'
+  if (lower.includes('overcast')) return 'overcast'
+  if (lower.includes('fog')) return 'fog'
+  if (lower.includes('drizzle')) return 'drizzle'
+  if (lower.includes('heavy rain') || lower.includes('violent')) return 'heavy_rain'
+  if (lower.includes('rain') || lower.includes('shower')) return 'rain'
+  if (lower.includes('heavy snow')) return 'heavy_snow'
+  if (lower.includes('snow')) return 'snow'
+  if (lower.includes('sleet')) return 'sleet'
+  if (lower.includes('hail')) return 'hail'
+  if (lower.includes('thunderstorm')) return 'thunderstorm'
+  if (lower.includes('storm')) return 'storm'
+  if (lower.includes('wind')) return 'wind'
+  return 'cloudy' // default
+}
+
+// Map weather condition string to precipitation type
+function mapConditionToPrecipType(condition: string, hasPrecp: boolean): PrecipitationType {
+  if (!hasPrecp) return 'none'
+  const lower = condition.toLowerCase()
+  if (lower.includes('snow')) return 'snow'
+  if (lower.includes('sleet')) return 'sleet'
+  if (lower.includes('hail')) return 'hail'
+  return 'rain'
+}
 
 interface WeatherLogFormDialogProps {
   open: boolean
@@ -98,6 +130,13 @@ export function WeatherLogFormDialog({
 
   const isEditing = !!weatherLog
 
+  // Project location for weather fetching
+  const { data: projectLocation } = useProjectLocation(projectId)
+
+  // Weather auto-fetch state
+  const [isLoadingWeather, setIsLoadingWeather] = useState(false)
+  const [weatherFetched, setWeatherFetched] = useState(false)
+
   // Form state
   const [logDate, setLogDate] = useState(
     weatherLog?.log_date || defaultDate || format(new Date(), 'yyyy-MM-dd')
@@ -129,9 +168,59 @@ export function WeatherLogFormDialog({
   useEffect(() => {
     if (!open) {
       // Use setTimeout to avoid synchronous state update in effect
-      setTimeout(() => setErrors({}), 0)
+      setTimeout(() => {
+        setErrors({})
+        setWeatherFetched(false)
+      }, 0)
     }
   }, [open])
+
+  // Fetch weather data from API
+  const handleFetchWeather = useCallback(async () => {
+    setIsLoadingWeather(true)
+    try {
+      let lat: number, lon: number
+
+      // Prefer project location, fall back to GPS
+      if (projectLocation?.latitude && projectLocation?.longitude) {
+        lat = projectLocation.latitude
+        lon = projectLocation.longitude
+      } else {
+        const location = await getCurrentLocation()
+        lat = location.lat
+        lon = location.lon
+      }
+
+      const weatherData = await getWeatherForLocation(lat, lon, logDate)
+
+      // Map weather service data to form fields
+      setConditions(mapWeatherConditionToEnum(weatherData.weather_condition))
+      setTempHigh(Math.round(weatherData.temperature_high).toString())
+      setTempLow(Math.round(weatherData.temperature_low).toString())
+      setPrecipAmount(weatherData.precipitation.toString())
+      setWindSpeed(Math.round(weatherData.wind_speed).toString())
+
+      // Set precipitation type based on condition
+      setPrecipType(mapConditionToPrecipType(weatherData.weather_condition, weatherData.precipitation > 0))
+
+      setWeatherFetched(true)
+      toast.success('Weather data loaded', projectLocation?.latitude
+        ? `Loaded from project location`
+        : 'Loaded from your current location')
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to fetch weather'
+      toast.error('Weather fetch failed', message)
+    } finally {
+      setIsLoadingWeather(false)
+    }
+  }, [projectLocation, logDate, toast])
+
+  // Auto-fetch weather when creating a new log
+  useEffect(() => {
+    if (open && !isEditing && !weatherFetched && !isLoadingWeather) {
+      handleFetchWeather()
+    }
+  }, [open, isEditing, weatherFetched, isLoadingWeather, handleFetchWeather])
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {}
@@ -249,18 +338,39 @@ export function WeatherLogFormDialog({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Date */}
-          <div>
-            <Label htmlFor="logDate">Date *</Label>
-            <Input
-              id="logDate"
-              type="date"
-              value={logDate}
-              onChange={(e) => setLogDate(e.target.value)}
-              max={format(new Date(), 'yyyy-MM-dd')}
-              required
-            />
-            {errors.logDate && <p className="text-sm text-error mt-1">{errors.logDate}</p>}
+          {/* Date and Auto-fetch */}
+          <div className="space-y-3">
+            <div>
+              <Label htmlFor="logDate">Date *</Label>
+              <Input
+                id="logDate"
+                type="date"
+                value={logDate}
+                onChange={(e) => setLogDate(e.target.value)}
+                max={format(new Date(), 'yyyy-MM-dd')}
+                required
+              />
+              {errors.logDate && <p className="text-sm text-error mt-1">{errors.logDate}</p>}
+            </div>
+
+            {/* Auto-fill Weather Button */}
+            <div className="flex justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleFetchWeather}
+                disabled={isLoadingWeather}
+                className="gap-2"
+              >
+                {isLoadingWeather ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <MapPin className="h-4 w-4" />
+                )}
+                {isLoadingWeather ? 'Fetching weather...' : 'Refresh Weather Data'}
+              </Button>
+            </div>
           </div>
 
           {/* Weather Conditions */}

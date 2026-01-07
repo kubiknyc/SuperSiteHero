@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import { SmartLayout } from '@/components/layout/SmartLayout'
-import { LayoutVersionToggle } from '@/components/layout/LayoutVersionToggle'
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
@@ -12,6 +11,7 @@ import { GloveModeToggle } from '@/components/ui/glove-mode-toggle'
 import { OfflineSyncSettings } from '@/components/settings/OfflineSyncSettings'
 import { MFABackupCodes } from '@/components/settings/MFABackupCodes'
 import { SessionManagement } from '@/components/settings/SessionManagement'
+import { NavigationLayoutSelector } from '@/components/settings/NavigationLayoutSelector'
 
 interface SettingsSection {
   title: string
@@ -209,8 +209,8 @@ export function SettingsPage() {
             </CardContent>
           </Card>
 
-          {/* Layout Version Toggle */}
-          <LayoutVersionToggle />
+          {/* Navigation Layout Selector */}
+          <NavigationLayoutSelector />
 
           {/* Glove Mode Toggle */}
           <Card>

@@ -13,20 +13,23 @@ export interface NavItem {
   /** Route path */
   path: string;
 
-  /** Optional badge component to display (e.g., unread count) */
-  badge?: React.ComponentType;
+  /** Optional badge - can be a number (displayed as count) or a React component */
+  badge?: number | React.ComponentType;
 
   /** Roles that can see this nav item (undefined = all roles) */
   roles?: UserRole[];
 
-  /** Category for grouping */
-  category: NavigationCategory;
+  /** Category for grouping (optional for dynamic layouts) */
+  category?: NavigationCategory;
 
   /** Whether this item should be shown in mobile bottom nav */
   isPrimaryMobileNav?: boolean;
 
   /** Keyboard shortcut hint (e.g., "⌘K") */
   shortcut?: string;
+
+  /** Optional description for the nav item */
+  description?: string;
 }
 
 export interface NavGroup {
@@ -45,8 +48,8 @@ export interface NavGroup {
   /** Whether group should be expanded by default */
   defaultExpanded?: boolean;
 
-  /** Category identifier */
-  category: NavigationCategory;
+  /** Category identifier (optional for dynamic layouts) */
+  category?: NavigationCategory;
 }
 
 export interface NavigationAnalyticsEvent {

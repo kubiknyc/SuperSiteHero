@@ -198,10 +198,15 @@ async function createAuthenticatedSession(options: {
       timeout: 30000,
     });
 
-    // Verify we're logged in by checking for user menu or other authenticated indicator
-    const userIndicator = page.locator(
-      '[data-testid="user-menu"], [aria-label="User menu"], button:has-text("Logout"), button:has-text("Sign out")'
-    );
+    // Verify we're logged in by checking for authenticated indicators
+    // The UI shows a user avatar button with initials, dashboard content, or welcome message
+    const userIndicator = page.locator('[data-testid="user-menu"]')
+      .or(page.locator('[aria-label="User menu"]'))
+      .or(page.locator('button:has-text("Logout")'))
+      .or(page.locator('button:has-text("Sign out")'))
+      .or(page.getByText(/Welcome back/i))
+      .or(page.locator('h1:has-text("Dashboard")'))
+      .or(page.locator('[class*="avatar"]'));
     await userIndicator.first().waitFor({ timeout: 10000 });
 
     // Save authentication state
