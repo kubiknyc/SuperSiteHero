@@ -126,7 +126,6 @@ import {
 import {
   useSubcontracts,
   useSubcontract,
-  useSubcontractsByProject,
   useSubcontractSummary,
   useSubcontractAmendments,
   useSubcontractPayments,
@@ -209,10 +208,10 @@ export function SubcontractManager({
   const [showAmendmentDialog, setShowAmendmentDialog] = useState(false)
   const [activeTab, setActiveTab] = useState<'all' | 'pending' | 'active' | 'completed'>('all')
 
-  // Queries
-  const { data: subcontracts, isLoading } = projectId
-    ? useSubcontractsByProject(projectId)
-    : useSubcontracts()
+  // Queries - always call useSubcontracts with optional projectId filter
+  const { data: subcontracts, isLoading } = useSubcontracts(
+    projectId ? { projectId } : {}
+  )
   const { data: summary } = useSubcontractSummary(projectId)
   const { data: selectedSubcontract } = useSubcontract(selectedSubcontractId || undefined)
   const { data: amendments } = useSubcontractAmendments(selectedSubcontractId || undefined)
