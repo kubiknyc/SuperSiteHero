@@ -3,8 +3,6 @@
  * Manage recipients and distribute drawing packages
  */
 
-/* eslint-disable react-hooks/preserve-manual-memoization */
-
 import React, { useState, useCallback } from 'react';
 import {
   Dialog,

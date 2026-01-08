@@ -69,7 +69,6 @@ export function useInitiateDocuSignConnection() {
       docuSignApi.initiateConnection(companyId!, dto),
     onSuccess: (data) => {
       // Redirect user to DocuSign OAuth page
-      // eslint-disable-next-line react-compiler/react-compiler
       window.location.href = data.authorizationUrl
     },
     onError: (error: Error) => {

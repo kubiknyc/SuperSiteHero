@@ -2,8 +2,6 @@
 // Read-only detail view for completed checklist executions
 // Phase: 3.1 - Checklist Execution UI
 
-/* eslint-disable react-hooks/preserve-manual-memoization */
-
 import { useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'

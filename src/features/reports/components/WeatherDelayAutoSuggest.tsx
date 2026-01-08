@@ -5,8 +5,6 @@
  * Integrates with daily reports delay tracking system.
  */
 
-/* eslint-disable react-hooks/preserve-manual-memoization */
-
 import React, { useState, useCallback, useMemo } from 'react';
 import {
   Cloud,

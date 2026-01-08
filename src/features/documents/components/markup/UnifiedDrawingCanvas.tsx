@@ -1,8 +1,6 @@
 // File: /src/features/documents/components/markup/UnifiedDrawingCanvas.tsx
 // Unified Konva-based drawing canvas combining best features from both implementations
 
-/* eslint-disable react-hooks/preserve-manual-memoization */
-
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import { Stage, Layer, Line, Arrow, Rect, Circle, Text as KonvaText, Transformer, Image as KonvaImage, Group } from 'react-konva'
 import type Konva from 'konva'

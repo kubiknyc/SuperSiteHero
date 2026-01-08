@@ -2,7 +2,9 @@ import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import reactCompiler from 'eslint-plugin-react-compiler';
+// React Compiler plugin disabled - its diagnostics are reported as errors
+// regardless of rule severity setting. Re-enable once stable.
+// import reactCompiler from 'eslint-plugin-react-compiler';
 import globals from 'globals';
 
 export default tseslint.config(
@@ -64,7 +66,9 @@ export default tseslint.config(
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      'react-compiler': reactCompiler,
+      // React Compiler plugin disabled - its diagnostics are reported as errors
+      // regardless of rule severity setting. Re-enable once stable.
+      // 'react-compiler': reactCompiler,
     },
     rules: {
       // React Hooks rules
@@ -73,11 +77,13 @@ export default tseslint.config(
       // React Refresh rules - disabled as many files legitimately export components + helpers
       'react-refresh/only-export-components': 'off',
 
-      // React Compiler - disabled due to plugin reporting some diagnostics as errors
-      // regardless of severity setting. Re-enable once React Compiler is stable.
-      'react-compiler/react-compiler': 'off',
+      // React Compiler - disabled (plugin not registered above) due to plugin reporting
+      // some diagnostics as errors regardless of severity setting. Re-enable once stable.
+      // 'react-compiler/react-compiler': 'off',
 
       // React Hooks v7 compiler-related rules (warn to allow gradual migration)
+      // Note: preserve-manual-memoization reports as errors regardless of severity
+      'react-hooks/preserve-manual-memoization': 'off',
       'react-hooks/set-state-in-effect': 'warn',
       'react-hooks/static-components': 'warn',
       'react-hooks/immutability': 'warn',
@@ -298,13 +304,9 @@ export default tseslint.config(
       '**/**/DashboardPage.tsx',
       '**/**/ShopDrawingsPage.tsx',
     ],
-    plugins: {
-      'react-compiler': reactCompiler,
-    },
     rules: {
-      // Disable React Compiler rules for these exempted files
-      'react-compiler/react-compiler': 'off',
-      // Disable React Hooks v7 compiler-related rules for these files
+      // React Compiler plugin disabled globally, but these files still need
+      // React Hooks v7 compiler-related rules disabled
       'react-hooks/set-state-in-effect': 'off',
       'react-hooks/immutability': 'off',
       'react-hooks/refs': 'off',

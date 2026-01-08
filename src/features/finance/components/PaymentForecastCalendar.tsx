@@ -9,8 +9,6 @@
  * - Payment analytics
  */
 
-/* eslint-disable react-hooks/preserve-manual-memoization */
-
 import React, { useState, useMemo } from 'react'
 import {
   Card,

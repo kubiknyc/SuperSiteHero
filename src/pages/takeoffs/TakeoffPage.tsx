@@ -1,8 +1,6 @@
 // File: /src/pages/takeoffs/TakeoffPage.tsx
 // Main page for takeoff measurements on PDF drawings
 
-/* eslint-disable react-hooks/preserve-manual-memoization */
-
 import { useState, useCallback, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, FileText, Save, FolderOpen, ChevronLeft, ChevronRight } from 'lucide-react'

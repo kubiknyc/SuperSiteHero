@@ -1,8 +1,6 @@
 // File: /src/features/takeoffs/components/TakeoffItemsList.tsx
 // List view of takeoff measurements with filtering and sorting
 
-/* eslint-disable react-hooks/preserve-manual-memoization */
-
 import { useState, useMemo } from 'react'
 import { Search, SortAsc, SortDesc, Filter, Trash2, Eye, EyeOff } from 'lucide-react'
 import { Input } from '@/components/ui/input'

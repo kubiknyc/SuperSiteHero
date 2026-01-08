@@ -1,7 +1,7 @@
 // File: /src/pages/shop-drawings/ShopDrawingsPage.tsx
 // Shop Drawings list page with filtering and statistics
 
-import { useState, useMemo } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
@@ -43,7 +43,7 @@ export function ShopDrawingsPage() {
   const stats = useShopDrawingStats(selectedProjectId || undefined)
 
   // Set first project as default
-  useMemo(() => {
+  useEffect(() => {
     if (projects && projects.length > 0 && !selectedProjectId) {
       setSelectedProjectId(projects[0].id)
     }
