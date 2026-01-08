@@ -39,6 +39,7 @@ import type {
   CopyFromPreviousDayRequest,
 } from '@/types/daily-reports-v2';
 import { toast } from 'sonner';
+import { STALE_TIMES } from '@/lib/stale-times';
 
 // =============================================
 // QUERY KEYS
@@ -82,7 +83,7 @@ export function useDailyReportsV2(
     queryKey: dailyReportV2Keys.list(projectId || '', options),
     queryFn: () => dailyReportsV2Api.getProjectReports(projectId!, options),
     enabled: !!projectId,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: STALE_TIMES.STANDARD, // 5 minutes
   });
 }
 
@@ -94,7 +95,7 @@ export function useDailyReportV2(reportId: string | undefined) {
     queryKey: dailyReportV2Keys.detail(reportId || ''),
     queryFn: () => dailyReportsV2Api.getReportWithRelated(reportId!),
     enabled: !!reportId,
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: STALE_TIMES.FREQUENT * 4, // ~2 minutes
   });
 }
 

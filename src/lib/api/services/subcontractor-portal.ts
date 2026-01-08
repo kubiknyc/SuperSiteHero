@@ -38,6 +38,38 @@ import type {
   SubcontractorRFI,
   SubcontractorDocument,
   SubcontractorPayment,
+  SubcontractorLienWaiver,
+  SubcontractorLienWaiverFilters,
+  SignLienWaiverDTO,
+  LienWaiverSummary,
+  SubcontractorRetainageInfo,
+  RetainageRelease,
+  RetainageSummary,
+  SubcontractorInsuranceCertificate,
+  SubcontractorInsuranceRequirement,
+  SubcontractorInsuranceComplianceSummary,
+  EndorsementRequirement,
+  EndorsementStatus,
+  InsuranceType,
+  SubcontractorPayApplication,
+  SubcontractorPayAppLineItem,
+  PayApplicationSummary,
+  SubcontractorChangeOrder,
+  SubcontractorChangeOrderItem,
+  ChangeOrderSummary,
+  ChangeOrderStatus,
+  ChangeOrderType,
+  SubcontractorScheduleActivity,
+  ScheduleChangeNotification,
+  ScheduleSummary,
+  ScheduleActivityStatus,
+  SubcontractorSafetyIncident,
+  SubcontractorCorrectiveAction,
+  SubcontractorToolboxTalk,
+  SubcontractorSafetyMetrics,
+  SafetyComplianceSummary,
+  SafetyIncidentSeverity,
+  SafetyIncidentStatus,
 } from '@/types/subcontractor-portal'
 
 // Use 'any' type workaround for tables not in generated types
@@ -1784,6 +1816,2425 @@ export const subcontractorPortalApi = {
       })
     }
   },
+
+  // =============================================
+  // LIEN WAIVERS (SUBCONTRACTOR PORTAL)
+  // =============================================
+
+  /**
+   * Get lien waivers requiring subcontractor action
+   */
+  async getLienWaivers(
+    userId: string,
+    filter?: SubcontractorLienWaiverFilters
+  ): Promise<SubcontractorLienWaiver[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {return []}
+
+      let query = db
+        .from('lien_waivers')
+        .select(`
+          id,
+          waiver_number,
+          waiver_type,
+          status,
+          payment_amount,
+          through_date,
+          due_date,
+          sent_at,
+          received_at,
+          signed_at,
+          signed_by,
+          signed_by_title,
+          signature_url,
+          document_url,
+          notes,
+          rejection_reason,
+          project_id,
+          subcontractor_id,
+          payment_application_id,
+          created_at,
+          updated_at,
+          project:projects(id, name),
+          payment_application:payment_applications(id, application_number)
+        `)
+        .in('subcontractor_id', subcontractorIds)
+        .is('deleted_at', null)
+        .in('status', ['pending', 'sent', 'received', 'under_review', 'approved', 'rejected'])
+        .order('created_at', { ascending: false })
+
+      if (filter?.project_id) {
+        query = query.eq('project_id', filter.project_id)
+      }
+
+      if (filter?.status) {
+        const statuses = Array.isArray(filter.status) ? filter.status : [filter.status]
+        query = query.in('status', statuses)
+      }
+
+      if (filter?.waiver_type) {
+        const types = Array.isArray(filter.waiver_type) ? filter.waiver_type : [filter.waiver_type]
+        query = query.in('waiver_type', types)
+      }
+
+      const { data, error } = await query
+
+      if (error) {throw error}
+
+      return (data || []).map((waiver: any) => ({
+        id: waiver.id,
+        waiver_number: waiver.waiver_number,
+        waiver_type: waiver.waiver_type,
+        status: waiver.status,
+        payment_application_id: waiver.payment_application_id,
+        payment_application_number: waiver.payment_application?.application_number || null,
+        payment_amount: waiver.payment_amount || 0,
+        through_date: waiver.through_date,
+        due_date: waiver.due_date,
+        sent_at: waiver.sent_at,
+        received_at: waiver.received_at,
+        signed_at: waiver.signed_at,
+        project_id: waiver.project_id,
+        project_name: waiver.project?.name || 'Unknown Project',
+        subcontractor_id: waiver.subcontractor_id,
+        signed_by_name: waiver.signed_by,
+        signed_by_title: waiver.signed_by_title,
+        signature_url: waiver.signature_url,
+        document_url: waiver.document_url,
+        notes: waiver.notes,
+        rejection_reason: waiver.rejection_reason,
+        created_at: waiver.created_at,
+        updated_at: waiver.updated_at,
+      }))
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch lien waivers:', error)
+      throw new ApiErrorClass({
+        code: 'LIEN_WAIVERS_ERROR',
+        message: 'Failed to fetch lien waivers',
+      })
+    }
+  },
+
+  /**
+   * Get pending lien waivers awaiting signature
+   */
+  async getPendingLienWaivers(userId: string): Promise<SubcontractorLienWaiver[]> {
+    return this.getLienWaivers(userId, { status: ['pending', 'sent'] })
+  },
+
+  /**
+   * Get lien waiver summary for dashboard
+   */
+  async getLienWaiverSummary(userId: string): Promise<LienWaiverSummary> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return {
+          pending_count: 0,
+          awaiting_signature_count: 0,
+          signed_count: 0,
+          approved_count: 0,
+          total_waived_amount: 0,
+          overdue_count: 0,
+        }
+      }
+
+      const { data: waivers, error } = await db
+        .from('lien_waivers')
+        .select('id, status, payment_amount, due_date')
+        .in('subcontractor_id', subcontractorIds)
+        .is('deleted_at', null)
+
+      if (error) {throw error}
+
+      const today = new Date().toISOString().split('T')[0]
+
+      const summary: LienWaiverSummary = {
+        pending_count: 0,
+        awaiting_signature_count: 0,
+        signed_count: 0,
+        approved_count: 0,
+        total_waived_amount: 0,
+        overdue_count: 0,
+      }
+
+      for (const waiver of (waivers || [])) {
+        if (waiver.status === 'pending') {
+          summary.pending_count++
+        }
+        if (waiver.status === 'sent') {
+          summary.awaiting_signature_count++
+        }
+        if (waiver.status === 'received' || waiver.status === 'under_review') {
+          summary.signed_count++
+        }
+        if (waiver.status === 'approved') {
+          summary.approved_count++
+          summary.total_waived_amount += waiver.payment_amount || 0
+        }
+        if (waiver.due_date && waiver.due_date < today &&
+            ['pending', 'sent'].includes(waiver.status)) {
+          summary.overdue_count++
+        }
+      }
+
+      return summary
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch lien waiver summary:', error)
+      return {
+        pending_count: 0,
+        awaiting_signature_count: 0,
+        signed_count: 0,
+        approved_count: 0,
+        total_waived_amount: 0,
+        overdue_count: 0,
+      }
+    }
+  },
+
+  /**
+   * Sign a lien waiver
+   */
+  async signLienWaiver(
+    waiverId: string,
+    userId: string,
+    data: SignLienWaiverDTO
+  ): Promise<SubcontractorLienWaiver> {
+    try {
+      // Verify the waiver belongs to this subcontractor
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+
+      const { data: existing, error: fetchError } = await db
+        .from('lien_waivers')
+        .select('id, subcontractor_id, status')
+        .eq('id', waiverId)
+        .single()
+
+      if (fetchError || !existing) {
+        throw new ApiErrorClass({
+          code: 'WAIVER_NOT_FOUND',
+          message: 'Lien waiver not found',
+        })
+      }
+
+      if (!subcontractorIds.includes(existing.subcontractor_id)) {
+        throw new ApiErrorClass({
+          code: 'UNAUTHORIZED',
+          message: 'You are not authorized to sign this waiver',
+        })
+      }
+
+      if (!['pending', 'sent'].includes(existing.status)) {
+        throw new ApiErrorClass({
+          code: 'INVALID_STATUS',
+          message: 'This waiver cannot be signed in its current status',
+        })
+      }
+
+      // Update the waiver with signature
+      const { data: waiver, error } = await db
+        .from('lien_waivers')
+        .update({
+          status: 'received',
+          signed_by: data.signed_by_name,
+          signed_by_title: data.signed_by_title,
+          signature_url: data.signature_url,
+          signed_at: new Date().toISOString(),
+          received_at: new Date().toISOString(),
+          notary_name: data.notary_name,
+          notary_date: data.notary_date,
+        })
+        .eq('id', waiverId)
+        .select(`
+          *,
+          project:projects(id, name),
+          payment_application:payment_applications(id, application_number)
+        `)
+        .single()
+
+      if (error) {throw error}
+
+      // Log to history
+      await db.from('lien_waiver_history').insert({
+        lien_waiver_id: waiverId,
+        action: 'signed',
+        notes: `Signed by ${data.signed_by_name} (${data.signed_by_title})`,
+        changed_by: userId,
+      })
+
+      return {
+        id: waiver.id,
+        waiver_number: waiver.waiver_number,
+        waiver_type: waiver.waiver_type,
+        status: waiver.status,
+        payment_application_id: waiver.payment_application_id,
+        payment_application_number: waiver.payment_application?.application_number || null,
+        payment_amount: waiver.payment_amount || 0,
+        through_date: waiver.through_date,
+        due_date: waiver.due_date,
+        sent_at: waiver.sent_at,
+        received_at: waiver.received_at,
+        signed_at: waiver.signed_at,
+        project_id: waiver.project_id,
+        project_name: waiver.project?.name || 'Unknown Project',
+        subcontractor_id: waiver.subcontractor_id,
+        signed_by_name: waiver.signed_by,
+        signed_by_title: waiver.signed_by_title,
+        signature_url: waiver.signature_url,
+        document_url: waiver.document_url,
+        notes: waiver.notes,
+        rejection_reason: waiver.rejection_reason,
+        created_at: waiver.created_at,
+        updated_at: waiver.updated_at,
+      }
+    } catch (error) {
+      if (error instanceof ApiErrorClass) {throw error}
+      logger.error('[SubcontractorPortal] Failed to sign lien waiver:', error)
+      throw new ApiErrorClass({
+        code: 'SIGN_WAIVER_ERROR',
+        message: 'Failed to sign lien waiver',
+      })
+    }
+  },
+
+  // =============================================
+  // RETAINAGE TRACKING (SUBCONTRACTOR PORTAL)
+  // =============================================
+
+  /**
+   * Get retainage info for all subcontractor's contracts
+   */
+  async getRetainageInfo(userId: string): Promise<SubcontractorRetainageInfo[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {return []}
+
+      // Query subcontracts with retainage info
+      const { data, error } = await db
+        .from('subcontracts')
+        .select(`
+          id,
+          contract_number,
+          project_id,
+          subcontractor_id,
+          original_value,
+          current_value,
+          retention_percent,
+          retention_held,
+          retention_released,
+          total_billed,
+          total_paid,
+          status,
+          substantial_completion_date,
+          final_completion_date,
+          warranty_expiration_date,
+          created_at,
+          updated_at,
+          project:projects(id, name)
+        `)
+        .in('subcontractor_id', subcontractorIds)
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false })
+
+      if (error) {throw error}
+
+      // Get pending lien waiver counts for each subcontract
+      const subcontractIds = (data || []).map((s: any) => s.id)
+      const lienWaiverCounts: Record<string, number> = {}
+
+      if (subcontractIds.length > 0) {
+        const { data: waivers } = await db
+          .from('lien_waivers')
+          .select('subcontract_id')
+          .in('subcontract_id', subcontractIds)
+          .in('status', ['pending', 'sent'])
+          .is('deleted_at', null)
+
+        for (const waiver of (waivers || [])) {
+          if (waiver.subcontract_id) {
+            lienWaiverCounts[waiver.subcontract_id] = (lienWaiverCounts[waiver.subcontract_id] || 0) + 1
+          }
+        }
+      }
+
+      return (data || []).map((contract: any) => {
+        const currentValue = contract.current_value || contract.original_value || 0
+        const totalBilled = contract.total_billed || 0
+        const percentComplete = currentValue > 0 ? (totalBilled / currentValue) * 100 : 0
+
+        return {
+          id: contract.id,
+          contract_number: contract.contract_number || 'N/A',
+          project_id: contract.project_id,
+          project_name: contract.project?.name || 'Unknown Project',
+          original_contract_value: contract.original_value || 0,
+          current_contract_value: currentValue,
+          approved_change_orders: (contract.current_value || 0) - (contract.original_value || 0),
+          total_billed: totalBilled,
+          total_paid: contract.total_paid || 0,
+          percent_complete: Math.round(percentComplete * 10) / 10,
+          retention_percent: contract.retention_percent || 10,
+          retention_held: contract.retention_held || 0,
+          retention_released: contract.retention_released || 0,
+          retention_balance: (contract.retention_held || 0) - (contract.retention_released || 0),
+          substantial_completion_date: contract.substantial_completion_date,
+          final_completion_date: contract.final_completion_date,
+          warranty_expiration_date: contract.warranty_expiration_date,
+          pending_lien_waivers: lienWaiverCounts[contract.id] || 0,
+          status: contract.status || 'active',
+          created_at: contract.created_at,
+          updated_at: contract.updated_at,
+        }
+      })
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch retainage info:', error)
+      throw new ApiErrorClass({
+        code: 'RETAINAGE_ERROR',
+        message: 'Failed to fetch retainage information',
+      })
+    }
+  },
+
+  /**
+   * Get retainage releases for a specific contract
+   */
+  async getRetainageReleases(
+    userId: string,
+    subcontractId: string
+  ): Promise<RetainageRelease[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {return []}
+
+      // Verify the subcontract belongs to this subcontractor
+      const { data: contract, error: contractError } = await db
+        .from('subcontracts')
+        .select('id, subcontractor_id')
+        .eq('id', subcontractId)
+        .single()
+
+      if (contractError || !contract) {
+        throw new ApiErrorClass({
+          code: 'CONTRACT_NOT_FOUND',
+          message: 'Subcontract not found',
+        })
+      }
+
+      if (!subcontractorIds.includes(contract.subcontractor_id)) {
+        throw new ApiErrorClass({
+          code: 'UNAUTHORIZED',
+          message: 'You are not authorized to view this contract',
+        })
+      }
+
+      const { data, error } = await db
+        .from('retainage_releases')
+        .select(`
+          id,
+          subcontract_id,
+          release_type,
+          amount,
+          release_date,
+          approved_by,
+          notes,
+          lien_waiver_required,
+          lien_waiver_received,
+          lien_waiver_id,
+          status,
+          created_at,
+          approved_by_user:users!approved_by(full_name)
+        `)
+        .eq('subcontract_id', subcontractId)
+        .order('release_date', { ascending: false })
+
+      if (error) {throw error}
+
+      return (data || []).map((release: any) => ({
+        id: release.id,
+        subcontract_id: release.subcontract_id,
+        release_type: release.release_type,
+        amount: release.amount || 0,
+        release_date: release.release_date,
+        approved_by: release.approved_by,
+        approved_by_name: release.approved_by_user?.full_name || null,
+        notes: release.notes,
+        lien_waiver_required: release.lien_waiver_required ?? true,
+        lien_waiver_received: release.lien_waiver_received ?? false,
+        lien_waiver_id: release.lien_waiver_id,
+        status: release.status || 'pending',
+        created_at: release.created_at,
+      }))
+    } catch (error) {
+      if (error instanceof ApiErrorClass) {throw error}
+      logger.error('[SubcontractorPortal] Failed to fetch retainage releases:', error)
+      throw new ApiErrorClass({
+        code: 'RELEASES_ERROR',
+        message: 'Failed to fetch retainage releases',
+      })
+    }
+  },
+
+  /**
+   * Get retainage summary for dashboard
+   */
+  async getRetainageSummary(userId: string): Promise<RetainageSummary> {
+    try {
+      const retainageInfo = await this.getRetainageInfo(userId)
+
+      const summary: RetainageSummary = {
+        total_contracts: retainageInfo.length,
+        total_retention_held: 0,
+        total_retention_released: 0,
+        total_retention_balance: 0,
+        pending_releases: 0,
+        contracts_at_substantial: 0,
+        contracts_at_final: 0,
+      }
+
+      for (const contract of retainageInfo) {
+        summary.total_retention_held += contract.retention_held
+        summary.total_retention_released += contract.retention_released
+        summary.total_retention_balance += contract.retention_balance
+
+        if (contract.status === 'substantial_completion') {
+          summary.contracts_at_substantial++
+        }
+        if (contract.status === 'final_completion') {
+          summary.contracts_at_final++
+        }
+        if (contract.pending_lien_waivers > 0) {
+          summary.pending_releases++
+        }
+      }
+
+      return summary
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch retainage summary:', error)
+      return {
+        total_contracts: 0,
+        total_retention_held: 0,
+        total_retention_released: 0,
+        total_retention_balance: 0,
+        pending_releases: 0,
+        contracts_at_substantial: 0,
+        contracts_at_final: 0,
+      }
+    }
+  },
+
+  // =============================================
+  // INSURANCE ENDORSEMENT VERIFICATION (P0-3)
+  // =============================================
+
+  /**
+   * Get insurance certificates with endorsement status for subcontractor
+   */
+  async getInsuranceCertificates(
+    userId: string
+  ): Promise<SubcontractorInsuranceCertificate[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {return []}
+
+      const { data, error } = await db
+        .from('insurance_certificates')
+        .select(`
+          id,
+          certificate_number,
+          insurance_type,
+          carrier_name,
+          policy_number,
+          effective_date,
+          expiration_date,
+          status,
+          each_occurrence_limit,
+          general_aggregate_limit,
+          products_completed_ops_limit,
+          combined_single_limit,
+          umbrella_each_occurrence,
+          umbrella_aggregate,
+          workers_comp_el_each_accident,
+          additional_insured_required,
+          additional_insured_verified,
+          additional_insured_name,
+          waiver_of_subrogation_required,
+          waiver_of_subrogation_verified,
+          primary_noncontributory_required,
+          primary_noncontributory_verified,
+          project_id,
+          certificate_url,
+          created_at,
+          updated_at,
+          project:projects(id, name)
+        `)
+        .in('subcontractor_id', subcontractorIds)
+        .is('deleted_at', null)
+        .neq('status', 'void')
+        .order('expiration_date', { ascending: true })
+
+      if (error) {throw error}
+
+      return (data || []).map((cert: any) => {
+        const endorsements: EndorsementRequirement[] = [
+          {
+            type: 'additional_insured',
+            required: cert.additional_insured_required ?? false,
+            verified: cert.additional_insured_verified ?? false,
+            status: getEndorsementStatus(cert.additional_insured_required, cert.additional_insured_verified),
+            additional_insured_name: cert.additional_insured_name,
+          },
+          {
+            type: 'waiver_of_subrogation',
+            required: cert.waiver_of_subrogation_required ?? false,
+            verified: cert.waiver_of_subrogation_verified ?? false,
+            status: getEndorsementStatus(cert.waiver_of_subrogation_required, cert.waiver_of_subrogation_verified),
+          },
+          {
+            type: 'primary_noncontributory',
+            required: cert.primary_noncontributory_required ?? false,
+            verified: cert.primary_noncontributory_verified ?? false,
+            status: getEndorsementStatus(cert.primary_noncontributory_required, cert.primary_noncontributory_verified),
+          },
+        ]
+
+        const missingEndorsements = endorsements
+          .filter((e) => e.status === 'missing')
+          .map((e) => getEndorsementLabel(e.type))
+
+        return {
+          id: cert.id,
+          certificate_number: cert.certificate_number,
+          insurance_type: cert.insurance_type,
+          carrier_name: cert.carrier_name || 'Unknown Carrier',
+          policy_number: cert.policy_number || 'N/A',
+          effective_date: cert.effective_date,
+          expiration_date: cert.expiration_date,
+          status: cert.status,
+          each_occurrence_limit: cert.each_occurrence_limit,
+          general_aggregate_limit: cert.general_aggregate_limit,
+          products_completed_ops_limit: cert.products_completed_ops_limit,
+          combined_single_limit: cert.combined_single_limit,
+          umbrella_each_occurrence: cert.umbrella_each_occurrence,
+          umbrella_aggregate: cert.umbrella_aggregate,
+          workers_comp_el_each_accident: cert.workers_comp_el_each_accident,
+          endorsements,
+          has_all_required_endorsements: missingEndorsements.length === 0,
+          missing_endorsements: missingEndorsements,
+          project_id: cert.project_id,
+          project_name: cert.project?.name || null,
+          certificate_url: cert.certificate_url,
+          created_at: cert.created_at,
+          updated_at: cert.updated_at,
+        }
+      })
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch insurance certificates:', error)
+      throw new ApiErrorClass({
+        code: 'INSURANCE_CERTIFICATES_ERROR',
+        message: 'Failed to fetch insurance certificates',
+      })
+    }
+  },
+
+  /**
+   * Get project insurance requirements for subcontractor
+   */
+  async getInsuranceRequirements(userId: string): Promise<SubcontractorInsuranceRequirement[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {return []}
+
+      // Get projects the subcontractor has access to
+      const { data: accessData } = await db
+        .from('subcontractor_portal_access')
+        .select('project_id')
+        .in('subcontractor_id', subcontractorIds)
+        .eq('is_active', true)
+
+      const projectIds = (accessData || []).map((a: any) => a.project_id)
+      if (projectIds.length === 0) {return []}
+
+      // Get project insurance requirements
+      const { data, error } = await db
+        .from('project_insurance_requirements')
+        .select(`
+          id,
+          project_id,
+          insurance_type,
+          is_required,
+          min_each_occurrence,
+          min_aggregate,
+          min_umbrella,
+          additional_insured_required,
+          waiver_of_subrogation_required,
+          primary_noncontributory_required,
+          notes,
+          project:projects(id, name)
+        `)
+        .in('project_id', projectIds)
+        .eq('is_required', true)
+
+      if (error) {throw error}
+
+      // Get subcontractor's certificates to check compliance
+      const certificates = await this.getInsuranceCertificates(userId)
+
+      return (data || []).map((req: any) => {
+        // Find matching certificate
+        const matchingCert = certificates.find((cert) =>
+          cert.insurance_type === req.insurance_type &&
+          cert.status === 'active' &&
+          (!req.project_id || cert.project_id === req.project_id || cert.project_id === null)
+        )
+
+        let isCompliant = !!matchingCert
+        let complianceGap: string | null = null
+
+        if (!matchingCert) {
+          complianceGap = `Missing ${getInsuranceTypeLabel(req.insurance_type)} certificate`
+        } else {
+          // Check coverage amounts
+          if (req.min_each_occurrence && (matchingCert.each_occurrence_limit || 0) < req.min_each_occurrence) {
+            isCompliant = false
+            complianceGap = `Each occurrence limit ($${(matchingCert.each_occurrence_limit || 0).toLocaleString()}) below minimum ($${req.min_each_occurrence.toLocaleString()})`
+          }
+
+          // Check endorsements
+          if (isCompliant) {
+            const missingEndorsements: string[] = []
+            if (req.additional_insured_required) {
+              const aiEndorsement = matchingCert.endorsements.find((e) => e.type === 'additional_insured')
+              if (!aiEndorsement?.verified) {missingEndorsements.push('Additional Insured')}
+            }
+            if (req.waiver_of_subrogation_required) {
+              const wosEndorsement = matchingCert.endorsements.find((e) => e.type === 'waiver_of_subrogation')
+              if (!wosEndorsement?.verified) {missingEndorsements.push('Waiver of Subrogation')}
+            }
+            if (req.primary_noncontributory_required) {
+              const pncEndorsement = matchingCert.endorsements.find((e) => e.type === 'primary_noncontributory')
+              if (!pncEndorsement?.verified) {missingEndorsements.push('Primary & Non-Contributory')}
+            }
+
+            if (missingEndorsements.length > 0) {
+              isCompliant = false
+              complianceGap = `Missing endorsements: ${missingEndorsements.join(', ')}`
+            }
+          }
+        }
+
+        return {
+          id: req.id,
+          project_id: req.project_id,
+          project_name: req.project?.name || 'Unknown Project',
+          insurance_type: req.insurance_type,
+          min_each_occurrence: req.min_each_occurrence,
+          min_general_aggregate: req.min_aggregate,
+          min_umbrella: req.min_umbrella,
+          additional_insured_required: req.additional_insured_required ?? false,
+          waiver_of_subrogation_required: req.waiver_of_subrogation_required ?? false,
+          primary_noncontributory_required: req.primary_noncontributory_required ?? false,
+          is_compliant: isCompliant,
+          compliance_gap: complianceGap,
+          matching_certificate_id: matchingCert?.id || null,
+        }
+      })
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch insurance requirements:', error)
+      throw new ApiErrorClass({
+        code: 'INSURANCE_REQUIREMENTS_ERROR',
+        message: 'Failed to fetch insurance requirements',
+      })
+    }
+  },
+
+  /**
+   * Get insurance compliance summary for subcontractor dashboard
+   */
+  async getInsuranceComplianceSummary(userId: string): Promise<SubcontractorInsuranceComplianceSummary> {
+    try {
+      const certificates = await this.getInsuranceCertificates(userId)
+      const requirements = await this.getInsuranceRequirements(userId)
+
+      const today = new Date()
+      const thirtyDaysFromNow = new Date()
+      thirtyDaysFromNow.setDate(today.getDate() + 30)
+
+      // Count certificate statuses
+      const activeCerts = certificates.filter((c) => c.status === 'active')
+      const expiringSoon = certificates.filter((c) => {
+        const expDate = new Date(c.expiration_date)
+        return expDate > today && expDate <= thirtyDaysFromNow
+      })
+      const expired = certificates.filter((c) => new Date(c.expiration_date) < today)
+
+      // Calculate endorsement summary
+      const endorsementSummary = {
+        additional_insured: { required_count: 0, verified_count: 0, missing_count: 0 },
+        waiver_of_subrogation: { required_count: 0, verified_count: 0, missing_count: 0 },
+        primary_noncontributory: { required_count: 0, verified_count: 0, missing_count: 0 },
+      }
+
+      for (const cert of certificates) {
+        for (const endorsement of cert.endorsements) {
+          const summary = endorsementSummary[endorsement.type]
+          if (endorsement.required) {
+            summary.required_count++
+            if (endorsement.verified) {
+              summary.verified_count++
+            } else {
+              summary.missing_count++
+            }
+          }
+        }
+      }
+
+      // Find gaps
+      const nonCompliantReqs = requirements.filter((r) => !r.is_compliant)
+      const missingInsuranceTypes = [...new Set(
+        nonCompliantReqs
+          .filter((r) => r.compliance_gap?.includes('Missing'))
+          .map((r) => r.insurance_type)
+      )] as InsuranceType[]
+
+      const insufficientCoverage = nonCompliantReqs
+        .filter((r) => r.compliance_gap?.includes('limit') || r.compliance_gap?.includes('below'))
+        .map((r) => ({
+          insurance_type: r.insurance_type,
+          required_amount: r.min_each_occurrence || 0,
+          current_amount: 0, // Would need to look up from matching cert
+          gap_description: r.compliance_gap || '',
+        }))
+
+      const missingEndorsementCerts = certificates
+        .filter((c) => !c.has_all_required_endorsements)
+        .map((c) => ({
+          certificate_id: c.id,
+          insurance_type: c.insurance_type,
+          missing_endorsements: c.missing_endorsements,
+        }))
+
+      // Calculate compliance score
+      const totalRequirements = requirements.length
+      const compliantRequirements = requirements.filter((r) => r.is_compliant).length
+      const complianceScore = totalRequirements > 0
+        ? Math.round((compliantRequirements / totalRequirements) * 100)
+        : 100
+
+      // Check for payment hold (query compliance status table)
+      let paymentHoldActive = false
+      let paymentHoldReason: string | null = null
+
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length > 0) {
+        const { data: complianceStatus } = await db
+          .from('subcontractor_compliance_status')
+          .select('payment_hold, hold_reason')
+          .in('subcontractor_id', subcontractorIds)
+          .eq('payment_hold', true)
+          .limit(1)
+          .single()
+
+        if (complianceStatus) {
+          paymentHoldActive = complianceStatus.payment_hold
+          paymentHoldReason = complianceStatus.hold_reason
+        }
+      }
+
+      return {
+        is_fully_compliant: complianceScore === 100 && missingEndorsementCerts.length === 0,
+        compliance_score: complianceScore,
+        total_certificates: certificates.length,
+        active_certificates: activeCerts.length,
+        expiring_soon_count: expiringSoon.length,
+        expired_count: expired.length,
+        endorsement_summary: endorsementSummary,
+        missing_insurance_types: missingInsuranceTypes,
+        insufficient_coverage: insufficientCoverage,
+        missing_endorsement_certificates: missingEndorsementCerts,
+        payment_hold_active: paymentHoldActive,
+        payment_hold_reason: paymentHoldReason,
+      }
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch insurance compliance summary:', error)
+      return {
+        is_fully_compliant: false,
+        compliance_score: 0,
+        total_certificates: 0,
+        active_certificates: 0,
+        expiring_soon_count: 0,
+        expired_count: 0,
+        endorsement_summary: {
+          additional_insured: { required_count: 0, verified_count: 0, missing_count: 0 },
+          waiver_of_subrogation: { required_count: 0, verified_count: 0, missing_count: 0 },
+          primary_noncontributory: { required_count: 0, verified_count: 0, missing_count: 0 },
+        },
+        missing_insurance_types: [],
+        insufficient_coverage: [],
+        missing_endorsement_certificates: [],
+        payment_hold_active: false,
+        payment_hold_reason: null,
+      }
+    }
+  },
+
+  // =============================================
+  // PAY APPLICATION LINE ITEMS (P1)
+  // =============================================
+
+  /**
+   * Get all pay applications for the subcontractor with line items
+   */
+  async getPayApplications(userId: string): Promise<SubcontractorPayApplication[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return []
+      }
+
+      // Get pay applications where the subcontractor is the applicant
+      const { data: applications, error } = await db
+        .from('payment_applications')
+        .select(`
+          id,
+          application_number,
+          period_to,
+          project_id,
+          original_contract_sum,
+          net_change_orders,
+          contract_sum_to_date,
+          total_completed_previous,
+          total_completed_this_period,
+          total_materials_stored,
+          total_completed_and_stored,
+          retainage_percent,
+          retainage_from_completed,
+          retainage_from_stored,
+          total_retainage,
+          retainage_release,
+          total_earned_less_retainage,
+          less_previous_certificates,
+          current_payment_due,
+          balance_to_finish,
+          percent_complete,
+          status,
+          submitted_at,
+          approved_at,
+          paid_at,
+          payment_received_amount,
+          payment_reference,
+          rejection_reason,
+          created_at,
+          updated_at,
+          projects:project_id (
+            name,
+            address
+          )
+        `)
+        .in('subcontractor_id', subcontractorIds)
+        .is('deleted_at', null)
+        .order('period_to', { ascending: false })
+
+      if (error) {
+        logger.error('[SubcontractorPortal] Failed to fetch pay applications:', error)
+        throw new ApiErrorClass('Failed to fetch pay applications', 500)
+      }
+
+      // Fetch line items for all applications
+      const applicationIds = (applications || []).map((app: any) => app.id)
+      let lineItemsMap: Record<string, SubcontractorPayAppLineItem[]> = {}
+
+      if (applicationIds.length > 0) {
+        const { data: lineItems, error: lineItemsError } = await db
+          .from('schedule_of_values')
+          .select(`
+            id,
+            payment_application_id,
+            item_number,
+            description,
+            cost_code,
+            cost_code_id,
+            scheduled_value,
+            change_order_adjustments,
+            total_scheduled_value,
+            work_completed_previous,
+            work_completed_this_period,
+            materials_stored,
+            total_completed_stored,
+            percent_complete,
+            balance_to_finish,
+            retainage_percent,
+            retainage_amount,
+            sort_order,
+            notes
+          `)
+          .in('payment_application_id', applicationIds)
+          .order('sort_order', { ascending: true })
+
+        if (lineItemsError) {
+          logger.error('[SubcontractorPortal] Failed to fetch SOV items:', lineItemsError)
+        } else {
+          // Group line items by application
+          (lineItems || []).forEach((item: any) => {
+            if (!lineItemsMap[item.payment_application_id]) {
+              lineItemsMap[item.payment_application_id] = []
+            }
+            lineItemsMap[item.payment_application_id].push({
+              id: item.id,
+              item_number: item.item_number || '',
+              description: item.description || '',
+              cost_code: item.cost_code,
+              cost_code_id: item.cost_code_id,
+              scheduled_value: Number(item.scheduled_value) || 0,
+              change_order_adjustments: Number(item.change_order_adjustments) || 0,
+              total_scheduled_value: Number(item.total_scheduled_value) || 0,
+              work_completed_previous: Number(item.work_completed_previous) || 0,
+              work_completed_this_period: Number(item.work_completed_this_period) || 0,
+              materials_stored: Number(item.materials_stored) || 0,
+              total_completed_stored: Number(item.total_completed_stored) || 0,
+              percent_complete: Number(item.percent_complete) || 0,
+              balance_to_finish: Number(item.balance_to_finish) || 0,
+              retainage_percent: item.retainage_percent != null ? Number(item.retainage_percent) : null,
+              retainage_amount: Number(item.retainage_amount) || 0,
+              sort_order: item.sort_order || 0,
+              notes: item.notes,
+            })
+          })
+        }
+      }
+
+      return (applications || []).map((app: any) => ({
+        id: app.id,
+        application_number: app.application_number,
+        period_to: app.period_to,
+        project_id: app.project_id,
+        project_name: app.projects?.name || 'Unknown Project',
+        project_address: app.projects?.address || null,
+        original_contract_sum: Number(app.original_contract_sum) || 0,
+        net_change_orders: Number(app.net_change_orders) || 0,
+        contract_sum_to_date: Number(app.contract_sum_to_date) || 0,
+        total_completed_previous: Number(app.total_completed_previous) || 0,
+        total_completed_this_period: Number(app.total_completed_this_period) || 0,
+        total_materials_stored: Number(app.total_materials_stored) || 0,
+        total_completed_and_stored: Number(app.total_completed_and_stored) || 0,
+        retainage_percent: Number(app.retainage_percent) || 0,
+        retainage_from_completed: Number(app.retainage_from_completed) || 0,
+        retainage_from_stored: Number(app.retainage_from_stored) || 0,
+        total_retainage: Number(app.total_retainage) || 0,
+        retainage_release: Number(app.retainage_release) || 0,
+        total_earned_less_retainage: Number(app.total_earned_less_retainage) || 0,
+        less_previous_certificates: Number(app.less_previous_certificates) || 0,
+        current_payment_due: Number(app.current_payment_due) || 0,
+        balance_to_finish: Number(app.balance_to_finish) || 0,
+        percent_complete: Number(app.percent_complete) || 0,
+        status: app.status,
+        submitted_at: app.submitted_at,
+        approved_at: app.approved_at,
+        paid_at: app.paid_at,
+        payment_received_amount: app.payment_received_amount != null ? Number(app.payment_received_amount) : null,
+        payment_reference: app.payment_reference,
+        rejection_reason: app.rejection_reason,
+        line_items: lineItemsMap[app.id] || [],
+        created_at: app.created_at,
+        updated_at: app.updated_at,
+      }))
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch pay applications:', error)
+      return []
+    }
+  },
+
+  /**
+   * Get a single pay application by ID with line items
+   */
+  async getPayApplication(userId: string, applicationId: string): Promise<SubcontractorPayApplication | null> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return null
+      }
+
+      const { data: app, error } = await db
+        .from('payment_applications')
+        .select(`
+          id,
+          application_number,
+          period_to,
+          project_id,
+          original_contract_sum,
+          net_change_orders,
+          contract_sum_to_date,
+          total_completed_previous,
+          total_completed_this_period,
+          total_materials_stored,
+          total_completed_and_stored,
+          retainage_percent,
+          retainage_from_completed,
+          retainage_from_stored,
+          total_retainage,
+          retainage_release,
+          total_earned_less_retainage,
+          less_previous_certificates,
+          current_payment_due,
+          balance_to_finish,
+          percent_complete,
+          status,
+          submitted_at,
+          approved_at,
+          paid_at,
+          payment_received_amount,
+          payment_reference,
+          rejection_reason,
+          created_at,
+          updated_at,
+          projects:project_id (
+            name,
+            address
+          )
+        `)
+        .eq('id', applicationId)
+        .in('subcontractor_id', subcontractorIds)
+        .is('deleted_at', null)
+        .single()
+
+      if (error || !app) {
+        return null
+      }
+
+      // Fetch line items
+      const { data: lineItems } = await db
+        .from('schedule_of_values')
+        .select(`
+          id,
+          item_number,
+          description,
+          cost_code,
+          cost_code_id,
+          scheduled_value,
+          change_order_adjustments,
+          total_scheduled_value,
+          work_completed_previous,
+          work_completed_this_period,
+          materials_stored,
+          total_completed_stored,
+          percent_complete,
+          balance_to_finish,
+          retainage_percent,
+          retainage_amount,
+          sort_order,
+          notes
+        `)
+        .eq('payment_application_id', applicationId)
+        .order('sort_order', { ascending: true })
+
+      return {
+        id: app.id,
+        application_number: app.application_number,
+        period_to: app.period_to,
+        project_id: app.project_id,
+        project_name: app.projects?.name || 'Unknown Project',
+        project_address: app.projects?.address || null,
+        original_contract_sum: Number(app.original_contract_sum) || 0,
+        net_change_orders: Number(app.net_change_orders) || 0,
+        contract_sum_to_date: Number(app.contract_sum_to_date) || 0,
+        total_completed_previous: Number(app.total_completed_previous) || 0,
+        total_completed_this_period: Number(app.total_completed_this_period) || 0,
+        total_materials_stored: Number(app.total_materials_stored) || 0,
+        total_completed_and_stored: Number(app.total_completed_and_stored) || 0,
+        retainage_percent: Number(app.retainage_percent) || 0,
+        retainage_from_completed: Number(app.retainage_from_completed) || 0,
+        retainage_from_stored: Number(app.retainage_from_stored) || 0,
+        total_retainage: Number(app.total_retainage) || 0,
+        retainage_release: Number(app.retainage_release) || 0,
+        total_earned_less_retainage: Number(app.total_earned_less_retainage) || 0,
+        less_previous_certificates: Number(app.less_previous_certificates) || 0,
+        current_payment_due: Number(app.current_payment_due) || 0,
+        balance_to_finish: Number(app.balance_to_finish) || 0,
+        percent_complete: Number(app.percent_complete) || 0,
+        status: app.status,
+        submitted_at: app.submitted_at,
+        approved_at: app.approved_at,
+        paid_at: app.paid_at,
+        payment_received_amount: app.payment_received_amount != null ? Number(app.payment_received_amount) : null,
+        payment_reference: app.payment_reference,
+        rejection_reason: app.rejection_reason,
+        line_items: (lineItems || []).map((item: any) => ({
+          id: item.id,
+          item_number: item.item_number || '',
+          description: item.description || '',
+          cost_code: item.cost_code,
+          cost_code_id: item.cost_code_id,
+          scheduled_value: Number(item.scheduled_value) || 0,
+          change_order_adjustments: Number(item.change_order_adjustments) || 0,
+          total_scheduled_value: Number(item.total_scheduled_value) || 0,
+          work_completed_previous: Number(item.work_completed_previous) || 0,
+          work_completed_this_period: Number(item.work_completed_this_period) || 0,
+          materials_stored: Number(item.materials_stored) || 0,
+          total_completed_stored: Number(item.total_completed_stored) || 0,
+          percent_complete: Number(item.percent_complete) || 0,
+          balance_to_finish: Number(item.balance_to_finish) || 0,
+          retainage_percent: item.retainage_percent != null ? Number(item.retainage_percent) : null,
+          retainage_amount: Number(item.retainage_amount) || 0,
+          sort_order: item.sort_order || 0,
+          notes: item.notes,
+        })),
+        created_at: app.created_at,
+        updated_at: app.updated_at,
+      }
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch pay application:', error)
+      return null
+    }
+  },
+
+  /**
+   * Get pay application summary for the subcontractor
+   */
+  async getPayApplicationSummary(userId: string): Promise<PayApplicationSummary> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return {
+          total_applications: 0,
+          total_billed: 0,
+          total_received: 0,
+          total_outstanding: 0,
+          total_retainage_held: 0,
+          pending_approval_count: 0,
+          pending_approval_amount: 0,
+        }
+      }
+
+      const { data: applications, error } = await db
+        .from('payment_applications')
+        .select(`
+          id,
+          status,
+          total_completed_and_stored,
+          current_payment_due,
+          total_retainage,
+          payment_received_amount
+        `)
+        .in('subcontractor_id', subcontractorIds)
+        .is('deleted_at', null)
+
+      if (error) {
+        logger.error('[SubcontractorPortal] Failed to fetch pay app summary:', error)
+        throw new ApiErrorClass('Failed to fetch pay application summary', 500)
+      }
+
+      const apps = applications || []
+
+      const totalBilled = apps.reduce((sum: number, app: any) =>
+        sum + (Number(app.total_completed_and_stored) || 0), 0)
+
+      const totalReceived = apps.reduce((sum: number, app: any) =>
+        sum + (Number(app.payment_received_amount) || 0), 0)
+
+      const totalRetainage = apps.reduce((sum: number, app: any) =>
+        sum + (Number(app.total_retainage) || 0), 0)
+
+      const pendingApps = apps.filter((app: any) =>
+        ['submitted', 'under_review'].includes(app.status))
+
+      const pendingAmount = pendingApps.reduce((sum: number, app: any) =>
+        sum + (Number(app.current_payment_due) || 0), 0)
+
+      return {
+        total_applications: apps.length,
+        total_billed: totalBilled,
+        total_received: totalReceived,
+        total_outstanding: totalBilled - totalReceived - totalRetainage,
+        total_retainage_held: totalRetainage,
+        pending_approval_count: pendingApps.length,
+        pending_approval_amount: pendingAmount,
+      }
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch pay application summary:', error)
+      return {
+        total_applications: 0,
+        total_billed: 0,
+        total_received: 0,
+        total_outstanding: 0,
+        total_retainage_held: 0,
+        pending_approval_count: 0,
+        pending_approval_amount: 0,
+      }
+    }
+  },
+
+  // =============================================
+  // CHANGE ORDER IMPACT DISPLAY (P1-2)
+  // =============================================
+
+  /**
+   * Get all change orders impacting the subcontractor
+   */
+  async getChangeOrders(userId: string): Promise<SubcontractorChangeOrder[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return []
+      }
+
+      // Get change orders where the subcontractor is linked
+      const { data: changeOrders, error } = await db
+        .from('change_orders')
+        .select(`
+          id,
+          pco_number,
+          co_number,
+          is_pco,
+          title,
+          description,
+          change_type,
+          status,
+          project_id,
+          proposed_amount,
+          approved_amount,
+          proposed_days,
+          approved_days,
+          original_contract_amount,
+          previous_changes_amount,
+          revised_contract_amount,
+          created_at,
+          submitted_at,
+          internally_approved_at,
+          owner_approved_at,
+          justification,
+          owner_comments,
+          rejection_reason,
+          related_rfi_id,
+          related_submittal_id,
+          projects:project_id (
+            name
+          )
+        `)
+        .in('subcontractor_id', subcontractorIds)
+        .is('deleted_at', null)
+        .order('created_at', { ascending: false })
+
+      if (error) {
+        logger.error('[SubcontractorPortal] Failed to fetch change orders:', error)
+        throw new ApiErrorClass('Failed to fetch change orders', 500)
+      }
+
+      // Get line item counts
+      const coIds = (changeOrders || []).map((co: any) => co.id)
+      let itemCountMap: Record<string, number> = {}
+
+      if (coIds.length > 0) {
+        const { data: itemCounts } = await db
+          .from('change_order_items')
+          .select('change_order_id')
+          .in('change_order_id', coIds)
+
+        if (itemCounts) {
+          itemCounts.forEach((item: any) => {
+            itemCountMap[item.change_order_id] = (itemCountMap[item.change_order_id] || 0) + 1
+          })
+        }
+      }
+
+      // Get related RFI/Submittal numbers
+      const rfiIds = (changeOrders || []).filter((co: any) => co.related_rfi_id).map((co: any) => co.related_rfi_id)
+      const submittalIds = (changeOrders || []).filter((co: any) => co.related_submittal_id).map((co: any) => co.related_submittal_id)
+
+      let rfiNumberMap: Record<string, string> = {}
+      let submittalNumberMap: Record<string, string> = {}
+
+      if (rfiIds.length > 0) {
+        const { data: rfis } = await db
+          .from('rfis')
+          .select('id, rfi_number')
+          .in('id', rfiIds)
+        if (rfis) {
+          rfis.forEach((rfi: any) => {
+            rfiNumberMap[rfi.id] = rfi.rfi_number
+          })
+        }
+      }
+
+      if (submittalIds.length > 0) {
+        const { data: submittals } = await db
+          .from('submittals')
+          .select('id, submittal_number')
+          .in('id', submittalIds)
+        if (submittals) {
+          submittals.forEach((s: any) => {
+            submittalNumberMap[s.id] = s.submittal_number
+          })
+        }
+      }
+
+      return (changeOrders || []).map((co: any) => ({
+        id: co.id,
+        pco_number: co.pco_number,
+        co_number: co.co_number,
+        is_pco: co.is_pco,
+        title: co.title || '',
+        description: co.description,
+        change_type: co.change_type,
+        status: co.status,
+        project_id: co.project_id,
+        project_name: co.projects?.name || 'Unknown Project',
+        proposed_amount: Number(co.proposed_amount) || 0,
+        approved_amount: co.approved_amount != null ? Number(co.approved_amount) : null,
+        proposed_days: co.proposed_days,
+        approved_days: co.approved_days,
+        original_contract_amount: co.original_contract_amount != null ? Number(co.original_contract_amount) : null,
+        previous_changes_amount: co.previous_changes_amount != null ? Number(co.previous_changes_amount) : null,
+        revised_contract_amount: co.revised_contract_amount != null ? Number(co.revised_contract_amount) : null,
+        created_at: co.created_at,
+        submitted_at: co.submitted_at,
+        internally_approved_at: co.internally_approved_at,
+        owner_approved_at: co.owner_approved_at,
+        line_item_count: itemCountMap[co.id] || 0,
+        related_rfi_number: co.related_rfi_id ? rfiNumberMap[co.related_rfi_id] || null : null,
+        related_submittal_number: co.related_submittal_id ? submittalNumberMap[co.related_submittal_id] || null : null,
+        justification: co.justification,
+        owner_comments: co.owner_comments,
+        rejection_reason: co.rejection_reason,
+      }))
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch change orders:', error)
+      return []
+    }
+  },
+
+  /**
+   * Get change order line items
+   */
+  async getChangeOrderItems(userId: string, changeOrderId: string): Promise<SubcontractorChangeOrderItem[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return []
+      }
+
+      // Verify the change order belongs to the subcontractor
+      const { data: co } = await db
+        .from('change_orders')
+        .select('id')
+        .eq('id', changeOrderId)
+        .in('subcontractor_id', subcontractorIds)
+        .single()
+
+      if (!co) {
+        return []
+      }
+
+      const { data: items, error } = await db
+        .from('change_order_items')
+        .select(`
+          id,
+          item_number,
+          description,
+          cost_code,
+          quantity,
+          unit,
+          unit_price,
+          labor_amount,
+          material_amount,
+          equipment_amount,
+          subcontract_amount,
+          other_amount,
+          markup_percent,
+          markup_amount,
+          total_amount,
+          notes
+        `)
+        .eq('change_order_id', changeOrderId)
+        .order('item_number', { ascending: true })
+
+      if (error) {
+        logger.error('[SubcontractorPortal] Failed to fetch change order items:', error)
+        return []
+      }
+
+      return (items || []).map((item: any) => ({
+        id: item.id,
+        item_number: item.item_number || 0,
+        description: item.description || '',
+        cost_code: item.cost_code,
+        quantity: item.quantity,
+        unit: item.unit,
+        unit_price: item.unit_price,
+        labor_amount: Number(item.labor_amount) || 0,
+        material_amount: Number(item.material_amount) || 0,
+        equipment_amount: Number(item.equipment_amount) || 0,
+        subcontract_amount: Number(item.subcontract_amount) || 0,
+        other_amount: Number(item.other_amount) || 0,
+        markup_percent: item.markup_percent,
+        markup_amount: Number(item.markup_amount) || 0,
+        total_amount: Number(item.total_amount) || 0,
+        notes: item.notes,
+      }))
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch change order items:', error)
+      return []
+    }
+  },
+
+  /**
+   * Get change order summary for the subcontractor
+   */
+  async getChangeOrderSummary(userId: string): Promise<ChangeOrderSummary> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return {
+          total_count: 0,
+          pending_count: 0,
+          approved_count: 0,
+          rejected_count: 0,
+          total_proposed_amount: 0,
+          total_approved_amount: 0,
+          net_contract_impact: 0,
+          total_days_impact: 0,
+        }
+      }
+
+      const { data: changeOrders, error } = await db
+        .from('change_orders')
+        .select(`
+          id,
+          status,
+          proposed_amount,
+          approved_amount,
+          approved_days
+        `)
+        .in('subcontractor_id', subcontractorIds)
+        .is('deleted_at', null)
+
+      if (error) {
+        logger.error('[SubcontractorPortal] Failed to fetch change order summary:', error)
+        throw new ApiErrorClass('Failed to fetch change order summary', 500)
+      }
+
+      const orders = changeOrders || []
+      const pendingStatuses = ['pending_estimate', 'estimate_complete', 'pending_internal_approval', 'internally_approved', 'pending_owner_review']
+
+      const pendingOrders = orders.filter((co: any) => pendingStatuses.includes(co.status))
+      const approvedOrders = orders.filter((co: any) => co.status === 'approved')
+      const rejectedOrders = orders.filter((co: any) => ['rejected', 'void'].includes(co.status))
+
+      const totalProposed = orders.reduce((sum: number, co: any) =>
+        sum + (Number(co.proposed_amount) || 0), 0)
+
+      const totalApproved = approvedOrders.reduce((sum: number, co: any) =>
+        sum + (Number(co.approved_amount) || 0), 0)
+
+      const totalDays = approvedOrders.reduce((sum: number, co: any) =>
+        sum + (co.approved_days || 0), 0)
+
+      return {
+        total_count: orders.length,
+        pending_count: pendingOrders.length,
+        approved_count: approvedOrders.length,
+        rejected_count: rejectedOrders.length,
+        total_proposed_amount: totalProposed,
+        total_approved_amount: totalApproved,
+        net_contract_impact: totalApproved,
+        total_days_impact: totalDays,
+      }
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch change order summary:', error)
+      return {
+        total_count: 0,
+        pending_count: 0,
+        approved_count: 0,
+        rejected_count: 0,
+        total_proposed_amount: 0,
+        total_approved_amount: 0,
+        net_contract_impact: 0,
+        total_days_impact: 0,
+      }
+    }
+  },
+
+  // =============================================
+  // SCHEDULE NOTIFICATIONS (P1-3)
+  // =============================================
+
+  /**
+   * Get schedule activities assigned to the subcontractor
+   */
+  async getScheduleActivities(userId: string): Promise<SubcontractorScheduleActivity[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return []
+      }
+
+      const today = new Date()
+      const weekFromNow = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000)
+
+      // Get schedule activities where the subcontractor is assigned
+      const { data: activities, error } = await db
+        .from('schedule_activities')
+        .select(`
+          id,
+          activity_id,
+          activity_name,
+          wbs_code,
+          project_id,
+          planned_start,
+          planned_finish,
+          actual_start,
+          actual_finish,
+          baseline_start,
+          baseline_finish,
+          status,
+          percent_complete,
+          is_milestone,
+          is_critical,
+          is_on_critical_path,
+          responsible_party,
+          notes,
+          created_at,
+          updated_at,
+          projects:project_id (
+            name
+          )
+        `)
+        .in('subcontractor_id', subcontractorIds)
+        .is('deleted_at', null)
+        .order('planned_start', { ascending: true })
+
+      if (error) {
+        logger.error('[SubcontractorPortal] Failed to fetch schedule activities:', error)
+        throw new ApiErrorClass('Failed to fetch schedule activities', 500)
+      }
+
+      return (activities || []).map((activity: any) => {
+        const plannedFinish = activity.planned_finish ? new Date(activity.planned_finish) : null
+        const baselineFinish = activity.baseline_finish ? new Date(activity.baseline_finish) : null
+        const plannedStart = activity.planned_start ? new Date(activity.planned_start) : null
+        const baselineStart = activity.baseline_start ? new Date(activity.baseline_start) : null
+
+        // Calculate variances in days
+        let startVariance: number | null = null
+        let finishVariance: number | null = null
+
+        if (plannedStart && baselineStart) {
+          startVariance = Math.round((plannedStart.getTime() - baselineStart.getTime()) / (1000 * 60 * 60 * 24))
+        }
+        if (plannedFinish && baselineFinish) {
+          finishVariance = Math.round((plannedFinish.getTime() - baselineFinish.getTime()) / (1000 * 60 * 60 * 24))
+        }
+
+        // Determine if overdue or upcoming
+        const isOverdue = plannedFinish && plannedFinish < today && activity.status !== 'completed'
+        const isUpcoming = plannedStart && plannedStart >= today && plannedStart <= weekFromNow
+
+        return {
+          id: activity.id,
+          activity_id: activity.activity_id,
+          activity_name: activity.activity_name || '',
+          wbs_code: activity.wbs_code,
+          project_id: activity.project_id,
+          project_name: activity.projects?.name || 'Unknown Project',
+          planned_start: activity.planned_start,
+          planned_finish: activity.planned_finish,
+          actual_start: activity.actual_start,
+          actual_finish: activity.actual_finish,
+          baseline_start: activity.baseline_start,
+          baseline_finish: activity.baseline_finish,
+          status: activity.status || 'not_started',
+          percent_complete: Number(activity.percent_complete) || 0,
+          start_variance: startVariance,
+          finish_variance: finishVariance,
+          is_milestone: activity.is_milestone || false,
+          is_critical: activity.is_critical || false,
+          is_on_critical_path: activity.is_on_critical_path || false,
+          is_overdue: isOverdue,
+          is_upcoming: isUpcoming,
+          responsible_party: activity.responsible_party,
+          notes: activity.notes,
+          created_at: activity.created_at,
+          updated_at: activity.updated_at,
+        }
+      })
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch schedule activities:', error)
+      return []
+    }
+  },
+
+  /**
+   * Get schedule change notifications for the subcontractor
+   */
+  async getScheduleChangeNotifications(userId: string): Promise<ScheduleChangeNotification[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return []
+      }
+
+      // Get notifications related to schedule activities for this subcontractor
+      const { data: notifications, error } = await db
+        .from('notifications')
+        .select(`
+          id,
+          type,
+          title,
+          message,
+          related_to_id,
+          related_to_type,
+          is_read,
+          created_at,
+          users:user_id (
+            first_name,
+            last_name
+          )
+        `)
+        .eq('user_id', userId)
+        .in('type', ['schedule_change', 'schedule_activity_updated', 'task_due', 'schedule_delay'])
+        .order('created_at', { ascending: false })
+        .limit(50)
+
+      if (error) {
+        logger.error('[SubcontractorPortal] Failed to fetch schedule notifications:', error)
+        return []
+      }
+
+      // For each notification, get the related activity details
+      const activityIds = (notifications || [])
+        .filter((n: any) => n.related_to_id && n.related_to_type === 'schedule_activity')
+        .map((n: any) => n.related_to_id)
+
+      let activityMap: Record<string, any> = {}
+      if (activityIds.length > 0) {
+        const { data: activities } = await db
+          .from('schedule_activities')
+          .select('id, activity_name, project_id, is_on_critical_path, projects:project_id (name)')
+          .in('id', activityIds)
+
+        if (activities) {
+          activities.forEach((a: any) => {
+            activityMap[a.id] = a
+          })
+        }
+      }
+
+      return (notifications || []).map((n: any) => {
+        const activity = activityMap[n.related_to_id] || {}
+
+        // Parse change type from notification type or message
+        let changeType: 'date_change' | 'status_change' | 'delay' | 'assignment' | 'completion' = 'date_change'
+        if (n.type === 'schedule_delay') changeType = 'delay'
+        else if (n.message?.toLowerCase().includes('status')) changeType = 'status_change'
+        else if (n.message?.toLowerCase().includes('complete')) changeType = 'completion'
+        else if (n.message?.toLowerCase().includes('assign')) changeType = 'assignment'
+
+        return {
+          id: n.id,
+          activity_id: n.related_to_id || '',
+          activity_name: activity.activity_name || n.title || 'Unknown Activity',
+          project_id: activity.project_id || '',
+          project_name: activity.projects?.name || '',
+          change_type: changeType,
+          field_changed: null,
+          old_value: null,
+          new_value: null,
+          description: n.message || n.title || '',
+          days_impact: null,
+          is_critical_path_impact: activity.is_on_critical_path || false,
+          changed_at: n.created_at,
+          changed_by_name: n.users ? `${n.users.first_name || ''} ${n.users.last_name || ''}`.trim() : null,
+          is_read: n.is_read || false,
+        }
+      })
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch schedule notifications:', error)
+      return []
+    }
+  },
+
+  /**
+   * Get schedule summary for dashboard
+   */
+  async getScheduleSummary(userId: string): Promise<ScheduleSummary> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return {
+          total_activities: 0,
+          activities_this_week: 0,
+          overdue_count: 0,
+          delayed_count: 0,
+          on_critical_path_count: 0,
+          upcoming_milestones: 0,
+          percent_complete_avg: 0,
+          unread_changes: 0,
+        }
+      }
+
+      const today = new Date()
+      const weekFromNow = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000)
+      const todayStr = today.toISOString().split('T')[0]
+      const weekFromNowStr = weekFromNow.toISOString().split('T')[0]
+
+      // Get all activities for summary calculations
+      const { data: activities, error } = await db
+        .from('schedule_activities')
+        .select(`
+          id,
+          status,
+          percent_complete,
+          planned_start,
+          planned_finish,
+          is_milestone,
+          is_on_critical_path
+        `)
+        .in('subcontractor_id', subcontractorIds)
+        .is('deleted_at', null)
+
+      if (error) {
+        logger.error('[SubcontractorPortal] Failed to fetch schedule summary:', error)
+        throw new ApiErrorClass('Failed to fetch schedule summary', 500)
+      }
+
+      // Get unread notification count
+      const { count: unreadCount } = await db
+        .from('notifications')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .in('type', ['schedule_change', 'schedule_activity_updated', 'schedule_delay'])
+        .eq('is_read', false)
+
+      const acts = activities || []
+
+      // Calculate summary
+      const overdueActs = acts.filter((a: any) => {
+        if (a.status === 'completed') return false
+        const plannedFinish = a.planned_finish ? new Date(a.planned_finish) : null
+        return plannedFinish && plannedFinish < today
+      })
+
+      const delayedActs = acts.filter((a: any) => a.status === 'delayed')
+
+      const thisWeekActs = acts.filter((a: any) => {
+        const plannedStart = a.planned_start ? new Date(a.planned_start) : null
+        return plannedStart && plannedStart >= today && plannedStart <= weekFromNow
+      })
+
+      const criticalPathActs = acts.filter((a: any) => a.is_on_critical_path)
+
+      const upcomingMilestones = acts.filter((a: any) => {
+        if (!a.is_milestone || a.status === 'completed') return false
+        const plannedFinish = a.planned_finish ? new Date(a.planned_finish) : null
+        return plannedFinish && plannedFinish >= today && plannedFinish <= weekFromNow
+      })
+
+      const totalPercent = acts.reduce((sum: number, a: any) => sum + (Number(a.percent_complete) || 0), 0)
+      const avgPercent = acts.length > 0 ? totalPercent / acts.length : 0
+
+      return {
+        total_activities: acts.length,
+        activities_this_week: thisWeekActs.length,
+        overdue_count: overdueActs.length,
+        delayed_count: delayedActs.length,
+        on_critical_path_count: criticalPathActs.length,
+        upcoming_milestones: upcomingMilestones.length,
+        percent_complete_avg: Math.round(avgPercent),
+        unread_changes: unreadCount || 0,
+      }
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch schedule summary:', error)
+      return {
+        total_activities: 0,
+        activities_this_week: 0,
+        overdue_count: 0,
+        delayed_count: 0,
+        on_critical_path_count: 0,
+        upcoming_milestones: 0,
+        percent_complete_avg: 0,
+        unread_changes: 0,
+      }
+    }
+  },
+
+  /**
+   * Mark schedule notification as read
+   */
+  async markScheduleNotificationRead(userId: string, notificationId: string): Promise<boolean> {
+    try {
+      const { error } = await db
+        .from('notifications')
+        .update({ is_read: true })
+        .eq('id', notificationId)
+        .eq('user_id', userId)
+
+      if (error) {
+        logger.error('[SubcontractorPortal] Failed to mark notification as read:', error)
+        return false
+      }
+      return true
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to mark notification as read:', error)
+      return false
+    }
+  },
+
+  // =============================================
+  // P1-4: SAFETY COMPLIANCE DASHBOARD
+  // =============================================
+
+  /**
+   * Get safety incidents involving the subcontractor
+   */
+  async getSafetyIncidents(userId: string): Promise<SubcontractorSafetyIncident[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return []
+      }
+
+      // Get projects where this subcontractor is assigned
+      const { data: projectAccess } = await db
+        .from('subcontractor_portal_access')
+        .select('project_id')
+        .in('subcontractor_id', subcontractorIds)
+        .eq('access_status', 'active')
+
+      if (!projectAccess || projectAccess.length === 0) {
+        return []
+      }
+
+      const projectIds = projectAccess.map((p: any) => p.project_id)
+
+      // Get incidents from these projects
+      const { data: incidents, error } = await db
+        .from('safety_incidents')
+        .select(`
+          id,
+          incident_number,
+          project_id,
+          incident_date,
+          incident_time,
+          location,
+          severity,
+          status,
+          type,
+          title,
+          description,
+          is_osha_recordable,
+          days_away_count,
+          days_transfer_restriction,
+          created_at,
+          closed_at,
+          projects:project_id (name)
+        `)
+        .in('project_id', projectIds)
+        .order('incident_date', { ascending: false })
+        .limit(50)
+
+      if (error) {
+        logger.error('[SubcontractorPortal] Failed to fetch safety incidents:', error)
+        return []
+      }
+
+      return (incidents || []).map((inc: any) => ({
+        id: inc.id,
+        incident_number: inc.incident_number,
+        project_id: inc.project_id,
+        project_name: inc.projects?.name || '',
+        incident_date: inc.incident_date,
+        incident_time: inc.incident_time,
+        location: inc.location,
+        severity: inc.severity as SafetyIncidentSeverity,
+        status: inc.status as SafetyIncidentStatus,
+        type: inc.type || 'other',
+        title: inc.title || inc.description?.substring(0, 50) || 'Incident',
+        description: inc.description || '',
+        is_osha_recordable: inc.is_osha_recordable || false,
+        days_away: inc.days_away_count || 0,
+        days_restricted: inc.days_transfer_restriction || 0,
+        reported_at: inc.created_at,
+        closed_at: inc.closed_at,
+      }))
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch safety incidents:', error)
+      return []
+    }
+  },
+
+  /**
+   * Get corrective actions assigned to the subcontractor
+   */
+  async getCorrectiveActions(userId: string): Promise<SubcontractorCorrectiveAction[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return []
+      }
+
+      // Get projects where this subcontractor is assigned
+      const { data: projectAccess } = await db
+        .from('subcontractor_portal_access')
+        .select('project_id')
+        .in('subcontractor_id', subcontractorIds)
+        .eq('access_status', 'active')
+
+      if (!projectAccess || projectAccess.length === 0) {
+        return []
+      }
+
+      const projectIds = projectAccess.map((p: any) => p.project_id)
+
+      // Get incidents from these projects to find corrective actions
+      const { data: incidents } = await db
+        .from('safety_incidents')
+        .select('id, incident_number, project_id, projects:project_id (name)')
+        .in('project_id', projectIds)
+
+      if (!incidents || incidents.length === 0) {
+        return []
+      }
+
+      const incidentIds = incidents.map((i: any) => i.id)
+      const incidentMap: Record<string, any> = {}
+      incidents.forEach((i: any) => {
+        incidentMap[i.id] = i
+      })
+
+      // Get corrective actions for these incidents
+      const { data: actions, error } = await db
+        .from('safety_incident_corrective_actions')
+        .select(`
+          id,
+          incident_id,
+          description,
+          status,
+          priority,
+          due_date,
+          completed_date,
+          created_at,
+          updated_at,
+          assigned_to:assigned_to_id (first_name, last_name)
+        `)
+        .in('incident_id', incidentIds)
+        .order('due_date', { ascending: true, nullsFirst: false })
+
+      if (error) {
+        logger.error('[SubcontractorPortal] Failed to fetch corrective actions:', error)
+        return []
+      }
+
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+
+      return (actions || []).map((action: any) => {
+        const incident = incidentMap[action.incident_id] || {}
+        const dueDate = action.due_date ? new Date(action.due_date) : null
+        const isOverdue = dueDate && dueDate < today && action.status !== 'completed' && action.status !== 'verified'
+
+        return {
+          id: action.id,
+          incident_id: action.incident_id,
+          incident_number: incident.incident_number || '',
+          project_id: incident.project_id || '',
+          project_name: incident.projects?.name || '',
+          description: action.description || '',
+          status: action.status || 'pending',
+          priority: action.priority || 'medium',
+          assigned_to_name: action.assigned_to
+            ? `${action.assigned_to.first_name || ''} ${action.assigned_to.last_name || ''}`.trim()
+            : null,
+          due_date: action.due_date,
+          completed_date: action.completed_date,
+          created_at: action.created_at,
+          updated_at: action.updated_at,
+          is_overdue: isOverdue || false,
+        }
+      })
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch corrective actions:', error)
+      return []
+    }
+  },
+
+  /**
+   * Get toolbox talks/safety training for projects
+   */
+  async getToolboxTalks(userId: string): Promise<SubcontractorToolboxTalk[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return []
+      }
+
+      // Get projects where this subcontractor is assigned
+      const { data: projectAccess } = await db
+        .from('subcontractor_portal_access')
+        .select('project_id')
+        .in('subcontractor_id', subcontractorIds)
+        .eq('access_status', 'active')
+
+      if (!projectAccess || projectAccess.length === 0) {
+        return []
+      }
+
+      const projectIds = projectAccess.map((p: any) => p.project_id)
+
+      // Get toolbox talks from these projects
+      const { data: talks, error } = await db
+        .from('toolbox_talks')
+        .select(`
+          id,
+          project_id,
+          topic,
+          description,
+          conducted_by,
+          conducted_at,
+          duration_minutes,
+          attendees_count,
+          projects:project_id (name)
+        `)
+        .in('project_id', projectIds)
+        .order('conducted_at', { ascending: false })
+        .limit(25)
+
+      if (error) {
+        logger.error('[SubcontractorPortal] Failed to fetch toolbox talks:', error)
+        return []
+      }
+
+      return (talks || []).map((talk: any) => ({
+        id: talk.id,
+        project_id: talk.project_id,
+        project_name: talk.projects?.name || '',
+        topic: talk.topic || 'Safety Talk',
+        description: talk.description,
+        conducted_by: talk.conducted_by || 'Unknown',
+        conducted_at: talk.conducted_at,
+        duration_minutes: talk.duration_minutes,
+        attendees_count: talk.attendees_count || 0,
+        subcontractor_attendees_count: 0, // Would need attendance tracking by subcontractor
+      }))
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch toolbox talks:', error)
+      return []
+    }
+  },
+
+  /**
+   * Get safety metrics for the subcontractor
+   */
+  async getSafetyMetrics(userId: string): Promise<SubcontractorSafetyMetrics> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+
+      // Get projects where this subcontractor is assigned
+      const { data: projectAccess } = await db
+        .from('subcontractor_portal_access')
+        .select('project_id')
+        .in('subcontractor_id', subcontractorIds)
+        .eq('access_status', 'active')
+
+      const projectIds = (projectAccess || []).map((p: any) => p.project_id)
+
+      // Set date range for YTD
+      const now = new Date()
+      const yearStart = new Date(now.getFullYear(), 0, 1)
+      const yearStartStr = yearStart.toISOString().split('T')[0]
+      const nowStr = now.toISOString().split('T')[0]
+
+      // Get incidents for these projects YTD
+      const { data: incidents } = await db
+        .from('safety_incidents')
+        .select('id, severity, is_osha_recordable, incident_date, days_away_count')
+        .in('project_id', projectIds)
+        .gte('incident_date', yearStartStr)
+        .lte('incident_date', nowStr)
+
+      const allIncidents = incidents || []
+      const recordableIncidents = allIncidents.filter((i: any) => i.is_osha_recordable)
+      const lostTimeIncidents = allIncidents.filter((i: any) =>
+        i.severity === 'lost_time' || i.severity === 'fatality' || (i.days_away_count && i.days_away_count > 0)
+      )
+
+      // Get the most recent incident
+      const { data: lastIncident } = await db
+        .from('safety_incidents')
+        .select('incident_date')
+        .in('project_id', projectIds)
+        .order('incident_date', { ascending: false })
+        .limit(1)
+        .single()
+
+      // Calculate days since last incident
+      let daysSinceLastIncident: number | null = null
+      if (lastIncident?.incident_date) {
+        const lastDate = new Date(lastIncident.incident_date)
+        daysSinceLastIncident = Math.floor((now.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24))
+      }
+
+      // Get last recordable incident
+      const { data: lastRecordable } = await db
+        .from('safety_incidents')
+        .select('incident_date')
+        .in('project_id', projectIds)
+        .eq('is_osha_recordable', true)
+        .order('incident_date', { ascending: false })
+        .limit(1)
+        .single()
+
+      let daysSinceLastRecordable: number | null = null
+      if (lastRecordable?.incident_date) {
+        const lastDate = new Date(lastRecordable.incident_date)
+        daysSinceLastRecordable = Math.floor((now.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24))
+      }
+
+      // Note: TRIR, DART, LTIR calculations require hours worked data
+      // which would need to be tracked separately. For now, return null for rates.
+      return {
+        trir: null,
+        dart: null,
+        ltir: null,
+        emr: null,
+        total_incidents: allIncidents.length,
+        recordable_incidents: recordableIncidents.length,
+        lost_time_incidents: lostTimeIncidents.length,
+        days_since_last_incident: daysSinceLastIncident,
+        days_since_last_recordable: daysSinceLastRecordable,
+        hours_worked: null,
+        period_start: yearStartStr,
+        period_end: nowStr,
+      }
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch safety metrics:', error)
+      return {
+        trir: null,
+        dart: null,
+        ltir: null,
+        emr: null,
+        total_incidents: 0,
+        recordable_incidents: 0,
+        lost_time_incidents: 0,
+        days_since_last_incident: null,
+        days_since_last_recordable: null,
+        hours_worked: null,
+        period_start: '',
+        period_end: '',
+      }
+    }
+  },
+
+  /**
+   * Get safety compliance summary for dashboard
+   */
+  async getSafetyComplianceSummary(userId: string): Promise<SafetyComplianceSummary> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+
+      // Get projects
+      const { data: projectAccess } = await db
+        .from('subcontractor_portal_access')
+        .select('project_id')
+        .in('subcontractor_id', subcontractorIds)
+        .eq('access_status', 'active')
+
+      const projectIds = (projectAccess || []).map((p: any) => p.project_id)
+
+      // Date calculations
+      const now = new Date()
+      const yearStart = new Date(now.getFullYear(), 0, 1)
+      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
+      const yearStartStr = yearStart.toISOString().split('T')[0]
+      const monthStartStr = monthStart.toISOString().split('T')[0]
+      const nowStr = now.toISOString().split('T')[0]
+
+      // Get YTD incidents
+      const { data: ytdIncidents } = await db
+        .from('safety_incidents')
+        .select('id, is_osha_recordable, incident_date')
+        .in('project_id', projectIds)
+        .gte('incident_date', yearStartStr)
+        .lte('incident_date', nowStr)
+
+      const incidentsYtd = (ytdIncidents || []).length
+      const recordableYtd = (ytdIncidents || []).filter((i: any) => i.is_osha_recordable).length
+
+      // Days since last incident
+      const { data: lastIncident } = await db
+        .from('safety_incidents')
+        .select('incident_date')
+        .in('project_id', projectIds)
+        .order('incident_date', { ascending: false })
+        .limit(1)
+        .single()
+
+      let daysSinceLast: number | null = null
+      if (lastIncident?.incident_date) {
+        const lastDate = new Date(lastIncident.incident_date)
+        daysSinceLast = Math.floor((now.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24))
+      }
+
+      // Get corrective actions
+      const { data: incidents } = await db
+        .from('safety_incidents')
+        .select('id')
+        .in('project_id', projectIds)
+
+      const incidentIds = (incidents || []).map((i: any) => i.id)
+
+      let openActions = 0
+      let overdueActions = 0
+
+      if (incidentIds.length > 0) {
+        const { data: actions } = await db
+          .from('safety_incident_corrective_actions')
+          .select('id, status, due_date')
+          .in('incident_id', incidentIds)
+          .in('status', ['pending', 'in_progress'])
+
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+
+        openActions = (actions || []).length
+        overdueActions = (actions || []).filter((a: any) => {
+          const dueDate = a.due_date ? new Date(a.due_date) : null
+          return dueDate && dueDate < today
+        }).length
+      }
+
+      // Get toolbox talks this month
+      const { data: monthTalks } = await db
+        .from('toolbox_talks')
+        .select('id')
+        .in('project_id', projectIds)
+        .gte('conducted_at', monthStartStr)
+
+      const talksThisMonth = (monthTalks || []).length
+
+      // Get safety certs from compliance documents
+      const { data: safetyCerts } = await db
+        .from('subcontractor_compliance_documents')
+        .select('id, status, expiration_date')
+        .in('subcontractor_id', subcontractorIds)
+        .eq('document_type', 'safety_cert')
+
+      const today = new Date()
+      const thirtyDaysFromNow = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)
+
+      let validCerts = 0
+      let expiringCerts = 0
+      let expiredCerts = 0
+
+      (safetyCerts || []).forEach((cert: any) => {
+        if (cert.status === 'approved') {
+          const expDate = cert.expiration_date ? new Date(cert.expiration_date) : null
+          if (!expDate || expDate > thirtyDaysFromNow) {
+            validCerts++
+          } else if (expDate > today) {
+            expiringCerts++
+          } else {
+            expiredCerts++
+          }
+        } else if (cert.status === 'expired' || (cert.expiration_date && new Date(cert.expiration_date) < today)) {
+          expiredCerts++
+        }
+      })
+
+      // Calculate compliance score (simplified)
+      let score = 100
+
+      // Deduct for incidents (up to 30 points)
+      score -= Math.min(30, recordableYtd * 15)
+
+      // Deduct for open corrective actions (up to 20 points)
+      score -= Math.min(20, openActions * 5)
+
+      // Deduct for overdue actions (up to 20 points)
+      score -= Math.min(20, overdueActions * 10)
+
+      // Deduct for expired certs (up to 15 points)
+      score -= Math.min(15, expiredCerts * 15)
+
+      // Bonus for days since incident (up to 15 points)
+      if (daysSinceLast !== null) {
+        if (daysSinceLast >= 365) score = Math.min(100, score + 15)
+        else if (daysSinceLast >= 180) score = Math.min(100, score + 10)
+        else if (daysSinceLast >= 90) score = Math.min(100, score + 5)
+      }
+
+      score = Math.max(0, score)
+
+      // Determine status thresholds
+      const trirStatus: 'good' | 'warning' | 'critical' | 'unknown' = 'unknown'
+      const dartStatus: 'good' | 'warning' | 'critical' | 'unknown' = 'unknown'
+
+      return {
+        compliance_score: Math.round(score),
+        incidents_ytd: incidentsYtd,
+        recordable_incidents_ytd: recordableYtd,
+        days_since_last_incident: daysSinceLast,
+        open_corrective_actions: openActions,
+        overdue_corrective_actions: overdueActions,
+        toolbox_talks_this_month: talksThisMonth,
+        training_compliance_percent: 100, // Would need training tracking
+        safety_certs_valid: validCerts,
+        safety_certs_expiring: expiringCerts,
+        safety_certs_expired: expiredCerts,
+        trir_status: trirStatus,
+        dart_status: dartStatus,
+      }
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch safety compliance summary:', error)
+      return {
+        compliance_score: 0,
+        incidents_ytd: 0,
+        recordable_incidents_ytd: 0,
+        days_since_last_incident: null,
+        open_corrective_actions: 0,
+        overdue_corrective_actions: 0,
+        toolbox_talks_this_month: 0,
+        training_compliance_percent: 0,
+        safety_certs_valid: 0,
+        safety_certs_expiring: 0,
+        safety_certs_expired: 0,
+        trir_status: 'unknown',
+        dart_status: 'unknown',
+      }
+    }
+  },
+}
+
+// =============================================
+// INSURANCE ENDORSEMENT HELPER FUNCTIONS
+// =============================================
+
+function getEndorsementStatus(required: boolean, verified: boolean): EndorsementStatus {
+  if (!required) {return 'not_required'}
+  if (verified) {return 'verified'}
+  return 'missing'
+}
+
+function getEndorsementLabel(type: string): string {
+  const labels: Record<string, string> = {
+    additional_insured: 'Additional Insured',
+    waiver_of_subrogation: 'Waiver of Subrogation',
+    primary_noncontributory: 'Primary & Non-Contributory',
+  }
+  return labels[type] || type
+}
+
+function getInsuranceTypeLabel(type: string): string {
+  const labels: Record<string, string> = {
+    general_liability: 'General Liability',
+    auto_liability: 'Auto Liability',
+    workers_compensation: "Workers' Compensation",
+    umbrella: 'Umbrella/Excess',
+    professional_liability: 'Professional Liability',
+    builders_risk: "Builder's Risk",
+    pollution: 'Pollution',
+    cyber: 'Cyber Liability',
+    other: 'Other',
+  }
+  return labels[type] || type
 }
 
 // =============================================

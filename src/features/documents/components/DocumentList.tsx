@@ -1,7 +1,8 @@
 // File: /src/features/documents/components/DocumentList.tsx
 // Table list component for displaying documents
+// Uses virtualization for large datasets (50+ items) for better performance
 
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { format } from 'date-fns'
 import { Eye, Edit, Trash2, Loader2, Maximize2 } from 'lucide-react'
 import {
@@ -15,11 +16,15 @@ import {
   TableCell,
   Button,
 } from '@/components/ui'
+import { VirtualizedTable } from '@/components/ui/virtualized-table'
 import { DocumentTypeIcon } from './DocumentTypeIcon'
 import { DocumentStatusBadge } from './DocumentStatusBadge'
 import { highlightSearchTerm } from '../hooks/useDocumentSearch'
 import { openDocumentPopup } from '@/lib/utils/openDocumentPopup'
 import type { Document } from '@/types/database'
+
+// Threshold for using virtualization (avoids overhead for small lists)
+const VIRTUALIZATION_THRESHOLD = 50
 
 
 interface DocumentListProps {
@@ -130,7 +135,118 @@ export function DocumentList({
     )
   }
 
-  // Documents table
+  // Use virtualization for large datasets
+  const useVirtualization = documents.length >= VIRTUALIZATION_THRESHOLD
+
+  // Memoized columns for virtualized table
+  const virtualizedColumns = useMemo(() => [
+    {
+      key: 'name',
+      header: 'Name',
+      className: 'w-[300px]',
+      render: (doc: Document) => (
+        <div className="flex items-center space-x-3">
+          <DocumentTypeIcon type={doc.document_type} className="flex-shrink-0" />
+          <div className="min-w-0 flex-1">
+            <button
+              onClick={(e) => { e.stopPropagation(); handleOpenInPopup(doc) }}
+              className="group flex items-center gap-1 font-medium text-primary hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 truncate transition-colors text-left"
+              title={`Open ${doc.name} in viewer (popup window)`}
+            >
+              <span className="truncate">
+                {searchTerm ? highlightSearchTerm(doc.name, searchTerm) : doc.name}
+              </span>
+              <Maximize2 className="w-3 h-3 opacity-0 group-hover:opacity-100 flex-shrink-0 transition-opacity" />
+            </button>
+            <p className="text-sm text-muted truncate">
+              {searchTerm && doc.drawing_number
+                ? highlightSearchTerm(doc.drawing_number, searchTerm)
+                : doc.drawing_number || doc.file_name}
+            </p>
+          </div>
+        </div>
+      ),
+    },
+    {
+      key: 'type',
+      header: 'Type',
+      className: 'w-[120px]',
+      render: (doc: Document) => (
+        <span className="text-sm text-secondary capitalize">
+          {doc.document_type.replace('_', ' ')}
+        </span>
+      ),
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      className: 'w-[120px]',
+      render: (doc: Document) => <DocumentStatusBadge status={doc.status ?? 'draft'} />,
+    },
+    {
+      key: 'version',
+      header: 'Version',
+      className: 'w-[100px]',
+      render: (doc: Document) => (
+        <span className="text-sm text-secondary">
+          {doc.version}
+          {doc.revision && ` (${doc.revision})`}
+        </span>
+      ),
+    },
+    {
+      key: 'size',
+      header: 'Size',
+      className: 'w-[100px]',
+      render: (doc: Document) => (
+        <span className="text-sm text-secondary">{formatFileSize(doc.file_size)}</span>
+      ),
+    },
+    {
+      key: 'created',
+      header: 'Created',
+      className: 'w-[140px]',
+      render: (doc: Document) => (
+        <span className="text-sm text-secondary">{formatDate(doc.created_at)}</span>
+      ),
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      className: 'w-[140px] text-right',
+      render: (doc: Document) => (
+        <div className="flex items-center justify-end space-x-1">
+          <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onView(doc) }} title="View document">
+            <Eye className="w-4 h-4" />
+          </Button>
+          <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onEdit(doc) }} title="Edit document">
+            <Edit className="w-4 h-4" />
+          </Button>
+          <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onDelete(doc) }} title="Delete document" className="text-error hover:text-error-dark hover:bg-error-light">
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </div>
+      ),
+    },
+  ], [searchTerm, handleOpenInPopup, onView, onEdit, onDelete, formatFileSize, formatDate])
+
+  // Virtualized table for large datasets (50+ documents)
+  if (useVirtualization) {
+    return (
+      <Card>
+        <CardContent className="p-0">
+          <VirtualizedTable
+            data={documents}
+            columns={virtualizedColumns}
+            estimatedRowHeight={73}
+            emptyMessage="No documents found"
+          />
+        </CardContent>
+      </Card>
+    )
+  }
+
+  // Standard table for small datasets (< 50 documents)
   return (
     <Card>
       <CardContent className="p-0">

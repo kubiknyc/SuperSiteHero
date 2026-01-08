@@ -272,7 +272,6 @@ export function TemplatePreviewPage() {
             onOpenChange={setShowStartDialog}
           />
         )}
-        </div>
       </div>
     </SmartLayout>
   )

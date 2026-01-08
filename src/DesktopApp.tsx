@@ -10,24 +10,24 @@ import { Routes, Route } from 'react-router-dom';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { RouteLoadingFallback } from './components/loading/RouteLoadingFallback';
 
-// Auth pages - loaded eagerly as they are the first pages users see
+// Auth pages - lazy loaded for smaller initial bundle
 // Using V2 versions with premium construction industry design
-import { LoginPageV2 as LoginPage } from './pages/auth/LoginPageV2';
-import { SignupPageV2 as SignupPage } from './pages/auth/SignupPageV2';
-import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
-import { ResetPasswordPage } from './pages/auth/ResetPasswordPage';
+const LoginPage = lazy(() => import('./pages/auth/LoginPageV2').then(m => ({ default: m.LoginPageV2 })));
+const SignupPage = lazy(() => import('./pages/auth/SignupPageV2').then(m => ({ default: m.SignupPageV2 })));
+const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage').then(m => ({ default: m.ForgotPasswordPage })));
+const ResetPasswordPage = lazy(() => import('./pages/auth/ResetPasswordPage').then(m => ({ default: m.ResetPasswordPage })));
 
 // MFA pages - lazy loaded as they're secondary auth flows
 const MFASetupPage = lazy(() => import('./pages/auth/MFASetupPage').then(m => ({ default: m.MFASetupPage })));
 const MFAVerifyPage = lazy(() => import('./pages/auth/MFAVerifyPage').then(m => ({ default: m.MFAVerifyPage })));
 
-// Registration flow - loaded eagerly as part of initial auth experience
-import { CompanyRegistration } from './features/registration/CompanyRegistration';
-import { PendingApproval } from './features/registration/PendingApproval';
-import { AdminApprovalDashboard } from './features/registration/AdminApprovalDashboard';
+// Registration flow - lazy loaded for smaller initial bundle
+const CompanyRegistration = lazy(() => import('./features/registration/CompanyRegistration').then(m => ({ default: m.CompanyRegistration })));
+const PendingApproval = lazy(() => import('./features/registration/PendingApproval').then(m => ({ default: m.PendingApproval })));
+const AdminApprovalDashboard = lazy(() => import('./features/registration/AdminApprovalDashboard').then(m => ({ default: m.AdminApprovalDashboard })));
 
-// Dashboard - loaded eagerly as it's the main landing page
-import { DashboardPage } from './pages/DashboardPage';
+// Dashboard - lazy loaded for smaller initial bundle
+const DashboardPage = lazy(() => import('./pages/DashboardPage').then(m => ({ default: m.DashboardPage })));
 
 // All other pages are lazy loaded to reduce initial bundle size
 // Projects feature
@@ -169,6 +169,12 @@ const SubcontractorProjectsPage = lazy(() => import('./pages/subcontractor-porta
 const SubcontractorCompliancePage = lazy(() => import('./pages/subcontractor-portal/SubcontractorCompliancePage').then(m => ({ default: m.SubcontractorCompliancePage })));
 const SubcontractorDailyReportsPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorDailyReportsPage').then(m => ({ default: m.SubcontractorDailyReportsPage })));
 const SubcontractorDailyReportDetailPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorDailyReportDetailPage').then(m => ({ default: m.SubcontractorDailyReportDetailPage })));
+const SubcontractorLienWaiversPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorLienWaiversPage').then(m => ({ default: m.SubcontractorLienWaiversPage })));
+const SubcontractorRetainagePage = lazy(() => import('./pages/subcontractor-portal/SubcontractorRetainagePage').then(m => ({ default: m.SubcontractorRetainagePage })));
+const SubcontractorPayAppsPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorPayAppsPage').then(m => ({ default: m.SubcontractorPayAppsPage })));
+const SubcontractorChangeOrdersPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorChangeOrdersPage').then(m => ({ default: m.SubcontractorChangeOrdersPage })));
+const SubcontractorSchedulePage = lazy(() => import('./pages/subcontractor-portal/SubcontractorSchedulePage'));
+const SubcontractorSafetyPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorSafetyPage'));
 const AcceptInvitationPage = lazy(() => import('./pages/auth/AcceptInvitationPage').then(m => ({ default: m.AcceptInvitationPage })));
 
 // Client Portal feature
@@ -638,6 +644,12 @@ export function DesktopApp() {
           <Route path="compliance" element={<SubcontractorCompliancePage />} />
           <Route path="daily-reports" element={<SubcontractorDailyReportsPage />} />
           <Route path="daily-reports/:reportId" element={<SubcontractorDailyReportDetailPage />} />
+          <Route path="lien-waivers" element={<SubcontractorLienWaiversPage />} />
+          <Route path="retainage" element={<SubcontractorRetainagePage />} />
+          <Route path="pay-apps" element={<SubcontractorPayAppsPage />} />
+          <Route path="change-orders" element={<SubcontractorChangeOrdersPage />} />
+          <Route path="schedule" element={<SubcontractorSchedulePage />} />
+          <Route path="safety" element={<SubcontractorSafetyPage />} />
         </Route>
 
         {/* Client Portal feature */}

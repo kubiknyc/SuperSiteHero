@@ -17,9 +17,15 @@ import {
   Building2,
   LogOut,
   CalendarDays,
+  CalendarClock,
   Menu,
   X,
   Bell,
+  FileSignature,
+  Banknote,
+  Receipt,
+  FileEdit,
+  Shield,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/lib/auth/AuthContext'
@@ -188,6 +194,36 @@ export function SubcontractorLayout() {
             count={stats?.expiring_documents}
             warning={stats?.expiring_documents ? stats.expiring_documents > 0 : false}
           />
+          <NavItem
+            to="/portal/lien-waivers"
+            icon={<FileSignature className="h-4 w-4" />}
+            label="Lien Waivers"
+          />
+          <NavItem
+            to="/portal/retainage"
+            icon={<Banknote className="h-4 w-4" />}
+            label="Retainage"
+          />
+          <NavItem
+            to="/portal/pay-apps"
+            icon={<Receipt className="h-4 w-4" />}
+            label="Pay Applications"
+          />
+          <NavItem
+            to="/portal/change-orders"
+            icon={<FileEdit className="h-4 w-4" />}
+            label="Change Orders"
+          />
+          <NavItem
+            to="/portal/schedule"
+            icon={<CalendarClock className="h-4 w-4" />}
+            label="Schedule"
+          />
+          <NavItem
+            to="/portal/safety"
+            icon={<Shield className="h-4 w-4" />}
+            label="Safety"
+          />
         </nav>
 
         {/* Footer */}
@@ -318,6 +354,42 @@ export function SubcontractorLayout() {
                 label="Compliance"
                 count={stats?.expiring_documents}
                 warning={stats?.expiring_documents ? stats.expiring_documents > 0 : false}
+                onClick={() => setMobileMenuOpen(false)}
+              />
+              <NavItem
+                to="/portal/lien-waivers"
+                icon={<FileSignature className="h-4 w-4" />}
+                label="Lien Waivers"
+                onClick={() => setMobileMenuOpen(false)}
+              />
+              <NavItem
+                to="/portal/retainage"
+                icon={<Banknote className="h-4 w-4" />}
+                label="Retainage"
+                onClick={() => setMobileMenuOpen(false)}
+              />
+              <NavItem
+                to="/portal/pay-apps"
+                icon={<Receipt className="h-4 w-4" />}
+                label="Pay Applications"
+                onClick={() => setMobileMenuOpen(false)}
+              />
+              <NavItem
+                to="/portal/change-orders"
+                icon={<FileEdit className="h-4 w-4" />}
+                label="Change Orders"
+                onClick={() => setMobileMenuOpen(false)}
+              />
+              <NavItem
+                to="/portal/schedule"
+                icon={<CalendarClock className="h-4 w-4" />}
+                label="Schedule"
+                onClick={() => setMobileMenuOpen(false)}
+              />
+              <NavItem
+                to="/portal/safety"
+                icon={<Shield className="h-4 w-4" />}
+                label="Safety"
                 onClick={() => setMobileMenuOpen(false)}
               />
               <NavItem

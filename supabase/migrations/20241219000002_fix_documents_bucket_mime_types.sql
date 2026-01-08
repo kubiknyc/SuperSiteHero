@@ -20,7 +20,4 @@ UPDATE storage.buckets
 SET allowed_mime_types = NULL
 WHERE id = 'documents';
 
--- Add comment for documentation
-COMMENT ON COLUMN storage.buckets.allowed_mime_types IS
-  'MIME type restrictions. NULL means no restrictions. For public buckets, ' ||
-  'set to NULL to avoid 406 errors. Validate MIME types at upload time instead.';
+-- Note: COMMENT ON requires owner privileges, skipping documentation comment

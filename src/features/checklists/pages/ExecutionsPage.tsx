@@ -606,7 +606,6 @@ export function ExecutionsPage() {
             projectId={activeProjectId}
           />
         )}
-        </div>
       </div>
     </SmartLayout>
   )

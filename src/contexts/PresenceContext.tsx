@@ -7,6 +7,7 @@ import {
   useEffect,
   useState,
   useCallback,
+  useMemo,
   ReactNode,
 } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -109,14 +110,14 @@ export function PresenceProvider({ children }: PresenceProviderProps) {
     [currentProjectId]
   )
 
-  const value: PresenceContextType = {
+  const value = useMemo<PresenceContextType>(() => ({
     connectionState,
     isConnected: connectionState === 'connected',
     currentProjectId,
     projectUsers,
     setCurrentProject,
     updateCurrentPage,
-  }
+  }), [connectionState, currentProjectId, projectUsers, setCurrentProject, updateCurrentPage])
 
   return (
     <PresenceContext.Provider value={value}>{children}</PresenceContext.Provider>

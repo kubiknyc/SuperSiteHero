@@ -15,6 +15,7 @@ import { RouteLoadingFallback } from './components/loading/RouteLoadingFallback'
 import { PWAInstallBanner } from './components/PWAInstallPrompt'
 import { PWAUpdateNotification } from './components/PWAUpdateNotification'
 import { KeyboardShortcutsProvider } from './components/ui/keyboard-shortcuts-provider'
+import { AgentChatPanel } from './features/agent'
 import { initDatabase, requestPersistentStorage } from './lib/offline/indexeddb'
 import { initSyncManager } from './lib/offline/sync-manager'
 import { logger } from './lib/utils/logger'
@@ -124,6 +125,9 @@ function App() {
 
                     {/* PWA Update Notification - shows toast when new version available */}
                     <PWAUpdateNotification />
+
+                    {/* AI Agent Chat Panel - floating chat interface */}
+                    <AgentChatPanel />
                   </KeyboardShortcutsProvider>
                 </LayoutVersionProvider>
               </DeviceProvider>

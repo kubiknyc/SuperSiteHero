@@ -71,7 +71,7 @@ export function GanttChart({
   hasBaseline = false,
   config: customConfig,
 }: GanttChartProps) {
-  'use no memo'
+  // Removed 'use no memo' - allowing React Compiler optimizations for better performance
   const containerRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
 

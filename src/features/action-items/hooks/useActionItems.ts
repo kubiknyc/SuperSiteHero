@@ -9,6 +9,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { actionItemsApi } from '@/lib/api/services/action-items'
 import { useAuth } from '@/hooks/useAuth'
 import { toast } from 'sonner'
+import { STALE_TIMES } from '@/lib/stale-times'
 import type {
   ActionItemFilters,
   CreateActionItemDTO,
@@ -48,7 +49,7 @@ export function useActionItems(filters: ActionItemFilters = {}) {
   return useQuery({
     queryKey: actionItemKeys.list(filters),
     queryFn: () => actionItemsApi.getActionItems(filters),
-    staleTime: 30000, // 30 seconds
+    staleTime: STALE_TIMES.FREQUENT, // 30 seconds
   })
 }
 
@@ -60,7 +61,7 @@ export function useProjectActionItems(projectId: string | undefined, extraFilter
     queryKey: actionItemKeys.list({ project_id: projectId, ...extraFilters }),
     queryFn: () => actionItemsApi.getActionItems({ project_id: projectId!, ...extraFilters }),
     enabled: !!projectId,
-    staleTime: 30000,
+    staleTime: STALE_TIMES.FREQUENT,
   })
 }
 
@@ -83,7 +84,7 @@ export function useActionItemSummary(projectId: string | undefined) {
     queryKey: actionItemKeys.summary(projectId || ''),
     queryFn: () => actionItemsApi.getProjectSummary(projectId!),
     enabled: !!projectId,
-    staleTime: 60000,
+    staleTime: STALE_TIMES.FREQUENT * 2, // 1 minute
   })
 }
 
@@ -95,7 +96,7 @@ export function useActionItemsByAssignee(projectId: string | undefined) {
     queryKey: actionItemKeys.byAssignee(projectId || ''),
     queryFn: () => actionItemsApi.getItemsByAssignee(projectId!),
     enabled: !!projectId,
-    staleTime: 60000,
+    staleTime: STALE_TIMES.FREQUENT * 2, // 1 minute
   })
 }
 
@@ -106,7 +107,7 @@ export function useOverdueActionItems(projectId?: string, limit = 50) {
   return useQuery({
     queryKey: actionItemKeys.overdue(projectId),
     queryFn: () => actionItemsApi.getOverdueItems(projectId, limit),
-    staleTime: 30000,
+    staleTime: STALE_TIMES.FREQUENT,
   })
 }
 
@@ -117,7 +118,7 @@ export function useActionItemsDueSoon(projectId?: string, limit = 50) {
   return useQuery({
     queryKey: actionItemKeys.dueSoon(projectId),
     queryFn: () => actionItemsApi.getItemsDueSoon(projectId, limit),
-    staleTime: 30000,
+    staleTime: STALE_TIMES.FREQUENT,
   })
 }
 
@@ -128,7 +129,7 @@ export function useEscalatedActionItems(projectId?: string, limit = 50) {
   return useQuery({
     queryKey: actionItemKeys.escalated(projectId),
     queryFn: () => actionItemsApi.getEscalatedItems(projectId, limit),
-    staleTime: 30000,
+    staleTime: STALE_TIMES.FREQUENT,
   })
 }
 
@@ -140,7 +141,7 @@ export function useActionItemStatusCounts(projectId: string | undefined) {
     queryKey: actionItemKeys.statusCounts(projectId || ''),
     queryFn: () => actionItemsApi.getStatusCounts(projectId!),
     enabled: !!projectId,
-    staleTime: 60000,
+    staleTime: STALE_TIMES.FREQUENT * 2, // 1 minute
   })
 }
 

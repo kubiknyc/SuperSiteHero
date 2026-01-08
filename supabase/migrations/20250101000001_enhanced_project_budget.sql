@@ -36,6 +36,7 @@ ALTER TABLE projects ADD COLUMN IF NOT EXISTS project_type VARCHAR(50); -- comme
 -- =============================================
 -- PROJECT BUDGET SUMMARY VIEW
 -- =============================================
+DROP VIEW IF EXISTS project_budget_summary;
 CREATE OR REPLACE VIEW project_budget_summary AS
 SELECT
   p.id,

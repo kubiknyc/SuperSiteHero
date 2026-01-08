@@ -1,6 +1,7 @@
 /**
  * Subcontractor Compliance Page
  * Manages compliance documents with expiration tracking and upload functionality
+ * Enhanced with P0-3: Insurance Endorsement Verification
  */
 
 import { useState, useMemo } from 'react'
@@ -8,6 +9,7 @@ import { useAuth } from '@/lib/auth/AuthContext'
 import {
   useComplianceDocuments,
   useExpiringDocuments,
+  useSubcontractorInsuranceCertificates,
   getDocumentTypeLabel,
   isExpired,
   isExpiringSoon,
@@ -16,6 +18,8 @@ import {
   ComplianceDocumentCard,
   ComplianceUploadDialog,
   InsuranceUploadWidget,
+  InsuranceEndorsementCard,
+  EndorsementComplianceSummary,
 } from '@/features/subcontractor-portal/components'
 import { Card, CardContent } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -29,6 +33,7 @@ import {
   CheckCircle,
   XCircle,
   Clock,
+  ShieldCheck,
 } from 'lucide-react'
 
 function ComplianceSkeleton() {
@@ -41,7 +46,7 @@ function ComplianceSkeleton() {
   )
 }
 
-type TabValue = 'all' | 'expiring' | 'pending' | 'approved' | 'rejected'
+type TabValue = 'all' | 'endorsements' | 'expiring' | 'pending' | 'approved' | 'rejected'
 
 export function SubcontractorCompliancePage() {
   const { userProfile } = useAuth()
@@ -49,6 +54,7 @@ export function SubcontractorCompliancePage() {
 
   const { data: allDocuments, isLoading, isError } = useComplianceDocuments()
   const { data: expiringDocuments } = useExpiringDocuments()
+  const { data: insuranceCertificates } = useSubcontractorInsuranceCertificates()
 
   // Calculate counts
   const counts = useMemo(() => {
@@ -202,10 +208,22 @@ export function SubcontractorCompliancePage() {
         </Card>
       </div>
 
+      {/* Endorsement Compliance Summary */}
+      <EndorsementComplianceSummary />
+
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabValue)}>
-        <TabsList>
+        <TabsList className="flex-wrap">
           <TabsTrigger value="all">All ({counts.all})</TabsTrigger>
+          <TabsTrigger value="endorsements" className="gap-1">
+            <ShieldCheck className="h-4 w-4" />
+            Endorsements
+            {insuranceCertificates && insuranceCertificates.length > 0 && (
+              <Badge variant="secondary" className="ml-1">
+                {insuranceCertificates.length}
+              </Badge>
+            )}
+          </TabsTrigger>
           <TabsTrigger value="expiring" className="text-warning">
             Expiring ({counts.expiring})
           </TabsTrigger>
@@ -214,59 +232,180 @@ export function SubcontractorCompliancePage() {
           <TabsTrigger value="rejected">Rejected ({counts.rejected})</TabsTrigger>
         </TabsList>
 
-        <TabsContent value={activeTab} className="mt-6">
-          {isLoading ? (
-            <ComplianceSkeleton />
-          ) : isError ? (
-            <Card>
-              <CardContent className="p-6 text-center text-muted-foreground">
-                Failed to load compliance documents
-              </CardContent>
-            </Card>
-          ) : filteredDocuments.length === 0 ? (
+        {/* Endorsements Tab Content */}
+        <TabsContent value="endorsements" className="mt-6">
+          {!insuranceCertificates || insuranceCertificates.length === 0 ? (
             <Card>
               <CardContent className="p-12 text-center">
-                <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <ShieldCheck className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                 <h3 className="text-lg font-medium mb-2 heading-subsection">
-                  {activeTab === 'all'
-                    ? 'No Documents Yet'
-                    : activeTab === 'expiring'
-                    ? 'No Expiring Documents'
-                    : activeTab === 'pending'
-                    ? 'No Pending Documents'
-                    : activeTab === 'approved'
-                    ? 'No Approved Documents'
-                    : 'No Rejected Documents'}
+                  No Insurance Certificates
                 </h3>
                 <p className="text-muted-foreground mb-4">
-                  {activeTab === 'all'
-                    ? "Upload your compliance documents to get started. You'll need insurance certificates, licenses, and other required documentation."
-                    : 'No documents match this filter.'}
+                  Upload your insurance certificates to track endorsement verification status.
                 </p>
-                {activeTab === 'all' && (
-                  <ComplianceUploadDialog subcontractorId={subcontractorId} />
-                )}
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-8">
-              {Object.entries(documentsByType).map(([type, docs]) => (
-                <section key={type}>
-                  <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 heading-section">
-                    {getDocumentTypeLabel(type)}
-                    <Badge variant="secondary">{docs.length}</Badge>
-                  </h2>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    {docs.map((doc) => (
-                      <ComplianceDocumentCard key={doc.id} document={doc} />
-                    ))}
-                  </div>
-                </section>
-              ))}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold heading-section">
+                  Insurance Certificates & Endorsements
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {insuranceCertificates.filter((c) => c.has_all_required_endorsements).length} of{' '}
+                  {insuranceCertificates.length} fully compliant
+                </p>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                {insuranceCertificates.map((cert) => (
+                  <InsuranceEndorsementCard key={cert.id} certificate={cert} />
+                ))}
+              </div>
             </div>
           )}
         </TabsContent>
+
+        {/* All Tab Content */}
+        <TabsContent value="all" className="mt-6">
+          <DocumentsTabContent
+            isLoading={isLoading}
+            isError={isError}
+            filteredDocuments={filteredDocuments}
+            documentsByType={documentsByType}
+            activeTab="all"
+            subcontractorId={subcontractorId}
+          />
+        </TabsContent>
+
+        {/* Expiring Tab Content */}
+        <TabsContent value="expiring" className="mt-6">
+          <DocumentsTabContent
+            isLoading={isLoading}
+            isError={isError}
+            filteredDocuments={filteredDocuments}
+            documentsByType={documentsByType}
+            activeTab="expiring"
+            subcontractorId={subcontractorId}
+          />
+        </TabsContent>
+
+        {/* Pending Tab Content */}
+        <TabsContent value="pending" className="mt-6">
+          <DocumentsTabContent
+            isLoading={isLoading}
+            isError={isError}
+            filteredDocuments={filteredDocuments}
+            documentsByType={documentsByType}
+            activeTab="pending"
+            subcontractorId={subcontractorId}
+          />
+        </TabsContent>
+
+        {/* Approved Tab Content */}
+        <TabsContent value="approved" className="mt-6">
+          <DocumentsTabContent
+            isLoading={isLoading}
+            isError={isError}
+            filteredDocuments={filteredDocuments}
+            documentsByType={documentsByType}
+            activeTab="approved"
+            subcontractorId={subcontractorId}
+          />
+        </TabsContent>
+
+        {/* Rejected Tab Content */}
+        <TabsContent value="rejected" className="mt-6">
+          <DocumentsTabContent
+            isLoading={isLoading}
+            isError={isError}
+            filteredDocuments={filteredDocuments}
+            documentsByType={documentsByType}
+            activeTab="rejected"
+            subcontractorId={subcontractorId}
+          />
+        </TabsContent>
       </Tabs>
+    </div>
+  )
+}
+
+// Helper component for document tab content
+interface DocumentsTabContentProps {
+  isLoading: boolean
+  isError: boolean
+  filteredDocuments: any[]
+  documentsByType: Record<string, any[]>
+  activeTab: TabValue
+  subcontractorId: string
+}
+
+function DocumentsTabContent({
+  isLoading,
+  isError,
+  filteredDocuments,
+  documentsByType,
+  activeTab,
+  subcontractorId,
+}: DocumentsTabContentProps) {
+  if (isLoading) {
+    return <ComplianceSkeleton />
+  }
+
+  if (isError) {
+    return (
+      <Card>
+        <CardContent className="p-6 text-center text-muted-foreground">
+          Failed to load compliance documents
+        </CardContent>
+      </Card>
+    )
+  }
+
+  if (filteredDocuments.length === 0) {
+    return (
+      <Card>
+        <CardContent className="p-12 text-center">
+          <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+          <h3 className="text-lg font-medium mb-2 heading-subsection">
+            {activeTab === 'all'
+              ? 'No Documents Yet'
+              : activeTab === 'expiring'
+              ? 'No Expiring Documents'
+              : activeTab === 'pending'
+              ? 'No Pending Documents'
+              : activeTab === 'approved'
+              ? 'No Approved Documents'
+              : 'No Rejected Documents'}
+          </h3>
+          <p className="text-muted-foreground mb-4">
+            {activeTab === 'all'
+              ? "Upload your compliance documents to get started. You'll need insurance certificates, licenses, and other required documentation."
+              : 'No documents match this filter.'}
+          </p>
+          {activeTab === 'all' && (
+            <ComplianceUploadDialog subcontractorId={subcontractorId} />
+          )}
+        </CardContent>
+      </Card>
+    )
+  }
+
+  return (
+    <div className="space-y-8">
+      {Object.entries(documentsByType).map(([type, docs]) => (
+        <section key={type}>
+          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 heading-section">
+            {getDocumentTypeLabel(type)}
+            <Badge variant="secondary">{docs.length}</Badge>
+          </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {docs.map((doc) => (
+              <ComplianceDocumentCard key={doc.id} document={doc} />
+            ))}
+          </div>
+        </section>
+      ))}
     </div>
   )
 }

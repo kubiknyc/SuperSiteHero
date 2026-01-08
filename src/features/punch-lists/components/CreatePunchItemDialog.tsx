@@ -15,7 +15,13 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { AssigneeSelector, type Assignee } from '@/components/AssigneeSelector'
 import { VoiceInputButton } from '@/components/ui/voice-input'
@@ -155,31 +161,33 @@ export function CreatePunchItemDialog({
             {/* Priority */}
             <div>
               <Label htmlFor="priority">Priority</Label>
-              <Select
-                id="priority"
-                value={priority || ''}
-                onChange={(e) => setPriority(e.target.value as Priority)}
-              >
-                <option value="low">Low</option>
-                <option value="normal">Normal</option>
-                <option value="high">High</option>
+              <Select value={priority} onValueChange={(v) => setPriority(v as Priority)}>
+                <SelectTrigger id="priority">
+                  <SelectValue placeholder="Select priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="normal">Normal</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                </SelectContent>
               </Select>
             </div>
 
             {/* Status */}
             <div>
               <Label htmlFor="status">Status</Label>
-              <Select
-                id="status"
-                value={status || ''}
-                onChange={(e) => setStatus(e.target.value as PunchItemStatus)}
-              >
-                <option value="open">Open</option>
-                <option value="in_progress">In Progress</option>
-                <option value="ready_for_review">Ready for Review</option>
-                <option value="completed">Completed</option>
-                <option value="verified">Verified</option>
-                <option value="rejected">Rejected</option>
+              <Select value={status} onValueChange={(v) => setStatus(v as PunchItemStatus)}>
+                <SelectTrigger id="status">
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="open">Open</SelectItem>
+                  <SelectItem value="in_progress">In Progress</SelectItem>
+                  <SelectItem value="ready_for_review">Ready for Review</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="verified">Verified</SelectItem>
+                  <SelectItem value="rejected">Rejected</SelectItem>
+                </SelectContent>
               </Select>
             </div>
 

@@ -1,7 +1,7 @@
 // File: /src/lib/auth/AuthContext.tsx
 // Authentication context and provider with enhanced session management
 
-import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback, useMemo, type ReactNode } from 'react'
 import { Session, User } from '@supabase/supabase-js'
 import { supabase } from '../supabase'
 import type { UserProfile } from '@/types/database'
@@ -121,28 +121,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logger.error('[Auth] Failed to initialize session manager:', error)
     })
 
-    // Get initial session
-    supabase.auth.getSession()
-      .then(({ data: { session } }) => {
+    // Get initial session - optimized to wait for both session AND profile before showing UI
+    const initializeAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
         setSession(session)
         setUser(session?.user ?? null)
 
-        // Fetch user profile from database
+        // Fetch user profile and initialize security in parallel
         if (session?.user) {
-          fetchUserProfile(session.user.id)
-          // Initialize session security on existing session
-          initializeSessionSecurity()
+          await Promise.all([
+            fetchUserProfile(session.user.id),
+            Promise.resolve(initializeSessionSecurity()),
+          ])
         }
-
-        setLoading(false)
-      })
-      .catch((error) => {
+      } catch (error) {
         logger.error('Error getting session:', error)
         setSession(null)
         setUser(null)
         setUserProfile(null)
+      } finally {
         setLoading(false)
-      })
+      }
+    }
+
+    initializeAuth()
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -277,7 +280,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const value = {
+  const value = useMemo(() => ({
     session,
     user,
     userProfile,
@@ -288,7 +291,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signOut,
     refreshUserProfile,
     dismissSecurityWarning,
-  }
+  }), [session, user, userProfile, loading, isPending, securityWarning, signIn, signOut, refreshUserProfile, dismissSecurityWarning])
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

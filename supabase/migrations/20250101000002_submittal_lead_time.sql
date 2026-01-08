@@ -59,7 +59,7 @@ BEGIN
   -- Calculate: Required date - lead time (weeks) - review cycle (days)
   RETURN p_required_on_site - (p_lead_time_weeks * 7) - p_review_cycle_days;
 END;
-$$ LANGUAGE SQL IMMUTABLE;
+$$ LANGUAGE plpgsql IMMUTABLE;
 
 -- =============================================
 -- TRIGGER: Auto-calculate submit-by date
@@ -91,6 +91,7 @@ CREATE TRIGGER trigger_submittal_due_date
 -- VIEW: submittal_register
 -- AIA G810 style submittal log
 -- =============================================
+DROP VIEW IF EXISTS submittal_register CASCADE;
 CREATE OR REPLACE VIEW submittal_register AS
 SELECT
   s.id,
@@ -100,7 +101,7 @@ SELECT
   s.spec_section_title,
   s.title,
   s.description,
-  s.status,
+  s.review_status,
   s.stamp_result,
   s.current_revision,
   s.revision_number,
@@ -117,17 +118,17 @@ SELECT
   s.review_cycle_days,
   -- Calculated fields
   CASE
-    WHEN s.calculated_submit_by_date IS NOT NULL AND s.status NOT IN ('approved', 'approved_as_noted', 'rejected') THEN
+    WHEN s.calculated_submit_by_date IS NOT NULL AND s.review_status NOT IN ('approved', 'approved_as_noted', 'rejected') THEN
       EXTRACT(DAY FROM (s.calculated_submit_by_date::timestamp - CURRENT_DATE::timestamp))::INTEGER
     ELSE NULL
   END AS days_until_submit_deadline,
   CASE
-    WHEN s.calculated_submit_by_date IS NOT NULL AND CURRENT_DATE > s.calculated_submit_by_date AND s.status NOT IN ('approved', 'approved_as_noted', 'rejected') THEN
+    WHEN s.calculated_submit_by_date IS NOT NULL AND CURRENT_DATE > s.calculated_submit_by_date AND s.review_status NOT IN ('approved', 'approved_as_noted', 'rejected') THEN
       true
     ELSE false
   END AS is_overdue_to_submit,
   CASE
-    WHEN s.required_on_site_date IS NOT NULL AND CURRENT_DATE > s.required_on_site_date AND s.status NOT IN ('approved', 'approved_as_noted') THEN
+    WHEN s.required_on_site_date IS NOT NULL AND CURRENT_DATE > s.required_on_site_date AND s.review_status NOT IN ('approved', 'approved_as_noted') THEN
       true
     ELSE false
   END AS is_overdue_on_site,
@@ -137,7 +138,7 @@ SELECT
   r.full_name AS reviewer_name,
   -- Subcontractor
   s.subcontractor_id,
-  sub.name AS subcontractor_name,
+  sub.company_name AS subcontractor_name,
   -- Project
   p.name AS project_name,
   p.project_number

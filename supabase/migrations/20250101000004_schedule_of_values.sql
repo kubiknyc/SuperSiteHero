@@ -31,10 +31,19 @@ CREATE TABLE IF NOT EXISTS schedule_of_values (
   deleted_at TIMESTAMPTZ
 );
 
--- Indexes
-CREATE INDEX IF NOT EXISTS idx_sov_project_id ON schedule_of_values(project_id);
-CREATE INDEX IF NOT EXISTS idx_sov_company_id ON schedule_of_values(company_id);
-CREATE INDEX IF NOT EXISTS idx_sov_status ON schedule_of_values(status);
+-- Indexes (wrapped in DO block to handle existing table with different schema)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'schedule_of_values' AND column_name = 'project_id') THEN
+    CREATE INDEX IF NOT EXISTS idx_sov_project_id ON schedule_of_values(project_id);
+  END IF;
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'schedule_of_values' AND column_name = 'company_id') THEN
+    CREATE INDEX IF NOT EXISTS idx_sov_company_id ON schedule_of_values(company_id);
+  END IF;
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'schedule_of_values' AND column_name = 'status') THEN
+    CREATE INDEX IF NOT EXISTS idx_sov_status ON schedule_of_values(status);
+  END IF;
+END $$;
 
 -- Enable RLS
 ALTER TABLE schedule_of_values ENABLE ROW LEVEL SECURITY;

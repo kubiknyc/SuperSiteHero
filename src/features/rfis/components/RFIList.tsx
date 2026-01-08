@@ -1,6 +1,8 @@
 // File: /src/features/rfis/components/RFIList.tsx
 // Table list of RFIs with filtering and sorting capabilities
+// Uses virtualization for large datasets (50+ items) for better performance
 
+import { useMemo } from 'react'
 import { format, isPast } from 'date-fns'
 import {
   Card,
@@ -14,6 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui'
+import { VirtualizedTable } from '@/components/ui/virtualized-table'
 import { Button } from '@/components/ui/button'
 import { Eye, Loader2, AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -21,6 +24,9 @@ import { RFIStatusBadge } from './RFIStatusBadge'
 import { RFIPriorityBadge } from './RFIPriorityBadge'
 import type { WorkflowItem } from '@/types/database'
 import { UserName } from '@/components/shared'
+
+// Threshold for using virtualization (avoids overhead for small lists)
+const VIRTUALIZATION_THRESHOLD = 50
 
 export interface RFIListProps {
   rfis: WorkflowItem[]
@@ -137,6 +143,122 @@ export function RFIList({ rfis, isLoading, onSelectRFI, filters }: RFIListProps)
     )
   }
 
+  // Use virtualization for large datasets
+  const useVirtualization = filteredRFIs.length >= VIRTUALIZATION_THRESHOLD
+
+  // Memoized columns for virtualized table
+  const virtualizedColumns = useMemo(() => [
+    {
+      key: 'number',
+      header: 'RFI #',
+      className: 'w-[100px]',
+      render: (rfi: WorkflowItem) => (
+        <span className="font-medium">{rfi.reference_number || `#${rfi.number || '-'}`}</span>
+      ),
+    },
+    {
+      key: 'title',
+      header: 'Title',
+      render: (rfi: WorkflowItem) => (
+        <div className="max-w-md">
+          <p className="font-medium text-foreground truncate">{rfi.title || 'Untitled RFI'}</p>
+          {rfi.description && (
+            <p className="text-xs text-muted truncate mt-1">{rfi.description}</p>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: 'status',
+      header: 'Status',
+      className: 'w-[120px]',
+      render: (rfi: WorkflowItem) => (
+        <RFIStatusBadge status={rfi.status as 'pending' | 'submitted' | 'approved' | 'rejected' | 'closed'} />
+      ),
+    },
+    {
+      key: 'priority',
+      header: 'Priority',
+      className: 'w-[100px]',
+      render: (rfi: WorkflowItem) => (
+        <RFIPriorityBadge priority={rfi.priority as 'low' | 'normal' | 'high'} />
+      ),
+    },
+    {
+      key: 'assignees',
+      header: 'Assignee(s)',
+      className: 'w-[150px]',
+      render: (rfi: WorkflowItem) => (
+        <span className="text-sm text-secondary">{renderAssignees(rfi.assignees)}</span>
+      ),
+    },
+    {
+      key: 'dueDate',
+      header: 'Due Date',
+      className: 'w-[130px]',
+      render: (rfi: WorkflowItem) => {
+        const overdueStatus = isOverdue(rfi.due_date)
+        return (
+          <span className={cn('text-sm', overdueStatus ? 'text-error font-medium' : 'text-secondary')}>
+            {formatDate(rfi.due_date)}
+            {overdueStatus && <span className="ml-1 text-xs">(Overdue)</span>}
+          </span>
+        )
+      },
+    },
+    {
+      key: 'created',
+      header: 'Created',
+      className: 'w-[130px]',
+      render: (rfi: WorkflowItem) => (
+        <span className="text-sm text-secondary">{formatDate(rfi.created_at)}</span>
+      ),
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      className: 'w-[80px] text-right',
+      render: (rfi: WorkflowItem) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={(e) => { e.stopPropagation(); onSelectRFI(rfi) }}
+          aria-label={`View RFI ${rfi.reference_number || rfi.number}`}
+        >
+          <Eye className="h-4 w-4" />
+        </Button>
+      ),
+    },
+  ], [onSelectRFI, renderAssignees, isOverdue, formatDate])
+
+  // Virtualized table for large datasets (50+ RFIs)
+  if (useVirtualization) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            RFIs
+            <span className="ml-2 text-sm font-normal text-muted">({filteredRFIs.length})</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <VirtualizedTable
+            data={filteredRFIs}
+            columns={virtualizedColumns}
+            estimatedRowHeight={73}
+            onRowClick={onSelectRFI}
+            rowClassName={(rfi) => cn(
+              'cursor-pointer',
+              isOverdue(rfi.due_date) && 'bg-error-light/50'
+            )}
+            emptyMessage="No RFIs found"
+          />
+        </CardContent>
+      </Card>
+    )
+  }
+
+  // Standard table for small datasets (< 50 RFIs)
   return (
     <Card>
       <CardHeader>

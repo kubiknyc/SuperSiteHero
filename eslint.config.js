@@ -35,8 +35,6 @@ export default tseslint.config(
       'public/*.min.mjs',
       // Docker demo project (separate codebase)
       'welcome-to-docker/**',
-      // Claudia submodule (separate codebase)
-      'claudia/**',
     ],
   },
 

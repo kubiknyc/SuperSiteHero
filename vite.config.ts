@@ -239,6 +239,29 @@ export default defineConfig(({ mode }) => {
           // Heavy PDF and Excel libraries - lazy loaded
           'vendor-pdf': ['jspdf', 'pdfjs-dist'],
           'vendor-excel': ['exceljs'],
+          // Animation library
+          'vendor-animation': ['framer-motion'],
+          // Drag and drop libraries
+          'vendor-dnd': ['@dnd-kit/core', '@dnd-kit/sortable', '@dnd-kit/utilities'],
+          // Radix UI primitives - grouped for better caching
+          'vendor-radix': [
+            '@radix-ui/react-accordion',
+            '@radix-ui/react-avatar',
+            '@radix-ui/react-collapsible',
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-label',
+            '@radix-ui/react-progress',
+            '@radix-ui/react-scroll-area',
+            '@radix-ui/react-select',
+            '@radix-ui/react-separator',
+            '@radix-ui/react-slider',
+            '@radix-ui/react-slot',
+            '@radix-ui/react-switch',
+            '@radix-ui/react-tooltip',
+          ],
+          // 3D visualization libraries - heavy, rarely used
+          'vendor-three': ['three', '@react-three/fiber', '@react-three/drei'],
         }
       }
     },

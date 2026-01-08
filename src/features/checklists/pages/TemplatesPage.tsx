@@ -471,7 +471,6 @@ export function TemplatesPage() {
           onSave={handleSaveTemplate}
           isLoading={isCreating || isUpdating}
         />
-        </div>
       </div>
     </SmartLayout>
   )
