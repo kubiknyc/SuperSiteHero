@@ -109,7 +109,7 @@ export function DrawingPickerDialog({
       // Search filter
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase()
-        const number = drawing.drawing_number?.toLowerCase() || ''
+        const number = drawing.drawingNumber?.toLowerCase() || ''
         const titleText = drawing.title?.toLowerCase() || ''
         const desc = drawing.description?.toLowerCase() || ''
 
@@ -144,10 +144,10 @@ export function DrawingPickerDialog({
       // Direct selection without pin
       onSelect({
         id: drawing.id,
-        drawingNumber: drawing.drawing_number,
+        drawingNumber: drawing.drawingNumber,
         title: drawing.title,
         discipline: drawing.discipline,
-        fileUrl: drawing.current_revision?.file_url || null,
+        fileUrl: drawing.currentFileUrl || null,
       })
       handleOpenChange(false)
     }
@@ -159,10 +159,10 @@ export function DrawingPickerDialog({
 
     onSelect({
       id: selectedDrawing.id,
-      drawingNumber: selectedDrawing.drawing_number,
+      drawingNumber: selectedDrawing.drawingNumber,
       title: selectedDrawing.title,
       discipline: selectedDrawing.discipline,
-      fileUrl: selectedDrawing.current_revision?.file_url || null,
+      fileUrl: selectedDrawing.currentFileUrl || null,
       pinX: pinPosition?.x,
       pinY: pinPosition?.y,
       pinLabel: pinLabel.trim() || undefined,
@@ -176,10 +176,10 @@ export function DrawingPickerDialog({
 
     onSelect({
       id: selectedDrawing.id,
-      drawingNumber: selectedDrawing.drawing_number,
+      drawingNumber: selectedDrawing.drawingNumber,
       title: selectedDrawing.title,
       discipline: selectedDrawing.discipline,
-      fileUrl: selectedDrawing.current_revision?.file_url || null,
+      fileUrl: selectedDrawing.currentFileUrl || null,
     })
     handleOpenChange(false)
   }
@@ -197,7 +197,7 @@ export function DrawingPickerDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileImage className="h-5 w-5" />
-            {selectedDrawing ? `Pin Location on ${selectedDrawing.drawing_number}` : title}
+            {selectedDrawing ? `Pin Location on ${selectedDrawing.drawingNumber}` : title}
           </DialogTitle>
           <DialogDescription>
             {selectedDrawing
@@ -286,14 +286,14 @@ export function DrawingPickerDialog({
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <span className="font-medium text-sm">
-                              {drawing.drawing_number}
+                              {drawing.drawingNumber}
                             </span>
                             {drawing.discipline && (
                               <Badge variant="outline" className="text-xs">
                                 {drawing.discipline}
                               </Badge>
                             )}
-                            {drawing.is_issued_for_construction && (
+                            {drawing.isIssuedForConstruction && (
                               <Badge className="text-xs bg-green-100 text-green-800">
                                 IFC
                               </Badge>
@@ -302,9 +302,9 @@ export function DrawingPickerDialog({
                           <p className="text-sm text-muted-foreground truncate">
                             {drawing.title}
                           </p>
-                          {drawing.current_revision && (
+                          {drawing.currentRevision && (
                             <p className="text-xs text-muted-foreground">
-                              Rev {drawing.current_revision.revision_number}
+                              Rev {drawing.currentRevision}
                             </p>
                           )}
                         </div>
@@ -351,9 +351,9 @@ export function DrawingPickerDialog({
               }}
             >
               {/* Drawing preview image or placeholder */}
-              {selectedDrawing.current_revision?.file_url ? (
+              {selectedDrawing.currentFileUrl ? (
                 <img
-                  src={selectedDrawing.current_revision.file_url}
+                  src={selectedDrawing.currentFileUrl}
                   alt={selectedDrawing.title}
                   className="w-full h-full object-contain"
                 />

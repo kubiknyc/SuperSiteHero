@@ -279,14 +279,14 @@ export function CloseoutDocumentFormDialog({
                 Subcontractor
               </Label>
               <Select
-                value={form.watch('subcontractor_id') || ''}
-                onValueChange={(value) => form.setValue('subcontractor_id', value)}
+                value={form.watch('subcontractor_id') || '__none__'}
+                onValueChange={(value) => form.setValue('subcontractor_id', value === '__none__' ? '' : value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select subcontractor" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">-- None --</SelectItem>
+                  <SelectItem value="__none__">-- None --</SelectItem>
                   {subcontractors.map((sub) => (
                     <SelectItem key={sub.id} value={sub.id}>
                       {sub.company_name}

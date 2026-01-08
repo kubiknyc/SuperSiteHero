@@ -250,6 +250,8 @@ export function EmptySearchResults({
 export function EmptyList({
   itemName = 'item',
   onCreate,
+  title,
+  description,
   ...props
 }: Omit<EmptyStateProps, 'type'> & {
   itemName?: string
@@ -258,8 +260,8 @@ export function EmptyList({
   return (
     <EmptyState
       icon={Inbox}
-      title={props.title ?? `No ${itemName}s yet`}
-      description={props.description ?? `Get started by creating your first ${itemName}.`}
+      title={title ?? `No ${itemName}s yet`}
+      description={description ?? `Get started by creating your first ${itemName}.`}
       action={onCreate ? { label: `Create ${itemName}`, onClick: onCreate } : undefined}
       {...props}
     />
@@ -269,6 +271,8 @@ export function EmptyList({
 /** Empty state for error scenarios */
 export function EmptyError({
   onRetry,
+  title,
+  description,
   ...props
 }: Omit<EmptyStateProps, 'type'> & {
   onRetry?: () => void
@@ -276,8 +280,8 @@ export function EmptyError({
   return (
     <EmptyState
       icon={AlertCircle}
-      title={props.title ?? 'Something went wrong'}
-      description={props.description ?? 'We encountered an error loading this content.'}
+      title={title ?? 'Something went wrong'}
+      description={description ?? 'We encountered an error loading this content.'}
       action={onRetry ? { label: 'Try again', onClick: onRetry } : undefined}
       {...props}
     />
@@ -285,12 +289,16 @@ export function EmptyError({
 }
 
 /** Empty state for permission denied */
-export function EmptyNoPermission(props: Omit<EmptyStateProps, 'type'>) {
+export function EmptyNoPermission({
+  title,
+  description,
+  ...props
+}: Omit<EmptyStateProps, 'type'>) {
   return (
     <EmptyState
       icon={Lock}
-      title={props.title ?? 'Access restricted'}
-      description={props.description ?? "You don't have permission to view this content."}
+      title={title ?? 'Access restricted'}
+      description={description ?? "You don't have permission to view this content."}
       {...props}
     />
   )
@@ -300,6 +308,8 @@ export function EmptyNoPermission(props: Omit<EmptyStateProps, 'type'>) {
 export function EmptyUpload({
   onUpload,
   acceptedTypes,
+  title,
+  description,
   ...props
 }: Omit<EmptyStateProps, 'type'> & {
   onUpload?: () => void
@@ -308,9 +318,9 @@ export function EmptyUpload({
   return (
     <EmptyState
       icon={FolderOpen}
-      title={props.title ?? 'No files uploaded'}
+      title={title ?? 'No files uploaded'}
       description={
-        props.description ??
+        description ??
         (acceptedTypes
           ? `Drag and drop files here, or click to upload. Accepted: ${acceptedTypes}`
           : 'Drag and drop files here, or click to upload.')
@@ -326,6 +336,8 @@ export function EmptyTable({
   itemName = 'record',
   onCreate,
   columns,
+  title,
+  description,
   ...props
 }: Omit<EmptyStateProps, 'type'> & {
   itemName?: string
@@ -335,8 +347,8 @@ export function EmptyTable({
   const content = (
     <EmptyState
       icon={Inbox}
-      title={props.title ?? `No ${itemName}s`}
-      description={props.description ?? `No ${itemName}s have been created yet.`}
+      title={title ?? `No ${itemName}s`}
+      description={description ?? `No ${itemName}s have been created yet.`}
       action={onCreate ? { label: `Add ${itemName}`, onClick: onCreate } : undefined}
       compact
       {...props}

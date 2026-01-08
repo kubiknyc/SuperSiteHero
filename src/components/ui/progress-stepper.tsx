@@ -13,7 +13,7 @@ export interface Step {
   id: string
   label: string
   description?: string
-  icon?: React.ElementType
+  icon?: React.ComponentType<{ className?: string }>
   optional?: boolean
 }
 

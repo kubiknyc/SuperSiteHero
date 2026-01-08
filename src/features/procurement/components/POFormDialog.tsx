@@ -277,14 +277,14 @@ export function POFormDialog({
                     Vendor
                   </Label>
                   <Select
-                    value={watch('vendor_id') || ''}
-                    onValueChange={(v) => setValue('vendor_id', v)}
+                    value={watch('vendor_id') || '__none__'}
+                    onValueChange={(v) => setValue('vendor_id', v === '__none__' ? '' : v)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select a vendor..." />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">No vendor selected</SelectItem>
+                      <SelectItem value="__none__">No vendor selected</SelectItem>
                       {vendors.map((vendor) => (
                         <SelectItem key={vendor.id} value={vendor.id}>
                           {vendor.name}

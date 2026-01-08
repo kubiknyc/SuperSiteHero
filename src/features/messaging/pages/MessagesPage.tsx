@@ -10,7 +10,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { MessageSquare } from 'lucide-react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import {
   ConversationList,
   ConversationHeader,
@@ -61,7 +61,7 @@ export function MessagesPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout>
       <div className="h-[calc(100vh-4rem)] flex">
         {/* Conversation list sidebar */}
         <div
@@ -150,6 +150,6 @@ export function MessagesPage() {
         onOpenChange={setShowNewDialog}
         projectId={selectedProjectId}
       />
-    </AppLayout>
+    </SmartLayout>
   )
 }

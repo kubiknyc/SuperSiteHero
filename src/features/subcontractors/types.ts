@@ -94,8 +94,10 @@ export interface BidLevelingRow {
 export interface BidRecommendation {
   submissionId: string
   bidderName: string
+  recommendedBidder: string
   reason: string
   score: number
+  confidence: 'high' | 'medium' | 'low'
   factors: {
     priceScore: number
     qualificationScore: number

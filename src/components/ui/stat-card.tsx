@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 import { LucideIcon, TrendingUp, TrendingDown, ExternalLink } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-interface StatCardProps {
+export interface StatCardProps {
   label: string
   value: string | number
   target?: number

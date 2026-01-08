@@ -409,14 +409,14 @@ export function InsuranceCertificateForm({
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Subcontractor</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select onValueChange={(v) => field.onChange(v === '__none__' ? '' : v)} defaultValue={field.value || '__none__'}>
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder="Select subcontractor" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="">None</SelectItem>
+                              <SelectItem value="__none__">None</SelectItem>
                               {subcontractors.map((sub) => (
                                 <SelectItem key={sub.id} value={sub.id}>
                                   {sub.company_name}
@@ -438,14 +438,14 @@ export function InsuranceCertificateForm({
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Project</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select onValueChange={(v) => field.onChange(v === '__none__' ? '' : v)} defaultValue={field.value || '__none__'}>
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder="Select project" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="">None (Company-wide)</SelectItem>
+                              <SelectItem value="__none__">None (Company-wide)</SelectItem>
                               {projects.map((project) => (
                                 <SelectItem key={project.id} value={project.id}>
                                   {project.name}

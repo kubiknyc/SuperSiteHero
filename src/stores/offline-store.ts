@@ -36,6 +36,7 @@ export interface PendingSyncItem {
   createdAt: number;
   timestamp: number;
   retryCount: number;
+  error?: string;
 }
 
 /**

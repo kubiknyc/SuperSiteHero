@@ -656,14 +656,14 @@ export function ActivityFormDialog({
                   <div className="space-y-2">
                     <Label>Assigned User</Label>
                     <Select
-                      value={form.watch('responsible_user_id') || ''}
-                      onValueChange={(value) => form.setValue('responsible_user_id', value)}
+                      value={form.watch('responsible_user_id') || '__none__'}
+                      onValueChange={(value) => form.setValue('responsible_user_id', value === '__none__' ? '' : value)}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select user" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">-- None --</SelectItem>
+                        <SelectItem value="__none__">-- None --</SelectItem>
                         {users.map((user) => (
                           <SelectItem key={user.id} value={user.id}>
                             {user.full_name}
@@ -679,14 +679,14 @@ export function ActivityFormDialog({
                   <div className="space-y-2">
                     <Label>Subcontractor</Label>
                     <Select
-                      value={form.watch('subcontractor_id') || ''}
-                      onValueChange={(value) => form.setValue('subcontractor_id', value)}
+                      value={form.watch('subcontractor_id') || '__none__'}
+                      onValueChange={(value) => form.setValue('subcontractor_id', value === '__none__' ? '' : value)}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select subcontractor" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">-- None --</SelectItem>
+                        <SelectItem value="__none__">-- None --</SelectItem>
                         {subcontractors.map((sub) => (
                           <SelectItem key={sub.id} value={sub.id}>
                             {sub.company_name}
@@ -723,14 +723,14 @@ export function ActivityFormDialog({
                     <div className="space-y-2">
                       <Label>Constraint Type</Label>
                       <Select
-                        value={form.watch('constraint_type') || ''}
-                        onValueChange={(value) => form.setValue('constraint_type', value)}
+                        value={form.watch('constraint_type') || '__none__'}
+                        onValueChange={(value) => form.setValue('constraint_type', value === '__none__' ? '' : value)}
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="No constraint" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">-- No Constraint --</SelectItem>
+                          <SelectItem value="__none__">-- No Constraint --</SelectItem>
                           {CONSTRAINT_TYPES.map((type) => (
                             <SelectItem key={type.value} value={type.value}>
                               {type.label}

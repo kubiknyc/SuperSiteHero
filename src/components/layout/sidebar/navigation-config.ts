@@ -18,7 +18,7 @@ export interface NavItem {
   path: string
   label: string
   icon: LucideIcon
-  badge?: number
+  badge?: number | React.ComponentType
   description?: string
 }
 

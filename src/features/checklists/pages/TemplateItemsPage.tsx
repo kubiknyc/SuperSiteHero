@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { ArrowLeft, Save, Eye, Trash2 } from 'lucide-react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui'
 import { ChecklistItemBuilder } from '../components/ChecklistItemBuilder'
@@ -134,20 +134,20 @@ export function TemplateItemsPage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
             <p className="mt-4 text-secondary">Loading template...</p>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (!template) {
     return (
-      <AppLayout>
+      <SmartLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <p className="text-secondary">Template not found</p>
@@ -161,12 +161,12 @@ export function TemplateItemsPage() {
             </Button>
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -287,6 +287,6 @@ export function TemplateItemsPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </AppLayout>
+    </SmartLayout>
   )
 }

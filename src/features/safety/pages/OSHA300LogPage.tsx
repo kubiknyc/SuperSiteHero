@@ -6,7 +6,7 @@
  */
 
 import { useState, useMemo } from 'react'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { OSHA300Log, OSHA300ACertificationDialog } from '../components'
 import { useIncidents, useOSHA300ASummary } from '../hooks/useIncidents'
 import { Button } from '@/components/ui/button'
@@ -194,7 +194,7 @@ export function OSHA300LogPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="OSHA 300 Log" subtitle="Work-related injuries and illnesses log">
       <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -531,7 +531,7 @@ export function OSHA300LogPage() {
           }}
         />
       )}
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

@@ -4,6 +4,7 @@
 
 import { useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -161,26 +162,30 @@ export function ExecutionDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-surface flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4" />
-          <p className="text-secondary">Loading checklist...</p>
+      <SmartLayout title="Loading Checklist" subtitle="">
+        <div className="min-h-screen bg-surface flex items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4" />
+            <p className="text-secondary">Loading checklist...</p>
+          </div>
         </div>
-      </div>
+      </SmartLayout>
     )
   }
 
   if (!execution) {
     return (
-      <div className="min-h-screen bg-surface flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-semibold text-foreground mb-2 heading-section">Checklist not found</h2>
-          <Button variant="outline" onClick={() => navigate('/checklists/executions')}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Checklists
-          </Button>
+      <SmartLayout title="Checklist Not Found" subtitle="">
+        <div className="min-h-screen bg-surface flex items-center justify-center">
+          <div className="text-center">
+            <h2 className="text-xl font-semibold text-foreground mb-2 heading-section">Checklist not found</h2>
+            <Button variant="outline" onClick={() => navigate('/checklists/executions')}>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Checklists
+            </Button>
+          </div>
         </div>
-      </div>
+      </SmartLayout>
     )
   }
 
@@ -199,23 +204,24 @@ export function ExecutionDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Header */}
-        <div className="mb-6">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/checklists/executions')}
-            className="mb-4"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Checklists
-          </Button>
+    <SmartLayout title={execution.name} subtitle="Checklist details">
+      <div className="min-h-screen bg-surface">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          {/* Header */}
+          <div className="mb-6">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate('/checklists/executions')}
+              className="mb-4"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Checklists
+            </Button>
 
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold text-foreground mb-2 heading-page">{execution.name}</h1>
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <h1 className="text-3xl font-bold text-foreground mb-2 heading-page">{execution.name}</h1>
               {execution.description && (
                 <p className="text-secondary mb-3">{execution.description}</p>
               )}
@@ -408,9 +414,10 @@ export function ExecutionDetailPage() {
               </CardContent>
             </Card>
           ))}
+          </div>
         </div>
       </div>
-    </div>
+    </SmartLayout>
   )
 }
 

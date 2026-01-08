@@ -4,6 +4,7 @@
 
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -228,13 +229,14 @@ export function TemplatesPage() {
   const hasActiveFilters = searchQuery || categoryFilter !== 'all' || !showSystemTemplates || !showCustomTemplates
 
   return (
-    <div className="min-h-screen bg-surface">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Header */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground mb-2 heading-page">Inspection Checklists</h1>
+    <SmartLayout title="Inspection Checklists" subtitle="Create and manage inspection templates">
+      <div className="min-h-screen bg-surface">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          {/* Header */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-foreground mb-2 heading-page">Inspection Checklists</h1>
               <p className="text-secondary">
                 Create and manage inspection checklist templates for your projects
               </p>
@@ -461,15 +463,17 @@ export function TemplatesPage() {
         )}
       </div>
 
-      {/* Template Builder Dialog */}
-      <TemplateBuilderDialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        template={editingTemplate}
-        onSave={handleSaveTemplate}
-        isLoading={isCreating || isUpdating}
-      />
-    </div>
+        {/* Template Builder Dialog */}
+        <TemplateBuilderDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          template={editingTemplate}
+          onSave={handleSaveTemplate}
+          isLoading={isCreating || isUpdating}
+        />
+        </div>
+      </div>
+    </SmartLayout>
   )
 }
 

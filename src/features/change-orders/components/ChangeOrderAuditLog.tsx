@@ -402,14 +402,14 @@ export function ChangeOrderAuditLog({
               />
             </div>
             <Select
-              value={actionFilter}
-              onValueChange={(value) => setActionFilter(value as AuditAction | '')}
+              value={actionFilter || '__all__'}
+              onValueChange={(value) => setActionFilter(value === '__all__' ? '' : value as AuditAction | '')}
             >
               <SelectTrigger className="w-full sm:w-[180px]">
                 <SelectValue placeholder="All Actions" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Actions</SelectItem>
+                <SelectItem value="__all__">All Actions</SelectItem>
                 <SelectItem value="created">Created</SelectItem>
                 <SelectItem value="updated">Updated</SelectItem>
                 <SelectItem value="status_changed">Status Changed</SelectItem>

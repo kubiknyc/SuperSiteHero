@@ -367,6 +367,7 @@ export function DesktopApp() {
 
         {/* Protected routes */}
         <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
 
         {/* Field Dashboard */}
         <Route path="/field-dashboard" element={<ProtectedRoute><FieldDashboardPage /></ProtectedRoute>} />

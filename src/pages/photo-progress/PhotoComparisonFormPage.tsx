@@ -233,13 +233,13 @@ export function PhotoComparisonFormPage() {
                 </div>
                 <div>
                   <Label htmlFor="locationId">Location (Optional)</Label>
-                  <Select value={locationId} onValueChange={setLocationId}>
+                  <Select value={locationId || '__none__'} onValueChange={(v) => setLocationId(v === '__none__' ? '' : v)}>
                     <SelectTrigger id="locationId">
                       <MapPin className="h-4 w-4 mr-2" />
                       <SelectValue placeholder="Select location" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Locations</SelectItem>
+                      <SelectItem value="__none__">All Locations</SelectItem>
                       {locations.map((loc) => (
                         <SelectItem key={loc.id} value={loc.id}>
                           {loc.name}

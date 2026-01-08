@@ -277,14 +277,14 @@ export function CustomRoleFormDialog({
                 <div className="space-y-2">
                   <Label htmlFor="inherits">Inherit Permissions From</Label>
                   <Select
-                    value={inheritsFrom}
-                    onValueChange={(v) => setInheritsFrom(v as DefaultRole | '')}
+                    value={inheritsFrom || '__none__'}
+                    onValueChange={(v) => setInheritsFrom(v === '__none__' ? '' : v as DefaultRole | '')}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select a base role (optional)" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">None</SelectItem>
+                      <SelectItem value="__none__">None</SelectItem>
                       {DEFAULT_ROLES.filter(
                         (r) => !['owner', 'subcontractor', 'client'].includes(r.value)
                       ).map((r) => (

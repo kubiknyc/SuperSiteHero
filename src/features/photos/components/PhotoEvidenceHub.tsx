@@ -280,16 +280,16 @@ export function PhotoEvidenceHub({
                   Entity Type
                 </label>
                 <Select
-                  value={filters.entityTypes?.[0] || ''}
+                  value={filters.entityTypes?.[0] || '__all__'}
                   onValueChange={(value) =>
-                    handleFilterChange('entityTypes', value ? [value as PhotoEntityType] : undefined)
+                    handleFilterChange('entityTypes', value === '__all__' ? undefined : [value as PhotoEntityType])
                   }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="All types" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All types</SelectItem>
+                    <SelectItem value="__all__">All types</SelectItem>
                     {ENTITY_TYPES.map((type) => (
                       <SelectItem key={type} value={type}>
                         {ENTITY_TYPE_LABELS[type]}

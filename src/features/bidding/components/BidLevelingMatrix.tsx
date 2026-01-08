@@ -187,11 +187,16 @@ export function BidLevelingMatrix({
   }, [matrix?.submissions, selectedBidders])
 
   // Export handler
-  const handleExport = useCallback(async (format: 'excel' | 'pdf') => {
+  const handleExport = useCallback(async (format: 'xlsx' | 'pdf') => {
     await exportMutation.mutateAsync({
       packageId: bidPackageId,
-      format,
-      includeNotes: true,
+      options: {
+        format,
+        includeLineItems: true,
+        includeAlternates: true,
+        includeExclusions: true,
+        includeCharts: false,
+      },
     })
   }, [bidPackageId, exportMutation])
 
@@ -235,7 +240,7 @@ export function BidLevelingMatrix({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => handleExport('excel')}>
+              <DropdownMenuItem onClick={() => handleExport('xlsx')}>
                 <FileSpreadsheet className="h-4 w-4 mr-2" />
                 Export to Excel
               </DropdownMenuItem>

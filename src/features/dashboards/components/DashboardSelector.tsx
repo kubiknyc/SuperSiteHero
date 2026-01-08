@@ -128,7 +128,7 @@ export function DashboardSelector({
       case 'project_manager':
         return <ProjectManagerDashboard project={project} projectId={projectId} />
       case 'executive':
-        return <ExecutiveDashboard companyId={userProfile?.company_id ?? undefined} />
+        return <ExecutiveDashboard companyId={userProfile?.company_id ?? undefined} projectId={projectId} />
       default:
         return null // Will fall back to original dashboard in parent
     }

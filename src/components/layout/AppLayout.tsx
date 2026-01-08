@@ -175,7 +175,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             {primaryNavItems.map((item) => {
               const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/')
               const Icon = item.icon
-              const Badge = item.badge
+              const BadgeComponent = typeof item.badge === 'function' ? item.badge : null
 
               return (
                 <Link
@@ -198,7 +198,12 @@ export function AppLayout({ children }: AppLayoutProps) {
                     isActive ? "text-primary" : "text-gray-500 group-hover:text-gray-300"
                   )} />
                   <span className="flex-1">{item.label}</span>
-                  {Badge && <Badge />}
+                  {typeof item.badge === 'number' && item.badge > 0 && (
+                    <span className="px-1.5 py-0.5 text-xs font-medium bg-red-500 text-white rounded-full min-w-[20px] text-center">
+                      {item.badge}
+                    </span>
+                  )}
+                  {BadgeComponent && <BadgeComponent />}
                 </Link>
               )
             })}

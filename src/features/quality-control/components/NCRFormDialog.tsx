@@ -509,14 +509,14 @@ export function NCRFormDialog({
               <div className="space-y-2">
                 <Label htmlFor="costCode">Cost Code</Label>
                 <Select
-                  value={costCodeId}
-                  onValueChange={setCostCodeId}
+                  value={costCodeId || '__none__'}
+                  onValueChange={(v) => setCostCodeId(v === '__none__' ? '' : v)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select cost code..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">None</SelectItem>
+                    <SelectItem value="__none__">None</SelectItem>
                     {costCodes.map((cc) => (
                       <SelectItem key={cc.id} value={cc.id}>
                         {cc.code} - {cc.name}
@@ -532,11 +532,12 @@ export function NCRFormDialog({
               <div className="space-y-2">
                 <Label htmlFor="responsiblePartyType">Responsible Party Type</Label>
                 <Select
-                  value={responsiblePartyType}
+                  value={responsiblePartyType || '__none__'}
                   onValueChange={(v) => {
-                    setResponsiblePartyType(v as ResponsiblePartyType);
+                    const newValue = v === '__none__' ? '' : v;
+                    setResponsiblePartyType(newValue as ResponsiblePartyType);
                     // Clear subcontractor if not selecting subcontractor type
-                    if (v !== ResponsiblePartyType.SUBCONTRACTOR) {
+                    if (newValue !== ResponsiblePartyType.SUBCONTRACTOR) {
                       setResponsibleSubcontractorId('');
                     }
                   }}
@@ -545,7 +546,7 @@ export function NCRFormDialog({
                     <SelectValue placeholder="Select party type..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">None</SelectItem>
+                    <SelectItem value="__none__">None</SelectItem>
                     {RESPONSIBLE_PARTY_TYPES.map((t) => (
                       <SelectItem key={t.value} value={t.value}>
                         {t.label}
@@ -559,14 +560,14 @@ export function NCRFormDialog({
                 <div className="space-y-2">
                   <Label htmlFor="subcontractor">Subcontractor</Label>
                   <Select
-                    value={responsibleSubcontractorId}
-                    onValueChange={setResponsibleSubcontractorId}
+                    value={responsibleSubcontractorId || '__none__'}
+                    onValueChange={(v) => setResponsibleSubcontractorId(v === '__none__' ? '' : v)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select subcontractor..." />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">None</SelectItem>
+                      <SelectItem value="__none__">None</SelectItem>
                       {subcontractors.map((sub) => (
                         <SelectItem key={sub.id} value={sub.id}>
                           {sub.company_name}
@@ -581,14 +582,14 @@ export function NCRFormDialog({
               <div className="space-y-2">
                 <Label htmlFor="responsibleUser">Assigned To</Label>
                 <Select
-                  value={responsibleUserId}
-                  onValueChange={setResponsibleUserId}
+                  value={responsibleUserId || '__none__'}
+                  onValueChange={(v) => setResponsibleUserId(v === '__none__' ? '' : v)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select user..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Unassigned</SelectItem>
+                    <SelectItem value="__none__">Unassigned</SelectItem>
                     {availableUsers.map((user) => (
                       <SelectItem key={user.id} value={user.id}>
                         {user.name}

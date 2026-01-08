@@ -50,7 +50,7 @@ interface SearchResult {
   subtitle?: string
   projectName?: string
   status?: string
-  icon: React.ElementType
+  icon: React.ComponentType<{ className?: string }>
   link: string
 }
 
@@ -60,7 +60,7 @@ interface RecentSearch {
 }
 
 // Type filter configuration
-const TYPE_FILTERS: Array<{ value: EntityType | 'all'; label: string; icon: React.ElementType }> = [
+const TYPE_FILTERS: Array<{ value: EntityType | 'all'; label: string; icon: React.ComponentType<{ className?: string }> }> = [
   { value: 'all', label: 'All', icon: Search },
   { value: 'project', label: 'Projects', icon: Building2 },
   { value: 'task', label: 'Tasks', icon: ClipboardList },
@@ -79,7 +79,7 @@ interface QuickAction {
   id: string
   label: string
   description: string
-  icon: React.ElementType
+  icon: React.ComponentType<{ className?: string }>
   link: string
   shortcut?: string
 }
@@ -325,7 +325,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
           type: 'project',
           title: p.name,
           subtitle: p.project_number ? `#${p.project_number}` : undefined,
-          status: p.status,
+          status: p.status ?? undefined,
           icon: Building2,
           link: `/projects/${p.id}`,
         })
@@ -562,7 +562,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                 )}
                 onClick={() => setTypeFilter(filter.value)}
               >
-                <Icon className="h-3 w-3" />
+                <Icon className="h-3 w-3" aria-hidden="true" />
                 {filter.label}
               </Button>
             )
@@ -628,7 +628,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                         'flex items-center justify-center w-9 h-9 rounded-lg',
                         isSelected ? 'bg-primary/20' : 'bg-muted'
                       )}>
-                        <Icon className="h-4 w-4" />
+                        <Icon className="h-4 w-4" aria-hidden="true" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
@@ -677,7 +677,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                       'flex items-center justify-center w-9 h-9 rounded-lg',
                       isSelected ? 'bg-primary/20' : 'bg-muted'
                     )}>
-                      <Icon className="h-4 w-4" />
+                      <Icon className="h-4 w-4" aria-hidden="true" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-medium">{action.label}</p>

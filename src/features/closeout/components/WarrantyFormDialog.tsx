@@ -268,14 +268,14 @@ export function WarrantyFormDialog({
             <div className="space-y-2">
               <Label htmlFor="warranty_type">Warranty Type</Label>
               <Select
-                value={form.watch('warranty_type') || ''}
-                onValueChange={(value) => form.setValue('warranty_type', value)}
+                value={form.watch('warranty_type') || '__none__'}
+                onValueChange={(value) => form.setValue('warranty_type', value === '__none__' ? '' : value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">-- None --</SelectItem>
+                  <SelectItem value="__none__">-- None --</SelectItem>
                   {WARRANTY_TYPES.map((type) => (
                     <SelectItem key={type.value} value={type.value}>
                       {type.label}
@@ -305,14 +305,14 @@ export function WarrantyFormDialog({
                 Subcontractor
               </Label>
               <Select
-                value={form.watch('subcontractor_id') || ''}
-                onValueChange={(value) => form.setValue('subcontractor_id', value)}
+                value={form.watch('subcontractor_id') || '__none__'}
+                onValueChange={(value) => form.setValue('subcontractor_id', value === '__none__' ? '' : value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select subcontractor" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">-- None --</SelectItem>
+                  <SelectItem value="__none__">-- None --</SelectItem>
                   {subcontractors.map((sub) => (
                     <SelectItem key={sub.id} value={sub.id}>
                       {sub.company_name}

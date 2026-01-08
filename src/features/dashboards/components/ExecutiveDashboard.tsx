@@ -25,6 +25,10 @@ import {
   Briefcase,
   Activity,
   Loader2,
+  ClipboardList,
+  AlertCircle,
+  ListChecks,
+  Shield,
 } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -32,14 +36,19 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useExecutiveDashboard } from '../hooks/useExecutiveDashboard'
+import { useDashboardStats } from '@/features/dashboard/hooks/useDashboardStats'
 
 interface ExecutiveDashboardProps {
   companyId?: string
+  projectId?: string
 }
 
-export function ExecutiveDashboard({ companyId }: ExecutiveDashboardProps) {
+export function ExecutiveDashboard({ companyId, projectId }: ExecutiveDashboardProps) {
   // Fetch real data from the dashboard hook
   const { data, isLoading, error } = useExecutiveDashboard(companyId)
+
+  // Fetch operational stats (Tasks, RFIs, Punch, Safety)
+  const { data: dashboardStats } = useDashboardStats(projectId)
 
   // Use real data or fallback defaults
   const portfolioMetrics = data?.portfolioMetrics || {
@@ -228,6 +237,81 @@ export function ExecutiveDashboard({ companyId }: ExecutiveDashboardProps) {
           </CardContent>
         </Card>
       </div>
+
+      {/* Operational Stats - Tasks, RFIs, Punch, Safety */}
+      {dashboardStats && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <Link to="/tasks?status=pending">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                    <ClipboardList className="h-5 w-5 text-blue-500" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold">
+                      {dashboardStats.tasks.pending + dashboardStats.tasks.inProgress}
+                    </p>
+                    <p className="text-sm text-muted-foreground">Tasks</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link to="/rfis?status=open">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                    <AlertCircle className="h-5 w-5 text-amber-500" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold">
+                      {dashboardStats.rfis.open + dashboardStats.rfis.pendingResponse}
+                    </p>
+                    <p className="text-sm text-muted-foreground">RFIs</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link to="/punch-lists?status=open">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                    <ListChecks className="h-5 w-5 text-purple-500" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold">
+                      {dashboardStats.punchItems.open + dashboardStats.punchItems.inProgress}
+                    </p>
+                    <p className="text-sm text-muted-foreground">Punch</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link to="/safety">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                    <Shield className="h-5 w-5 text-emerald-500" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold">{dashboardStats.safety.daysSinceIncident}d</p>
+                    <p className="text-sm text-muted-foreground">Safety</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        </div>
+      )}
 
       {/* KPIs */}
       <Card>

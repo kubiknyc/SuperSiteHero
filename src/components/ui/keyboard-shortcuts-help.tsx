@@ -39,7 +39,7 @@ interface KeyboardShortcutsHelpProps {
 // Category Icons
 // ============================================================================
 
-const CATEGORY_ICONS: Record<ShortcutCategory, React.ElementType> = {
+const CATEGORY_ICONS: Record<ShortcutCategory, React.ComponentType<{ className?: string }>> = {
   navigation: Globe,
   actions: Zap,
   views: Eye,

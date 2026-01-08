@@ -17,7 +17,7 @@ import { Badge } from '@/components/ui/badge'
 import { Loader2, AtSign, X } from 'lucide-react'
 import { useMentions, type MentionUser, type ParsedMention } from '@/hooks/notifications/useMentions'
 
-interface MentionInputProps extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'onChange'> {
+interface MentionInputProps extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'onChange' | 'value' | 'onSubmit'> {
   value: string
   onChange: (value: string) => void
   projectId?: string

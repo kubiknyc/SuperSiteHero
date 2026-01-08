@@ -4,6 +4,7 @@
 
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -232,12 +233,14 @@ export function ChecklistsDashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-surface flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4" />
-          <p className="text-secondary">Loading dashboard...</p>
+      <SmartLayout title="Checklists Analytics" subtitle="Performance metrics">
+        <div className="min-h-screen bg-surface flex items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4" />
+            <p className="text-secondary">Loading dashboard...</p>
+          </div>
         </div>
-      </div>
+      </SmartLayout>
     )
   }
 
@@ -253,31 +256,32 @@ export function ChecklistsDashboardPage() {
   const PIE_COLORS = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#6366f1']
 
   return (
-    <div className="min-h-screen bg-surface">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Header */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground flex items-center gap-3 heading-page">
-                <BarChart3 className="w-8 h-8 text-primary" />
-                Checklists Analytics
-              </h1>
-              <p className="text-secondary mt-1">
-                Insights and performance metrics for your checklists
-              </p>
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={() => navigate('/checklists/executions')}>
-                <FileText className="w-4 h-4 mr-2" />
-                View All
-              </Button>
-              <Button onClick={() => navigate('/checklists/templates')}>
-                Start Checklist
-              </Button>
+    <SmartLayout title="Checklists Analytics" subtitle="Performance metrics">
+      <div className="min-h-screen bg-surface">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          {/* Header */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-foreground flex items-center gap-3 heading-page">
+                  <BarChart3 className="w-8 h-8 text-primary" />
+                  Checklists Analytics
+                </h1>
+                <p className="text-secondary mt-1">
+                  Insights and performance metrics for your checklists
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => navigate('/checklists/executions')}>
+                  <FileText className="w-4 h-4 mr-2" />
+                  View All
+                </Button>
+                <Button onClick={() => navigate('/checklists/templates')}>
+                  Start Checklist
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
 
         {/* Key Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -707,8 +711,9 @@ export function ChecklistsDashboardPage() {
             </CardContent>
           </Card>
         )}
+        </div>
       </div>
-    </div>
+    </SmartLayout>
   )
 }
 

@@ -88,8 +88,8 @@ export function BaselineSelector({
   return (
     <div className={`flex gap-2 ${className}`}>
       <Select
-        value={value || ''}
-        onValueChange={(val) => onChange(val === '' ? null : val)}
+        value={value || '__none__'}
+        onValueChange={(val) => onChange(val === '__none__' ? null : val)}
         disabled={disabled}
       >
         <SelectTrigger className="w-[220px]">
@@ -109,7 +109,7 @@ export function BaselineSelector({
         </SelectTrigger>
         <SelectContent>
           {/* No baseline option */}
-          <SelectItem value="">
+          <SelectItem value="__none__">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Target className="h-4 w-4" />
               <span>No baseline (no comparison)</span>

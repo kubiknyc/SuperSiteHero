@@ -3,7 +3,7 @@
 
 import { useState, useCallback, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { AppLayoutV2 } from '@/components/layout/AppLayoutV2'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { QuickActions } from '@/components/layout/QuickActions'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
 import { useAuth } from '@/lib/auth/AuthContext'
@@ -76,7 +76,7 @@ export function DashboardPageV2() {
   }
 
   return (
-    <AppLayoutV2 showHeaderStats={true}>
+    <SmartLayout showHeaderStats={false}>
       {/* Role-based Dashboard */}
       {hasRoleDashboard ? (
         <div className="p-6 lg:p-8">
@@ -269,6 +269,6 @@ export function DashboardPageV2() {
           />
         </div>
       )}
-    </AppLayoutV2>
+    </SmartLayout>
   )
 }

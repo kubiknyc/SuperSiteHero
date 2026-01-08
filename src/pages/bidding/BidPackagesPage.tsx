@@ -199,12 +199,12 @@ export default function BidPackagesPage() {
             />
           </div>
 
-          <RadixSelect value={divisionFilter} onValueChange={setDivisionFilter}>
+          <RadixSelect value={divisionFilter || '__all__'} onValueChange={(v) => setDivisionFilter(v === '__all__' ? '' : v)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="All Divisions" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Divisions</SelectItem>
+              <SelectItem value="__all__">All Divisions</SelectItem>
               {CSI_DIVISIONS.map((div) => (
                 <SelectItem key={div.code} value={div.code}>
                   {div.code} - {div.name}

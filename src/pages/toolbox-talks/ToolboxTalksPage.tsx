@@ -237,14 +237,14 @@ export function ToolboxTalksPage() {
 
             {/* Status filter */}
             <Select
-              value={statusFilter || ''}
-              onValueChange={(v) => updateFilter('status', v || null)}
+              value={statusFilter || '__all__'}
+              onValueChange={(v) => updateFilter('status', v === '__all__' ? null : v)}
             >
               <SelectTrigger className="w-[160px]">
                 <SelectValue placeholder="All Statuses" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Statuses</SelectItem>
+                <SelectItem value="__all__">All Statuses</SelectItem>
                 {Object.entries(TALK_STATUS_LABELS).map(([value, label]) => (
                   <SelectItem key={value} value={value}>
                     {label}
@@ -255,14 +255,14 @@ export function ToolboxTalksPage() {
 
             {/* Category filter */}
             <Select
-              value={categoryFilter || ''}
-              onValueChange={(v) => updateFilter('category', v || null)}
+              value={categoryFilter || '__all__'}
+              onValueChange={(v) => updateFilter('category', v === '__all__' ? null : v)}
             >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Categories</SelectItem>
+                <SelectItem value="__all__">All Categories</SelectItem>
                 {Object.entries(TOPIC_CATEGORY_LABELS).map(([value, label]) => (
                   <SelectItem key={value} value={value}>
                     {label}

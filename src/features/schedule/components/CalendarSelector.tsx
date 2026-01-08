@@ -113,8 +113,8 @@ export function CalendarSelector({
   return (
     <div className={`flex gap-2 ${className}`}>
       <Select
-        value={value || ''}
-        onValueChange={(val) => onChange(val === '' ? null : val)}
+        value={value || '__none__'}
+        onValueChange={(val) => onChange(val === '__none__' ? null : val)}
         disabled={disabled}
       >
         <SelectTrigger className="flex-1">
@@ -137,7 +137,7 @@ export function CalendarSelector({
         </SelectTrigger>
         <SelectContent>
           {/* No calendar option */}
-          <SelectItem value="">
+          <SelectItem value="__none__">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Calendar className="h-4 w-4" />
               <span>No calendar (use project default)</span>

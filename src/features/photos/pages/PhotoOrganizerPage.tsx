@@ -11,7 +11,7 @@
  */
 
 import { useState, useMemo, useCallback, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import {
   Camera,
   Grid3X3,
@@ -20,6 +20,7 @@ import {
   Search,
   Upload,
   FolderPlus,
+  FolderOpen,
   Trash2,
   Download,
   Tag,
@@ -27,6 +28,7 @@ import {
   Image,
   Clock,
   HardDrive,
+  Building2,
 } from 'lucide-react'
 import { LocalErrorBoundary } from '@/components/errors'
 import { Button } from '@/components/ui/button'
@@ -83,6 +85,7 @@ import type {
 } from '@/types/photo-management'
 import { logger } from '../../../lib/utils/logger';
 import JSZip from 'jszip';
+import { useMyProjects } from '@/features/projects/hooks/useProjects';
 
 
 // =============================================
@@ -313,6 +316,10 @@ function FilterBar({ filters, onFiltersChange, filterOptions }: FilterBarProps) 
 
 export function PhotoOrganizerPage() {
   const { projectId } = useParams<{ projectId: string }>()
+  const navigate = useNavigate()
+
+  // Fetch projects for selection when no projectId in URL
+  const { data: projects, isLoading: isLoadingProjects } = useMyProjects()
 
   // View state
   const [viewMode, setViewMode] = useState<PhotoViewMode>('grid')
@@ -662,10 +669,77 @@ export function PhotoOrganizerPage() {
     toast.info('Add to collection coming soon')
   }, [])
 
+  // Handle project selection callback
+  const handleProjectSelect = useCallback((selectedProjectId: string) => {
+    navigate(`/projects/${selectedProjectId}/photos`)
+  }, [navigate])
+
   if (!projectId) {
+    // Show project selector when no project in URL
+    if (isLoadingProjects) {
+      return (
+        <div className="container mx-auto py-6">
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-pulse text-muted-foreground">Loading projects...</div>
+          </div>
+        </div>
+      )
+    }
+
+    if (!projects || projects.length === 0) {
+      return (
+        <div className="container mx-auto py-6">
+          <div className="text-center py-16">
+            <FolderOpen className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+            <h2 className="text-xl font-semibold mb-2">No Projects Found</h2>
+            <p className="text-muted-foreground">
+              You need to be assigned to a project to view photos.
+            </p>
+          </div>
+        </div>
+      )
+    }
+
     return (
-      <div className="flex items-center justify-center h-64">
-        <p className="text-muted-foreground">No project selected</p>
+      <div className="container mx-auto py-6 space-y-6">
+        {/* Header */}
+        <div>
+          <h1 className="text-2xl font-bold heading-page">Photos</h1>
+          <p className="text-muted-foreground">
+            Select a project to view and manage photos
+          </p>
+        </div>
+
+        {/* Project Selection Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {projects.map((project) => (
+            <Card
+              key={project.id}
+              className="cursor-pointer hover:border-primary hover:shadow-md transition-all"
+              onClick={() => handleProjectSelect(project.id)}
+            >
+              <CardContent className="pt-6">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 bg-primary/10 rounded-lg">
+                    <Building2 className="h-6 w-6 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold truncate">{project.name}</h3>
+                    {project.project_number && (
+                      <p className="text-sm text-muted-foreground">
+                        #{project.project_number}
+                      </p>
+                    )}
+                    <p className="text-sm text-muted-foreground mt-1 capitalize">
+                      {project.status?.replace('_', ' ') || 'Active'}
+                    </p>
+                  </div>
+                  <Camera className="h-5 w-5 text-muted-foreground" />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     )
   }

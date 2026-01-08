@@ -7,7 +7,7 @@
 
 import { useState, useMemo } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -82,7 +82,7 @@ export function IncidentsListPage() {
   const hasActiveFilters = severityFilter || statusFilter || typeFilter
 
   return (
-    <AppLayout>
+    <SmartLayout title="Safety Incidents" subtitle="Track and manage safety incidents">
       <div className="p-6">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -294,7 +294,7 @@ export function IncidentsListPage() {
           </div>
         )}
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

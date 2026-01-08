@@ -123,6 +123,30 @@ export default {
   				DEFAULT: 'hsl(var(--destructive))',
   				foreground: 'hsl(var(--destructive-foreground))'
   			},
+  			success: {
+  				DEFAULT: 'hsl(var(--success))',
+  				foreground: 'hsl(var(--success-foreground))',
+  				light: 'hsl(var(--success) / 0.1)',
+  				dark: 'hsl(var(--success) / 0.9)'
+  			},
+  			error: {
+  				DEFAULT: 'hsl(var(--destructive))',
+  				foreground: 'hsl(var(--destructive-foreground))',
+  				light: 'hsl(var(--destructive) / 0.1)',
+  				dark: 'hsl(var(--destructive) / 0.9)'
+  			},
+  			info: {
+  				DEFAULT: 'hsl(var(--info))',
+  				foreground: 'hsl(var(--info-foreground))',
+  				light: 'hsl(var(--info) / 0.1)',
+  				dark: 'hsl(var(--info) / 0.9)'
+  			},
+  			warning: {
+  				DEFAULT: 'hsl(var(--warning))',
+  				foreground: 'hsl(var(--warning-foreground))',
+  				light: 'hsl(var(--warning) / 0.1)',
+  				dark: 'hsl(var(--warning) / 0.9)'
+  			},
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',

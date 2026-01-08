@@ -297,13 +297,13 @@ export function PhotoUploadPage() {
                 </div>
                 <div>
                   <Label htmlFor="defaultLocation">Default Location</Label>
-                  <Select value={defaultLocationId} onValueChange={setDefaultLocationId}>
+                  <Select value={defaultLocationId || '__none__'} onValueChange={(v) => setDefaultLocationId(v === '__none__' ? '' : v)}>
                     <SelectTrigger id="defaultLocation">
                       <MapPin className="h-4 w-4 mr-2" />
                       <SelectValue placeholder="Select location" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">No Location</SelectItem>
+                      <SelectItem value="__none__">No Location</SelectItem>
                       {locations.map((loc) => (
                         <SelectItem key={loc.id} value={loc.id}>
                           {loc.name}
@@ -314,13 +314,13 @@ export function PhotoUploadPage() {
                 </div>
                 <div>
                   <Label htmlFor="weatherCondition">Weather</Label>
-                  <Select value={weatherCondition} onValueChange={setWeatherCondition}>
+                  <Select value={weatherCondition || '__none__'} onValueChange={(v) => setWeatherCondition(v === '__none__' ? '' : v)}>
                     <SelectTrigger id="weatherCondition">
                       <Cloud className="h-4 w-4 mr-2" />
                       <SelectValue placeholder="Select weather" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Not specified</SelectItem>
+                      <SelectItem value="__none__">Not specified</SelectItem>
                       {Object.values(WeatherCondition).map((condition) => (
                         <SelectItem key={condition} value={condition}>
                           {getWeatherConditionLabel(condition)}
@@ -471,14 +471,14 @@ export function PhotoUploadPage() {
                               className="text-sm"
                             />
                             <Select
-                              value={fileData.locationId}
-                              onValueChange={(v) => updateFileLocation(fileData.id, v)}
+                              value={fileData.locationId || '__none__'}
+                              onValueChange={(v) => updateFileLocation(fileData.id, v === '__none__' ? '' : v)}
                             >
                               <SelectTrigger className="text-sm">
                                 <SelectValue placeholder="Location" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="">No Location</SelectItem>
+                                <SelectItem value="__none__">No Location</SelectItem>
                                 {locations.map((loc) => (
                                   <SelectItem key={loc.id} value={loc.id}>
                                     {loc.name}

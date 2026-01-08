@@ -287,7 +287,7 @@ export function DashboardPage() {
   const { isV2 } = useLayoutVersion()
 
   return (
-    <SmartLayout showHeaderStats={true}>
+    <SmartLayout showHeaderStats={false}>
       {/* Role-based Dashboard */}
       {hasRoleDashboard ? (
         <div className="p-6">

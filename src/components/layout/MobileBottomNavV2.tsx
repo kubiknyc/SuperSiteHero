@@ -50,9 +50,10 @@ export const MobileBottomNavV2 = memo(function MobileBottomNavV2({
   onMoreClick,
 }: MobileBottomNavV2Props) {
   const location = useLocation();
-  const navigate = useNavigate();
+  // Note: useNavigate is available if programmatic navigation is needed
+  const _navigate = useNavigate();
 
-  const handleNavClick = useCallback((path: string, isAction?: boolean) => {
+  const handleNavClick = useCallback((_path: string, isAction?: boolean) => {
     triggerHaptic(isAction ? 'medium' : 'light');
   }, []);
 

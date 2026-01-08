@@ -70,21 +70,21 @@ export function EnhancedNotificationCenter({
     // Tab filter
     switch (activeTab) {
       case 'unread':
-        filtered = filtered.filter(n => !n.read)
+        filtered = filtered.filter(n => !n.is_read)
         break
       case 'mentions':
         filtered = filtered.filter(n => n.type === 'mention')
         break
       case 'approvals':
         filtered = filtered.filter(n =>
-          n.type === 'approval_request' || n.requiresAction
+          n.type === 'approval_request' || n.type?.includes('approval')
         )
         break
     }
 
     // Type filter
     if (selectedTypes.length > 0) {
-      filtered = filtered.filter(n => selectedTypes.includes(n.type))
+      filtered = filtered.filter(n => n.type && selectedTypes.includes(n.type))
     }
 
     // Search filter
@@ -92,31 +92,42 @@ export function EnhancedNotificationCenter({
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(n =>
         n.title.toLowerCase().includes(query) ||
-        n.message.toLowerCase().includes(query) ||
-        n.projectName?.toLowerCase().includes(query)
+        n.message?.toLowerCase().includes(query) ||
+        n.project?.name?.toLowerCase().includes(query)
       )
     }
 
     return filtered
   }, [notifications, activeTab, searchQuery, selectedTypes])
 
-  // Group filtered notifications
+  // Group filtered notifications - convert NotificationItemData to GroupedNotification format
   const { groups } = useNotificationGroups(
     filteredNotifications.map(n => ({
-      ...n,
+      id: n.id,
+      user_id: '', // Not available in NotificationItemData, but required for GroupedNotification
+      type: n.type || 'general',
+      title: n.title,
+      message: n.message,
+      is_read: n.is_read ?? false,
+      created_at: n.created_at || new Date().toISOString(),
       priority: n.priority || 'normal',
+      project_id: n.project?.id || null,
+      project_name: n.project?.name || null,
+      sender_id: n.sender?.id || null,
+      sender_name: n.sender?.name || null,
+      sender_avatar_url: n.sender?.avatar_url || null,
     })),
     groupBy
   )
 
-  const unreadCount = notifications.filter(n => !n.read).length
-  const mentionsCount = notifications.filter(n => n.type === 'mention' && !n.read).length
+  const unreadCount = notifications.filter(n => !n.is_read).length
+  const mentionsCount = notifications.filter(n => n.type === 'mention' && !n.is_read).length
   const approvalsCount = notifications.filter(n =>
-    (n.type === 'approval_request' || n.requiresAction) && !n.read
+    (n.type === 'approval_request' || n.type?.includes('approval')) && !n.is_read
   ).length
 
   const notificationTypes = useMemo(() => {
-    const types = new Set(notifications.map(n => n.type))
+    const types = new Set(notifications.map(n => n.type).filter((t): t is string => t !== null))
     return Array.from(types)
   }, [notifications])
 

@@ -565,14 +565,14 @@ export function ScheduleOfValues({
         <div>
           <Label>Cost Code</Label>
           <Select
-            value={formData.cost_code}
-            onValueChange={(value) => handleFormChange('cost_code', value)}
+            value={formData.cost_code || '__none__'}
+            onValueChange={(value) => handleFormChange('cost_code', value === '__none__' ? '' : value)}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select division..." />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">None</SelectItem>
+              <SelectItem value="__none__">None</SelectItem>
               {csiDivisions.map((div) => (
                 <SelectItem key={div.code} value={div.code}>
                   {div.code} - {div.name}

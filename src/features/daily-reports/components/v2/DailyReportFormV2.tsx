@@ -17,6 +17,7 @@ import {
   ChevronLeft,
 } from 'lucide-react';
 import { QuickModeForm } from './QuickModeForm';
+import { DetailedModeForm } from './DetailedModeForm';
 import { useResponsiveLayout, useOrientation } from '@/hooks/useOrientation';
 import { cn } from '@/lib/utils';
 import type { DailyReportV2, FormMode } from '@/types/daily-reports-v2';
@@ -159,74 +160,6 @@ export function DailyReportFormV2({
           onSwitchToQuick={handleSwitchToQuick}
         />
       )}
-    </div>
-  );
-}
-
-// Placeholder for detailed mode - will be implemented in Phase 2
-// Now with tablet-optimized layout
-function DetailedModeForm({
-  projectId: _projectId,
-  reportDate: _reportDate,
-  existingReport: _existingReport,
-  onSwitchToQuick,
-}: {
-  projectId: string;
-  reportDate: string;
-  existingReport?: DailyReportV2;
-  onSwitchToQuick: () => void;
-}) {
-  const layout = useResponsiveLayout();
-  const { isTablet, isTouchDevice } = useOrientation();
-
-  const _isTabletLandscape = layout === 'tablet-landscape';
-  const isTabletOrDesktop = layout === 'tablet-portrait' || layout === 'tablet-landscape' || layout === 'desktop';
-
-  return (
-    <div className={cn(
-      'mx-auto p-4',
-      // Wider container and more padding on tablets
-      isTabletOrDesktop ? 'max-w-5xl tablet:p-6' : 'max-w-4xl'
-    )}>
-      <div className={cn(
-        'bg-card rounded-lg shadow-sm border text-center',
-        // More padding on tablets
-        isTablet ? 'p-10' : 'p-8'
-      )}>
-        <FileText className={cn(
-          'mx-auto text-disabled mb-4',
-          isTablet ? 'h-16 w-16' : 'h-12 w-12'
-        )} />
-        <h2 className={cn(
-          'font-semibold mb-2',
-          isTablet ? 'text-2xl' : 'text-xl'
-        )}>
-          Detailed Mode
-        </h2>
-        <p className={cn(
-          'text-secondary mb-4',
-          isTablet && 'text-lg'
-        )}>
-          Full form with all sections including safety incidents, inspections,
-          T&M work, progress tracking, and more.
-        </p>
-        <p className={cn(
-          'text-muted mb-6',
-          isTablet ? 'text-base' : 'text-sm'
-        )}>
-          Coming soon! For now, use Quick Mode for fast daily report entry.
-        </p>
-        <Button
-          onClick={onSwitchToQuick}
-          className={cn(
-            // Larger button on tablets
-            isTouchDevice && 'min-h-touch px-6'
-          )}
-        >
-          <Zap className={isTablet ? 'h-5 w-5 mr-2' : 'h-4 w-4 mr-2'} />
-          Switch to Quick Mode
-        </Button>
-      </div>
     </div>
   );
 }

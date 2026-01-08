@@ -4,6 +4,7 @@
 
 import { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -180,13 +181,14 @@ export function SchedulesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Header */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-foreground mb-2 flex items-center gap-3 heading-page">
+    <SmartLayout title="Recurring Schedules" subtitle="Manage automated checklist creation">
+      <div className="min-h-screen bg-surface">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          {/* Header */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold text-foreground mb-2 flex items-center gap-3 heading-page">
                 <Repeat className="w-8 h-8 text-primary" />
                 Recurring Schedules
               </h1>
@@ -476,27 +478,29 @@ export function SchedulesPage() {
         />
       )}
 
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              <Trash2 className="h-5 w-5 text-error" />
-              Delete Schedule
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete &quot;{scheduleToDelete?.name}&quot;? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setScheduleToDelete(null)}>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteConfirm} className="bg-error hover:bg-red-700">
-              Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+        {/* Delete Confirmation Dialog */}
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-2">
+                <Trash2 className="h-5 w-5 text-error" />
+                Delete Schedule
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete &quot;{scheduleToDelete?.name}&quot;? This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setScheduleToDelete(null)}>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteConfirm} className="bg-error hover:bg-red-700">
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+        </div>
+      </div>
+    </SmartLayout>
   )
 }
 

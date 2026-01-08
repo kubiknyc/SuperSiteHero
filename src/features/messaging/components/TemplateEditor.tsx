@@ -166,12 +166,12 @@ export function TemplateEditor({
           <div className="space-y-2">
             <Label htmlFor="template-category">Category</Label>
             {categories.length > 0 ? (
-              <Select value={category} onValueChange={setCategory} disabled={isSaving}>
+              <Select value={category || '__none__'} onValueChange={(v) => setCategory(v === '__none__' ? '' : v)} disabled={isSaving}>
                 <SelectTrigger id="template-category">
                   <SelectValue placeholder="Select or enter category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">No category</SelectItem>
+                  <SelectItem value="__none__">No category</SelectItem>
                   {categories.map(cat => (
                     <SelectItem key={cat} value={cat}>
                       {cat}

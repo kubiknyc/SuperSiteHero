@@ -4,6 +4,7 @@
 
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -67,17 +68,20 @@ export function TemplatePreviewPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-surface flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4" />
-          <p className="text-secondary">Loading template...</p>
+      <SmartLayout title="Template Preview" subtitle="Loading...">
+        <div className="min-h-screen bg-surface flex items-center justify-center">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4" />
+            <p className="text-secondary">Loading template...</p>
+          </div>
         </div>
-      </div>
+      </SmartLayout>
     )
   }
 
   if (!template) {
     return (
+      <SmartLayout title="Template Not Found" subtitle="">
       <div className="min-h-screen bg-surface flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-xl font-semibold text-foreground mb-2 heading-section">Template not found</h2>
@@ -87,6 +91,7 @@ export function TemplatePreviewPage() {
           </Button>
         </div>
       </div>
+      </SmartLayout>
     )
   }
 
@@ -95,9 +100,10 @@ export function TemplatePreviewPage() {
   const requiredItems = template.template_items?.filter((item) => item.is_required).length || 0
 
   return (
-    <div className="min-h-screen bg-surface">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Header */}
+    <SmartLayout title={template.name} subtitle="Template preview">
+      <div className="min-h-screen bg-surface">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          {/* Header */}
         <div className="mb-6">
           <Button
             variant="ghost"
@@ -257,16 +263,18 @@ export function TemplatePreviewPage() {
         )}
       </div>
 
-      {/* Start Execution Dialog */}
-      {showStartDialog && template && (
-        <StartExecutionDialog
-          templateId={template.id}
-          projectId="" // User will select project in dialog
-          open={showStartDialog}
-          onOpenChange={setShowStartDialog}
-        />
-      )}
-    </div>
+        {/* Start Execution Dialog */}
+        {showStartDialog && template && (
+          <StartExecutionDialog
+            templateId={template.id}
+            projectId="" // User will select project in dialog
+            open={showStartDialog}
+            onOpenChange={setShowStartDialog}
+          />
+        )}
+        </div>
+      </div>
+    </SmartLayout>
   )
 }
 

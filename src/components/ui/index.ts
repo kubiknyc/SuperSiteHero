@@ -302,4 +302,4 @@ export type {
 
 // Dashboard Components
 export { StatCard, StatCardSkeleton } from './stat-card'
-export type { default as StatCardProps } from './stat-card'
+export type { StatCardProps } from './stat-card'

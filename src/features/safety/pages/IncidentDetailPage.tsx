@@ -11,7 +11,7 @@
 
 import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -73,17 +73,17 @@ export function IncidentDetailPage() {
 
   if (isLoading) {
     return (
-      <AppLayout>
+      <SmartLayout>
         <div className="flex items-center justify-center h-96">
           <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   if (!incident) {
     return (
-      <AppLayout>
+      <SmartLayout>
         <div className="p-6 text-center">
           <AlertTriangle className="h-12 w-12 text-disabled mx-auto" />
           <h2 className="text-lg font-medium text-foreground mt-4 heading-section">Incident not found</h2>
@@ -92,7 +92,7 @@ export function IncidentDetailPage() {
             <Button>Back to Incidents</Button>
           </Link>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
@@ -135,7 +135,7 @@ export function IncidentDetailPage() {
 
   if (isEditing) {
     return (
-      <AppLayout>
+      <SmartLayout>
         <div className="p-6">
           <div className="mb-6">
             <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)} className="mb-4">
@@ -152,12 +152,12 @@ export function IncidentDetailPage() {
             />
           </div>
         </div>
-      </AppLayout>
+      </SmartLayout>
     )
   }
 
   return (
-    <AppLayout>
+    <SmartLayout>
       <div className="p-6">
         {/* Header */}
         <div className="mb-6">
@@ -592,7 +592,7 @@ export function IncidentDetailPage() {
           </TabsContent>
         </Tabs>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 

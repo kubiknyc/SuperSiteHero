@@ -31,7 +31,7 @@ export default defineConfig(({ mode }) => {
         name: 'JobSight',
         short_name: 'JobSight',
         description: 'Construction Field Management Platform',
-        theme_color: '#F97316',
+        theme_color: '#1e40af',
         background_color: '#ffffff',
         start_url: '/',
         display: 'standalone',

@@ -62,7 +62,7 @@ import {
   clearStore,
 } from '@/lib/offline/indexeddb'
 import { StorageManager } from '@/lib/offline/storage-manager'
-import { supabase } from '@/lib/supabase'
+import { supabase, supabaseUntyped } from '@/lib/supabase'
 import { logger } from '@/lib/utils/logger'
 import type { CachedData } from '@/types/offline'
 
@@ -306,7 +306,8 @@ async function downloadProjectForOffline(
 
   // Fetch and cache related data
   const fetchAndCache = async (table: string, foreignKey: string = 'project_id') => {
-    const { data, error } = await supabase
+    // Use supabaseUntyped for dynamic table names that may not be in the typed schema
+    const { data, error } = await supabaseUntyped
       .from(table)
       .select('*')
       .eq(foreignKey, projectId)
@@ -317,7 +318,7 @@ async function downloadProjectForOffline(
     }
 
     // Cache each record
-    for (const record of data || []) {
+    for (const record of (data || []) as Array<{ id: string; [key: string]: unknown }>) {
       await StorageManager.cacheData(
         StorageManager.generateRecordKey(table, record.id),
         table,

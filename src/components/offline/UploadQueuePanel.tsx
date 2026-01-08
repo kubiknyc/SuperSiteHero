@@ -302,9 +302,9 @@ function useUploadQueue() {
     queryKey: ['uploadQueue'],
     queryFn: getUploadQueueItems,
     staleTime: 5 * 1000, // 5 seconds - more frequent updates for upload queue
-    refetchInterval: (data) => {
+    refetchInterval: (query) => {
       // Poll more frequently if there are pending/uploading items
-      const hasActive = data?.some(
+      const hasActive = query.state.data?.some(
         item => item.status === 'pending' || item.status === 'uploading'
       )
       return hasActive ? 3000 : 30000 // 3s if active, 30s otherwise

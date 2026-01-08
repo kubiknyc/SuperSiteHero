@@ -3,7 +3,6 @@
 
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
@@ -78,15 +77,13 @@ export function SecurityWarningDialog({
               Dismiss
             </Button>
           )}
-          <AlertDialogAction asChild>
-            <Button
-              variant={isHighRisk ? 'destructive' : 'default'}
-              onClick={onSignOut}
-            >
-              <LogOut className="mr-2 h-4 w-4" />
-              Sign Out
-            </Button>
-          </AlertDialogAction>
+          <Button
+            variant={isHighRisk ? 'destructive' : 'default'}
+            onClick={onSignOut}
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            Sign Out
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

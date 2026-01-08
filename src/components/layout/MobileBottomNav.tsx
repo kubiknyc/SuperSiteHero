@@ -28,7 +28,7 @@ export const MobileBottomNav = memo(function MobileBottomNav() {
             const isActive = location.pathname === item.path ||
               (item.path !== '/' && location.pathname.startsWith(item.path))
             const Icon = item.icon
-            const Badge = item.badge
+            const BadgeComponent = typeof item.badge === 'function' ? item.badge : null
 
             // Determine display name (shorten for bottom nav)
             const displayName = item.label === 'Dashboard' ? 'Home' :
@@ -61,9 +61,16 @@ export const MobileBottomNav = memo(function MobileBottomNav() {
                     )}
                     aria-hidden="true"
                   />
-                  {Badge && (
+                  {typeof item.badge === 'number' && item.badge > 0 && (
                     <div className="absolute -top-1 -right-1 animate-pulse" aria-hidden="true">
-                      <Badge />
+                      <span className="px-1 py-0.5 text-[10px] font-medium bg-red-500 text-white rounded-full min-w-[16px] text-center">
+                        {item.badge}
+                      </span>
+                    </div>
+                  )}
+                  {BadgeComponent && (
+                    <div className="absolute -top-1 -right-1 animate-pulse" aria-hidden="true">
+                      <BadgeComponent />
                     </div>
                   )}
                 </div>

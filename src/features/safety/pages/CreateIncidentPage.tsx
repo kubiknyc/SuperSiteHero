@@ -5,7 +5,7 @@
  */
 
 import { useNavigate, Link } from 'react-router-dom'
-import { AppLayout } from '@/components/layout/AppLayout'
+import { SmartLayout } from '@/components/layout/SmartLayout'
 import { IncidentReportForm } from '../components'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -18,7 +18,7 @@ export function CreateIncidentPage() {
   }
 
   return (
-    <AppLayout>
+    <SmartLayout title="Report Safety Incident" subtitle="OSHA-compliant incident reporting">
       <div className="p-6">
         {/* Header */}
         <div className="mb-6">
@@ -42,7 +42,7 @@ export function CreateIncidentPage() {
           />
         </div>
       </div>
-    </AppLayout>
+    </SmartLayout>
   )
 }
 
