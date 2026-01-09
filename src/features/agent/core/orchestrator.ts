@@ -693,15 +693,77 @@ If you don't need to use a tool, respond normally without the JSON format.`
       temperature: config.temperature,
     })
 
-    // Parse tool calls from response
-    const toolCalls = this.parseToolCalls(result.content)
+    // Parse tool calls from response and extract remaining text
+    const { toolCalls, textContent } = this.parseToolCallsWithText(result.content)
 
     return {
-      content: toolCalls ? '' : result.content,
-      toolCalls,
+      content: textContent,
+      toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
       tokens: result.tokens,
       model: result.model,
     }
+  }
+
+  /**
+   * Parse tool calls and extract remaining text content
+   * Returns both the tool calls AND any text that wasn't part of a tool call
+   */
+  private parseToolCallsWithText(content: string): {
+    toolCalls: ToolCall[]
+    textContent: string
+  } {
+    const toolCalls: ToolCall[] = []
+    let textContent = content
+
+    // Only look for explicit tool_call format - don't be too aggressive
+    // Pattern: {"tool_call": {"name": "...", "arguments": {...}}}
+    const toolCallPattern = /\{\s*"tool_call"\s*:\s*\{\s*"name"\s*:\s*"([^"]+)"\s*,\s*"arguments"\s*:\s*(\{[^}]*\}|\{\})\s*\}\s*\}/g
+
+    let match
+    const matches: { start: number; end: number; toolCall: ToolCall }[] = []
+
+    while ((match = toolCallPattern.exec(content)) !== null) {
+      try {
+        const name = match[1]
+        const argsStr = match[2]
+        const args = JSON.parse(argsStr)
+
+        matches.push({
+          start: match.index,
+          end: match.index + match[0].length,
+          toolCall: {
+            id: `call_${Date.now()}_${toolCalls.length}`,
+            name,
+            arguments: args,
+          },
+        })
+
+        toolCalls.push({
+          id: `call_${Date.now()}_${toolCalls.length}`,
+          name,
+          arguments: args,
+        })
+      } catch {
+        // Invalid JSON in arguments, skip this match
+      }
+    }
+
+    // Remove tool call JSON from text content (from end to start to preserve indices)
+    if (matches.length > 0) {
+      matches.sort((a, b) => b.start - a.start) // Sort by position descending
+      for (const m of matches) {
+        textContent = textContent.slice(0, m.start) + textContent.slice(m.end)
+      }
+
+      // Clean up the remaining text
+      textContent = textContent
+        .replace(/^\s*```json\s*/g, '') // Remove opening code block markers
+        .replace(/\s*```\s*$/g, '')     // Remove closing code block markers
+        .replace(/\n{3,}/g, '\n\n')     // Collapse multiple newlines
+        .trim()
+    }
+
+    return { toolCalls, textContent }
   }
 
   /**

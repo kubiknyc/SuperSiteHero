@@ -40,13 +40,31 @@ export function ResetPasswordPage() {
 
   // Check for valid recovery session on mount
   useEffect(() => {
+    let subscription: { unsubscribe: () => void } | null = null
+    let timeoutId: ReturnType<typeof setTimeout> | null = null
+    let isSubscribed = true
+
     const checkRecoverySession = async () => {
       setIsCheckingSession(true)
       setSessionError(null)
 
       try {
-        // Listen for auth state changes - Supabase will emit PASSWORD_RECOVERY event
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+        // Check URL hash for recovery token FIRST (before Supabase processes it)
+        const hashParams = new URLSearchParams(window.location.hash.substring(1))
+        const accessToken = hashParams.get('access_token')
+        const type = hashParams.get('type')
+        const hasRecoveryToken = type === 'recovery' && accessToken
+
+        // Set up auth state listener BEFORE checking session
+        const { data } = supabase.auth.onAuthStateChange((event, session) => {
+          if (!isSubscribed) return
+
+          // Clear timeout since we got an event
+          if (timeoutId) {
+            clearTimeout(timeoutId)
+            timeoutId = null
+          }
+
           if (event === 'PASSWORD_RECOVERY') {
             // User clicked the recovery link in email
             setIsValidSession(true)
@@ -55,45 +73,64 @@ export function ResetPasswordPage() {
             // Session restored from recovery link
             setIsValidSession(true)
             setIsCheckingSession(false)
+          } else if (event === 'TOKEN_REFRESHED' && session) {
+            // Token was refreshed, we have a valid session
+            setIsValidSession(true)
+            setIsCheckingSession(false)
           }
         })
+        subscription = data.subscription
 
-        // Also check if there's already a session (user may have landed here with valid token)
+        // If we detected a recovery token in the URL, wait for Supabase to process it
+        if (hasRecoveryToken) {
+          // Give Supabase time to process the token and emit the event
+          timeoutId = setTimeout(() => {
+            if (!isSubscribed) return
+            // If we still haven't gotten a valid session after 5 seconds, show error
+            setSessionError('This password reset link has expired or is invalid. Please request a new one.')
+            setIsCheckingSession(false)
+          }, 5000)
+          return
+        }
+
+        // No recovery token in URL, check for existing session
         const { data: { session }, error } = await supabase.auth.getSession()
+
+        if (!isSubscribed) return
 
         if (error) {
           throw error
         }
 
-        // Check URL hash for recovery token (Supabase uses fragment-based tokens)
-        const hashParams = new URLSearchParams(window.location.hash.substring(1))
-        const accessToken = hashParams.get('access_token')
-        const type = hashParams.get('type')
-
-        if (type === 'recovery' && accessToken) {
-          // Valid recovery link
+        if (session) {
+          // There's an existing session - user might be in recovery flow
           setIsValidSession(true)
-        } else if (session) {
-          // There's an existing session - might be from recovery
-          setIsValidSession(true)
+          setIsCheckingSession(false)
         } else {
           // No valid session or recovery token
           setSessionError('This password reset link has expired or is invalid. Please request a new one.')
-        }
-
-        setIsCheckingSession(false)
-
-        // Cleanup subscription
-        return () => {
-          subscription.unsubscribe()
+          setIsCheckingSession(false)
         }
       } catch (err) {
+        if (!isSubscribed) return
+        console.error('Error checking recovery session:', err)
         setSessionError('An error occurred while verifying the reset link. Please try again.')
         setIsCheckingSession(false)
       }
     }
 
     checkRecoverySession()
+
+    // Cleanup
+    return () => {
+      isSubscribed = false
+      if (subscription) {
+        subscription.unsubscribe()
+      }
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
+    }
   }, [])
 
   // Check if all password requirements are met
