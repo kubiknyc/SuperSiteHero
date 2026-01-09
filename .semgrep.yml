@@ -1,0 +1,84 @@
+rules:
+  # Detect potential hardcoded API keys or secrets
+  - id: hardcoded-api-key
+    patterns:
+      - pattern-regex: (api[_-]?key|apikey|secret[_-]?key|access[_-]?token)\s*[:=]\s*['"][a-zA-Z0-9_\-]{20,}['"]
+    paths:
+      exclude:
+        - '*.example'
+        - '*.md'
+        - '*.test.ts'
+        - '*.test.tsx'
+        - '*.spec.ts'
+        - '__tests__/**'
+        - 'e2e/**'
+    message: Potential hardcoded API key or secret detected. Use environment variables instead.
+    languages: [typescript, javascript]
+    severity: ERROR
+
+  # Detect potential Supabase key exposure
+  - id: supabase-key-in-code
+    patterns:
+      - pattern-regex: (supabase|SUPABASE).*(key|KEY)\s*[:=]\s*['"]eyJ[a-zA-Z0-9_\-]+['"]
+    paths:
+      exclude:
+        - '*.example'
+        - '*.md'
+        - '.env*'
+    message: Potential hardcoded Supabase key detected. Use environment variables.
+    languages: [typescript, javascript]
+    severity: ERROR
+
+  # Detect usage of localStorage for sensitive data
+  - id: sensitive-data-in-localstorage
+    patterns:
+      - pattern: localStorage.setItem($KEY, ...)
+      - metavariable-regex:
+          metavariable: $KEY
+          regex: .*(token|password|secret|key|auth|credential).*
+    message: Avoid storing sensitive data in localStorage. Consider using secure HTTP-only cookies or encrypted storage.
+    languages: [typescript, javascript]
+    severity: WARNING
+
+  # Detect console.log with sensitive variables
+  - id: console-log-sensitive
+    patterns:
+      - pattern: console.log(..., $VAR, ...)
+      - metavariable-regex:
+          metavariable: $VAR
+          regex: .*(password|token|secret|key|credential|auth).*
+    paths:
+      exclude:
+        - '*.test.ts'
+        - '*.test.tsx'
+        - '*.spec.ts'
+        - '__tests__/**'
+        - 'e2e/**'
+        - 'scripts/**'
+    message: Avoid logging sensitive information. This could expose secrets in logs.
+    languages: [typescript, javascript]
+    severity: WARNING
+
+  # Detect SQL injection patterns in template literals
+  - id: sql-injection-template-literal
+    patterns:
+      - pattern: $DB.$METHOD(`... ${$VAR} ...`)
+      - metavariable-regex:
+          metavariable: $METHOD
+          regex: (query|execute|raw|sql|from|select|rpc)
+    message: Potential SQL injection via template literal. Use parameterized queries instead.
+    languages: [typescript, javascript]
+    severity: ERROR
+
+  # Detect open redirect vulnerabilities
+  - id: open-redirect
+    patterns:
+      - pattern: window.location.href = $VAR
+      - pattern-not: window.location.href = "..."
+    paths:
+      exclude:
+        - '*.test.ts'
+        - '*.test.tsx'
+    message: Potential open redirect vulnerability. Validate the redirect URL against an allowlist.
+    languages: [typescript, javascript]
+    severity: WARNING

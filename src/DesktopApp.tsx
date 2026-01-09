@@ -175,6 +175,9 @@ const SubcontractorPayAppsPage = lazy(() => import('./pages/subcontractor-portal
 const SubcontractorChangeOrdersPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorChangeOrdersPage').then(m => ({ default: m.SubcontractorChangeOrdersPage })));
 const SubcontractorSchedulePage = lazy(() => import('./pages/subcontractor-portal/SubcontractorSchedulePage'));
 const SubcontractorSafetyPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorSafetyPage'));
+const SubcontractorPhotosPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorPhotosPage'));
+const SubcontractorMeetingsPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorMeetingsPage'));
+const SubcontractorCertificationsPage = lazy(() => import('./pages/subcontractor-portal/SubcontractorCertificationsPage'));
 const AcceptInvitationPage = lazy(() => import('./pages/auth/AcceptInvitationPage').then(m => ({ default: m.AcceptInvitationPage })));
 
 // Client Portal feature
@@ -650,6 +653,9 @@ export function DesktopApp() {
           <Route path="change-orders" element={<SubcontractorChangeOrdersPage />} />
           <Route path="schedule" element={<SubcontractorSchedulePage />} />
           <Route path="safety" element={<SubcontractorSafetyPage />} />
+          <Route path="photos" element={<SubcontractorPhotosPage />} />
+          <Route path="meetings" element={<SubcontractorMeetingsPage />} />
+          <Route path="certifications" element={<SubcontractorCertificationsPage />} />
         </Route>
 
         {/* Client Portal feature */}

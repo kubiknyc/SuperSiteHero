@@ -56,13 +56,16 @@ class ToolRegistryImpl implements IToolRegistry {
   getForContext(context: AgentContext): Tool[] {
     return this.list().filter((tool) => {
       // Check if feature is enabled for this tool's category
-      const featureMapping: Record<ToolCategory, keyof typeof context.featuresEnabled> = {
+      const featureMapping: Partial<Record<ToolCategory, keyof typeof context.featuresEnabled>> = {
         document: 'document_processing',
         report: 'daily_report_summaries',
         rfi: 'rfi_routing',
         submittal: 'submittal_classification',
         search: 'semantic_search',
         action: 'background_tasks',
+        inspection: 'background_tasks',
+        safety: 'background_tasks',
+        schedule: 'background_tasks',
       }
 
       const featureKey = featureMapping[tool.category]

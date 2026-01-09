@@ -109,7 +109,11 @@
     "migrate:colors:phase2:write": "tsx scripts/migrate-colors-phase2.ts -- --write",
     "migrate:typography": "tsx scripts/migrate-typography-to-tokens.ts",
     "migrate:typography:write": "tsx scripts/migrate-typography-to-tokens.ts -- --write",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "security": "npm run security:lint && npm run security:deps",
+    "security:lint": "eslint . --rule 'security/*: error' --quiet",
+    "security:deps": "npm audit --audit-level=high",
+    "security:quick": "npm audit --audit-level=high && eslint . --rule 'security/*: error' --quiet"
   },
   "dependencies": {
     "@21st-extension/react": "^0.5.14",
@@ -230,6 +234,7 @@
     "eslint-plugin-react-compiler": "^19.1.0-rc.2",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.26",
+    "eslint-plugin-security": "^3.0.1",
     "execa": "^9.6.1",
     "fake-indexeddb": "^6.2.5",
     "globals": "^15.14.0",

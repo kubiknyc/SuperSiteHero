@@ -2,6 +2,7 @@ import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
+import security from 'eslint-plugin-security';
 // React Compiler plugin disabled - its diagnostics are reported as errors
 // regardless of rule severity setting. Re-enable once stable.
 // import reactCompiler from 'eslint-plugin-react-compiler';
@@ -41,6 +42,9 @@ export default tseslint.config(
   // Base ESLint recommended rules
   js.configs.recommended,
 
+  // Security plugin recommended rules
+  security.configs.recommended,
+
   // TypeScript recommended rules
   ...tseslint.configs.recommended,
 
@@ -67,6 +71,7 @@ export default tseslint.config(
       // React Compiler plugin disabled - its diagnostics are reported as errors
       // regardless of rule severity setting. Re-enable once stable.
       // 'react-compiler': reactCompiler,
+      security: security,
     },
     rules: {
       // React Hooks rules
@@ -135,6 +140,20 @@ export default tseslint.config(
         },
       ],
       'no-case-declarations': 'warn',
+
+      // Security rules - detect common vulnerabilities
+      'security/detect-unsafe-regex': 'error',
+      'security/detect-eval-with-expression': 'error',
+      'security/detect-new-buffer': 'error',
+      'security/detect-disable-mustache-escape': 'error',
+      'security/detect-no-csrf-before-method-override': 'error',
+      'security/detect-object-injection': 'warn', // Many false positives in React
+      'security/detect-possible-timing-attacks': 'warn',
+      'security/detect-child-process': 'warn',
+      'security/detect-non-literal-regexp': 'warn',
+      'security/detect-pseudoRandomBytes': 'warn',
+      'security/detect-non-literal-require': 'off', // Not relevant for ES modules
+      'security/detect-buffer-noassert': 'error',
     },
     settings: {
       react: {
@@ -180,6 +199,9 @@ export default tseslint.config(
       'prefer-const': 'off',
       // Disable React hooks rules for E2E tests - Playwright uses `use` as a fixture callback
       'react-hooks/rules-of-hooks': 'off',
+      // Relax security rules for test files
+      'security/detect-object-injection': 'off',
+      'security/detect-non-literal-regexp': 'off',
     },
   },
 
@@ -375,6 +397,10 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': 'off',
       '@typescript-eslint/no-unused-expressions': 'off',
       'no-undef': 'off',
+      // Scripts may use child_process and dynamic requires
+      'security/detect-child-process': 'off',
+      'security/detect-non-literal-require': 'off',
+      'security/detect-non-literal-regexp': 'off',
     },
   }
 );

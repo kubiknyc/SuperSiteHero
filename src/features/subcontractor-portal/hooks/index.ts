@@ -272,3 +272,101 @@ export type {
   SafetyIncidentSeverity,
   SafetyIncidentStatus,
 } from './useSubcontractorSafety'
+
+// Photo Documentation Access (P2-1 - View project photos)
+export {
+  photoKeys,
+  useSubcontractorPhotos,
+  usePhotoSummary,
+  getCategoryLabel,
+  getCategoryColor,
+  getCategoryBadgeVariant,
+  formatPhotoDate,
+  formatPhotoDateTime,
+  filterPhotosByCategory,
+  groupPhotosByDate,
+  groupPhotosByProject,
+} from './useSubcontractorPhotos'
+
+export type {
+  SubcontractorPhoto,
+  SubcontractorPhotoFilters,
+  PhotoSummary,
+  PhotoCategory,
+} from './useSubcontractorPhotos'
+
+// Meeting Minutes & Action Items (P2-2 - View meetings and action items)
+export {
+  meetingKeys,
+  useSubcontractorMeetings,
+  useSubcontractorActionItems,
+  useMeetingAttachments,
+  useMeetingSummary,
+  useMarkActionItemComplete,
+  getMeetingStatusBadgeVariant,
+  getMeetingStatusLabel,
+  getMeetingStatusColor,
+  getActionItemStatusBadgeVariant,
+  getActionItemStatusLabel,
+  getActionItemStatusColor,
+  getActionItemPriorityBadgeVariant,
+  getActionItemPriorityLabel,
+  getActionItemPriorityColor,
+  formatMeetingDate,
+  formatMeetingTime,
+  formatDuration,
+  getDaysUntilDue as getActionItemDaysUntilDue,
+  isActionItemOverdue,
+  filterActionItemsByStatus,
+  filterMeetingsByStatus,
+  groupMeetingsByProject,
+  groupActionItemsByMeeting,
+  formatFileSize,
+  getMeetingTypeLabel,
+} from './useSubcontractorMeetings'
+
+export type {
+  SubcontractorMeeting,
+  SubcontractorActionItem,
+  MeetingAttachment,
+  MeetingSummary,
+  MeetingStatus,
+  ActionItemStatus,
+  ActionItemPriority,
+} from './useSubcontractorMeetings'
+
+// Equipment & Labor Certifications (P2-3 - Track certifications)
+export {
+  certificationKeys,
+  useSubcontractorCertifications,
+  useCertificationSummary,
+  useUploadCertification,
+  getCertificationTypeLabel,
+  getCertificationTypeShortLabel,
+  getCertificationTypeIcon,
+  getCertificationStatusBadgeVariant,
+  getCertificationStatusLabel,
+  getCertificationStatusColor,
+  getCertificationStatusBgColor,
+  formatCertificationDate,
+  getDaysUntilExpiration as getCertDaysUntilExpiration,
+  isCertificationExpired,
+  isCertificationExpiringSoon,
+  getExpirationStatusText,
+  filterCertificationsByStatus,
+  filterCertificationsByType,
+  groupCertificationsByType,
+  groupCertificationsByHolder,
+  sortCertificationsByExpiration,
+  getCertificationHealthScore,
+  getHealthScoreColor,
+  getHealthScoreBgColor,
+} from './useSubcontractorCertifications'
+
+export type {
+  SubcontractorCertification,
+  CreateCertificationDTO,
+  CertificationSummary,
+  CertificationType,
+  CertificationStatusType,
+} from './useSubcontractorCertifications'

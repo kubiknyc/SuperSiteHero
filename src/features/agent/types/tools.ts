@@ -9,7 +9,7 @@ import type { AgentContext } from './agent'
 // Tool Definition Types
 // ============================================================================
 
-export type ToolCategory = 'document' | 'report' | 'rfi' | 'submittal' | 'search' | 'action'
+export type ToolCategory = 'document' | 'report' | 'rfi' | 'submittal' | 'search' | 'action' | 'inspection' | 'safety' | 'schedule'
 
 export type ToolHandlerType = 'builtin' | 'supabase_function' | 'edge_function' | 'webhook'
 

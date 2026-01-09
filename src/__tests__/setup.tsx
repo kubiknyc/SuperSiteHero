@@ -68,6 +68,21 @@ vi.mock('react-hot-toast', () => ({
     promise: vi.fn(),
   },
   Toaster: () => null,
+}))
+
+// Mock sonner toast library
+vi.mock('sonner', () => ({
+  toast: {
+    success: vi.fn(),
+    error: vi.fn(),
+    info: vi.fn(),
+    warning: vi.fn(),
+    loading: vi.fn(),
+    promise: vi.fn(),
+    dismiss: vi.fn(),
+    custom: vi.fn(),
+  },
+  Toaster: () => null,
 }));
 
 // Mock @/ path alias imports (for Vitest Windows path resolution issue)

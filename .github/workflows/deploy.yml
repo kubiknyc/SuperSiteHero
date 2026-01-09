@@ -30,6 +30,8 @@ jobs:
     name: Deploy Preview
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || github.event.inputs.environment == 'preview'
+    outputs:
+      url: ${{ steps.deploy.outputs.url }}
     environment:
       name: preview
       url: ${{ steps.deploy.outputs.url }}

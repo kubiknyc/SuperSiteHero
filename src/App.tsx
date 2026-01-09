@@ -15,7 +15,7 @@ import { RouteLoadingFallback } from './components/loading/RouteLoadingFallback'
 import { PWAInstallBanner } from './components/PWAInstallPrompt'
 import { PWAUpdateNotification } from './components/PWAUpdateNotification'
 import { KeyboardShortcutsProvider } from './components/ui/keyboard-shortcuts-provider'
-import { AgentChatPanel } from './features/agent'
+import { AgentProvider, AgentFAB, AgentChatPanel } from './features/agent'
 import { initDatabase, requestPersistentStorage } from './lib/offline/indexeddb'
 import { initSyncManager } from './lib/offline/sync-manager'
 import { logger } from './lib/utils/logger'
@@ -95,11 +95,12 @@ function App() {
 
   return (
     <>
-      <TwentyFirstToolbar
+      {/* Temporarily disabled to debug blank page issue */}
+      {/* <TwentyFirstToolbar
         config={{
           plugins: [ReactPlugin],
         } as any}
-      />
+      /> */}
       <ErrorBoundary>
       <ThemeProvider defaultTheme="system">
         <BrowserRouter
@@ -115,19 +116,24 @@ function App() {
               <DeviceProvider>
                 <LayoutVersionProvider>
                   <KeyboardShortcutsProvider>
-                    <AppShell />
+                    <AgentProvider enableKeyboardShortcut={true} shortcutKey="k">
+                      <AppShell />
 
-                    {/* Toast notification container - displays all toasts throughout app */}
-                    <ToastContainer />
+                      {/* Toast notification container - displays all toasts throughout app */}
+                      <ToastContainer />
 
-                    {/* PWA Install Banner - prompts users to install the app */}
-                    <PWAInstallBanner />
+                      {/* PWA Install Banner - prompts users to install the app */}
+                      <PWAInstallBanner />
 
-                    {/* PWA Update Notification - shows toast when new version available */}
-                    <PWAUpdateNotification />
+                      {/* PWA Update Notification - shows toast when new version available */}
+                      <PWAUpdateNotification />
 
-                    {/* AI Agent Chat Panel - floating chat interface */}
-                    <AgentChatPanel />
+                      {/* AI Agent Floating Action Button - bottom right corner */}
+                      <AgentFAB position="bottom-right" showShortcutHint={true} />
+
+                      {/* AI Agent Chat Panel - slide-out drawer (uses external FAB) */}
+                      <AgentChatPanel hideInternalFAB={true} />
+                    </AgentProvider>
                   </KeyboardShortcutsProvider>
                 </LayoutVersionProvider>
               </DeviceProvider>

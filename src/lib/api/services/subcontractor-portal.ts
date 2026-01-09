@@ -70,6 +70,21 @@ import type {
   SafetyComplianceSummary,
   SafetyIncidentSeverity,
   SafetyIncidentStatus,
+  SubcontractorPhoto,
+  SubcontractorPhotoFilters,
+  PhotoSummary,
+  PhotoCategory,
+  SubcontractorMeeting,
+  SubcontractorActionItem,
+  MeetingAttachment,
+  MeetingSummary,
+  MeetingStatus,
+  ActionItemStatus,
+  SubcontractorCertification,
+  CertificationSummary,
+  CertificationType,
+  CertificationStatusType,
+  CreateCertificationDTO,
 } from '@/types/subcontractor-portal'
 
 // Use 'any' type workaround for tables not in generated types
@@ -4199,6 +4214,777 @@ export const subcontractorPortalApi = {
         trir_status: 'unknown',
         dart_status: 'unknown',
       }
+    }
+  },
+
+  // =============================================
+  // P2-1: PHOTO DOCUMENTATION ACCESS
+  // =============================================
+
+  /**
+   * Get photos from the subcontractor's projects
+   */
+  async getProjectPhotos(userId: string, filters?: SubcontractorPhotoFilters): Promise<SubcontractorPhoto[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return []
+      }
+
+      // Get projects where this subcontractor is assigned
+      const { data: projectAccess } = await db
+        .from('subcontractor_portal_access')
+        .select('project_id')
+        .in('subcontractor_id', subcontractorIds)
+        .eq('access_status', 'active')
+
+      if (!projectAccess || projectAccess.length === 0) {
+        return []
+      }
+
+      let projectIds = projectAccess.map((p: any) => p.project_id)
+
+      // Filter by specific project if provided
+      if (filters?.project_id) {
+        if (!projectIds.includes(filters.project_id)) {
+          return []
+        }
+        projectIds = [filters.project_id]
+      }
+
+      // Build query for photos
+      let query = db
+        .from('photos')
+        .select(`
+          id,
+          project_id,
+          photo_url,
+          thumbnail_url,
+          caption,
+          category,
+          location,
+          area,
+          taken_at,
+          created_at,
+          tags,
+          width,
+          height,
+          projects:project_id (name),
+          users:uploaded_by (first_name, last_name)
+        `)
+        .in('project_id', projectIds)
+        .order('created_at', { ascending: false })
+
+      // Apply filters
+      if (filters?.category) {
+        query = query.eq('category', filters.category)
+      }
+      if (filters?.date_from) {
+        query = query.gte('created_at', filters.date_from)
+      }
+      if (filters?.date_to) {
+        query = query.lte('created_at', filters.date_to)
+      }
+      if (filters?.search) {
+        query = query.or(`caption.ilike.%${filters.search}%,location.ilike.%${filters.search}%`)
+      }
+
+      const { data: photos, error } = await query.limit(100)
+
+      if (error) {
+        logger.error('[SubcontractorPortal] Failed to fetch photos:', error)
+        return []
+      }
+
+      return (photos || []).map((photo: any) => ({
+        id: photo.id,
+        project_id: photo.project_id,
+        project_name: photo.projects?.name || '',
+        photo_url: photo.photo_url,
+        thumbnail_url: photo.thumbnail_url,
+        caption: photo.caption,
+        category: photo.category as PhotoCategory | null,
+        location: photo.location,
+        area: photo.area,
+        taken_at: photo.taken_at,
+        uploaded_at: photo.created_at,
+        uploaded_by_name: photo.users
+          ? `${photo.users.first_name || ''} ${photo.users.last_name || ''}`.trim()
+          : null,
+        tags: photo.tags || [],
+        width: photo.width,
+        height: photo.height,
+      }))
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch photos:', error)
+      return []
+    }
+  },
+
+  /**
+   * Get photo summary for dashboard
+   */
+  async getPhotoSummary(userId: string): Promise<PhotoSummary> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+
+      // Get projects
+      const { data: projectAccess } = await db
+        .from('subcontractor_portal_access')
+        .select('project_id')
+        .in('subcontractor_id', subcontractorIds)
+        .eq('access_status', 'active')
+
+      const projectIds = (projectAccess || []).map((p: any) => p.project_id)
+
+      if (projectIds.length === 0) {
+        return {
+          total_photos: 0,
+          photos_this_week: 0,
+          photos_this_month: 0,
+          photos_by_category: {},
+          photos_by_project: [],
+          recent_photos: [],
+        }
+      }
+
+      // Get all photos for these projects
+      const { data: allPhotos } = await db
+        .from('photos')
+        .select('id, project_id, category, created_at')
+        .in('project_id', projectIds)
+
+      const photos = allPhotos || []
+      const now = new Date()
+      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+      const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+
+      // Calculate stats
+      const photosThisWeek = photos.filter((p: any) => new Date(p.created_at) >= weekAgo).length
+      const photosThisMonth = photos.filter((p: any) => new Date(p.created_at) >= monthAgo).length
+
+      // Count by category
+      const photosByCategory: Record<string, number> = {}
+      photos.forEach((p: any) => {
+        const cat = p.category || 'general'
+        photosByCategory[cat] = (photosByCategory[cat] || 0) + 1
+      })
+
+      // Count by project with names
+      const { data: projects } = await db
+        .from('projects')
+        .select('id, name')
+        .in('id', projectIds)
+
+      const projectMap: Record<string, string> = {}
+      ;(projects || []).forEach((p: any) => {
+        projectMap[p.id] = p.name
+      })
+
+      const projectCounts: Record<string, number> = {}
+      photos.forEach((p: any) => {
+        projectCounts[p.project_id] = (projectCounts[p.project_id] || 0) + 1
+      })
+
+      const photosByProject = Object.entries(projectCounts).map(([projectId, count]) => ({
+        project_id: projectId,
+        project_name: projectMap[projectId] || 'Unknown Project',
+        count,
+      }))
+
+      // Get recent photos
+      const recentPhotos = await this.getProjectPhotos(userId, {})
+      const recent = recentPhotos.slice(0, 6)
+
+      return {
+        total_photos: photos.length,
+        photos_this_week: photosThisWeek,
+        photos_this_month: photosThisMonth,
+        photos_by_category: photosByCategory,
+        photos_by_project: photosByProject,
+        recent_photos: recent,
+      }
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch photo summary:', error)
+      return {
+        total_photos: 0,
+        photos_this_week: 0,
+        photos_this_month: 0,
+        photos_by_category: {},
+        photos_by_project: [],
+        recent_photos: [],
+      }
+    }
+  },
+
+  // =============================================
+  // P2-2: MEETING MINUTES & ACTION ITEMS
+  // =============================================
+
+  /**
+   * Get meetings for the subcontractor's projects
+   */
+  async getMeetings(userId: string): Promise<SubcontractorMeeting[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return []
+      }
+
+      // Get projects
+      const { data: projectAccess } = await db
+        .from('subcontractor_portal_access')
+        .select('project_id')
+        .in('subcontractor_id', subcontractorIds)
+        .eq('access_status', 'active')
+
+      if (!projectAccess || projectAccess.length === 0) {
+        return []
+      }
+
+      const projectIds = projectAccess.map((p: any) => p.project_id)
+
+      // Get meetings from these projects
+      const { data: meetings, error } = await db
+        .from('meetings')
+        .select(`
+          id,
+          project_id,
+          title,
+          meeting_type,
+          description,
+          scheduled_date,
+          scheduled_time,
+          duration_minutes,
+          location,
+          is_virtual,
+          meeting_link,
+          status,
+          agenda,
+          minutes_summary,
+          projects:project_id (name)
+        `)
+        .in('project_id', projectIds)
+        .order('scheduled_date', { ascending: false })
+        .limit(50)
+
+      if (error) {
+        logger.error('[SubcontractorPortal] Failed to fetch meetings:', error)
+        return []
+      }
+
+      // Get attendee counts and attachment counts for each meeting
+      const meetingIds = (meetings || []).map((m: any) => m.id)
+
+      const { data: attendees } = await db
+        .from('meeting_attendees')
+        .select('meeting_id, attended')
+        .in('meeting_id', meetingIds)
+
+      const { data: attachments } = await db
+        .from('meeting_attachments')
+        .select('meeting_id')
+        .in('meeting_id', meetingIds)
+
+      // Build attendee and attachment counts
+      const attendeeCounts: Record<string, { total: number; attended: number }> = {}
+      ;(attendees || []).forEach((a: any) => {
+        if (!attendeeCounts[a.meeting_id]) {
+          attendeeCounts[a.meeting_id] = { total: 0, attended: 0 }
+        }
+        attendeeCounts[a.meeting_id].total++
+        if (a.attended) attendeeCounts[a.meeting_id].attended++
+      })
+
+      const attachmentCounts: Record<string, number> = {}
+      ;(attachments || []).forEach((a: any) => {
+        attachmentCounts[a.meeting_id] = (attachmentCounts[a.meeting_id] || 0) + 1
+      })
+
+      return (meetings || []).map((m: any) => ({
+        id: m.id,
+        project_id: m.project_id,
+        project_name: m.projects?.name || '',
+        title: m.title || 'Untitled Meeting',
+        meeting_type: m.meeting_type || 'general',
+        description: m.description,
+        scheduled_date: m.scheduled_date,
+        scheduled_time: m.scheduled_time,
+        duration_minutes: m.duration_minutes,
+        location: m.location,
+        is_virtual: m.is_virtual || false,
+        meeting_link: m.meeting_link,
+        status: (m.status || 'scheduled') as MeetingStatus,
+        total_attendees: attendeeCounts[m.id]?.total || 0,
+        subcontractor_attended: attendeeCounts[m.id]?.attended > 0 || false,
+        agenda: m.agenda,
+        minutes_summary: m.minutes_summary,
+        attachments_count: attachmentCounts[m.id] || 0,
+      }))
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch meetings:', error)
+      return []
+    }
+  },
+
+  /**
+   * Get action items assigned to the subcontractor
+   */
+  async getActionItems(userId: string): Promise<SubcontractorActionItem[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return []
+      }
+
+      // Get projects
+      const { data: projectAccess } = await db
+        .from('subcontractor_portal_access')
+        .select('project_id')
+        .in('subcontractor_id', subcontractorIds)
+        .eq('access_status', 'active')
+
+      if (!projectAccess || projectAccess.length === 0) {
+        return []
+      }
+
+      const projectIds = projectAccess.map((p: any) => p.project_id)
+
+      // Get meetings from these projects
+      const { data: meetings } = await db
+        .from('meetings')
+        .select('id, title, project_id, projects:project_id (name)')
+        .in('project_id', projectIds)
+
+      if (!meetings || meetings.length === 0) {
+        return []
+      }
+
+      const meetingIds = meetings.map((m: any) => m.id)
+      const meetingMap: Record<string, any> = {}
+      meetings.forEach((m: any) => {
+        meetingMap[m.id] = m
+      })
+
+      // Get action items from these meetings
+      const { data: actionItems, error } = await db
+        .from('meeting_action_items')
+        .select(`
+          id,
+          meeting_id,
+          description,
+          status,
+          priority,
+          due_date,
+          completed_date,
+          created_at,
+          assigned_to:assigned_to_id (first_name, last_name)
+        `)
+        .in('meeting_id', meetingIds)
+        .order('due_date', { ascending: true, nullsFirst: false })
+
+      if (error) {
+        logger.error('[SubcontractorPortal] Failed to fetch action items:', error)
+        return []
+      }
+
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+
+      return (actionItems || []).map((item: any) => {
+        const meeting = meetingMap[item.meeting_id] || {}
+        const dueDate = item.due_date ? new Date(item.due_date) : null
+        const isOverdue = dueDate && dueDate < today && item.status !== 'completed' && item.status !== 'cancelled'
+
+        return {
+          id: item.id,
+          meeting_id: item.meeting_id,
+          meeting_title: meeting.title || 'Unknown Meeting',
+          project_id: meeting.project_id || '',
+          project_name: meeting.projects?.name || '',
+          description: item.description || '',
+          status: (item.status || 'pending') as ActionItemStatus,
+          priority: (item.priority || 'medium') as any,
+          assigned_to_name: item.assigned_to
+            ? `${item.assigned_to.first_name || ''} ${item.assigned_to.last_name || ''}`.trim()
+            : null,
+          is_assigned_to_subcontractor: true, // Simplified - would need more logic
+          due_date: item.due_date,
+          completed_date: item.completed_date,
+          created_at: item.created_at,
+          is_overdue: isOverdue || false,
+        }
+      })
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch action items:', error)
+      return []
+    }
+  },
+
+  /**
+   * Get meeting attachments
+   */
+  async getMeetingAttachments(userId: string, meetingId: string): Promise<MeetingAttachment[]> {
+    try {
+      const { data: attachments, error } = await db
+        .from('meeting_attachments')
+        .select('id, meeting_id, file_name, file_url, file_type, file_size, created_at')
+        .eq('meeting_id', meetingId)
+
+      if (error) {
+        logger.error('[SubcontractorPortal] Failed to fetch meeting attachments:', error)
+        return []
+      }
+
+      return (attachments || []).map((a: any) => ({
+        id: a.id,
+        meeting_id: a.meeting_id,
+        file_name: a.file_name || 'Attachment',
+        file_url: a.file_url,
+        file_type: a.file_type,
+        file_size: a.file_size,
+        uploaded_at: a.created_at,
+      }))
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch meeting attachments:', error)
+      return []
+    }
+  },
+
+  /**
+   * Get meeting summary for dashboard
+   */
+  async getMeetingSummary(userId: string): Promise<MeetingSummary> {
+    try {
+      const meetings = await this.getMeetings(userId)
+      const actionItems = await this.getActionItems(userId)
+
+      const now = new Date()
+      const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+
+      const upcoming = meetings.filter(m =>
+        m.status === 'scheduled' && new Date(m.scheduled_date) >= now
+      ).length
+
+      const thisMonth = meetings.filter(m =>
+        new Date(m.scheduled_date) >= monthAgo
+      ).length
+
+      const openItems = actionItems.filter(a =>
+        a.status === 'pending' || a.status === 'in_progress'
+      ).length
+
+      const overdueItems = actionItems.filter(a => a.is_overdue).length
+
+      const completedItems = actionItems.filter(a =>
+        a.status === 'completed'
+      ).length
+
+      return {
+        total_meetings: meetings.length,
+        upcoming_meetings: upcoming,
+        meetings_this_month: thisMonth,
+        open_action_items: openItems,
+        overdue_action_items: overdueItems,
+        completed_action_items: completedItems,
+      }
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch meeting summary:', error)
+      return {
+        total_meetings: 0,
+        upcoming_meetings: 0,
+        meetings_this_month: 0,
+        open_action_items: 0,
+        overdue_action_items: 0,
+        completed_action_items: 0,
+      }
+    }
+  },
+
+  /**
+   * Mark an action item as complete
+   */
+  async markActionItemComplete(userId: string, itemId: string): Promise<boolean> {
+    try {
+      const { error } = await db
+        .from('meeting_action_items')
+        .update({
+          status: 'completed',
+          completed_date: new Date().toISOString(),
+        })
+        .eq('id', itemId)
+
+      if (error) {
+        logger.error('[SubcontractorPortal] Failed to mark action item complete:', error)
+        return false
+      }
+      return true
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to mark action item complete:', error)
+      return false
+    }
+  },
+
+  // =============================================
+  // P2-3: EQUIPMENT & LABOR CERTIFICATIONS
+  // =============================================
+
+  /**
+   * Get certifications for the subcontractor
+   */
+  async getCertifications(userId: string): Promise<SubcontractorCertification[]> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return []
+      }
+
+      // Get certifications from subcontractor_certifications table
+      const { data: certifications, error } = await db
+        .from('subcontractor_certifications')
+        .select(`
+          id,
+          subcontractor_id,
+          certification_type,
+          certification_name,
+          issuing_authority,
+          certificate_number,
+          holder_name,
+          holder_title,
+          issue_date,
+          expiration_date,
+          document_url,
+          document_name,
+          status,
+          verified_at,
+          created_at,
+          updated_at,
+          verified_by:verified_by_id (first_name, last_name)
+        `)
+        .in('subcontractor_id', subcontractorIds)
+        .order('expiration_date', { ascending: true, nullsFirst: false })
+
+      if (error) {
+        // Table might not exist, try compliance documents as fallback
+        logger.warn('[SubcontractorPortal] subcontractor_certifications table not found, using compliance documents')
+        return await this.getCertificationsFromComplianceDocs(subcontractorIds)
+      }
+
+      const today = new Date()
+      const thirtyDaysFromNow = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)
+
+      return (certifications || []).map((cert: any) => {
+        const expDate = cert.expiration_date ? new Date(cert.expiration_date) : null
+        let status: CertificationStatusType = cert.status || 'pending_verification'
+
+        // Override status based on expiration
+        if (expDate) {
+          if (expDate < today) {
+            status = 'expired'
+          } else if (expDate < thirtyDaysFromNow) {
+            status = 'expiring_soon'
+          } else if (cert.verified_at) {
+            status = 'valid'
+          }
+        } else if (cert.verified_at) {
+          status = 'valid'
+        }
+
+        return {
+          id: cert.id,
+          subcontractor_id: cert.subcontractor_id,
+          certification_type: (cert.certification_type || 'other') as CertificationType,
+          certification_name: cert.certification_name || 'Certification',
+          issuing_authority: cert.issuing_authority,
+          certificate_number: cert.certificate_number,
+          holder_name: cert.holder_name || 'Unknown',
+          holder_title: cert.holder_title,
+          issue_date: cert.issue_date,
+          expiration_date: cert.expiration_date,
+          document_url: cert.document_url,
+          document_name: cert.document_name,
+          status,
+          verified_at: cert.verified_at,
+          verified_by_name: cert.verified_by
+            ? `${cert.verified_by.first_name || ''} ${cert.verified_by.last_name || ''}`.trim()
+            : null,
+          created_at: cert.created_at,
+          updated_at: cert.updated_at,
+        }
+      })
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch certifications:', error)
+      return []
+    }
+  },
+
+  /**
+   * Fallback: Get certifications from compliance documents
+   */
+  async getCertificationsFromComplianceDocs(subcontractorIds: string[]): Promise<SubcontractorCertification[]> {
+    try {
+      const { data: docs, error } = await db
+        .from('subcontractor_compliance_documents')
+        .select('*')
+        .in('subcontractor_id', subcontractorIds)
+        .eq('document_type', 'safety_cert')
+
+      if (error) {
+        return []
+      }
+
+      const today = new Date()
+      const thirtyDaysFromNow = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)
+
+      return (docs || []).map((doc: any) => {
+        const expDate = doc.expiration_date ? new Date(doc.expiration_date) : null
+        let status: CertificationStatusType = 'pending_verification'
+
+        if (expDate) {
+          if (expDate < today) {
+            status = 'expired'
+          } else if (expDate < thirtyDaysFromNow) {
+            status = 'expiring_soon'
+          } else if (doc.status === 'approved') {
+            status = 'valid'
+          }
+        } else if (doc.status === 'approved') {
+          status = 'valid'
+        }
+
+        return {
+          id: doc.id,
+          subcontractor_id: doc.subcontractor_id,
+          certification_type: 'safety_training' as CertificationType,
+          certification_name: doc.document_name || 'Safety Certification',
+          issuing_authority: null,
+          certificate_number: null,
+          holder_name: 'Company',
+          holder_title: null,
+          issue_date: doc.issue_date,
+          expiration_date: doc.expiration_date,
+          document_url: doc.file_url,
+          document_name: doc.document_name,
+          status,
+          verified_at: doc.verified_at,
+          verified_by_name: null,
+          created_at: doc.created_at,
+          updated_at: doc.updated_at,
+        }
+      })
+    } catch (error) {
+      return []
+    }
+  },
+
+  /**
+   * Get certification summary for dashboard
+   */
+  async getCertificationSummary(userId: string): Promise<CertificationSummary> {
+    try {
+      const certifications = await this.getCertifications(userId)
+
+      const validCount = certifications.filter(c => c.status === 'valid').length
+      const expiringSoonCount = certifications.filter(c => c.status === 'expiring_soon').length
+      const expiredCount = certifications.filter(c => c.status === 'expired').length
+      const pendingCount = certifications.filter(c => c.status === 'pending_verification').length
+
+      // Count by type
+      const byType: Record<string, number> = {}
+      certifications.forEach(c => {
+        byType[c.certification_type] = (byType[c.certification_type] || 0) + 1
+      })
+
+      // Get expiring within 30 days
+      const today = new Date()
+      const thirtyDaysFromNow = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)
+      const expiringWithin30 = certifications.filter(c => {
+        if (!c.expiration_date) return false
+        const expDate = new Date(c.expiration_date)
+        return expDate >= today && expDate <= thirtyDaysFromNow
+      })
+
+      return {
+        total_certifications: certifications.length,
+        valid_count: validCount,
+        expiring_soon_count: expiringSoonCount,
+        expired_count: expiredCount,
+        pending_verification_count: pendingCount,
+        certifications_by_type: byType,
+        expiring_within_30_days: expiringWithin30,
+      }
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to fetch certification summary:', error)
+      return {
+        total_certifications: 0,
+        valid_count: 0,
+        expiring_soon_count: 0,
+        expired_count: 0,
+        pending_verification_count: 0,
+        certifications_by_type: {},
+        expiring_within_30_days: [],
+      }
+    }
+  },
+
+  /**
+   * Upload a new certification
+   */
+  async uploadCertification(userId: string, data: CreateCertificationDTO): Promise<SubcontractorCertification | null> {
+    try {
+      const subcontractorIds = await getSubcontractorIdsForUser(userId)
+      if (subcontractorIds.length === 0) {
+        return null
+      }
+
+      const subcontractorId = subcontractorIds[0]
+
+      const { data: cert, error } = await db
+        .from('subcontractor_certifications')
+        .insert({
+          subcontractor_id: subcontractorId,
+          certification_type: data.certification_type,
+          certification_name: data.certification_name,
+          issuing_authority: data.issuing_authority,
+          certificate_number: data.certificate_number,
+          holder_name: data.holder_name,
+          holder_title: data.holder_title,
+          issue_date: data.issue_date,
+          expiration_date: data.expiration_date,
+          document_url: data.document_url,
+          document_name: data.document_name,
+          status: 'pending_verification',
+        })
+        .select()
+        .single()
+
+      if (error) {
+        logger.error('[SubcontractorPortal] Failed to upload certification:', error)
+        return null
+      }
+
+      return {
+        id: cert.id,
+        subcontractor_id: cert.subcontractor_id,
+        certification_type: cert.certification_type,
+        certification_name: cert.certification_name,
+        issuing_authority: cert.issuing_authority,
+        certificate_number: cert.certificate_number,
+        holder_name: cert.holder_name,
+        holder_title: cert.holder_title,
+        issue_date: cert.issue_date,
+        expiration_date: cert.expiration_date,
+        document_url: cert.document_url,
+        document_name: cert.document_name,
+        status: 'pending_verification',
+        verified_at: null,
+        verified_by_name: null,
+        created_at: cert.created_at,
+        updated_at: cert.updated_at,
+      }
+    } catch (error) {
+      logger.error('[SubcontractorPortal] Failed to upload certification:', error)
+      return null
     }
   },
 }

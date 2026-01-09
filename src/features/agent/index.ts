@@ -17,6 +17,9 @@ export { AgentChatPanel } from './components/AgentChatPanel'
 export { AgentChatInput } from './components/AgentChatInput'
 export { AgentMessage } from './components/AgentMessage'
 export { AgentQuickActions, ContextQuickActions } from './components/AgentQuickActions'
+export { AgentProvider, useAgent, useAgentSafe } from './components/AgentProvider'
+export { AgentFAB } from './components/AgentFAB'
+export { AgentKeyboardShortcut, useKeyboardShortcutText } from './components/AgentKeyboardShortcut'
 
 // ============================================================================
 // Hooks
@@ -30,6 +33,13 @@ export {
   selectActiveSession,
   selectSortedSessions,
   selectIsReady,
+  // Background task hooks
+  useBackgroundTasks,
+  useTaskActions,
+  useTask,
+  useTaskHistory,
+  useProcessorStatus,
+  useQuickTaskActions,
 } from './hooks'
 
 // ============================================================================
@@ -52,6 +62,28 @@ export {
   routeRFITool,
   summarizeDailyReportTool,
 } from './tools'
+
+// ============================================================================
+// Services
+// ============================================================================
+
+export { taskService } from './services'
+
+// ============================================================================
+// Background Processing
+// ============================================================================
+
+export {
+  taskProcessor,
+  taskScheduler,
+  registerTaskHandler,
+  initializeAllTriggers,
+  // Subscriptions
+  subscribeToDocumentUploads,
+  subscribeToRFICreation,
+  subscribeToReportSubmissions,
+  subscribeToInspectionResults,
+} from './background'
 
 // ============================================================================
 // Initialize

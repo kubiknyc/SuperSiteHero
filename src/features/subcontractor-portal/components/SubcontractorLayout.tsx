@@ -26,6 +26,9 @@ import {
   Receipt,
   FileEdit,
   Shield,
+  Camera,
+  Users,
+  Award,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/lib/auth/AuthContext'
@@ -224,6 +227,21 @@ export function SubcontractorLayout() {
             icon={<Shield className="h-4 w-4" />}
             label="Safety"
           />
+          <NavItem
+            to="/portal/photos"
+            icon={<Camera className="h-4 w-4" />}
+            label="Photos"
+          />
+          <NavItem
+            to="/portal/meetings"
+            icon={<Users className="h-4 w-4" />}
+            label="Meetings"
+          />
+          <NavItem
+            to="/portal/certifications"
+            icon={<Award className="h-4 w-4" />}
+            label="Certifications"
+          />
         </nav>
 
         {/* Footer */}
@@ -390,6 +408,24 @@ export function SubcontractorLayout() {
                 to="/portal/safety"
                 icon={<Shield className="h-4 w-4" />}
                 label="Safety"
+                onClick={() => setMobileMenuOpen(false)}
+              />
+              <NavItem
+                to="/portal/photos"
+                icon={<Camera className="h-4 w-4" />}
+                label="Photos"
+                onClick={() => setMobileMenuOpen(false)}
+              />
+              <NavItem
+                to="/portal/meetings"
+                icon={<Users className="h-4 w-4" />}
+                label="Meetings"
+                onClick={() => setMobileMenuOpen(false)}
+              />
+              <NavItem
+                to="/portal/certifications"
+                icon={<Award className="h-4 w-4" />}
+                label="Certifications"
                 onClick={() => setMobileMenuOpen(false)}
               />
               <NavItem

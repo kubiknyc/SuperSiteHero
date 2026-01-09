@@ -1367,3 +1367,268 @@ export interface SafetyComplianceSummary {
   trir_status: 'good' | 'warning' | 'critical' | 'unknown';
   dart_status: 'good' | 'warning' | 'critical' | 'unknown';
 }
+
+// =============================================
+// P2-1: PHOTO DOCUMENTATION ACCESS
+// =============================================
+
+/**
+ * Photo category for filtering
+ */
+export type PhotoCategory = 'progress' | 'safety' | 'quality' | 'weather' | 'delivery' | 'equipment' | 'general' | 'issue';
+
+/**
+ * A photo accessible to the subcontractor
+ */
+export interface SubcontractorPhoto {
+  id: string;
+  project_id: string;
+  project_name: string;
+
+  // Photo details
+  photo_url: string;
+  thumbnail_url: string | null;
+  caption: string | null;
+  category: PhotoCategory | null;
+
+  // Location info
+  location: string | null;
+  area: string | null;
+
+  // Metadata
+  taken_at: string | null;
+  uploaded_at: string;
+  uploaded_by_name: string | null;
+
+  // Tags
+  tags: string[];
+
+  // Dimensions (if available)
+  width: number | null;
+  height: number | null;
+}
+
+/**
+ * Filters for photo queries
+ */
+export interface SubcontractorPhotoFilters {
+  project_id?: string;
+  category?: PhotoCategory;
+  date_from?: string;
+  date_to?: string;
+  search?: string;
+}
+
+/**
+ * Summary of photos for dashboard
+ */
+export interface PhotoSummary {
+  total_photos: number;
+  photos_this_week: number;
+  photos_this_month: number;
+  photos_by_category: Record<string, number>;
+  photos_by_project: Array<{
+    project_id: string;
+    project_name: string;
+    count: number;
+  }>;
+  recent_photos: SubcontractorPhoto[];
+}
+
+// =============================================
+// P2-2: MEETING MINUTES & ACTION ITEMS
+// =============================================
+
+/**
+ * Meeting status types
+ */
+export type MeetingStatus = 'scheduled' | 'in_progress' | 'completed' | 'cancelled';
+
+/**
+ * Action item status
+ */
+export type ActionItemStatus = 'pending' | 'in_progress' | 'completed' | 'cancelled';
+
+/**
+ * Action item priority
+ */
+export type ActionItemPriority = 'low' | 'medium' | 'high' | 'urgent';
+
+/**
+ * A meeting accessible to the subcontractor
+ */
+export interface SubcontractorMeeting {
+  id: string;
+  project_id: string;
+  project_name: string;
+
+  // Meeting details
+  title: string;
+  meeting_type: string;
+  description: string | null;
+
+  // Timing
+  scheduled_date: string;
+  scheduled_time: string | null;
+  duration_minutes: number | null;
+
+  // Location
+  location: string | null;
+  is_virtual: boolean;
+  meeting_link: string | null;
+
+  // Status
+  status: MeetingStatus;
+
+  // Attendee info
+  total_attendees: number;
+  subcontractor_attended: boolean;
+
+  // Content
+  agenda: string | null;
+  minutes_summary: string | null;
+
+  // Attachments count
+  attachments_count: number;
+}
+
+/**
+ * A meeting attachment
+ */
+export interface MeetingAttachment {
+  id: string;
+  meeting_id: string;
+  file_name: string;
+  file_url: string;
+  file_type: string | null;
+  file_size: number | null;
+  uploaded_at: string;
+}
+
+/**
+ * An action item from a meeting
+ */
+export interface SubcontractorActionItem {
+  id: string;
+  meeting_id: string;
+  meeting_title: string;
+  project_id: string;
+  project_name: string;
+
+  // Action details
+  description: string;
+  status: ActionItemStatus;
+  priority: ActionItemPriority;
+
+  // Assignment
+  assigned_to_name: string | null;
+  is_assigned_to_subcontractor: boolean;
+
+  // Dates
+  due_date: string | null;
+  completed_date: string | null;
+  created_at: string;
+
+  // Status flags
+  is_overdue: boolean;
+}
+
+/**
+ * Summary of meetings for dashboard
+ */
+export interface MeetingSummary {
+  total_meetings: number;
+  upcoming_meetings: number;
+  meetings_this_month: number;
+  open_action_items: number;
+  overdue_action_items: number;
+  completed_action_items: number;
+}
+
+// =============================================
+// P2-3: EQUIPMENT & LABOR CERTIFICATIONS
+// =============================================
+
+/**
+ * Certification type categories
+ */
+export type CertificationType =
+  | 'equipment_operator'    // Crane, forklift, etc.
+  | 'safety_training'       // OSHA-30, OSHA-10, etc.
+  | 'first_aid'            // First Aid, CPR, AED
+  | 'trade_license'        // Electrician, Plumber, etc.
+  | 'professional'         // PE, Architect, etc.
+  | 'hazmat'               // Hazardous materials
+  | 'confined_space'       // Confined space entry
+  | 'fall_protection'      // Fall protection
+  | 'welding'              // Welding certifications
+  | 'other';
+
+/**
+ * Certification status based on expiration
+ */
+export type CertificationStatusType = 'valid' | 'expiring_soon' | 'expired' | 'pending_verification';
+
+/**
+ * A certification record
+ */
+export interface SubcontractorCertification {
+  id: string;
+  subcontractor_id: string;
+
+  // Certificate details
+  certification_type: CertificationType;
+  certification_name: string;
+  issuing_authority: string | null;
+  certificate_number: string | null;
+
+  // Person holding certification
+  holder_name: string;
+  holder_title: string | null;
+
+  // Dates
+  issue_date: string | null;
+  expiration_date: string | null;
+
+  // Document
+  document_url: string | null;
+  document_name: string | null;
+
+  // Status
+  status: CertificationStatusType;
+  verified_at: string | null;
+  verified_by_name: string | null;
+
+  // Timestamps
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * DTO for uploading a new certification
+ */
+export interface CreateCertificationDTO {
+  certification_type: CertificationType;
+  certification_name: string;
+  issuing_authority?: string;
+  certificate_number?: string;
+  holder_name: string;
+  holder_title?: string;
+  issue_date?: string;
+  expiration_date?: string;
+  document_url?: string;
+  document_name?: string;
+}
+
+/**
+ * Summary of certifications for dashboard
+ */
+export interface CertificationSummary {
+  total_certifications: number;
+  valid_count: number;
+  expiring_soon_count: number;
+  expired_count: number;
+  pending_verification_count: number;
+  certifications_by_type: Record<string, number>;
+  expiring_within_30_days: SubcontractorCertification[];
+}
