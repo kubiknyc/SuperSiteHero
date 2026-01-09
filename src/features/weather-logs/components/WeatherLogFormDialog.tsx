@@ -15,7 +15,7 @@ import { useProjectLocation } from '@/features/daily-reports/hooks/useWeather'
 import { getWeatherForLocation, getCurrentLocation } from '@/features/daily-reports/services/weatherService'
 import type { WeatherLog, WeatherCondition, PrecipitationType, WindDirection, WorkImpact } from '@/types/database-extensions'
 import { format } from 'date-fns'
-import { Loader2, MapPin } from 'lucide-react'
+import { Loader2, MapPin, X } from 'lucide-react'
 
 // Map Open-Meteo text conditions to WeatherCondition enum values
 function mapWeatherConditionToEnum(condition: string): WeatherCondition {
@@ -329,7 +329,20 @@ export function WeatherLogFormDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{isEditing ? 'Edit Weather Log' : 'Create Weather Log'}</DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle>{isEditing ? 'Edit Weather Log' : 'Create Weather Log'}</DialogTitle>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => onOpenChange(false)}
+              disabled={isLoading}
+              className="h-6 w-6"
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </Button>
+          </div>
           <DialogDescription>
             {isEditing
               ? 'Update the weather conditions and their impact on work'

@@ -37,6 +37,7 @@ import {
   Building2,
   Package,
   DollarSign,
+  X,
 } from 'lucide-react';
 import {
   useVendors,
@@ -248,10 +249,23 @@ export function POFormDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-3xl max-h-[90vh]">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <ShoppingCart className="h-5 w-5" />
-            {isEditMode ? 'Edit Purchase Order' : 'Create Purchase Order'}
-          </DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="flex items-center gap-2">
+              <ShoppingCart className="h-5 w-5" />
+              {isEditMode ? 'Edit Purchase Order' : 'Create Purchase Order'}
+            </DialogTitle>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => onOpenChange(false)}
+              disabled={isSubmitting}
+              className="h-6 w-6"
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </Button>
+          </div>
           <DialogDescription>
             {isEditMode
               ? 'Update the details of this purchase order.'

@@ -11,7 +11,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
 import { Checkbox } from '@/components/ui/checkbox'
 import { CSISpecPicker, getSpecSectionTitle } from '@/components/ui/csi-spec-picker'
-import { Loader2, FileText } from 'lucide-react'
+import { Loader2, FileText, X } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
 import { useCreateShopDrawing, SHOP_DRAWING_DISCIPLINES, SHOP_DRAWING_PRIORITIES } from '../hooks'
@@ -153,10 +153,23 @@ export function CreateShopDrawingDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            Create Shop Drawing
-          </DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              Create Shop Drawing
+            </DialogTitle>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => onOpenChange(false)}
+              disabled={createShopDrawing.isPending}
+              className="h-6 w-6"
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </Button>
+          </div>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">

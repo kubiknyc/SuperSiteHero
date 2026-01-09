@@ -263,11 +263,12 @@ export const useAgentStore = create<AgentStore>()(
             set({ isProcessing: false, streamingMessageId: null })
             return response
           } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error'
             logger.error('[AgentStore] Error sending message:', error)
             set({
               isProcessing: false,
               streamingMessageId: null,
-              error: 'Failed to send message',
+              error: errorMessage || 'Failed to send message',
             })
             throw error
           }

@@ -28,7 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Loader2, FileText, Building, Calendar, Hash } from 'lucide-react'
+import { Loader2, FileText, Building, Calendar, Hash, X } from 'lucide-react'
 import {
   CLOSEOUT_DOCUMENT_TYPES,
   type CloseoutDocumentWithDetails,
@@ -178,10 +178,23 @@ export function CloseoutDocumentFormDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            {isEditing ? 'Edit Closeout Document' : 'Add Closeout Document'}
-          </DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              {isEditing ? 'Edit Closeout Document' : 'Add Closeout Document'}
+            </DialogTitle>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => onOpenChange(false)}
+              disabled={form.formState.isSubmitting}
+              className="h-6 w-6"
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </Button>
+          </div>
           <DialogDescription>
             {isEditing
               ? 'Update the closeout document details below.'

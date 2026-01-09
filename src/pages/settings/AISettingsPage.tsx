@@ -5,6 +5,7 @@
  */
 
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -25,6 +26,7 @@ import {
   FileSearch,
   Clock,
   Shield,
+  ArrowLeft,
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -116,6 +118,7 @@ const FEATURE_INFO = [
 ]
 
 export default function AISettingsPage() {
+  const navigate = useNavigate()
   const [showApiKey, setShowApiKey] = useState(false)
   const { data: config, isLoading } = useAIConfiguration()
   const { data: usageStats } = useAIUsageStats()
@@ -129,7 +132,7 @@ export default function AISettingsPage() {
   const getCurrentModel = () => {
     const provider = getCurrentProvider()
     if (provider === 'openai') return config?.openai_model || config?.model_preference || 'gpt-4o-mini'
-    if (provider === 'anthropic') return config?.anthropic_model || config?.model_preference || 'claude-3-5-haiku-latest'
+    if (provider === 'anthropic') return config?.anthropic_model || config?.model_preference || 'claude-3-haiku-20240307'
     return config?.model_preference || 'llama3'
   }
 
@@ -191,9 +194,11 @@ export default function AISettingsPage() {
       case 'openai':
         return ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-3.5-turbo']
       case 'anthropic':
-        return ['claude-3-5-sonnet-latest', 'claude-3-5-haiku-latest', 'claude-3-opus-latest']
+        return ['claude-3-haiku-20240307', 'claude-3-5-sonnet-20241022', 'claude-3-5-haiku-20241022', 'claude-3-opus-20240229']
       case 'local':
         return ['llama3', 'mistral', 'codellama', 'phi3']
+      default:
+        return ['gpt-4o', 'gpt-4o-mini', 'gpt-4-turbo', 'gpt-3.5-turbo']
     }
   }
 
@@ -211,9 +216,29 @@ export default function AISettingsPage() {
   }
 
   const handleTestConnection = () => {
-    if (config) {
-      testConfig.mutate(config)
-    }
+    // Use current form values, not saved config, so we can test before saving
+    const formValues = form.getValues()
+    const provider = formValues.provider || config?.default_provider || 'anthropic'
+
+    // Build a test config with current form values
+    const testConfigData = {
+      ...config,
+      default_provider: provider,
+      provider: provider,
+      // Use form API key if provided, otherwise fall back to saved keys
+      anthropic_api_key_id: provider === 'anthropic' && formValues.api_key
+        ? formValues.api_key
+        : config?.anthropic_api_key_id,
+      openai_api_key_id: provider === 'openai' && formValues.api_key
+        ? formValues.api_key
+        : config?.openai_api_key_id,
+      api_key_encrypted: formValues.api_key || config?.api_key_encrypted,
+      anthropic_model: formValues.model_preference || config?.anthropic_model,
+      openai_model: formValues.model_preference || config?.openai_model,
+      model_preference: formValues.model_preference,
+    } as AIConfiguration
+
+    testConfig.mutate(testConfigData)
   }
 
   if (isLoading) {
@@ -227,14 +252,25 @@ export default function AISettingsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
-            <Bot className="w-6 h-6" />
-            AI Settings
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Configure AI-powered features for your organization
-          </p>
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigate(-1)}
+            className="h-8 w-8"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span className="sr-only">Go back</span>
+          </Button>
+          <div>
+            <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
+              <Bot className="w-6 h-6" />
+              AI Settings
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              Configure AI-powered features for your organization
+            </p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           {isAIEnabled() && hasApiKey() ? (
@@ -622,7 +658,7 @@ export default function AISettingsPage() {
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-bold">
-                    {usageStats?.byFeature.reduce((sum, f) => sum + f.requestCount, 0) || 0}
+                    {usageStats?.byFeature?.reduce((sum, f) => sum + f.requestCount, 0) || 0}
                   </p>
                   <p className="text-sm text-muted-foreground">Requests</p>
                 </div>
@@ -633,10 +669,10 @@ export default function AISettingsPage() {
               {/* Usage by Feature */}
               <div className="space-y-3">
                 <h4 className="font-medium heading-card">Usage by Feature</h4>
-                {usageStats?.byFeature.length === 0 ? (
+                {!usageStats?.byFeature?.length ? (
                   <p className="text-sm text-muted-foreground">No usage data yet</p>
                 ) : (
-                  usageStats?.byFeature.map((feature) => (
+                  usageStats.byFeature.map((feature) => (
                     <div
                       key={feature.feature}
                       className="flex items-center justify-between py-2 border-b last:border-0"

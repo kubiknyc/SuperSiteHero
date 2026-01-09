@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { NativeSelect as Select } from '@/components/ui/select'
 import { useCreateChangeOrderWithNotification } from '../hooks/useChangeOrderMutations'
-import { Plus } from 'lucide-react'
+import { Plus, X } from 'lucide-react'
 import { logger } from '../../../lib/utils/logger';
 
 
@@ -70,7 +70,20 @@ export function CreateChangeOrderDialog({ projectId, workflowTypeId }: CreateCha
       </DialogTrigger>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Create Change Order</DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle>Create Change Order</DialogTitle>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => setOpen(false)}
+              disabled={createChangeOrder.isPending}
+              className="h-6 w-6"
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </Button>
+          </div>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">

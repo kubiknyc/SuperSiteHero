@@ -26,6 +26,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { AssigneeSelector, type Assignee } from '@/components/AssigneeSelector'
 import { VoiceInputButton } from '@/components/ui/voice-input'
 import { LazyFloorPlanPinDrop, type PinLocation } from './LazyFloorPlanPinDrop'
+import { X } from 'lucide-react'
 
 interface CreatePunchItemDialogProps {
   projectId: string
@@ -125,7 +126,20 @@ export function CreatePunchItemDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Create Punch Item</DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle>Create Punch Item</DialogTitle>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => onOpenChange(false)}
+              disabled={createMutation.isPending}
+              className="h-6 w-6"
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </Button>
+          </div>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">

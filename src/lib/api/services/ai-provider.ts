@@ -44,47 +44,44 @@ class OpenAIProvider implements AIProvider {
     const startTime = Date.now()
     const model = options?.model || this.defaultModel
 
-    const messages: Array<{ role: string; content: string }> = []
-
-    if (options?.systemPrompt) {
-      messages.push({ role: 'system', content: options.systemPrompt })
-    }
-    messages.push({ role: 'user', content: prompt })
-
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${this.apiKey}`,
-      },
-      body: JSON.stringify({
+    // Use Edge Function to avoid CORS issues
+    const { data, error } = await supabase.functions.invoke('ai-proxy', {
+      body: {
+        provider: 'openai',
+        apiKey: this.apiKey,
         model,
-        messages,
+        prompt,
+        systemPrompt: options?.systemPrompt,
+        maxTokens: options?.maxTokens ?? 2048,
         temperature: options?.temperature ?? 0.7,
-        max_tokens: options?.maxTokens ?? 2048,
-        stop: options?.stopSequences,
-        response_format:
-          options?.responseFormat === 'json' ? { type: 'json_object' } : undefined,
-      }),
+      },
     })
 
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({}))
-      throw new Error(`OpenAI API error: ${error.error?.message || response.statusText}`)
+    if (error) {
+      logger.error('[OpenAIProvider] Edge function error:', error)
+      throw new Error(`OpenAI API error: ${error.message || 'Edge function failed'}`)
     }
 
-    const data = await response.json()
+    if (!data) {
+      throw new Error('OpenAI API error: No response from AI proxy')
+    }
+
+    if (!data.success) {
+      logger.error('[OpenAIProvider] AI proxy returned error:', data.error)
+      throw new Error(`OpenAI API error: ${data.error || 'Unknown error from AI service'}`)
+    }
+
     const latencyMs = Date.now() - startTime
 
     return {
-      content: data.choices[0]?.message?.content || '',
+      content: data.content || '',
       tokens: {
-        input: data.usage?.prompt_tokens || 0,
-        output: data.usage?.completion_tokens || 0,
-        total: data.usage?.total_tokens || 0,
+        input: data.tokens?.input || 0,
+        output: data.tokens?.output || 0,
+        total: (data.tokens?.input || 0) + (data.tokens?.output || 0),
       },
       model,
-      finishReason: this.mapFinishReason(data.choices[0]?.finish_reason),
+      finishReason: 'stop',
       latencyMs,
     }
   }
@@ -168,50 +165,51 @@ class AnthropicProvider implements AIProvider {
 
   constructor(apiKey: string, defaultModel?: string) {
     this.apiKey = apiKey
-    this.defaultModel = defaultModel || 'claude-3-5-haiku-latest'
+    this.defaultModel = defaultModel || 'claude-3-haiku-20240307'
   }
 
   async complete(prompt: string, options?: CompletionOptions): Promise<CompletionResult> {
     const startTime = Date.now()
     const model = options?.model || this.defaultModel
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': this.apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
+    // Use Edge Function to avoid CORS issues
+    const { data, error } = await supabase.functions.invoke('ai-proxy', {
+      body: {
+        provider: 'anthropic',
+        apiKey: this.apiKey,
         model,
-        max_tokens: options?.maxTokens ?? 2048,
-        system: options?.systemPrompt,
-        messages: [{ role: 'user', content: prompt }],
+        prompt,
+        systemPrompt: options?.systemPrompt,
+        maxTokens: options?.maxTokens ?? 2048,
         temperature: options?.temperature ?? 0.7,
-        stop_sequences: options?.stopSequences,
-      }),
+      },
     })
 
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({}))
-      throw new Error(`Anthropic API error: ${error.error?.message || response.statusText}`)
+    if (error) {
+      logger.error('[AnthropicProvider] Edge function error:', error)
+      throw new Error(`Anthropic API error: ${error.message || 'Edge function failed'}`)
     }
 
-    const data = await response.json()
+    if (!data) {
+      throw new Error('Anthropic API error: No response from AI proxy')
+    }
+
+    if (!data.success) {
+      logger.error('[AnthropicProvider] AI proxy returned error:', data.error)
+      throw new Error(`Anthropic API error: ${data.error || 'Unknown error from AI service'}`)
+    }
+
     const latencyMs = Date.now() - startTime
 
-    const content =
-      data.content?.find((block: { type: string }) => block.type === 'text')?.text || ''
-
     return {
-      content,
+      content: data.content || '',
       tokens: {
-        input: data.usage?.input_tokens || 0,
-        output: data.usage?.output_tokens || 0,
-        total: (data.usage?.input_tokens || 0) + (data.usage?.output_tokens || 0),
+        input: data.tokens?.input || 0,
+        output: data.tokens?.output || 0,
+        total: (data.tokens?.input || 0) + (data.tokens?.output || 0),
       },
       model,
-      finishReason: this.mapStopReason(data.stop_reason),
+      finishReason: 'stop',
       latencyMs,
     }
   }
@@ -268,7 +266,7 @@ class AnthropicProvider implements AIProvider {
   }
 
   getAvailableModels(): string[] {
-    return ['claude-3-5-sonnet-latest', 'claude-3-5-haiku-latest', 'claude-3-opus-latest']
+    return ['claude-3-haiku-20240307', 'claude-3-5-sonnet-20241022', 'claude-3-5-haiku-20241022', 'claude-3-opus-20240229']
   }
 
   isConfigured(): boolean {
@@ -429,7 +427,7 @@ function getModelForProvider(config: AIConfiguration): string {
     return config.openai_model || config.model_preference || 'gpt-4o-mini'
   }
   if (provider === 'anthropic') {
-    return config.anthropic_model || config.model_preference || 'claude-3-5-haiku-latest'
+    return config.anthropic_model || config.model_preference || 'claude-3-haiku-20240307'
   }
   // Local models
   return config.model_preference || 'llama3'
@@ -596,15 +594,45 @@ export const aiConfigurationApi = {
   },
 
   /**
-   * Test AI configuration by making a simple request
+   * Test AI configuration by making a simple request via Edge Function (to avoid CORS)
    */
   async testConfiguration(config: AIConfiguration): Promise<{ success: boolean; error?: string }> {
     try {
-      const provider = getAIProvider(config)
-      await provider.complete('Say "Hello" in exactly one word.', {
-        maxTokens: 10,
-        temperature: 0,
+      const providerType = config.default_provider || config.provider
+      const apiKey = getApiKeyForProvider(config)
+      const model = getModelForProvider(config)
+
+      if (!apiKey) {
+        return { success: false, error: 'API key not configured' }
+      }
+
+      // Use Edge Function to avoid CORS issues
+      const { data, error } = await supabase.functions.invoke('ai-proxy', {
+        body: {
+          provider: providerType,
+          apiKey,
+          model,
+          prompt: 'Say "Hello" in exactly one word.',
+          maxTokens: 10,
+          temperature: 0,
+        },
       })
+
+      if (error) {
+        // If Edge Function not deployed, provide helpful message
+        if (error.message?.includes('FunctionNotFound') || error.message?.includes('404')) {
+          return {
+            success: false,
+            error: 'AI proxy not deployed. Please deploy the ai-proxy Edge Function or save configuration to test with the AI agent.',
+          }
+        }
+        throw error
+      }
+
+      if (!data.success) {
+        return { success: false, error: data.error || 'Test failed' }
+      }
+
       return { success: true }
     } catch (error) {
       return {

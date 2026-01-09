@@ -755,9 +755,10 @@ export const MODEL_PRICING: Record<string, { input: number; output: number }> = 
   'gpt-3.5-turbo': { input: 0.05, output: 0.15 },
 
   // Anthropic
-  'claude-3-5-sonnet-latest': { input: 0.3, output: 1.5 },
-  'claude-3-5-haiku-latest': { input: 0.08, output: 0.4 },
-  'claude-3-opus-latest': { input: 1.5, output: 7.5 },
+  'claude-3-haiku-20240307': { input: 0.025, output: 0.125 },
+  'claude-3-5-sonnet-20241022': { input: 0.3, output: 1.5 },
+  'claude-3-5-haiku-20241022': { input: 0.08, output: 0.4 },
+  'claude-3-opus-20240229': { input: 1.5, output: 7.5 },
 
   // Local (free)
   'local': { input: 0, output: 0 },
@@ -765,6 +766,6 @@ export const MODEL_PRICING: Record<string, { input: number; output: number }> = 
 
 export const DEFAULT_MODELS: Record<AIProviderType, string> = {
   openai: 'gpt-4o-mini',
-  anthropic: 'claude-3-5-haiku-latest',
+  anthropic: 'claude-3-haiku-20240307',
   local: 'local',
 }

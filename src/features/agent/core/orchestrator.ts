@@ -544,8 +544,22 @@ export class AgentOrchestrator {
   }> {
     // Get AI configuration
     const aiConfig = await aiConfigurationApi.getConfiguration()
-    if (!aiConfig || !aiConfig.is_enabled) {
-      throw new Error('AI features are not enabled')
+    if (!aiConfig) {
+      throw new Error('AI is not configured. Please configure AI in Settings → AI.')
+    }
+
+    // Check if AI is enabled (aiService.complete will do a detailed check)
+    const hasAnyFeatureEnabled =
+      aiConfig.is_enabled ||
+      aiConfig.enable_rfi_routing ||
+      aiConfig.enable_smart_summaries ||
+      aiConfig.enable_action_item_extraction ||
+      aiConfig.enable_risk_prediction ||
+      aiConfig.enable_schedule_optimization ||
+      aiConfig.enable_document_enhancement
+
+    if (!hasAnyFeatureEnabled) {
+      throw new Error('AI features are disabled. Please enable at least one AI feature in Settings → AI.')
     }
 
     // For now, use the existing aiService.complete

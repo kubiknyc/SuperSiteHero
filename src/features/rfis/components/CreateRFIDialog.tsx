@@ -175,17 +175,30 @@ export function CreateRFIDialog({
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle>Create RFI (Request for Information)</DialogTitle>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setShowTemplateSelector(true)}
-              disabled={createRFI.isPending}
-              className="gap-2"
-            >
-              <FileText className="h-4 w-4" />
-              Use Template
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setShowTemplateSelector(true)}
+                disabled={createRFI.isPending}
+                className="gap-2"
+              >
+                <FileText className="h-4 w-4" />
+                Use Template
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={handleClose}
+                disabled={createRFI.isPending}
+                className="h-6 w-6"
+              >
+                <X className="h-4 w-4" />
+                <span className="sr-only">Close</span>
+              </Button>
+            </div>
           </div>
           <DialogDescription>
             Submit a request for clarification from the design team or owner

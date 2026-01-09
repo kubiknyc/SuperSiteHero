@@ -29,7 +29,7 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Loader2, AlertTriangle, FileWarning, DollarSign, Clock, MapPin } from 'lucide-react';
+import { Loader2, AlertTriangle, FileWarning, DollarSign, Clock, MapPin, X } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useCreateNCR, useUpdateNCR } from '../hooks/useQualityControl';
 import { useProjectUsers } from '@/features/messaging/hooks/useProjectUsers';
@@ -322,10 +322,23 @@ export function NCRFormDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <FileWarning className="h-5 w-5 text-red-500" />
-            {isEditMode ? 'Edit NCR' : 'Create Non-Conformance Report'}
-          </DialogTitle>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="flex items-center gap-2">
+              <FileWarning className="h-5 w-5 text-red-500" />
+              {isEditMode ? 'Edit NCR' : 'Create Non-Conformance Report'}
+            </DialogTitle>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => onOpenChange(false)}
+              disabled={isSubmitting}
+              className="h-6 w-6"
+            >
+              <X className="h-4 w-4" />
+              <span className="sr-only">Close</span>
+            </Button>
+          </div>
           <DialogDescription>
             {isEditMode
               ? 'Update the details of this non-conformance report.'
