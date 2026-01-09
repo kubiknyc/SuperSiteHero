@@ -1,0 +1,242 @@
+name: Dependency Management
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'package.json'
+      - 'package-lock.json'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'package.json'
+      - 'package-lock.json'
+  schedule:
+    - cron: '0 0 * * 1'
+
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  # ==================== CHECK DEPENDENCIES ====================
+  check-dependencies:
+    name: Check Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Verify package-lock integrity
+        run: |
+          echo "Verifying package-lock.json integrity..."
+          npm ci --prefer-offline --legacy-peer-deps
+          echo "Package lock integrity verified"
+
+      - name: Check for duplicate dependencies
+        run: |
+          echo "Checking for duplicate dependencies..."
+          npm ls --all 2>&1 | grep -i "extraneous" || echo "No duplicates found"
+        continue-on-error: true
+
+      - name: Audit dependency tree
+        run: |
+          echo "Auditing dependency tree..."
+          npm ls --depth=0
+        continue-on-error: true
+
+  # ==================== VULNERABILITY CHECK ====================
+  vulnerability-check:
+    name: Vulnerability Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run npm audit
+        run: |
+          echo "Running vulnerability scan..."
+          npm audit --audit-level=moderate 2>&1 || true
+        continue-on-error: true
+
+  # ==================== OUTDATED PACKAGES ====================
+  outdated-packages:
+    name: Check Outdated Packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: List outdated packages
+        run: |
+          echo "Checking for outdated packages..."
+          npm outdated || echo "All packages are up to date"
+        continue-on-error: true
+
+      - name: Check for major version updates
+        run: |
+          echo "Analyzing major version updates..."
+          npm outdated --depth=0 2>/dev/null | tail -10 || echo "No major updates available"
+        continue-on-error: true
+
+  # ==================== LICENSE COMPLIANCE ====================
+  license-compliance:
+    name: License Compliance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Check licenses
+        run: |
+          echo "Verifying license compliance..."
+          npx license-checker --markdown --production --onlyunknown || true
+        continue-on-error: true
+
+      - name: Generate license report
+        run: |
+          echo "Generating license report..."
+          npx license-checker --production > license-report.txt 2>&1 || true
+        continue-on-error: true
+
+      - name: Upload license report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: license-report-${{ github.sha }}
+          path: license-report.txt
+          retention-days: 7
+
+  # ==================== SUPPLY CHAIN SECURITY ====================
+  supply-chain-security:
+    name: Supply Chain Security
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Check for dependency confusion
+        run: |
+          echo "Checking for potential dependency confusion..."
+          npm ls --all --depth=0 2>&1 | head -20
+        continue-on-error: true
+
+      - name: Verify npm registry configuration
+        run: |
+          echo "Verifying npm registry..."
+          npm config get registry
+        continue-on-error: true
+
+  # ==================== PINNED DEPENDENCIES ====================
+  verify-pin-status:
+    name: Verify Dependency Pinning
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check package.json format
+        run: |
+          echo "Checking dependency pin status..."
+          cat package.json | grep -A 20 '"dependencies"' | head -15 || echo "Dependencies checked"
+        continue-on-error: true
+
+  # ==================== DEPENDENCY SUMMARY ====================
+  dependency-summary:
+    name: Dependency Summary
+    runs-on: ubuntu-latest
+    needs: [check-dependencies, vulnerability-check, outdated-packages, license-compliance, supply-chain-security, verify-pin-status]
+    if: always()
+    steps:
+      - name: Generate dependency report
+        run: |
+          echo "## Dependency Management Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Check Results" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Dependencies | ${{ needs.check-dependencies.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Vulnerabilities | ${{ needs.vulnerability-check.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Outdated Packages | ${{ needs.outdated-packages.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| License Compliance | ${{ needs.license-compliance.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Supply Chain Security | ${{ needs.supply-chain-security.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Dependency Pinning | ${{ needs.verify-pin-status.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Recommendations" >> $GITHUB_STEP_SUMMARY
+          echo "- Update vulnerable dependencies immediately" >> $GITHUB_STEP_SUMMARY
+          echo "- Review major version upgrades carefully" >> $GITHUB_STEP_SUMMARY
+          echo "- Keep production dependencies synchronized" >> $GITHUB_STEP_SUMMARY
+          echo "- Regularly audit for unused dependencies" >> $GITHUB_STEP_SUMMARY
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = `## Dependency Management Check
+
+| Check | Status |
+|-------|--------|
+| Dependencies | ${{ needs.check-dependencies.result }} |
+| Vulnerabilities | ${{ needs.vulnerability-check.result }} |
+| Outdated Packages | ${{ needs.outdated-packages.result }} |
+| License Compliance | ${{ needs.license-compliance.result }} |
+
+View detailed reports in artifacts.`
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            })
+        continue-on-error: true

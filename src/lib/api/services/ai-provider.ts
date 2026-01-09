@@ -399,18 +399,17 @@ class LocalProvider implements AIProvider {
 function getApiKeyForProvider(config: AIConfiguration): string | undefined {
   const provider = config.default_provider || config.provider
 
-  // First check for direct API key (legacy support)
-  if (config.api_key_encrypted) {
-    return config.api_key_encrypted
-  }
-
-  // Check for vault reference (UUID) - for now, these are stored directly
-  // TODO: Implement Supabase Vault decryption when vault is set up
+  // Check for provider-specific keys first (preferred)
   if (provider === 'openai' && config.openai_api_key_id) {
     return config.openai_api_key_id
   }
   if (provider === 'anthropic' && config.anthropic_api_key_id) {
     return config.anthropic_api_key_id
+  }
+
+  // Fall back to legacy direct API key
+  if (config.api_key_encrypted) {
+    return config.api_key_encrypted
   }
 
   return undefined
