@@ -26,6 +26,7 @@ import exifr from 'exifr';
 import { generateVideoThumbnail } from '@/lib/utils/generateVideoThumbnail';
 import { getVideoCodec } from '@/lib/utils/videoCompression';
 import { logger } from '../../../lib/utils/logger';
+import { validateFileServer } from '@/lib/api/file-validation-service';
 
 
 // =============================================
@@ -57,6 +58,8 @@ export interface PhotoUploadOptions {
   folderPath?: string;
   /** Allow video uploads (default: true) */
   allowVideos?: boolean;
+  /** Enable server-side validation (default: true in production) */
+  serverValidation?: boolean;
 }
 
 export interface PhotoUploadProgress {
@@ -315,6 +318,7 @@ export function usePhotoUpload(options: PhotoUploadOptions) {
     generateThumbnail: shouldGenerateThumbnail = true,
     folderPath,
     allowVideos = true,
+    serverValidation = import.meta.env.PROD, // Enable by default in production
   } = options;
 
   const queryClient = useQueryClient();
@@ -354,6 +358,30 @@ export function usePhotoUpload(options: PhotoUploadOptions) {
           throw new Error(
             `File size (${(file.size / 1024 / 1024).toFixed(1)}MB) exceeds limit (${(fileSizeLimit / 1024 / 1024).toFixed(0)}MB)`
           );
+        }
+
+        // Server-side validation (defense-in-depth)
+        if (serverValidation) {
+          try {
+            const serverResult = await validateFileServer(file, {
+              preset: 'images',
+              bucket: 'project-files',
+              maxSize: fileSizeLimit,
+            });
+
+            if (!serverResult.valid) {
+              throw new Error(serverResult.error || 'Server validation failed');
+            }
+
+            if (serverResult.warnings?.length) {
+              logger.warn('File validation warnings:', serverResult.warnings);
+            }
+          } catch (error) {
+            if (import.meta.env.PROD) {
+              throw error;
+            }
+            logger.warn('Server validation unavailable:', error);
+          }
         }
 
         // Get dimensions (different methods for images vs videos)

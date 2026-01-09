@@ -2,6 +2,10 @@
 // Document file upload and utility functions
 
 import { supabase } from '@/lib/supabase'
+import {
+  validateFileServer,
+  type ServerValidationResult,
+} from '@/lib/api/file-validation-service'
 
 export interface FileValidationError {
   valid: false
@@ -93,19 +97,61 @@ export function generateStorageFileName(
   return `${projectId}/${timestamp}-${cleanName}.${cleanExt}`
 }
 
+export interface UploadOptions {
+  /** Bucket name (default: 'documents') */
+  bucketName?: string
+  /** Progress callback */
+  onProgress?: (progress: number) => void
+  /** Enable server-side validation (default: true in production) */
+  serverValidation?: boolean
+}
+
 /**
  * Upload a file to Supabase Storage
+ * Includes both client-side and optional server-side validation
  */
 export async function uploadFile(
   file: File,
   projectId: string,
-  bucketName: string = 'documents',
-  onProgress?: (progress: number) => void
-): Promise<{ path: string; publicUrl: string }> {
-  // Validate file
-  const validation = validateFile(file)
-  if (!validation.valid) {
-    throw new Error((validation as FileValidationError).error)
+  options: UploadOptions = {}
+): Promise<{ path: string; publicUrl: string; serverValidation?: ServerValidationResult }> {
+  const {
+    bucketName = 'documents',
+    onProgress,
+    serverValidation = import.meta.env.PROD, // Enable by default in production
+  } = options
+
+  // Client-side validation (fast, immediate feedback)
+  const clientValidation = validateFile(file)
+  if (!clientValidation.valid) {
+    throw new Error((clientValidation as FileValidationError).error)
+  }
+
+  // Server-side validation (defense-in-depth)
+  let serverResult: ServerValidationResult | undefined
+  if (serverValidation) {
+    try {
+      serverResult = await validateFileServer(file, {
+        preset: 'documents',
+        bucket: bucketName,
+      })
+
+      if (!serverResult.valid) {
+        throw new Error(serverResult.error || 'Server validation failed')
+      }
+
+      // Log warnings if any
+      if (serverResult.warnings?.length) {
+        console.warn('File validation warnings:', serverResult.warnings)
+      }
+    } catch (error) {
+      // In production, fail if server validation fails
+      // In development, log warning and continue
+      if (import.meta.env.PROD) {
+        throw error
+      }
+      console.warn('Server validation unavailable, proceeding with client validation only:', error)
+    }
   }
 
   // Generate storage path
@@ -138,12 +184,25 @@ export async function uploadFile(
     return {
       path: storagePath,
       publicUrl: publicUrlData.publicUrl,
+      serverValidation: serverResult,
     }
   } catch (error) {
     throw error instanceof Error
       ? error
       : new Error('Failed to upload file')
   }
+}
+
+/**
+ * @deprecated Use uploadFile with options object instead
+ */
+export async function uploadFileLegacy(
+  file: File,
+  projectId: string,
+  bucketName: string = 'documents',
+  onProgress?: (progress: number) => void
+): Promise<{ path: string; publicUrl: string }> {
+  return uploadFile(file, projectId, { bucketName, onProgress, serverValidation: false })
 }
 
 /**

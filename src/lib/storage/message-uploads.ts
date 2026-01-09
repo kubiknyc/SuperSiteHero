@@ -6,6 +6,7 @@
 
 import { supabase } from '@/lib/supabase'
 import { logger } from '@/lib/utils/logger'
+import { validateFileServer } from '@/lib/api/file-validation-service'
 
 export interface UploadedFile {
   url: string
@@ -15,6 +16,11 @@ export interface UploadedFile {
   size: number
 }
 
+export interface UploadOptions {
+  /** Enable server-side validation (default: true in production) */
+  serverValidation?: boolean
+}
+
 /**
  * Upload a file attachment for a message
  * File path format: {conversationId}/{userId}/{timestamp}-{random}.{ext}
@@ -22,12 +28,39 @@ export interface UploadedFile {
 export async function uploadMessageAttachment(
   conversationId: string,
   userId: string,
-  file: File
+  file: File,
+  options: UploadOptions = {}
 ): Promise<UploadedFile> {
+  const { serverValidation = import.meta.env.PROD } = options
+
   // Validate file size (50MB limit)
   const MAX_FILE_SIZE = 50 * 1024 * 1024 // 50MB
   if (file.size > MAX_FILE_SIZE) {
     throw new Error(`File size exceeds 50MB limit. File: ${(file.size / 1024 / 1024).toFixed(2)}MB`)
+  }
+
+  // Server-side validation (defense-in-depth)
+  if (serverValidation) {
+    try {
+      const serverResult = await validateFileServer(file, {
+        preset: 'documents',
+        bucket: 'message-attachments',
+        maxSize: MAX_FILE_SIZE,
+      })
+
+      if (!serverResult.valid) {
+        throw new Error(serverResult.error || 'Server validation failed')
+      }
+
+      if (serverResult.warnings?.length) {
+        logger.warn('File validation warnings:', serverResult.warnings)
+      }
+    } catch (error) {
+      if (import.meta.env.PROD) {
+        throw error
+      }
+      logger.warn('Server validation unavailable:', error)
+    }
   }
 
   // Generate unique file name
