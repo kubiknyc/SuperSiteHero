@@ -76,7 +76,6 @@ interface NavGroup {
 const primaryNavItems: NavItem[] = [
   { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/projects', label: 'Projects', icon: FolderKanban },
-  { path: '/daily-reports', label: 'Daily Reports', icon: ClipboardList, badge: 3 },
 ]
 
 const navGroups: NavGroup[] = [
@@ -93,6 +92,7 @@ const navGroups: NavGroup[] = [
     id: 'field',
     label: 'Field Operations',
     items: [
+      { path: '/daily-reports', label: 'Daily Reports', icon: ClipboardList, badge: 3 },
       { path: '/punch-lists', label: 'Punch Lists', icon: ClipboardList },
       { path: '/safety', label: 'Safety', icon: AlertTriangle },
       { path: '/inspections', label: 'Inspections', icon: ClipboardList },

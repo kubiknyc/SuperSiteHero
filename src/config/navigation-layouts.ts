@@ -71,7 +71,6 @@ const WORKFLOW_TYPE_LAYOUT: NavigationLayout = {
   primary: [
     { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { path: '/projects', label: 'Projects', icon: FolderKanban },
-    { path: '/daily-reports', label: 'Daily Reports', icon: ClipboardList, badge: 3 },
   ],
   groups: [
     {
@@ -89,6 +88,7 @@ const WORKFLOW_TYPE_LAYOUT: NavigationLayout = {
       label: 'Field Operations',
       icon: HardHat,
       items: [
+        { path: '/daily-reports', label: 'Daily Reports', icon: ClipboardList, badge: 3 },
         { path: '/punch-lists', label: 'Punch Lists', icon: CheckSquare },
         { path: '/safety', label: 'Safety', icon: Shield },
         { path: '/inspections', label: 'Inspections', icon: FileCheck },
