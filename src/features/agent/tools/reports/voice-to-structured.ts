@@ -229,8 +229,8 @@ export const voiceToStructuredTool = createTool<VoiceToStructuredInput, VoiceToS
       .select('company_name, trade')
       .eq('project_id', project_id)
 
-    const tradeToCompany = new Map(
-      subcontractors?.map(s => [s.trade?.toLowerCase(), s.company_name]) || []
+    const tradeToCompany = new Map<string, string>(
+      (subcontractors?.map(s => [s.trade?.toLowerCase() || '', s.company_name || '']) || []) as [string, string][]
     )
 
     // Split text into sentences

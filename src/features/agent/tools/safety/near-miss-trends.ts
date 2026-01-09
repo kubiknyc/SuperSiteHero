@@ -253,7 +253,7 @@ export const nearMissTrendsTool = createTool<NearMissTrendInput, NearMissTrendOu
     // Find categories that are increasing in the current period
     const emergingRisks: EmergingRisk[] = []
 
-    for (const [category, data] of categoryOccurrences.entries()) {
+    for (const [category, data] of Array.from(categoryOccurrences.entries())) {
       const currentPeriodCount = currentPeriodNearMisses.filter(nm =>
         (nm.observation_type || nm.category || 'General') === category
       ).length
@@ -275,7 +275,7 @@ export const nearMissTrendsTool = createTool<NearMissTrendInput, NearMissTrendOu
 
       emergingRisks.push({
         category,
-        location: data.locations.size === 1 ? Array.from(data.locations)[0] : undefined,
+        location: data.locations.size === 1 ? Array.from(data.locations)[0] as string : undefined,
         trend,
         count: data.count,
         first_occurrence: data.firstDate,
@@ -301,7 +301,7 @@ export const nearMissTrendsTool = createTool<NearMissTrendInput, NearMissTrendOu
       dailyCounts.set(dateKey, (dailyCounts.get(dateKey) || 0) + 1)
     }
 
-    for (const [dateStr, count] of dailyCounts.entries()) {
+    for (const [dateStr, count] of Array.from(dailyCounts.entries())) {
       const deviationPercent = ((count - dailyAverage) / dailyAverage) * 100
 
       if (deviationPercent > spike_threshold) {
@@ -427,7 +427,7 @@ export const nearMissTrendsTool = createTool<NearMissTrendInput, NearMissTrendOu
         { label: 'Spikes Detected', value: spike_alerts.length, type: 'text' },
         { label: 'Insights', value: predictive_insights.length, type: 'text' },
       ],
-      expandedContent: output
+      expandedContent: output as unknown as Record<string, unknown>
     }
   }
 })

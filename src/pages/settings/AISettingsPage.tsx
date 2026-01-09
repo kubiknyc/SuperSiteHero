@@ -122,34 +122,64 @@ export default function AISettingsPage() {
   const updateConfig = useUpdateAIConfiguration()
   const testConfig = useTestAIConfiguration()
 
+  // Helper to get current provider
+  const getCurrentProvider = () => config?.default_provider || config?.provider || 'openai'
+
+  // Helper to get current model based on provider
+  const getCurrentModel = () => {
+    const provider = getCurrentProvider()
+    if (provider === 'openai') return config?.openai_model || config?.model_preference || 'gpt-4o-mini'
+    if (provider === 'anthropic') return config?.anthropic_model || config?.model_preference || 'claude-3-5-haiku-latest'
+    return config?.model_preference || 'llama3'
+  }
+
+  // Helper to check if AI is enabled
+  const isAIEnabled = () => {
+    if (config?.is_enabled !== undefined) return config.is_enabled
+    return config?.enable_rfi_routing || config?.enable_smart_summaries ||
+           config?.enable_risk_prediction || config?.enable_schedule_optimization ||
+           config?.enable_document_enhancement || true
+  }
+
+  // Helper to get features enabled state
+  const getFeaturesEnabled = () => ({
+    rfi_routing: config?.enable_rfi_routing ?? config?.features_enabled?.rfi_routing ?? true,
+    smart_summaries: config?.enable_smart_summaries ?? config?.features_enabled?.smart_summaries ?? true,
+    risk_prediction: config?.enable_risk_prediction ?? config?.features_enabled?.risk_prediction ?? true,
+    schedule_optimization: config?.enable_schedule_optimization ?? config?.features_enabled?.schedule_optimization ?? true,
+    document_enhancement: config?.enable_document_enhancement ?? config?.features_enabled?.document_enhancement ?? true,
+  })
+
+  // Helper to check if API key is configured
+  const hasApiKey = () => {
+    const provider = getCurrentProvider()
+    if (provider === 'openai') return !!(config?.openai_api_key_id || config?.api_key_encrypted)
+    if (provider === 'anthropic') return !!(config?.anthropic_api_key_id || config?.api_key_encrypted)
+    return true // Local doesn't need API key
+  }
+
   const form = useForm<ConfigFormValues>({
     resolver: zodResolver(configSchema) as any,
     defaultValues: {
-      provider: config?.provider || 'openai',
+      provider: getCurrentProvider(),
       api_key: '',
-      model_preference: config?.model_preference || 'gpt-4o-mini',
-      is_enabled: config?.is_enabled ?? true,
+      model_preference: getCurrentModel(),
+      is_enabled: isAIEnabled(),
       monthly_budget_dollars: config?.monthly_budget_cents
         ? config.monthly_budget_cents / 100
         : undefined,
-      features_enabled: config?.features_enabled || {
-        rfi_routing: true,
-        smart_summaries: true,
-        risk_prediction: true,
-        schedule_optimization: true,
-        document_enhancement: true,
-      },
+      features_enabled: getFeaturesEnabled(),
     },
     values: config
       ? {
-          provider: config.provider,
+          provider: getCurrentProvider(),
           api_key: '',
-          model_preference: config.model_preference,
-          is_enabled: config.is_enabled,
+          model_preference: getCurrentModel(),
+          is_enabled: isAIEnabled(),
           monthly_budget_dollars: config.monthly_budget_cents
             ? config.monthly_budget_cents / 100
             : undefined,
-          features_enabled: config.features_enabled,
+          features_enabled: getFeaturesEnabled(),
         }
       : undefined,
   })
@@ -207,10 +237,15 @@ export default function AISettingsPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {config?.is_enabled ? (
+          {isAIEnabled() && hasApiKey() ? (
             <Badge variant="default" className="gap-1">
               <CheckCircle2 className="w-3 h-3" />
               AI Enabled
+            </Badge>
+          ) : !hasApiKey() ? (
+            <Badge variant="destructive" className="gap-1">
+              <AlertTriangle className="w-3 h-3" />
+              API Key Required
             </Badge>
           ) : (
             <Badge variant="secondary" className="gap-1">
@@ -338,7 +373,7 @@ export default function AISettingsPage() {
                                 <Input
                                   type={showApiKey ? 'text' : 'password'}
                                   placeholder={
-                                    config?.api_key_encrypted
+                                    hasApiKey()
                                       ? '••••••••••••••••'
                                       : 'Enter your API key'
                                   }

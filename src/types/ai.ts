@@ -13,15 +13,44 @@ export type AIProviderType = 'openai' | 'anthropic' | 'local'
 export interface AIConfiguration {
   id: string
   company_id: string
-  provider: AIProviderType
+
+  // Provider Settings (matches database schema)
+  default_provider: AIProviderType
+  openai_model: string
+  anthropic_model: string
+
+  // API Keys - vault references (UUID) or direct encrypted keys
+  openai_api_key_id?: string
+  anthropic_api_key_id?: string
+  // Legacy support for direct API key storage
   api_key_encrypted?: string
-  model_preference: string
-  is_enabled: boolean
-  monthly_budget_cents?: number
-  monthly_usage_cents: number
-  features_enabled: AIFeaturesEnabled
+
+  // Feature Toggles (individual booleans matching database)
+  enable_rfi_routing: boolean
+  enable_smart_summaries: boolean
+  enable_action_item_extraction: boolean
+  enable_risk_prediction: boolean
+  enable_schedule_optimization: boolean
+  enable_document_enhancement: boolean
+
+  // Cost Controls
+  monthly_budget_cents: number
+  current_month_usage_cents: number
+  last_usage_reset: string
+  alert_threshold_percent: number
+
   created_at: string
   updated_at: string
+
+  // Computed property helpers (for backwards compatibility)
+  /** @deprecated Use default_provider instead */
+  provider?: AIProviderType
+  /** @deprecated Use openai_model or anthropic_model instead */
+  model_preference?: string
+  /** @deprecated Check individual enable_* properties instead */
+  is_enabled?: boolean
+  /** @deprecated Use individual enable_* properties instead */
+  features_enabled?: AIFeaturesEnabled
 }
 
 export interface AIFeaturesEnabled {
@@ -655,11 +684,37 @@ export interface AIProvider {
 // ============================================================================
 
 export interface UpdateAIConfigurationDTO {
-  provider?: AIProviderType
-  api_key?: string
-  model_preference?: string
-  is_enabled?: boolean
+  // Provider Settings
+  default_provider?: AIProviderType
+  openai_model?: string
+  anthropic_model?: string
+
+  // API Keys (direct values to be stored/encrypted)
+  openai_api_key?: string
+  anthropic_api_key?: string
+
+  // Feature Toggles
+  enable_rfi_routing?: boolean
+  enable_smart_summaries?: boolean
+  enable_action_item_extraction?: boolean
+  enable_risk_prediction?: boolean
+  enable_schedule_optimization?: boolean
+  enable_document_enhancement?: boolean
+
+  // Cost Controls
   monthly_budget_cents?: number
+  alert_threshold_percent?: number
+
+  // Legacy support
+  /** @deprecated Use default_provider instead */
+  provider?: AIProviderType
+  /** @deprecated Use openai_api_key or anthropic_api_key instead */
+  api_key?: string
+  /** @deprecated Use openai_model or anthropic_model instead */
+  model_preference?: string
+  /** @deprecated Use individual enable_* properties instead */
+  is_enabled?: boolean
+  /** @deprecated Use individual enable_* properties instead */
   features_enabled?: Partial<AIFeaturesEnabled>
 }
 

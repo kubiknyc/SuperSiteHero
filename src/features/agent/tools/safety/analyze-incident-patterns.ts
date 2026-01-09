@@ -423,7 +423,7 @@ export const analyzeIncidentPatternsTool = createTool<AnalyzeIncidentPatternsInp
         { label: 'Hotspots', value: hotspots.length, type: 'text' },
         { label: 'Patterns Found', value: patterns.length, type: 'text' },
       ],
-      expandedContent: output
+      expandedContent: output as unknown as Record<string, unknown>
     }
   }
 })

@@ -510,7 +510,7 @@ export const generateLookaheadTool = createTool<GenerateLookaheadInput, Generate
           data: { action: 'print', html: output.printable_format?.html }
         }
       ],
-      expandedContent: output
+      expandedContent: output as unknown as Record<string, unknown>
     }
   }
 })

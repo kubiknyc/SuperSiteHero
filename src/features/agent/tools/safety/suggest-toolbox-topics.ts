@@ -540,7 +540,7 @@ export const suggestToolboxTopicsTool = createTool<SuggestToolboxTopicsInput, Su
         { label: 'Incident Follow-up', value: incident_based?.length || 0, type: 'text' },
         { label: 'Top Priority', value: recommended_topics[0]?.priority || 'medium', type: 'badge' },
       ],
-      expandedContent: output
+      expandedContent: output as unknown as Record<string, unknown>
     }
   }
 })

@@ -394,25 +394,90 @@ class LocalProvider implements AIProvider {
 // Provider Factory
 // ============================================================================
 
+/**
+ * Get the API key for the current provider
+ * Supports both direct encrypted keys and vault references
+ */
+function getApiKeyForProvider(config: AIConfiguration): string | undefined {
+  const provider = config.default_provider || config.provider
+
+  // First check for direct API key (legacy support)
+  if (config.api_key_encrypted) {
+    return config.api_key_encrypted
+  }
+
+  // Check for vault reference (UUID) - for now, these are stored directly
+  // TODO: Implement Supabase Vault decryption when vault is set up
+  if (provider === 'openai' && config.openai_api_key_id) {
+    return config.openai_api_key_id
+  }
+  if (provider === 'anthropic' && config.anthropic_api_key_id) {
+    return config.anthropic_api_key_id
+  }
+
+  return undefined
+}
+
+/**
+ * Get the model for the current provider
+ */
+function getModelForProvider(config: AIConfiguration): string {
+  const provider = config.default_provider || config.provider
+
+  // Use the provider-specific model setting
+  if (provider === 'openai') {
+    return config.openai_model || config.model_preference || 'gpt-4o-mini'
+  }
+  if (provider === 'anthropic') {
+    return config.anthropic_model || config.model_preference || 'claude-3-5-haiku-latest'
+  }
+  // Local models
+  return config.model_preference || 'llama3'
+}
+
+/**
+ * Check if AI features are enabled (any feature toggle is on)
+ */
+function isAIEnabled(config: AIConfiguration): boolean {
+  // Check explicit is_enabled flag (legacy)
+  if (config.is_enabled !== undefined) {
+    return config.is_enabled
+  }
+
+  // Check if any feature is enabled
+  return (
+    config.enable_rfi_routing ||
+    config.enable_smart_summaries ||
+    config.enable_action_item_extraction ||
+    config.enable_risk_prediction ||
+    config.enable_schedule_optimization ||
+    config.enable_document_enhancement
+  )
+}
+
 export function getAIProvider(config: AIConfiguration): AIProvider {
-  switch (config.provider) {
+  const provider = config.default_provider || config.provider
+  const apiKey = getApiKeyForProvider(config)
+  const model = getModelForProvider(config)
+
+  switch (provider) {
     case 'openai':
-      if (!config.api_key_encrypted) {
-        throw new Error('OpenAI API key not configured')
+      if (!apiKey) {
+        throw new Error('OpenAI API key not configured. Please add your API key in Settings → AI.')
       }
-      return new OpenAIProvider(config.api_key_encrypted, config.model_preference)
+      return new OpenAIProvider(apiKey, model)
 
     case 'anthropic':
-      if (!config.api_key_encrypted) {
-        throw new Error('Anthropic API key not configured')
+      if (!apiKey) {
+        throw new Error('Anthropic API key not configured. Please add your API key in Settings → AI.')
       }
-      return new AnthropicProvider(config.api_key_encrypted, config.model_preference)
+      return new AnthropicProvider(apiKey, model)
 
     case 'local':
-      return new LocalProvider(undefined, config.model_preference)
+      return new LocalProvider(undefined, model)
 
     default:
-      throw new Error(`Unknown AI provider: ${config.provider}`)
+      throw new Error(`Unknown AI provider: ${provider}`)
   }
 }
 
@@ -446,14 +511,55 @@ export const aiConfigurationApi = {
       .select('id')
       .single()
 
+    // Build update object with correct column names
+    const updateData: Record<string, unknown> = {
+      updated_at: new Date().toISOString(),
+    }
+
+    // Provider settings
+    if (dto.default_provider || dto.provider) {
+      updateData.default_provider = dto.default_provider || dto.provider
+    }
+    if (dto.openai_model || (dto.model_preference && (dto.default_provider || dto.provider) === 'openai')) {
+      updateData.openai_model = dto.openai_model || dto.model_preference
+    }
+    if (dto.anthropic_model || (dto.model_preference && (dto.default_provider || dto.provider) === 'anthropic')) {
+      updateData.anthropic_model = dto.anthropic_model || dto.model_preference
+    }
+
+    // API Keys - store directly in the key_id fields (vault integration TODO)
+    if (dto.openai_api_key || (dto.api_key && (dto.default_provider || dto.provider) === 'openai')) {
+      updateData.openai_api_key_id = dto.openai_api_key || dto.api_key
+    }
+    if (dto.anthropic_api_key || (dto.api_key && (dto.default_provider || dto.provider) === 'anthropic')) {
+      updateData.anthropic_api_key_id = dto.anthropic_api_key || dto.api_key
+    }
+
+    // Feature toggles
+    if (dto.enable_rfi_routing !== undefined) updateData.enable_rfi_routing = dto.enable_rfi_routing
+    if (dto.enable_smart_summaries !== undefined) updateData.enable_smart_summaries = dto.enable_smart_summaries
+    if (dto.enable_action_item_extraction !== undefined) updateData.enable_action_item_extraction = dto.enable_action_item_extraction
+    if (dto.enable_risk_prediction !== undefined) updateData.enable_risk_prediction = dto.enable_risk_prediction
+    if (dto.enable_schedule_optimization !== undefined) updateData.enable_schedule_optimization = dto.enable_schedule_optimization
+    if (dto.enable_document_enhancement !== undefined) updateData.enable_document_enhancement = dto.enable_document_enhancement
+
+    // Handle legacy features_enabled object
+    if (dto.features_enabled) {
+      if (dto.features_enabled.rfi_routing !== undefined) updateData.enable_rfi_routing = dto.features_enabled.rfi_routing
+      if (dto.features_enabled.smart_summaries !== undefined) updateData.enable_smart_summaries = dto.features_enabled.smart_summaries
+      if (dto.features_enabled.risk_prediction !== undefined) updateData.enable_risk_prediction = dto.features_enabled.risk_prediction
+      if (dto.features_enabled.schedule_optimization !== undefined) updateData.enable_schedule_optimization = dto.features_enabled.schedule_optimization
+      if (dto.features_enabled.document_enhancement !== undefined) updateData.enable_document_enhancement = dto.features_enabled.document_enhancement
+    }
+
+    // Cost controls
+    if (dto.monthly_budget_cents !== undefined) updateData.monthly_budget_cents = dto.monthly_budget_cents
+    if (dto.alert_threshold_percent !== undefined) updateData.alert_threshold_percent = dto.alert_threshold_percent
+
     if (existing) {
       const { data, error } = await (supabase as any)
         .from('ai_configuration')
-        .update({
-          ...dto,
-          api_key_encrypted: dto.api_key,
-          updated_at: new Date().toISOString(),
-        })
+        .update(updateData)
         .eq('id', existing.id)
         .select()
         .single()
@@ -461,23 +567,26 @@ export const aiConfigurationApi = {
       if (error) {throw error}
       return data as AIConfiguration
     } else {
-      // Create new configuration
+      // Create new configuration with defaults
+      const insertData = {
+        default_provider: dto.default_provider || dto.provider || 'openai',
+        openai_model: dto.openai_model || 'gpt-4o-mini',
+        anthropic_model: dto.anthropic_model || 'claude-3-haiku-20240307',
+        openai_api_key_id: dto.openai_api_key || (dto.api_key && (dto.default_provider || dto.provider) === 'openai' ? dto.api_key : null),
+        anthropic_api_key_id: dto.anthropic_api_key || (dto.api_key && (dto.default_provider || dto.provider) === 'anthropic' ? dto.api_key : null),
+        enable_rfi_routing: dto.enable_rfi_routing ?? dto.features_enabled?.rfi_routing ?? true,
+        enable_smart_summaries: dto.enable_smart_summaries ?? dto.features_enabled?.smart_summaries ?? true,
+        enable_action_item_extraction: dto.enable_action_item_extraction ?? true,
+        enable_risk_prediction: dto.enable_risk_prediction ?? dto.features_enabled?.risk_prediction ?? true,
+        enable_schedule_optimization: dto.enable_schedule_optimization ?? dto.features_enabled?.schedule_optimization ?? true,
+        enable_document_enhancement: dto.enable_document_enhancement ?? dto.features_enabled?.document_enhancement ?? true,
+        monthly_budget_cents: dto.monthly_budget_cents ?? 10000,
+        alert_threshold_percent: dto.alert_threshold_percent ?? 80,
+      }
+
       const { data, error } = await (supabase as any)
         .from('ai_configuration')
-        .insert({
-          provider: dto.provider || 'openai',
-          api_key_encrypted: dto.api_key,
-          model_preference: dto.model_preference || 'gpt-4o-mini',
-          is_enabled: dto.is_enabled ?? true,
-          monthly_budget_cents: dto.monthly_budget_cents,
-          features_enabled: dto.features_enabled || {
-            rfi_routing: true,
-            smart_summaries: true,
-            risk_prediction: true,
-            schedule_optimization: true,
-            document_enhancement: true,
-          },
-        })
+        .insert(insertData)
         .select()
         .single()
 
@@ -647,8 +756,8 @@ export const aiService = {
     options?: CompletionOptions
   ): Promise<CompletionResult> {
     const config = await aiConfigurationApi.getConfiguration()
-    if (!config || !config.is_enabled) {
-      throw new Error('AI features are not enabled')
+    if (!config || !isAIEnabled(config)) {
+      throw new Error('AI features are not enabled. Please configure AI in Settings → AI.')
     }
 
     // Check budget before making request
@@ -681,8 +790,8 @@ export const aiService = {
     options?: JSONExtractionOptions
   ): Promise<{ data: T; tokens: TokenCount }> {
     const config = await aiConfigurationApi.getConfiguration()
-    if (!config || !config.is_enabled) {
-      throw new Error('AI features are not enabled')
+    if (!config || !isAIEnabled(config)) {
+      throw new Error('AI features are not enabled. Please configure AI in Settings → AI.')
     }
 
     const { withinBudget, usedPercent } = await aiUsageApi.checkBudget()
@@ -701,7 +810,7 @@ export const aiService = {
 
     await aiUsageApi.logUsage({
       feature,
-      model: config.model_preference,
+      model: getModelForProvider(config),
       inputTokens,
       outputTokens,
       latencyMs,
@@ -717,11 +826,28 @@ export const aiService = {
    * Check if a specific AI feature is enabled
    */
   async isFeatureEnabled(
-    feature: keyof AIConfiguration['features_enabled']
+    feature: 'rfi_routing' | 'smart_summaries' | 'risk_prediction' | 'schedule_optimization' | 'document_enhancement' | 'action_item_extraction'
   ): Promise<boolean> {
     const config = await aiConfigurationApi.getConfiguration()
-    if (!config || !config.is_enabled) {return false}
-    return config.features_enabled?.[feature] ?? false
+    if (!config || !isAIEnabled(config)) {return false}
+
+    // Map feature names to column names
+    const featureMap: Record<string, keyof AIConfiguration> = {
+      rfi_routing: 'enable_rfi_routing',
+      smart_summaries: 'enable_smart_summaries',
+      risk_prediction: 'enable_risk_prediction',
+      schedule_optimization: 'enable_schedule_optimization',
+      document_enhancement: 'enable_document_enhancement',
+      action_item_extraction: 'enable_action_item_extraction',
+    }
+
+    const columnName = featureMap[feature]
+    if (columnName && config[columnName] !== undefined) {
+      return config[columnName] as boolean
+    }
+
+    // Fallback to legacy features_enabled object
+    return config.features_enabled?.[feature as keyof typeof config.features_enabled] ?? false
   },
 
   /**
@@ -729,7 +855,7 @@ export const aiService = {
    */
   async getProvider(): Promise<AIProvider | null> {
     const config = await aiConfigurationApi.getConfiguration()
-    if (!config || !config.is_enabled) {return null}
+    if (!config || !isAIEnabled(config)) {return null}
     return getAIProvider(config)
   },
 }

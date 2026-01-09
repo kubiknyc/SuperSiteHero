@@ -240,7 +240,7 @@ export const scheduleInspectionCorrelationTool = createTool<ScheduleInspectionCo
     const timingIssues = conflicts.filter(c => c.conflict_type === 'timing_conflict')
 
     if (missingInspections.length > 0) {
-      const uniqueInspections = [...new Set(missingInspections.map(c => c.required_inspection))]
+      const uniqueInspections = Array.from(new Set(missingInspections.map(c => c.required_inspection)))
       recommendations.push({
         action: `Schedule ${uniqueInspections.length} missing inspection(s): ${uniqueInspections.slice(0, 3).join(', ')}`,
         priority: 'immediate',
@@ -311,14 +311,14 @@ export const scheduleInspectionCorrelationTool = createTool<ScheduleInspectionCo
       })
     }
 
-    for (const [week, data] of weekMap.entries()) {
+    Array.from(weekMap.entries()).forEach(([week, data]) => {
       weeklySummary.push({
         week,
         scheduled_inspections: data.scheduled,
         pending_inspections: data.pending,
         activities_at_risk: data.atRisk
       })
-    }
+    })
 
     // Filter conflicts if not including warnings
     const finalConflicts = include_warnings
@@ -354,7 +354,7 @@ export const scheduleInspectionCorrelationTool = createTool<ScheduleInspectionCo
         { label: 'Warnings', value: warningCount, type: 'text' },
         { label: 'Recommendations', value: recommendations.length, type: 'text' }
       ],
-      expandedContent: output
+      expandedContent: output as unknown as Record<string, unknown>
     }
   }
 })

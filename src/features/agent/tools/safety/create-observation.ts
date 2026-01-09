@@ -414,7 +414,7 @@ export const createSafetyObservationTool = createTool<CreateSafetyObservationInp
           data: { path: `/safety/observations/${observation.id}` }
         }
       ],
-      expandedContent: output
+      expandedContent: output as unknown as Record<string, unknown>
     }
   }
 })

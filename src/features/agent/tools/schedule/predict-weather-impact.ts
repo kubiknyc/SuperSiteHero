@@ -483,7 +483,7 @@ export const predictWeatherImpactTool = createTool<PredictWeatherImpactInput, Pr
         { label: 'Best Work Windows', value: best_work_windows.length, type: 'text' },
         { label: 'Affected Trades', value: weather_delay_forecast.most_affected_trades.join(', ') || 'None', type: 'text' },
       ],
-      expandedContent: output
+      expandedContent: output as unknown as Record<string, unknown>
     }
   }
 })

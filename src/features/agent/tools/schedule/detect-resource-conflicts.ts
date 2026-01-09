@@ -125,7 +125,7 @@ function detectEquipmentNeeded(activityName: string): string[] {
     equipment.push('Scissor Lift')
   }
 
-  return [...new Set(equipment)]
+  return Array.from(new Set(equipment))
 }
 
 function generateConflictId(): string {
@@ -218,7 +218,7 @@ export const detectResourceConflictsTool = createTool<DetectResourceConflictsInp
     if (resource_types.includes('labor')) {
       const laborByTradeByDate = new Map<string, Map<string, any[]>>()
 
-      for (const [date, dayActivities] of activitiesByDate.entries()) {
+      for (const [date, dayActivities] of Array.from(activitiesByDate.entries())) {
         if (!laborByTradeByDate.has(date)) {
           laborByTradeByDate.set(date, new Map())
         }
@@ -235,8 +235,8 @@ export const detectResourceConflictsTool = createTool<DetectResourceConflictsInp
       }
 
       // Detect conflicts (multiple activities same trade, limited crew)
-      for (const [date, tradeMap] of laborByTradeByDate.entries()) {
-        for (const [trade, tradeActivities] of tradeMap.entries()) {
+      for (const [date, tradeMap] of Array.from(laborByTradeByDate.entries())) {
+        for (const [trade, tradeActivities] of Array.from(tradeMap.entries())) {
           const requirement = TRADE_RESOURCE_REQUIREMENTS[trade] || TRADE_RESOURCE_REQUIREMENTS['General']
 
           if (tradeActivities.length > 1) {
@@ -286,7 +286,7 @@ export const detectResourceConflictsTool = createTool<DetectResourceConflictsInp
     if (resource_types.includes('equipment')) {
       const equipmentByDate = new Map<string, Map<string, any[]>>()
 
-      for (const [date, dayActivities] of activitiesByDate.entries()) {
+      for (const [date, dayActivities] of Array.from(activitiesByDate.entries())) {
         if (!equipmentByDate.has(date)) {
           equipmentByDate.set(date, new Map())
         }
@@ -305,8 +305,8 @@ export const detectResourceConflictsTool = createTool<DetectResourceConflictsInp
       }
 
       // Detect equipment conflicts
-      for (const [date, equipMap] of equipmentByDate.entries()) {
-        for (const [equipment, equipActivities] of equipMap.entries()) {
+      for (const [date, equipMap] of Array.from(equipmentByDate.entries())) {
+        for (const [equipment, equipActivities] of Array.from(equipMap.entries())) {
           if (equipActivities.length > 1) {
             // Assume only 1 of each major equipment available
             conflicts.push({
@@ -349,7 +349,7 @@ export const detectResourceConflictsTool = createTool<DetectResourceConflictsInp
     // Check for space conflicts (activities in same area)
     if (resource_types.includes('space')) {
       // This would require location data which we'll approximate
-      for (const [date, dayActivities] of activitiesByDate.entries()) {
+      for (const [date, dayActivities] of Array.from(activitiesByDate.entries())) {
         if ((dayActivities?.length || 0) > 5) {
           // High activity density - potential space conflict
           conflicts.push({
@@ -391,7 +391,7 @@ export const detectResourceConflictsTool = createTool<DetectResourceConflictsInp
     // Build resource utilization data
     const tradeUtilization: Record<string, { allocated: number; days: string[] }> = {}
 
-    for (const [date, dayActivities] of activitiesByDate.entries()) {
+    for (const [date, dayActivities] of Array.from(activitiesByDate.entries())) {
       for (const activity of dayActivities || []) {
         const trade = activity.subcontractors?.trade || extractTrade(activity.name)
 
@@ -404,7 +404,7 @@ export const detectResourceConflictsTool = createTool<DetectResourceConflictsInp
     }
 
     for (const [trade, data] of Object.entries(tradeUtilization)) {
-      const uniqueDays = [...new Set(data.days)]
+      const uniqueDays = Array.from(new Set(data.days))
       const avgAllocation = data.allocated / uniqueDays.length
 
       resourceUtilization.push({
@@ -474,7 +474,7 @@ export const detectResourceConflictsTool = createTool<DetectResourceConflictsInp
         { label: 'Equipment Conflicts', value: conflicts.filter(c => c.conflict_type === 'equipment').length, type: 'text' },
         { label: 'Actions Needed', value: summary.resolution_actions_needed, type: 'text' },
       ],
-      expandedContent: output
+      expandedContent: output as unknown as Record<string, unknown>
     }
   }
 })

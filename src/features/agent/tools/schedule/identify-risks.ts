@@ -354,8 +354,8 @@ export const identifyScheduleRisksTool = createTool<IdentifyScheduleRisksInput, 
       }
 
       // Find conflicts (multiple activities same trade same day)
-      for (const [date, tradeMap] of tradeByDate.entries()) {
-        for (const [trade, activityNames] of tradeMap.entries()) {
+      for (const [date, tradeMap] of Array.from(tradeByDate.entries())) {
+        for (const [trade, activityNames] of Array.from(tradeMap.entries())) {
           if (activityNames.length > 1) {
             resourceConflicts.push({
               resource_type: trade,
@@ -474,7 +474,7 @@ export const identifyScheduleRisksTool = createTool<IdentifyScheduleRisksInput, 
         { label: 'Resource Conflicts', value: resource_conflicts.length, type: 'text' },
         { label: 'Recommendations', value: recommendations.length, type: 'text' },
       ],
-      expandedContent: output
+      expandedContent: output as unknown as Record<string, unknown>
     }
   }
 })

@@ -123,7 +123,7 @@ export function useAgentConfig(options: UseAgentConfigOptions = {}): UseAgentCon
 
       // Fetch agent configuration for the company
       const { data, error } = await supabase
-        .from('agent_configurations')
+        .from('agent_configuration')
         .select('*')
         .eq('company_id', profile.company_id)
         .single()
@@ -165,7 +165,7 @@ export function useAgentConfig(options: UseAgentConfigOptions = {}): UseAgentCon
 
       // Check if configuration exists
       const { data: existingConfig } = await supabase
-        .from('agent_configurations')
+        .from('agent_configuration')
         .select('id')
         .eq('company_id', profile.company_id)
         .single()
@@ -175,7 +175,7 @@ export function useAgentConfig(options: UseAgentConfigOptions = {}): UseAgentCon
       if (existingConfig) {
         // Update existing configuration
         const { data, error } = await supabase
-          .from('agent_configurations')
+          .from('agent_configuration')
           .update({
             ...updates,
             updated_at: new Date().toISOString(),
@@ -195,7 +195,7 @@ export function useAgentConfig(options: UseAgentConfigOptions = {}): UseAgentCon
         }
 
         const { data, error } = await supabase
-          .from('agent_configurations')
+          .from('agent_configuration')
           .insert(newConfig)
           .select()
           .single()

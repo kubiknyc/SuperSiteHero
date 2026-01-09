@@ -309,7 +309,7 @@ export const predictInspectionResultTool = createTool<PredictInspectionResultInp
         { label: 'Risk Level', value: prediction.risk_level, type: 'badge' },
         { label: 'Risk Factors', value: risk_factors.length, type: 'text' }
       ],
-      expandedContent: output
+      expandedContent: output as unknown as Record<string, unknown>
     }
   }
 })

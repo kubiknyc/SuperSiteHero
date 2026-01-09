@@ -335,7 +335,7 @@ export const prepareInspectionTool = createTool<PrepareInspectionInput, PrepareI
         { label: 'Common Issues', value: common_failure_points.length, type: 'text' },
         { label: 'Est. Duration', value: output.estimated_duration, type: 'text' }
       ],
-      expandedContent: output
+      expandedContent: output as unknown as Record<string, unknown>
     }
   }
 })
