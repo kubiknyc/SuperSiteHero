@@ -258,6 +258,20 @@ export const useAgentStore = create<AgentStore>()(
                   set({ streamingMessageId: chunk.messageId || null })
                 }
               },
+              onConfirmationRequired: (confirmation) => {
+                // Add to pending confirmations queue
+                const pendingConfirmation: PendingConfirmation = {
+                  id: confirmation.id,
+                  toolName: confirmation.toolName,
+                  toolInput: confirmation.toolInput,
+                  description: confirmation.description,
+                  createdAt: new Date().toISOString(),
+                  toolCall: confirmation.toolCall,
+                  severity: confirmation.severity,
+                  estimatedImpact: confirmation.estimatedImpact,
+                }
+                get().addPendingConfirmation(pendingConfirmation)
+              },
             })
 
             set({ isProcessing: false, streamingMessageId: null })
@@ -283,23 +297,93 @@ export const useAgentStore = create<AgentStore>()(
         // Confirmation Actions
         // ======================================================================
 
+        addPendingConfirmation: (confirmation: PendingConfirmation) => {
+          set((state) => ({
+            pendingConfirmations: [...state.pendingConfirmations, confirmation],
+          }))
+        },
+
         confirmAction: async (confirmationId: string) => {
           const state = get()
           const confirmation = state.pendingConfirmations.find((c) => c.id === confirmationId)
           if (!confirmation) return
 
-          // TODO: Execute the confirmed action
+          // Remove from pending
           set((s) => ({
             pendingConfirmations: s.pendingConfirmations.filter((c) => c.id !== confirmationId),
+            isProcessing: true,
           }))
+
+          try {
+            // Execute the confirmed tool
+            const session = state.sessions.get(state.activeSessionId || '')
+            if (session && confirmation.toolCall) {
+              const context = {
+                sessionId: session.id,
+                userId: session.user_id,
+                companyId: session.company_id,
+                projectId: session.project_id,
+                autonomyLevel: 'autonomous' as const, // Confirmed by user
+                featuresEnabled: {},
+              }
+
+              const result = await agentOrchestrator.executeTask(
+                confirmation.toolCall.name,
+                confirmation.toolCall.arguments,
+                context
+              )
+
+              // Save the tool result to the session
+              await supabase.from('agent_messages').insert({
+                session_id: session.id,
+                role: 'tool',
+                content: JSON.stringify(result.data || result.error),
+                tool_call_id: confirmation.toolCall.id,
+                tool_name: confirmation.toolCall.name,
+                tool_input: confirmation.toolCall.arguments,
+                tool_output: result.data,
+                tool_error: result.error,
+              })
+
+              // Call the onConfirm callback if provided
+              if (confirmation.onConfirm) {
+                await confirmation.onConfirm(result)
+              }
+            }
+          } catch (error) {
+            logger.error('[AgentStore] Error executing confirmed action:', error)
+            set({ error: 'Failed to execute action' })
+          } finally {
+            set({ isProcessing: false })
+          }
         },
 
-        rejectAction: (confirmationId: string) => {
-          set((state) => ({
-            pendingConfirmations: state.pendingConfirmations.filter(
+        rejectAction: async (confirmationId: string) => {
+          const state = get()
+          const confirmation = state.pendingConfirmations.find((c) => c.id === confirmationId)
+
+          set((s) => ({
+            pendingConfirmations: s.pendingConfirmations.filter(
               (c) => c.id !== confirmationId
             ),
           }))
+
+          // Save rejection to session
+          if (confirmation && state.activeSessionId) {
+            await supabase.from('agent_messages').insert({
+              session_id: state.activeSessionId,
+              role: 'tool',
+              content: JSON.stringify({ rejected: true, message: 'User rejected this action' }),
+              tool_call_id: confirmation.toolCall?.id,
+              tool_name: confirmation.toolCall?.name,
+              tool_error: 'Action rejected by user',
+            })
+
+            // Call the onReject callback if provided
+            if (confirmation.onReject) {
+              confirmation.onReject()
+            }
+          }
         },
 
         clearConfirmations: () => {

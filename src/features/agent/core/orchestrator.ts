@@ -33,6 +33,7 @@ import type {
 import { toolRegistry } from '../tools/registry'
 import { buildSystemPrompt, buildContextPrompt } from '../chat/prompts/system-prompt'
 import { logger } from '@/lib/utils/logger'
+import { createContextManager, estimateTokens } from '../utils/token-counter'
 
 // ============================================================================
 // Types
@@ -55,7 +56,22 @@ const DEFAULT_CONFIG: OrchestratorConfig = {
 interface ProcessMessageOptions {
   config?: Partial<OrchestratorConfig>
   onStreamChunk?: (chunk: StreamChunk) => void
+  onConfirmationRequired?: (confirmation: ToolConfirmationRequest) => void
   abortSignal?: AbortSignal
+}
+
+interface ToolConfirmationRequest {
+  id: string
+  toolName: string
+  toolInput: Record<string, unknown>
+  description: string
+  severity: 'low' | 'medium' | 'high'
+  estimatedImpact?: string
+  toolCall: {
+    id: string
+    name: string
+    arguments: Record<string, unknown>
+  }
 }
 
 // ============================================================================
@@ -90,8 +106,12 @@ export class AgentOrchestrator {
         content: userMessage,
       })
 
-      // Get conversation history
-      const history = await this.getConversationHistory(session.id)
+      // Get AI configuration to determine model
+      const aiConfig = await aiConfigurationApi.getConfiguration()
+      const model = aiConfig?.openai_model || aiConfig?.anthropic_model || 'gpt-4o-mini'
+
+      // Get conversation history with token-aware trimming
+      const history = await this.getConversationHistory(session.id, model)
 
       // Get available tools for this context
       const tools = toolRegistry.getForContext(context)
@@ -106,6 +126,7 @@ export class AgentOrchestrator {
         context,
         config,
         options?.onStreamChunk,
+        options?.onConfirmationRequired,
         options?.abortSignal
       )
 
@@ -208,22 +229,74 @@ export class AgentOrchestrator {
   }
 
   /**
-   * Get conversation history for a session
+   * Get conversation history for a session with token-aware management
    */
-  private async getConversationHistory(sessionId: string): Promise<AgentMessage[]> {
+  private async getConversationHistory(
+    sessionId: string,
+    model?: string
+  ): Promise<AgentMessage[]> {
+    // Fetch more messages initially, then trim based on tokens
     const { data, error } = await supabase
       .from('agent_messages')
       .select('*')
       .eq('session_id', sessionId)
       .order('created_at', { ascending: true })
-      .limit(50) // Limit history to manage context window
+      .limit(100) // Fetch more, trim by tokens
 
     if (error) {
       logger.error('[Orchestrator] Error fetching history:', error)
       return []
     }
 
-    return data as AgentMessage[]
+    const messages = data as AgentMessage[]
+
+    // If we have a model, use token-aware trimming
+    if (model && messages.length > 10) {
+      const contextManager = createContextManager(model)
+      const trimmedMessages = contextManager.trimToFit(
+        messages.map((m) => ({
+          role: m.role,
+          content: m.content,
+          tool_calls: m.tool_calls,
+          tool_call_id: m.tool_call_id,
+        })),
+        {
+          preserveSystemMessage: true,
+          summarizeOld: true,
+          minRecentMessages: 6,
+        }
+      )
+
+      // Map back to AgentMessage format (preserve IDs for messages we kept)
+      const trimmedSet = new Set(trimmedMessages.map((m) => m.content))
+      const result = messages.filter((m) => trimmedSet.has(m.content))
+
+      // If we summarized old messages, add the summary as a synthetic message
+      const summaryMessage = trimmedMessages.find(
+        (m) => m.role === 'system' && m.content.startsWith('Previous conversation summary')
+      )
+      if (summaryMessage) {
+        // Insert summary at the beginning
+        result.unshift({
+          id: 'summary',
+          session_id: sessionId,
+          role: 'system',
+          content: summaryMessage.content,
+          created_at: messages[0]?.created_at || new Date().toISOString(),
+        } as AgentMessage)
+      }
+
+      const stats = contextManager.getStats(trimmedMessages)
+      logger.debug('[Orchestrator] Context stats:', {
+        original: messages.length,
+        trimmed: result.length,
+        ...stats,
+      })
+
+      return result
+    }
+
+    return messages
   }
 
   /**
@@ -272,6 +345,7 @@ export class AgentOrchestrator {
     context: AgentContext,
     config: OrchestratorConfig,
     onStreamChunk?: (chunk: StreamChunk) => void,
+    onConfirmationRequired?: (confirmation: ToolConfirmationRequest) => void,
     abortSignal?: AbortSignal
   ): Promise<Omit<AgentResponse, 'latencyMs'>> {
     let toolCallCount = 0
@@ -346,26 +420,54 @@ export class AgentOrchestrator {
             context.autonomyLevel !== 'autonomous' &&
             !context.userPreferences?.autoConfirmTools
           ) {
-            // TODO: Implement confirmation flow
-            // For now, skip tools requiring confirmation in non-autonomous mode
-            const skipResult: ToolCallResult = {
+            // Emit confirmation request instead of just skipping
+            if (onConfirmationRequired) {
+              const confirmationRequest: ToolConfirmationRequest = {
+                id: `confirm_${toolCall.id}`,
+                toolName: toolCall.name,
+                toolInput: toolCall.arguments,
+                description: this.generateToolConfirmationDescription(tool, toolCall.arguments),
+                severity: this.assessToolSeverity(tool),
+                estimatedImpact: tool.estimatedImpact,
+                toolCall: {
+                  id: toolCall.id,
+                  name: toolCall.name,
+                  arguments: toolCall.arguments,
+                },
+              }
+              onConfirmationRequired(confirmationRequest)
+            }
+
+            // Add pending result to messages
+            const pendingResult: ToolCallResult = {
               id: toolCall.id,
               toolName: toolCall.name,
               input: toolCall.arguments,
               output: null,
-              error: 'This action requires user confirmation',
+              error: 'Awaiting user confirmation',
               executionTimeMs: 0,
             }
-            toolCallResults.push(skipResult)
+            toolCallResults.push(pendingResult)
 
             messages.push({
               role: 'tool',
               content: JSON.stringify({
-                error: 'Action skipped - requires user confirmation',
+                status: 'pending_confirmation',
+                message: 'This action requires your confirmation before proceeding.',
+                tool: toolCall.name,
                 requiresConfirmation: true,
               }),
               tool_call_id: toolCall.id,
             })
+
+            // Stream the confirmation request
+            onStreamChunk?.({
+              type: 'confirmation_required',
+              toolCall: {
+                id: toolCall.id,
+                name: toolCall.name,
+              },
+            } as StreamChunk)
 
             continue
           }
@@ -603,28 +705,146 @@ If you don't need to use a tool, respond normally without the JSON format.`
   }
 
   /**
-   * Parse tool calls from LLM response
+   * Parse tool calls from LLM response using robust JSON parsing
+   * Supports multiple tool calls and handles nested JSON properly
    */
   private parseToolCalls(content: string): ToolCall[] | undefined {
-    try {
-      // Look for tool_call JSON in response
-      const match = content.match(/\{"tool_call":\s*\{[^}]+\}\s*\}/)
-      if (!match) return undefined
+    const toolCalls: ToolCall[] = []
 
-      const parsed = JSON.parse(match[0])
-      if (parsed.tool_call && parsed.tool_call.name) {
-        return [
-          {
-            id: `call_${Date.now()}`,
-            name: parsed.tool_call.name,
-            arguments: parsed.tool_call.arguments || {},
-          },
-        ]
+    try {
+      // Strategy 1: Look for tool_call wrapper format
+      // Matches: {"tool_call": {...}} with proper nesting
+      const toolCallPattern = /\{\s*"tool_call"\s*:\s*(\{[\s\S]*?\})\s*\}/g
+      let match
+
+      while ((match = toolCallPattern.exec(content)) !== null) {
+        try {
+          // Extract the inner tool call object
+          const innerJson = match[1]
+          const toolData = this.parseNestedJSON(innerJson)
+
+          if (toolData && toolData.name) {
+            toolCalls.push({
+              id: `call_${Date.now()}_${toolCalls.length}`,
+              name: toolData.name as string,
+              arguments: (toolData.arguments as Record<string, unknown>) || {},
+            })
+          }
+        } catch {
+          // Continue to next match
+        }
       }
-    } catch {
-      // Not a tool call
+
+      if (toolCalls.length > 0) {
+        return toolCalls
+      }
+
+      // Strategy 2: Look for direct tool format (name + arguments at root)
+      // Matches: {"name": "tool_name", "arguments": {...}}
+      const directPattern = /\{\s*"name"\s*:\s*"([^"]+)"\s*,\s*"arguments"\s*:\s*(\{[\s\S]*?\})\s*\}/g
+
+      while ((match = directPattern.exec(content)) !== null) {
+        try {
+          const name = match[1]
+          const argsJson = match[2]
+          const args = JSON.parse(argsJson)
+
+          toolCalls.push({
+            id: `call_${Date.now()}_${toolCalls.length}`,
+            name,
+            arguments: args,
+          })
+        } catch {
+          // Continue to next match
+        }
+      }
+
+      if (toolCalls.length > 0) {
+        return toolCalls
+      }
+
+      // Strategy 3: Try to find any JSON object that looks like a tool call
+      const jsonObjects = this.extractAllJSONObjects(content)
+
+      for (const obj of jsonObjects) {
+        if (obj.tool_call && typeof obj.tool_call === 'object') {
+          const tc = obj.tool_call as Record<string, unknown>
+          if (tc.name) {
+            toolCalls.push({
+              id: `call_${Date.now()}_${toolCalls.length}`,
+              name: tc.name as string,
+              arguments: (tc.arguments as Record<string, unknown>) || {},
+            })
+          }
+        } else if (obj.name && (obj.arguments !== undefined || obj.input !== undefined)) {
+          // Direct tool call format
+          toolCalls.push({
+            id: `call_${Date.now()}_${toolCalls.length}`,
+            name: obj.name as string,
+            arguments: (obj.arguments || obj.input || {}) as Record<string, unknown>,
+          })
+        }
+      }
+
+      return toolCalls.length > 0 ? toolCalls : undefined
+    } catch (error) {
+      logger.debug('[Orchestrator] Tool call parsing failed:', error)
+      return undefined
     }
-    return undefined
+  }
+
+  /**
+   * Parse nested JSON with proper brace matching
+   */
+  private parseNestedJSON(jsonStr: string): Record<string, unknown> | null {
+    try {
+      return JSON.parse(jsonStr)
+    } catch {
+      // Try to fix common issues
+      try {
+        // Remove trailing commas
+        const fixed = jsonStr.replace(/,\s*([}\]])/g, '$1')
+        return JSON.parse(fixed)
+      } catch {
+        return null
+      }
+    }
+  }
+
+  /**
+   * Extract all valid JSON objects from a string
+   */
+  private extractAllJSONObjects(content: string): Record<string, unknown>[] {
+    const objects: Record<string, unknown>[] = []
+    let depth = 0
+    let start = -1
+
+    for (let i = 0; i < content.length; i++) {
+      const char = content[i]
+
+      if (char === '{') {
+        if (depth === 0) {
+          start = i
+        }
+        depth++
+      } else if (char === '}') {
+        depth--
+        if (depth === 0 && start !== -1) {
+          const jsonStr = content.substring(start, i + 1)
+          try {
+            const parsed = JSON.parse(jsonStr)
+            if (typeof parsed === 'object' && parsed !== null) {
+              objects.push(parsed)
+            }
+          } catch {
+            // Not valid JSON, continue
+          }
+          start = -1
+        }
+      }
+    }
+
+    return objects
   }
 
   /**
@@ -768,6 +988,86 @@ If you don't need to use a tool, respond normally without the JSON format.`
       target_entity_id: event.entityId,
       created_by: event.userId,
     })
+  }
+
+  /**
+   * Generate a human-readable description for tool confirmation
+   */
+  private generateToolConfirmationDescription(
+    tool: Tool,
+    args: Record<string, unknown>
+  ): string {
+    // Tool-specific descriptions
+    const descriptions: Record<string, (args: Record<string, unknown>) => string> = {
+      'delete_document': (a) => `Delete the document "${a.document_name || a.document_id}"`,
+      'delete_rfi': (a) => `Delete RFI #${a.rfi_number || a.rfi_id}`,
+      'send_notification': (a) => `Send notification to ${a.recipient || 'recipients'}`,
+      'update_status': (a) => `Update status of ${a.entity_type || 'item'} to "${a.status}"`,
+      'create_rfi': (a) => `Create a new RFI: "${a.subject || 'Untitled'}"`,
+      'submit_daily_report': (a) => `Submit daily report for ${a.date || 'today'}`,
+      'assign_task': (a) => `Assign task to ${a.assignee || 'user'}`,
+      'schedule_inspection': (a) => `Schedule inspection for ${a.date || 'a date'}`,
+      'approve_submittal': (a) => `Approve submittal "${a.submittal_name || a.submittal_id}"`,
+      'reject_submittal': (a) => `Reject submittal "${a.submittal_name || a.submittal_id}"`,
+    }
+
+    const generator = descriptions[tool.name]
+    if (generator) {
+      return generator(args)
+    }
+
+    // Fallback to tool description with args summary
+    const argSummary = Object.entries(args)
+      .slice(0, 3)
+      .map(([k, v]) => `${k}: ${String(v).slice(0, 30)}`)
+      .join(', ')
+
+    return `${tool.description}${argSummary ? ` (${argSummary})` : ''}`
+  }
+
+  /**
+   * Assess the severity level of a tool action
+   */
+  private assessToolSeverity(tool: Tool): 'low' | 'medium' | 'high' {
+    // High severity: destructive or irreversible actions
+    const highSeverityTools = [
+      'delete_document',
+      'delete_rfi',
+      'delete_project',
+      'delete_user',
+      'archive_project',
+      'send_external_notification',
+      'approve_payment',
+      'finalize_report',
+    ]
+
+    // Medium severity: modifying actions
+    const mediumSeverityTools = [
+      'update_status',
+      'assign_task',
+      'reassign_task',
+      'approve_submittal',
+      'reject_submittal',
+      'schedule_inspection',
+      'submit_daily_report',
+      'create_rfi',
+      'send_notification',
+    ]
+
+    if (highSeverityTools.includes(tool.name)) {
+      return 'high'
+    }
+
+    if (mediumSeverityTools.includes(tool.name)) {
+      return 'medium'
+    }
+
+    // Check tool's own severity if defined
+    if (tool.severity) {
+      return tool.severity
+    }
+
+    return 'low'
   }
 
   /**

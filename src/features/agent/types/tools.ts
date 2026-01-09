@@ -78,6 +78,12 @@ export interface Tool<TInput = Record<string, unknown>, TOutput = unknown> {
   /** Whether this tool requires user confirmation before execution */
   requiresConfirmation: boolean
 
+  /** Severity level for confirmation UI */
+  severity?: 'low' | 'medium' | 'high'
+
+  /** Description of the estimated impact for confirmation dialog */
+  estimatedImpact?: string
+
   /** Estimated tokens this tool typically uses */
   estimatedTokens?: number
 

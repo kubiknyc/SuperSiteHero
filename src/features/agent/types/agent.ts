@@ -241,6 +241,16 @@ export interface PendingConfirmation {
   toolInput: Record<string, unknown>
   description: string
   createdAt: string
+  // Enhanced confirmation data
+  toolCall?: {
+    id: string
+    name: string
+    arguments: Record<string, unknown>
+  }
+  severity?: 'low' | 'medium' | 'high'
+  estimatedImpact?: string
+  onConfirm?: (result: unknown) => void | Promise<void>
+  onReject?: () => void
 }
 
 export interface AgentStoreActions {
@@ -263,8 +273,9 @@ export interface AgentStoreActions {
   cancelProcessing(): void
 
   // Confirmation actions
+  addPendingConfirmation(confirmation: PendingConfirmation): void
   confirmAction(confirmationId: string): Promise<void>
-  rejectAction(confirmationId: string): void
+  rejectAction(confirmationId: string): Promise<void>
   clearConfirmations(): void
 
   // Error handling
