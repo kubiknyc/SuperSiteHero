@@ -666,14 +666,17 @@ export const aiUsageApi = {
       (params.inputTokens * pricing.input + params.outputTokens * pricing.output) / 1000
     )
 
+    // Determine provider from model name
+    const aiProvider = params.model.startsWith('claude') ? 'anthropic' :
+                       params.model.startsWith('gpt') ? 'openai' : 'openai'
+
     const { error } = await (supabase as any).from('ai_usage_log').insert({
       feature: params.feature,
-      model: params.model,
-      input_tokens: params.inputTokens,
-      output_tokens: params.outputTokens,
-      cost_cents: costCents,
-      latency_ms: params.latencyMs,
-      request_metadata: params.metadata,
+      ai_provider: aiProvider,
+      ai_model: params.model,
+      prompt_tokens: params.inputTokens,
+      completion_tokens: params.outputTokens,
+      estimated_cost_cents: costCents,
     })
 
     if (error) {
@@ -694,7 +697,7 @@ export const aiUsageApi = {
     // Get aggregated usage by feature
     const { data: featureData, error: featureError } = await (supabase as any)
       .from('ai_usage_log')
-      .select('feature, input_tokens, output_tokens, cost_cents')
+      .select('feature, prompt_tokens, completion_tokens, estimated_cost_cents')
       .gte('created_at', start)
       .lte('created_at', end)
 
@@ -706,9 +709,9 @@ export const aiUsageApi = {
     let totalCostCents = 0
 
     for (const row of featureData || []) {
-      const tokens = row.input_tokens + row.output_tokens
+      const tokens = (row.prompt_tokens || 0) + (row.completion_tokens || 0)
       totalTokens += tokens
-      totalCostCents += row.cost_cents
+      totalCostCents += row.estimated_cost_cents || 0
 
       const existing = byFeatureMap.get(row.feature) || {
         feature: row.feature,
@@ -717,7 +720,7 @@ export const aiUsageApi = {
         requestCount: 0,
       }
       existing.tokens += tokens
-      existing.costCents += row.cost_cents
+      existing.costCents += row.estimated_cost_cents || 0
       existing.requestCount += 1
       byFeatureMap.set(row.feature, existing)
     }
