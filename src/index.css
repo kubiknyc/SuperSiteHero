@@ -19,6 +19,9 @@
 /* Import premium login page styles */
 @import './styles/login-v2.css';
 
+/* Import modern minimal navigation sidebar styles */
+@import './components/layout/sidebar/styles/sidebar.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
