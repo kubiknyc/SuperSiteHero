@@ -222,21 +222,22 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const comment = `## Dependency Management Check
-
-| Check | Status |
-|-------|--------|
-| Dependencies | ${{ needs.check-dependencies.result }} |
-| Vulnerabilities | ${{ needs.vulnerability-check.result }} |
-| Outdated Packages | ${{ needs.outdated-packages.result }} |
-| License Compliance | ${{ needs.license-compliance.result }} |
-
-View detailed reports in artifacts.`
-
+            const comment = [
+              '## Dependency Management Check',
+              '',
+              '| Check | Status |',
+              '|-------|--------|',
+              '| Dependencies | ${{ needs.check-dependencies.result }} |',
+              '| Vulnerabilities | ${{ needs.vulnerability-check.result }} |',
+              '| Outdated Packages | ${{ needs.outdated-packages.result }} |',
+              '| License Compliance | ${{ needs.license-compliance.result }} |',
+              '',
+              'View detailed reports in artifacts.'
+            ].join('\n');
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: comment
-            })
+            });
         continue-on-error: true
