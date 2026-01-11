@@ -193,7 +193,7 @@ export function ChangeOrderLineItems({
 
   // Save item
   const handleSave = async () => {
-    if (!formData.description.trim()) return;
+    if (!formData.description.trim()) {return;}
 
     setIsSubmitting(true);
     try {
@@ -221,7 +221,7 @@ export function ChangeOrderLineItems({
 
   // Delete item
   const handleDelete = async () => {
-    if (!deleteConfirmId) return;
+    if (!deleteConfirmId) {return;}
     setIsSubmitting(true);
     try {
       await onDeleteItem(deleteConfirmId);
@@ -536,7 +536,7 @@ export function ChangeOrderLineItems({
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             {Object.values(LineItemCategory).map((category) => {
               const data = categorySummary.get(category);
-              if (!data) return null;
+              if (!data) {return null;}
               return (
                 <div
                   key={category}

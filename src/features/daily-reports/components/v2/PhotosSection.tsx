@@ -343,7 +343,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
   }, [LONG_PRESS_DURATION]);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!touchStartPos) return;
+    if (!touchStartPos) {return;}
 
     const touch = e.touches[0];
     const dx = Math.abs(touch.clientX - touchStartPos.x);
@@ -392,7 +392,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
   }, []);
 
   const handleLightboxTouchEnd = useCallback((e: React.TouchEvent) => {
-    if (swipeStartX === null) return;
+    if (swipeStartX === null) {return;}
 
     const endX = e.changedTouches[0].clientX;
     const diff = swipeStartX - endX;

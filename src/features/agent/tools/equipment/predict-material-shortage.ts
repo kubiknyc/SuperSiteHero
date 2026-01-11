@@ -284,8 +284,8 @@ export const predictMaterialShortageTool = createTool<PredictMaterialShortageInp
           existing.first_need_date = need.scheduled_start
         }
         // Escalate priority if any activity is higher
-        if (need.priority === 'critical') existing.priority = 'critical'
-        else if (need.priority === 'high' && existing.priority !== 'critical') existing.priority = 'high'
+        if (need.priority === 'critical') {existing.priority = 'critical'}
+        else if (need.priority === 'high' && existing.priority !== 'critical') {existing.priority = 'high'}
       } else {
         materialNeedsMap.set(key, {
           total_needed: need.quantity_needed,

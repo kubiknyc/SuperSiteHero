@@ -24,9 +24,6 @@ const SIDEBAR_EXPANDED_WIDTH = 280
 import { StickyHeader } from './StickyHeader'
 import { ActionPanel } from './ActionPanel'
 
-// Premium easing
-const SPRING_EASING = 'cubic-bezier(0.32, 0.72, 0, 1)'
-
 // Page title map for auto-detection
 const pageTitles: Record<string, { title: string; subtitle?: string }> = {
   '/': { title: 'Dashboard', subtitle: 'Overview of your projects' },
@@ -175,13 +172,16 @@ export function AppLayoutV2({
   const isAdmin = userProfile?.role === 'admin' || userProfile?.role === 'owner'
 
   // Determine layout mode
-  const showPersistentSidebar = !isTablet || isLandscape
   const showDrawerSidebar = isTablet && isPortrait
 
   // Calculate main content margin based on sidebar state
   const getSidebarOffset = () => {
-    if (isTablet && isPortrait) return 0
-    if (isTablet && isLandscape) return 240 // Slightly narrower for tablet
+    if (isTablet && isPortrait) {
+      return 0
+    }
+    if (isTablet && isLandscape) {
+      return 240 // Slightly narrower for tablet
+    }
     return isPinned ? SIDEBAR_EXPANDED_WIDTH : SIDEBAR_COLLAPSED_WIDTH
   }
 

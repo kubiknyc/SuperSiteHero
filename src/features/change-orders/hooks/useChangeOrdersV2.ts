@@ -41,7 +41,7 @@ async function getChangeOrderRecipients(
     .eq('project_id', projectId)
     .in('role', ['owner', 'project_manager', 'superintendent', 'admin']);
 
-  if (!projectMembers) return [];
+  if (!projectMembers) {return [];}
 
   return projectMembers
     .filter((pm: any) => pm.users?.id !== excludeUserId)
@@ -68,7 +68,7 @@ async function getProjectName(projectId: string): Promise<string> {
  * Helper to format currency
  */
 function formatCurrency(amount: number | null | undefined): string {
-  if (amount == null) return 'N/A';
+  if (amount == null) {return 'N/A';}
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
 }
 

@@ -234,7 +234,7 @@ export const analyzeDeficienciesTool = createTool<AnalyzeDeficienciesInput, Anal
       switch (status) {
         case 'open':
           totalOpen++
-          if (severity === 'critical') criticalOpen++
+          if (severity === 'critical') {criticalOpen++}
           break
         case 'in_progress':
           totalInProgress++
@@ -283,8 +283,8 @@ export const analyzeDeficienciesTool = createTool<AnalyzeDeficienciesInput, Anal
       } else {
         tradeSummary.open++
       }
-      if (severity === 'critical') tradeSummary.critical_count++
-      if (severity === 'major') tradeSummary.major_count++
+      if (severity === 'critical') {tradeSummary.critical_count++}
+      if (severity === 'major') {tradeSummary.major_count++}
 
       // Track by location
       if (!locationMap.has(location)) {
@@ -398,14 +398,14 @@ export const analyzeDeficienciesTool = createTool<AnalyzeDeficienciesInput, Anal
 
 function normalizeSeverity(severity: string | null): 'minor' | 'moderate' | 'major' | 'critical' {
   const sev = (severity || '').toLowerCase()
-  if (/critical|severe|safety/i.test(sev)) return 'critical'
-  if (/major|high|significant/i.test(sev)) return 'major'
-  if (/moderate|medium/i.test(sev)) return 'moderate'
+  if (/critical|severe|safety/i.test(sev)) {return 'critical'}
+  if (/major|high|significant/i.test(sev)) {return 'major'}
+  if (/moderate|medium/i.test(sev)) {return 'moderate'}
   return 'minor'
 }
 
 function calculateTradeTrend(deficiencies: DeficiencyItem[]): 'improving' | 'stable' | 'declining' {
-  if (deficiencies.length < 5) return 'stable'
+  if (deficiencies.length < 5) {return 'stable'}
 
   const now = new Date()
   const thirtyDaysAgo = new Date(now)
@@ -419,11 +419,11 @@ function calculateTradeTrend(deficiencies: DeficiencyItem[]): 'improving' | 'sta
     return date >= sixtyDaysAgo && date < thirtyDaysAgo
   }).length
 
-  if (older === 0) return 'stable'
+  if (older === 0) {return 'stable'}
 
   const changeRate = (recent - older) / older
-  if (changeRate < -0.2) return 'improving'
-  if (changeRate > 0.2) return 'declining'
+  if (changeRate < -0.2) {return 'improving'}
+  if (changeRate > 0.2) {return 'declining'}
   return 'stable'
 }
 

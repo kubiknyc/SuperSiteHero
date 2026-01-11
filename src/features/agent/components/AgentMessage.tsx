@@ -285,7 +285,7 @@ function MessageContent({ content, isUser }: { content: string; isUser: boolean 
 }
 
 function parseMessageContent(content: string, isUser: boolean): React.ReactNode {
-  if (!content) return null
+  if (!content) {return null}
 
   // Split content by code blocks
   const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g

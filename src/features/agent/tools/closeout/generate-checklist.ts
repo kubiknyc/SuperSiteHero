@@ -398,10 +398,10 @@ function detectItemStatus(
   if (item.category === 'documentation') {
     const matchingDocs = documents.filter(d => {
       const docName = (d.name || d.title || '').toLowerCase()
-      if (itemLower.includes('as-built')) return /as.?built|record drawing/i.test(docName)
-      if (itemLower.includes('o&m')) return /o&m|operation|maintenance manual/i.test(docName)
-      if (itemLower.includes('test report')) return /test report|inspection report/i.test(docName)
-      if (itemLower.includes('commissioning')) return /commissioning/i.test(docName)
+      if (itemLower.includes('as-built')) {return /as.?built|record drawing/i.test(docName)}
+      if (itemLower.includes('o&m')) {return /o&m|operation|maintenance manual/i.test(docName)}
+      if (itemLower.includes('test report')) {return /test report|inspection report/i.test(docName)}
+      if (itemLower.includes('commissioning')) {return /commissioning/i.test(docName)}
       return false
     })
 
@@ -415,9 +415,9 @@ function detectItemStatus(
   if (item.category === 'warranties') {
     const matchingWarranties = warranties.filter(w => {
       const warType = (w.type || w.name || '').toLowerCase()
-      if (itemLower.includes('roof')) return /roof/i.test(warType)
-      if (itemLower.includes('hvac')) return /hvac|mechanical/i.test(warType)
-      if (itemLower.includes('elevator')) return /elevator/i.test(warType)
+      if (itemLower.includes('roof')) {return /roof/i.test(warType)}
+      if (itemLower.includes('hvac')) {return /hvac|mechanical/i.test(warType)}
+      if (itemLower.includes('elevator')) {return /elevator/i.test(warType)}
       return false
     })
 

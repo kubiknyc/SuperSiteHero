@@ -189,9 +189,9 @@ export const predictApprovalTimelineTool = createTool<PredictApprovalTimelineInp
     // Apply value-based adjustment
     let valueFactor = 1.0
     if (value) {
-      if (value > 100000) valueFactor = 1.5 // Large values take longer
-      else if (value > 50000) valueFactor = 1.25
-      else if (value > 25000) valueFactor = 1.1
+      if (value > 100000) {valueFactor = 1.5} // Large values take longer
+      else if (value > 50000) {valueFactor = 1.25}
+      else if (value > 25000) {valueFactor = 1.1}
     }
 
     // Calculate final prediction
@@ -259,9 +259,9 @@ export const predictApprovalTimelineTool = createTool<PredictApprovalTimelineInp
 
     // Calculate confidence
     let confidence = 0.7
-    if (completionTimes.length > 20) confidence += 0.15
-    if (assigned_to) confidence += 0.1
-    if (completionTimes.length < 5) confidence -= 0.2
+    if (completionTimes.length > 20) {confidence += 0.15}
+    if (assigned_to) {confidence += 0.1}
+    if (completionTimes.length < 5) {confidence -= 0.2}
 
     const confidenceLevel: 'high' | 'medium' | 'low' =
       confidence >= 0.8 ? 'high' : confidence >= 0.6 ? 'medium' : 'low'

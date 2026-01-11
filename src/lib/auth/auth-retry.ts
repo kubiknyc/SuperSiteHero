@@ -102,7 +102,7 @@ export interface RetryResult<T> {
  * Check if an error is transient and worth retrying
  */
 export function isTransientError(error: unknown): boolean {
-  if (!error) return false
+  if (!error) {return false}
 
   const errorMessage = getErrorMessage(error).toLowerCase()
   const errorCode = getErrorCode(error)?.toLowerCase() ?? ''
@@ -160,9 +160,9 @@ function getErrorMessage(error: unknown): string {
   }
   if (error && typeof error === 'object') {
     const obj = error as Record<string, unknown>
-    if (typeof obj.message === 'string') return obj.message
-    if (typeof obj.error === 'string') return obj.error
-    if (typeof obj.error_description === 'string') return obj.error_description
+    if (typeof obj.message === 'string') {return obj.message}
+    if (typeof obj.error === 'string') {return obj.error}
+    if (typeof obj.error_description === 'string') {return obj.error_description}
   }
   return String(error)
 }
@@ -173,9 +173,9 @@ function getErrorMessage(error: unknown): string {
 function getErrorCode(error: unknown): string | null {
   if (error && typeof error === 'object') {
     const obj = error as Record<string, unknown>
-    if (typeof obj.code === 'string') return obj.code
-    if (typeof obj.error === 'string') return obj.error
-    if (typeof obj.name === 'string') return obj.name
+    if (typeof obj.code === 'string') {return obj.code}
+    if (typeof obj.error === 'string') {return obj.error}
+    if (typeof obj.name === 'string') {return obj.name}
   }
   return null
 }
@@ -186,8 +186,8 @@ function getErrorCode(error: unknown): string | null {
 function getErrorStatus(error: unknown): number | null {
   if (error && typeof error === 'object') {
     const obj = error as Record<string, unknown>
-    if (typeof obj.status === 'number') return obj.status
-    if (typeof obj.statusCode === 'number') return obj.statusCode
+    if (typeof obj.status === 'number') {return obj.status}
+    if (typeof obj.statusCode === 'number') {return obj.statusCode}
   }
   return null
 }

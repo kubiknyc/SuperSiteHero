@@ -124,7 +124,7 @@ function formatStatus(status: string): string {
 }
 
 function formatCurrency(amount: number | null): string {
-  if (amount == null) return 'N/A'
+  if (amount == null) {return 'N/A'}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -147,7 +147,7 @@ export function useChangeOrderAuditLog(
   return useQuery({
     queryKey: ['change-order-audit-log', changeOrderId, filters],
     queryFn: async () => {
-      if (!changeOrderId) throw new Error('Change Order ID required')
+      if (!changeOrderId) {throw new Error('Change Order ID required')}
 
       // First, get the change order with its metadata
       const { data: co, error: coError } = await supabase
@@ -156,7 +156,7 @@ export function useChangeOrderAuditLog(
         .eq('id', changeOrderId)
         .single()
 
-      if (coError) throw coError
+      if (coError) {throw coError}
 
       // Extract audit log from metadata
       const auditHistory = ((co.metadata as any)?.auditLog || []) as AuditLogEntry[]
@@ -259,7 +259,7 @@ export function useAddAuditLogEntry() {
         .eq('id', changeOrderId)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       const now = new Date().toISOString()
       const entryId = `${changeOrderId}-${now}-${Math.random().toString(36).substr(2, 9)}`
@@ -292,7 +292,7 @@ export function useAddAuditLogEntry() {
         .update({ metadata: updatedMetadata })
         .eq('id', changeOrderId)
 
-      if (error) throw error
+      if (error) {throw error}
 
       return newEntry
     },

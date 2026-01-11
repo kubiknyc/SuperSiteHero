@@ -436,7 +436,7 @@ export function getConstraintIndicatorPosition(
  * Format lag display
  */
 export function formatLag(lag: number, unit: LagUnit = 'days'): string {
-  if (lag === 0) return ''
+  if (lag === 0) {return ''}
   const sign = lag > 0 ? '+' : ''
   switch (unit) {
     case 'days':

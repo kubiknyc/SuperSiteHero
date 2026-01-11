@@ -298,7 +298,7 @@ Date: ___________________________
 }
 
 function generateNotarizationBlock(state: StateRequirements): string | undefined {
-  if (!state.notarization_required) return undefined
+  if (!state.notarization_required) {return undefined}
 
   return `
 NOTARIZATION:

@@ -293,7 +293,9 @@ export async function runHealthChecks(options: HealthCheckOptions): Promise<Heal
   }
 
   // 1. Network connectivity (quick sanity check)
-  if (opts.verbose) console.log('   → Checking network connectivity...');
+  if (opts.verbose) {
+    console.log('   → Checking network connectivity...');
+  }
   const networkCheck = await executeCheck('Network Connectivity', checkNetworkConnectivity, opts);
   checks.push(networkCheck);
   if (opts.verbose) {
@@ -301,7 +303,9 @@ export async function runHealthChecks(options: HealthCheckOptions): Promise<Heal
   }
 
   // 2. Development server
-  if (opts.verbose) console.log('   → Checking development server...');
+  if (opts.verbose) {
+    console.log('   → Checking development server...');
+  }
   const devServerCheck = await executeCheck(
     'Development Server',
     () => checkDevServer(opts.baseURL),
@@ -314,7 +318,9 @@ export async function runHealthChecks(options: HealthCheckOptions): Promise<Heal
 
   // 3. Login page (only if dev server is healthy)
   if (devServerCheck.passed) {
-    if (opts.verbose) console.log('   → Checking login page renders correctly...');
+    if (opts.verbose) {
+      console.log('   → Checking login page renders correctly...');
+    }
     const loginCheck = await executeCheck('Login Page', () => checkLoginPage(opts.baseURL), opts);
     checks.push(loginCheck);
     if (opts.verbose) {
@@ -324,7 +330,9 @@ export async function runHealthChecks(options: HealthCheckOptions): Promise<Heal
 
   // 4. Supabase REST API (if URL provided)
   if (opts.supabaseUrl) {
-    if (opts.verbose) console.log('   → Checking Supabase REST API...');
+    if (opts.verbose) {
+      console.log('   → Checking Supabase REST API...');
+    }
     const restCheck = await executeCheck(
       'Supabase REST API',
       () => checkSupabaseRest(opts.supabaseUrl!),
@@ -336,7 +344,9 @@ export async function runHealthChecks(options: HealthCheckOptions): Promise<Heal
     }
 
     // 5. Supabase Auth API
-    if (opts.verbose) console.log('   → Checking Supabase Auth API...');
+    if (opts.verbose) {
+      console.log('   → Checking Supabase Auth API...');
+    }
     const authCheck = await executeCheck(
       'Supabase Auth API',
       () => checkSupabaseAuth(opts.supabaseUrl!),

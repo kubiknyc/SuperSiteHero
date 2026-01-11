@@ -65,7 +65,7 @@ function findDependencies(
   allItems: ChecklistTemplateItem[]
 ): string[] {
   const conditions = item.conditions as ItemConditions | null
-  if (!conditions?.rules) return []
+  if (!conditions?.rules) {return []}
 
   return conditions.rules.map((rule) => rule.target_item_id)
 }
@@ -77,7 +77,7 @@ function findAffectedItems(
   return allItems
     .filter((item) => {
       const conditions = item.conditions as ItemConditions | null
-      if (!conditions?.rules) return false
+      if (!conditions?.rules) {return false}
       return conditions.rules.some((rule) => rule.target_item_id === itemId)
     })
     .map((item) => item.id)
@@ -88,14 +88,14 @@ function calculateBranchDepth(
   allItems: ChecklistTemplateItem[],
   visited: Set<string> = new Set()
 ): number {
-  if (visited.has(itemId)) return 0 // Prevent circular dependencies
+  if (visited.has(itemId)) {return 0} // Prevent circular dependencies
   visited.add(itemId)
 
   const item = allItems.find((i) => i.id === itemId)
-  if (!item) return 0
+  if (!item) {return 0}
 
   const dependencies = findDependencies(item, allItems)
-  if (dependencies.length === 0) return 0
+  if (dependencies.length === 0) {return 0}
 
   const maxParentDepth = Math.max(
     ...dependencies.map((depId) =>
@@ -109,7 +109,7 @@ function calculateBranchDepth(
 function extractResponseValue(
   response: ChecklistResponse | undefined
 ): string | number | boolean | null {
-  if (!response?.response_data) return null
+  if (!response?.response_data) {return null}
 
   const data = response.response_data as Record<string, unknown>
 
@@ -183,7 +183,7 @@ export function useConditionalLogic(
   const isItemVisible = useCallback(
     (itemId: string): boolean => {
       const item = templateItems.find((i) => i.id === itemId)
-      if (!item) return true
+      if (!item) {return true}
 
       return evaluateItemVisibility(
         item.conditions as ItemConditions | null,
@@ -212,10 +212,10 @@ export function useConditionalLogic(
       hypotheticalValue: string | number | boolean | null
     ): BranchPreview | null => {
       const item = templateItems.find((i) => i.id === itemId)
-      if (!item) return null
+      if (!item) {return null}
 
       const conditions = item.conditions as ItemConditions | null
-      if (!conditions?.rules) return null
+      if (!conditions?.rules) {return null}
 
       const dependencyChain = conditions.rules.map((rule) => {
         const targetItem = templateItems.find((i) => i.id === rule.target_item_id)
@@ -362,7 +362,7 @@ export function useUpdateItemConditions() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (data) => {

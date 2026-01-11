@@ -195,7 +195,7 @@ function PinMarker({
 
   // Drag handlers
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (!enableDrag) return
+    if (!enableDrag) {return}
     e.preventDefault()
     e.stopPropagation()
 
@@ -210,14 +210,14 @@ function PinMarker({
   }, [enableDrag, pin.x, pin.y, onDragStart])
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!isDragging || !dragStartRef.current) return
+    if (!isDragging || !dragStartRef.current) {return}
 
     // Calculate new position (this is visual feedback only)
     // Actual position update happens on mouse up
   }, [isDragging])
 
   const handleMouseUp = useCallback((e: MouseEvent) => {
-    if (!isDragging || !dragStartRef.current) return
+    if (!isDragging || !dragStartRef.current) {return}
 
     const deltaX = e.clientX - dragStartRef.current.x
     const deltaY = e.clientY - dragStartRef.current.y
@@ -231,7 +231,7 @@ function PinMarker({
 
   // Touch drag handlers
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    if (!enableDrag) return
+    if (!enableDrag) {return}
 
     const touch = e.touches[0]
     setIsDragging(true)
@@ -245,7 +245,7 @@ function PinMarker({
   }, [enableDrag, pin.x, pin.y, onDragStart])
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    if (!isDragging || !dragStartRef.current) return
+    if (!isDragging || !dragStartRef.current) {return}
 
     const touch = e.changedTouches[0]
     const deltaX = touch.clientX - dragStartRef.current.x
@@ -261,7 +261,7 @@ function PinMarker({
   const pinButton = (
     <button
       onClick={(e) => {
-        if (isDragging) return
+        if (isDragging) {return}
         if (onSelect) {
           e.stopPropagation()
           onSelect()
@@ -443,7 +443,7 @@ interface PinSidePanelProps {
 }
 
 function PinSidePanel({ pin, onClose, onNavigate }: PinSidePanelProps) {
-  if (!pin) return null
+  if (!pin) {return null}
 
   const Icon = pin.type === 'rfi' ? FileQuestion : FileCheck
 
@@ -578,7 +578,7 @@ export function DrawingPinOverlay({
     // Add RFI pins
     if (rfiVisible && rfiLinks) {
       rfiLinks.forEach((link) => {
-        if (link.pin_x === null || link.pin_y === null || !link.rfi) return
+        if (link.pin_x === null || link.pin_y === null || !link.rfi) {return}
 
         const pixelPos = rfiNormalizedToPixel(
           link.pin_x,
@@ -607,7 +607,7 @@ export function DrawingPinOverlay({
     // Add Submittal pins
     if (submittalVisible && submittalLinks) {
       submittalLinks.forEach((link) => {
-        if (link.pin_x === null || link.pin_y === null || !link.submittal) return
+        if (link.pin_x === null || link.pin_y === null || !link.submittal) {return}
 
         const pixelPos = submittalNormalizedToPixel(
           link.pin_x,
@@ -655,7 +655,7 @@ export function DrawingPinOverlay({
 
   // Navigate from side panel
   const handleNavigateFromPanel = useCallback(() => {
-    if (!selectedPin) return
+    if (!selectedPin) {return}
     if (selectedPin.type === 'rfi') {
       navigate(`/rfis/${selectedPin.id}`)
     } else {
@@ -665,7 +665,7 @@ export function DrawingPinOverlay({
 
   // Handle pin drag end
   const handlePinDragEnd = useCallback((pin: PinData, newX: number, newY: number) => {
-    if (!onMovePin) return
+    if (!onMovePin) {return}
 
     // Convert pixel position back to normalized coordinates
     const normalizedX = newX / (containerWidth * scale)
@@ -681,7 +681,7 @@ export function DrawingPinOverlay({
 
   // Handle overlay click for adding new pins
   const handleOverlayClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!enableAddPin || !addPinMode || !onAddPin) return
+    if (!enableAddPin || !addPinMode || !onAddPin) {return}
 
     const rect = e.currentTarget.getBoundingClientRect()
     const x = (e.clientX - rect.left) / (containerWidth * scale)

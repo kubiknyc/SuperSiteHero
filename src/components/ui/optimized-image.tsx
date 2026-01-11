@@ -146,13 +146,13 @@ export function OptimizedImage({
 
   // Generate srcset from responsive sources
   const srcSet = useMemo(() => {
-    if (!responsiveSources || responsiveSources.length === 0) return undefined
+    if (!responsiveSources || responsiveSources.length === 0) {return undefined}
     return generateSrcSet(responsiveSources)
   }, [responsiveSources])
 
   // Group sources by format for picture element
   const sourcesByFormat = useMemo(() => {
-    if (!responsiveSources || !usePictureElement) return null
+    if (!responsiveSources || !usePictureElement) {return null}
     return groupSourcesByFormat(responsiveSources)
   }, [responsiveSources, usePictureElement])
 

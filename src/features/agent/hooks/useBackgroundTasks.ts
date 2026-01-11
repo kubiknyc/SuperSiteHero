@@ -126,7 +126,7 @@ export function useBackgroundTasks(
 
   // Set up realtime subscription
   useEffect(() => {
-    if (!realtime) return
+    if (!realtime) {return}
 
     const channel = supabase
       .channel('agent-tasks-changes')
@@ -276,7 +276,7 @@ export function useTask(taskId: string | null | undefined, options: UseTaskOptio
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['agent-task', taskId],
     queryFn: async () => {
-      if (!taskId) return null
+      if (!taskId) {return null}
       return taskService.get(taskId)
     },
     enabled: !!taskId,
@@ -284,7 +284,7 @@ export function useTask(taskId: string | null | undefined, options: UseTaskOptio
 
   // Set up realtime subscription for this specific task
   useEffect(() => {
-    if (!taskId || !realtime) return
+    if (!taskId || !realtime) {return}
 
     const channel = supabase
       .channel(`agent-task-${taskId}`)

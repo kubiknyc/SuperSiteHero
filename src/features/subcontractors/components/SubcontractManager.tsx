@@ -227,16 +227,16 @@ export function SubcontractManager({
 
   // Filter subcontracts
   const filteredSubcontracts = useMemo(() => {
-    if (!subcontracts) return []
+    if (!subcontracts) {return []}
 
     return subcontracts.filter((sub) => {
       // Status filter
-      if (statusFilter !== 'all' && sub.status !== statusFilter) return false
+      if (statusFilter !== 'all' && sub.status !== statusFilter) {return false}
 
       // Tab filter
-      if (activeTab === 'pending' && sub.status !== 'pending_signature') return false
-      if (activeTab === 'active' && !['executed', 'in_progress'].includes(sub.status)) return false
-      if (activeTab === 'completed' && !['complete', 'closed'].includes(sub.status)) return false
+      if (activeTab === 'pending' && sub.status !== 'pending_signature') {return false}
+      if (activeTab === 'active' && !['executed', 'in_progress'].includes(sub.status)) {return false}
+      if (activeTab === 'completed' && !['complete', 'closed'].includes(sub.status)) {return false}
 
       // Search filter
       if (searchQuery) {

@@ -55,7 +55,7 @@ export function CreateDailyReportDialog({
 
   // Copy from previous report handler
   const handleCopyFromPrevious = useCallback(() => {
-    if (!previousReport) return
+    if (!previousReport) {return}
 
     const copyableFields = extractCopyableFields(previousReport)
     setFormData((prev) => ({

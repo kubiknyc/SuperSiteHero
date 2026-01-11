@@ -250,7 +250,7 @@ export function TrainingRecords({ projectId, className }: TrainingRecordsProps) 
 
   // Handle remove attendee
   const handleRemoveAttendee = async (attendeeId: string) => {
-    if (!confirm('Remove this attendee?')) return
+    if (!confirm('Remove this attendee?')) {return}
 
     try {
       await removeAttendee.mutateAsync(attendeeId)

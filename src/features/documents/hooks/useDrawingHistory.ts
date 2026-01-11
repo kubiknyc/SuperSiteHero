@@ -117,7 +117,7 @@ export function useDrawingHistory({
   )
 
   const undo = useCallback((): DrawingAction | null => {
-    if (!canUndo) return null
+    if (!canUndo) {return null}
 
     const action = history[historyIndex]
     setHistoryIndex((prev) => {
@@ -130,7 +130,7 @@ export function useDrawingHistory({
   }, [canUndo, history, historyIndex, notifyChange])
 
   const redo = useCallback((): DrawingAction | null => {
-    if (!canRedo) return null
+    if (!canRedo) {return null}
 
     const nextIndex = historyIndex + 1
     const action = history[nextIndex]
@@ -151,13 +151,13 @@ export function useDrawingHistory({
   }, [notifyChange])
 
   const getCurrentAction = useCallback((): DrawingAction | null => {
-    if (historyIndex < 0 || historyIndex >= history.length) return null
+    if (historyIndex < 0 || historyIndex >= history.length) {return null}
     return history[historyIndex]
   }, [history, historyIndex])
 
   const getActionAt = useCallback(
     (index: number): DrawingAction | null => {
-      if (index < 0 || index >= history.length) return null
+      if (index < 0 || index >= history.length) {return null}
       return history[index]
     },
     [history]
@@ -241,7 +241,7 @@ export function useDrawingKeyboardShortcuts({
 }: UseDrawingKeyboardShortcutsOptions) {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (!enabled) return
+      if (!enabled) {return}
 
       // Check for Ctrl/Cmd + Z (Undo)
       if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
@@ -346,7 +346,7 @@ export function useDrawingState({
     (id: string, data: Partial<DrawingElement['data']>) => {
       setElements((prev) => {
         const index = prev.findIndex((el) => el.id === id)
-        if (index === -1) return prev
+        if (index === -1) {return prev}
 
         const previousElement = prev[index]
         const updatedElement = {
@@ -372,7 +372,7 @@ export function useDrawingState({
     (id: string) => {
       setElements((prev) => {
         const element = prev.find((el) => el.id === id)
-        if (!element) return prev
+        if (!element) {return prev}
 
         pushAction({
           type: 'remove',
@@ -389,7 +389,7 @@ export function useDrawingState({
     (ids: string[]) => {
       setElements((prev) => {
         const removedElements = prev.filter((el) => ids.includes(el.id))
-        if (removedElements.length === 0) return prev
+        if (removedElements.length === 0) {return prev}
 
         pushAction({
           type: 'batch',
@@ -404,7 +404,7 @@ export function useDrawingState({
 
   const clearElements = useCallback(() => {
     setElements((prev) => {
-      if (prev.length === 0) return prev
+      if (prev.length === 0) {return prev}
 
       pushAction({
         type: 'batch',
@@ -417,7 +417,7 @@ export function useDrawingState({
 
   const undo = useCallback(() => {
     const action = historyUndo()
-    if (!action) return
+    if (!action) {return}
 
     setElements((prev) => {
       switch (action.type) {
@@ -450,7 +450,7 @@ export function useDrawingState({
 
   const redo = useCallback(() => {
     const action = historyRedo()
-    if (!action) return
+    if (!action) {return}
 
     setElements((prev) => {
       switch (action.type) {

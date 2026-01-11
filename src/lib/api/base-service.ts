@@ -580,7 +580,7 @@ import { supabase } from '../supabase'
 export async function getUserDetails(
   userId: string
 ): Promise<{ email: string; full_name: string | null } | null> {
-  if (!userId) return null
+  if (!userId) {return null}
 
   const { data } = await supabase
     .from('users')
@@ -595,7 +595,7 @@ export async function getUserDetails(
  * Get project name by ID (consolidated from rfis.ts, punch-lists.ts)
  */
 export async function getProjectName(projectId: string): Promise<string> {
-  if (!projectId) return 'Unknown Project'
+  if (!projectId) {return 'Unknown Project'}
 
   const { data } = await supabase
     .from('projects')
@@ -610,7 +610,7 @@ export async function getProjectName(projectId: string): Promise<string> {
  * Get company name by ID
  */
 export async function getCompanyName(companyId: string): Promise<string> {
-  if (!companyId) return 'Unknown Company'
+  if (!companyId) {return 'Unknown Company'}
 
   const { data } = await supabase
     .from('companies')
@@ -629,9 +629,9 @@ export function detectFieldChange<T>(
   newValue: T | undefined | null
 ): boolean {
   // Both are null/undefined - no change
-  if (oldValue == null && newValue == null) return false
+  if (oldValue == null && newValue == null) {return false}
   // One is null/undefined, other isn't - change
-  if (oldValue == null || newValue == null) return true
+  if (oldValue == null || newValue == null) {return true}
   // Both have values - compare
   return oldValue !== newValue
 }

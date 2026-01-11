@@ -428,7 +428,7 @@ function AddReminderDialog({ open, onOpenChange, submittals, onAdd }: AddReminde
 
   const handleSubmit = useCallback(() => {
     const submittal = submittals.find(s => s.id === selectedSubmittal)
-    if (!submittal || !reminderDate) return
+    if (!submittal || !reminderDate) {return}
 
     onAdd({
       submittalId: selectedSubmittal,
@@ -553,7 +553,7 @@ export function SubmittalRemindersPanel({
 
   const handleSendReminder = async (submittalId: string) => {
     const submittal = submittals?.find(s => s.id === submittalId)
-    if (!submittal) return
+    if (!submittal) {return}
 
     try {
       await recordReminder.mutateAsync({

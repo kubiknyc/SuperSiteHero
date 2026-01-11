@@ -137,7 +137,7 @@ export function DestructiveActionDialog({
   }, [open])
 
   const handleConfirm = async () => {
-    if (!isConfirmationValid) return
+    if (!isConfirmationValid) {return}
 
     setIsProcessing(true)
     try {

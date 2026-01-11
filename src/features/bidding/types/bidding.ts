@@ -710,7 +710,7 @@ export function calculateCompliancePercentage(
   missingCertificates: MissingCertificate[]
 ): number {
   const total = certificates.length + missingCertificates.length;
-  if (total === 0) return 100;
+  if (total === 0) {return 100;}
 
   const compliant = certificates.filter(
     (c) => c.status === 'valid' && c.meetsRequirement
@@ -727,7 +727,7 @@ export function getDaysUntilExpiry(expirationDate: string): number {
 }
 
 export function getExpiryStatus(daysUntilExpiry: number): 'valid' | 'expiring_soon' | 'expired' {
-  if (daysUntilExpiry < 0) return 'expired';
-  if (daysUntilExpiry <= 30) return 'expiring_soon';
+  if (daysUntilExpiry < 0) {return 'expired';}
+  if (daysUntilExpiry <= 30) {return 'expiring_soon';}
   return 'valid';
 }

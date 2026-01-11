@@ -43,7 +43,7 @@ export function useBidLevelingMatrix(packageId: string | undefined) {
         .eq('id', packageId)
         .single()
 
-      if (pkgError) throw pkgError
+      if (pkgError) {throw pkgError}
 
       // Get package items
       const { data: items, error: itemsError } = await db
@@ -52,7 +52,7 @@ export function useBidLevelingMatrix(packageId: string | undefined) {
         .eq('bid_package_id', packageId)
         .order('sort_order', { ascending: true })
 
-      if (itemsError) throw itemsError
+      if (itemsError) {throw itemsError}
 
       // Get submissions with line items
       const { data: submissions, error: subError } = await db
@@ -65,7 +65,7 @@ export function useBidLevelingMatrix(packageId: string | undefined) {
         .in('status', ['received', 'under_review', 'qualified', 'shortlisted', 'awarded'])
         .order('base_bid_amount', { ascending: true })
 
-      if (subError) throw subError
+      if (subError) {throw subError}
 
       // Build the matrix
       const matrix: BidLevelingMatrix = {
@@ -314,7 +314,7 @@ export function useLineItemAnalysis(packageId: string | undefined) {
         p_package_id: packageId,
       })
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     enabled: !!packageId,
@@ -353,7 +353,7 @@ export function useNormalizeBids() {
         { onConflict: 'submission_id,package_item_id' }
       )
 
-      if (error) throw error
+      if (error) {throw error}
 
       return { success: true }
     },
@@ -389,9 +389,9 @@ export function calculateScopeGapScore(
  * Get price variance status
  */
 export function getPriceVarianceStatus(variance: number): 'low' | 'normal' | 'high' | 'extreme' {
-  if (variance <= 0) return 'low'
-  if (variance <= 5) return 'normal'
-  if (variance <= 15) return 'high'
+  if (variance <= 0) {return 'low'}
+  if (variance <= 5) {return 'normal'}
+  if (variance <= 15) {return 'high'}
   return 'extreme'
 }
 
@@ -399,7 +399,7 @@ export function getPriceVarianceStatus(variance: number): 'low' | 'normal' | 'hi
  * Format currency for display
  */
 export function formatBidCurrency(value: number | null): string {
-  if (value === null) return '-'
+  if (value === null) {return '-'}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',

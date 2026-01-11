@@ -139,7 +139,7 @@ export function CountTool({
   }, [activeCategory, onCategoryChange, onActiveChange])
 
   const handleAddCategory = useCallback(() => {
-    if (!newCategoryName.trim()) return
+    if (!newCategoryName.trim()) {return}
 
     const newCategory: Omit<CountCategory, 'count'> = {
       id: `custom-${Date.now()}`,
@@ -155,7 +155,7 @@ export function CountTool({
   }, [newCategoryName, newCategoryColor, onAddCategory])
 
   const handleEditCategory = useCallback(() => {
-    if (!editingCategory || !newCategoryName.trim()) return
+    if (!editingCategory || !newCategoryName.trim()) {return}
 
     onUpdateCategory({
       ...editingCategory,

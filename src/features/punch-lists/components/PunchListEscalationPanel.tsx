@@ -210,7 +210,7 @@ function SubcontractorBreakdown({
 }) {
   const [isOpen, setIsOpen] = useState(false)
 
-  if (!stats.bySubcontractor.length) return null
+  if (!stats.bySubcontractor.length) {return null}
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -273,8 +273,8 @@ export function PunchListEscalationPanel({
 
   // Filter items by escalation level
   const filteredItems = useMemo(() => {
-    if (!overdueItems) return []
-    if (filterLevel === 'all') return overdueItems
+    if (!overdueItems) {return []}
+    if (filterLevel === 'all') {return overdueItems}
     return overdueItems.filter((item) => item.escalationLevel === filterLevel)
   }, [overdueItems, filterLevel])
 
@@ -315,7 +315,7 @@ export function PunchListEscalationPanel({
   }
 
   const handleSendReminder = async (item: OverduePunchItem) => {
-    if (!item.assigned_to) return
+    if (!item.assigned_to) {return}
 
     setReminderPending(item.id)
     try {

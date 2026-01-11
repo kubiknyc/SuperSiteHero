@@ -99,7 +99,7 @@ function extractTrade(activityName: string): string {
   ]
 
   for (const [pattern, trade] of tradePatterns) {
-    if (pattern.test(lowerName)) return trade
+    if (pattern.test(lowerName)) {return trade}
   }
   return 'General'
 }

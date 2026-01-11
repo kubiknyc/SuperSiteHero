@@ -58,7 +58,7 @@ export function useCertifications(filters: CertificationFilters = {}) {
     queryKey: certificationKeys.lists(filters),
     queryFn: async (): Promise<CertificationWithOperator[]> => {
       const companyId = filters.company_id || userProfile?.company_id;
-      if (!companyId) throw new Error('No company context');
+      if (!companyId) {throw new Error('No company context');}
 
       let query = db
         .from('equipment_certifications')
@@ -111,7 +111,7 @@ export function useCertifications(filters: CertificationFilters = {}) {
       }
 
       const { data, error } = await query;
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Add computed status and days until expiry
       return (data || []).map((cert: any) => ({
@@ -151,7 +151,7 @@ export function useCertification(id: string) {
         .eq('id', id)
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       return {
         ...data,
@@ -183,7 +183,7 @@ export function useOperatorCertifications(operatorId: string) {
         .is('deleted_at', null)
         .order('expiration_date', { ascending: true, nullsFirst: false });
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       return (data || []).map((cert: any) => ({
         ...cert,
@@ -204,7 +204,7 @@ export function useExpiringCertifications(days: number = 30) {
   return useQuery({
     queryKey: certificationKeys.expiring(days),
     queryFn: async (): Promise<CertificationWithOperator[]> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       const futureDate = new Date();
       futureDate.setDate(futureDate.getDate() + days);
@@ -224,7 +224,7 @@ export function useExpiringCertifications(days: number = 30) {
         .gte('expiration_date', new Date().toISOString().split('T')[0])
         .order('expiration_date', { ascending: true });
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       return (data || []).map((cert: any) => ({
         ...cert,
@@ -246,7 +246,7 @@ export function useCertificationStats(companyId?: string) {
   return useQuery({
     queryKey: certificationKeys.stats(effectiveCompanyId || ''),
     queryFn: async (): Promise<CertificationStats> => {
-      if (!effectiveCompanyId) throw new Error('No company context');
+      if (!effectiveCompanyId) {throw new Error('No company context');}
 
       const { data: certs, error } = await db
         .from('equipment_certifications')
@@ -255,7 +255,7 @@ export function useCertificationStats(companyId?: string) {
         .eq('is_active', true)
         .is('deleted_at', null);
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       const now = new Date();
       const in30Days = new Date();
@@ -357,7 +357,7 @@ export function useOperatorCertificationSummaries(companyId?: string) {
   return useQuery({
     queryKey: certificationKeys.operatorSummaries(effectiveCompanyId || ''),
     queryFn: async (): Promise<OperatorCertificationSummary[]> => {
-      if (!effectiveCompanyId) throw new Error('No company context');
+      if (!effectiveCompanyId) {throw new Error('No company context');}
 
       const { data: certs, error } = await db
         .from('equipment_certifications')
@@ -366,7 +366,7 @@ export function useOperatorCertificationSummaries(companyId?: string) {
         .eq('is_active', true)
         .is('deleted_at', null);
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Group by operator
       const operatorMap = new Map<string, OperatorCertificationSummary>();
@@ -392,9 +392,9 @@ export function useOperatorCertificationSummaries(companyId?: string) {
         const summary = operatorMap.get(key)!;
         summary.total_certifications++;
 
-        if (status === 'valid') summary.valid_certifications++;
-        else if (status === 'expiring_soon') summary.expiring_certifications++;
-        else if (status === 'expired') summary.expired_certifications++;
+        if (status === 'valid') {summary.valid_certifications++;}
+        else if (status === 'expiring_soon') {summary.expiring_certifications++;}
+        else if (status === 'expired') {summary.expired_certifications++;}
 
         if (!summary.certification_types.includes(cert.certification_type)) {
           summary.certification_types.push(cert.certification_type);
@@ -425,7 +425,7 @@ export function useCertificationAlerts(companyId?: string) {
   return useQuery({
     queryKey: certificationKeys.alerts(effectiveCompanyId || ''),
     queryFn: async (): Promise<CertificationAlert[]> => {
-      if (!effectiveCompanyId) throw new Error('No company context');
+      if (!effectiveCompanyId) {throw new Error('No company context');}
 
       const { data: alerts, error } = await db
         .from('certification_alerts')
@@ -442,7 +442,7 @@ export function useCertificationAlerts(companyId?: string) {
         .eq('acknowledged', false)
         .order('days_until_expiry', { ascending: true });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return alerts || [];
     },
     enabled: !!effectiveCompanyId,
@@ -466,7 +466,7 @@ export function useCanOperateEquipment(
         .eq('equipment_id', equipmentId)
         .eq('is_required', true);
 
-      if (reqError) throw reqError;
+      if (reqError) {throw reqError;}
 
       if (!requirements || requirements.length === 0) {
         return { authorized: true, missing: [], expired: [] };
@@ -480,7 +480,7 @@ export function useCanOperateEquipment(
         .eq('is_active', true)
         .is('deleted_at', null);
 
-      if (certError) throw certError;
+      if (certError) {throw certError;}
 
       const requiredTypes = requirements.map((r: any) => r.certification_type);
       const validCerts = (operatorCerts || []).filter(
@@ -534,7 +534,7 @@ export function useCreateCertification() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as EquipmentCertification;
     },
     onSuccess: (data) => {
@@ -577,7 +577,7 @@ export function useUpdateCertification() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as EquipmentCertification;
     },
     onSuccess: (data) => {
@@ -620,7 +620,7 @@ export function useVerifyCertification() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as EquipmentCertification;
     },
     onSuccess: (data) => {
@@ -663,7 +663,7 @@ export function useUploadCertificationDocument() {
         .from('documents')
         .upload(filePath, file);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {throw uploadError;}
 
       // Get public URL
       const { data: urlData } = supabase.storage
@@ -681,7 +681,7 @@ export function useUploadCertificationDocument() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as EquipmentCertification;
     },
     onSuccess: (data) => {
@@ -716,7 +716,7 @@ export function useDeleteCertification() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {throw error;}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: certificationKeys.all });
@@ -754,7 +754,7 @@ export function useAcknowledgeCertificationAlert() {
         })
         .eq('id', alertId);
 
-      if (error) throw error;
+      if (error) {throw error;}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: certificationKeys.alerts('') });
@@ -786,8 +786,8 @@ export function useSendRenewalReminder() {
         .eq('id', certificationId)
         .single();
 
-      if (fetchError) throw fetchError;
-      if (!certification) throw new Error('Certification not found');
+      if (fetchError) {throw fetchError;}
+      if (!certification) {throw new Error('Certification not found');}
 
       // Update reminder sent flag
       const { error } = await db
@@ -798,7 +798,7 @@ export function useSendRenewalReminder() {
         })
         .eq('id', certificationId);
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Get operator ID for notification
       const operatorId = certification.operator?.id || certification.operator_id;

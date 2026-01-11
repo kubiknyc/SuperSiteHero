@@ -133,7 +133,7 @@ export function OMManualBuilder({ projectId, className }: OMManualBuilderProps) 
 
   // Handle edit section
   const handleEditSection = async () => {
-    if (!editingSection) return
+    if (!editingSection) {return}
 
     try {
       await updateSection.mutateAsync({
@@ -151,7 +151,7 @@ export function OMManualBuilder({ projectId, className }: OMManualBuilderProps) 
 
   // Handle delete section
   const handleDeleteSection = async (sectionId: string) => {
-    if (!confirm('Are you sure you want to delete this section?')) return
+    if (!confirm('Are you sure you want to delete this section?')) {return}
 
     try {
       await deleteSection.mutateAsync(sectionId)
@@ -181,7 +181,7 @@ export function OMManualBuilder({ projectId, className }: OMManualBuilderProps) 
 
   const handleDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault()
-    if (draggedIndex === null || draggedIndex === index) return
+    if (draggedIndex === null || draggedIndex === index) {return}
 
     // Visual feedback could be added here
   }

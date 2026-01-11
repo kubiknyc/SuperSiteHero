@@ -82,13 +82,13 @@ export function useRFICostRollup(projectId: string | undefined) {
   return useQuery({
     queryKey: rfiCostRollupKeys.summary(projectId || ''),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase.rpc('get_rfi_cost_rollup', {
         p_project_id: projectId,
       })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFICostRollup
     },
     enabled: !!projectId,
@@ -105,7 +105,7 @@ export function useRFIsWithCostImpact(
   return useQuery({
     queryKey: rfiCostRollupKeys.items(projectId || '', filters),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       let query = supabase
         .from('rfis')
@@ -174,7 +174,7 @@ export function useRFIsWithCostImpact(
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFICostImpactItem[]
     },
     enabled: !!projectId,
@@ -188,7 +188,7 @@ export function useRFICostByMonth(projectId: string | undefined) {
   return useQuery({
     queryKey: rfiCostRollupKeys.byMonth(projectId || ''),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('rfis')
@@ -198,7 +198,7 @@ export function useRFICostByMonth(projectId: string | undefined) {
         .not('cost_impact', 'is', null)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Group by month
       const byMonth: Record<
@@ -285,7 +285,7 @@ export function useUpdateCostImpactStatus() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return { ...data, projectId }
     },
     onSuccess: (data) => {
@@ -404,7 +404,7 @@ export function getCostImpactStatusLabel(status: CostImpactStatus | null): strin
  * Format currency for display
  */
 export function formatCurrency(amount: number | null | undefined): string {
-  if (amount === null || amount === undefined) return '-'
+  if (amount === null || amount === undefined) {return '-'}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -417,6 +417,6 @@ export function formatCurrency(amount: number | null | undefined): string {
  * Calculate percentage of total
  */
 export function calculatePercentage(amount: number, total: number): number {
-  if (total === 0) return 0
+  if (total === 0) {return 0}
   return Math.round((amount / total) * 100)
 }

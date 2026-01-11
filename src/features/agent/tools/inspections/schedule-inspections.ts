@@ -447,10 +447,10 @@ function determineRequiredInspections(
           // Determine priority
           const daysUntilNeeded = Math.floor((plannedStart.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
           let priority: 'low' | 'medium' | 'high' | 'critical' = 'medium'
-          if (daysUntilNeeded <= 2) priority = 'critical'
-          else if (daysUntilNeeded <= 5) priority = 'high'
-          else if (daysUntilNeeded <= 10) priority = 'medium'
-          else priority = 'low'
+          if (daysUntilNeeded <= 2) {priority = 'critical'}
+          else if (daysUntilNeeded <= 5) {priority = 'high'}
+          else if (daysUntilNeeded <= 10) {priority = 'medium'}
+          else {priority = 'low'}
 
           inspectionsNeeded.push({
             inspection: trigger.inspection,

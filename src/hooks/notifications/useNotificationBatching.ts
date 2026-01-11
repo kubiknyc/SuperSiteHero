@@ -117,7 +117,7 @@ export function useNotificationBatching(options?: {
   const { data: savedConfig } = useQuery({
     queryKey: ['notification-batch-config', user?.id],
     queryFn: async () => {
-      if (!user?.id) return null
+      if (!user?.id) {return null}
 
       const { data, error } = await supabase
         .from('users')
@@ -146,7 +146,7 @@ export function useNotificationBatching(options?: {
   // Save configuration mutation
   const saveConfigMutation = useMutation({
     mutationFn: async (newConfig: NotificationBatchConfig) => {
-      if (!user?.id) throw new Error('User not authenticated')
+      if (!user?.id) {throw new Error('User not authenticated')}
 
       const { error } = await supabase
         .from('users')
@@ -157,7 +157,7 @@ export function useNotificationBatching(options?: {
         })
         .eq('id', user.id)
 
-      if (error) throw error
+      if (error) {throw error}
       return newConfig
     },
     onSuccess: (newConfig) => {
@@ -249,7 +249,7 @@ export function useNotificationBatching(options?: {
     // Sort by priority and recency
     return batches.sort((a, b) => {
       const priorityDiff = getPriorityOrder(b.priority) - getPriorityOrder(a.priority)
-      if (priorityDiff !== 0) return priorityDiff
+      if (priorityDiff !== 0) {return priorityDiff}
       return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
     })
   }, [config.excludeUrgent, generateBatchKey])
@@ -297,7 +297,7 @@ export function useNotificationBatching(options?: {
    */
   const flushBatch = useCallback(() => {
     const notifications = pendingNotificationsRef.current
-    if (notifications.length === 0) return
+    if (notifications.length === 0) {return}
 
     const batches = createBatches(notifications)
     batches.forEach(batch => {

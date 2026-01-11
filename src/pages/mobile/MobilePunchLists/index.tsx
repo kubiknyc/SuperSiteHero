@@ -94,8 +94,8 @@ export const MobilePunchListsList = memo(function MobilePunchListsList() {
   };
 
   const filteredItems = punchItems.filter((item) => {
-    if (filter === 'all') return true;
-    if (filter === 'open') return item.status !== 'completed';
+    if (filter === 'all') {return true;}
+    if (filter === 'open') {return item.status !== 'completed';}
     return item.status === 'completed';
   });
 

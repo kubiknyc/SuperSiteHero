@@ -659,7 +659,7 @@ export function getAllNavItems(): SidebarNavItem[] {
  */
 export function searchNavItems(query: string): SidebarNavItem[] {
   const normalizedQuery = query.toLowerCase().trim()
-  if (!normalizedQuery) return []
+  if (!normalizedQuery) {return []}
 
   return getAllNavItems().filter((item) => {
     const matchLabel = item.label.toLowerCase().includes(normalizedQuery)

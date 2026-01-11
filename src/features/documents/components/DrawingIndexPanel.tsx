@@ -38,7 +38,7 @@ const DISCIPLINE_MAP: Record<string, { name: string; code: string }> = {
 
 function extractDiscipline(fileName: string): string {
   const match = fileName.match(/^([A-Z]{1,2})[-\s]?(\d+)/)
-  if (match) return match[1]
+  if (match) {return match[1]}
   const firstLetter = fileName.charAt(0).toUpperCase()
   return /[A-Z]/.test(firstLetter) ? firstLetter : 'G'
 }
@@ -46,7 +46,7 @@ function extractDiscipline(fileName: string): string {
 function extractSheetNumber(fileName: string): string {
   const nameWithoutExt = fileName.replace(/\.(pdf|png|jpg|jpeg|dwg|dxf)$/i, '')
   const match = nameWithoutExt.match(/^([A-Z]{1,2}[-\s]?\d+)/)
-  if (match) return match[1]
+  if (match) {return match[1]}
   return nameWithoutExt
 }
 
@@ -82,7 +82,7 @@ export function DrawingIndexPanel({
 
   const groupedDocuments = useMemo(() => {
     const filtered = documents.filter((doc) => {
-      if (!searchTerm) return true
+      if (!searchTerm) {return true}
       const lower = searchTerm.toLowerCase()
       return (
         doc.file_name?.toLowerCase().includes(lower) ||
@@ -148,7 +148,7 @@ export function DrawingIndexPanel({
     }
   }
 
-  if (!isOpen) return null
+  if (!isOpen) {return null}
 
   const totalMatching = groupedDocuments.reduce((sum, g) => sum + g.documents.length, 0)
 

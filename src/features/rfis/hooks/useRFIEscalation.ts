@@ -80,8 +80,8 @@ function shouldEscalatePriority(
   config: EscalationConfig
 ): boolean {
   // Only escalate if overdue and not already high priority
-  if (daysOverdue < config.highPriorityThreshold) return false
-  if (rfi.priority === 'high') return false
+  if (daysOverdue < config.highPriorityThreshold) {return false}
+  if (rfi.priority === 'high') {return false}
   return true
 }
 
@@ -117,7 +117,7 @@ export function useOverdueRFIs(
         .is('deleted_at', null)
         .order('due_date', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Analyze each RFI for escalation needs
       const overdueRFIs: OverdueRFI[] = (data || []).map((rfi) => {
@@ -187,7 +187,7 @@ export function useEscalateRFIPriority() {
         .eq('id', rfiId)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       const previousPriority = rfi.priority || 'normal'
       const newPriority = 'high'
@@ -218,7 +218,7 @@ export function useEscalateRFIPriority() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return {
         rfi: data as WorkflowItem,
@@ -258,7 +258,7 @@ export function useBatchEscalateRFIs() {
           .eq('id', rfiId)
           .single()
 
-        if (fetchError) continue
+        if (fetchError) {continue}
 
         const daysOverdue = rfi.due_date
           ? calculateDaysOverdue(rfi.due_date, true)
@@ -267,7 +267,7 @@ export function useBatchEscalateRFIs() {
         const previousPriority = rfi.priority || 'normal'
 
         // Skip if already high priority
-        if (previousPriority === 'high') continue
+        if (previousPriority === 'high') {continue}
 
         const updatedMetadata = {
           ...(rfi.metadata || {}),
@@ -334,7 +334,7 @@ export function useRecordReminderSent() {
         .eq('id', rfiId)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       const updatedMetadata = {
         ...(rfi.metadata || {}),
@@ -353,7 +353,7 @@ export function useRecordReminderSent() {
         .update({ metadata: updatedMetadata })
         .eq('id', rfiId)
 
-      if (error) throw error
+      if (error) {throw error}
 
       return { rfiId, recipients }
     },

@@ -108,7 +108,7 @@ async function fetchProjectManagerDashboardData(projectId: string): Promise<Proj
     .eq('id', projectId)
     .single()
 
-  if (projectError) throw projectError
+  if (projectError) {throw projectError}
 
   // Fetch RFIs
   const { data: rfis } = await supabase
@@ -162,7 +162,7 @@ async function fetchProjectManagerDashboardData(projectId: string): Promise<Proj
     return created >= weekStart && created <= weekEnd
   })
   const closedThisWeek = closedRfis.filter(r => {
-    if (!r.closed_at) return false
+    if (!r.closed_at) {return false}
     const closed = new Date(r.closed_at)
     return closed >= weekStart && closed <= weekEnd
   })
@@ -170,7 +170,7 @@ async function fetchProjectManagerDashboardData(projectId: string): Promise<Proj
   // Calculate average response time for closed RFIs
   const avgResponseDays = closedRfis.length > 0
     ? closedRfis.reduce((sum, r) => {
-        if (!r.closed_at) return sum
+        if (!r.closed_at) {return sum}
         return sum + differenceInDays(new Date(r.closed_at), new Date(r.created_at))
       }, 0) / closedRfis.length
     : 0

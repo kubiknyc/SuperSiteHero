@@ -444,10 +444,10 @@ export const suggestToolboxTopicsTool = createTool<SuggestToolboxTopicsInput, Su
 
           // Map to OSHA Focus Four if applicable
           let focusFourKey: keyof typeof OSHA_FOCUS_FOUR | null = null
-          if (incidentType.toLowerCase().includes('fall')) focusFourKey = 'falls'
-          else if (incidentType.toLowerCase().includes('struck')) focusFourKey = 'struck_by'
-          else if (incidentType.toLowerCase().includes('caught') || incidentType.toLowerCase().includes('crush')) focusFourKey = 'caught_in'
-          else if (incidentType.toLowerCase().includes('electr') || incidentType.toLowerCase().includes('shock')) focusFourKey = 'electrocution'
+          if (incidentType.toLowerCase().includes('fall')) {focusFourKey = 'falls'}
+          else if (incidentType.toLowerCase().includes('struck')) {focusFourKey = 'struck_by'}
+          else if (incidentType.toLowerCase().includes('caught') || incidentType.toLowerCase().includes('crush')) {focusFourKey = 'caught_in'}
+          else if (incidentType.toLowerCase().includes('electr') || incidentType.toLowerCase().includes('shock')) {focusFourKey = 'electrocution'}
 
           if (focusFourKey) {
             const focusTopic = OSHA_FOCUS_FOUR[focusFourKey]

@@ -90,7 +90,7 @@ export function SubcontractorChangeOrdersPage() {
 
   // Get unique projects for filter
   const projects = useMemo(() => {
-    if (!changeOrders) return []
+    if (!changeOrders) {return []}
     const uniqueProjects = new Map<string, string>()
     changeOrders.forEach((co) => {
       if (!uniqueProjects.has(co.project_id)) {
@@ -102,7 +102,7 @@ export function SubcontractorChangeOrdersPage() {
 
   // Filter change orders
   const filteredChangeOrders = useMemo(() => {
-    if (!changeOrders) return []
+    if (!changeOrders) {return []}
 
     let filtered = changeOrders
 
@@ -129,7 +129,7 @@ export function SubcontractorChangeOrdersPage() {
 
   // Calculate tab counts
   const counts = useMemo(() => {
-    if (!changeOrders) return { all: 0, pending: 0, approved: 0, rejected: 0 }
+    if (!changeOrders) {return { all: 0, pending: 0, approved: 0, rejected: 0 }}
 
     return {
       all: changeOrders.length,

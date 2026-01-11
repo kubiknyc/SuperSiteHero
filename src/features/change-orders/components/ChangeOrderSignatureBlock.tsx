@@ -139,13 +139,13 @@ function SignatureDialog({
 
   // Initialize canvas
   useEffect(() => {
-    if (!open) return
+    if (!open) {return}
 
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas) {return}
 
     const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
 
     const initCanvas = () => {
       const rect = canvas.getBoundingClientRect()
@@ -169,7 +169,7 @@ function SignatureDialog({
   // Get coordinates from mouse/touch event
   const getCoordinates = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     const canvas = canvasRef.current
-    if (!canvas) return null
+    if (!canvas) {return null}
 
     const rect = canvas.getBoundingClientRect()
 
@@ -189,11 +189,11 @@ function SignatureDialog({
 
   const startDrawing = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     const coords = getCoordinates(e)
-    if (!coords) return
+    if (!coords) {return}
 
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
 
     setIsDrawing(true)
     ctx.beginPath()
@@ -201,14 +201,14 @@ function SignatureDialog({
   }, [getCoordinates])
 
   const draw = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDrawing) return
+    if (!isDrawing) {return}
 
     const coords = getCoordinates(e)
-    if (!coords) return
+    if (!coords) {return}
 
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
 
     ctx.lineTo(coords.x, coords.y)
     ctx.stroke()
@@ -222,7 +222,7 @@ function SignatureDialog({
   const clearSignature = useCallback(() => {
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
-    if (!ctx || !canvas) return
+    if (!ctx || !canvas) {return}
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     setHasDrawn(false)
@@ -240,7 +240,7 @@ function SignatureDialog({
         upsert: true,
       })
 
-    if (error) throw error
+    if (error) {throw error}
 
     const { data: urlData } = supabase.storage
       .from('documents')
@@ -289,7 +289,7 @@ function SignatureDialog({
   // Prevent scrolling while drawing on touch devices
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas) {return}
 
     const preventScroll = (e: TouchEvent) => {
       if (isDrawing) {

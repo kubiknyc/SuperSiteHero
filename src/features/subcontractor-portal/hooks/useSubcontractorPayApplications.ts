@@ -139,7 +139,7 @@ export function getPayAppStatusColor(status: PayApplicationStatus): string {
  * Format currency amount
  */
 export function formatCurrency(amount: number | null | undefined): string {
-  if (amount == null) return '$0.00'
+  if (amount == null) {return '$0.00'}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -152,7 +152,7 @@ export function formatCurrency(amount: number | null | undefined): string {
  * Format percentage
  */
 export function formatPercent(value: number | null | undefined): string {
-  if (value == null) return '0%'
+  if (value == null) {return '0%'}
   return `${value.toFixed(1)}%`
 }
 

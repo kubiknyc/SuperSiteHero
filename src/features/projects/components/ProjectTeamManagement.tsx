@@ -38,7 +38,7 @@ export function ProjectTeamManagement({ projectId, companyId }: ProjectTeamManag
 
   // Filter team by search query
   const filteredTeam = team.filter(member => {
-    if (!searchQuery || !member.user) return true
+    if (!searchQuery || !member.user) {return true}
     const searchLower = searchQuery.toLowerCase()
     const fullName = `${member.user.first_name || ''} ${member.user.last_name || ''}`.toLowerCase()
     return (

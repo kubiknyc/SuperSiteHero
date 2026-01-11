@@ -46,7 +46,7 @@ function ValidationIndicator({
   state: ValidationState
   className?: string
 }) {
-  if (state === 'idle') return null
+  if (state === 'idle') {return null}
 
   return (
     <span className={cn('ml-2', className)}>

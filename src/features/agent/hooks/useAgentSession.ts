@@ -84,7 +84,7 @@ export function useAgentSession(options: UseAgentSessionOptions = {}): UseAgentS
   } = useQuery({
     queryKey: [SESSION_QUERY_KEY, activeSessionId],
     queryFn: async () => {
-      if (!activeSessionId) return null
+      if (!activeSessionId) {return null}
 
       const { data, error } = await supabase
         .from('agent_sessions')
@@ -92,7 +92,7 @@ export function useAgentSession(options: UseAgentSessionOptions = {}): UseAgentS
         .eq('id', activeSessionId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as AgentSession
     },
     enabled: !!activeSessionId,
@@ -129,14 +129,14 @@ export function useAgentSession(options: UseAgentSessionOptions = {}): UseAgentS
   // Update session mutation
   const updateSessionMutation = useMutation({
     mutationFn: async (dto: UpdateSessionDTO) => {
-      if (!activeSessionId) throw new Error('No active session')
+      if (!activeSessionId) {throw new Error('No active session')}
 
       const { error } = await supabase
         .from('agent_sessions')
         .update(dto)
         .eq('id', activeSessionId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [SESSION_QUERY_KEY, activeSessionId] })
@@ -152,7 +152,7 @@ export function useAgentSession(options: UseAgentSessionOptions = {}): UseAgentS
         .update({ status: 'archived' })
         .eq('id', sessionId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: (_, sessionId) => {
       queryClient.invalidateQueries({ queryKey: [SESSION_QUERY_KEY, sessionId] })
@@ -164,7 +164,7 @@ export function useAgentSession(options: UseAgentSessionOptions = {}): UseAgentS
   const clearHistoryMutation = useMutation({
     mutationFn: async () => {
       const { data: userData } = await supabase.auth.getUser()
-      if (!userData.user) throw new Error('Not authenticated')
+      if (!userData.user) {throw new Error('Not authenticated')}
 
       const { error } = await supabase
         .from('agent_sessions')
@@ -172,7 +172,7 @@ export function useAgentSession(options: UseAgentSessionOptions = {}): UseAgentS
         .eq('user_id', userData.user.id)
         .eq('status', 'archived')
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [SESSIONS_QUERY_KEY] })
@@ -263,7 +263,7 @@ export function useSessionTitleGeneration(sessionId: string | null) {
 
   const generateTitle = useCallback(
     async (firstMessage: string) => {
-      if (!sessionId || !firstMessage) return
+      if (!sessionId || !firstMessage) {return}
 
       // Simple title generation - take first 50 chars
       // In production, this could use AI to generate a better title
@@ -299,7 +299,7 @@ export function useSessionContext(sessionId: string | null) {
 
   const setContext = useCallback(
     async (entityType: string, entityId: string, entityData?: Record<string, unknown>) => {
-      if (!sessionId) return
+      if (!sessionId) {return}
 
       try {
         await supabase
@@ -320,7 +320,7 @@ export function useSessionContext(sessionId: string | null) {
   )
 
   const clearContext = useCallback(async () => {
-    if (!sessionId) return
+    if (!sessionId) {return}
 
     try {
       await supabase

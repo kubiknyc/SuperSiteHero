@@ -271,7 +271,7 @@ async function findSimilarRFIs(
     .order('created_at', { ascending: false })
     .limit(100)
 
-  if (!rfis || rfis.length === 0) return []
+  if (!rfis || rfis.length === 0) {return []}
 
   // Simple keyword-based similarity scoring
   const searchText = `${subject} ${question}`.toLowerCase()

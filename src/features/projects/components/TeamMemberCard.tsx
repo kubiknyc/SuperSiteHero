@@ -46,7 +46,7 @@ export function TeamMemberCard({
   const [showRemoveDialog, setShowRemoveDialog] = useState(false)
 
   const user = member.user
-  if (!user) return null
+  if (!user) {return null}
 
   // Get user display name
   const displayName = user.first_name || user.last_name
@@ -65,9 +65,9 @@ export function TeamMemberCard({
 
   // Build permissions list
   const permissions = []
-  if (member.can_edit) permissions.push('Edit')
-  if (member.can_delete) permissions.push('Delete')
-  if (member.can_approve) permissions.push('Approve')
+  if (member.can_edit) {permissions.push('Edit')}
+  if (member.can_delete) {permissions.push('Delete')}
+  if (member.can_approve) {permissions.push('Approve')}
 
   const handleRemoveConfirm = () => {
     onRemove(member)

@@ -201,13 +201,13 @@ export function EnhancedDrawingComparison({
 
   // Pan handling
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (e.button !== 0) return
+    if (e.button !== 0) {return}
     setIsPanning(true)
     lastPanPosition.current = { x: e.clientX, y: e.clientY }
   }, [])
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!isPanning) return
+    if (!isPanning) {return}
 
     const dx = e.clientX - lastPanPosition.current.x
     const dy = e.clientY - lastPanPosition.current.y
@@ -227,7 +227,7 @@ export function EnhancedDrawingComparison({
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!open) return
+      if (!open) {return}
 
       switch (e.key) {
         case 'Escape':
@@ -278,7 +278,7 @@ export function EnhancedDrawingComparison({
 
   // Export comparison as image
   const handleExportComparison = useCallback(async (format: 'png' | 'jpg' = 'png') => {
-    if (!containerRef.current) return
+    if (!containerRef.current) {return}
 
     setIsExporting(true)
     try {

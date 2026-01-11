@@ -66,9 +66,9 @@ function isWeatherSensitive(activityName: string): boolean {
 function calculateRiskLevel(probability: number, impactDays: number): 'low' | 'medium' | 'high' | 'critical' {
   const riskScore = probability * impactDays
 
-  if (riskScore >= 15 || impactDays >= 10) return 'critical'
-  if (riskScore >= 8 || impactDays >= 5) return 'high'
-  if (riskScore >= 3 || impactDays >= 2) return 'medium'
+  if (riskScore >= 15 || impactDays >= 10) {return 'critical'}
+  if (riskScore >= 8 || impactDays >= 5) {return 'high'}
+  if (riskScore >= 3 || impactDays >= 2) {return 'medium'}
   return 'low'
 }
 

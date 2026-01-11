@@ -116,8 +116,8 @@ export function BidLevelingMatrix({
 
   // Filter bidders
   const visibleSubmissions = useMemo(() => {
-    if (!matrix) return []
-    if (selectedBidders.size === 0) return matrix.submissions
+    if (!matrix) {return []}
+    if (selectedBidders.size === 0) {return matrix.submissions}
     return matrix.submissions.filter((s) => selectedBidders.has(s.id))
   }, [matrix, selectedBidders])
 
@@ -695,7 +695,7 @@ interface LineItemCellProps {
 }
 
 function LineItemCell({ data, highlightVariance }: LineItemCellProps) {
-  if (!data) return <span className="text-muted-foreground">-</span>
+  if (!data) {return <span className="text-muted-foreground">-</span>}
 
   if (!data.isIncluded) {
     return (
@@ -774,9 +774,9 @@ function RankBadge({ rank }: { rank: number }) {
 }
 
 function getVarianceColorClass(variance: number): string {
-  if (variance <= 0) return ''
-  if (variance <= 5) return 'text-muted-foreground'
-  if (variance <= 10) return 'text-warning'
-  if (variance <= 20) return 'text-orange-600'
+  if (variance <= 0) {return ''}
+  if (variance <= 5) {return 'text-muted-foreground'}
+  if (variance <= 10) {return 'text-warning'}
+  if (variance <= 20) {return 'text-orange-600'}
   return 'text-error'
 }

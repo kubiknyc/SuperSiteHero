@@ -190,7 +190,7 @@ export function WarrantyClaims({ projectId, className }: WarrantyClaimsProps) {
 
   // Handle submit to contractor
   const handleSubmitClaim = async () => {
-    if (!selectedClaimId) return
+    if (!selectedClaimId) {return}
 
     try {
       await submitClaim.mutateAsync({
@@ -271,7 +271,7 @@ export function WarrantyClaims({ projectId, className }: WarrantyClaimsProps) {
 
   // Handle owner sign-off
   const handleOwnerSignOff = async () => {
-    if (!selectedClaimId) return
+    if (!selectedClaimId) {return}
 
     try {
       await ownerSignOff.mutateAsync(selectedClaimId)

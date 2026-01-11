@@ -1,11 +1,11 @@
 // File: src/components/layout/sidebar/components/CommandStrip.tsx
 // Top zone of sidebar - search trigger, quick create, and notifications
 
-import { memo, useState, useCallback } from 'react'
+import { memo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
-import { Search, Plus, Bell, Command, X } from 'lucide-react'
+import { Search, Plus, Bell, Command } from 'lucide-react'
 import {
   Tooltip,
   TooltipContent,

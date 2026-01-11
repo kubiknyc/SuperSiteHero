@@ -17,9 +17,7 @@ import {
   CloudOff,
   RefreshCw,
   AlertTriangle,
-  Check,
   Clock,
-  HardDrive,
   Trash2,
   ChevronDown,
   ChevronUp,
@@ -71,8 +69,12 @@ import {
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { useOfflineSync } from '@/hooks/useOfflineSync'
-import type { PendingSyncItem, SyncConflict, SyncPreferences } from '@/stores/offline-store'
-import { useOfflineStore } from '@/stores/offline-store'
+import {
+  useOfflineStore,
+  type PendingSyncItem,
+  type SyncConflict,
+  type SyncPreferences,
+} from '@/stores/offline-store'
 
 // ============================================================================
 // Types
@@ -158,7 +160,7 @@ function SyncProgress({
 }: {
   progress: { current: number; total: number; percentage: number } | null
 }) {
-  if (!progress) return null
+  if (!progress) {return null}
 
   return (
     <div className="space-y-2 p-3 bg-primary/5 rounded-lg border border-primary/20">
@@ -376,7 +378,7 @@ function ConflictItemCard({
 }
 
 function EntityTypeBreakdown({ stats }: { stats: EntityTypeStats[] }) {
-  if (stats.length === 0) return null
+  if (stats.length === 0) {return null}
 
   return (
     <div className="space-y-2">

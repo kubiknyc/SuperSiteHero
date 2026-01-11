@@ -117,7 +117,7 @@ export function useEditConflictDetection<T = Record<string, unknown>>(
   }, [])
 
   const acceptServerChanges = useCallback(() => {
-    if (!conflict) return null
+    if (!conflict) {return null}
     const serverData = conflict.serverData
     setConflict(null)
     return serverData
@@ -148,7 +148,7 @@ export function useEditConflictDetection<T = Record<string, unknown>>(
  * Detect if there are meaningful changes between local and server data
  */
 function detectChanges<T>(local: T | undefined, server: T): boolean {
-  if (!local) return false
+  if (!local) {return false}
 
   // Compare JSON representations (simple deep equality)
   // Exclude timestamps and metadata fields

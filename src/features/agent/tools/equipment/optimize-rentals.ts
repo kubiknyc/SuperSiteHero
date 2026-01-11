@@ -191,9 +191,9 @@ export const optimizeRentalsTool = createTool<OptimizeRentalsInput, OptimizeRent
 
       // Determine rental status
       let status: CurrentRental['status'] = 'active'
-      if (rentalStart > today) status = 'scheduled'
-      else if (rental.returned_date) status = 'returned'
-      else if (rentalEnd < today) status = 'overdue'
+      if (rentalStart > today) {status = 'scheduled'}
+      else if (rental.returned_date) {status = 'returned'}
+      else if (rentalEnd < today) {status = 'overdue'}
 
       // Calculate rates
       const dailyRate = rental.daily_rate || 0
@@ -235,7 +235,7 @@ export const optimizeRentalsTool = createTool<OptimizeRentalsInput, OptimizeRent
         earlyReturnSavings += returnSavings
 
         const urgency = utilizationPercent < 25 ? 'high' : 'medium'
-        if (urgency === 'high') highPriorityCount++
+        if (urgency === 'high') {highPriorityCount++}
 
         optimizationOpportunities.push({
           rental_id: rental.id,
@@ -272,7 +272,7 @@ export const optimizeRentalsTool = createTool<OptimizeRentalsInput, OptimizeRent
             urgency: rateSavings > 500 ? 'high' : 'medium'
           })
 
-          if (rateSavings > 500) highPriorityCount++
+          if (rateSavings > 500) {highPriorityCount++}
         }
 
         if (daysRemaining >= 20 && weeklyEquivalent > monthlyRate && !rental.is_monthly_rate) {
@@ -342,7 +342,7 @@ export const optimizeRentalsTool = createTool<OptimizeRentalsInput, OptimizeRent
             urgency: bestAlternative.potential_savings > 1000 ? 'high' : 'medium'
           })
 
-          if (bestAlternative.potential_savings > 1000) highPriorityCount++
+          if (bestAlternative.potential_savings > 1000) {highPriorityCount++}
         }
       }
 
@@ -393,7 +393,7 @@ export const optimizeRentalsTool = createTool<OptimizeRentalsInput, OptimizeRent
               urgency: savingsPotential > 5000 ? 'high' : 'medium'
             })
 
-            if (savingsPotential > 5000) highPriorityCount++
+            if (savingsPotential > 5000) {highPriorityCount++}
           }
         }
       }
@@ -480,7 +480,7 @@ function calculateRentalCost(
   weeklyRate: number,
   monthlyRate: number
 ): number {
-  if (days <= 0) return 0
+  if (days <= 0) {return 0}
 
   // Determine most cost-effective rate
   const dailyCost = days * dailyRate
@@ -488,8 +488,8 @@ function calculateRentalCost(
   const monthlyCost = Math.ceil(days / 30) * monthlyRate
 
   // For short rentals, use daily; for longer, compare weekly/monthly
-  if (days <= 4) return dailyCost
-  if (days <= 25) return Math.min(dailyCost, weeklyCost)
+  if (days <= 4) {return dailyCost}
+  if (days <= 25) {return Math.min(dailyCost, weeklyCost)}
   return Math.min(dailyCost, weeklyCost, monthlyCost)
 }
 

@@ -533,25 +533,25 @@ export const aiConfigurationApi = {
     }
 
     // Feature toggles
-    if (dto.enable_rfi_routing !== undefined) updateData.enable_rfi_routing = dto.enable_rfi_routing
-    if (dto.enable_smart_summaries !== undefined) updateData.enable_smart_summaries = dto.enable_smart_summaries
-    if (dto.enable_action_item_extraction !== undefined) updateData.enable_action_item_extraction = dto.enable_action_item_extraction
-    if (dto.enable_risk_prediction !== undefined) updateData.enable_risk_prediction = dto.enable_risk_prediction
-    if (dto.enable_schedule_optimization !== undefined) updateData.enable_schedule_optimization = dto.enable_schedule_optimization
-    if (dto.enable_document_enhancement !== undefined) updateData.enable_document_enhancement = dto.enable_document_enhancement
+    if (dto.enable_rfi_routing !== undefined) {updateData.enable_rfi_routing = dto.enable_rfi_routing}
+    if (dto.enable_smart_summaries !== undefined) {updateData.enable_smart_summaries = dto.enable_smart_summaries}
+    if (dto.enable_action_item_extraction !== undefined) {updateData.enable_action_item_extraction = dto.enable_action_item_extraction}
+    if (dto.enable_risk_prediction !== undefined) {updateData.enable_risk_prediction = dto.enable_risk_prediction}
+    if (dto.enable_schedule_optimization !== undefined) {updateData.enable_schedule_optimization = dto.enable_schedule_optimization}
+    if (dto.enable_document_enhancement !== undefined) {updateData.enable_document_enhancement = dto.enable_document_enhancement}
 
     // Handle legacy features_enabled object
     if (dto.features_enabled) {
-      if (dto.features_enabled.rfi_routing !== undefined) updateData.enable_rfi_routing = dto.features_enabled.rfi_routing
-      if (dto.features_enabled.smart_summaries !== undefined) updateData.enable_smart_summaries = dto.features_enabled.smart_summaries
-      if (dto.features_enabled.risk_prediction !== undefined) updateData.enable_risk_prediction = dto.features_enabled.risk_prediction
-      if (dto.features_enabled.schedule_optimization !== undefined) updateData.enable_schedule_optimization = dto.features_enabled.schedule_optimization
-      if (dto.features_enabled.document_enhancement !== undefined) updateData.enable_document_enhancement = dto.features_enabled.document_enhancement
+      if (dto.features_enabled.rfi_routing !== undefined) {updateData.enable_rfi_routing = dto.features_enabled.rfi_routing}
+      if (dto.features_enabled.smart_summaries !== undefined) {updateData.enable_smart_summaries = dto.features_enabled.smart_summaries}
+      if (dto.features_enabled.risk_prediction !== undefined) {updateData.enable_risk_prediction = dto.features_enabled.risk_prediction}
+      if (dto.features_enabled.schedule_optimization !== undefined) {updateData.enable_schedule_optimization = dto.features_enabled.schedule_optimization}
+      if (dto.features_enabled.document_enhancement !== undefined) {updateData.enable_document_enhancement = dto.features_enabled.document_enhancement}
     }
 
     // Cost controls
-    if (dto.monthly_budget_cents !== undefined) updateData.monthly_budget_cents = dto.monthly_budget_cents
-    if (dto.alert_threshold_percent !== undefined) updateData.alert_threshold_percent = dto.alert_threshold_percent
+    if (dto.monthly_budget_cents !== undefined) {updateData.monthly_budget_cents = dto.monthly_budget_cents}
+    if (dto.alert_threshold_percent !== undefined) {updateData.alert_threshold_percent = dto.alert_threshold_percent}
 
     if (existing) {
       const { data, error } = await (supabase as any)

@@ -154,9 +154,9 @@ export const analyzeBudgetVarianceTool = createTool<AnalyzeBudgetVarianceInput, 
       const variancePercent = budgeted > 0 ? (variance / budgeted) * 100 : 0
 
       let status: 'under' | 'on_track' | 'over' | 'critical' = 'on_track'
-      if (variancePercent < -20) status = 'critical'
-      else if (variancePercent < -variance_threshold) status = 'over'
-      else if (variancePercent > variance_threshold) status = 'under'
+      if (variancePercent < -20) {status = 'critical'}
+      else if (variancePercent < -variance_threshold) {status = 'over'}
+      else if (variancePercent > variance_threshold) {status = 'under'}
 
       return {
         category: item.category || item.cost_code || 'General',
@@ -184,9 +184,9 @@ export const analyzeBudgetVarianceTool = createTool<AnalyzeBudgetVarianceInput, 
     // Update category status
     for (const [category, data] of Object.entries(varianceByCategory)) {
       const pct = data.budgeted > 0 ? (data.variance / data.budgeted) * 100 : 0
-      if (pct < -20) data.status = 'critical'
-      else if (pct < -variance_threshold) data.status = 'over'
-      else if (pct > variance_threshold) data.status = 'under'
+      if (pct < -20) {data.status = 'critical'}
+      else if (pct < -variance_threshold) {data.status = 'over'}
+      else if (pct > variance_threshold) {data.status = 'under'}
     }
 
     // Identify problem areas and positive variances
@@ -281,7 +281,7 @@ function calculateProjectedFinalCost(
 ): number {
   // Simple projection based on percent complete
   const percentComplete = project?.percent_complete || 50
-  if (percentComplete === 0) return budget
+  if (percentComplete === 0) {return budget}
 
   // Estimate at completion (EAC) using earned value method
   const earnedValue = budget * (percentComplete / 100)

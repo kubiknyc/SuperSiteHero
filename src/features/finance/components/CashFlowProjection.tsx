@@ -208,7 +208,7 @@ function MonthlyChart({ months }: MonthlyChartProps) {
   }, [months])
 
   const getBarHeight = (value: number) => {
-    if (maxValue === 0) return 0
+    if (maxValue === 0) {return 0}
     return Math.min((Math.abs(value) / maxValue) * 100, 100)
   }
 
@@ -321,7 +321,7 @@ function SCurveChart({ projectId }: SCurveChartProps) {
     return <Skeleton className="h-64" />
   }
 
-  if (!sCurve) return null
+  if (!sCurve) {return null}
 
   // Find max for scaling
   const maxPercent = 100

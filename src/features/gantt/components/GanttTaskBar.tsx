@@ -535,26 +535,26 @@ function GanttTaskBarImpl({
 // Custom comparison function for memo - only re-render when relevant props change
 function arePropsEqual(prevProps: GanttTaskBarProps, nextProps: GanttTaskBarProps): boolean {
   // Compare task data
-  if (prevProps.task.id !== nextProps.task.id) return false
-  if (prevProps.task.start_date !== nextProps.task.start_date) return false
-  if (prevProps.task.finish_date !== nextProps.task.finish_date) return false
-  if (prevProps.task.percent_complete !== nextProps.task.percent_complete) return false
-  if (prevProps.task.task_name !== nextProps.task.task_name) return false
-  if (prevProps.task.is_critical !== nextProps.task.is_critical) return false
-  if (prevProps.task.is_milestone !== nextProps.task.is_milestone) return false
+  if (prevProps.task.id !== nextProps.task.id) {return false}
+  if (prevProps.task.start_date !== nextProps.task.start_date) {return false}
+  if (prevProps.task.finish_date !== nextProps.task.finish_date) {return false}
+  if (prevProps.task.percent_complete !== nextProps.task.percent_complete) {return false}
+  if (prevProps.task.task_name !== nextProps.task.task_name) {return false}
+  if (prevProps.task.is_critical !== nextProps.task.is_critical) {return false}
+  if (prevProps.task.is_milestone !== nextProps.task.is_milestone) {return false}
 
   // Compare rendering props
-  if (prevProps.rowIndex !== nextProps.rowIndex) return false
-  if (prevProps.zoomLevel !== nextProps.zoomLevel) return false
-  if (prevProps.isSelected !== nextProps.isSelected) return false
-  if (prevProps.showProgress !== nextProps.showProgress) return false
-  if (prevProps.showCriticalPath !== nextProps.showCriticalPath) return false
-  if (prevProps.showBaseline !== nextProps.showBaseline) return false
-  if (prevProps.rowHeight !== nextProps.rowHeight) return false
-  if (prevProps.barHeight !== nextProps.barHeight) return false
+  if (prevProps.rowIndex !== nextProps.rowIndex) {return false}
+  if (prevProps.zoomLevel !== nextProps.zoomLevel) {return false}
+  if (prevProps.isSelected !== nextProps.isSelected) {return false}
+  if (prevProps.showProgress !== nextProps.showProgress) {return false}
+  if (prevProps.showCriticalPath !== nextProps.showCriticalPath) {return false}
+  if (prevProps.showBaseline !== nextProps.showBaseline) {return false}
+  if (prevProps.rowHeight !== nextProps.rowHeight) {return false}
+  if (prevProps.barHeight !== nextProps.barHeight) {return false}
 
   // Compare timeline
-  if (prevProps.timelineStartDate.getTime() !== nextProps.timelineStartDate.getTime()) return false
+  if (prevProps.timelineStartDate.getTime() !== nextProps.timelineStartDate.getTime()) {return false}
 
   return true
 }

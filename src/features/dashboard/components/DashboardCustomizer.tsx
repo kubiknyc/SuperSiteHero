@@ -72,7 +72,7 @@ export function DashboardCustomizer({ className }: DashboardCustomizerProps) {
   // Handle drag over
   const handleDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault()
-    if (draggedIndex === null || draggedIndex === index) return
+    if (draggedIndex === null || draggedIndex === index) {return}
 
     reorderWidgets(draggedIndex, index)
     setDraggedIndex(index)

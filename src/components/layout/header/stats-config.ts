@@ -103,7 +103,7 @@ export const STAT_CONFIGS: StatItemConfig[] = [
  * Combines static config with dynamic data
  */
 export function buildStatsFromData(stats: DashboardStats | null | undefined): StatItem[] {
-  if (!stats) return []
+  if (!stats) {return []}
 
   return [
     {

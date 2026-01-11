@@ -178,13 +178,13 @@ export function SubmittalApprovalSignatureDialog({
 
   // Initialize canvas
   useEffect(() => {
-    if (!open) return
+    if (!open) {return}
 
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas) {return}
 
     const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
 
     // Wait for dialog to render, then set canvas size
     const initCanvas = () => {
@@ -210,7 +210,7 @@ export function SubmittalApprovalSignatureDialog({
   // Get coordinates from mouse/touch event
   const getCoordinates = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     const canvas = canvasRef.current
-    if (!canvas) return null
+    if (!canvas) {return null}
 
     const rect = canvas.getBoundingClientRect()
 
@@ -229,14 +229,14 @@ export function SubmittalApprovalSignatureDialog({
   }, [])
 
   const startDrawing = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    if (disabled) return
+    if (disabled) {return}
 
     const coords = getCoordinates(e)
-    if (!coords) return
+    if (!coords) {return}
 
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
 
     setIsDrawing(true)
     ctx.beginPath()
@@ -244,14 +244,14 @@ export function SubmittalApprovalSignatureDialog({
   }, [disabled, getCoordinates])
 
   const draw = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDrawing || disabled) return
+    if (!isDrawing || disabled) {return}
 
     const coords = getCoordinates(e)
-    if (!coords) return
+    if (!coords) {return}
 
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
 
     ctx.lineTo(coords.x, coords.y)
     ctx.stroke()
@@ -265,7 +265,7 @@ export function SubmittalApprovalSignatureDialog({
   const clearSignature = useCallback(() => {
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
-    if (!ctx || !canvas) return
+    if (!ctx || !canvas) {return}
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     setHasDrawn(false)
@@ -283,7 +283,7 @@ export function SubmittalApprovalSignatureDialog({
         upsert: true,
       })
 
-    if (error) throw error
+    if (error) {throw error}
 
     // Get public URL
     const { data: urlData } = supabase.storage
@@ -343,7 +343,7 @@ export function SubmittalApprovalSignatureDialog({
   // Prevent scrolling while drawing on touch devices
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas) {return}
 
     const preventScroll = (e: TouchEvent) => {
       if (isDrawing) {

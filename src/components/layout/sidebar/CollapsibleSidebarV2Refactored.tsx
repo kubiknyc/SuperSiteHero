@@ -9,7 +9,7 @@
 // - SidebarFooter: Quick actions and user profile
 // - NavLinkItem: Reusable navigation link component
 
-import { useEffect, createContext, useContext, useCallback } from 'react'
+import { useEffect, createContext, useContext } from 'react'
 import { cn } from '@/lib/utils'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { useSidebarState } from './useSidebarState'

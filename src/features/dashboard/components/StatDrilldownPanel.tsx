@@ -424,7 +424,7 @@ export function StatDrilldownPanel({
 
   // Count items by tab
   const tabCounts = useMemo(() => {
-    if (!items) return {}
+    if (!items) {return {}}
 
     return config.tabs.reduce((acc, tab) => {
       if (tab.value === 'all') {

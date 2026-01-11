@@ -372,8 +372,8 @@ export function useActionItems(projectId?: string) {
 
       // Sort by priority and overdue status
       return actionItems.sort((a, b) => {
-        if (a.isOverdue && !b.isOverdue) return -1
-        if (!a.isOverdue && b.isOverdue) return 1
+        if (a.isOverdue && !b.isOverdue) {return -1}
+        if (!a.isOverdue && b.isOverdue) {return 1}
         const priorityOrder = { urgent: 0, high: 1, normal: 2, low: 3 }
         return priorityOrder[a.priority] - priorityOrder[b.priority]
       })
@@ -391,7 +391,7 @@ export function useProjectStats(projectId: string | undefined) {
   return useQuery({
     queryKey: ['project-stats', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const [
         { count: taskCount },

@@ -119,7 +119,7 @@ function gpsToPixel(
   containerWidth: number,
   containerHeight: number
 ): { x: number; y: number } | null {
-  if (referencePoints.length < 2) return null
+  if (referencePoints.length < 2) {return null}
 
   // Use simple linear interpolation with 2 points
   const p1 = referencePoints[0]
@@ -728,9 +728,9 @@ export function GPSLocationOverlay({
       },
       (error) => {
         let errorMessage = 'Failed to get location'
-        if (error.code === 1) errorMessage = 'Location permission denied'
-        if (error.code === 2) errorMessage = 'Location unavailable'
-        if (error.code === 3) errorMessage = 'Location request timed out'
+        if (error.code === 1) {errorMessage = 'Location permission denied'}
+        if (error.code === 2) {errorMessage = 'Location unavailable'}
+        if (error.code === 3) {errorMessage = 'Location request timed out'}
 
         setState((prev) => ({ ...prev, error: errorMessage }))
       },
@@ -775,7 +775,7 @@ export function GPSLocationOverlay({
   )
 
   const accuracyInfo = useMemo(() => {
-    if (!state.currentPosition?.accuracy) return null
+    if (!state.currentPosition?.accuracy) {return null}
     return getAccuracyLevel(state.currentPosition.accuracy)
   }, [state.currentPosition?.accuracy])
 

@@ -93,7 +93,7 @@ export function useExecutiveSummary() {
   return useQuery({
     queryKey: ['executive-summary', userProfile?.company_id],
     queryFn: async (): Promise<ExecutiveSummary> => {
-      if (!userProfile?.company_id) throw new Error('No company ID')
+      if (!userProfile?.company_id) {throw new Error('No company ID')}
 
       const now = new Date()
       const weekStart = startOfWeek(now)
@@ -221,12 +221,12 @@ export function useExecutiveSummary() {
 
       const scheduleStatus = { onTrack: 0, atRisk: 0, behind: 0, ahead: 0 }
       for (const project of activeProjects) {
-        if (!project.target_end_date) continue
+        if (!project.target_end_date) {continue}
         const daysToEnd = differenceInDays(new Date(project.target_end_date), now)
-        if (daysToEnd < -7) scheduleStatus.behind++
-        else if (daysToEnd < 7) scheduleStatus.atRisk++
-        else if (daysToEnd > 30) scheduleStatus.ahead++
-        else scheduleStatus.onTrack++
+        if (daysToEnd < -7) {scheduleStatus.behind++}
+        else if (daysToEnd < 7) {scheduleStatus.atRisk++}
+        else if (daysToEnd > 30) {scheduleStatus.ahead++}
+        else {scheduleStatus.onTrack++}
       }
 
       const highlights: ReportHighlight[] = []

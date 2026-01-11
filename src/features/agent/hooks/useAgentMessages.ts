@@ -44,7 +44,7 @@ export function useAgentMessages(
   } = useQuery({
     queryKey: ['agent-messages', sessionId],
     queryFn: async () => {
-      if (!sessionId) return []
+      if (!sessionId) {return []}
 
       const { data, error } = await supabase
         .from('agent_messages')
@@ -53,7 +53,7 @@ export function useAgentMessages(
         .order('created_at', { ascending: true })
         .limit(limit)
 
-      if (error) throw error
+      if (error) {throw error}
       return data as AgentMessage[]
     },
     enabled: enabled && !!sessionId,
@@ -62,7 +62,7 @@ export function useAgentMessages(
 
   // Set up real-time subscription
   useEffect(() => {
-    if (!sessionId || !enabled) return
+    if (!sessionId || !enabled) {return}
 
     const channel = supabase
       .channel(`agent-messages-${sessionId}`)
@@ -127,7 +127,7 @@ export function useAgentMessage(messageId: string | null | undefined) {
   return useQuery({
     queryKey: ['agent-message', messageId],
     queryFn: async () => {
-      if (!messageId) return null
+      if (!messageId) {return null}
 
       const { data, error } = await supabase
         .from('agent_messages')
@@ -135,7 +135,7 @@ export function useAgentMessage(messageId: string | null | undefined) {
         .eq('id', messageId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as AgentMessage
     },
     enabled: !!messageId,

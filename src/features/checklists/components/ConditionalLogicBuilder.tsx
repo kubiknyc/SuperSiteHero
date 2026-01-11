@@ -238,10 +238,10 @@ export function ConditionalLogicBuilder({
   const availableItems = useMemo(() => {
     return allItems.filter((item) => {
       // Exclude self
-      if (item.id === currentItem.id) return false
+      if (item.id === currentItem.id) {return false}
 
       // Exclude items that come after in sort order (prevent circular)
-      if (item.sort_order > currentItem.sort_order) return false
+      if (item.sort_order > currentItem.sort_order) {return false}
 
       return true
     })
@@ -265,7 +265,7 @@ export function ConditionalLogicBuilder({
   }
 
   const handleAddRule = () => {
-    if (!conditions) return
+    if (!conditions) {return}
 
     const defaultTarget = availableItems[0]
     const newRule: ItemConditionRule = {
@@ -281,7 +281,7 @@ export function ConditionalLogicBuilder({
   }
 
   const handleUpdateRule = (index: number, rule: ItemConditionRule) => {
-    if (!conditions) return
+    if (!conditions) {return}
 
     const newRules = [...conditions.rules]
     newRules[index] = rule
@@ -293,7 +293,7 @@ export function ConditionalLogicBuilder({
   }
 
   const handleRemoveRule = (index: number) => {
-    if (!conditions) return
+    if (!conditions) {return}
 
     const newRules = conditions.rules.filter((_, i) => i !== index)
 
@@ -310,7 +310,7 @@ export function ConditionalLogicBuilder({
 
   // Validate current configuration
   const validationErrors = useMemo(() => {
-    if (!conditions) return []
+    if (!conditions) {return []}
 
     const errors: string[] = []
 

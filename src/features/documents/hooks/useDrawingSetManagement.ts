@@ -191,7 +191,7 @@ export function useSheetReferences(documentId: string | undefined) {
   return useQuery({
     queryKey: ['sheet-references', documentId],
     queryFn: async () => {
-      if (!documentId) throw new Error('Document ID required')
+      if (!documentId) {throw new Error('Document ID required')}
 
       const { data, error } = await db
         .from('sheet_references')
@@ -205,7 +205,7 @@ export function useSheetReferences(documentId: string | undefined) {
         .is('deleted_at', null)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return (data || []) as SheetReference[]
     },
     enabled: !!documentId,
@@ -219,7 +219,7 @@ export function useSheetBacklinks(documentId: string | undefined) {
   return useQuery({
     queryKey: ['sheet-backlinks', documentId],
     queryFn: async () => {
-      if (!documentId) throw new Error('Document ID required')
+      if (!documentId) {throw new Error('Document ID required')}
 
       const { data, error } = await db
         .from('sheet_references')
@@ -236,7 +236,7 @@ export function useSheetBacklinks(documentId: string | undefined) {
         .eq('target_document_id', documentId)
         .is('deleted_at', null)
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []).map((ref: any) => ({
         id: ref.id,
@@ -261,7 +261,7 @@ export function useCreateSheetReference() {
 
   return useMutation({
     mutationFn: async (reference: Omit<SheetReference, 'id' | 'createdAt' | 'createdBy'>) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       const { data, error } = await db
         .from('sheet_references')
@@ -278,7 +278,7 @@ export function useCreateSheetReference() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SheetReference
     },
     onSuccess: (data) => {
@@ -301,7 +301,7 @@ export function useDeleteSheetReference() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', referenceId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sheet-references'] })
@@ -329,11 +329,11 @@ export function useAutoDetectSheetReferences() {
       textContent: string
       pageNumber?: number
     }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       // Parse references from text
       const parsedRefs = parseDrawingReferences(textContent)
-      if (parsedRefs.length === 0) return { created: 0, references: [] }
+      if (parsedRefs.length === 0) {return { created: 0, references: [] }}
 
       // Find matching documents in the project
       const drawingNumbers = [...new Set(parsedRefs.map(r => r.drawingNumber))]
@@ -344,7 +344,7 @@ export function useAutoDetectSheetReferences() {
         .is('deleted_at', null)
         .in('drawing_number', drawingNumbers)
 
-      if (docError) throw docError
+      if (docError) {throw docError}
 
       if (!matchingDocs || matchingDocs.length === 0) {
         return { created: 0, references: [] }
@@ -382,7 +382,7 @@ export function useAutoDetectSheetReferences() {
         .insert(referencesToCreate)
         .select()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return { created: data?.length || 0, references: data || [] }
     },
@@ -404,7 +404,7 @@ export function useRevisionClouds(documentId: string | undefined) {
   return useQuery({
     queryKey: ['revision-clouds', documentId],
     queryFn: async () => {
-      if (!documentId) throw new Error('Document ID required')
+      if (!documentId) {throw new Error('Document ID required')}
 
       const { data, error } = await db
         .from('revision_clouds')
@@ -416,7 +416,7 @@ export function useRevisionClouds(documentId: string | undefined) {
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []).map((cloud: any) => ({
         id: cloud.id,
@@ -451,7 +451,7 @@ export function useCreateRevisionCloud() {
 
   return useMutation({
     mutationFn: async (cloud: Omit<RevisionCloud, 'id' | 'createdAt' | 'createdBy'>) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       const { data, error } = await db
         .from('revision_clouds')
@@ -475,7 +475,7 @@ export function useCreateRevisionCloud() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (data) => {
@@ -497,7 +497,7 @@ export function useDeleteRevisionCloud() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', cloudId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['revision-clouds'] })
@@ -580,17 +580,17 @@ export function useGenerateRevisionClouds() {
  * Helper to merge nearby change regions
  */
 function mergeNearbyRegions(regions: ChangeRegion[], distance: number): ChangeRegion[] {
-  if (regions.length <= 1) return regions
+  if (regions.length <= 1) {return regions}
 
   const merged: ChangeRegion[] = []
   const used = new Set<string>()
 
   for (const region of regions) {
-    if (used.has(region.id)) continue
+    if (used.has(region.id)) {continue}
 
     // Find all regions within merge distance
     const nearby = regions.filter(r => {
-      if (r.id === region.id || used.has(r.id)) return false
+      if (r.id === region.id || used.has(r.id)) {return false}
       const dx = Math.abs((r.x + r.width / 2) - (region.x + region.width / 2))
       const dy = Math.abs((r.y + r.height / 2) - (region.y + region.height / 2))
       return dx <= distance && dy <= distance
@@ -645,7 +645,7 @@ export function useBulkApplyMarkups() {
       options: BulkMarkupApplyOptions
       onProgress?: (progress: BulkOperationProgress) => void
     }): Promise<BulkMarkupApplyResult> => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       const selectedTargets = targets.filter(t => t.selected)
       const result: BulkMarkupApplyResult = {
@@ -663,7 +663,7 @@ export function useBulkApplyMarkups() {
         .in('id', selection.markupIds)
         .is('deleted_at', null)
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
       if (!sourceMarkups || sourceMarkups.length === 0) {
         return { ...result, success: false }
       }
@@ -802,10 +802,10 @@ function adjustMarkupPosition(
       const scaleFactor = options.scaleFactor || 1
       adjusted.x = (adjusted.x || 0) * scaleFactor
       adjusted.y = (adjusted.y || 0) * scaleFactor
-      if (adjusted.width) adjusted.width *= scaleFactor
-      if (adjusted.height) adjusted.height *= scaleFactor
-      if (adjusted.radius) adjusted.radius *= scaleFactor
-      if (adjusted.strokeWidth) adjusted.strokeWidth *= scaleFactor
+      if (adjusted.width) {adjusted.width *= scaleFactor}
+      if (adjusted.height) {adjusted.height *= scaleFactor}
+      if (adjusted.radius) {adjusted.radius *= scaleFactor}
+      if (adjusted.strokeWidth) {adjusted.strokeWidth *= scaleFactor}
       break
 
     case 'relative':
@@ -828,7 +828,7 @@ export function useNewRevisionDetection(projectId: string | undefined) {
   return useQuery({
     queryKey: ['new-revision-detection', projectId],
     queryFn: async () => {
-      if (!projectId) return []
+      if (!projectId) {return []}
 
       // Find documents that supersede others and have markups to migrate
       const { data, error } = await supabase
@@ -846,8 +846,8 @@ export function useNewRevisionDetection(projectId: string | undefined) {
         .order('created_at', { ascending: false })
         .limit(20)
 
-      if (error) throw error
-      if (!data || data.length === 0) return []
+      if (error) {throw error}
+      if (!data || data.length === 0) {return []}
 
       // Check each for migratable markups
       const detections: NewRevisionDetection[] = []
@@ -897,7 +897,7 @@ export function useMigratableMarkups(
   return useQuery({
     queryKey: ['migratable-markups', fromDocumentId, toDocumentId],
     queryFn: async () => {
-      if (!fromDocumentId || !toDocumentId) return []
+      if (!fromDocumentId || !toDocumentId) {return []}
 
       const { data: markups, error } = await supabase
         .from('document_markups')
@@ -905,8 +905,8 @@ export function useMigratableMarkups(
         .eq('document_id', fromDocumentId)
         .is('deleted_at', null)
 
-      if (error) throw error
-      if (!markups) return []
+      if (error) {throw error}
+      if (!markups) {return []}
 
       return markups.map(markup => {
         const position = {
@@ -976,7 +976,7 @@ export function useMigrateMarkups() {
       markups: MigratableMarkup[]
       options: MarkupMigrationOptions
     }): Promise<MarkupMigrationResult> => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       const result: MarkupMigrationResult = {
         success: true,
@@ -1032,7 +1032,7 @@ export function useMigrateMarkups() {
               .select()
               .single()
 
-            if (error) throw error
+            if (error) {throw error}
 
             result.migratedCount++
             result.migratedMarkups.push({
@@ -1076,7 +1076,7 @@ export function useMigrateMarkups() {
               .select()
               .single()
 
-            if (error) throw error
+            if (error) {throw error}
 
             result.migratedCount++
             result.migratedMarkups.push({
@@ -1360,7 +1360,7 @@ export function useDrawingSetIndex(projectId: string | undefined) {
   return useQuery({
     queryKey: ['drawing-set-index', projectId],
     queryFn: async () => {
-      if (!projectId) return []
+      if (!projectId) {return []}
 
       // Get all drawings in the project
       const { data: documents, error } = await supabase
@@ -1378,8 +1378,8 @@ export function useDrawingSetIndex(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('drawing_number', { ascending: true })
 
-      if (error) throw error
-      if (!documents) return []
+      if (error) {throw error}
+      if (!documents) {return []}
 
       // Get link counts and markup info
       const entries: DrawingSetEntry[] = await Promise.all(
@@ -1461,7 +1461,7 @@ export function useDrawingSetStats(projectId: string | undefined) {
       disciplineBreakdown[entry.discipline] = (disciplineBreakdown[entry.discipline] || 0) + 1
       totalClouds += entry.revisionCloudCount
       totalLinks += entry.outgoingLinkCount + entry.incomingLinkCount
-      if (entry.hasMarkups) sheetsWithMarkups++
+      if (entry.hasMarkups) {sheetsWithMarkups++}
     }
 
     return {

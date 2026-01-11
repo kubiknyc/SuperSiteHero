@@ -59,7 +59,7 @@ export function useMentions(options?: {
   const { data: suggestions = [], isLoading } = useQuery({
     queryKey: ['mention-users', query, options?.projectId],
     queryFn: async (): Promise<MentionSuggestion[]> => {
-      if (!query) return []
+      if (!query) {return []}
 
       const queryBuilder = supabase
         .from('users')
@@ -106,7 +106,7 @@ export function useMentions(options?: {
   }, [])
 
   const insertMention = useCallback((user: MentionUser, value: string): string => {
-    if (!triggerPosition.current) return value
+    if (!triggerPosition.current) {return value}
     const { start, end } = triggerPosition.current
     const mentionText = '@[' + user.display_name + '](' + user.id + ')'
     const newValue = value.slice(0, start) + mentionText + ' ' + value.slice(end)
@@ -122,7 +122,7 @@ export function useMentions(options?: {
     value: string,
     onChange: (value: string) => void
   ): boolean => {
-    if (!isOpen || suggestions.length === 0) return false
+    if (!isOpen || suggestions.length === 0) {return false}
 
     switch (event.key) {
       case 'ArrowDown':
@@ -137,7 +137,7 @@ export function useMentions(options?: {
       case 'Tab':
         event.preventDefault()
         const selected = suggestions[selectedIndex]
-        if (selected) onChange(insertMention(selected, value))
+        if (selected) {onChange(insertMention(selected, value))}
         return true
       case 'Escape':
         event.preventDefault()
@@ -179,7 +179,7 @@ export function useMentions(options?: {
     context: MentionContext & { message_preview?: string; sender_name?: string }
   ): Promise<void> => {
     const userIds = extractMentionedUserIds(text).filter(id => id !== currentUser?.id)
-    if (userIds.length === 0) return
+    if (userIds.length === 0) {return}
 
     const preview = context.message_preview || toPlainText(text).slice(0, 100)
 
@@ -201,7 +201,7 @@ export function useMentions(options?: {
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (inputRef.current && !inputRef.current.contains(e.target as Node)) setIsOpen(false)
+      if (inputRef.current && !inputRef.current.contains(e.target as Node)) {setIsOpen(false)}
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)

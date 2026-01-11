@@ -112,7 +112,7 @@ function getActivityStatus(activity: ScheduleActivity): 'completed' | 'in_progre
 }
 
 function calculateVariance(activity: ScheduleActivity): number {
-  if (!activity.baseline_finish || !activity.planned_finish) return 0
+  if (!activity.baseline_finish || !activity.planned_finish) {return 0}
 
   try {
     const baseline = parseISO(activity.baseline_finish)
@@ -163,8 +163,8 @@ function getImpactLevel(
 }
 
 function formatDuration(days: number): string {
-  if (days === 1) return '1 day'
-  if (days < 7) return `${days} days`
+  if (days === 1) {return '1 day'}
+  if (days < 7) {return `${days} days`}
   const weeks = Math.floor(days / 7)
   const remainingDays = days % 7
   if (remainingDays === 0) {
@@ -227,15 +227,15 @@ export function useScheduleNarrative(
         // Sort by impact, then by delay days
         const impactOrder = { critical: 0, high: 1, medium: 2, low: 3 }
         const impactDiff = impactOrder[a.impact] - impactOrder[b.impact]
-        if (impactDiff !== 0) return impactDiff
+        if (impactDiff !== 0) {return impactDiff}
         return b.delayDays - a.delayDays
       })
 
     // Find upcoming milestones
     const upcomingMilestones = activities
       .filter((a) => {
-        if (!a.is_milestone) return false
-        if (!a.planned_finish) return false
+        if (!a.is_milestone) {return false}
+        if (!a.planned_finish) {return false}
         const finish = parseISO(a.planned_finish)
         return isAfter(finish, now) && isBefore(finish, lookAheadEnd)
       })
@@ -356,7 +356,7 @@ export function useScheduleNarrative(
     // Upcoming Work Section
     if (includeUpcomingWork) {
       const upcomingActivities = activities.filter((a) => {
-        if (!a.planned_start) return false
+        if (!a.planned_start) {return false}
         const start = parseISO(a.planned_start)
         return isAfter(start, now) && isBefore(start, lookAheadEnd) && getActivityStatus(a) === 'not_started'
       })

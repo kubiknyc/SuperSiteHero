@@ -161,10 +161,14 @@ interface QuickActionsProps {
  * Uses URLSearchParams for proper URL encoding
  */
 function appendProjectId(path: string, projectId?: string): string {
-  if (!projectId) return path
+  if (!projectId) {
+    return path
+  }
 
   // Don't add if already present
-  if (path.includes('projectId=')) return path
+  if (path.includes('projectId=')) {
+    return path
+  }
 
   const separator = path.includes('?') ? '&' : '?'
   return `${path}${separator}projectId=${encodeURIComponent(projectId)}`

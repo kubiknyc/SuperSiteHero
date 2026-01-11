@@ -35,7 +35,7 @@ interface InlineActionsProps {
 }
 
 export function InlineActions({
-  notificationId,
+  notificationId: _notificationId,
   showApproval = false,
   showSnooze = true,
   showReply = false,
@@ -50,7 +50,9 @@ export function InlineActions({
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleReplySubmit = async () => {
-    if (!replyMessage.trim() || !onReply) return
+    if (!replyMessage.trim() || !onReply) {
+      return
+    }
     setIsSubmitting(true)
     try {
       await onReply(replyMessage)

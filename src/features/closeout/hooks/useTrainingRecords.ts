@@ -42,7 +42,7 @@ export function useTrainingSessions(projectId: string | undefined) {
   return useQuery({
     queryKey: trainingKeys.sessions(projectId || ''),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data: sessions, error } = await supabase
         .from('training_sessions')
@@ -51,7 +51,7 @@ export function useTrainingSessions(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('scheduled_date', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Fetch attendee counts for each session
       const sessionsWithCounts = await Promise.all(
@@ -95,7 +95,7 @@ export function useTrainingSession(sessionId: string | undefined) {
   return useQuery({
     queryKey: trainingKeys.session(sessionId || ''),
     queryFn: async () => {
-      if (!sessionId) throw new Error('Session ID required')
+      if (!sessionId) {throw new Error('Session ID required')}
 
       const { data: session, error: sessionError } = await supabase
         .from('training_sessions')
@@ -103,7 +103,7 @@ export function useTrainingSession(sessionId: string | undefined) {
         .eq('id', sessionId)
         .single()
 
-      if (sessionError) throw sessionError
+      if (sessionError) {throw sessionError}
 
       // Fetch attendees
       const { data: attendees, error: attendeesError } = await supabase
@@ -112,7 +112,7 @@ export function useTrainingSession(sessionId: string | undefined) {
         .eq('training_session_id', sessionId)
         .order('attendee_name', { ascending: true })
 
-      if (attendeesError) throw attendeesError
+      if (attendeesError) {throw attendeesError}
 
       return {
         ...session,
@@ -162,7 +162,7 @@ export function useCreateTrainingSession() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as TrainingSession
     },
     onSuccess: (data) => {
@@ -190,7 +190,7 @@ export function useUpdateTrainingSession() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as TrainingSession
     },
     onSuccess: (data) => {
@@ -216,7 +216,7 @@ export function useDeleteTrainingSession() {
         .select('project_id')
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (data) => {
@@ -251,7 +251,7 @@ export function useCompleteTrainingSession() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as TrainingSession
     },
     onSuccess: (data) => {
@@ -273,7 +273,7 @@ export function useTrainingAttendees(sessionId: string | undefined) {
   return useQuery({
     queryKey: trainingKeys.attendees(sessionId || ''),
     queryFn: async () => {
-      if (!sessionId) throw new Error('Session ID required')
+      if (!sessionId) {throw new Error('Session ID required')}
 
       const { data, error } = await supabase
         .from('training_attendees')
@@ -281,7 +281,7 @@ export function useTrainingAttendees(sessionId: string | undefined) {
         .eq('training_session_id', sessionId)
         .order('attendee_name', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as TrainingAttendee[]
     },
     enabled: !!sessionId,
@@ -311,7 +311,7 @@ export function useAddTrainingAttendee() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as TrainingAttendee
     },
     onSuccess: (data) => {
@@ -346,7 +346,7 @@ export function useUpdateTrainingAttendee() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as TrainingAttendee
     },
     onSuccess: (data) => {
@@ -382,7 +382,7 @@ export function useSignInAttendee() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as TrainingAttendee
     },
     onSuccess: (data) => {
@@ -421,7 +421,7 @@ export function useGenerateCertificate() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as TrainingAttendee
     },
     onSuccess: (data) => {
@@ -446,7 +446,7 @@ export function useRemoveTrainingAttendee() {
         .select('training_session_id')
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (data) => {

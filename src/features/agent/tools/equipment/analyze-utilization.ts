@@ -218,7 +218,7 @@ export const analyzeEquipmentUtilizationTool = createTool<AnalyzeEquipmentUtiliz
     // Process usage logs
     for (const log of usageLogs || []) {
       const equipmentId = log.equipment_id
-      if (!equipmentMap.has(equipmentId)) continue
+      if (!equipmentMap.has(equipmentId)) {continue}
 
       const data = equipmentMap.get(equipmentId)!
       const hours = log.hours_used || log.hours || log.usage_hours || 0
@@ -248,7 +248,7 @@ export const analyzeEquipmentUtilizationTool = createTool<AnalyzeEquipmentUtiliz
     for (const report of dailyReports || []) {
       for (const entry of report.equipment_entries || []) {
         const equipmentId = entry.equipment_id
-        if (!equipmentMap.has(equipmentId)) continue
+        if (!equipmentMap.has(equipmentId)) {continue}
 
         const data = equipmentMap.get(equipmentId)!
         const hours = entry.hours_used || entry.hours || 0
@@ -426,8 +426,8 @@ export const analyzeEquipmentUtilizationTool = createTool<AnalyzeEquipmentUtiliz
       typeData.total_units++
       typeData.total_hours_used += hoursUsed
       typeData.total_hours_available += totalAvailable
-      if (status === 'underutilized') typeData.underutilized_count++
-      if (status === 'overutilized') typeData.overutilized_count++
+      if (status === 'underutilized') {typeData.underutilized_count++}
+      if (status === 'overutilized') {typeData.overutilized_count++}
     }
 
     // Calculate average utilization for each type

@@ -455,7 +455,7 @@ async function sendInspectionNotifications(
       .eq('project_id', inspection.project_id)
       .in('role', ['project_manager', 'superintendent', 'quality_manager', 'admin'])
 
-    if (!projectUsers || projectUsers.length === 0) return false
+    if (!projectUsers || projectUsers.length === 0) {return false}
 
     const isFailure = inspection.result === 'fail' || compliance.compliance_status === 'non_compliant'
     const urgentTasks = followUpTasks.filter((t) => t.priority === 'urgent' || t.priority === 'high')

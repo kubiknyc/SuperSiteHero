@@ -281,7 +281,7 @@ export function BookmarkManager({
   }
 
   const handleEditBookmark = () => {
-    if (!editingBookmark) return
+    if (!editingBookmark) {return}
 
     if (!formData.name.trim()) {
       toast.error('Bookmark name is required')
@@ -383,7 +383,7 @@ export function BookmarkManager({
             {!isLoading && bookmarks.length > 0 && (
               <div className="max-h-[400px] overflow-y-auto">
                 {Object.entries(groupedBookmarks).map(([folder, folderBookmarks]) => {
-                  if (folderBookmarks.length === 0) return null
+                  if (folderBookmarks.length === 0) {return null}
 
                   return (
                     <div key={folder}>
@@ -666,7 +666,7 @@ export function BookmarkManager({
       {!isLoading && bookmarks.length > 0 && (
         <div className="space-y-2">
           {Object.entries(groupedBookmarks).map(([folder, folderBookmarks]) => {
-            if (folderBookmarks.length === 0) return null
+            if (folderBookmarks.length === 0) {return null}
 
             return (
               <div key={folder}>

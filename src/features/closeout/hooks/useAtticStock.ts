@@ -41,7 +41,7 @@ export function useAtticStockItems(projectId: string | undefined) {
   return useQuery({
     queryKey: atticStockKeys.items(projectId || ''),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('attic_stock_items')
@@ -54,7 +54,7 @@ export function useAtticStockItems(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('item_name', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as AtticStockItemWithDetails[]
     },
     enabled: !!projectId,
@@ -68,7 +68,7 @@ export function useAtticStockItem(itemId: string | undefined) {
   return useQuery({
     queryKey: atticStockKeys.item(itemId || ''),
     queryFn: async () => {
-      if (!itemId) throw new Error('Item ID required')
+      if (!itemId) {throw new Error('Item ID required')}
 
       const { data: item, error: itemError } = await supabase
         .from('attic_stock_items')
@@ -80,7 +80,7 @@ export function useAtticStockItem(itemId: string | undefined) {
         .eq('id', itemId)
         .single()
 
-      if (itemError) throw itemError
+      if (itemError) {throw itemError}
 
       // Fetch deliveries for this item
       const { data: deliveries, error: deliveriesError } = await supabase
@@ -89,7 +89,7 @@ export function useAtticStockItem(itemId: string | undefined) {
         .eq('attic_stock_item_id', itemId)
         .order('delivery_date', { ascending: false })
 
-      if (deliveriesError) throw deliveriesError
+      if (deliveriesError) {throw deliveriesError}
 
       return {
         ...item,
@@ -135,7 +135,7 @@ export function useCreateAtticStockItem() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as AtticStockItem
     },
     onSuccess: (data) => {
@@ -176,7 +176,7 @@ export function useUpdateAtticStockItem() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as AtticStockItem
     },
     onSuccess: (data) => {
@@ -202,7 +202,7 @@ export function useDeleteAtticStockItem() {
         .select('project_id')
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (data) => {
@@ -240,7 +240,7 @@ export function useVerifyAtticStockItem() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as AtticStockItem
     },
     onSuccess: (data) => {
@@ -262,7 +262,7 @@ export function useAtticStockDeliveries(itemId: string | undefined) {
   return useQuery({
     queryKey: atticStockKeys.deliveries(itemId || ''),
     queryFn: async () => {
-      if (!itemId) throw new Error('Item ID required')
+      if (!itemId) {throw new Error('Item ID required')}
 
       const { data, error } = await supabase
         .from('attic_stock_deliveries')
@@ -270,7 +270,7 @@ export function useAtticStockDeliveries(itemId: string | undefined) {
         .eq('attic_stock_item_id', itemId)
         .order('delivery_date', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as AtticStockDelivery[]
     },
     enabled: !!itemId,
@@ -304,7 +304,7 @@ export function useAddAtticStockDelivery() {
         .select()
         .single()
 
-      if (deliveryError) throw deliveryError
+      if (deliveryError) {throw deliveryError}
 
       // Update the item's total delivered quantity
       const { data: item } = await supabase
@@ -324,7 +324,7 @@ export function useAddAtticStockDelivery() {
         })
         .eq('id', input.attic_stock_item_id)
 
-      if (updateError) throw updateError
+      if (updateError) {throw updateError}
 
       return delivery as AtticStockDelivery
     },

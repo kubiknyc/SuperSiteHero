@@ -145,20 +145,20 @@ const REQUIRED_DOCS: Record<string, { name: string; category: MissingRequirement
 }
 
 function getRiskLevel(probability: number): 'high' | 'medium' | 'low' {
-  if (probability >= 0.6) return 'high'
-  if (probability >= 0.3) return 'medium'
+  if (probability >= 0.6) {return 'high'}
+  if (probability >= 0.3) {return 'medium'}
   return 'low'
 }
 
 function getSeverity(frequency: number): 'high' | 'medium' | 'low' {
-  if (frequency >= 0.4) return 'high'
-  if (frequency >= 0.2) return 'medium'
+  if (frequency >= 0.4) {return 'high'}
+  if (frequency >= 0.2) {return 'medium'}
   return 'low'
 }
 
 function getImpact(category: MissingRequirement['category']): MissingRequirement['impact'] {
-  if (category === 'compliance') return 'blocking'
-  if (category === 'documentation' || category === 'approval') return 'significant'
+  if (category === 'compliance') {return 'blocking'}
+  if (category === 'documentation' || category === 'approval') {return 'significant'}
   return 'minor'
 }
 

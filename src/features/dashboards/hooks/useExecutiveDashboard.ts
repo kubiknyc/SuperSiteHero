@@ -91,7 +91,7 @@ async function fetchExecutiveDashboardData(companyId: string): Promise<Executive
     .select('id, name, status, budget, start_date, end_date, created_at')
     .eq('company_id', companyId)
 
-  if (projectsError) throw projectsError
+  if (projectsError) {throw projectsError}
 
   const activeProjects = projects?.filter(p => p.status === 'active') || []
   const allProjects = projects || []
@@ -146,8 +146,8 @@ async function fetchExecutiveDashboardData(companyId: string): Promise<Executive
     // Determine schedule status based on percent complete
     const expectedProgress = (elapsedDays / totalDays) * 100
     let scheduleStatus: 'ahead' | 'on-track' | 'behind' = 'on-track'
-    if (percentComplete > expectedProgress + 5) scheduleStatus = 'ahead'
-    else if (percentComplete < expectedProgress - 5) scheduleStatus = 'behind'
+    if (percentComplete > expectedProgress + 5) {scheduleStatus = 'ahead'}
+    else if (percentComplete < expectedProgress - 5) {scheduleStatus = 'behind'}
 
     return {
       id: project.id,

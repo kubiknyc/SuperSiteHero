@@ -194,17 +194,17 @@ export const trackSubmittalsTool = createTool<TrackSubmittalsInput, TrackSubmitt
         bySpecSection[specSec] = { total: 0, approved: 0, pending: 0 }
       }
       bySpecSection[specSec].total++
-      if (submittal.status === 'approved') bySpecSection[specSec].approved++
-      if (['pending', 'not_submitted'].includes(submittal.status)) bySpecSection[specSec].pending++
+      if (submittal.status === 'approved') {bySpecSection[specSec].approved++}
+      if (['pending', 'not_submitted'].includes(submittal.status)) {bySpecSection[specSec].pending++}
 
       // Track by subcontractor
       if (!bySubcontractor[subcontractorName]) {
         bySubcontractor[subcontractorName] = { total: 0, approved: 0, pending: 0, overdue: 0 }
       }
       bySubcontractor[subcontractorName].total++
-      if (submittal.status === 'approved') bySubcontractor[subcontractorName].approved++
-      if (['pending', 'not_submitted'].includes(submittal.status)) bySubcontractor[subcontractorName].pending++
-      if (daysOverdue) bySubcontractor[subcontractorName].overdue++
+      if (submittal.status === 'approved') {bySubcontractor[subcontractorName].approved++}
+      if (['pending', 'not_submitted'].includes(submittal.status)) {bySubcontractor[subcontractorName].pending++}
+      if (daysOverdue) {bySubcontractor[subcontractorName].overdue++}
 
       const item: SubmittalItem = {
         id: submittal.id,

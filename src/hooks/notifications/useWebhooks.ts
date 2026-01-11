@@ -74,7 +74,7 @@ export function useWebhooks(options?: {
   } = useQuery({
     queryKey: ['webhooks', user?.id, options?.organizationId],
     queryFn: async () => {
-      if (!user?.id) return []
+      if (!user?.id) {return []}
 
       if (options?.organizationId) {
         return webhookManager.getOrganizationWebhooks(options.organizationId)
@@ -114,7 +114,7 @@ export function useWebhooks(options?: {
   // Create webhook mutation
   const createMutation = useMutation({
     mutationFn: async (input: CreateWebhookInput) => {
-      if (!user?.id) throw new Error('User not authenticated')
+      if (!user?.id) {throw new Error('User not authenticated')}
 
       return webhookManager.createWebhook(user.id, {
         ...input,

@@ -117,7 +117,7 @@ export interface OSHA301FormData {
 // =============================================
 
 function convertIncidentToFormData(incident: SafetyIncident | null | undefined): Partial<OSHA301FormData> {
-  if (!incident) return {}
+  if (!incident) {return {}}
 
   return {
     case_number: incident.case_number || '',
@@ -167,7 +167,7 @@ export function OSHA301Form({
     field: K,
     value: OSHA301FormData[K]
   ) => {
-    if (readOnly) return
+    if (readOnly) {return}
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
@@ -176,7 +176,7 @@ export function OSHA301Form({
   }
 
   const handleSave = async () => {
-    if (!onSave) return
+    if (!onSave) {return}
 
     setSaving(true)
     try {

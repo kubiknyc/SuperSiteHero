@@ -263,7 +263,7 @@ function StatsOverview({ projectId }: { projectId?: string }) {
 function TrendAnalysis({ projectId }: { projectId?: string }) {
   const { data: stats } = useObservationStats(projectId);
 
-  if (!stats) return null;
+  if (!stats) {return null;}
 
   return (
     <Card>

@@ -152,7 +152,7 @@ function getResourceColor(resourceType: string, index: number): string {
 }
 
 function calculateActivityDuration(start: string, finish: string): number {
-  if (!start || !finish) return 0
+  if (!start || !finish) {return 0}
   try {
     return Math.max(1, differenceInDays(parseISO(finish), parseISO(start)) + 1)
   } catch {
@@ -256,19 +256,19 @@ export function useResourceLeveling(
 
       // Find activities active on this day
       activities.forEach((activity) => {
-        if (!activity.planned_start || !activity.planned_finish) return
+        if (!activity.planned_start || !activity.planned_finish) {return}
 
         const actStart = parseISO(activity.planned_start)
         const actEnd = parseISO(activity.planned_finish)
 
-        if (!isWithinInterval(day, { start: actStart, end: actEnd })) return
+        if (!isWithinInterval(day, { start: actStart, end: actEnd })) {return}
 
         // Get assignments for this activity
         const actAssignments = activityAssignments.get(activity.id) || []
 
         actAssignments.forEach((assignment) => {
           const allocation = resourceAllocations.get(assignment.resource_id)
-          if (!allocation) return
+          if (!allocation) {return}
 
           const duration = calculateActivityDuration(activity.planned_start!, activity.planned_finish!)
           const dailyHours = (assignment.planned_work_hours || 8) / duration
@@ -411,7 +411,7 @@ export function useResourceLeveling(
 
       affectedActivityIds.forEach((activityId) => {
         const activity = activities.find((a) => a.id === activityId)
-        if (!activity) return
+        if (!activity) {return}
 
         const isCritical = activity.is_critical
         const totalFloat = activity.total_float || 0
@@ -495,7 +495,7 @@ export function useResourceLeveling(
 
       for (const option of optionsToApply) {
         const activity = activities.find((a) => a.id === option.activityId)
-        if (!activity) continue
+        if (!activity) {continue}
 
         const update: UpdateScheduleActivityDTO = {}
 

@@ -79,7 +79,7 @@ export function snapToCommonAngle(angle: number, threshold = 3): number {
 
 // Snap angle to nearest increment (e.g., 15 degrees)
 export function snapToIncrement(angle: number, increment: number = 15): number {
-  if (increment <= 0) return angle
+  if (increment <= 0) {return angle}
   return Math.round(angle / increment) * increment
 }
 

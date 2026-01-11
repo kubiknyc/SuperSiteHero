@@ -155,7 +155,7 @@ export function DrawingPickerDialog({
 
   // Handle pin placement confirmation
   const handleConfirmWithPin = () => {
-    if (!selectedDrawing) return
+    if (!selectedDrawing) {return}
 
     onSelect({
       id: selectedDrawing.id,
@@ -172,7 +172,7 @@ export function DrawingPickerDialog({
 
   // Handle skip pin placement
   const handleSkipPin = () => {
-    if (!selectedDrawing) return
+    if (!selectedDrawing) {return}
 
     onSelect({
       id: selectedDrawing.id,

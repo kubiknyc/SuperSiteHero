@@ -422,7 +422,7 @@ export function GanttChart({
   }, [sidebarWidth])
 
   const handleResizeMove = useCallback((e: MouseEvent) => {
-    if (!isResizing) return
+    if (!isResizing) {return}
     const diff = e.clientX - resizeStartX.current
     const newWidth = Math.max(150, Math.min(500, resizeStartWidth.current + diff))
     setSidebarWidth(newWidth)

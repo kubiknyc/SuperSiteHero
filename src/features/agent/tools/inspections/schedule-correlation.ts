@@ -287,7 +287,7 @@ export const scheduleInspectionCorrelationTool = createTool<ScheduleInspectionCo
 
       // Count scheduled inspections in this week
       const scheduledInWeek = inspections?.filter(i => {
-        if (!i.scheduled_date) return false
+        if (!i.scheduled_date) {return false}
         const iDate = new Date(i.scheduled_date)
         return iDate >= weekStart && iDate <= weekEnd
       }).length || 0

@@ -305,18 +305,18 @@ function getLocationMultiplier(location: string): number {
   const locLower = location.toLowerCase()
 
   // Location cost indices (US average = 1.0)
-  if (/new york|nyc|manhattan/i.test(locLower)) return 1.35
-  if (/san francisco|sf|bay area/i.test(locLower)) return 1.40
-  if (/los angeles|la|socal/i.test(locLower)) return 1.20
-  if (/chicago/i.test(locLower)) return 1.15
-  if (/boston/i.test(locLower)) return 1.25
-  if (/seattle/i.test(locLower)) return 1.18
-  if (/denver/i.test(locLower)) return 1.05
-  if (/miami|florida/i.test(locLower)) return 1.02
-  if (/atlanta/i.test(locLower)) return 0.95
-  if (/dallas|houston|texas/i.test(locLower)) return 0.92
-  if (/phoenix|arizona/i.test(locLower)) return 0.95
-  if (/rural|midwest/i.test(locLower)) return 0.85
+  if (/new york|nyc|manhattan/i.test(locLower)) {return 1.35}
+  if (/san francisco|sf|bay area/i.test(locLower)) {return 1.40}
+  if (/los angeles|la|socal/i.test(locLower)) {return 1.20}
+  if (/chicago/i.test(locLower)) {return 1.15}
+  if (/boston/i.test(locLower)) {return 1.25}
+  if (/seattle/i.test(locLower)) {return 1.18}
+  if (/denver/i.test(locLower)) {return 1.05}
+  if (/miami|florida/i.test(locLower)) {return 1.02}
+  if (/atlanta/i.test(locLower)) {return 0.95}
+  if (/dallas|houston|texas/i.test(locLower)) {return 0.92}
+  if (/phoenix|arizona/i.test(locLower)) {return 0.95}
+  if (/rural|midwest/i.test(locLower)) {return 0.85}
 
   return 1.0
 }

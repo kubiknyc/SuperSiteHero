@@ -168,12 +168,12 @@ interface NormalizedTask extends Omit<EnhancedGanttTask, 'startDate' | 'endDate'
 // ============================================================================
 
 function normalizeDate(date: Date | string | null | undefined): Date | null {
-  if (!date) return null
+  if (!date) {return null}
   return typeof date === 'string' ? parseISO(date) : date
 }
 
 function calculateCriticalPath(tasks: NormalizedTask[]): Set<string> {
-  if (tasks.length === 0) return new Set()
+  if (tasks.length === 0) {return new Set()}
 
   const taskMap = new Map(tasks.map(t => [t.id, t]))
   const inDegree = new Map<string, number>()
@@ -301,7 +301,7 @@ function calculateCriticalPath(tasks: NormalizedTask[]): Set<string> {
 function calculateBaselineVariance(
   task: NormalizedTask
 ): BaselineVariance | null {
-  if (!task.baselineStartDate || !task.baselineEndDate) return null
+  if (!task.baselineStartDate || !task.baselineEndDate) {return null}
 
   const startVarianceDays = differenceInDays(task.startDate, task.baselineStartDate)
   const endVarianceDays = differenceInDays(task.endDate, task.baselineEndDate)
@@ -422,7 +422,7 @@ export function EnhancedGanttChart({
 
   const scheduleHealth = useMemo(() => {
     const tasksWithBaseline = Array.from(baselineVariances.values())
-    if (tasksWithBaseline.length === 0) return null
+    if (tasksWithBaseline.length === 0) {return null}
 
     const aheadCount = tasksWithBaseline.filter(v => v.isAheadOfSchedule).length
     const behindCount = tasksWithBaseline.filter(v => v.isBehindSchedule).length
@@ -520,7 +520,7 @@ export function EnhancedGanttChart({
   )
 
   const handleSaveBaseline = useCallback(() => {
-    if (!onSaveBaseline) return
+    if (!onSaveBaseline) {return}
     const tasksWithBaseline = normalizedTasks.map(task => ({
       ...task,
       baselineStartDate: task.startDate,
@@ -568,7 +568,7 @@ export function EnhancedGanttChart({
 
   const getBaselineStyle = useCallback(
     (task: NormalizedTask) => {
-      if (!task.baselineStartDate || !task.baselineEndDate) return null
+      if (!task.baselineStartDate || !task.baselineEndDate) {return null}
 
       const startOffset = Math.max(0, differenceInDays(task.baselineStartDate, visibleStart))
       const endOffset = differenceInDays(task.baselineEndDate, visibleStart) + 1
@@ -592,10 +592,10 @@ export function EnhancedGanttChart({
 
   const getTaskColor = useCallback(
     (task: NormalizedTask, isCritical: boolean) => {
-      if (isCritical && options.showCriticalPath) return '#DC2626'
-      if (task.color) return task.color
-      if (task.status) return STATUS_COLORS[task.status] || STATUS_COLORS.pending
-      if (task.priority) return PRIORITY_COLORS[task.priority] || PRIORITY_COLORS.normal
+      if (isCritical && options.showCriticalPath) {return '#DC2626'}
+      if (task.color) {return task.color}
+      if (task.status) {return STATUS_COLORS[task.status] || STATUS_COLORS.pending}
+      if (task.priority) {return PRIORITY_COLORS[task.priority] || PRIORITY_COLORS.normal}
       return '#3B82F6'
     },
     [options.showCriticalPath]
@@ -607,12 +607,12 @@ export function EnhancedGanttChart({
 
   const handleDragStart = useCallback(
     (e: React.MouseEvent, taskId: string, mode: DragState['mode']) => {
-      if (!editable) return
+      if (!editable) {return}
       e.preventDefault()
       e.stopPropagation()
 
       const task = normalizedTasks.find(t => t.id === taskId)
-      if (!task) return
+      if (!task) {return}
 
       setDragState({
         taskId,
@@ -632,12 +632,12 @@ export function EnhancedGanttChart({
 
   const handleDragMove = useCallback(
     (e: MouseEvent) => {
-      if (!dragState || dragState.mode === 'link') return
+      if (!dragState || dragState.mode === 'link') {return}
 
       const deltaX = e.clientX - dragState.startX
       const daysDelta = Math.round(deltaX / columnWidth)
 
-      if (daysDelta === 0) return
+      if (daysDelta === 0) {return}
 
       const newChanges = new Map(pendingChanges)
 
@@ -650,11 +650,11 @@ export function EnhancedGanttChart({
       } else if (dragState.mode === 'resize-start') {
         newStart = addDays(dragState.originalStart, daysDelta)
         newEnd = dragState.originalEnd
-        if (newStart >= newEnd) return
+        if (newStart >= newEnd) {return}
       } else {
         newStart = dragState.originalStart
         newEnd = addDays(dragState.originalEnd, daysDelta)
-        if (newEnd <= newStart) return
+        if (newEnd <= newStart) {return}
       }
 
       newChanges.set(dragState.taskId, { startDate: newStart, endDate: newEnd })
@@ -701,18 +701,18 @@ export function EnhancedGanttChart({
 
   const renderDependencyLines = useCallback(
     (task: NormalizedTask, taskIndex: number) => {
-      if (!options.showDependencies) return null
+      if (!options.showDependencies) {return null}
 
       const taskStyle = getTaskStyle(task)
-      if (!taskStyle) return null
+      if (!taskStyle) {return null}
 
       return task.dependencies.map(dep => {
         const predTask = normalizedTasks.find(t => t.id === dep.predecessorId)
-        if (!predTask) return null
+        if (!predTask) {return null}
 
         const predIndex = normalizedTasks.findIndex(t => t.id === dep.predecessorId)
         const predStyle = getTaskStyle(predTask)
-        if (!predStyle) return null
+        if (!predStyle) {return null}
 
         const isCritical = criticalPath.has(task.id) && criticalPath.has(dep.predecessorId)
         const depKey = `${dep.predecessorId}-${task.id}`
@@ -818,7 +818,7 @@ export function EnhancedGanttChart({
 
   const renderConstraintIndicator = useCallback(
     (task: NormalizedTask, taskStyle: { left: string; width: string }) => {
-      if (!task.constraintType || task.constraintType === 'as_soon_as_possible') return null
+      if (!task.constraintType || task.constraintType === 'as_soon_as_possible') {return null}
 
       const barRect = {
         left: parseFloat(taskStyle.left),
@@ -985,14 +985,14 @@ export function EnhancedGanttChart({
             <Button variant="ghost" size="sm" onClick={() => {
               const levels: ZoomLevel[] = ['day', 'week', 'month', 'quarter']
               const idx = levels.indexOf(options.zoomLevel)
-              if (idx > 0) setZoom(levels[idx - 1])
+              if (idx > 0) {setZoom(levels[idx - 1])}
             }}>
               <ZoomIn className="h-4 w-4" />
             </Button>
             <Button variant="ghost" size="sm" onClick={() => {
               const levels: ZoomLevel[] = ['day', 'week', 'month', 'quarter']
               const idx = levels.indexOf(options.zoomLevel)
-              if (idx < levels.length - 1) setZoom(levels[idx + 1])
+              if (idx < levels.length - 1) {setZoom(levels[idx + 1])}
             }}>
               <ZoomOut className="h-4 w-4" />
             </Button>
@@ -1222,7 +1222,7 @@ export function EnhancedGanttChart({
             {/* Task bars */}
             {normalizedTasks.map((task, taskIndex) => {
               const style = getTaskStyle(task)
-              if (!style) return null
+              if (!style) {return null}
 
               const isCritical = criticalPath.has(task.id)
               const color = getTaskColor(task, isCritical)

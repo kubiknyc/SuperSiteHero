@@ -668,10 +668,10 @@ export class AgentOrchestrator {
     // In the future, this should use the native function calling API
     const prompt = messages
       .map((m) => {
-        if (m.role === 'system') return `System: ${m.content}`
-        if (m.role === 'user') return `User: ${m.content}`
-        if (m.role === 'assistant') return `Assistant: ${m.content}`
-        if (m.role === 'tool') return `Tool Result: ${m.content}`
+        if (m.role === 'system') {return `System: ${m.content}`}
+        if (m.role === 'user') {return `User: ${m.content}`}
+        if (m.role === 'assistant') {return `Assistant: ${m.content}`}
+        if (m.role === 'tool') {return `Tool Result: ${m.content}`}
         return ''
       })
       .join('\n\n')
@@ -1033,7 +1033,7 @@ If you don't need to use a tool, respond normally without the JSON format.`
     }
 
     const taskType = taskTypeMapping[event.type]
-    if (!taskType) return
+    if (!taskType) {return}
 
     await supabase.from('agent_tasks').insert({
       company_id: event.companyId,

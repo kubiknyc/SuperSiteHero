@@ -90,7 +90,7 @@ function getCanvasFingerprint(): string {
   try {
     const canvas = document.createElement('canvas')
     const ctx = canvas.getContext('2d')
-    if (!ctx) return 'no-canvas'
+    if (!ctx) {return 'no-canvas'}
 
     canvas.width = 200
     canvas.height = 50
@@ -118,10 +118,10 @@ function getWebGLVendor(): string {
   try {
     const canvas = document.createElement('canvas')
     const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
-    if (!gl) return 'no-webgl'
+    if (!gl) {return 'no-webgl'}
 
     const debugInfo = (gl as WebGLRenderingContext).getExtension('WEBGL_debug_renderer_info')
-    if (!debugInfo) return 'no-debug-info'
+    if (!debugInfo) {return 'no-debug-info'}
 
     const vendor = (gl as WebGLRenderingContext).getParameter(debugInfo.UNMASKED_VENDOR_WEBGL)
     const renderer = (gl as WebGLRenderingContext).getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
@@ -172,36 +172,36 @@ export function compareFingerprints(
   const total = 10
 
   // Check each property
-  if (fp1.userAgent === fp2.userAgent) matches++
-  else differences.push('userAgent')
+  if (fp1.userAgent === fp2.userAgent) {matches++}
+  else {differences.push('userAgent')}
 
-  if (fp1.screenResolution === fp2.screenResolution) matches++
-  else differences.push('screenResolution')
+  if (fp1.screenResolution === fp2.screenResolution) {matches++}
+  else {differences.push('screenResolution')}
 
-  if (fp1.timezoneOffset === fp2.timezoneOffset) matches++
-  else differences.push('timezoneOffset')
+  if (fp1.timezoneOffset === fp2.timezoneOffset) {matches++}
+  else {differences.push('timezoneOffset')}
 
-  if (fp1.platform === fp2.platform) matches++
-  else differences.push('platform')
+  if (fp1.platform === fp2.platform) {matches++}
+  else {differences.push('platform')}
 
-  if (fp1.colorDepth === fp2.colorDepth) matches++
-  else differences.push('colorDepth')
+  if (fp1.colorDepth === fp2.colorDepth) {matches++}
+  else {differences.push('colorDepth')}
 
-  if (fp1.hardwareConcurrency === fp2.hardwareConcurrency) matches++
-  else differences.push('hardwareConcurrency')
+  if (fp1.hardwareConcurrency === fp2.hardwareConcurrency) {matches++}
+  else {differences.push('hardwareConcurrency')}
 
-  if (fp1.touchSupport === fp2.touchSupport) matches++
-  else differences.push('touchSupport')
+  if (fp1.touchSupport === fp2.touchSupport) {matches++}
+  else {differences.push('touchSupport')}
 
-  if (fp1.canvasHash === fp2.canvasHash) matches++
-  else differences.push('canvasHash')
+  if (fp1.canvasHash === fp2.canvasHash) {matches++}
+  else {differences.push('canvasHash')}
 
-  if (fp1.webglVendor === fp2.webglVendor) matches++
-  else differences.push('webglVendor')
+  if (fp1.webglVendor === fp2.webglVendor) {matches++}
+  else {differences.push('webglVendor')}
 
   // Languages can change, less weight
-  if (JSON.stringify(fp1.languages) === JSON.stringify(fp2.languages)) matches++
-  else differences.push('languages')
+  if (JSON.stringify(fp1.languages) === JSON.stringify(fp2.languages)) {matches++}
+  else {differences.push('languages')}
 
   return {
     similarity: matches / total,

@@ -68,7 +68,7 @@ export function AddTeamMemberDialog({
 
   // Filter users by search query
   const filteredUsers = availableUsers.filter(user => {
-    if (!searchQuery) return true
+    if (!searchQuery) {return true}
     const searchLower = searchQuery.toLowerCase()
     const fullName = `${user.first_name || ''} ${user.last_name || ''}`.toLowerCase()
     return (
@@ -80,7 +80,7 @@ export function AddTeamMemberDialog({
   const selectedUser = availableUsers.find(u => u.id === selectedUserId)
 
   const handleSubmit = async () => {
-    if (!selectedUserId) return
+    if (!selectedUserId) {return}
 
     await addMember.mutateAsync({
       user_id: selectedUserId,

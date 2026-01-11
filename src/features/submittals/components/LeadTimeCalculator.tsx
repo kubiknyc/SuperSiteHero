@@ -344,7 +344,7 @@ export function LeadTimeCalculator({
 
   // Calculate date range for holidays
   const dateRange = useMemo(() => {
-    if (!requiredOnSite) return { start: null, end: null }
+    if (!requiredOnSite) {return { start: null, end: null }}
     const start = subDays(requiredOnSite, 365)
     return { start, end: requiredOnSite }
   }, [requiredOnSite])
@@ -354,7 +354,7 @@ export function LeadTimeCalculator({
 
   // Calculate the submit-by date with holiday support
   const calculation = useMemo((): LeadTimeResult | null => {
-    if (!requiredOnSite) return null
+    if (!requiredOnSite) {return null}
 
     // Calculate working days needed
     const fabricationWorkingDays = leadTimeWeeks * 5 // 5 working days per week

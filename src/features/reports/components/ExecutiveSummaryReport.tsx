@@ -86,7 +86,7 @@ function MetricCard({
 
 function ScheduleChart({ onTrack, atRisk, behind, ahead }: { onTrack: number; atRisk: number; behind: number; ahead: number }) {
   const total = onTrack + atRisk + behind + ahead
-  if (total === 0) return null
+  if (total === 0) {return null}
 
   const segments = [
     { label: 'Ahead', value: ahead, color: 'bg-blue-500' },

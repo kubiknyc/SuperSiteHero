@@ -56,7 +56,7 @@ export function useNotificationActions() {
         })
         .eq('id', entityId)
 
-      if (error) throw error
+      if (error) {throw error}
 
       await supabase
         .from('notifications')
@@ -87,7 +87,7 @@ export function useNotificationActions() {
         .update({ snoozed_until: snoozeUntil })
         .eq('id', notificationId)
 
-      if (error) throw error
+      if (error) {throw error}
       return { success: true, message: 'Notification snoozed' }
     },
     onSuccess: () => {

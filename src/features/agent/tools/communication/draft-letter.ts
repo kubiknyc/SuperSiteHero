@@ -223,24 +223,24 @@ function formatLetterDate(date: Date): string {
 }
 
 function buildHeader(company: any): string {
-  if (!company) return '[COMPANY LETTERHEAD]'
+  if (!company) {return '[COMPANY LETTERHEAD]'}
 
   const lines = [company.name || '[COMPANY NAME]']
-  if (company.address) lines.push(company.address)
+  if (company.address) {lines.push(company.address)}
   if (company.city && company.state && company.zip) {
     lines.push(`${company.city}, ${company.state} ${company.zip}`)
   }
-  if (company.phone) lines.push(`Phone: ${company.phone}`)
-  if (company.email) lines.push(`Email: ${company.email}`)
+  if (company.phone) {lines.push(`Phone: ${company.phone}`)}
+  if (company.email) {lines.push(`Email: ${company.email}`)}
 
   return lines.join('\n')
 }
 
 function buildRecipientBlock(recipient: DraftLetterInput['recipient']): string {
   const lines = [recipient.name]
-  if (recipient.title) lines.push(recipient.title)
+  if (recipient.title) {lines.push(recipient.title)}
   lines.push(recipient.company)
-  if (recipient.address) lines.push(recipient.address)
+  if (recipient.address) {lines.push(recipient.address)}
 
   return lines.join('\n')
 }
@@ -249,7 +249,7 @@ function buildSubjectLine(subject: string, projectName?: string, projectNumber?:
   let line = 'RE: '
   if (projectName) {
     line += `${projectName}`
-    if (projectNumber) line += ` (Project #${projectNumber})`
+    if (projectNumber) {line += ` (Project #${projectNumber})`}
     line += '\n    '
   }
   line += subject
@@ -434,7 +434,7 @@ function getRequiredActions(letterType: string, tone: string): { actions: string
   }
 
   const config = actions[letterType]
-  if (!config) return { actions: [], deadline: null }
+  if (!config) {return { actions: [], deadline: null }}
 
   const deadline = new Date()
   deadline.setDate(deadline.getDate() + config.days)

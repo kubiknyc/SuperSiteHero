@@ -9,7 +9,6 @@ import { cn } from '@/lib/utils'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { GlobalSearchBar } from '@/features/search/components/GlobalSearchBar'
 import { useDashboardStats } from '@/features/dashboard/hooks/useDashboardStats'
-import type { LucideIcon } from 'lucide-react'
 import {
   ClipboardList,
   AlertCircle,
@@ -20,6 +19,7 @@ import {
   Search,
   TrendingUp,
   TrendingDown,
+  type LucideIcon,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -82,7 +82,7 @@ export function StickyHeader({
 }: StickyHeaderProps) {
   const { userProfile } = useAuth()
   const { data: dashboardStats, isLoading: statsLoading } = useDashboardStats(projectId)
-  const [searchOpen, setSearchOpen] = useState(false)
+  const [_searchOpen, setSearchOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
 
   // Animate in on mount
@@ -139,7 +139,9 @@ export function StickyHeader({
 
   // Get initials for avatar
   const getInitials = () => {
-    if (!userProfile) return '??'
+    if (!userProfile) {
+      return '??'
+    }
     const first = userProfile.first_name?.[0] || ''
     const last = userProfile.last_name?.[0] || ''
     return `${first}${last}`.toUpperCase()

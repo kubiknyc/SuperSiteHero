@@ -387,7 +387,7 @@ export function HelpPanel({ isOpen, onClose, context }: HelpPanelProps) {
                         <div className="space-y-2">
                           {selectedTopic.relatedTopics.map((topicId) => {
                             const topic = helpTopics.find(t => t.id === topicId)
-                            if (!topic) return null
+                            if (!topic) {return null}
                             return (
                               <button
                                 key={topic.id}
@@ -610,7 +610,7 @@ function WhatsThisIndicator({
   isActive: boolean
   onDeactivate: () => void
 }) {
-  if (!isActive) return null
+  if (!isActive) {return null}
 
   return (
     <motion.div

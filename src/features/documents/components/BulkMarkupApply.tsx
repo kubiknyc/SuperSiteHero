@@ -111,7 +111,7 @@ export function BulkMarkupApply({
     const grouped: Record<string, typeof targetDocuments> = {}
     for (const doc of targetDocuments) {
       const discipline = doc.discipline || 'Other'
-      if (!grouped[discipline]) grouped[discipline] = []
+      if (!grouped[discipline]) {grouped[discipline] = []}
       grouped[discipline].push(doc)
     }
     return grouped
@@ -119,7 +119,7 @@ export function BulkMarkupApply({
 
   // Filter by search
   const filteredDocuments = useMemo(() => {
-    if (!searchTerm) return groupedDocuments
+    if (!searchTerm) {return groupedDocuments}
     const term = searchTerm.toLowerCase()
     const filtered: Record<string, typeof targetDocuments> = {}
     for (const [discipline, docs] of Object.entries(groupedDocuments)) {
@@ -128,7 +128,7 @@ export function BulkMarkupApply({
           doc.name.toLowerCase().includes(term) ||
           (doc.drawing_number || '').toLowerCase().includes(term)
       )
-      if (matchingDocs.length > 0) filtered[discipline] = matchingDocs
+      if (matchingDocs.length > 0) {filtered[discipline] = matchingDocs}
     }
     return filtered
   }, [groupedDocuments, searchTerm])
@@ -174,7 +174,7 @@ export function BulkMarkupApply({
 
   // Select/deselect all markups
   const toggleAllMarkups = useCallback(() => {
-    if (!sourceMarkups) return
+    if (!sourceMarkups) {return}
     if (selectedMarkupIds.size === sourceMarkups.length) {
       setSelectedMarkupIds(new Set())
     } else {
@@ -202,7 +202,7 @@ export function BulkMarkupApply({
 
   // Handle apply
   const handleApply = async () => {
-    if (selectedMarkupIds.size === 0 || selectedTargetIds.size === 0) return
+    if (selectedMarkupIds.size === 0 || selectedTargetIds.size === 0) {return}
 
     setStep('apply')
     setProgress({

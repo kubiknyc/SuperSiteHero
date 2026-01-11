@@ -84,9 +84,9 @@ const SLA_HOURS: Record<string, number> = {
 
 // Priority thresholds based on days overdue
 function calculatePriority(daysOverdue: number, value?: number): 'low' | 'normal' | 'high' | 'critical' {
-  if (daysOverdue >= 14 || (value && value > 100000)) return 'critical'
-  if (daysOverdue >= 7 || (value && value > 50000)) return 'high'
-  if (daysOverdue >= 3) return 'normal'
+  if (daysOverdue >= 14 || (value && value > 100000)) {return 'critical'}
+  if (daysOverdue >= 7 || (value && value > 50000)) {return 'high'}
+  if (daysOverdue >= 3) {return 'normal'}
   return 'low'
 }
 
@@ -185,7 +185,7 @@ export const escalateStalledTool = createTool<EscalateStalledInput, EscalateStal
 
     for (const member of teamMembers || []) {
       const user = member.users as { id: string; full_name: string; email: string } | null
-      if (!user) continue
+      if (!user) {continue}
 
       const normalizedRole = normalizeRole(member.role || '')
       const memberInfo = {

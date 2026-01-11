@@ -66,7 +66,7 @@ export function PunchListCloseoutSummary({ projectId, className }: PunchListClos
     )
   }
 
-  if (!status) return null
+  if (!status) {return null}
 
   return (
     <Card className={className}>

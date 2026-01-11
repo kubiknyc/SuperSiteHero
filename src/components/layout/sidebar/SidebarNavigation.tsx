@@ -19,7 +19,6 @@ import {
   getSelectedLayoutId,
   subscribeToLayoutChanges,
   RESTRICTED_TAKEOFF_ROLES,
-  type NavItem,
   type NavGroup,
 } from './navigation-config'
 

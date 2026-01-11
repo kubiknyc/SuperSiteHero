@@ -130,7 +130,7 @@ export function OnboardingProvider({
 
   // Auto-start tour based on current path
   useEffect(() => {
-    if (!autoStartTours || !isOnboardingComplete) return
+    if (!autoStartTours || !isOnboardingComplete) {return}
 
     const path = window.location.pathname
     const tour = getTourForPath(path)
@@ -250,7 +250,7 @@ export function OnboardingReminder({ className }: OnboardingReminderProps) {
   const { shouldShowReminder, openWizard, skipOnboarding } = useOnboarding()
   const { dismissReminder } = useOnboardingStore()
 
-  if (!shouldShowReminder) return null
+  if (!shouldShowReminder) {return null}
 
   return (
     <div

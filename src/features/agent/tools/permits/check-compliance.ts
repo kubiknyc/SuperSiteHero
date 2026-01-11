@@ -150,7 +150,7 @@ const OSHA_REQUIRED_POSTINGS: Array<{ type: string; requirement: string }> = [
 // ============================================================================
 
 function calculateDaysUntilExpiration(expirationDate: string | null): number | null {
-  if (!expirationDate) return null
+  if (!expirationDate) {return null}
   const expDate = new Date(expirationDate)
   const today = new Date()
   return Math.ceil((expDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
@@ -161,9 +161,9 @@ function getExpirationStatus(
   warningDays: number = 30
 ): 'current' | 'expiring_soon' | 'expired' {
   const daysUntil = calculateDaysUntilExpiration(expirationDate)
-  if (daysUntil === null) return 'current'
-  if (daysUntil < 0) return 'expired'
-  if (daysUntil <= warningDays) return 'expiring_soon'
+  if (daysUntil === null) {return 'current'}
+  if (daysUntil < 0) {return 'expired'}
+  if (daysUntil <= warningDays) {return 'expiring_soon'}
   return 'current'
 }
 
@@ -172,17 +172,17 @@ function determineRiskLevel(gaps: ComplianceGap[]): 'low' | 'medium' | 'high' | 
   const highCount = gaps.filter(g => g.severity === 'high').length
   const mediumCount = gaps.filter(g => g.severity === 'medium').length
 
-  if (criticalCount > 0) return 'critical'
-  if (highCount >= 2) return 'high'
-  if (highCount === 1 || mediumCount >= 3) return 'medium'
+  if (criticalCount > 0) {return 'critical'}
+  if (highCount >= 2) {return 'high'}
+  if (highCount === 1 || mediumCount >= 3) {return 'medium'}
   return 'low'
 }
 
 function determineComplianceStatus(
   score: number
 ): 'compliant' | 'at_risk' | 'non_compliant' {
-  if (score >= 90) return 'compliant'
-  if (score >= 70) return 'at_risk'
+  if (score >= 90) {return 'compliant'}
+  if (score >= 70) {return 'at_risk'}
   return 'non_compliant'
 }
 

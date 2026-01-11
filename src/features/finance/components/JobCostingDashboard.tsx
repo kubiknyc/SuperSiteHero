@@ -141,10 +141,10 @@ function getCostTypeLabel(type: CostType): string {
 }
 
 function getVarianceStatus(variance: number, budget: number) {
-  if (budget === 0) return { status: 'neutral', label: 'N/A' }
+  if (budget === 0) {return { status: 'neutral', label: 'N/A' }}
   const percent = (variance / budget) * 100
-  if (percent > 5) return { status: 'under', label: 'Under Budget' }
-  if (percent < -5) return { status: 'over', label: 'Over Budget' }
+  if (percent > 5) {return { status: 'under', label: 'Under Budget' }}
+  if (percent < -5) {return { status: 'over', label: 'Over Budget' }}
   return { status: 'on-track', label: 'On Track' }
 }
 
@@ -510,7 +510,7 @@ function ForecastPanel({ projectId }: ForecastPanelProps) {
     )
   }
 
-  if (!forecast) return null
+  if (!forecast) {return null}
 
   return (
     <Card>

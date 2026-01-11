@@ -63,7 +63,7 @@ async function fetchInspectionPhotos(inspectionId: string): Promise<InspectionPh
     .order('display_order', { ascending: true })
     .order('created_at', { ascending: false })
 
-  if (error) throw error
+  if (error) {throw error}
   return data || []
 }
 
@@ -99,7 +99,7 @@ export function InspectionPhotoGallery({
         .delete()
         .eq('id', photo.id)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['inspection-photos', inspectionId] })
@@ -141,11 +141,11 @@ export function InspectionPhotoGallery({
   const canGoNext = selectedPhotoIndex !== null && selectedPhotoIndex < photos.length - 1
 
   const goToPrev = () => {
-    if (canGoPrev) setSelectedPhotoIndex(selectedPhotoIndex! - 1)
+    if (canGoPrev) {setSelectedPhotoIndex(selectedPhotoIndex! - 1)}
   }
 
   const goToNext = () => {
-    if (canGoNext) setSelectedPhotoIndex(selectedPhotoIndex! + 1)
+    if (canGoNext) {setSelectedPhotoIndex(selectedPhotoIndex! + 1)}
   }
 
   if (isLoading) {

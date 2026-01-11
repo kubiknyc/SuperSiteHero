@@ -91,7 +91,7 @@ export function getDeviceMode(): DeviceMode {
  * This persists across sessions until cleared.
  */
 export function setDeviceModeOverride(mode: DeviceMode): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') {return;}
   localStorage.setItem(USER_OVERRIDE_KEY, mode);
   sessionStorage.setItem(DEVICE_MODE_KEY, mode);
 }
@@ -100,7 +100,7 @@ export function setDeviceModeOverride(mode: DeviceMode): void {
  * Clears the user override, returning to auto-detection.
  */
 export function clearDeviceModeOverride(): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') {return;}
   localStorage.removeItem(USER_OVERRIDE_KEY);
   sessionStorage.removeItem(DEVICE_MODE_KEY);
 }
@@ -109,7 +109,7 @@ export function clearDeviceModeOverride(): void {
  * Checks if the user has manually overridden the device mode.
  */
 export function hasDeviceModeOverride(): boolean {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === 'undefined') {return false;}
   return localStorage.getItem(USER_OVERRIDE_KEY) !== null;
 }
 

@@ -152,7 +152,7 @@ export function AgentChatPanel({
 
   const handleSendMessage = useCallback(
     async (content: string, mentions?: Mention[], attachments?: Attachment[]) => {
-      if (!content.trim()) return
+      if (!content.trim()) {return}
 
       try {
         await sendMessage(content)

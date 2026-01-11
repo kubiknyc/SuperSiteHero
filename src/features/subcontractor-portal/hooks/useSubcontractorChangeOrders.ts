@@ -212,7 +212,7 @@ export function getDisplayNumber(co: SubcontractorChangeOrder): string {
  * Format amount as currency
  */
 export function formatAmount(amount: number | null | undefined): string {
-  if (amount == null) return '$0.00'
+  if (amount == null) {return '$0.00'}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -225,7 +225,7 @@ export function formatAmount(amount: number | null | undefined): string {
  * Format days impact
  */
 export function formatDaysImpact(days: number | null | undefined): string {
-  if (days == null || days === 0) return 'No impact'
+  if (days == null || days === 0) {return 'No impact'}
   const sign = days > 0 ? '+' : ''
   return `${sign}${days} day${Math.abs(days) !== 1 ? 's' : ''}`
 }

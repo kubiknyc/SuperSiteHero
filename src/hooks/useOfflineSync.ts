@@ -281,7 +281,7 @@ export function useOfflinePunchItemMutation() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     queryKeyToInvalidate: ['punch-items'],
@@ -305,7 +305,7 @@ export function useOfflineDailyReportMutation() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     queryKeyToInvalidate: ['daily-reports'],
@@ -329,7 +329,7 @@ export function useOfflineChecklistResponseMutation() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     queryKeyToInvalidate: ['checklist-responses'],
@@ -363,10 +363,10 @@ export function useSyncStatusDisplay() {
   }, [status])
 
   const statusColor = useMemo(() => {
-    if (!status.isOnline) return 'text-yellow-600'
-    if (status.isSyncing) return 'text-blue-600'
-    if (status.conflictCount > 0) return 'text-red-600'
-    if (status.pendingSyncs > 0) return 'text-orange-600'
+    if (!status.isOnline) {return 'text-yellow-600'}
+    if (status.isSyncing) {return 'text-blue-600'}
+    if (status.conflictCount > 0) {return 'text-red-600'}
+    if (status.pendingSyncs > 0) {return 'text-orange-600'}
     return 'text-green-600'
   }, [status])
 

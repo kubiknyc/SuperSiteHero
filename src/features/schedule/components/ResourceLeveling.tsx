@@ -133,12 +133,12 @@ function ResourceHistogram({
   const barAreaHeight = height - chartPadding
 
   const getBarHeight = (value: number) => {
-    if (maxValue === 0) return 0
+    if (maxValue === 0) {return 0}
     return (value / maxValue) * barAreaHeight
   }
 
   const getCapacityY = (capacity: number) => {
-    if (maxValue === 0) return barAreaHeight
+    if (maxValue === 0) {return barAreaHeight}
     return chartPadding + barAreaHeight - (capacity / maxValue) * barAreaHeight
   }
 
@@ -201,7 +201,7 @@ function ResourceHistogram({
             {/* Weekend shading */}
             {dates.map((dateStr, index) => {
               const date = parseISO(dateStr)
-              if (!isWeekend(date)) return null
+              if (!isWeekend(date)) {return null}
               return (
                 <rect
                   key={`weekend-${index}`}
@@ -289,7 +289,7 @@ function ResourceHistogram({
             {/* Date labels */}
             {dates.map((dateStr, index) => {
               const showLabel = columnWidth >= 40 || index % 7 === 0
-              if (!showLabel) return null
+              if (!showLabel) {return null}
 
               return (
                 <text

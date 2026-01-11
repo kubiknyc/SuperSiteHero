@@ -249,7 +249,7 @@ export function TransmittalForm({
                 {drawings && drawings.length > 0 && (
                   <Select onValueChange={(id) => {
                     const drawing = drawings.find((d) => d.id === id)
-                    if (drawing) handleAddDrawing(drawing)
+                    if (drawing) {handleAddDrawing(drawing)}
                   }}>
                     <SelectTrigger className="w-[200px]">
                       <SelectValue placeholder="Add from register..." />

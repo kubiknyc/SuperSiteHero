@@ -162,7 +162,7 @@ export function PhotoCapture({
 
   // Capture photo from camera
   const capturePhoto = useCallback(() => {
-    if (!videoRef.current || !canvasRef.current) return
+    if (!videoRef.current || !canvasRef.current) {return}
 
     const video = videoRef.current
     const canvas = canvasRef.current
@@ -171,7 +171,7 @@ export function PhotoCapture({
     canvas.height = video.videoHeight
 
     const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    if (!ctx) {return}
 
     // Mirror image if using front camera
     if (facingMode === 'user') {
@@ -194,7 +194,7 @@ export function PhotoCapture({
 
   // Confirm captured photo
   const confirmPhoto = useCallback(async () => {
-    if (!capturedImage) return
+    if (!capturedImage) {return}
 
     // Convert data URL to File
     const response = await fetch(capturedImage)
@@ -215,7 +215,7 @@ export function PhotoCapture({
 
   // Handle file upload
   const handleFileUpload = useCallback((files: FileList | null) => {
-    if (!files) return
+    if (!files) {return}
 
     const remainingSlots = maxPhotos - photos.length
     const filesToProcess = Array.from(files).slice(0, remainingSlots)
@@ -223,7 +223,7 @@ export function PhotoCapture({
     const newPhotos: CapturedPhoto[] = []
 
     filesToProcess.forEach((file) => {
-      if (!file.type.startsWith('image/')) return
+      if (!file.type.startsWith('image/')) {return}
 
       const reader = new FileReader()
       reader.onload = (e) => {

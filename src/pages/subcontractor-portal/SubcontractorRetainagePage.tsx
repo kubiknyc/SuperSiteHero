@@ -86,7 +86,7 @@ export function SubcontractorRetainagePage() {
 
   // Calculate health status
   const healthStatus = useMemo(() => {
-    if (!summary) return null
+    if (!summary) {return null}
     return getRetainageHealth(summary)
   }, [summary])
 

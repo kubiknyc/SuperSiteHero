@@ -146,7 +146,7 @@ export function DashboardPage() {
 
     // Calculate changes from trend
     const getChange = (trend: number[]) => {
-      if (trend.length < 2) return { value: '0', direction: 'up' as const }
+      if (trend.length < 2) {return { value: '0', direction: 'up' as const }}
       const current = trend[trend.length - 1]
       const previous = trend[trend.length - 2]
       const diff = current - previous

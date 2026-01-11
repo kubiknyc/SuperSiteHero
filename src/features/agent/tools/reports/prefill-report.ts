@@ -218,7 +218,7 @@ export const prefillReportTool = createTool<PrefillReportInput, PrefillReportOut
     }
 
     // Get work activities
-    let activities: PrefilledWorkActivity[] = []
+    const activities: PrefilledWorkActivity[] = []
     if (include_sections.includes('activities')) {
       // Carryover incomplete work from previous day
       if (previousReport?.work_planned) {

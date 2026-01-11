@@ -125,7 +125,7 @@ export function AgentProvider({
 
   // Register keyboard listener
   useEffect(() => {
-    if (!enableKeyboardShortcut) return
+    if (!enableKeyboardShortcut) {return}
 
     window.addEventListener('keydown', handleKeyDown, { capture: true })
     return () => {

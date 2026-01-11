@@ -144,7 +144,7 @@ export function AtticStockTracker({ projectId, subcontractors = [], className }:
 
   // Handle delete item
   const handleDeleteItem = async (itemId: string) => {
-    if (!confirm('Are you sure you want to delete this item?')) return
+    if (!confirm('Are you sure you want to delete this item?')) {return}
 
     try {
       await deleteItem.mutateAsync(itemId)
@@ -182,7 +182,7 @@ export function AtticStockTracker({ projectId, subcontractors = [], className }:
 
   // Handle verification
   const handleVerify = async () => {
-    if (!selectedItemId) return
+    if (!selectedItemId) {return}
 
     try {
       await verifyItem.mutateAsync({
@@ -200,8 +200,8 @@ export function AtticStockTracker({ projectId, subcontractors = [], className }:
 
   // Get delivery status
   const getDeliveryStatus = (item: AtticStockItemWithDetails) => {
-    if (item.quantity_delivered === 0) return 'not_delivered'
-    if (item.quantity_delivered >= item.quantity_required) return 'fully_delivered'
+    if (item.quantity_delivered === 0) {return 'not_delivered'}
+    if (item.quantity_delivered >= item.quantity_required) {return 'fully_delivered'}
     return 'partially_delivered'
   }
 

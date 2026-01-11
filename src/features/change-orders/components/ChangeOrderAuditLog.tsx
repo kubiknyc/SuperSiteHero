@@ -325,8 +325,8 @@ export function ChangeOrderAuditLog({
 
   // Filter by search query
   const filteredLog = useMemo(() => {
-    if (!auditLog) return []
-    if (!searchQuery.trim()) return auditLog
+    if (!auditLog) {return []}
+    if (!searchQuery.trim()) {return auditLog}
 
     const query = searchQuery.toLowerCase()
     return auditLog.filter(

@@ -2757,7 +2757,7 @@ export const subcontractorPortalApi = {
 
       // Fetch line items for all applications
       const applicationIds = (applications || []).map((app: any) => app.id)
-      let lineItemsMap: Record<string, SubcontractorPayAppLineItem[]> = {}
+      const lineItemsMap: Record<string, SubcontractorPayAppLineItem[]> = {}
 
       if (applicationIds.length > 0) {
         const { data: lineItems, error: lineItemsError } = await db
@@ -3136,7 +3136,7 @@ export const subcontractorPortalApi = {
 
       // Get line item counts
       const coIds = (changeOrders || []).map((co: any) => co.id)
-      let itemCountMap: Record<string, number> = {}
+      const itemCountMap: Record<string, number> = {}
 
       if (coIds.length > 0) {
         const { data: itemCounts } = await db
@@ -3155,8 +3155,8 @@ export const subcontractorPortalApi = {
       const rfiIds = (changeOrders || []).filter((co: any) => co.related_rfi_id).map((co: any) => co.related_rfi_id)
       const submittalIds = (changeOrders || []).filter((co: any) => co.related_submittal_id).map((co: any) => co.related_submittal_id)
 
-      let rfiNumberMap: Record<string, string> = {}
-      let submittalNumberMap: Record<string, string> = {}
+      const rfiNumberMap: Record<string, string> = {}
+      const submittalNumberMap: Record<string, string> = {}
 
       if (rfiIds.length > 0) {
         const { data: rfis } = await db
@@ -3519,7 +3519,7 @@ export const subcontractorPortalApi = {
         .filter((n: any) => n.related_to_id && n.related_to_type === 'schedule_activity')
         .map((n: any) => n.related_to_id)
 
-      let activityMap: Record<string, any> = {}
+      const activityMap: Record<string, any> = {}
       if (activityIds.length > 0) {
         const { data: activities } = await db
           .from('schedule_activities')
@@ -3538,10 +3538,10 @@ export const subcontractorPortalApi = {
 
         // Parse change type from notification type or message
         let changeType: 'date_change' | 'status_change' | 'delay' | 'assignment' | 'completion' = 'date_change'
-        if (n.type === 'schedule_delay') changeType = 'delay'
-        else if (n.message?.toLowerCase().includes('status')) changeType = 'status_change'
-        else if (n.message?.toLowerCase().includes('complete')) changeType = 'completion'
-        else if (n.message?.toLowerCase().includes('assign')) changeType = 'assignment'
+        if (n.type === 'schedule_delay') {changeType = 'delay'}
+        else if (n.message?.toLowerCase().includes('status')) {changeType = 'status_change'}
+        else if (n.message?.toLowerCase().includes('complete')) {changeType = 'completion'}
+        else if (n.message?.toLowerCase().includes('assign')) {changeType = 'assignment'}
 
         return {
           id: n.id,
@@ -3623,7 +3623,7 @@ export const subcontractorPortalApi = {
 
       // Calculate summary
       const overdueActs = acts.filter((a: any) => {
-        if (a.status === 'completed') return false
+        if (a.status === 'completed') {return false}
         const plannedFinish = a.planned_finish ? new Date(a.planned_finish) : null
         return plannedFinish && plannedFinish < today
       })
@@ -3638,7 +3638,7 @@ export const subcontractorPortalApi = {
       const criticalPathActs = acts.filter((a: any) => a.is_on_critical_path)
 
       const upcomingMilestones = acts.filter((a: any) => {
-        if (!a.is_milestone || a.status === 'completed') return false
+        if (!a.is_milestone || a.status === 'completed') {return false}
         const plannedFinish = a.planned_finish ? new Date(a.planned_finish) : null
         return plannedFinish && plannedFinish >= today && plannedFinish <= weekFromNow
       })
@@ -4171,9 +4171,9 @@ export const subcontractorPortalApi = {
 
       // Bonus for days since incident (up to 15 points)
       if (daysSinceLast !== null) {
-        if (daysSinceLast >= 365) score = Math.min(100, score + 15)
-        else if (daysSinceLast >= 180) score = Math.min(100, score + 10)
-        else if (daysSinceLast >= 90) score = Math.min(100, score + 5)
+        if (daysSinceLast >= 365) {score = Math.min(100, score + 15)}
+        else if (daysSinceLast >= 180) {score = Math.min(100, score + 10)}
+        else if (daysSinceLast >= 90) {score = Math.min(100, score + 5)}
       }
 
       score = Math.max(0, score)
@@ -4493,7 +4493,7 @@ export const subcontractorPortalApi = {
           attendeeCounts[a.meeting_id] = { total: 0, attended: 0 }
         }
         attendeeCounts[a.meeting_id].total++
-        if (a.attended) attendeeCounts[a.meeting_id].attended++
+        if (a.attended) {attendeeCounts[a.meeting_id].attended++}
       })
 
       const attachmentCounts: Record<string, number> = {}
@@ -4899,7 +4899,7 @@ export const subcontractorPortalApi = {
       const today = new Date()
       const thirtyDaysFromNow = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)
       const expiringWithin30 = certifications.filter(c => {
-        if (!c.expiration_date) return false
+        if (!c.expiration_date) {return false}
         const expDate = new Date(c.expiration_date)
         return expDate >= today && expDate <= thirtyDaysFromNow
       })

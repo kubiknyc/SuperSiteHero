@@ -167,7 +167,7 @@ function extractTrade(activityName: string): string {
   ]
 
   for (const [pattern, trade] of tradePatterns) {
-    if (pattern.test(lowerName)) return trade
+    if (pattern.test(lowerName)) {return trade}
   }
 
   return 'General'
@@ -216,9 +216,9 @@ function assessWeatherImpact(
 
   // Determine impact level
   let impact: 'none' | 'minor' | 'moderate' | 'severe' = 'none'
-  if (delayHours >= 8) impact = 'severe'
-  else if (delayHours >= 4) impact = 'moderate'
-  else if (delayHours > 0) impact = 'minor'
+  if (delayHours >= 8) {impact = 'severe'}
+  else if (delayHours >= 4) {impact = 'moderate'}
+  else if (delayHours > 0) {impact = 'minor'}
 
   return {
     impact,
@@ -307,7 +307,7 @@ export const predictWeatherImpactTool = createTool<PredictWeatherImpactInput, Pr
     }
 
     // Get scheduled activities
-    let activityQuery = supabase
+    const activityQuery = supabase
       .from('schedule_activities')
       .select(`
         id,

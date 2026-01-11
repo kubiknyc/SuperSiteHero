@@ -60,7 +60,7 @@ export function OfflineIndicator({
 
   // Badge variant - minimal indicator
   if (variant === 'badge') {
-    if (isOnline) return null
+    if (isOnline) {return null}
 
     return (
       <Badge
@@ -148,7 +148,7 @@ export function MobileOfflineBanner() {
   const isOnline = useIsOnline()
   const pendingSyncs = usePendingSyncs()
 
-  if (isOnline) return null
+  if (isOnline) {return null}
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 bg-warning text-warning-foreground px-4 py-2 md:hidden">

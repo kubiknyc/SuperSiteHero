@@ -34,7 +34,9 @@ export function SecurityWarningDialog({
   onDismiss,
   onSignOut,
 }: SecurityWarningDialogProps) {
-  if (!securityResult) return null
+  if (!securityResult) {
+    return null
+  }
 
   const isHighRisk = securityResult.riskLevel === 'high'
   const isMediumRisk = securityResult.riskLevel === 'medium'

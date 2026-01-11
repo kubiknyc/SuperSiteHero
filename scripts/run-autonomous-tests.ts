@@ -293,7 +293,9 @@ class AutonomousTestRunner {
    * Check if a phase should run based on config
    */
   private shouldRunPhase(phase: string): boolean {
-    if (this.config.phase === 'all') return true;
+    if (this.config.phase === 'all') {
+      return true;
+    }
     if (this.config.phase === 'critical') {
       return ['unit', 'e2e'].includes(phase);
     }

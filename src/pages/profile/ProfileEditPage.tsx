@@ -56,7 +56,7 @@ export function ProfileEditPage() {
 
   // Check for unsaved changes
   useEffect(() => {
-    if (!userProfile) return
+    if (!userProfile) {return}
 
     const hasFormChanges =
       formData.first_name !== (userProfile.first_name || '') ||
@@ -79,7 +79,7 @@ export function ProfileEditPage() {
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (!file) return
+    if (!file) {return}
 
     // Validate file type
     if (!ALLOWED_AVATAR_TYPES.includes(file.type)) {
@@ -113,7 +113,7 @@ export function ProfileEditPage() {
   }
 
   const uploadAvatar = async (): Promise<string | null> => {
-    if (!avatarFile || !userProfile) return avatarUrl
+    if (!avatarFile || !userProfile) {return avatarUrl}
 
     setUploadingAvatar(true)
 

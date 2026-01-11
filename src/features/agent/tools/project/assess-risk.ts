@@ -235,9 +235,9 @@ function determineOverallRiskLevel(
   highPriority: number,
   totalRisks: number
 ): 'low' | 'medium' | 'high' | 'critical' {
-  if (highPriority >= 5 || avgScore >= 7) return 'critical'
-  if (highPriority >= 3 || avgScore >= 5) return 'high'
-  if (highPriority >= 1 || avgScore >= 3) return 'medium'
+  if (highPriority >= 5 || avgScore >= 7) {return 'critical'}
+  if (highPriority >= 3 || avgScore >= 5) {return 'high'}
+  if (highPriority >= 1 || avgScore >= 3) {return 'medium'}
   return 'low'
 }
 
@@ -247,7 +247,7 @@ function analyzeScheduleRisks(activities: any[], project: any): RiskItem[] {
 
   // Check for delayed activities
   const delayedActivities = activities.filter(a => {
-    if (a.status === 'completed') return false
+    if (a.status === 'completed') {return false}
     const plannedEnd = new Date(a.planned_end || a.end_date)
     return plannedEnd < now
   })

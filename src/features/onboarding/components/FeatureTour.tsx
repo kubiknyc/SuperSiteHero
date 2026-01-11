@@ -147,11 +147,11 @@ export function FeatureTour({
       }
 
       // Keep tooltip within viewport
-      if (left < 16) left = 16
+      if (left < 16) {left = 16}
       if (left + tooltipWidth > window.innerWidth - 16) {
         left = window.innerWidth - tooltipWidth - 16
       }
-      if (top < 16) top = 16
+      if (top < 16) {top = 16}
       if (top + tooltipHeight > window.innerHeight - 16) {
         top = window.innerHeight - tooltipHeight - 16
       }
@@ -171,7 +171,7 @@ export function FeatureTour({
 
   // Start tour
   const handleStart = useCallback(() => {
-    if (!tour) return
+    if (!tour) {return}
     setIsActive(true)
     setCurrentStepIndex(0)
     startTour(tourId)
@@ -214,7 +214,7 @@ export function FeatureTour({
 
   // Render spotlight overlay and tooltip
   const renderTourOverlay = () => {
-    if (!isActive || !currentStep) return null
+    if (!isActive || !currentStep) {return null}
 
     const spotlightRect = targetElement?.getBoundingClientRect()
     const padding = currentStep.spotlightPadding || 8
@@ -390,7 +390,7 @@ export function FeatureTour({
   }
 
   // If tour doesn't exist, return null
-  if (!tour) return null
+  if (!tour) {return null}
 
   // If completed and not active, show restart button
   if (isCompleted && !isActive) {

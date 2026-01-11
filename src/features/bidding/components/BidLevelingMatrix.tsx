@@ -181,8 +181,8 @@ export function BidLevelingMatrix({
 
   // Filter visible submissions
   const visibleSubmissions = useMemo(() => {
-    if (!matrix?.submissions) return []
-    if (selectedBidders.size === 0) return matrix.submissions
+    if (!matrix?.submissions) {return []}
+    if (selectedBidders.size === 0) {return matrix.submissions}
     return matrix.submissions.filter((s) => selectedBidders.has(s.id))
   }, [matrix?.submissions, selectedBidders])
 
@@ -727,11 +727,11 @@ function LineItemsComparison({
                       : null
 
                     let cellClass = ''
-                    if (highlightMode === 'low' && isLow) cellClass = 'bg-success/20 text-success'
-                    if (highlightMode === 'high' && isHigh) cellClass = 'bg-error/20 text-error'
+                    if (highlightMode === 'low' && isLow) {cellClass = 'bg-success/20 text-success'}
+                    if (highlightMode === 'high' && isHigh) {cellClass = 'bg-error/20 text-error'}
                     if (highlightMode === 'variance' && variance !== null) {
-                      if (variance < -10) cellClass = 'bg-success/20 text-success'
-                      if (variance > 10) cellClass = 'bg-error/20 text-error'
+                      if (variance < -10) {cellClass = 'bg-success/20 text-success'}
+                      if (variance > 10) {cellClass = 'bg-error/20 text-error'}
                     }
 
                     return (
@@ -994,7 +994,7 @@ function NotesDialog({ open, onOpenChange, editingNote, onClose }: NotesDialogPr
   return (
     <Dialog open={open} onOpenChange={(isOpen) => {
       onOpenChange(isOpen)
-      if (!isOpen) onClose()
+      if (!isOpen) {onClose()}
     }}>
       <DialogContent>
         <DialogHeader>

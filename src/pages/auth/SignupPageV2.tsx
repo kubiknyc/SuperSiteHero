@@ -134,7 +134,7 @@ export function SignupPageV2() {
         },
       })
 
-      if (authError) throw authError
+      if (authError) {throw authError}
 
       rateLimit.reset()
       success('Account Created', 'Please check your email to verify your account.')

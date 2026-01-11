@@ -63,7 +63,7 @@ export function usePhotoSummary() {
  * Get category label
  */
 export function getCategoryLabel(category: PhotoCategory | null): string {
-  if (!category) return 'General'
+  if (!category) {return 'General'}
   const labels: Record<PhotoCategory, string> = {
     progress: 'Progress',
     safety: 'Safety',
@@ -81,7 +81,7 @@ export function getCategoryLabel(category: PhotoCategory | null): string {
  * Get category color
  */
 export function getCategoryColor(category: PhotoCategory | null): string {
-  if (!category) return 'text-muted-foreground'
+  if (!category) {return 'text-muted-foreground'}
   switch (category) {
     case 'progress':
       return 'text-blue-600'
@@ -106,7 +106,7 @@ export function getCategoryColor(category: PhotoCategory | null): string {
  * Get category badge variant
  */
 export function getCategoryBadgeVariant(category: PhotoCategory | null): 'default' | 'secondary' | 'destructive' | 'outline' {
-  if (!category) return 'outline'
+  if (!category) {return 'outline'}
   switch (category) {
     case 'safety':
     case 'issue':
@@ -123,7 +123,7 @@ export function getCategoryBadgeVariant(category: PhotoCategory | null): 'defaul
  * Format photo date for display
  */
 export function formatPhotoDate(dateString: string | null): string {
-  if (!dateString) return '-'
+  if (!dateString) {return '-'}
   return new Date(dateString).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -135,7 +135,7 @@ export function formatPhotoDate(dateString: string | null): string {
  * Format photo datetime for display
  */
 export function formatPhotoDateTime(dateString: string | null): string {
-  if (!dateString) return '-'
+  if (!dateString) {return '-'}
   return new Date(dateString).toLocaleString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -152,7 +152,7 @@ export function filterPhotosByCategory(
   photos: SubcontractorPhoto[],
   category: PhotoCategory | 'all'
 ): SubcontractorPhoto[] {
-  if (category === 'all') return photos
+  if (category === 'all') {return photos}
   return photos.filter(p => p.category === category)
 }
 

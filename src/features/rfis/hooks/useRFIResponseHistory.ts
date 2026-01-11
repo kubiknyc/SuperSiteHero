@@ -87,7 +87,7 @@ export function useRFIResponses(rfiId: string | undefined) {
   return useQuery({
     queryKey: rfiResponseKeys.byRFI(rfiId || ''),
     queryFn: async () => {
-      if (!rfiId) throw new Error('RFI ID required')
+      if (!rfiId) {throw new Error('RFI ID required')}
 
       const { data, error } = await supabase
         .from('rfi_responses')
@@ -107,7 +107,7 @@ export function useRFIResponses(rfiId: string | undefined) {
         .eq('is_current_version', true)
         .order('responded_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFIResponse[]
     },
     enabled: !!rfiId,
@@ -121,7 +121,7 @@ export function useRFIResponseHistory(rfiId: string | undefined) {
   return useQuery({
     queryKey: rfiResponseKeys.history(rfiId || ''),
     queryFn: async () => {
-      if (!rfiId) throw new Error('RFI ID required')
+      if (!rfiId) {throw new Error('RFI ID required')}
 
       const { data, error } = await supabase
         .from('rfi_responses')
@@ -141,7 +141,7 @@ export function useRFIResponseHistory(rfiId: string | undefined) {
         .order('responded_at', { ascending: false })
         .order('version_number', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFIResponse[]
     },
     enabled: !!rfiId,
@@ -155,7 +155,7 @@ export function useCurrentOfficialResponse(rfiId: string | undefined) {
   return useQuery({
     queryKey: rfiResponseKeys.current(rfiId || ''),
     queryFn: async () => {
-      if (!rfiId) throw new Error('RFI ID required')
+      if (!rfiId) {throw new Error('RFI ID required')}
 
       const { data, error } = await supabase
         .from('rfi_responses')
@@ -178,7 +178,7 @@ export function useCurrentOfficialResponse(rfiId: string | undefined) {
         .limit(1)
         .maybeSingle()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFIResponse | null
     },
     enabled: !!rfiId,
@@ -192,7 +192,7 @@ export function useResponseRevisionHistory(responseId: string | undefined) {
   return useQuery({
     queryKey: rfiResponseKeys.detail(responseId || ''),
     queryFn: async () => {
-      if (!responseId) throw new Error('Response ID required')
+      if (!responseId) {throw new Error('Response ID required')}
 
       // Get the response to find its chain
       const { data: response, error: responseError } = await supabase
@@ -201,7 +201,7 @@ export function useResponseRevisionHistory(responseId: string | undefined) {
         .eq('id', responseId)
         .single()
 
-      if (responseError) throw responseError
+      if (responseError) {throw responseError}
 
       // Get all versions of this response type for the RFI
       const { data, error } = await supabase
@@ -221,7 +221,7 @@ export function useResponseRevisionHistory(responseId: string | undefined) {
         .eq('response_type', response.response_type)
         .order('version_number', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFIResponse[]
     },
     enabled: !!responseId,
@@ -269,7 +269,7 @@ export function useAddRFIResponse() {
         )
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // If this is an official response, update the RFI status
       if (input.response_type === 'official') {
@@ -316,7 +316,7 @@ export function useReviseRFIResponse() {
         p_user_id: userProfile?.id,
       })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Fetch the new response
       const { data: newResponse, error: fetchError } = await supabase
@@ -336,7 +336,7 @@ export function useReviseRFIResponse() {
         .eq('id', newResponseId)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       // Update action type if provided
       if (updates.action_type) {
@@ -379,7 +379,7 @@ export function getResponseTypeColor(type: ResponseType): string {
  * Get label for response action type
  */
 export function getActionTypeLabel(actionType: ResponseActionType | null): string {
-  if (!actionType) return ''
+  if (!actionType) {return ''}
 
   const labels: Record<ResponseActionType, string> = {
     answered: 'Answered',
@@ -398,7 +398,7 @@ export function getActionTypeLabel(actionType: ResponseActionType | null): strin
  * Get color for action type badge
  */
 export function getActionTypeColor(actionType: ResponseActionType | null): string {
-  if (!actionType) return 'bg-gray-100 text-gray-800'
+  if (!actionType) {return 'bg-gray-100 text-gray-800'}
 
   const colors: Record<ResponseActionType, string> = {
     answered: 'bg-green-100 text-green-800',

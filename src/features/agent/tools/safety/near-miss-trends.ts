@@ -64,17 +64,17 @@ interface NearMissTrendOutput {
 const DAYS_OF_WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 function determineTrendDirection(current: number, previous: number): 'increasing' | 'decreasing' | 'stable' {
-  if (previous === 0) return current > 0 ? 'increasing' : 'stable'
+  if (previous === 0) {return current > 0 ? 'increasing' : 'stable'}
 
   const changePercent = ((current - previous) / previous) * 100
 
-  if (changePercent > 15) return 'increasing'
-  if (changePercent < -15) return 'decreasing'
+  if (changePercent > 15) {return 'increasing'}
+  if (changePercent < -15) {return 'decreasing'}
   return 'stable'
 }
 
 function calculatePercentChange(current: number, previous: number): number {
-  if (previous === 0) return current > 0 ? 100 : 0
+  if (previous === 0) {return current > 0 ? 100 : 0}
   return ((current - previous) / previous) * 100
 }
 
@@ -240,7 +240,7 @@ export const nearMissTrendsTool = createTool<NearMissTrendInput, NearMissTrendOu
 
       if (existing) {
         existing.count++
-        if (nm.location) existing.locations.add(nm.location)
+        if (nm.location) {existing.locations.add(nm.location)}
       } else {
         categoryOccurrences.set(category, {
           count: 1,

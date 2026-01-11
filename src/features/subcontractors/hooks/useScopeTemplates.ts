@@ -69,7 +69,7 @@ export function useScopeTemplates(filters: { tradeCode?: string; search?: string
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return data as ScopeTemplate[]
     },
     enabled: !!userProfile?.company_id,
@@ -92,7 +92,7 @@ export function useScopeTemplate(id: string | undefined) {
         .eq('id', id)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Sort items by sort_order
       if (data.items) {
@@ -134,7 +134,7 @@ export function useScopeTemplateLibrary() {
         .is('deleted_at', null)
         .order('name', { ascending: true })
 
-      if (tempError) throw tempError
+      if (tempError) {throw tempError}
 
       // Group by trade
       const tradeGroups: Record<string, number> = {}
@@ -191,7 +191,7 @@ export function useScopeTemplatesByTrade(tradeCode: string | undefined) {
         .order('is_default', { ascending: false })
         .order('name', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as ScopeTemplate[]
     },
     enabled: !!tradeCode && !!userProfile?.company_id,
@@ -230,7 +230,7 @@ export function useCreateScopeTemplate() {
         .select()
         .single()
 
-      if (tempError) throw tempError
+      if (tempError) {throw tempError}
 
       // Create items if provided
       if (dto.scopeItems && dto.scopeItems.length > 0) {
@@ -252,7 +252,7 @@ export function useCreateScopeTemplate() {
           .from('scope_template_items')
           .insert(items)
 
-        if (itemsError) throw itemsError
+        if (itemsError) {throw itemsError}
       }
 
       return template
@@ -300,7 +300,7 @@ export function useUpdateScopeTemplate() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (data) => {
@@ -327,7 +327,7 @@ export function useDeleteScopeTemplate() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: scopeTemplateKeys.lists() })
@@ -365,7 +365,7 @@ export function useDuplicateScopeTemplate() {
         .eq('id', templateId)
         .single()
 
-      if (origError) throw origError
+      if (origError) {throw origError}
 
       // Create new template
       const { data: newTemplate, error: newError } = await db
@@ -387,7 +387,7 @@ export function useDuplicateScopeTemplate() {
         .select()
         .single()
 
-      if (newError) throw newError
+      if (newError) {throw newError}
 
       // Duplicate items
       if (original.items && original.items.length > 0) {
@@ -459,7 +459,7 @@ export function useApplyScopeTemplate() {
         .eq('id', templateId)
         .single()
 
-      if (tempError) throw tempError
+      if (tempError) {throw tempError}
 
       let itemsAdded = 0
 
@@ -585,7 +585,7 @@ export function useAddTemplateItem() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return { item: data, templateId }
     },
     onSuccess: ({ templateId }) => {
@@ -631,7 +631,7 @@ export function useUpdateTemplateItem() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return { item: data, templateId }
     },
     onSuccess: ({ templateId }) => {
@@ -663,7 +663,7 @@ export function useDeleteTemplateItem() {
         .delete()
         .eq('id', itemId)
 
-      if (error) throw error
+      if (error) {throw error}
       return { templateId }
     },
     onSuccess: ({ templateId }) => {
@@ -739,15 +739,15 @@ export function formatTemplateForExport(template: ScopeTemplate): string {
 
   lines.push(`Template: ${template.name}`)
   lines.push(`Trade: ${getTradeLabel(template.tradeCode as TradeCode)}`)
-  if (template.description) lines.push(`Description: ${template.description}`)
+  if (template.description) {lines.push(`Description: ${template.description}`)}
   lines.push('')
 
   if (template.scopeItems && template.scopeItems.length > 0) {
     lines.push('Scope Items:')
     template.scopeItems.forEach((item) => {
       lines.push(`  ${item.itemNumber}. ${item.description}`)
-      if (item.unit) lines.push(`      Unit: ${item.unit}`)
-      if (item.notes) lines.push(`      Notes: ${item.notes}`)
+      if (item.unit) {lines.push(`      Unit: ${item.unit}`)}
+      if (item.notes) {lines.push(`      Notes: ${item.notes}`)}
     })
     lines.push('')
   }

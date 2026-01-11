@@ -140,7 +140,7 @@ export function useJHAs(filters?: JSAFilters) {
       }
 
       const { data, error } = await query;
-      if (error) throw error;
+      if (error) {throw error;}
 
       return (data || []).map((jha: any) => ({
         ...jha,
@@ -177,7 +177,7 @@ export function useJHA(jhaId: string) {
         .eq('id', jhaId)
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Sort hazards by step number
       if (data.hazards) {
@@ -219,7 +219,7 @@ export function useJHAHazards(jhaId: string) {
         .eq('jsa_id', jhaId)
         .order('step_number');
 
-      if (error) throw error;
+      if (error) {throw error;}
       return (data || []) as JSAHazard[];
     },
     enabled: !!jhaId,
@@ -242,7 +242,7 @@ export function useJHAAcknowledgments(jhaId: string) {
         .eq('jsa_id', jhaId)
         .order('acknowledged_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return (data || []) as JSAAcknowledgment[];
     },
     enabled: !!jhaId,
@@ -258,7 +258,7 @@ export function useJHATemplatesByCategory() {
   return useQuery({
     queryKey: jhaKeys.templates(),
     queryFn: async (): Promise<JHATemplateCategory[]> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       const { data, error } = await db
         .from('jsa_templates')
@@ -268,7 +268,7 @@ export function useJHATemplatesByCategory() {
         .order('category')
         .order('name');
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Group by category
       const categoryMap = new Map<string, JSATemplate[]>();
@@ -308,7 +308,7 @@ export function useJHAStatistics(projectId: string) {
         `)
         .eq('project_id', projectId);
 
-      if (jhaError) throw jhaError;
+      if (jhaError) {throw jhaError;}
 
       const stats: JHAStatistics = {
         total_jhas: jhas?.length || 0,
@@ -349,8 +349,8 @@ export function useJHAStatistics(projectId: string) {
 
         // Check for high/critical risk
         hazards.forEach((h: { risk_level: RiskLevel }) => {
-          if (h.risk_level === 'high') stats.high_risk_count++;
-          if (h.risk_level === 'critical') stats.critical_risk_count++;
+          if (h.risk_level === 'high') {stats.high_risk_count++;}
+          if (h.risk_level === 'critical') {stats.critical_risk_count++;}
         });
 
         // Count acknowledgments
@@ -388,7 +388,7 @@ export function usePendingAcknowledgments(projectId: string) {
         .in('status', ['approved', 'in_progress'])
         .order('scheduled_date');
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Filter to JHAs where expected workers > acknowledgments
       // This would need to be enhanced with crew size data
@@ -416,7 +416,7 @@ export function useCreateJHA() {
 
   return useMutation({
     mutationFn: async (dto: CreateJSADTO): Promise<JobSafetyAnalysis> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       const { data: jha, error: jhaError } = await db
         .from('job_safety_analyses')
@@ -442,7 +442,7 @@ export function useCreateJHA() {
         .select()
         .single();
 
-      if (jhaError) throw jhaError;
+      if (jhaError) {throw jhaError;}
 
       // Add hazards if provided
       if (dto.hazards && dto.hazards.length > 0) {
@@ -469,7 +469,7 @@ export function useCreateJHA() {
           .from('jsa_hazards')
           .insert(hazardInserts);
 
-        if (hazardsError) throw hazardsError;
+        if (hazardsError) {throw hazardsError;}
       }
 
       return jha as JobSafetyAnalysis;
@@ -508,7 +508,7 @@ export function useUpdateJHA() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JobSafetyAnalysis;
     },
     onSuccess: (data) => {
@@ -572,7 +572,7 @@ export function useAddJHAHazard() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JSAHazard;
     },
     onSuccess: (_, variables) => {
@@ -620,7 +620,7 @@ export function useAddJHAAcknowledgment() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JSAAcknowledgment;
     },
     onSuccess: (data, variables) => {
@@ -675,7 +675,7 @@ export function useBulkAddAcknowledgments() {
         .insert(inserts)
         .select();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JSAAcknowledgment[];
     },
     onSuccess: (data, variables) => {
@@ -723,7 +723,7 @@ export function useLinkJHAToDailyReport() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as DailyReportLink;
     },
     onSuccess: (_, variables) => {
@@ -767,7 +767,7 @@ export function useApplyJHATemplate() {
         .eq('id', template_id)
         .single();
 
-      if (templateError) throw templateError;
+      if (templateError) {throw templateError;}
 
       // Update JHA with template reference
       const { error: updateError } = await db
@@ -775,7 +775,7 @@ export function useApplyJHATemplate() {
         .update({ template_id })
         .eq('id', jha_id);
 
-      if (updateError) throw updateError;
+      if (updateError) {throw updateError;}
 
       // Add default hazards from template
       if (template.default_hazards && template.default_hazards.length > 0) {
@@ -793,7 +793,7 @@ export function useApplyJHATemplate() {
           .from('jsa_hazards')
           .insert(hazardInserts);
 
-        if (hazardsError) throw hazardsError;
+        if (hazardsError) {throw hazardsError;}
       }
 
       // Increment template usage count
@@ -839,7 +839,7 @@ export function useSubmitJHAForReview() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JobSafetyAnalysis;
     },
     onSuccess: (data) => {
@@ -890,7 +890,7 @@ export function useApproveJHA() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JobSafetyAnalysis;
     },
     onSuccess: (data) => {
@@ -939,7 +939,7 @@ export function useCompleteJHA() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as JobSafetyAnalysis;
     },
     onSuccess: (data) => {

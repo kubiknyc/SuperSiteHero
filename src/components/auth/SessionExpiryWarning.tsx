@@ -101,14 +101,10 @@ export function SessionExpiryWarning({ onExpired }: SessionExpiryWarningProps) {
     extendSessionRef.current = extendSession
   }, [extendSession])
 
-  const { formattedTime, isExpiringSoon } = useSessionCountdown()
+  const { formattedTime, isExpiringSoon: _isExpiringSoon } = useSessionCountdown()
 
-  // Show dialog when time is critically low
-  useEffect(() => {
-    if (isExpiringSoon && !showDialog && hasShownWarning) {
-      setShowDialog(true)
-    }
-  }, [isExpiringSoon, showDialog, hasShownWarning])
+  // Note: Dialog is shown via handleExpiringSoon callback when timeRemaining < 2 minutes
+  // No additional effect needed here
 
   const handleExtend = async () => {
     const success = await extendSession()

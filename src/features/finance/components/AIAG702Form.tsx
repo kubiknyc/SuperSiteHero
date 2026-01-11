@@ -96,7 +96,7 @@ function formatCurrency(amount: number): string {
 }
 
 function formatDate(date: string | null | undefined): string {
-  if (!date) return ''
+  if (!date) {return ''}
   try {
     return format(parseISO(date), 'MMMM d, yyyy')
   } catch {
@@ -248,7 +248,7 @@ export function AIAG702Form({
 
   // Handle reject
   const handleReject = async () => {
-    if (!rejectReason.trim()) return
+    if (!rejectReason.trim()) {return}
     await rejectApplication.mutateAsync({
       id: applicationId,
       reason: rejectReason.trim(),

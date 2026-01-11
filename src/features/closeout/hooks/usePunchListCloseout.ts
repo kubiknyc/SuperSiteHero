@@ -61,7 +61,7 @@ async function fetchPunchListCloseoutStatus(projectId: string): Promise<PunchLis
     .eq('project_id', projectId)
     .is('deleted_at', null)
 
-  if (error) throw error
+  if (error) {throw error}
 
   const punchItems = items || []
 
@@ -142,8 +142,8 @@ async function fetchPunchListCloseoutStatus(projectId: string): Promise<PunchLis
     }
 
     const assigneeData = assigneeMap.get(assigneeKey)!
-    if (item.status === 'open') assigneeData.openCount++
-    if (item.status === 'in_progress') assigneeData.inProgressCount++
+    if (item.status === 'open') {assigneeData.openCount++}
+    if (item.status === 'in_progress') {assigneeData.inProgressCount++}
 
     // Location grouping
     const location = item.location || 'Unknown Location'
@@ -156,8 +156,8 @@ async function fetchPunchListCloseoutStatus(projectId: string): Promise<PunchLis
     }
 
     const locationData = locationMap.get(location)!
-    if (item.status === 'open' || item.status === 'in_progress') locationData.openCount++
-    if (item.status === 'completed' || item.status === 'verified') locationData.completedCount++
+    if (item.status === 'open' || item.status === 'in_progress') {locationData.openCount++}
+    if (item.status === 'completed' || item.status === 'verified') {locationData.completedCount++}
   }
 
   const total = punchItems.length
@@ -194,7 +194,7 @@ export function usePunchListCloseout(projectId: string | undefined) {
   return useQuery({
     queryKey: ['closeout', 'punch-list-status', projectId],
     queryFn: () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
       return fetchPunchListCloseoutStatus(projectId)
     },
     enabled: !!projectId,

@@ -82,12 +82,12 @@ export function useInsuranceComplianceList(filters: InsuranceComplianceFilters =
 
       const { data: subcontractors, error: subError } = await query
 
-      if (subError) throw subError
+      if (subError) {throw subError}
 
       // Get certificates for each subcontractor
       const subIds = subcontractors?.map((s: any) => s.id) || []
 
-      if (subIds.length === 0) return []
+      if (subIds.length === 0) {return []}
 
       const { data: certificates, error: certError } = await db
         .from('insurance_certificates')
@@ -96,7 +96,7 @@ export function useInsuranceComplianceList(filters: InsuranceComplianceFilters =
         .is('deleted_at', null)
         .order('expiration_date', { ascending: true })
 
-      if (certError) throw certError
+      if (certError) {throw certError}
 
       // Build compliance list
       return subcontractors.map((sub: any) => {
@@ -112,8 +112,8 @@ export function useInsuranceComplianceList(filters: InsuranceComplianceFilters =
           const daysUntilExpiry = Math.ceil((expDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
 
           let certStatus: 'active' | 'expiring_soon' | 'expired' = 'active'
-          if (daysUntilExpiry < 0) certStatus = 'expired'
-          else if (daysUntilExpiry <= 30) certStatus = 'expiring_soon'
+          if (daysUntilExpiry < 0) {certStatus = 'expired'}
+          else if (daysUntilExpiry <= 30) {certStatus = 'expiring_soon'}
 
           return {
             id: cert.id,
@@ -189,7 +189,7 @@ export function useSubcontractorCompliance(subcontractorId: string | undefined) 
         .eq('id', subcontractorId)
         .single()
 
-      if (subError) throw subError
+      if (subError) {throw subError}
       return sub
     },
     enabled: !!subcontractorId,
@@ -225,7 +225,7 @@ export function useExpiringCertificates(daysAhead: number = 30) {
         .in('status', ['active', 'expiring_soon'])
         .order('expiration_date', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     enabled: !!userProfile?.company_id,
@@ -258,13 +258,13 @@ export function useExpirationCalendar(month: string) {
         .is('deleted_at', null)
         .order('expiration_date', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Group by date
       const byDate: Record<string, any[]> = {}
       data?.forEach((cert: any) => {
         const date = cert.expiration_date
-        if (!byDate[date]) byDate[date] = []
+        if (!byDate[date]) {byDate[date] = []}
         byDate[date].push(cert)
       })
 
@@ -294,7 +294,7 @@ export function useInsuranceComplianceDashboard() {
         .eq('company_id', userProfile?.company_id)
         .is('deleted_at', null)
 
-      if (certError) throw certError
+      if (certError) {throw certError}
 
       // Get compliance status counts
       const { data: complianceStats, error: compError } = await db
@@ -302,7 +302,7 @@ export function useInsuranceComplianceDashboard() {
         .select('is_compliant, payment_hold')
         .eq('company_id', userProfile?.company_id)
 
-      if (compError) throw compError
+      if (compError) {throw compError}
 
       const now = new Date()
       const thirtyDays = new Date()
@@ -358,7 +358,7 @@ export function useReminderSettings() {
         .eq('company_id', userProfile?.company_id)
         .single()
 
-      if (error && error.code !== 'PGRST116') throw error
+      if (error && error.code !== 'PGRST116') {throw error}
 
       // Return defaults if not found
       return data || {
@@ -394,7 +394,7 @@ export function useUpdateReminderSettings() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: () => {
@@ -426,7 +426,7 @@ export function useSendBulkReminders() {
         },
       })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Log reminders sent
       for (const subId of dto.subcontractorIds) {
@@ -481,7 +481,7 @@ export function useSendReminder() {
         },
       })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Log reminder
       await db.from('insurance_reminder_log').insert({
@@ -539,7 +539,7 @@ export function useUploadCertificate() {
         .from('insurance-certificates')
         .upload(fileName, file)
 
-      if (uploadError) throw uploadError
+      if (uploadError) {throw uploadError}
 
       // Get public URL
       const { data: urlData } = supabase.storage
@@ -565,7 +565,7 @@ export function useUploadCertificate() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (_, { subcontractorId }) => {
@@ -614,7 +614,7 @@ export function useVerifyCertificate() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: () => {

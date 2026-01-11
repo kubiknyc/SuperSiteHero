@@ -78,7 +78,7 @@ export function useSubmittalDrawingLinks(submittalId: string | undefined) {
   return useQuery({
     queryKey: submittalDrawingLinkKeys.bySubmittal(submittalId || ''),
     queryFn: async () => {
-      if (!submittalId) throw new Error('Submittal ID required')
+      if (!submittalId) {throw new Error('Submittal ID required')}
 
       const { data, error } = await supabase
         .from('submittal_drawing_links')
@@ -97,7 +97,7 @@ export function useSubmittalDrawingLinks(submittalId: string | undefined) {
         .eq('submittal_id', submittalId)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SubmittalDrawingLink[]
     },
     enabled: !!submittalId,
@@ -112,7 +112,7 @@ export function useSubmittalsByDrawing(documentId: string | undefined) {
   return useQuery({
     queryKey: submittalDrawingLinkKeys.byDocument(documentId || ''),
     queryFn: async () => {
-      if (!documentId) throw new Error('Document ID required')
+      if (!documentId) {throw new Error('Document ID required')}
 
       const { data, error } = await supabase
         .from('submittal_drawing_links')
@@ -132,7 +132,7 @@ export function useSubmittalsByDrawing(documentId: string | undefined) {
         .eq('document_id', documentId)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     enabled: !!documentId,
@@ -173,7 +173,7 @@ export function useAddSubmittalDrawingLink() {
         `)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SubmittalDrawingLink
     },
     onSuccess: (data) => {
@@ -213,7 +213,7 @@ export function useUpdateSubmittalDrawingLink() {
         `)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SubmittalDrawingLink
     },
     onSuccess: (data) => {
@@ -241,7 +241,7 @@ export function useRemoveSubmittalDrawingLink() {
     }) => {
       const { error } = await supabase.from('submittal_drawing_links').delete().eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
       return { id, submittalId, documentId }
     },
     onSuccess: (data) => {

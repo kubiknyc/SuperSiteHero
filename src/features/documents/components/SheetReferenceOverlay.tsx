@@ -59,7 +59,7 @@ function AddReferenceDialog({ isOpen, onClose, onSave, position }: AddReferenceD
   const [targetDetail, setTargetDetail] = useState('')
 
   const handleSave = () => {
-    if (!targetSheet.trim()) return
+    if (!targetSheet.trim()) {return}
     onSave({
       targetSheet: targetSheet.trim().toUpperCase(),
       label: label.trim() || `See ${targetSheet.trim().toUpperCase()}`,
@@ -176,7 +176,7 @@ export function SheetReferenceOverlay({
 
   const handleContainerClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!isEditMode || !onAddReference) return
+      if (!isEditMode || !onAddReference) {return}
 
       const rect = e.currentTarget.getBoundingClientRect()
       const x = (e.clientX - rect.left) / containerWidth

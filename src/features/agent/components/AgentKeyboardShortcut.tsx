@@ -39,7 +39,7 @@ interface AgentKeyboardShortcutProps {
  */
 function useIsMac(): boolean {
   return useMemo(() => {
-    if (typeof window === 'undefined') return false
+    if (typeof window === 'undefined') {return false}
 
     // Check navigator.platform first (more reliable)
     if (navigator.platform) {

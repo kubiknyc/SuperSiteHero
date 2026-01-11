@@ -107,12 +107,12 @@ export function AIAG703Form({
 
   // Calculate pagination
   const totalPages = useMemo(() => {
-    if (!g703?.line_items) return 1
+    if (!g703?.line_items) {return 1}
     return Math.ceil(g703.line_items.length / ITEMS_PER_PAGE)
   }, [g703?.line_items])
 
   const paginatedItems = useMemo(() => {
-    if (!g703?.line_items) return []
+    if (!g703?.line_items) {return []}
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE
     return g703.line_items.slice(startIndex, startIndex + ITEMS_PER_PAGE)
   }, [g703?.line_items, currentPage])

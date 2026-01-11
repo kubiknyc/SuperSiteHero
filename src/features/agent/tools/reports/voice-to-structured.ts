@@ -352,10 +352,10 @@ export const voiceToStructuredTool = createTool<VoiceToStructuredInput, VoiceToS
 
     // Calculate confidence score
     let confidence = 0.5 // Base confidence
-    if (workActivities.length > 0) confidence += 0.15
-    if (manpowerMap.size > 0) confidence += 0.15
-    if (delaysIssues.length > 0 || safetyObservations.length > 0) confidence += 0.1
-    if (ambiguousItems.length === 0) confidence += 0.1
+    if (workActivities.length > 0) {confidence += 0.15}
+    if (manpowerMap.size > 0) {confidence += 0.15}
+    if (delaysIssues.length > 0 || safetyObservations.length > 0) {confidence += 0.1}
+    if (ambiguousItems.length === 0) {confidence += 0.1}
     confidence = Math.min(confidence, 0.95)
 
     return {

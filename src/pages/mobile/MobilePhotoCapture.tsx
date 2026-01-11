@@ -54,7 +54,7 @@ function generateId(): string {
 
 // Get GPS location
 async function getGPSLocation(): Promise<CapturedPhoto['gps'] | undefined> {
-  if (!navigator.geolocation) return undefined;
+  if (!navigator.geolocation) {return undefined;}
 
   return new Promise((resolve) => {
     navigator.geolocation.getCurrentPosition(
@@ -73,7 +73,7 @@ async function getGPSLocation(): Promise<CapturedPhoto['gps'] | undefined> {
 
 // Format GPS for display
 function formatGPS(gps?: CapturedPhoto['gps']): string {
-  if (!gps) return 'No location';
+  if (!gps) {return 'No location';}
   const lat = Math.abs(gps.latitude).toFixed(4);
   const lng = Math.abs(gps.longitude).toFixed(4);
   const latDir = gps.latitude >= 0 ? 'N' : 'S';
@@ -190,7 +190,7 @@ export const MobilePhotoCapture = memo(function MobilePhotoCapture() {
 
   // Capture photo
   const capturePhoto = useCallback(async () => {
-    if (!videoRef.current || !canvasRef.current || cameraState !== 'ready') return;
+    if (!videoRef.current || !canvasRef.current || cameraState !== 'ready') {return;}
 
     setCameraState('capturing');
     triggerHaptic('heavy');
@@ -200,7 +200,7 @@ export const MobilePhotoCapture = memo(function MobilePhotoCapture() {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext('2d');
 
-      if (!ctx) throw new Error('Failed to get canvas context');
+      if (!ctx) {throw new Error('Failed to get canvas context');}
 
       // Set canvas size
       canvas.width = video.videoWidth;
@@ -264,7 +264,7 @@ export const MobilePhotoCapture = memo(function MobilePhotoCapture() {
     triggerHaptic('light');
     setCapturedPhotos(prev => {
       const photo = prev[index];
-      if (photo) URL.revokeObjectURL(photo.previewUrl);
+      if (photo) {URL.revokeObjectURL(photo.previewUrl);}
       return prev.filter((_, i) => i !== index);
     });
     setSelectedPhotoIndex(null);
@@ -331,7 +331,7 @@ export const MobilePhotoCapture = memo(function MobilePhotoCapture() {
   // Close without saving
   const handleClose = useCallback(() => {
     if (capturedPhotos.length > 0) {
-      if (!confirm('Discard captured photos?')) return;
+      if (!confirm('Discard captured photos?')) {return;}
     }
     capturedPhotos.forEach(photo => URL.revokeObjectURL(photo.previewUrl));
     if (streamRef.current) {

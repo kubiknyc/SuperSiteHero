@@ -174,8 +174,8 @@ function generateMockForecast(days: number, location: string): DayForecast[] {
 
   // Adjust for season
   const month = today.getMonth()
-  if (month >= 5 && month <= 8) baseTemp += 15 // Summer
-  else if (month >= 11 || month <= 2) baseTemp -= 20 // Winter
+  if (month >= 5 && month <= 8) {baseTemp += 15} // Summer
+  else if (month >= 11 || month <= 2) {baseTemp -= 20} // Winter
 
   for (let i = 0; i < days; i++) {
     const date = new Date(today)
@@ -191,11 +191,11 @@ function generateMockForecast(days: number, location: string): DayForecast[] {
     const windSpeed = Math.round(Math.random() * 20 + 5)
 
     let condition = 'Sunny'
-    if (precipChance > 50) condition = 'Rain'
-    else if (precipChance > 30) condition = 'Partly Cloudy'
-    else if (precipChance > 15) condition = 'Cloudy'
+    if (precipChance > 50) {condition = 'Rain'}
+    else if (precipChance > 30) {condition = 'Partly Cloudy'}
+    else if (precipChance > 15) {condition = 'Cloudy'}
 
-    if (highTemp < 32 && precipChance > 30) condition = 'Snow'
+    if (highTemp < 32 && precipChance > 30) {condition = 'Snow'}
 
     // Determine work impact
     let workImpact: 'none' | 'minor' | 'moderate' | 'severe' = 'none'
@@ -212,18 +212,18 @@ function generateMockForecast(days: number, location: string): DayForecast[] {
       recommendations.push('Suspend crane operations')
       recommendations.push('Secure loose materials')
     } else if (windSpeed > 20) {
-      if (workImpact !== 'severe') workImpact = 'moderate'
+      if (workImpact !== 'severe') {workImpact = 'moderate'}
       recommendations.push('Monitor crane operations')
     }
 
     if (highTemp > 95) {
-      if (workImpact === 'none') workImpact = 'minor'
+      if (workImpact === 'none') {workImpact = 'minor'}
       recommendations.push('Schedule heavy work for early morning')
       recommendations.push('Enforce hydration breaks')
     }
 
     if (lowTemp < 32) {
-      if (workImpact === 'none') workImpact = 'minor'
+      if (workImpact === 'none') {workImpact = 'minor'}
       recommendations.push('Protect fresh concrete from freezing')
       recommendations.push('Heat enclosures for masonry work')
     }

@@ -94,7 +94,7 @@ export function RFIResponseTimeline({
 
   // Get user initials for avatar fallback
   const getInitials = (name: string | undefined): string => {
-    if (!name) return '?'
+    if (!name) {return '?'}
     return name
       .split(' ')
       .map((n) => n[0])

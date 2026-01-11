@@ -448,9 +448,9 @@ function buildProcessingSummary(
 
   if (metadata) {
     const metaParts: string[] = []
-    if (metadata.title) metaParts.push(`title: "${metadata.title}"`)
-    if (metadata.revision) metaParts.push(`revision: ${metadata.revision}`)
-    if (metadata.date) metaParts.push(`date: ${metadata.date}`)
+    if (metadata.title) {metaParts.push(`title: "${metadata.title}"`)}
+    if (metadata.revision) {metaParts.push(`revision: ${metadata.revision}`)}
+    if (metadata.date) {metaParts.push(`date: ${metadata.date}`)}
     if (metaParts.length > 0) {
       parts.push(`Extracted: ${metaParts.join(', ')}`)
     }
@@ -488,9 +488,9 @@ async function logDocumentProcessing(
 
 function buildActionSummary(summary: { classified: boolean; extracted_metadata: boolean; linked_count: number }): string {
   const parts: string[] = []
-  if (summary.classified) parts.push('classified')
-  if (summary.extracted_metadata) parts.push('metadata extracted')
-  if (summary.linked_count > 0) parts.push(`${summary.linked_count} links created`)
+  if (summary.classified) {parts.push('classified')}
+  if (summary.extracted_metadata) {parts.push('metadata extracted')}
+  if (summary.linked_count > 0) {parts.push(`${summary.linked_count} links created`)}
   return parts.join(', ') || 'no actions taken'
 }
 
@@ -499,7 +499,7 @@ async function sendProcessingNotification(
   result: DocumentProcessingOutput
 ): Promise<void> {
   // Send notification about document processing
-  if (!task.created_by) return
+  if (!task.created_by) {return}
 
   try {
     await supabase.from('notifications').insert({

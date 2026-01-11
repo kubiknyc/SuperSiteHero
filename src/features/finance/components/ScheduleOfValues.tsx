@@ -333,7 +333,7 @@ export function ScheduleOfValues({
 
   // Generate next item number
   const nextItemNumber = useMemo(() => {
-    if (!sov?.line_items?.length) return '001'
+    if (!sov?.line_items?.length) {return '001'}
     const maxNumber = Math.max(
       ...sov.line_items.map((li) => parseInt(li.item_number) || 0)
     )
@@ -371,7 +371,7 @@ export function ScheduleOfValues({
 
   // Save line item
   const handleSave = async () => {
-    if (!formData.description.trim() || !sov) return
+    if (!formData.description.trim() || !sov) {return}
 
     const itemData: SOVLineItemInsert = {
       sov_id: sov.id,
@@ -394,7 +394,7 @@ export function ScheduleOfValues({
 
   // Delete line item
   const handleDelete = async () => {
-    if (!deleteConfirmId) return
+    if (!deleteConfirmId) {return}
     await deleteLineItem.mutateAsync(deleteConfirmId)
     setDeleteConfirmId(null)
   }
@@ -429,7 +429,7 @@ export function ScheduleOfValues({
 
   // Roll billing forward
   const handleRollForward = async () => {
-    if (!sov) return
+    if (!sov) {return}
     await rollForward.mutateAsync(sov.id)
   }
 
@@ -448,7 +448,7 @@ export function ScheduleOfValues({
 
   // Lock/unlock SOV
   const handleToggleLock = async () => {
-    if (!sov) return
+    if (!sov) {return}
     await updateSOV.mutateAsync({
       id: sov.id,
       data: { status: sov.status === 'locked' ? 'active' : 'locked' },

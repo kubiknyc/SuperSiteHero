@@ -206,17 +206,17 @@ export const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(
     // Get canvas context
     const getContext = useCallback(() => {
       const canvas = canvasRef.current
-      if (!canvas) return null
+      if (!canvas) {return null}
       return canvas.getContext('2d')
     }, [])
 
     // Initialize canvas
     useEffect(() => {
       const canvas = canvasRef.current
-      if (!canvas) return
+      if (!canvas) {return}
 
       const ctx = canvas.getContext('2d')
-      if (!ctx) return
+      if (!ctx) {return}
 
       // Set canvas resolution for high DPI displays
       const dpr = window.devicePixelRatio || 1
@@ -245,7 +245,7 @@ export const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(
     const getCoordinates = useCallback(
       (e: React.MouseEvent | React.TouchEvent) => {
         const canvas = canvasRef.current
-        if (!canvas) return null
+        if (!canvas) {return null}
 
         const rect = canvas.getBoundingClientRect()
         const scaleX = actualWidth / rect.width
@@ -271,7 +271,7 @@ export const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(
     const drawLine = useCallback(
       (from: { x: number; y: number }, to: { x: number; y: number }) => {
         const ctx = getContext()
-        if (!ctx) return
+        if (!ctx) {return}
 
         ctx.beginPath()
         ctx.moveTo(from.x, from.y)
@@ -292,11 +292,11 @@ export const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(
     // Handle drawing start
     const handleStart = useCallback(
       (e: React.MouseEvent | React.TouchEvent) => {
-        if (disabled) return
+        if (disabled) {return}
 
         e.preventDefault()
         const coords = getCoordinates(e)
-        if (!coords) return
+        if (!coords) {return}
 
         setIsDrawing(true)
         setIsEmpty(false)
@@ -318,11 +318,11 @@ export const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(
     // Handle drawing move
     const handleMove = useCallback(
       (e: React.MouseEvent | React.TouchEvent) => {
-        if (!isDrawing || disabled) return
+        if (!isDrawing || disabled) {return}
 
         e.preventDefault()
         const coords = getCoordinates(e)
-        if (!coords || !lastPointRef.current) return
+        if (!coords || !lastPointRef.current) {return}
 
         drawLine(lastPointRef.current, coords)
         lastPointRef.current = coords
@@ -332,7 +332,7 @@ export const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(
 
     // Handle drawing end
     const handleEnd = useCallback(() => {
-      if (!isDrawing) return
+      if (!isDrawing) {return}
 
       setIsDrawing(false)
       lastPointRef.current = null
@@ -352,7 +352,7 @@ export const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(
     const clear = useCallback(() => {
       const canvas = canvasRef.current
       const ctx = getContext()
-      if (!canvas || !ctx) return
+      if (!canvas || !ctx) {return}
 
       ctx.fillStyle = backgroundColor
       ctx.fillRect(0, 0, actualWidth, height)
@@ -366,7 +366,7 @@ export const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(
     // Save signature with full data
     const save = useCallback((): SignatureData | null => {
       const canvas = canvasRef.current
-      if (!canvas || isEmpty) return null
+      if (!canvas || isEmpty) {return null}
 
       const dataUrl = canvas.toDataURL('image/png')
       const metadata = getMetadata()
@@ -381,7 +381,7 @@ export const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(
     // Save data URL only (legacy)
     const saveDataUrl = useCallback((): string | null => {
       const canvas = canvasRef.current
-      if (!canvas || isEmpty) return null
+      if (!canvas || isEmpty) {return null}
       return canvas.toDataURL('image/png')
     }, [isEmpty])
 
@@ -403,7 +403,7 @@ export const SignaturePad = forwardRef<SignaturePadRef, SignaturePadProps>(
     // Download signature
     const handleDownload = useCallback(() => {
       const canvas = canvasRef.current
-      if (!canvas || isEmpty) return
+      if (!canvas || isEmpty) {return}
 
       const link = document.createElement('a')
       link.download = `signature-${Date.now()}.png`

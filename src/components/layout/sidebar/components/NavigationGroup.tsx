@@ -10,12 +10,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { NavigationItem, NavigationItemProps } from './NavigationItem'
+import { NavigationItem } from './NavigationItem'
 import {
   groupContainerVariants,
   groupItemVariants,
   chevronVariants,
-  springConfig,
 } from '../hooks/useSidebarAnimation'
 
 // ============================================================================
@@ -62,7 +61,7 @@ const GroupHeader = memo(function GroupHeader({
   isExpanded,
   isGroupOpen,
   onToggle,
-  itemCount,
+  itemCount: _itemCount,
   totalBadges,
 }: GroupHeaderProps) {
   // When sidebar is collapsed, show icon only with tooltip

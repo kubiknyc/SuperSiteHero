@@ -67,7 +67,7 @@ export function useNotificationGroups(
   groupBy: GroupByType = 'time'
 ) {
   const groups = useMemo<NotificationGroup[]>(() => {
-    if (!notifications || notifications.length === 0) return []
+    if (!notifications || notifications.length === 0) {return []}
 
     switch (groupBy) {
       case 'type':
@@ -98,10 +98,10 @@ function groupByTime(notifications: GroupedNotification[]): NotificationGroup[] 
 
   notifications.forEach(n => {
     const date = new Date(n.created_at)
-    if (isToday(date)) groups.today.push(n)
-    else if (isYesterday(date)) groups.yesterday.push(n)
-    else if (isThisWeek(date)) groups.thisWeek.push(n)
-    else groups.older.push(n)
+    if (isToday(date)) {groups.today.push(n)}
+    else if (isYesterday(date)) {groups.yesterday.push(n)}
+    else if (isThisWeek(date)) {groups.thisWeek.push(n)}
+    else {groups.older.push(n)}
   })
 
   return [
@@ -117,7 +117,7 @@ function groupByType(notifications: GroupedNotification[]): NotificationGroup[] 
 
   notifications.forEach(n => {
     const type = n.category || getTypeFromNotificationType(n.type)
-    if (!groups[type]) groups[type] = []
+    if (!groups[type]) {groups[type] = []}
     groups[type].push(n)
   })
 
@@ -138,7 +138,7 @@ function groupByProject(notifications: GroupedNotification[]): NotificationGroup
   notifications.forEach(n => {
     const projectId = n.project_id || 'no-project'
     const projectName = n.project_name || 'No Project'
-    if (!groups[projectId]) groups[projectId] = { name: projectName, items: [] }
+    if (!groups[projectId]) {groups[projectId] = { name: projectName, items: [] }}
     groups[projectId].items.push(n)
   })
 
@@ -201,16 +201,16 @@ function groupBySender(notifications: GroupedNotification[]): NotificationGroup[
 }
 
 function getTypeFromNotificationType(type: string): string {
-  if (type.startsWith('rfi')) return 'rfi'
-  if (type.startsWith('submittal')) return 'submittal'
-  if (type.startsWith('task')) return 'task'
-  if (type.startsWith('punch')) return 'punch_item'
-  if (type.startsWith('approval')) return 'approval'
-  if (type.startsWith('mention')) return 'mention'
-  if (type.startsWith('safety') || type.startsWith('incident')) return 'safety'
-  if (type.startsWith('document')) return 'document'
-  if (type.startsWith('change_order')) return 'change_order'
-  if (type.startsWith('payment')) return 'payment'
+  if (type.startsWith('rfi')) {return 'rfi'}
+  if (type.startsWith('submittal')) {return 'submittal'}
+  if (type.startsWith('task')) {return 'task'}
+  if (type.startsWith('punch')) {return 'punch_item'}
+  if (type.startsWith('approval')) {return 'approval'}
+  if (type.startsWith('mention')) {return 'mention'}
+  if (type.startsWith('safety') || type.startsWith('incident')) {return 'safety'}
+  if (type.startsWith('document')) {return 'document'}
+  if (type.startsWith('change_order')) {return 'change_order'}
+  if (type.startsWith('payment')) {return 'payment'}
   return 'general'
 }
 

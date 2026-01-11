@@ -124,7 +124,7 @@ export class TaskQueueProcessor {
    * Stop the processor
    */
   stop(): void {
-    if (!this.state.isRunning) return
+    if (!this.state.isRunning) {return}
 
     logger.info('[TaskProcessor] Stopping task queue processor')
     this.state.isRunning = false
@@ -160,7 +160,7 @@ export class TaskQueueProcessor {
    * Poll for new tasks
    */
   private async poll(): Promise<void> {
-    if (!this.state.isRunning) return
+    if (!this.state.isRunning) {return}
 
     // Check if we should respect working hours
     if (this.config.respectWorkingHours && !this.isWithinWorkingHours()) {
@@ -179,7 +179,7 @@ export class TaskQueueProcessor {
 
       // Calculate how many tasks we can fetch
       const availableSlots = this.config.concurrency - this.state.activeTaskIds.length
-      if (availableSlots <= 0) return
+      if (availableSlots <= 0) {return}
 
       const batchSize = Math.min(availableSlots, this.config.batchSize)
 
@@ -195,7 +195,7 @@ export class TaskQueueProcessor {
 
       // Process tasks concurrently
       for (const task of tasks) {
-        if (!this.canProcessMore()) break
+        if (!this.canProcessMore()) {break}
 
         // Claim and process task
         this.processTask(task)

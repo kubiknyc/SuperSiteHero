@@ -474,14 +474,14 @@ export const webhookService = {
 
     const eligibleWebhooks = webhooks.filter(w => {
       // Check if webhook is enabled
-      if (!w.enabled) return false
+      if (!w.enabled) {return false}
 
       // Check if webhook subscribes to this event
-      if (!w.events.includes(event)) return false
+      if (!w.events.includes(event)) {return false}
 
       // Check project filter
       if (w.project_ids?.length && notification.project_id) {
-        if (!w.project_ids.includes(notification.project_id)) return false
+        if (!w.project_ids.includes(notification.project_id)) {return false}
       }
 
       // Check priority filter
@@ -611,7 +611,7 @@ export const webhookManager = {
       .single()
 
     if (error) {
-      if (error.code === 'PGRST116') return null
+      if (error.code === 'PGRST116') {return null}
       logger.error('[WebhookManager] Failed to fetch webhook:', error)
       throw error
     }

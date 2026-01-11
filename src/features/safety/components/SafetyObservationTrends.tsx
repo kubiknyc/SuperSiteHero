@@ -120,19 +120,19 @@ interface SafetyObservationTrendsProps {
 // ============================================================================
 
 function formatNumber(num: number | null | undefined): string {
-  if (num === null || num === undefined) return '-';
+  if (num === null || num === undefined) {return '-';}
   return num.toLocaleString();
 }
 
 function formatPercent(num: number | null | undefined): string {
-  if (num === null || num === undefined) return '-';
+  if (num === null || num === undefined) {return '-';}
   return `${num.toFixed(1)}%`;
 }
 
 function formatHours(hours: number | null | undefined): string {
-  if (hours === null || hours === undefined) return '-';
-  if (hours < 1) return `${Math.round(hours * 60)}m`;
-  if (hours < 24) return `${hours.toFixed(1)}h`;
+  if (hours === null || hours === undefined) {return '-';}
+  if (hours < 1) {return `${Math.round(hours * 60)}m`;}
+  if (hours < 24) {return `${hours.toFixed(1)}h`;}
   return `${Math.round(hours / 24)}d`;
 }
 
@@ -342,7 +342,7 @@ function useDailyStats(projectId?: string, days = 30) {
   return useQuery({
     queryKey: ['safety-observation-daily-stats', projectId, days],
     queryFn: async (): Promise<DailyStats[]> => {
-      if (!userProfile?.company_id) return [];
+      if (!userProfile?.company_id) {return [];}
 
       const startDate = format(subDays(new Date(), days), 'yyyy-MM-dd');
 
@@ -358,7 +358,7 @@ function useDailyStats(projectId?: string, days = 30) {
       }
 
       const { data, error } = await query;
-      if (error) throw error;
+      if (error) {throw error;}
       return data || [];
     },
     enabled: !!userProfile?.company_id,
@@ -371,7 +371,7 @@ function usePeriodStats(projectId?: string, periodType: 'weekly' | 'monthly' = '
   return useQuery({
     queryKey: ['safety-observation-period-stats', projectId, periodType],
     queryFn: async (): Promise<PeriodStats[]> => {
-      if (!userProfile?.company_id) return [];
+      if (!userProfile?.company_id) {return [];}
 
       let query = (supabase as any)
         .from('safety_observation_period_stats')
@@ -386,7 +386,7 @@ function usePeriodStats(projectId?: string, periodType: 'weekly' | 'monthly' = '
       }
 
       const { data, error } = await query;
-      if (error) throw error;
+      if (error) {throw error;}
       return data || [];
     },
     enabled: !!userProfile?.company_id,
@@ -489,7 +489,7 @@ export function SafetyObservationTrends({
 
   // Transform daily stats for trend chart
   const trendData: TrendData[] = React.useMemo(() => {
-    if (!dailyStats) return [];
+    if (!dailyStats) {return [];}
     return dailyStats.map((day) => ({
       date: format(new Date(day.stat_date), 'MMM d'),
       total: day.total_observations,

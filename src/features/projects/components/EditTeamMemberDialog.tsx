@@ -55,7 +55,7 @@ export function EditTeamMemberDialog({
     }
   }, [open, member])
 
-  if (!member || !member.user) return null
+  if (!member || !member.user) {return null}
 
   const user = member.user
 

@@ -177,7 +177,7 @@ export const suggestActivitiesTool = createTool<SuggestActivitiesInput, SuggestA
     }
 
     // Check weather if requested
-    let weatherAdjusted: WeatherAdjustedActivity[] = []
+    const weatherAdjusted: WeatherAdjustedActivity[] = []
     let weatherImpact: { severity: string } = { severity: 'none' }
 
     if (consider_weather) {
@@ -288,15 +288,15 @@ function estimateManpower(activityName: string): number {
   const lowerName = activityName.toLowerCase()
 
   // Rough estimates based on activity type
-  if (lowerName.includes('pour') || lowerName.includes('concrete')) return 8
-  if (lowerName.includes('framing')) return 6
-  if (lowerName.includes('electrical')) return 4
-  if (lowerName.includes('plumbing')) return 4
-  if (lowerName.includes('hvac')) return 4
-  if (lowerName.includes('drywall')) return 6
-  if (lowerName.includes('painting')) return 4
-  if (lowerName.includes('roofing')) return 6
-  if (lowerName.includes('steel')) return 6
+  if (lowerName.includes('pour') || lowerName.includes('concrete')) {return 8}
+  if (lowerName.includes('framing')) {return 6}
+  if (lowerName.includes('electrical')) {return 4}
+  if (lowerName.includes('plumbing')) {return 4}
+  if (lowerName.includes('hvac')) {return 4}
+  if (lowerName.includes('drywall')) {return 6}
+  if (lowerName.includes('painting')) {return 4}
+  if (lowerName.includes('roofing')) {return 6}
+  if (lowerName.includes('steel')) {return 6}
 
   return 4 // Default estimate
 }

@@ -149,11 +149,11 @@ const ActivityItem = memo(function ActivityItem({
 
 // Weather icon helper
 function getWeatherIcon(condition?: string) {
-  if (!condition) return Sun;
+  if (!condition) {return Sun;}
   const lower = condition.toLowerCase();
-  if (lower.includes('rain') || lower.includes('shower')) return CloudRain;
-  if (lower.includes('cloud') || lower.includes('overcast')) return Cloud;
-  if (lower.includes('snow') || lower.includes('sleet')) return Snowflake;
+  if (lower.includes('rain') || lower.includes('shower')) {return CloudRain;}
+  if (lower.includes('cloud') || lower.includes('overcast')) {return Cloud;}
+  if (lower.includes('snow') || lower.includes('sleet')) {return Snowflake;}
   return Sun;
 }
 
@@ -178,7 +178,7 @@ export const MobileDashboard = memo(function MobileDashboard() {
       return reportDate.toDateString() === today.toDateString();
     }).length ?? 0;
     const dueInspections = upcomingInspections?.filter(i => {
-      if (!i.scheduled_date) return false;
+      if (!i.scheduled_date) {return false;}
       const scheduledDate = new Date(i.scheduled_date);
       const today = new Date();
       return scheduledDate <= today;
@@ -238,7 +238,7 @@ export const MobileDashboard = memo(function MobileDashboard() {
 
     // Overdue inspections
     const overdueInspections = upcomingInspections?.filter(i => {
-      if (!i.scheduled_date) return false;
+      if (!i.scheduled_date) {return false;}
       return new Date(i.scheduled_date) < new Date() && i.status !== 'completed';
     });
     if (overdueInspections?.length) {
@@ -267,7 +267,7 @@ export const MobileDashboard = memo(function MobileDashboard() {
 
     // Overdue punch items
     const overduePunch = punchItems?.filter(p => {
-      if (!p.due_date) return false;
+      if (!p.due_date) {return false;}
       return new Date(p.due_date) < new Date() && p.status !== 'closed';
     });
     if (overduePunch?.length) {
@@ -285,8 +285,8 @@ export const MobileDashboard = memo(function MobileDashboard() {
   // Get greeting based on time of day
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Good morning';
-    if (hour < 17) return 'Good afternoon';
+    if (hour < 12) {return 'Good morning';}
+    if (hour < 17) {return 'Good afternoon';}
     return 'Good evening';
   };
 

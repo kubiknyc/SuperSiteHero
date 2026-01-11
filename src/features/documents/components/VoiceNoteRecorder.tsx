@@ -170,7 +170,7 @@ function VoiceNotePlayer({
 
   useEffect(() => {
     const audio = audioRef.current
-    if (!audio) return
+    if (!audio) {return}
 
     const handleTimeUpdate = () => setCurrentTime(audio.currentTime)
     const handleEnded = () => {
@@ -194,7 +194,7 @@ function VoiceNotePlayer({
   }, [])
 
   const togglePlay = useCallback(() => {
-    if (!audioRef.current) return
+    if (!audioRef.current) {return}
 
     if (isPlaying) {
       audioRef.current.pause()
@@ -204,19 +204,19 @@ function VoiceNotePlayer({
   }, [isPlaying])
 
   const handleSeek = useCallback((value: number[]) => {
-    if (!audioRef.current) return
+    if (!audioRef.current) {return}
     const newTime = (value[0] / 100) * voiceNote.duration
     audioRef.current.currentTime = newTime
     setCurrentTime(newTime)
   }, [voiceNote.duration])
 
   const skipBackward = useCallback(() => {
-    if (!audioRef.current) return
+    if (!audioRef.current) {return}
     audioRef.current.currentTime = Math.max(0, audioRef.current.currentTime - 5)
   }, [])
 
   const skipForward = useCallback(() => {
-    if (!audioRef.current) return
+    if (!audioRef.current) {return}
     audioRef.current.currentTime = Math.min(
       voiceNote.duration,
       audioRef.current.currentTime + 5
@@ -224,7 +224,7 @@ function VoiceNotePlayer({
   }, [voiceNote.duration])
 
   const toggleMute = useCallback(() => {
-    if (!audioRef.current) return
+    if (!audioRef.current) {return}
     audioRef.current.muted = !isMuted
     setIsMuted(!isMuted)
   }, [isMuted])
@@ -501,7 +501,7 @@ function RecordingDialog({ isOpen, onClose, onSave }: RecordingDialogProps) {
 
       // Start audio level visualization
       const updateAudioLevel = () => {
-        if (!analyserRef.current) return
+        if (!analyserRef.current) {return}
 
         const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount)
         analyserRef.current.getByteFrequencyData(dataArray)
@@ -582,7 +582,7 @@ function RecordingDialog({ isOpen, onClose, onSave }: RecordingDialogProps) {
   }, [])
 
   const handleSave = useCallback(() => {
-    if (!audioBlob) return
+    if (!audioBlob) {return}
 
     onSave(
       audioBlob,
@@ -892,7 +892,7 @@ export function VoiceNoteIndicator({
   onClick,
   className,
 }: VoiceNoteIndicatorProps) {
-  if (voiceNotes.length === 0) return null
+  if (voiceNotes.length === 0) {return null}
 
   const totalDuration = voiceNotes.reduce((acc, note) => acc + note.duration, 0)
 

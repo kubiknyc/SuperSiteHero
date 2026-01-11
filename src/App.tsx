@@ -4,8 +4,6 @@
 
 import { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import { TwentyFirstToolbar } from '@21st-extension/toolbar-react'
-import { ReactPlugin } from '@21st-extension/react'
 import { AuthProvider } from './lib/auth/AuthContext'
 import { ToastProvider } from './lib/notifications/ToastContext'
 import { ThemeProvider } from './lib/theme/darkMode'

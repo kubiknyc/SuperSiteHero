@@ -81,10 +81,10 @@ function getReminderLevel(
   daysUntil: number,
   config: ReminderConfig
 ): SubmittalWithReminder['reminderLevel'] {
-  if (daysUntil < 0) return 'overdue'
-  if (daysUntil <= config.criticalReminderDays) return 'critical'
-  if (daysUntil <= config.urgentReminderDays) return 'urgent'
-  if (daysUntil <= config.firstReminderDays) return 'upcoming'
+  if (daysUntil < 0) {return 'overdue'}
+  if (daysUntil <= config.criticalReminderDays) {return 'critical'}
+  if (daysUntil <= config.urgentReminderDays) {return 'urgent'}
+  if (daysUntil <= config.firstReminderDays) {return 'upcoming'}
   return 'none'
 }
 
@@ -93,8 +93,8 @@ function getReminderMessage(level: SubmittalWithReminder['reminderLevel'], daysU
     case 'overdue':
       return `Overdue by ${Math.abs(daysUntil)} day${Math.abs(daysUntil) !== 1 ? 's' : ''}! Submit immediately.`
     case 'critical':
-      if (daysUntil === 0) return 'Due TODAY! Submit now to avoid delays.'
-      if (daysUntil === 1) return 'Due TOMORROW! Prepare for immediate submission.'
+      if (daysUntil === 0) {return 'Due TODAY! Submit now to avoid delays.'}
+      if (daysUntil === 1) {return 'Due TOMORROW! Prepare for immediate submission.'}
       return `Only ${daysUntil} days left! Critical deadline approaching.`
     case 'urgent':
       return `${daysUntil} days until deadline. Review and prepare for submission.`
@@ -135,7 +135,7 @@ export function useSubmittalsWithReminders(
         .not('due_date', 'is', null) // Only submittals with due dates
         .order('due_date', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Process each submittal to calculate reminder status
       const submittalsWithReminders: SubmittalWithReminder[] = (data || []).map((item) => {
@@ -229,7 +229,7 @@ export function useAllSubmittalReminders(workflowTypeId: string | undefined) {
         .lte('due_date', cutoffDate.toISOString().split('T')[0])
         .order('due_date', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Process and filter to only those assigned to current user
       const submittalsWithReminders: SubmittalWithReminder[] = (data || [])
@@ -304,7 +304,7 @@ export function useRecordSubmittalReminder() {
         .eq('id', submittalId)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       const now = new Date().toISOString()
       const updatedMetadata = {
@@ -326,7 +326,7 @@ export function useRecordSubmittalReminder() {
         .update({ metadata: updatedMetadata })
         .eq('id', submittalId)
 
-      if (error) throw error
+      if (error) {throw error}
 
       return { submittalId, timestamp: now }
     },
@@ -365,7 +365,7 @@ export function useSnoozeSubmittalReminder() {
         .eq('id', submittalId)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       const updatedMetadata = {
         ...(submittal.metadata || {}),
@@ -378,7 +378,7 @@ export function useSnoozeSubmittalReminder() {
         .update({ metadata: updatedMetadata })
         .eq('id', submittalId)
 
-      if (error) throw error
+      if (error) {throw error}
 
       return { submittalId, snoozeUntil }
     },

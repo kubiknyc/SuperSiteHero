@@ -81,7 +81,7 @@ function formatCurrency(amount: number): string {
 
 // Calculate percent complete
 function calculatePercentComplete(completed: number, scheduled: number): number {
-  if (scheduled === 0) return 0
+  if (scheduled === 0) {return 0}
   return Math.round((completed / scheduled) * 1000) / 10
 }
 

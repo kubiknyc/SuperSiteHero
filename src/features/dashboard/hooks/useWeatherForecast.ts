@@ -115,8 +115,8 @@ function getWeatherCondition(code: number): { condition: string; icon: WeatherIc
 }
 
 function getDayName(date: Date, index: number): string {
-  if (index === 0) return 'Today'
-  if (index === 1) return 'Tomorrow'
+  if (index === 0) {return 'Today'}
+  if (index === 1) {return 'Tomorrow'}
   return date.toLocaleDateString('en-US', { weekday: 'short' })
 }
 

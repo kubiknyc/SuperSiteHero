@@ -10,8 +10,8 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+  TooltipProvider,
 } from '@/components/ui/tooltip'
-import { TooltipProvider } from '@/components/ui/tooltip'
 
 // Components
 import { CommandStrip } from './CommandStrip'
@@ -20,7 +20,7 @@ import { NavigationGroup } from './NavigationGroup'
 import { UserDock } from './UserDock'
 
 // Config
-import { SIDEBAR_CONFIG, type SidebarNavGroup } from '@/config/navigation-sidebar'
+import { SIDEBAR_CONFIG } from '@/config/navigation-sidebar'
 
 // Animation hook
 import { useSidebarAnimation, sidebarVariants } from '../hooks/useSidebarAnimation'
@@ -181,13 +181,17 @@ const NavigationSidebar = memo(function NavigationSidebar({
 }: NavigationSidebarProps) {
   // State
   const [isExpanded, setIsExpanded] = useState(() => {
-    if (typeof window === 'undefined') return defaultExpanded
+    if (typeof window === 'undefined') {
+      return defaultExpanded
+    }
     const stored = localStorage.getItem(SIDEBAR_EXPANDED_KEY)
     return stored !== null ? stored === 'true' : defaultExpanded
   })
 
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(() => {
-    if (typeof window === 'undefined') return new Set(['core-operations', 'workflows'])
+    if (typeof window === 'undefined') {
+      return new Set(['core-operations', 'workflows'])
+    }
     const stored = localStorage.getItem(SIDEBAR_GROUPS_KEY)
     if (stored) {
       try {

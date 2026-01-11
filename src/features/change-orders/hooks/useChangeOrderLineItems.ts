@@ -119,7 +119,7 @@ export function useChangeOrderLineItems(changeOrderId: string | undefined) {
   return useQuery({
     queryKey: lineItemKeys.list(changeOrderId || ''),
     queryFn: async () => {
-      if (!changeOrderId) throw new Error('Change Order ID required');
+      if (!changeOrderId) {throw new Error('Change Order ID required');}
 
       const { data, error } = await supabase
         .from('change_order_line_items')
@@ -128,7 +128,7 @@ export function useChangeOrderLineItems(changeOrderId: string | undefined) {
         .is('deleted_at', null)
         .order('item_number', { ascending: true });
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       return (data || []).map(mapToLineItemBreakdown);
     },
@@ -146,7 +146,7 @@ export function useLineItemSummary(changeOrderId: string | undefined) {
   return useQuery({
     queryKey: lineItemKeys.summary(changeOrderId || ''),
     queryFn: () => {
-      if (!items) return null;
+      if (!items) {return null;}
       return calculateSummary(items);
     },
     enabled: !!items,
@@ -213,7 +213,7 @@ export function useAddLineItem() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Update change order proposed amount
       await updateChangeOrderTotal(changeOrderId);
@@ -251,7 +251,7 @@ export function useUpdateLineItem() {
         .eq('id', id)
         .single();
 
-      if (fetchError) throw fetchError;
+      if (fetchError) {throw fetchError;}
 
       // Merge with updates
       const quantity = item.quantity ?? currentItem.quantity ?? 0;
@@ -286,7 +286,7 @@ export function useUpdateLineItem() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Update change order proposed amount
       await updateChangeOrderTotal(changeOrderId);
@@ -320,7 +320,7 @@ export function useDeleteLineItem() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Renumber remaining items
       await renumberLineItems(changeOrderId);
@@ -392,7 +392,7 @@ export function useDuplicateLineItem() {
         .eq('id', id)
         .single();
 
-      if (fetchError) throw fetchError;
+      if (fetchError) {throw fetchError;}
 
       // Create duplicate
       const duplicateData: CreateLineItemDTO = {
@@ -430,7 +430,7 @@ async function renumberLineItems(changeOrderId: string): Promise<void> {
     .is('deleted_at', null)
     .order('item_number', { ascending: true });
 
-  if (!items) return;
+  if (!items) {return;}
 
   const updates = items.map((item, index) =>
     supabase
@@ -452,7 +452,7 @@ async function updateChangeOrderTotal(changeOrderId: string): Promise<void> {
     .eq('change_order_id', changeOrderId)
     .is('deleted_at', null);
 
-  if (!items) return;
+  if (!items) {return;}
 
   const total = items.reduce((sum, item) => sum + (item.total_amount || 0), 0);
 

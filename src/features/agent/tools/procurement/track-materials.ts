@@ -201,7 +201,7 @@ export const trackMaterialsTool = createTool<TrackMaterialsInput, TrackMaterials
           const deliveryDiff = Math.floor((actualDelivery.getTime() - expectedDelivery.getTime()) / (1000 * 60 * 60 * 24))
           daysLate = deliveryDiff > 0 ? deliveryDiff : null
           deliveredCount++
-          if (deliveryDiff <= 0) onTimeCount++
+          if (deliveryDiff <= 0) {onTimeCount++}
         } else if (expectedDelivery < now && status !== 'delivered') {
           // Past due
           daysLate = Math.floor((now.getTime() - expectedDelivery.getTime()) / (1000 * 60 * 60 * 24))
@@ -275,9 +275,9 @@ export const trackMaterialsTool = createTool<TrackMaterialsInput, TrackMaterials
 
       const supplierSummary = supplierMap.get(supplierName)!
       supplierSummary.total_orders++
-      if (status === 'delivered') supplierSummary.delivered++
-      else if (status === 'delayed') supplierSummary.delayed++
-      else supplierSummary.pending++
+      if (status === 'delivered') {supplierSummary.delivered++}
+      else if (status === 'delayed') {supplierSummary.delayed++}
+      else {supplierSummary.pending++}
 
       // Add late deliveries to alerts
       if (daysLate && daysLate > 0 && status !== 'delivered') {
@@ -467,7 +467,7 @@ function generateMaterialForecast(
     periodEnd.setDate(periodEnd.getDate() + 7)
 
     const periodOrders = orders.filter(o => {
-      if (!o.expected_delivery || o.status === 'delivered') return false
+      if (!o.expected_delivery || o.status === 'delivered') {return false}
       const deliveryDate = new Date(o.expected_delivery)
       return deliveryDate >= periodStart && deliveryDate < periodEnd
     })

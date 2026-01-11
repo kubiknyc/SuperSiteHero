@@ -105,7 +105,7 @@ const isMac = typeof navigator !== 'undefined' && /Mac|iPod|iPhone|iPad/.test(na
  * Check if the event target is an input element
  */
 function isInputElement(target: EventTarget | null): boolean {
-  if (!target || !(target instanceof HTMLElement)) return false
+  if (!target || !(target instanceof HTMLElement)) {return false}
   const tagName = target.tagName.toLowerCase()
   return (
     tagName === 'input' ||
@@ -181,13 +181,13 @@ function matchesShortcut(event: KeyboardEvent, shortcut: GlobalShortcut): boolea
   const hasShift = event.shiftKey
 
   // If shortcut requires modifier but event doesn't have it
-  if (needsCtrlOrCmd && !hasCtrlOrCmd) return false
-  if (needsAlt && !hasAlt) return false
-  if (needsShift && !hasShift) return false
+  if (needsCtrlOrCmd && !hasCtrlOrCmd) {return false}
+  if (needsAlt && !hasAlt) {return false}
+  if (needsShift && !hasShift) {return false}
 
   // If event has modifier but shortcut doesn't require it
-  if (!needsCtrlOrCmd && hasCtrlOrCmd) return false
-  if (!needsAlt && hasAlt) return false
+  if (!needsCtrlOrCmd && hasCtrlOrCmd) {return false}
+  if (!needsAlt && hasAlt) {return false}
   // Allow shift for case variations
 
   // Get the non-modifier key
@@ -195,7 +195,7 @@ function matchesShortcut(event: KeyboardEvent, shortcut: GlobalShortcut): boolea
     (k) => !['ctrl', 'cmd', 'meta', 'alt', 'option', 'shift'].includes(k)
   )
 
-  if (!targetKey) return false
+  if (!targetKey) {return false}
 
   // Special handling for ? (shift + /)
   if (targetKey === '?') {
@@ -340,18 +340,18 @@ export function useGlobalKeyboardShortcuts(
   // Handle keyboard events
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
-      if (!enabled) return
+      if (!enabled) {return}
 
       // Don't trigger shortcuts in input elements (except for modifier shortcuts)
       const hasModifier = event.ctrlKey || event.metaKey
-      if (isInputElement(event.target) && !hasModifier) return
+      if (isInputElement(event.target) && !hasModifier) {return}
 
       // Build current key
       const currentKey = event.key.toLowerCase()
 
       // Check for single-key shortcuts first
       for (const shortcut of allShortcuts) {
-        if (shortcut.enabled === false) continue
+        if (shortcut.enabled === false) {continue}
         if (matchesShortcut(event, shortcut)) {
           event.preventDefault()
           shortcut.action()
@@ -379,7 +379,7 @@ export function useGlobalKeyboardShortcuts(
         // Check for matching sequence
         const sequence = keySequenceRef.current.join('')
         for (const shortcut of allShortcuts) {
-          if (shortcut.enabled === false) continue
+          if (shortcut.enabled === false) {continue}
           if (shortcut.keys.length === 2 && !shortcut.requiresModifier) {
             const shortcutSequence = shortcut.keys.join('')
             if (sequence === shortcutSequence) {
@@ -405,7 +405,7 @@ export function useGlobalKeyboardShortcuts(
 
   // Set up event listener
   useEffect(() => {
-    if (!enabled) return
+    if (!enabled) {return}
 
     document.addEventListener('keydown', handleKeyDown)
     return () => {

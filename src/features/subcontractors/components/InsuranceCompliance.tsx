@@ -170,7 +170,7 @@ export function InsuranceCompliance({
 
   // Send reminders to selected
   const handleSendReminders = useCallback(async () => {
-    if (selectedIds.size === 0) return
+    if (selectedIds.size === 0) {return}
 
     await sendBulkRemindersMutation.mutateAsync({
       subcontractorIds: Array.from(selectedIds),

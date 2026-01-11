@@ -58,11 +58,11 @@ function getStatusBadge(status: string) {
 
 // Weather icon helper
 function getWeatherIcon(condition?: string) {
-  if (!condition) return Sun;
+  if (!condition) {return Sun;}
   const lower = condition.toLowerCase();
-  if (lower.includes('rain') || lower.includes('shower')) return CloudRain;
-  if (lower.includes('cloud') || lower.includes('overcast')) return Cloud;
-  if (lower.includes('snow') || lower.includes('sleet')) return Snowflake;
+  if (lower.includes('rain') || lower.includes('shower')) {return CloudRain;}
+  if (lower.includes('cloud') || lower.includes('overcast')) {return Cloud;}
+  if (lower.includes('snow') || lower.includes('sleet')) {return Snowflake;}
   return Sun;
 }
 
@@ -77,7 +77,7 @@ export const MobileDailyReportsList = memo(function MobileDailyReportsList() {
 
   // Filter reports by search
   const filteredReports = reports?.filter(report => {
-    if (!searchQuery) return true;
+    if (!searchQuery) {return true;}
     const query = searchQuery.toLowerCase();
     return (
       report.summary?.toLowerCase().includes(query) ||
@@ -469,8 +469,8 @@ export const MobileDailyReportDetail = memo(function MobileDailyReportDetail() {
   const deleteMutation = useDeleteDailyReport();
 
   const handleDelete = useCallback(async () => {
-    if (!id) return;
-    if (!confirm('Are you sure you want to delete this report?')) return;
+    if (!id) {return;}
+    if (!confirm('Are you sure you want to delete this report?')) {return;}
 
     try {
       await deleteMutation.mutateAsync(id);

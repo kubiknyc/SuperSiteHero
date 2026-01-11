@@ -152,7 +152,7 @@ export function useAgentChatEnhanced(options: UseAgentChatOptions = {}): UseAgen
 
   const sendMessage = useCallback(
     async (content: string, options: SendMessageOptions = {}) => {
-      if (!content.trim() || !sessionId) return
+      if (!content.trim() || !sessionId) {return}
 
       const { mentions, attachments, skipOptimistic } = options
       lastUserMessageRef.current = content
@@ -183,7 +183,7 @@ export function useAgentChatEnhanced(options: UseAgentChatOptions = {}): UseAgen
                   .from('chat-attachments')
                   .upload(`${sessionId}/${Date.now()}-${attachment.name}`, attachment.file)
 
-                if (error) throw error
+                if (error) {throw error}
                 return { name: attachment.name, path: data.path }
               }
               return { name: attachment.name, url: attachment.url }
@@ -241,17 +241,17 @@ export function useAgentChatEnhanced(options: UseAgentChatOptions = {}): UseAgen
   }, [cancelProcessing, clearStreamingContent, clearStreamingToolCalls])
 
   const retryLastMessage = useCallback(async () => {
-    if (!lastUserMessageRef.current) return
+    if (!lastUserMessageRef.current) {return}
     await sendMessage(lastUserMessageRef.current)
   }, [sendMessage])
 
   const regenerateResponse = useCallback(
     async (messageId: string) => {
-      if (!sessionId) return
+      if (!sessionId) {return}
 
       // Find the user message before this assistant message
       const messageIndex = messages.findIndex((m) => m.id === messageId)
-      if (messageIndex <= 0) return
+      if (messageIndex <= 0) {return}
 
       // Find previous user message
       let userMessageIndex = messageIndex - 1
@@ -259,7 +259,7 @@ export function useAgentChatEnhanced(options: UseAgentChatOptions = {}): UseAgen
         userMessageIndex--
       }
 
-      if (userMessageIndex < 0) return
+      if (userMessageIndex < 0) {return}
       const userMessage = messages[userMessageIndex]
 
       // Delete the assistant message and any tool messages after it
@@ -281,7 +281,7 @@ export function useAgentChatEnhanced(options: UseAgentChatOptions = {}): UseAgen
 
   const editMessage = useCallback(
     async (messageId: string, newContent: string) => {
-      if (!sessionId) return
+      if (!sessionId) {return}
 
       // Update the message
       await supabase
@@ -322,7 +322,7 @@ export function useAgentChatEnhanced(options: UseAgentChatOptions = {}): UseAgen
   )
 
   const clearChat = useCallback(async () => {
-    if (!sessionId) return
+    if (!sessionId) {return}
 
     await supabase.from('agent_messages').delete().eq('session_id', sessionId)
     await refetchMessages()
@@ -332,7 +332,7 @@ export function useAgentChatEnhanced(options: UseAgentChatOptions = {}): UseAgen
     async (messageId: string, rating: 'positive' | 'negative', comment?: string) => {
       try {
         const { data: userData } = await supabase.auth.getUser()
-        if (!userData.user) return
+        if (!userData.user) {return}
 
         const { data: userRecord } = await supabase
           .from('users')
@@ -443,7 +443,7 @@ export function useChatCommands() {
 
   const executeCommand = useCallback(
     async (input: string): Promise<string | null> => {
-      if (!input.startsWith('/')) return null
+      if (!input.startsWith('/')) {return null}
 
       const parts = input.slice(1).split(' ')
       const commandName = parts[0].toLowerCase()

@@ -216,11 +216,11 @@ export const analyzeScheduleDelaysTool = createTool<AnalyzeDelaysInput, AnalyzeD
 
 function inferDelayCause(activity: any): string | null {
   // Infer delay cause based on activity data
-  if (activity.weather_delay) return 'Weather delay'
-  if (activity.material_delay) return 'Material delivery delay'
-  if (activity.labor_shortage) return 'Labor shortage'
-  if (activity.rfi_pending) return 'Awaiting RFI response'
-  if (activity.inspection_pending) return 'Awaiting inspection'
+  if (activity.weather_delay) {return 'Weather delay'}
+  if (activity.material_delay) {return 'Material delivery delay'}
+  if (activity.labor_shortage) {return 'Labor shortage'}
+  if (activity.rfi_pending) {return 'Awaiting RFI response'}
+  if (activity.inspection_pending) {return 'Awaiting inspection'}
   return null
 }
 

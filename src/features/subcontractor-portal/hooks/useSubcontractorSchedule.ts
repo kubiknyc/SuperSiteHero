@@ -157,8 +157,8 @@ export function getActivityStatusColor(status: ScheduleActivityStatus): string {
  * Format variance in days
  */
 export function formatVariance(days: number | null): string {
-  if (days == null) return '-'
-  if (days === 0) return 'On schedule'
+  if (days == null) {return '-'}
+  if (days === 0) {return 'On schedule'}
   const sign = days > 0 ? '+' : ''
   return `${sign}${days} day${Math.abs(days) !== 1 ? 's' : ''}`
 }
@@ -167,9 +167,9 @@ export function formatVariance(days: number | null): string {
  * Get variance color
  */
 export function getVarianceColor(days: number | null): string {
-  if (days == null || days === 0) return 'text-muted-foreground'
-  if (days < 0) return 'text-green-600' // Ahead of schedule
-  if (days <= 3) return 'text-yellow-600' // Slightly behind
+  if (days == null || days === 0) {return 'text-muted-foreground'}
+  if (days < 0) {return 'text-green-600'} // Ahead of schedule
+  if (days <= 3) {return 'text-yellow-600'} // Slightly behind
   return 'text-red-600' // Significantly behind
 }
 
@@ -248,7 +248,7 @@ export function filterActivitiesByStatus(
  * Format date for display
  */
 export function formatScheduleDate(dateString: string | null): string {
-  if (!dateString) return '-'
+  if (!dateString) {return '-'}
   return new Date(dateString).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -260,7 +260,7 @@ export function formatScheduleDate(dateString: string | null): string {
  * Get days until a date
  */
 export function getDaysUntil(dateString: string | null): number | null {
-  if (!dateString) return null
+  if (!dateString) {return null}
   const date = new Date(dateString)
   const today = new Date()
   today.setHours(0, 0, 0, 0)

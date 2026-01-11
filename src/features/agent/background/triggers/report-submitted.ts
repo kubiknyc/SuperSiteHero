@@ -340,8 +340,8 @@ function buildReportContent(
   let content = `DAILY FIELD REPORT - ${date}\n\n`
 
   content += `WEATHER: ${report.weather_conditions || 'Not recorded'}\n`
-  if (report.temperature_high) content += `High: ${report.temperature_high}F `
-  if (report.temperature_low) content += `Low: ${report.temperature_low}F`
+  if (report.temperature_high) {content += `High: ${report.temperature_high}F `}
+  if (report.temperature_low) {content += `Low: ${report.temperature_low}F`}
   content += '\n\n'
 
   if (report.summary) {
@@ -492,7 +492,7 @@ async function notifyAboutIssues(
   issues: FlaggedIssue[]
 ): Promise<void> {
   const criticalIssues = issues.filter((i) => i.severity === 'critical' || i.severity === 'high')
-  if (criticalIssues.length === 0) return
+  if (criticalIssues.length === 0) {return}
 
   try {
     // Get project managers
@@ -502,7 +502,7 @@ async function notifyAboutIssues(
       .eq('project_id', report.project_id)
       .in('role', ['project_manager', 'superintendent', 'admin'])
 
-    if (!managers || managers.length === 0) return
+    if (!managers || managers.length === 0) {return}
 
     const date = new Date(report.report_date).toLocaleDateString()
     const issueList = criticalIssues

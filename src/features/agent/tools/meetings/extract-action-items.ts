@@ -111,11 +111,11 @@ function extractActionFromSentence(
   baseDate: Date
 ): ActionItem | null {
   const trimmed = sentence.trim()
-  if (trimmed.length < 15) return null
+  if (trimmed.length < 15) {return null}
 
   const hasActionVerb = /\b(will|shall|must|need|should|send|submit|provide|review|coordinate|schedule|contact|follow-up|prepare|complete|verify|confirm|update|create|develop|issue|resolve|address)\b/i.test(trimmed)
 
-  if (!hasActionVerb) return null
+  if (!hasActionVerb) {return null}
 
   const owner = extractOwner(trimmed, meetingType)
   const dueDate = extractDueDate(trimmed, baseDate)
@@ -147,12 +147,12 @@ function extractOwner(text: string, meetingType: string): string {
     }
   }
 
-  if (/\b(GC|general contractor)\b/i.test(text)) return 'GC'
-  if (/\barchitect\b/i.test(text)) return 'Architect'
-  if (/\bengineer\b/i.test(text)) return 'Engineer'
-  if (/\bowner\b/i.test(text)) return 'Owner'
-  if (/\b(CM|construction manager)\b/i.test(text)) return 'CM'
-  if (/\bsubcontractor\b/i.test(text)) return 'Subcontractor'
+  if (/\b(GC|general contractor)\b/i.test(text)) {return 'GC'}
+  if (/\barchitect\b/i.test(text)) {return 'Architect'}
+  if (/\bengineer\b/i.test(text)) {return 'Engineer'}
+  if (/\bowner\b/i.test(text)) {return 'Owner'}
+  if (/\b(CM|construction manager)\b/i.test(text)) {return 'CM'}
+  if (/\bsubcontractor\b/i.test(text)) {return 'Subcontractor'}
 
   const defaultOwners: Record<string, string> = {
     oac: 'TBD',
@@ -229,15 +229,15 @@ function determinePriority(text: string): 'low' | 'medium' | 'high' | 'critical'
 }
 
 function determineCategory(text: string, meetingType: string): string {
-  if (/rfi|clarification|question/i.test(text)) return 'RFI/Clarification'
-  if (/submittal|shop drawing|approval/i.test(text)) return 'Submittals'
-  if (/schedule|milestone|delay/i.test(text)) return 'Schedule'
-  if (/budget|cost|payment|invoice/i.test(text)) return 'Cost/Budget'
-  if (/safety|incident|hazard/i.test(text)) return 'Safety'
-  if (/quality|inspection|test/i.test(text)) return 'Quality'
-  if (/drawing|document|revision/i.test(text)) return 'Documents'
-  if (/change|modification|revision/i.test(text)) return 'Changes'
-  if (/coordinate|sequence|logistics/i.test(text)) return 'Coordination'
+  if (/rfi|clarification|question/i.test(text)) {return 'RFI/Clarification'}
+  if (/submittal|shop drawing|approval/i.test(text)) {return 'Submittals'}
+  if (/schedule|milestone|delay/i.test(text)) {return 'Schedule'}
+  if (/budget|cost|payment|invoice/i.test(text)) {return 'Cost/Budget'}
+  if (/safety|incident|hazard/i.test(text)) {return 'Safety'}
+  if (/quality|inspection|test/i.test(text)) {return 'Quality'}
+  if (/drawing|document|revision/i.test(text)) {return 'Documents'}
+  if (/change|modification|revision/i.test(text)) {return 'Changes'}
+  if (/coordinate|sequence|logistics/i.test(text)) {return 'Coordination'}
 
   const categoryDefaults: Record<string, string> = {
     oac: 'Coordination',

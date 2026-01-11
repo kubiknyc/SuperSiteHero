@@ -131,14 +131,14 @@ export default function AISettingsPage() {
   // Helper to get current model based on provider
   const getCurrentModel = () => {
     const provider = getCurrentProvider()
-    if (provider === 'openai') return config?.openai_model || config?.model_preference || 'gpt-4o-mini'
-    if (provider === 'anthropic') return config?.anthropic_model || config?.model_preference || 'claude-3-haiku-20240307'
+    if (provider === 'openai') {return config?.openai_model || config?.model_preference || 'gpt-4o-mini'}
+    if (provider === 'anthropic') {return config?.anthropic_model || config?.model_preference || 'claude-3-haiku-20240307'}
     return config?.model_preference || 'llama3'
   }
 
   // Helper to check if AI is enabled
   const isAIEnabled = () => {
-    if (config?.is_enabled !== undefined) return config.is_enabled
+    if (config?.is_enabled !== undefined) {return config.is_enabled}
     return config?.enable_rfi_routing || config?.enable_smart_summaries ||
            config?.enable_risk_prediction || config?.enable_schedule_optimization ||
            config?.enable_document_enhancement || true
@@ -156,8 +156,8 @@ export default function AISettingsPage() {
   // Helper to check if API key is configured
   const hasApiKey = () => {
     const provider = getCurrentProvider()
-    if (provider === 'openai') return !!(config?.openai_api_key_id || config?.api_key_encrypted)
-    if (provider === 'anthropic') return !!(config?.anthropic_api_key_id || config?.api_key_encrypted)
+    if (provider === 'openai') {return !!(config?.openai_api_key_id || config?.api_key_encrypted)}
+    if (provider === 'anthropic') {return !!(config?.anthropic_api_key_id || config?.api_key_encrypted)}
     return true // Local doesn't need API key
   }
 

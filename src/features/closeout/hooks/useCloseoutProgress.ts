@@ -45,7 +45,7 @@ export function useCloseoutMilestones(projectId: string | undefined) {
   return useQuery({
     queryKey: closeoutProgressKeys.milestones(projectId || ''),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('closeout_milestones')
@@ -58,7 +58,7 @@ export function useCloseoutMilestones(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as CloseoutMilestoneWithDetails[]
     },
     enabled: !!projectId,
@@ -72,7 +72,7 @@ export function useCloseoutMilestone(milestoneId: string | undefined) {
   return useQuery({
     queryKey: closeoutProgressKeys.milestone(milestoneId || ''),
     queryFn: async () => {
-      if (!milestoneId) throw new Error('Milestone ID required')
+      if (!milestoneId) {throw new Error('Milestone ID required')}
 
       const { data, error } = await supabase
         .from('closeout_milestones')
@@ -84,7 +84,7 @@ export function useCloseoutMilestone(milestoneId: string | undefined) {
         .eq('id', milestoneId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as CloseoutMilestoneWithDetails
     },
     enabled: !!milestoneId,
@@ -118,7 +118,7 @@ export function useCreateCloseoutMilestone() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as CloseoutMilestone
     },
     onSuccess: (data) => {
@@ -155,7 +155,7 @@ export function useUpdateCloseoutMilestone() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as CloseoutMilestone
     },
     onSuccess: (data) => {
@@ -197,7 +197,7 @@ export function useCompleteMilestone() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as CloseoutMilestone
     },
     onSuccess: (data) => {
@@ -236,7 +236,7 @@ export function useOwnerSignOffMilestone() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as CloseoutMilestone
     },
     onSuccess: (data) => {
@@ -262,7 +262,7 @@ export function useDeleteCloseoutMilestone() {
         .select('project_id')
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (data) => {
@@ -311,7 +311,7 @@ export function useInitializeCloseoutMilestones() {
         .insert(milestonesToInsert)
         .select()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as CloseoutMilestone[]
     },
     onSuccess: (data) => {

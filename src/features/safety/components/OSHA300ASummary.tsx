@@ -102,12 +102,12 @@ interface PrintableFormProps {
 // ============================================================================
 
 function formatNumber(num: number | null | undefined): string {
-  if (num === null || num === undefined) return '-'
+  if (num === null || num === undefined) {return '-'}
   return num.toLocaleString()
 }
 
 function formatRate(rate: number | null | undefined): string {
-  if (rate === null || rate === undefined) return '-'
+  if (rate === null || rate === undefined) {return '-'}
   return rate.toFixed(2)
 }
 

@@ -43,7 +43,7 @@ export function ResourceHistogram({
 
   // Calculate max value for scaling
   const maxLabor = useMemo(() => {
-    if (dailySummaries.length === 0) return laborCapacity
+    if (dailySummaries.length === 0) {return laborCapacity}
     return Math.max(
       laborCapacity,
       ...dailySummaries.map(d => d.totalLabor)
@@ -51,7 +51,7 @@ export function ResourceHistogram({
   }, [dailySummaries, laborCapacity])
 
   const maxEquipment = useMemo(() => {
-    if (dailySummaries.length === 0) return equipmentCapacity
+    if (dailySummaries.length === 0) {return equipmentCapacity}
     return Math.max(
       equipmentCapacity,
       ...dailySummaries.map(d => d.totalEquipment)
@@ -63,12 +63,12 @@ export function ResourceHistogram({
   const barAreaHeight = height - chartPadding
 
   const getBarHeight = (value: number, maxValue: number) => {
-    if (maxValue === 0) return 0
+    if (maxValue === 0) {return 0}
     return (value / maxValue) * barAreaHeight
   }
 
   const getCapacityLineY = (capacity: number, maxValue: number) => {
-    if (maxValue === 0) return barAreaHeight
+    if (maxValue === 0) {return barAreaHeight}
     return chartPadding + barAreaHeight - (capacity / maxValue) * barAreaHeight
   }
 
@@ -136,7 +136,7 @@ export function ResourceHistogram({
             {/* Weekend shading */}
             {showWeekends && dailySummaries.map((day, index) => {
               const date = parseISO(day.date)
-              if (!isWeekend(date)) return null
+              if (!isWeekend(date)) {return null}
               return (
                 <rect
                   key={`weekend-${index}`}
@@ -296,7 +296,7 @@ export function ResourceHistogram({
             {dailySummaries.map((day, index) => {
               // Show label every 7 days for narrow columns, every day for wide columns
               const showLabel = columnWidth >= 40 || index % 7 === 0
-              if (!showLabel) return null
+              if (!showLabel) {return null}
 
               return (
                 <text

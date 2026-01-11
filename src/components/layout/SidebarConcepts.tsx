@@ -2,7 +2,7 @@
 // Three distinct sidebar navigation concepts for JobSight
 // Each concept has a unique aesthetic and interaction pattern
 
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { LogoIconLight } from '@/components/brand'
@@ -11,7 +11,6 @@ import {
   ChevronRight,
   Search,
   Plus,
-  MoreHorizontal,
   Sparkles,
 } from 'lucide-react'
 

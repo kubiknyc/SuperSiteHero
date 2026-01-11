@@ -184,7 +184,7 @@ export function useAgentConfig(options: UseAgentConfigOptions = {}): UseAgentCon
           .select()
           .single()
 
-        if (error) throw error
+        if (error) {throw error}
         result = data as AgentConfiguration
       } else {
         // Create new configuration with defaults + updates
@@ -200,7 +200,7 @@ export function useAgentConfig(options: UseAgentConfigOptions = {}): UseAgentCon
           .select()
           .single()
 
-        if (error) throw error
+        if (error) {throw error}
         result = data as AgentConfiguration
       }
 

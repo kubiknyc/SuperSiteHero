@@ -230,13 +230,13 @@ function parseAttendee(name: string, meetingType: string): AttendeeInfo {
 function inferRole(name: string, meetingType: string): string {
   const nameLower = name.toLowerCase()
 
-  if (/superintendent|super/i.test(nameLower)) return 'Superintendent'
-  if (/project\s*manager|pm/i.test(nameLower)) return 'Project Manager'
-  if (/architect/i.test(nameLower)) return 'Architect'
-  if (/engineer/i.test(nameLower)) return 'Engineer'
-  if (/owner/i.test(nameLower)) return 'Owner Representative'
-  if (/safety/i.test(nameLower)) return 'Safety Manager'
-  if (/foreman/i.test(nameLower)) return 'Foreman'
+  if (/superintendent|super/i.test(nameLower)) {return 'Superintendent'}
+  if (/project\s*manager|pm/i.test(nameLower)) {return 'Project Manager'}
+  if (/architect/i.test(nameLower)) {return 'Architect'}
+  if (/engineer/i.test(nameLower)) {return 'Engineer'}
+  if (/owner/i.test(nameLower)) {return 'Owner Representative'}
+  if (/safety/i.test(nameLower)) {return 'Safety Manager'}
+  if (/foreman/i.test(nameLower)) {return 'Foreman'}
 
   const defaultRoles: Record<string, string> = {
     oac: 'Attendee',
@@ -326,7 +326,7 @@ function extractDiscussionTopics(notes: string, meetingType: string): Discussion
   const sections = notes.split(/\n\n+/)
 
   for (const section of sections) {
-    if (section.length < 30) continue
+    if (section.length < 30) {continue}
 
     // Try to identify topic header
     const lines = section.split('\n')
@@ -339,7 +339,7 @@ function extractDiscussionTopics(notes: string, meetingType: string): Discussion
 
       for (const line of contentLines) {
         const trimmed = line.trim()
-        if (trimmed.length < 10) continue
+        if (trimmed.length < 10) {continue}
 
         if (/\b(issue|problem|concern|outstanding|unresolved|pending)\b/i.test(trimmed)) {
           openIssues.push(trimmed.replace(/^[\-]/g, ''))
@@ -398,33 +398,33 @@ function extractDecisionMaker(context: string): string {
 
   for (const pattern of patterns) {
     const match = context.match(pattern)
-    if (match) return match[1].trim()
+    if (match) {return match[1].trim()}
   }
 
-  if (/owner/i.test(context)) return 'Owner'
-  if (/architect/i.test(context)) return 'Architect'
-  if (/gc|general contractor/i.test(context)) return 'GC'
-  if (/team|group/i.test(context)) return 'Team Consensus'
+  if (/owner/i.test(context)) {return 'Owner'}
+  if (/architect/i.test(context)) {return 'Architect'}
+  if (/gc|general contractor/i.test(context)) {return 'GC'}
+  if (/team|group/i.test(context)) {return 'Team Consensus'}
 
   return 'Meeting Consensus'
 }
 
 function determineDecisionImpact(text: string): 'low' | 'medium' | 'high' {
-  if (/critical|major|significant|schedule|cost|budget|delay/i.test(text)) return 'high'
-  if (/important|change|modify|update/i.test(text)) return 'medium'
+  if (/critical|major|significant|schedule|cost|budget|delay/i.test(text)) {return 'high'}
+  if (/important|change|modify|update/i.test(text)) {return 'medium'}
   return 'low'
 }
 
 function extractRelatedTopics(text: string): string[] {
   const topics: string[] = []
 
-  if (/schedule|timeline|date/i.test(text)) topics.push('Schedule')
-  if (/cost|budget|price|payment/i.test(text)) topics.push('Cost')
-  if (/safety|hazard/i.test(text)) topics.push('Safety')
-  if (/quality|inspection/i.test(text)) topics.push('Quality')
-  if (/submittal|approval/i.test(text)) topics.push('Submittals')
-  if (/rfi|clarification/i.test(text)) topics.push('RFIs')
-  if (/change|modification/i.test(text)) topics.push('Changes')
+  if (/schedule|timeline|date/i.test(text)) {topics.push('Schedule')}
+  if (/cost|budget|price|payment/i.test(text)) {topics.push('Cost')}
+  if (/safety|hazard/i.test(text)) {topics.push('Safety')}
+  if (/quality|inspection/i.test(text)) {topics.push('Quality')}
+  if (/submittal|approval/i.test(text)) {topics.push('Submittals')}
+  if (/rfi|clarification/i.test(text)) {topics.push('RFIs')}
+  if (/change|modification/i.test(text)) {topics.push('Changes')}
 
   return topics.slice(0, 3)
 }
@@ -465,13 +465,13 @@ function extractOwner(text: string): string {
 
   for (const pattern of patterns) {
     const match = text.match(pattern)
-    if (match && match[1]) return match[1].trim()
+    if (match && match[1]) {return match[1].trim()}
   }
 
-  if (/\b(GC|general contractor)\b/i.test(text)) return 'GC'
-  if (/\barchitect\b/i.test(text)) return 'Architect'
-  if (/\bengineer\b/i.test(text)) return 'Engineer'
-  if (/\bowner\b/i.test(text)) return 'Owner'
+  if (/\b(GC|general contractor)\b/i.test(text)) {return 'GC'}
+  if (/\barchitect\b/i.test(text)) {return 'Architect'}
+  if (/\bengineer\b/i.test(text)) {return 'Engineer'}
+  if (/\bowner\b/i.test(text)) {return 'Owner'}
 
   return 'TBD'
 }
@@ -525,9 +525,9 @@ function formatDate(date: Date): string {
 }
 
 function determinePriority(text: string): 'low' | 'medium' | 'high' | 'critical' {
-  if (/critical|urgent|asap|immediate|safety|hazard|stop work/i.test(text)) return 'critical'
-  if (/important|priority|soon|this week|required/i.test(text)) return 'high'
-  if (/when possible|eventually|fyi|nice to have/i.test(text)) return 'low'
+  if (/critical|urgent|asap|immediate|safety|hazard|stop work/i.test(text)) {return 'critical'}
+  if (/important|priority|soon|this week|required/i.test(text)) {return 'high'}
+  if (/when possible|eventually|fyi|nice to have/i.test(text)) {return 'low'}
   return 'medium'
 }
 
@@ -680,9 +680,9 @@ function generateFormattedMinutes(params: FormatMinutesParams): string {
   lines.push('')
   lines.push(`Meeting: ${title}`)
   lines.push(`Date: ${date}`)
-  if (location) lines.push(`Location: ${location}`)
-  if (duration) lines.push(`Duration: ${duration}`)
-  if (project) lines.push(`Project: ${project}`)
+  if (location) {lines.push(`Location: ${location}`)}
+  if (duration) {lines.push(`Duration: ${duration}`)}
+  if (project) {lines.push(`Project: ${project}`)}
   lines.push('')
 
   // Attendees

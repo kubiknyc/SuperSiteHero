@@ -347,7 +347,7 @@ export function useEnhancedMeasurements({
   // Export measurements
   const handleExport = useCallback(
     (options: MeasurementExportOptions) => {
-      if (!documentId) return
+      if (!documentId) {return}
 
       exportMeasurements(
         measurements,
@@ -370,7 +370,7 @@ export function useEnhancedMeasurements({
       displayVolumeUnit: VolumeUnit
     ) => {
       const measurement = measurements.find((m) => m.id === measurementId)
-      if (!measurement || measurement.type !== 'area' || !documentId) return
+      if (!measurement || measurement.type !== 'area' || !documentId) {return}
 
       const volumeInCubicFeet = calculateVolume(
         measurement.value,
@@ -465,7 +465,7 @@ export function useCountMarkers({
   // Add a marker
   const addMarker = useCallback(
     (position: { x: number; y: number }, label?: string) => {
-      if (!activeCategory || !userProfile?.id) return null
+      if (!activeCategory || !userProfile?.id) {return null}
 
       const categoryMarkers = markers.filter((m) => m.categoryId === activeCategory.id)
       const nextNumber = categoryMarkers.length + 1
@@ -493,7 +493,7 @@ export function useCountMarkers({
   const deleteMarker = useCallback((id: string) => {
     setMarkers((prev) => {
       const markerToDelete = prev.find((m) => m.id === id)
-      if (!markerToDelete) return prev
+      if (!markerToDelete) {return prev}
 
       // Remove marker and renumber remaining markers in same category
       const remaining = prev.filter((m) => m.id !== id)

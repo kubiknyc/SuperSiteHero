@@ -94,7 +94,7 @@ export function useNotifications(options?: {
   } = useQuery({
     queryKey: ['notifications', user?.id, options?.filters, limit],
     queryFn: async () => {
-      if (!user?.id) return []
+      if (!user?.id) {return []}
 
       let query = supabase
         .from('notifications')
@@ -179,7 +179,7 @@ export function useNotifications(options?: {
       byPriority[priority] = (byPriority[priority] || 0) + 1
 
       // Unread
-      if (!n.is_read) unread++
+      if (!n.is_read) {unread++}
     })
 
     return {
@@ -201,7 +201,7 @@ export function useNotifications(options?: {
         })
         .eq('id', notificationId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] })
@@ -229,7 +229,7 @@ export function useNotifications(options?: {
 
       const { error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] })
@@ -249,7 +249,7 @@ export function useNotifications(options?: {
         .update({ snoozed_until: snoozeUntil })
         .eq('id', notificationId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] })
@@ -270,7 +270,7 @@ export function useNotifications(options?: {
         })
         .eq('id', notificationId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] })
@@ -288,7 +288,7 @@ export function useNotifications(options?: {
         .update({ deleted_at: new Date().toISOString() })
         .eq('user_id', user?.id)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notifications'] })
@@ -300,7 +300,7 @@ export function useNotifications(options?: {
 
   // Real-time subscription
   useEffect(() => {
-    if (!user?.id || !enableRealtime) return
+    if (!user?.id || !enableRealtime) {return}
 
     const channel = supabase
       .channel(`notifications:${user.id}`)

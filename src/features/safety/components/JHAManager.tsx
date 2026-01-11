@@ -328,7 +328,7 @@ export function JHAManager({ projectId, className }: JHAManagerProps) {
 
   // Filtered data based on active tab
   const filteredJHAs = useMemo(() => {
-    if (!jhas) return [];
+    if (!jhas) {return [];}
 
     switch (activeTab) {
       case 'pending':

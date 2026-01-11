@@ -112,23 +112,33 @@ export class SafeInteractor {
 
     // Tab interactions
     interactionCount += await this.interactWithTabs();
-    if (interactionCount >= this.options.maxInteractions) return this.interactionLog;
+    if (interactionCount >= this.options.maxInteractions) {
+      return this.interactionLog;
+    }
 
     // Accordion/expandable interactions
     interactionCount += await this.interactWithAccordions();
-    if (interactionCount >= this.options.maxInteractions) return this.interactionLog;
+    if (interactionCount >= this.options.maxInteractions) {
+      return this.interactionLog;
+    }
 
     // Dropdown peek (open and close)
     interactionCount += await this.peekDropdowns();
-    if (interactionCount >= this.options.maxInteractions) return this.interactionLog;
+    if (interactionCount >= this.options.maxInteractions) {
+      return this.interactionLog;
+    }
 
     // Tooltip hover
     interactionCount += await this.hoverTooltips();
-    if (interactionCount >= this.options.maxInteractions) return this.interactionLog;
+    if (interactionCount >= this.options.maxInteractions) {
+      return this.interactionLog;
+    }
 
     // Table sort interactions
     interactionCount += await this.interactWithTableSorts();
-    if (interactionCount >= this.options.maxInteractions) return this.interactionLog;
+    if (interactionCount >= this.options.maxInteractions) {
+      return this.interactionLog;
+    }
 
     // View toggle interactions
     interactionCount += await this.interactWithViewToggles();
@@ -149,7 +159,9 @@ export class SafeInteractor {
       if (await this.isSafeToInteract(tab)) {
         const result = await this.safeClick(tab, 'tab');
         this.interactionLog.push(result);
-        if (result.success) count++;
+        if (result.success) {
+          count++;
+        }
         // Small delay between tab clicks to allow content to load
         await this.page.waitForTimeout(300);
       }
@@ -171,7 +183,9 @@ export class SafeInteractor {
       if (await this.isSafeToInteract(accordion)) {
         const result = await this.safeClick(accordion, 'accordion');
         this.interactionLog.push(result);
-        if (result.success) count++;
+        if (result.success) {
+          count++;
+        }
         await this.page.waitForTimeout(200);
       }
     }
@@ -192,7 +206,9 @@ export class SafeInteractor {
       if (await this.isSafeToInteract(dropdown)) {
         const result = await this.peekDropdown(dropdown);
         this.interactionLog.push(result);
-        if (result.success) count++;
+        if (result.success) {
+          count++;
+        }
       }
     }
 
@@ -212,7 +228,9 @@ export class SafeInteractor {
       if (await this.isSafeToInteract(tooltip)) {
         const result = await this.safeHover(tooltip, 'tooltip');
         this.interactionLog.push(result);
-        if (result.success) count++;
+        if (result.success) {
+          count++;
+        }
       }
     }
 
@@ -232,7 +250,9 @@ export class SafeInteractor {
       if (await this.isSafeToInteract(header)) {
         const result = await this.safeClick(header, 'table-sort');
         this.interactionLog.push(result);
-        if (result.success) count++;
+        if (result.success) {
+          count++;
+        }
         await this.page.waitForTimeout(300);
       }
     }
@@ -253,7 +273,9 @@ export class SafeInteractor {
       if (await this.isSafeToInteract(toggle)) {
         const result = await this.safeClick(toggle, 'view-toggle');
         this.interactionLog.push(result);
-        if (result.success) count++;
+        if (result.success) {
+          count++;
+        }
         await this.page.waitForTimeout(200);
       }
     }
@@ -268,10 +290,14 @@ export class SafeInteractor {
     try {
       // Check if visible and enabled
       const isVisible = await locator.isVisible({ timeout: 1000 }).catch(() => false);
-      if (!isVisible) return false;
+      if (!isVisible) {
+        return false;
+      }
 
       const isEnabled = await locator.isEnabled({ timeout: 1000 }).catch(() => false);
-      if (!isEnabled) return false;
+      if (!isEnabled) {
+        return false;
+      }
 
       // Check against unsafe patterns
       for (const pattern of UNSAFE_PATTERNS) {
@@ -370,10 +396,14 @@ export class SafeInteractor {
   private async getSelector(locator: Locator): Promise<string> {
     try {
       const testId = await locator.getAttribute('data-testid');
-      if (testId) return `[data-testid="${testId}"]`;
+      if (testId) {
+        return `[data-testid="${testId}"]`;
+      }
 
       const id = await locator.getAttribute('id');
-      if (id) return `#${id}`;
+      if (id) {
+        return `#${id}`;
+      }
 
       const className = await locator.getAttribute('class');
       if (className) {

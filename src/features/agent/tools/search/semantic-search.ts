@@ -210,7 +210,7 @@ async function searchRFIs(
 
   const { data, error } = await query
 
-  if (error || !data) return []
+  if (error || !data) {return []}
 
   return data.map((rfi) => ({
     entity_type: 'rfi',
@@ -241,7 +241,7 @@ async function searchSubmittals(
 
   const { data, error } = await query
 
-  if (error || !data) return []
+  if (error || !data) {return []}
 
   return data.map((sub) => ({
     entity_type: 'submittal',
@@ -272,7 +272,7 @@ async function searchDocuments(
 
   const { data, error } = await query
 
-  if (error || !data) return []
+  if (error || !data) {return []}
 
   return data.map((doc) => ({
     entity_type: 'document',
@@ -302,7 +302,7 @@ async function searchDailyReports(
 
   const { data, error } = await query
 
-  if (error || !data) return []
+  if (error || !data) {return []}
 
   // Filter by terms in summary or work_performed
   const filtered = data.filter((report) => {
@@ -339,7 +339,7 @@ async function searchPunchItems(
 
   const { data, error } = await query
 
-  if (error || !data) return []
+  if (error || !data) {return []}
 
   return data.map((item) => ({
     entity_type: 'punch_item',
@@ -370,7 +370,7 @@ async function searchChangeOrders(
 
   const { data, error } = await query
 
-  if (error || !data) return []
+  if (error || !data) {return []}
 
   return data.map((co) => ({
     entity_type: 'change_order',
@@ -401,7 +401,7 @@ async function searchTasks(
 
   const { data, error } = await query
 
-  if (error || !data) return []
+  if (error || !data) {return []}
 
   return data.map((task) => ({
     entity_type: 'task',
@@ -431,7 +431,7 @@ function calculateRelevance(terms: string[], fields: (string | null | undefined)
 }
 
 function truncate(text: string, maxLength: number): string {
-  if (text.length <= maxLength) return text
+  if (text.length <= maxLength) {return text}
   return text.slice(0, maxLength - 3) + '...'
 }
 

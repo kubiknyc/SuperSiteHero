@@ -73,7 +73,7 @@ function getRateLimitData(action: RateLimitAction, identifier?: string): RateLim
   try {
     const key = getStorageKey(action, identifier)
     const stored = localStorage.getItem(key)
-    if (!stored) return null
+    if (!stored) {return null}
 
     const data = JSON.parse(stored) as RateLimitData
     const config = RATE_LIMIT_CONFIG[action]
@@ -203,7 +203,7 @@ export function resetRateLimit(action: RateLimitAction, identifier?: string): vo
  * Format remaining lockout time for display
  */
 export function formatLockoutTime(ms: number): string {
-  if (ms <= 0) return ''
+  if (ms <= 0) {return ''}
 
   const seconds = Math.ceil(ms / 1000)
   const minutes = Math.floor(seconds / 60)
@@ -255,7 +255,7 @@ export function useRateLimit(options: UseRateLimitOptions): UseRateLimitResult {
 
   // Update state periodically while locked out
   useEffect(() => {
-    if (!state.isLocked) return
+    if (!state.isLocked) {return}
 
     const interval = setInterval(() => {
       const newState = getRateLimitState(action, identifier)

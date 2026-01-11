@@ -83,7 +83,7 @@ export const ShopDrawingStatusTransition = memo(function ShopDrawingStatusTransi
   }
 
   const handleConfirmTransition = async () => {
-    if (!selectedStatus) return
+    if (!selectedStatus) {return}
 
     try {
       const approvalCode = statusToApprovalCode[selectedStatus]
@@ -125,8 +125,8 @@ export const ShopDrawingStatusTransition = memo(function ShopDrawingStatusTransi
   }
 
   const getStatusButtonVariant = (status: SubmittalReviewStatus): 'default' | 'destructive' | 'outline' => {
-    if (['approved', 'approved_as_noted'].includes(status)) return 'default'
-    if (['rejected'].includes(status)) return 'destructive'
+    if (['approved', 'approved_as_noted'].includes(status)) {return 'default'}
+    if (['rejected'].includes(status)) {return 'destructive'}
     return 'outline'
   }
 

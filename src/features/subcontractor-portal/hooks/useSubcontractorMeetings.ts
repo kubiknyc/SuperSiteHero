@@ -265,7 +265,7 @@ export function getActionItemPriorityColor(priority: ActionItemPriority): string
  * Format meeting date for display
  */
 export function formatMeetingDate(dateString: string | null): string {
-  if (!dateString) return '-'
+  if (!dateString) {return '-'}
   return new Date(dateString).toLocaleDateString('en-US', {
     weekday: 'short',
     month: 'short',
@@ -278,7 +278,7 @@ export function formatMeetingDate(dateString: string | null): string {
  * Format meeting time for display
  */
 export function formatMeetingTime(timeString: string | null): string {
-  if (!timeString) return '-'
+  if (!timeString) {return '-'}
   // Assume time is in HH:MM:SS format
   const [hours, minutes] = timeString.split(':')
   const hour = parseInt(hours, 10)
@@ -291,11 +291,11 @@ export function formatMeetingTime(timeString: string | null): string {
  * Format duration for display
  */
 export function formatDuration(minutes: number | null): string {
-  if (!minutes) return '-'
-  if (minutes < 60) return `${minutes} min`
+  if (!minutes) {return '-'}
+  if (minutes < 60) {return `${minutes} min`}
   const hours = Math.floor(minutes / 60)
   const mins = minutes % 60
-  if (mins === 0) return `${hours} hr`
+  if (mins === 0) {return `${hours} hr`}
   return `${hours} hr ${mins} min`
 }
 
@@ -303,7 +303,7 @@ export function formatDuration(minutes: number | null): string {
  * Calculate days until due date
  */
 export function getDaysUntilDue(dueDate: string | null): number | null {
-  if (!dueDate) return null
+  if (!dueDate) {return null}
   const due = new Date(dueDate)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -316,9 +316,9 @@ export function getDaysUntilDue(dueDate: string | null): number | null {
  * Check if action item is overdue
  */
 export function isActionItemOverdue(item: SubcontractorActionItem): boolean {
-  if (item.is_overdue) return true
-  if (!item.due_date) return false
-  if (item.status === 'completed' || item.status === 'cancelled') return false
+  if (item.is_overdue) {return true}
+  if (!item.due_date) {return false}
+  if (item.status === 'completed' || item.status === 'cancelled') {return false}
   const days = getDaysUntilDue(item.due_date)
   return days !== null && days < 0
 }
@@ -397,9 +397,9 @@ export function groupActionItemsByMeeting(
  * Format file size for display
  */
 export function formatFileSize(bytes: number | null): string {
-  if (!bytes) return '-'
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+  if (!bytes) {return '-'}
+  if (bytes < 1024) {return `${bytes} B`}
+  if (bytes < 1024 * 1024) {return `${(bytes / 1024).toFixed(1)} KB`}
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
@@ -407,7 +407,7 @@ export function formatFileSize(bytes: number | null): string {
  * Get meeting type label
  */
 export function getMeetingTypeLabel(meetingType: string | null): string {
-  if (!meetingType) return 'General'
+  if (!meetingType) {return 'General'}
   const labels: Record<string, string> = {
     kickoff: 'Kickoff',
     progress: 'Progress',

@@ -210,7 +210,7 @@ export function getCertificationStatusBgColor(status: CertificationStatusType): 
  * Format certification date for display
  */
 export function formatCertificationDate(dateString: string | null): string {
-  if (!dateString) return '-'
+  if (!dateString) {return '-'}
   return new Date(dateString).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -222,7 +222,7 @@ export function formatCertificationDate(dateString: string | null): string {
  * Calculate days until expiration
  */
 export function getDaysUntilExpiration(expirationDate: string | null): number | null {
-  if (!expirationDate) return null
+  if (!expirationDate) {return null}
   const expiry = new Date(expirationDate)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -235,8 +235,8 @@ export function getDaysUntilExpiration(expirationDate: string | null): number | 
  * Check if certification is expired
  */
 export function isCertificationExpired(cert: SubcontractorCertification): boolean {
-  if (cert.status === 'expired') return true
-  if (!cert.expiration_date) return false
+  if (cert.status === 'expired') {return true}
+  if (!cert.expiration_date) {return false}
   const days = getDaysUntilExpiration(cert.expiration_date)
   return days !== null && days < 0
 }
@@ -245,9 +245,9 @@ export function isCertificationExpired(cert: SubcontractorCertification): boolea
  * Check if certification is expiring soon (within 30 days)
  */
 export function isCertificationExpiringSoon(cert: SubcontractorCertification, days: number = 30): boolean {
-  if (cert.status === 'expiring_soon') return true
-  if (!cert.expiration_date) return false
-  if (isCertificationExpired(cert)) return false
+  if (cert.status === 'expiring_soon') {return true}
+  if (!cert.expiration_date) {return false}
+  if (isCertificationExpired(cert)) {return false}
   const daysLeft = getDaysUntilExpiration(cert.expiration_date)
   return daysLeft !== null && daysLeft <= days
 }
@@ -256,14 +256,14 @@ export function isCertificationExpiringSoon(cert: SubcontractorCertification, da
  * Get expiration status text
  */
 export function getExpirationStatusText(cert: SubcontractorCertification): string {
-  if (!cert.expiration_date) return 'No expiration'
+  if (!cert.expiration_date) {return 'No expiration'}
   const days = getDaysUntilExpiration(cert.expiration_date)
-  if (days === null) return '-'
-  if (days < 0) return `Expired ${Math.abs(days)} days ago`
-  if (days === 0) return 'Expires today'
-  if (days === 1) return 'Expires tomorrow'
-  if (days <= 30) return `Expires in ${days} days`
-  if (days <= 60) return `Expires in ${Math.ceil(days / 7)} weeks`
+  if (days === null) {return '-'}
+  if (days < 0) {return `Expired ${Math.abs(days)} days ago`}
+  if (days === 0) {return 'Expires today'}
+  if (days === 1) {return 'Expires tomorrow'}
+  if (days <= 30) {return `Expires in ${days} days`}
+  if (days <= 60) {return `Expires in ${Math.ceil(days / 7)} weeks`}
   return `Expires ${formatCertificationDate(cert.expiration_date)}`
 }
 
@@ -295,7 +295,7 @@ export function filterCertificationsByType(
   certs: SubcontractorCertification[],
   type: CertificationType | 'all'
 ): SubcontractorCertification[] {
-  if (type === 'all') return certs
+  if (type === 'all') {return certs}
   return certs.filter(c => c.certification_type === type)
 }
 
@@ -338,9 +338,9 @@ export function sortCertificationsByExpiration(
   certs: SubcontractorCertification[]
 ): SubcontractorCertification[] {
   return [...certs].sort((a, b) => {
-    if (!a.expiration_date && !b.expiration_date) return 0
-    if (!a.expiration_date) return 1
-    if (!b.expiration_date) return -1
+    if (!a.expiration_date && !b.expiration_date) {return 0}
+    if (!a.expiration_date) {return 1}
+    if (!b.expiration_date) {return -1}
     return new Date(a.expiration_date).getTime() - new Date(b.expiration_date).getTime()
   })
 }
@@ -349,7 +349,7 @@ export function sortCertificationsByExpiration(
  * Get certification health score (percentage of valid certs)
  */
 export function getCertificationHealthScore(certs: SubcontractorCertification[]): number {
-  if (certs.length === 0) return 100
+  if (certs.length === 0) {return 100}
   const validCount = certs.filter(c => c.status === 'valid' || c.status === 'expiring_soon').length
   return Math.round((validCount / certs.length) * 100)
 }
@@ -358,9 +358,9 @@ export function getCertificationHealthScore(certs: SubcontractorCertification[])
  * Get health score color
  */
 export function getHealthScoreColor(score: number): string {
-  if (score >= 90) return 'text-green-600'
-  if (score >= 70) return 'text-yellow-600'
-  if (score >= 50) return 'text-orange-600'
+  if (score >= 90) {return 'text-green-600'}
+  if (score >= 70) {return 'text-yellow-600'}
+  if (score >= 50) {return 'text-orange-600'}
   return 'text-red-600'
 }
 
@@ -368,9 +368,9 @@ export function getHealthScoreColor(score: number): string {
  * Get health score background color
  */
 export function getHealthScoreBgColor(score: number): string {
-  if (score >= 90) return 'bg-green-100'
-  if (score >= 70) return 'bg-yellow-100'
-  if (score >= 50) return 'bg-orange-100'
+  if (score >= 90) {return 'bg-green-100'}
+  if (score >= 70) {return 'bg-yellow-100'}
+  if (score >= 50) {return 'bg-orange-100'}
   return 'bg-red-100'
 }
 

@@ -153,14 +153,14 @@ export function ScopeTemplates({ onApplyTemplate, bidPackageId }: ScopeTemplates
 
   // Filter templates
   const filteredTemplates = library?.templates.filter((t) => {
-    if (selectedTrade !== 'all' && t.tradeCode !== selectedTrade) return false
-    if (searchQuery && !t.name.toLowerCase().includes(searchQuery.toLowerCase())) return false
+    if (selectedTrade !== 'all' && t.tradeCode !== selectedTrade) {return false}
+    if (searchQuery && !t.name.toLowerCase().includes(searchQuery.toLowerCase())) {return false}
     return true
   }) || []
 
   // Handle apply template
   const handleApplyTemplate = useCallback(async (templateId: string) => {
-    if (!bidPackageId) return
+    if (!bidPackageId) {return}
 
     await applyMutation.mutateAsync({
       templateId,
@@ -181,7 +181,7 @@ export function ScopeTemplates({ onApplyTemplate, bidPackageId }: ScopeTemplates
 
   // Handle delete
   const handleDelete = useCallback(async (templateId: string) => {
-    if (!confirm('Are you sure you want to delete this template?')) return
+    if (!confirm('Are you sure you want to delete this template?')) {return}
     await deleteMutation.mutateAsync(templateId)
   }, [deleteMutation])
 
@@ -239,7 +239,7 @@ export function ScopeTemplates({ onApplyTemplate, bidPackageId }: ScopeTemplates
         <div className="space-y-8">
           {library?.trades.map((trade) => {
             const tradeTemplates = filteredTemplates.filter((t) => t.tradeCode === trade.code)
-            if (tradeTemplates.length === 0) return null
+            if (tradeTemplates.length === 0) {return null}
 
             return (
               <div key={trade.code}>

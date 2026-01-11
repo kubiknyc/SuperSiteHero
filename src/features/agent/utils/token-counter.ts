@@ -34,7 +34,7 @@ const RESPONSE_RESERVED_TOKENS = 4096
  * Average English text is ~4 characters per token for GPT models
  */
 export function estimateTokens(text: string): number {
-  if (!text) return 0
+  if (!text) {return 0}
 
   // Count different character types
   const words = text.split(/\s+/).filter(Boolean)
@@ -185,7 +185,7 @@ export class ContextManager {
       const { message, tokens } = messageTokens[i]
 
       // Skip system messages if we're preserving them separately
-      if (preserveSystemMessage && message.role === 'system') continue
+      if (preserveSystemMessage && message.role === 'system') {continue}
 
       result.unshift(message)
       totalTokens += tokens
@@ -197,7 +197,7 @@ export class ContextManager {
       const { message, tokens } = messageTokens[i]
 
       // Skip system messages
-      if (preserveSystemMessage && message.role === 'system') continue
+      if (preserveSystemMessage && message.role === 'system') {continue}
 
       // Check if we have room
       if (totalTokens + tokens > availableTokens) {

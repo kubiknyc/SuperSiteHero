@@ -2,7 +2,7 @@
 // Slide-out panel for action items requiring user attention
 // Part of the v2 desktop layout redesign
 
-import { useEffect, useRef, useCallback, memo } from 'react'
+import { useEffect, useRef, memo } from 'react'
 import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { useActionItems } from '@/features/dashboard/hooks/useDashboardStats'
@@ -27,9 +27,15 @@ type BadgeVariant = 'destructive' | 'secondary' | 'outline' | 'default'
  * Get badge variant based on priority and overdue status
  */
 function getPriorityVariant(priority: string, isOverdue: boolean): BadgeVariant {
-  if (isOverdue) return 'destructive'
-  if (priority === 'urgent') return 'destructive'
-  if (priority === 'high') return 'secondary'
+  if (isOverdue) {
+    return 'destructive'
+  }
+  if (priority === 'urgent') {
+    return 'destructive'
+  }
+  if (priority === 'high') {
+    return 'secondary'
+  }
   return 'outline'
 }
 
@@ -37,7 +43,9 @@ function getPriorityVariant(priority: string, isOverdue: boolean): BadgeVariant 
  * Get display label for action item type
  */
 function getTypeLabel(type: string, isOverdue: boolean): string {
-  if (isOverdue) return 'Overdue'
+  if (isOverdue) {
+    return 'Overdue'
+  }
   return type.replace('_', ' ')
 }
 

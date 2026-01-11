@@ -73,7 +73,7 @@ export function LienWaiverSignDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!canSubmit) return
+    if (!canSubmit) {return}
 
     await signMutation.mutateAsync({
       waiverId: waiver.id,

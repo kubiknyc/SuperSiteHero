@@ -280,7 +280,7 @@ class SessionManager {
    */
   private async waitForOnlineAndRefresh(): Promise<void> {
     const queuedAt = this.state.offlineQueuedAt
-    if (!queuedAt) return
+    if (!queuedAt) {return}
 
     const online = await waitForOnline(MAX_OFFLINE_QUEUE_TIME_MS)
 
@@ -318,7 +318,7 @@ class SessionManager {
    * Check session expiry and emit warnings
    */
   private checkExpiry(): void {
-    if (!this.state.expiresAt) return
+    if (!this.state.expiresAt) {return}
 
     const now = Date.now()
     const timeRemaining = this.state.expiresAt - now
@@ -421,7 +421,7 @@ class SessionManager {
    * Broadcast session update to other tabs
    */
   private broadcastSessionUpdate(type: string, session: Session | null): void {
-    if (!this.broadcastChannel) return
+    if (!this.broadcastChannel) {return}
 
     try {
       this.broadcastChannel.postMessage({
@@ -441,7 +441,7 @@ class SessionManager {
    * Handle broadcast message from another tab
    */
   private handleBroadcastMessage(data: unknown): void {
-    if (!data || typeof data !== 'object') return
+    if (!data || typeof data !== 'object') {return}
 
     const message = data as { type: string; timestamp: number }
     logger.debug('[SessionManager] Received broadcast:', message.type)
@@ -477,7 +477,7 @@ class SessionManager {
    * Set up network online/offline listeners
    */
   private setupNetworkListeners(): void {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined') {return}
 
     window.addEventListener('online', () => {
       logger.log('[SessionManager] Network online')
@@ -563,7 +563,7 @@ export const sessionManager = new SessionManager()
  * Format remaining time for display
  */
 export function formatTimeRemaining(ms: number): string {
-  if (ms <= 0) return 'Expired'
+  if (ms <= 0) {return 'Expired'}
 
   const hours = Math.floor(ms / 3600000)
   const minutes = Math.floor((ms % 3600000) / 60000)
@@ -582,7 +582,7 @@ export function formatTimeRemaining(ms: number): string {
  * Check if session needs refresh
  */
 export function sessionNeedsRefresh(session: Session | null): boolean {
-  if (!session?.expires_at) return false
+  if (!session?.expires_at) {return false}
 
   const expiresAt = session.expires_at * 1000
   const now = Date.now()

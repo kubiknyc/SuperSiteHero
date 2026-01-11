@@ -379,9 +379,9 @@ export const scheduleMaintenanceTool = createTool<ScheduleMaintenanceInput, Sche
 
     // Sort results
     upcomingMaintenance.sort((a, b) => {
-      if (a.days_until_due === null && b.days_until_due === null) return 0
-      if (a.days_until_due === null) return 1
-      if (b.days_until_due === null) return -1
+      if (a.days_until_due === null && b.days_until_due === null) {return 0}
+      if (a.days_until_due === null) {return 1}
+      if (b.days_until_due === null) {return -1}
       return a.days_until_due - b.days_until_due
     })
 
@@ -636,13 +636,13 @@ function getFrequencyDescription(maintenance: any): string {
   }
   if (maintenance.frequency_days || maintenance.interval_days) {
     const days = maintenance.frequency_days || maintenance.interval_days
-    if (days === 7) parts.push('Weekly')
-    else if (days === 14) parts.push('Bi-weekly')
-    else if (days === 30) parts.push('Monthly')
-    else if (days === 90) parts.push('Quarterly')
-    else if (days === 180) parts.push('Semi-annually')
-    else if (days === 365) parts.push('Annually')
-    else parts.push(`Every ${days} days`)
+    if (days === 7) {parts.push('Weekly')}
+    else if (days === 14) {parts.push('Bi-weekly')}
+    else if (days === 30) {parts.push('Monthly')}
+    else if (days === 90) {parts.push('Quarterly')}
+    else if (days === 180) {parts.push('Semi-annually')}
+    else if (days === 365) {parts.push('Annually')}
+    else {parts.push(`Every ${days} days`)}
   }
 
   return parts.length > 0 ? parts.join(' or ') : 'As needed'
@@ -679,9 +679,9 @@ function getMaintenanceUrgency(
   milesUntilDue: number | null
 ): 'critical' | 'high' | 'medium' | 'low' {
   if (daysUntilDue !== null) {
-    if (daysUntilDue <= 0) return 'critical'
-    if (daysUntilDue <= 7) return 'high'
-    if (daysUntilDue <= 30) return 'medium'
+    if (daysUntilDue <= 0) {return 'critical'}
+    if (daysUntilDue <= 7) {return 'high'}
+    if (daysUntilDue <= 30) {return 'medium'}
     return 'low'
   }
   return 'medium'
@@ -709,9 +709,9 @@ function getOverdueRiskLevel(
 ): 'critical' | 'high' | 'medium' | 'low' {
   if (daysOverdue !== null) {
     const overdue = Math.abs(daysOverdue)
-    if (overdue >= 30) return 'critical'
-    if (overdue >= 14) return 'high'
-    if (overdue >= 7) return 'medium'
+    if (overdue >= 30) {return 'critical'}
+    if (overdue >= 14) {return 'high'}
+    if (overdue >= 7) {return 'medium'}
     return 'low'
   }
   return 'medium'

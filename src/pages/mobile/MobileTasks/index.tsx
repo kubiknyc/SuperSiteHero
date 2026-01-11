@@ -97,7 +97,7 @@ export const MobileTasksList = memo(function MobileTasksList() {
   };
 
   const isOverdue = (dueDate: string, status: string) => {
-    if (status === 'completed') return false;
+    if (status === 'completed') {return false;}
     return new Date(dueDate) < new Date();
   };
 

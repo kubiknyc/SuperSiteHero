@@ -231,13 +231,13 @@ export function InsuranceTracker({
 
   // Get selected subcontractor details
   const selectedSubcontractor = useMemo(() => {
-    if (!selectedSubcontractorId || !subcontractors) return null
+    if (!selectedSubcontractorId || !subcontractors) {return null}
     return subcontractors.find((s) => s.id === selectedSubcontractorId)
   }, [selectedSubcontractorId, subcontractors])
 
   // Handle send reminders
   const handleSendReminders = useCallback(async () => {
-    if (selectedCertificates.size === 0) return
+    if (selectedCertificates.size === 0) {return}
 
     const subIds = Array.from(selectedCertificates)
     await sendBulkRemindersMutation.mutateAsync({
@@ -249,7 +249,7 @@ export function InsuranceTracker({
 
   // Handle upload certificate
   const handleUpload = useCallback(async (data: CertificateFormValues) => {
-    if (!uploadingFor) return
+    if (!uploadingFor) {return}
 
     await uploadMutation.mutateAsync({
       subcontractorId: uploadingFor,

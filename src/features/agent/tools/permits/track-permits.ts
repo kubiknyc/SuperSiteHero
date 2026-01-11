@@ -328,9 +328,9 @@ export const trackPermitsTool = createTool<TrackPermitsInput, TrackPermitsOutput
 // ============================================================================
 
 function getExpirationUrgency(daysUntilExpiration: number): 'critical' | 'high' | 'medium' | 'low' {
-  if (daysUntilExpiration <= 14) return 'critical'
-  if (daysUntilExpiration <= 30) return 'high'
-  if (daysUntilExpiration <= 60) return 'medium'
+  if (daysUntilExpiration <= 14) {return 'critical'}
+  if (daysUntilExpiration <= 30) {return 'high'}
+  if (daysUntilExpiration <= 60) {return 'medium'}
   return 'low'
 }
 

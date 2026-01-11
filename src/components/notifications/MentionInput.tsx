@@ -57,7 +57,6 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
       setSelectedIndex,
       setIsOpen,
       parseMentions,
-      toPlainText,
     } = useMentions({
       projectId,
       onMention,
@@ -86,7 +85,6 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
 
       // Calculate dropdown position relative to cursor
       if (textareaRef.current && containerRef.current) {
-        const containerRect = containerRef.current.getBoundingClientRect()
         const textareaRect = textareaRef.current.getBoundingClientRect()
 
         // Simple positioning below the textarea
@@ -193,8 +191,11 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
         <textarea
           ref={(el) => {
             textareaRef.current = el
-            if (typeof ref === 'function') ref(el)
-            else if (ref) ref.current = el
+            if (typeof ref === 'function') {
+              ref(el)
+            } else if (ref) {
+              ref.current = el
+            }
           }}
           value={value}
           onChange={handleChange}
@@ -371,7 +372,7 @@ interface MentionPreviewProps {
 }
 
 export function MentionPreview({ value, className }: MentionPreviewProps) {
-  const { parseMentions, toPlainText } = useMentions()
+  const { parseMentions } = useMentions()
   const mentions = parseMentions(value)
 
   return (

@@ -213,7 +213,7 @@ async function findSimilarRFIs(
     .order('created_at', { ascending: false })
     .limit(50)
 
-  if (!rfis || rfis.length === 0) return []
+  if (!rfis || rfis.length === 0) {return []}
 
   // Simple keyword-based similarity
   const searchTerms = `${subject} ${question}`.toLowerCase().split(/\s+/)
@@ -254,7 +254,7 @@ async function getProjectTeam(projectId: string): Promise<Array<{ id: string; na
     .eq('project_id', projectId)
     .limit(20)
 
-  if (!data) return []
+  if (!data) {return []}
 
   return data.map((pu: any) => ({
     id: pu.user_id,

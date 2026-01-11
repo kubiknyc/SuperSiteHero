@@ -136,7 +136,7 @@ function SignerInputDialog({
   }, [contractorEmail, contractorName, ownerEmail, ownerName])
 
   const handleSubmit = () => {
-    if (!isValid) return
+    if (!isValid) {return}
 
     onSubmit({
       change_order_id: changeOrder.id,
@@ -519,7 +519,7 @@ export function ChangeOrderDocuSignIntegration({
 
   // Handle void envelope
   const handleVoidEnvelope = async () => {
-    if (!existingEnvelope) return
+    if (!existingEnvelope) {return}
 
     try {
       await voidEnvelope.mutateAsync({
@@ -535,7 +535,7 @@ export function ChangeOrderDocuSignIntegration({
 
   // Handle resend envelope
   const handleResendEnvelope = async () => {
-    if (!existingEnvelope) return
+    if (!existingEnvelope) {return}
 
     try {
       await resendEnvelope.mutateAsync({

@@ -15,7 +15,6 @@ import {
   activeIndicatorVariants,
   iconVariants,
   badgeVariants,
-  quickSpring,
 } from '../hooks/useSidebarAnimation'
 
 // ============================================================================
@@ -45,7 +44,9 @@ interface BadgeProps {
 }
 
 const Badge = memo(function Badge({ count, isUrgent = false }: BadgeProps) {
-  if (count <= 0) return null
+  if (count <= 0) {
+    return null
+  }
 
   return (
     <motion.span
@@ -74,12 +75,12 @@ const Badge = memo(function Badge({ count, isUrgent = false }: BadgeProps) {
 const NavigationItem = memo(
   forwardRef<HTMLAnchorElement, NavigationItemProps>(function NavigationItem(
     {
-      id,
+      id: _id,
       path,
       label,
       icon: Icon,
       badge,
-      description,
+      description: _description,
       isExpanded,
       isNested = false,
       className,

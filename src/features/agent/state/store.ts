@@ -66,7 +66,7 @@ export const useAgentStore = create<AgentStore>()(
               .order('last_message_at', { ascending: false })
               .limit(20)
 
-            if (error) throw error
+            if (error) {throw error}
 
             const sessionsMap = new Map<string, AgentSession>()
             for (const session of sessions || []) {
@@ -126,7 +126,7 @@ export const useAgentStore = create<AgentStore>()(
               .select()
               .single()
 
-            if (error) throw error
+            if (error) {throw error}
 
             const newSession = session as AgentSession
 
@@ -306,7 +306,7 @@ export const useAgentStore = create<AgentStore>()(
         confirmAction: async (confirmationId: string) => {
           const state = get()
           const confirmation = state.pendingConfirmations.find((c) => c.id === confirmationId)
-          if (!confirmation) return
+          if (!confirmation) {return}
 
           // Remove from pending
           set((s) => ({

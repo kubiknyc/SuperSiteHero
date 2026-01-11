@@ -753,7 +753,7 @@ export function CategorizedQuickActions({
   }, [])
 
   const filteredActions = useMemo(() => {
-    if (!activeCategory) return QUICK_ACTIONS.slice(0, 8)
+    if (!activeCategory) {return QUICK_ACTIONS.slice(0, 8)}
     return QUICK_ACTIONS.filter((a) => a.category === activeCategory)
   }, [activeCategory])
 

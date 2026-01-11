@@ -122,9 +122,9 @@ function formatTimeAgo(dateString: string): string {
   const diffHours = Math.floor(diffMins / 60)
   const diffDays = Math.floor(diffHours / 24)
 
-  if (diffMins < 1) return 'Just now'
-  if (diffMins < 60) return `${diffMins}m ago`
-  if (diffHours < 24) return `${diffHours}h ago`
+  if (diffMins < 1) {return 'Just now'}
+  if (diffMins < 60) {return `${diffMins}m ago`}
+  if (diffHours < 24) {return `${diffHours}h ago`}
   return `${diffDays}d ago`
 }
 
@@ -474,7 +474,7 @@ export function OfflineMarkupSync({
 
   // Handle sync
   const handleSync = useCallback(async () => {
-    if (!onSync || isSyncing) return
+    if (!onSync || isSyncing) {return}
 
     setIsSyncing(true)
     try {
@@ -487,7 +487,7 @@ export function OfflineMarkupSync({
   // Handle conflict resolution
   const handleResolveConflict = useCallback(
     (resolution: 'local' | 'server' | 'merged') => {
-      if (!selectedConflict || !onResolveConflict) return
+      if (!selectedConflict || !onResolveConflict) {return}
 
       onResolveConflict(selectedConflict.id, resolution)
       setSelectedConflict(null)

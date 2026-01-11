@@ -216,7 +216,7 @@ export function mapUrlToDeviceMode(
  */
 export function getMobileUrl(desktopUrl: string): string {
   const mapped = mapUrlToDeviceMode(desktopUrl, 'mobile');
-  if (mapped) return mapped;
+  if (mapped) {return mapped;}
 
   // If it's a desktop-only route, redirect to mobile dashboard
   if (isDesktopOnlyRoute(desktopUrl)) {
@@ -238,7 +238,7 @@ export function getMobileUrl(desktopUrl: string): string {
  */
 export function getDesktopUrl(mobileUrl: string): string {
   const mapped = mapUrlToDeviceMode(mobileUrl, 'desktop');
-  if (mapped) return mapped;
+  if (mapped) {return mapped;}
 
   // If already a desktop URL, return as-is
   if (!mobileUrl.startsWith('/mobile/')) {

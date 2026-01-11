@@ -302,10 +302,10 @@ async function evaluateSubcontractor(
 }
 
 function calculateScheduleAdherence(activities: any[]): number {
-  if (activities.length === 0) return 100
+  if (activities.length === 0) {return 100}
 
   const completed = activities.filter(a => a.status === 'completed')
-  if (completed.length === 0) return 100
+  if (completed.length === 0) {return 100}
 
   let onTimeCount = 0
   for (const activity of completed) {
@@ -328,9 +328,9 @@ function calculateQualityScore(punchItems: any[], rfis: any[], activities: any[]
   const activityCount = Math.max(activities.length, 1)
   const punchRate = punchItems.length / activityCount
 
-  if (punchRate > 5) score -= 30
-  else if (punchRate > 3) score -= 20
-  else if (punchRate > 1) score -= 10
+  if (punchRate > 5) {score -= 30}
+  else if (punchRate > 3) {score -= 20}
+  else if (punchRate > 1) {score -= 10}
 
   // Deduct for RFIs that indicate errors
   const errorRFIs = rfis.filter(r =>
@@ -382,25 +382,25 @@ function calculateCommunicationScore(rfis: any[], sub: any): number {
       return sum + Math.floor((responded.getTime() - created.getTime()) / (1000 * 60 * 60 * 24))
     }, 0) / respondedRFIs.length
 
-    if (avgResponseDays <= 3) score += 20
-    else if (avgResponseDays <= 7) score += 10
-    else if (avgResponseDays > 14) score -= 20
+    if (avgResponseDays <= 3) {score += 20}
+    else if (avgResponseDays <= 7) {score += 10}
+    else if (avgResponseDays > 14) {score -= 20}
   }
 
   return Math.max(0, Math.min(100, score))
 }
 
 function calculateChangeOrderRate(changeOrders: any[], contractValue: number): number {
-  if (contractValue === 0) return 100
+  if (contractValue === 0) {return 100}
 
   const coTotal = changeOrders.reduce((sum, co) => sum + Math.abs(co.amount || 0), 0)
   const coRate = (coTotal / contractValue) * 100
 
   // Lower CO rate = better score
-  if (coRate <= 2) return 100
-  if (coRate <= 5) return 90
-  if (coRate <= 10) return 75
-  if (coRate <= 15) return 60
+  if (coRate <= 2) {return 100}
+  if (coRate <= 5) {return 90}
+  if (coRate <= 10) {return 75}
+  if (coRate <= 15) {return 60}
   return 40
 }
 
@@ -410,11 +410,11 @@ function calculatePunchListRate(punchItems: any[], activities: any[]): number {
   const rate = punchCount / activityCount
 
   // Lower punch rate = better score
-  if (rate <= 0.5) return 100
-  if (rate <= 1) return 90
-  if (rate <= 2) return 75
-  if (rate <= 3) return 60
-  if (rate <= 5) return 45
+  if (rate <= 0.5) {return 100}
+  if (rate <= 1) {return 90}
+  if (rate <= 2) {return 75}
+  if (rate <= 3) {return 60}
+  if (rate <= 5) {return 45}
   return 30
 }
 
@@ -441,18 +441,18 @@ function calculateOverallScore(metrics: PerformanceMetrics): number {
 }
 
 function determineGrade(score: number): 'A' | 'B' | 'C' | 'D' | 'F' {
-  if (score >= 90) return 'A'
-  if (score >= 80) return 'B'
-  if (score >= 70) return 'C'
-  if (score >= 60) return 'D'
+  if (score >= 90) {return 'A'}
+  if (score >= 80) {return 'B'}
+  if (score >= 70) {return 'C'}
+  if (score >= 60) {return 'D'}
   return 'F'
 }
 
 function determineTrend(metrics: PerformanceMetrics): 'improving' | 'stable' | 'declining' {
   // In real implementation, would compare to previous period
   // For now, use heuristics
-  if (metrics.overall_score >= 85) return 'stable'
-  if (metrics.quality_score < 70 || metrics.safety_score < 70) return 'declining'
+  if (metrics.overall_score >= 85) {return 'stable'}
+  if (metrics.quality_score < 70 || metrics.safety_score < 70) {return 'declining'}
   return 'stable'
 }
 
@@ -517,8 +517,8 @@ function calculateProjectBenchmarks(performances: SubcontractorPerformance[]): {
   const overallAvg = (avgSchedule + avgQuality + avgSafety) / 3
 
   let comparison = 'Average'
-  if (overallAvg >= 85) comparison = 'Above industry average'
-  else if (overallAvg < 70) comparison = 'Below industry average'
+  if (overallAvg >= 85) {comparison = 'Above industry average'}
+  else if (overallAvg < 70) {comparison = 'Below industry average'}
 
   return {
     schedule_adherence: Math.round(avgSchedule),

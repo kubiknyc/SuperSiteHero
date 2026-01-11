@@ -115,7 +115,7 @@ function SyncProgress({
 }: {
   progress: { current: number; total: number; percentage: number } | null
 }) {
-  if (!progress) return null
+  if (!progress) {return null}
 
   return (
     <div className="space-y-2 p-3 bg-primary/5 rounded-lg border border-primary/20">
@@ -318,10 +318,10 @@ function ConflictItem({
 }
 
 function StorageUsage({ storage }: { storage: StorageInfo | null }) {
-  if (!storage) return null
+  if (!storage) {return null}
 
   const formatBytes = (bytes: number) => {
-    if (bytes === 0) return '0 B'
+    if (bytes === 0) {return '0 B'}
     const k = 1024
     const sizes = ['B', 'KB', 'MB', 'GB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))

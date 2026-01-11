@@ -81,7 +81,7 @@ export function useOSHA300Entries(filters: OSHA300Filters = {}) {
     queryKey: osha300Keys.entries(filters),
     queryFn: async (): Promise<OSHA300Entry[]> => {
       const companyId = filters.company_id || userProfile?.company_id;
-      if (!companyId) throw new Error('No company context');
+      if (!companyId) {throw new Error('No company context');}
 
       let query = db
         .from('osha_300_entries')
@@ -120,7 +120,7 @@ export function useOSHA300Entries(filters: OSHA300Filters = {}) {
       }
 
       const { data, error } = await query;
-      if (error) throw error;
+      if (error) {throw error;}
       return data || [];
     },
     enabled: !!(filters.company_id || userProfile?.company_id),
@@ -144,7 +144,7 @@ export function useOSHA300Entry(id: string) {
         .eq('id', id)
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data;
     },
     enabled: !!id,
@@ -160,7 +160,7 @@ export function useOSHA300YearEntries(year: number) {
   return useQuery({
     queryKey: osha300Keys.yearEntries(year, userProfile?.company_id || ''),
     queryFn: async (): Promise<OSHA300Entry[]> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       const { data, error } = await db
         .from('osha_300_entries')
@@ -171,7 +171,7 @@ export function useOSHA300YearEntries(year: number) {
         .is('deleted_at', null)
         .order('case_number');
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data || [];
     },
     enabled: !!userProfile?.company_id && !!year,
@@ -187,7 +187,7 @@ export function useNextCaseNumber(year: number) {
   return useQuery({
     queryKey: osha300Keys.nextCaseNumber(year, userProfile?.company_id || ''),
     queryFn: async (): Promise<string> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       const { data, error } = await db
         .from('osha_300_entries')
@@ -197,7 +197,7 @@ export function useNextCaseNumber(year: number) {
         .order('case_number', { ascending: false })
         .limit(1);
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       let nextSequence = 1;
       if (data && data.length > 0) {
@@ -228,7 +228,7 @@ export function useOSHA300ASummaries(filters: OSHA300AFilters = {}) {
     queryKey: osha300Keys.summaries(filters),
     queryFn: async (): Promise<OSHA300ASummary[]> => {
       const companyId = filters.company_id || userProfile?.company_id;
-      if (!companyId) throw new Error('No company context');
+      if (!companyId) {throw new Error('No company context');}
 
       let query = db
         .from('osha_300a_summaries')
@@ -247,7 +247,7 @@ export function useOSHA300ASummaries(filters: OSHA300AFilters = {}) {
       }
 
       const { data, error } = await query;
-      if (error) throw error;
+      if (error) {throw error;}
       return data || [];
     },
     enabled: !!(filters.company_id || userProfile?.company_id),
@@ -267,7 +267,7 @@ export function useOSHA300ASummary(id: string) {
         .eq('id', id)
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data;
     },
     enabled: !!id,
@@ -283,7 +283,7 @@ export function useOSHA300AYearSummary(year: number) {
   return useQuery({
     queryKey: osha300Keys.yearSummary(year, userProfile?.company_id || ''),
     queryFn: async (): Promise<OSHA300ASummary | null> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       // Try to get existing summary
       const { data: existing, error: existingError } = await db
@@ -293,8 +293,8 @@ export function useOSHA300AYearSummary(year: number) {
         .eq('year', year)
         .maybeSingle();
 
-      if (existingError) throw existingError;
-      if (existing) return existing;
+      if (existingError) {throw existingError;}
+      if (existing) {return existing;}
 
       // No existing summary - return null (use calculateYearSummary to generate)
       return null;
@@ -312,7 +312,7 @@ export function useCalculateYearSummary(year: number) {
   return useQuery({
     queryKey: [...osha300Keys.yearSummary(year, userProfile?.company_id || ''), 'calculate'],
     queryFn: async (): Promise<Partial<OSHA300ASummary>> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       // Get all entries for the year
       const { data: entries, error: entriesError } = await db
@@ -323,7 +323,7 @@ export function useCalculateYearSummary(year: number) {
         .eq('is_active', true)
         .is('deleted_at', null);
 
-      if (entriesError) throw entriesError;
+      if (entriesError) {throw entriesError;}
 
       // Get employee hours for the year
       const { data: hours, error: hoursError } = await db
@@ -333,7 +333,7 @@ export function useCalculateYearSummary(year: number) {
         .eq('year', year)
         .maybeSingle();
 
-      if (hoursError) throw hoursError;
+      if (hoursError) {throw hoursError;}
 
       // Calculate totals
       let total_deaths = 0;
@@ -448,7 +448,7 @@ export function useEmployeeHours(year: number) {
   return useQuery({
     queryKey: osha300Keys.employeeHours(year, userProfile?.company_id || ''),
     queryFn: async (): Promise<OSHAEmployeeHours | null> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       const { data, error } = await db
         .from('osha_employee_hours')
@@ -457,7 +457,7 @@ export function useEmployeeHours(year: number) {
         .eq('year', year)
         .maybeSingle();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data;
     },
     enabled: !!userProfile?.company_id && !!year,
@@ -473,7 +473,7 @@ export function useEstablishments() {
   return useQuery({
     queryKey: osha300Keys.establishments(userProfile?.company_id || ''),
     queryFn: async (): Promise<OSHAEstablishment[]> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       const { data, error } = await db
         .from('osha_establishments')
@@ -482,7 +482,7 @@ export function useEstablishments() {
         .eq('is_active', true)
         .order('name');
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data || [];
     },
     enabled: !!userProfile?.company_id,
@@ -499,7 +499,7 @@ export function useOSHADashboard() {
   return useQuery({
     queryKey: osha300Keys.dashboard(userProfile?.company_id || ''),
     queryFn: async (): Promise<OSHADashboardData> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       // Get current year entries
       const { data: currentEntries, error: currentError } = await db
@@ -510,7 +510,7 @@ export function useOSHADashboard() {
         .eq('is_active', true)
         .is('deleted_at', null);
 
-      if (currentError) throw currentError;
+      if (currentError) {throw currentError;}
 
       // Get previous year entries
       const { data: previousEntries, error: previousError } = await db
@@ -521,7 +521,7 @@ export function useOSHADashboard() {
         .eq('is_active', true)
         .is('deleted_at', null);
 
-      if (previousError) throw previousError;
+      if (previousError) {throw previousError;}
 
       // Get hours for both years
       const { data: currentHours } = await db
@@ -709,7 +709,7 @@ export function useCreateOSHA300Entry() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data;
     },
     onSuccess: (data) => {
@@ -752,7 +752,7 @@ export function useUpdateOSHA300Entry() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data;
     },
     onSuccess: (data) => {
@@ -788,7 +788,7 @@ export function useDeleteOSHA300Entry() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', id);
 
-      if (error) throw error;
+      if (error) {throw error;}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: osha300Keys.all });
@@ -925,7 +925,7 @@ export function useGenerateOSHA300ASummary() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data;
     },
     onSuccess: (data) => {
@@ -973,7 +973,7 @@ export function useCertifyOSHA300ASummary() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data;
     },
     onSuccess: (data) => {
@@ -1014,7 +1014,7 @@ export function usePostOSHA300ASummary() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data;
     },
     onSuccess: (data) => {
@@ -1045,7 +1045,7 @@ export function useUpdateEmployeeHours() {
 
   return useMutation({
     mutationFn: async (dto: UpdateEmployeeHoursDTO): Promise<OSHAEmployeeHours> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       // Upsert employee hours
       const { data, error } = await db
@@ -1065,7 +1065,7 @@ export function useUpdateEmployeeHours() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data;
     },
     onSuccess: (data) => {

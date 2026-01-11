@@ -391,7 +391,7 @@ function GenericOutput({ output }: { output: unknown }) {
     return (
       <div className="space-y-2">
         {Object.entries(obj).map(([key, value]) => {
-          if (key.startsWith('_')) return null
+          if (key.startsWith('_')) {return null}
 
           return (
             <div key={key} className="flex gap-2">

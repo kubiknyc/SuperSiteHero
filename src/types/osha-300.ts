@@ -492,7 +492,7 @@ export interface OSHADashboardData {
  * Formula: (Number of OSHA recordable cases * 200,000) / Total hours worked
  */
 export function calculateTRIR(totalCases: number, totalHoursWorked: number): number | null {
-  if (totalHoursWorked <= 0) return null;
+  if (totalHoursWorked <= 0) {return null;}
   return Number(((totalCases * 200000) / totalHoursWorked).toFixed(2));
 }
 
@@ -505,7 +505,7 @@ export function calculateDARTRate(
   jobTransferRestrictionCases: number,
   totalHoursWorked: number
 ): number | null {
-  if (totalHoursWorked <= 0) return null;
+  if (totalHoursWorked <= 0) {return null;}
   const dartCases = daysAwayCases + jobTransferRestrictionCases;
   return Number(((dartCases * 200000) / totalHoursWorked).toFixed(2));
 }
@@ -519,7 +519,7 @@ export function calculateLTIR(
   daysAwayCases: number,
   totalHoursWorked: number
 ): number | null {
-  if (totalHoursWorked <= 0) return null;
+  if (totalHoursWorked <= 0) {return null;}
   const lostTimeCases = deathCases + daysAwayCases;
   return Number(((lostTimeCases * 200000) / totalHoursWorked).toFixed(2));
 }
@@ -533,7 +533,7 @@ export function calculateSeverityRate(
   totalDaysRestricted: number,
   totalHoursWorked: number
 ): number | null {
-  if (totalHoursWorked <= 0) return null;
+  if (totalHoursWorked <= 0) {return null;}
   const totalDays = totalDaysAway + totalDaysRestricted;
   return Number(((totalDays * 200000) / totalHoursWorked).toFixed(2));
 }
@@ -573,7 +573,7 @@ export function getPostingDeadline(year: number): { start: Date; end: Date } {
  * Calculate average employees from monthly data
  */
 export function calculateAverageEmployees(monthlyData: MonthlyHoursData[]): number {
-  if (monthlyData.length === 0) return 0;
+  if (monthlyData.length === 0) {return 0;}
   const total = monthlyData.reduce((sum, month) => sum + month.employee_count, 0);
   return Math.round(total / monthlyData.length);
 }

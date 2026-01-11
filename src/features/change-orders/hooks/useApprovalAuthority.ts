@@ -174,7 +174,7 @@ export function useApprovalLevels(companyId: string | undefined) {
   return useQuery({
     queryKey: ['approval-levels', companyId],
     queryFn: async () => {
-      if (!companyId) throw new Error('Company ID required')
+      if (!companyId) {throw new Error('Company ID required')}
 
       // Try to fetch custom levels from database
       const { data, error } = await supabase
@@ -207,7 +207,7 @@ export function useCurrentUserApprovalLevel() {
   const { data: levels } = useApprovalLevels(userProfile?.company_id)
 
   return useMemo(() => {
-    if (!userProfile || !levels) return null
+    if (!userProfile || !levels) {return null}
 
     // Map user's actual role to approval role
     const roleMapping: Record<string, ApprovalRole> = {
@@ -315,7 +315,7 @@ export function useRequestEscalation() {
         .eq('id', changeOrderId)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       const now = new Date().toISOString()
       const updatedMetadata = {
@@ -345,7 +345,7 @@ export function useRequestEscalation() {
         })
         .eq('id', changeOrderId)
 
-      if (error) throw error
+      if (error) {throw error}
 
       return { changeOrderId, escalateTo }
     },
@@ -392,7 +392,7 @@ export function useApproveWithAuthorityCheck() {
         .eq('id', changeOrderId)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       const now = new Date().toISOString()
       const needsSecondApproval =
@@ -436,7 +436,7 @@ export function useApproveWithAuthorityCheck() {
         })
         .eq('id', changeOrderId)
 
-      if (error) throw error
+      if (error) {throw error}
 
       return { changeOrderId, needsSecondApproval }
     },

@@ -135,7 +135,7 @@ export const MobileWorkflowToolbar = memo(function MobileWorkflowToolbar({
   const [isSending, setIsSending] = useState(false)
 
   const handleSendComment = useCallback(async () => {
-    if (!comment.trim() || !onComment) return
+    if (!comment.trim() || !onComment) {return}
 
     setIsSending(true)
     try {
@@ -148,7 +148,7 @@ export const MobileWorkflowToolbar = memo(function MobileWorkflowToolbar({
   }, [comment, onComment])
 
   const handleApprovalCode = useCallback(async (code: 'A' | 'B' | 'C' | 'D') => {
-    if (!onApprovalCode) return
+    if (!onApprovalCode) {return}
 
     setIsSending(true)
     try {

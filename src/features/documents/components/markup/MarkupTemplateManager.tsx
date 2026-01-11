@@ -484,7 +484,7 @@ function SaveTemplateDialog({
   const [tags, setTags] = useState('')
 
   const handleSave = useCallback(() => {
-    if (!name.trim()) return
+    if (!name.trim()) {return}
 
     const templateData: CreateMarkupTemplateInput = {
       name: name.trim(),

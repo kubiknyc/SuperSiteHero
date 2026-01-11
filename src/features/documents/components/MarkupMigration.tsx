@@ -223,7 +223,7 @@ function MigrationDialog({
 
   // Group markups by change overlap
   const groupedMarkups = useMemo(() => {
-    if (!markups) return { unchanged: [], overlapping: [] }
+    if (!markups) {return { unchanged: [], overlapping: [] }}
     return {
       unchanged: markups.filter(m => !m.overlapsChange),
       overlapping: markups.filter(m => m.overlapsChange),
@@ -276,7 +276,7 @@ function MigrationDialog({
 
   // Handle migration
   const handleMigrate = async () => {
-    if (!markups) return
+    if (!markups) {return}
 
     const selectedMarkups = markups.filter(m => selectedMarkupIds.has(m.id))
     if (selectedMarkups.length === 0) {
@@ -314,7 +314,7 @@ function MigrationDialog({
 
   // Stats
   const stats = useMemo(() => {
-    if (!markups) return { total: 0, selected: 0, unchanged: 0, overlapping: 0 }
+    if (!markups) {return { total: 0, selected: 0, unchanged: 0, overlapping: 0 }}
     return {
       total: markups.length,
       selected: selectedMarkupIds.size,
@@ -580,7 +580,7 @@ function MarkupGroup({
   const selectedCount = markups.filter(m => selectedIds.has(m.id)).length
   const allSelected = markups.length > 0 && selectedCount === markups.length
 
-  if (markups.length === 0) return null
+  if (markups.length === 0) {return null}
 
   return (
     <div className="border rounded-lg overflow-hidden">

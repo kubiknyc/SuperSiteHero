@@ -31,10 +31,10 @@ function formatRelativeTime(date: Date): string {
   const diffMins = Math.floor(diffSecs / 60)
   const diffHours = Math.floor(diffMins / 60)
 
-  if (diffSecs < 10) return 'Just now'
-  if (diffSecs < 60) return `${diffSecs}s ago`
-  if (diffMins < 60) return `${diffMins}m ago`
-  if (diffHours < 24) return `${diffHours}h ago`
+  if (diffSecs < 10) {return 'Just now'}
+  if (diffSecs < 60) {return `${diffSecs}s ago`}
+  if (diffMins < 60) {return `${diffMins}m ago`}
+  if (diffHours < 24) {return `${diffHours}h ago`}
   return date.toLocaleDateString()
 }
 

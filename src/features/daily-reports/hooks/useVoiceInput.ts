@@ -94,7 +94,7 @@ export interface VoiceInputReturn extends VoiceInputState {
  * Check if Web Speech API is supported
  */
 export function isSpeechRecognitionSupported(): boolean {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === 'undefined') {return false;}
   return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
 }
 
@@ -102,7 +102,7 @@ export function isSpeechRecognitionSupported(): boolean {
  * Get SpeechRecognition constructor
  */
 function getSpeechRecognition(): SpeechRecognitionConstructor | null {
-  if (typeof window === 'undefined') return null;
+  if (typeof window === 'undefined') {return null;}
   return window.SpeechRecognition || window.webkitSpeechRecognition || null;
 }
 
@@ -252,7 +252,7 @@ export function useVoiceInput(options: VoiceInputOptions = {}): VoiceInputReturn
   // Append transcript to a field value
   const appendToField = useCallback((currentValue: string, setter: (value: string) => void) => {
     const fullTranscript = transcriptRef.current;
-    if (!fullTranscript) return;
+    if (!fullTranscript) {return;}
 
     const newValue = currentValue
       ? `${currentValue} ${fullTranscript}`.trim()

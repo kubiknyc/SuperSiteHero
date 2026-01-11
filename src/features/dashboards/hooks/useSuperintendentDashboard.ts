@@ -234,8 +234,8 @@ async function fetchSuperintendentDashboardData(projectId: string): Promise<Supe
     const isTomorrow = format(inspDate, 'yyyy-MM-dd') === format(addDays(today, 1), 'yyyy-MM-dd')
 
     let dateStr = format(inspDate, 'EEE, h:mm a')
-    if (isToday) dateStr = `Today, ${time || '9:00 AM'}`
-    else if (isTomorrow) dateStr = `Tomorrow, ${time || '9:00 AM'}`
+    if (isToday) {dateStr = `Today, ${time || '9:00 AM'}`}
+    else if (isTomorrow) {dateStr = `Tomorrow, ${time || '9:00 AM'}`}
 
     return {
       type: insp.inspection_name || insp.inspection_type,

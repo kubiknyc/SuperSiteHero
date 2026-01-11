@@ -63,7 +63,7 @@ interface CalculatedTask {
 // ============================================================================
 
 function normalizeDate(date: Date | string | null | undefined): Date | null {
-  if (!date) return null
+  if (!date) {return null}
   return typeof date === 'string' ? parseISO(date) : date
 }
 
@@ -300,7 +300,7 @@ export function usePredecessorConstraints(
 
           task.dependencies.forEach(dep => {
             const predTask = taskMap.get(dep.predecessorId)
-            if (!predTask) return
+            if (!predTask) {return}
 
             const predDuration = predTask.duration
 
@@ -404,10 +404,10 @@ export function usePredecessorConstraints(
 
           successors.forEach(succId => {
             const succTask = taskMap.get(succId)
-            if (!succTask) return
+            if (!succTask) {return}
 
             const dep = succTask.dependencies.find(d => d.predecessorId === taskId)
-            if (!dep) return
+            if (!dep) {return}
 
             switch (dep.type) {
               case 'FS':
@@ -521,7 +521,7 @@ export function usePredecessorConstraints(
       // Map back to EnhancedGanttTask
       const resultTasks: EnhancedGanttTask[] = tasks.map(originalTask => {
         const calcTask = taskMap.get(originalTask.id)
-        if (!calcTask) return originalTask
+        if (!calcTask) {return originalTask}
 
         return {
           ...originalTask,
@@ -692,8 +692,8 @@ export function usePredecessorConstraints(
       (task.dependencies || []).forEach(dep => {
         stats.total++
         stats.byType[dep.type]++
-        if (dep.lag > 0) stats.withLag++
-        if (dep.lag < 0) stats.withLead++
+        if (dep.lag > 0) {stats.withLag++}
+        if (dep.lag < 0) {stats.withLead++}
       })
     })
 

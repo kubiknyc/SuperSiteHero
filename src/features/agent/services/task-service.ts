@@ -48,7 +48,7 @@ class TaskService {
    */
   private async getCompanyId(): Promise<string | null> {
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return null
+    if (!user) {return null}
 
     const { data } = await supabase
       .from('users')
@@ -112,7 +112,7 @@ class TaskService {
       .single()
 
     if (error) {
-      if (error.code === 'PGRST116') return null
+      if (error.code === 'PGRST116') {return null}
       logger.error('[TaskService] Error fetching task:', error)
       throw error
     }
@@ -191,12 +191,12 @@ class TaskService {
   async update(taskId: string, dto: UpdateTaskDTO): Promise<AgentTask> {
     const updateData: Record<string, unknown> = {}
 
-    if (dto.status !== undefined) updateData.status = dto.status
-    if (dto.output_data !== undefined) updateData.output_data = dto.output_data
-    if (dto.error_message !== undefined) updateData.error_message = dto.error_message
-    if (dto.error_details !== undefined) updateData.error_details = dto.error_details
-    if (dto.tokens_used !== undefined) updateData.tokens_used = dto.tokens_used
-    if (dto.cost_cents !== undefined) updateData.cost_cents = dto.cost_cents
+    if (dto.status !== undefined) {updateData.status = dto.status}
+    if (dto.output_data !== undefined) {updateData.output_data = dto.output_data}
+    if (dto.error_message !== undefined) {updateData.error_message = dto.error_message}
+    if (dto.error_details !== undefined) {updateData.error_details = dto.error_details}
+    if (dto.tokens_used !== undefined) {updateData.tokens_used = dto.tokens_used}
+    if (dto.cost_cents !== undefined) {updateData.cost_cents = dto.cost_cents}
 
     const { data, error } = await supabase
       .from('agent_tasks')
@@ -384,12 +384,12 @@ class TaskService {
         totalExecutionTime += task.execution_time_ms
         executionCount++
       }
-      if (task.tokens_used) totalTokens += task.tokens_used
-      if (task.cost_cents) totalCost += task.cost_cents
+      if (task.tokens_used) {totalTokens += task.tokens_used}
+      if (task.cost_cents) {totalCost += task.cost_cents}
 
       // Success rate calculation
-      if (task.status === 'completed') completedCount++
-      if (task.status === 'failed') failedCount++
+      if (task.status === 'completed') {completedCount++}
+      if (task.status === 'failed') {failedCount++}
     }
 
     return {
@@ -448,10 +448,10 @@ class TaskService {
       const summary = summaryMap.get(createdDate)
       if (summary) {
         summary.tasks_created++
-        if (task.status === 'completed') summary.tasks_completed++
-        if (task.status === 'failed') summary.tasks_failed++
-        if (task.tokens_used) summary.tokens_used += task.tokens_used
-        if (task.cost_cents) summary.cost_cents += task.cost_cents
+        if (task.status === 'completed') {summary.tasks_completed++}
+        if (task.status === 'failed') {summary.tasks_failed++}
+        if (task.tokens_used) {summary.tokens_used += task.tokens_used}
+        if (task.cost_cents) {summary.cost_cents += task.cost_cents}
       }
     }
 

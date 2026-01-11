@@ -105,8 +105,8 @@ function StatusBadge({ status }: { status: NarrativeType['overallStatus'] }) {
 
 function HealthGauge({ score }: { score: number }) {
   const getColor = (value: number) => {
-    if (value >= 80) return 'bg-success'
-    if (value >= 60) return 'bg-warning'
+    if (value >= 80) {return 'bg-success'}
+    if (value >= 60) {return 'bg-warning'}
     return 'bg-destructive'
   }
 

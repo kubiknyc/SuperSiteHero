@@ -453,15 +453,15 @@ function determineTrend(location: LocationProgress, activities: any[]): 'ahead' 
     (a.location || '').toLowerCase().includes(location.location.toLowerCase())
   )
 
-  if (locationActivities.length === 0) return 'unknown'
+  if (locationActivities.length === 0) {return 'unknown'}
 
   const avgExpected = locationActivities.reduce((sum, a) => {
     const progress = a.percent_complete || 0
     return sum + progress
   }, 0) / locationActivities.length
 
-  if (location.estimated_completion > avgExpected + 10) return 'ahead'
-  if (location.estimated_completion < avgExpected - 10) return 'behind'
+  if (location.estimated_completion > avgExpected + 10) {return 'ahead'}
+  if (location.estimated_completion < avgExpected - 10) {return 'behind'}
   return 'on_track'
 }
 
@@ -469,8 +469,8 @@ function determineOverallTrend(locations: LocationProgress[]): 'ahead' | 'on_tra
   const ahead = locations.filter(l => l.trend === 'ahead').length
   const behind = locations.filter(l => l.trend === 'behind').length
 
-  if (ahead > behind * 2) return 'ahead'
-  if (behind > ahead * 2) return 'behind'
+  if (ahead > behind * 2) {return 'ahead'}
+  if (behind > ahead * 2) {return 'behind'}
   return 'on_track'
 }
 

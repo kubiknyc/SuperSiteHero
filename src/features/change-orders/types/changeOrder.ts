@@ -465,9 +465,9 @@ export function calculateTMLaborEntryTotal(entry: Partial<TMTicketLaborEntry>): 
  * Get contingency alert level
  */
 export function getContingencyAlertLevel(utilizationPercent: number): ContingencyAlertLevel {
-  if (utilizationPercent >= 100) return ContingencyAlertLevel.DEPLETED;
-  if (utilizationPercent >= 95) return ContingencyAlertLevel.CRITICAL;
-  if (utilizationPercent >= 90) return ContingencyAlertLevel.WARNING;
+  if (utilizationPercent >= 100) {return ContingencyAlertLevel.DEPLETED;}
+  if (utilizationPercent >= 95) {return ContingencyAlertLevel.CRITICAL;}
+  if (utilizationPercent >= 90) {return ContingencyAlertLevel.WARNING;}
   return ContingencyAlertLevel.HEALTHY;
 }
 

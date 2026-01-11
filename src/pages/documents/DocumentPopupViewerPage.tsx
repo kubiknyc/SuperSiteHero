@@ -54,7 +54,7 @@ export function DocumentPopupViewerPage() {
 
   // Handle download
   const handleDownload = useCallback(() => {
-    if (!document?.file_url) return
+    if (!document?.file_url) {return}
 
     const a = globalThis.document.createElement('a')
     a.href = document.file_url

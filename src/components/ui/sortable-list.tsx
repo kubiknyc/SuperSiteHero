@@ -63,7 +63,7 @@ export function SortableList<T extends SortableItem>({
   const [dragOverId, setDragOverId] = React.useState<string | null>(null)
 
   const handleDragStart = (e: React.DragEvent, id: string) => {
-    if (disabled) return
+    if (disabled) {return}
     setDraggedId(id)
     e.dataTransfer.effectAllowed = 'move'
     e.dataTransfer.setData('text/plain', id)
@@ -71,7 +71,7 @@ export function SortableList<T extends SortableItem>({
 
   const handleDragOver = (e: React.DragEvent, id: string) => {
     e.preventDefault()
-    if (disabled || id === draggedId) return
+    if (disabled || id === draggedId) {return}
     setDragOverId(id)
   }
 
@@ -188,22 +188,22 @@ export function moveItem<T>(array: T[], fromIndex: number, toIndex: number): T[]
 }
 
 export function moveItemUp<T>(array: T[], index: number): T[] {
-  if (index <= 0) return array
+  if (index <= 0) {return array}
   return moveItem(array, index, index - 1)
 }
 
 export function moveItemDown<T>(array: T[], index: number): T[] {
-  if (index >= array.length - 1) return array
+  if (index >= array.length - 1) {return array}
   return moveItem(array, index, index + 1)
 }
 
 export function moveItemToStart<T>(array: T[], index: number): T[] {
-  if (index === 0) return array
+  if (index === 0) {return array}
   return moveItem(array, index, 0)
 }
 
 export function moveItemToEnd<T>(array: T[], index: number): T[] {
-  if (index === array.length - 1) return array
+  if (index === array.length - 1) {return array}
   return moveItem(array, index, array.length - 1)
 }
 

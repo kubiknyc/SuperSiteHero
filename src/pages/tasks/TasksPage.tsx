@@ -53,11 +53,11 @@ export function TasksPage() {
   // Update URL params when filters change
   useEffect(() => {
     const params = new URLSearchParams()
-    if (selectedProjectId) params.set('projectId', selectedProjectId)
-    if (statusFilter !== 'all') params.set('status', statusFilter)
-    if (priorityFilter !== 'all') params.set('priority', priorityFilter)
-    if (searchQuery) params.set('search', searchQuery)
-    if (showOverdue) params.set('overdue', 'true')
+    if (selectedProjectId) {params.set('projectId', selectedProjectId)}
+    if (statusFilter !== 'all') {params.set('status', statusFilter)}
+    if (priorityFilter !== 'all') {params.set('priority', priorityFilter)}
+    if (searchQuery) {params.set('search', searchQuery)}
+    if (showOverdue) {params.set('overdue', 'true')}
     setSearchParams(params, { replace: true })
   }, [selectedProjectId, statusFilter, priorityFilter, searchQuery, showOverdue, setSearchParams])
 
@@ -74,7 +74,7 @@ export function TasksPage() {
       // Overdue filter (takes precedence)
       if (showOverdue) {
         const isOverdue = task.due_date && isPast(new Date(task.due_date)) && task.status !== 'completed'
-        if (!isOverdue) return false
+        if (!isOverdue) {return false}
       }
 
       // Status filter
@@ -265,7 +265,7 @@ export function TasksPage() {
                   value={statusFilter}
                   onChange={(e) => {
                     setStatusFilter(e.target.value)
-                    if (e.target.value !== 'all') setShowOverdue(false)
+                    if (e.target.value !== 'all') {setShowOverdue(false)}
                   }}
                   disabled={showOverdue}
                 >
@@ -313,7 +313,7 @@ export function TasksPage() {
                   className="w-full"
                   onClick={() => {
                     setShowOverdue(!showOverdue)
-                    if (!showOverdue) setStatusFilter('all')
+                    if (!showOverdue) {setStatusFilter('all')}
                   }}
                 >
                   <AlertCircle className="h-4 w-4 mr-2" />

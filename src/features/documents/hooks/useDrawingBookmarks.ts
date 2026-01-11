@@ -100,7 +100,7 @@ export function useDrawingBookmarks(filters: BookmarkFilters = {}) {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []).map(mapBookmarkFromDb) as DrawingBookmark[]
     },
@@ -115,7 +115,7 @@ export function useDrawingBookmark(bookmarkId: string | undefined) {
   return useQuery({
     queryKey: drawingBookmarkKeys.detail(bookmarkId || ''),
     queryFn: async () => {
-      if (!bookmarkId) throw new Error('Bookmark ID required')
+      if (!bookmarkId) {throw new Error('Bookmark ID required')}
 
       const { data, error } = await db
         .from('drawing_bookmarks')
@@ -129,7 +129,7 @@ export function useDrawingBookmark(bookmarkId: string | undefined) {
         .is('deleted_at', null)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return mapBookmarkFromDb(data) as DrawingBookmark
     },
     enabled: !!bookmarkId,
@@ -145,7 +145,7 @@ export function useBookmarkFolders(projectId: string | undefined) {
   return useQuery({
     queryKey: drawingBookmarkKeys.folders(projectId || ''),
     queryFn: async () => {
-      if (!projectId || !userProfile?.id) return []
+      if (!projectId || !userProfile?.id) {return []}
 
       const { data, error } = await db
         .from('drawing_bookmarks')
@@ -155,7 +155,7 @@ export function useBookmarkFolders(projectId: string | undefined) {
         .is('deleted_at', null)
         .not('folder', 'is', null)
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Get unique folder names
       const folderSet = new Set((data || []).map((d: any) => d.folder))
@@ -193,7 +193,7 @@ export function useCreateDrawingBookmark() {
 
   return useMutation({
     mutationFn: async (input: CreateBookmarkInput) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       const { data, error } = await db
         .from('drawing_bookmarks')
@@ -210,7 +210,7 @@ export function useCreateDrawingBookmark() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return mapBookmarkFromDb(data) as DrawingBookmark
     },
     onMutate: async (newBookmark) => {
@@ -279,10 +279,10 @@ export function useUpdateDrawingBookmark() {
         updated_at: new Date().toISOString(),
       }
 
-      if (input.name !== undefined) updateData.name = input.name
-      if (input.folder !== undefined) updateData.folder = input.folder
-      if (input.shared !== undefined) updateData.shared = input.shared
-      if (input.viewport !== undefined) updateData.viewport = input.viewport
+      if (input.name !== undefined) {updateData.name = input.name}
+      if (input.folder !== undefined) {updateData.folder = input.folder}
+      if (input.shared !== undefined) {updateData.shared = input.shared}
+      if (input.viewport !== undefined) {updateData.viewport = input.viewport}
 
       const { data, error } = await db
         .from('drawing_bookmarks')
@@ -291,7 +291,7 @@ export function useUpdateDrawingBookmark() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return mapBookmarkFromDb(data) as DrawingBookmark
     },
     onMutate: async (updatedBookmark) => {
@@ -349,7 +349,7 @@ export function useDeleteDrawingBookmark() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', bookmarkId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onMutate: async (bookmarkId) => {
       // Cancel outgoing refetches
@@ -451,7 +451,7 @@ export function useDrawingBookmarksWithUtilities(projectId: string) {
 
   const searchBookmarks = useCallback(
     (query: string): DrawingBookmark[] => {
-      if (!query.trim()) return bookmarks
+      if (!query.trim()) {return bookmarks}
 
       const lowerQuery = query.toLowerCase()
       return bookmarks.filter(

@@ -81,12 +81,12 @@ function calculateDaysOverdue(
   dueDate: string | null,
   useBusinessDays: boolean
 ): number {
-  if (!dueDate) return 0
+  if (!dueDate) {return 0}
 
   const due = new Date(dueDate)
   const now = new Date()
 
-  if (now <= due) return 0
+  if (now <= due) {return 0}
 
   return useBusinessDays
     ? differenceInBusinessDays(now, due)
@@ -97,9 +97,9 @@ function determineEscalationLevel(
   daysOverdue: number,
   config: EscalationConfig
 ): EscalationLevel {
-  if (daysOverdue >= config.criticalThresholdDays) return 'critical'
-  if (daysOverdue >= config.urgentThresholdDays) return 'urgent'
-  if (daysOverdue >= config.firstWarningDays) return 'warning'
+  if (daysOverdue >= config.criticalThresholdDays) {return 'critical'}
+  if (daysOverdue >= config.urgentThresholdDays) {return 'urgent'}
+  if (daysOverdue >= config.firstWarningDays) {return 'warning'}
   return 'none'
 }
 
@@ -167,7 +167,7 @@ export function useOverduePunchItems(
   return useQuery({
     queryKey: ['punch-items', 'overdue', projectId, config],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       // Get all open punch items with due dates
       const { data, error } = await supabase
@@ -183,7 +183,7 @@ export function useOverduePunchItems(
         .is('deleted_at', null)
         .order('due_date', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       const now = new Date()
 
@@ -296,7 +296,7 @@ export function useItemsNeedingEscalation(
 
   // Filter to items that haven't been escalated recently (within 24 hours)
   const needsEscalation = overdueItems?.filter((item) => {
-    if (!item.lastEscalatedAt) return true
+    if (!item.lastEscalatedAt) {return true}
     const lastEscalated = new Date(item.lastEscalatedAt)
     const hoursSinceEscalation = differenceInDays(new Date(), lastEscalated) * 24
     return hoursSinceEscalation >= 24
@@ -334,7 +334,7 @@ export function useEscalatePunchItem() {
       sendNotification?: boolean
       notes?: string
     }): Promise<EscalationResult> => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       // Get current punch item
       const { data: current, error: fetchError } = await supabase
@@ -343,7 +343,7 @@ export function useEscalatePunchItem() {
         .eq('id', punchItemId)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       const currentMetadata = (current as any).metadata || {}
       const escalationHistory = currentMetadata.escalationHistory || []
@@ -382,7 +382,7 @@ export function useEscalatePunchItem() {
         .update(updates)
         .eq('id', punchItemId)
 
-      if (updateError) throw updateError
+      if (updateError) {throw updateError}
 
       const notificationsSent: string[] = []
 
@@ -471,7 +471,7 @@ export function useRecordPunchListReminder() {
       recipientId: string
       reminderType: 'email' | 'in_app' | 'sms'
     }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       const { data: current, error: fetchError } = await supabase
         .from('punch_items')
@@ -479,7 +479,7 @@ export function useRecordPunchListReminder() {
         .eq('id', punchItemId)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       const currentMetadata = (current as any).metadata || {}
       const reminderHistory = currentMetadata.reminderHistory || []
@@ -502,7 +502,7 @@ export function useRecordPunchListReminder() {
         })
         .eq('id', punchItemId)
 
-      if (updateError) throw updateError
+      if (updateError) {throw updateError}
 
       return { success: true }
     },

@@ -197,7 +197,7 @@ export function RFITemplateSelector({
 
   // Filter templates based on search
   const filteredTemplates = useMemo(() => {
-    if (!searchQuery.trim()) return RFI_TEMPLATES
+    if (!searchQuery.trim()) {return RFI_TEMPLATES}
     return searchTemplates(searchQuery)
   }, [searchQuery])
 

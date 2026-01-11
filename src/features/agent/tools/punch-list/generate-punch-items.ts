@@ -254,13 +254,13 @@ function determinePriority(text: string): string | null {
 }
 
 function categorizeItem(text: string): string {
-  if (/missing|install|add|need/i.test(text)) return 'Missing/Incomplete'
-  if (/damage|broken|crack|chip|dent/i.test(text)) return 'Damage'
-  if (/clean|debris|dust|smudge|stain/i.test(text)) return 'Cleaning'
-  if (/adjust|align|level|plumb|square/i.test(text)) return 'Adjustment'
-  if (/touch.?up|repaint|refinish/i.test(text)) return 'Touch-up'
-  if (/repair|fix|replace/i.test(text)) return 'Repair'
-  if (/incomplete|unfinished|partial/i.test(text)) return 'Incomplete'
+  if (/missing|install|add|need/i.test(text)) {return 'Missing/Incomplete'}
+  if (/damage|broken|crack|chip|dent/i.test(text)) {return 'Damage'}
+  if (/clean|debris|dust|smudge|stain/i.test(text)) {return 'Cleaning'}
+  if (/adjust|align|level|plumb|square/i.test(text)) {return 'Adjustment'}
+  if (/touch.?up|repaint|refinish/i.test(text)) {return 'Touch-up'}
+  if (/repair|fix|replace/i.test(text)) {return 'Repair'}
+  if (/incomplete|unfinished|partial/i.test(text)) {return 'Incomplete'}
   return 'General'
 }
 
@@ -280,9 +280,9 @@ function estimateHours(text: string, category: string): number {
   let hours = categoryHours[category] || 1
 
   // Adjust based on keywords
-  if (/multiple|several|all|throughout/i.test(text)) hours *= 2
-  if (/small|minor|single/i.test(text)) hours *= 0.5
-  if (/major|large|extensive/i.test(text)) hours *= 2
+  if (/multiple|several|all|throughout/i.test(text)) {hours *= 2}
+  if (/small|minor|single/i.test(text)) {hours *= 0.5}
+  if (/major|large|extensive/i.test(text)) {hours *= 2}
 
   return Math.round(hours * 2) / 2 // Round to nearest 0.5
 }

@@ -251,7 +251,7 @@ function QRCodeDisplay({ qrCode, onDelete, readOnly }: QRCodeDisplayProps) {
   }, [qrCode.url])
 
   const handleDownload = useCallback(() => {
-    if (!qrDataUrl) return
+    if (!qrDataUrl) {return}
 
     const link = document.createElement('a')
     link.download = `qr-${qrCode.label.replace(/\s+/g, '-').toLowerCase()}.png`
@@ -415,7 +415,7 @@ function GenerateQRDialog({
   }, [url])
 
   const handleDownload = useCallback(() => {
-    if (!qrDataUrl) return
+    if (!qrDataUrl) {return}
 
     const link = document.createElement('a')
     link.download = `qr-${label.replace(/\s+/g, '-').toLowerCase()}.png`
@@ -424,10 +424,10 @@ function GenerateQRDialog({
   }, [qrDataUrl, label])
 
   const handlePrint = useCallback(() => {
-    if (!qrDataUrl) return
+    if (!qrDataUrl) {return}
 
     const printWindow = window.open('', '_blank')
-    if (!printWindow) return
+    if (!printWindow) {return}
 
     printWindow.document.write(`
       <!DOCTYPE html>
@@ -850,7 +850,7 @@ export function parseDrawingQRUrl(url: string): {
     const parsed = new URL(url)
     const pathMatch = parsed.pathname.match(/\/documents\/([^/]+)\/view/)
 
-    if (!pathMatch) return null
+    if (!pathMatch) {return null}
 
     const documentId = pathMatch[1]
     const page = parseInt(parsed.searchParams.get('page') || '1', 10)

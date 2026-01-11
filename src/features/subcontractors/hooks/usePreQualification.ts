@@ -56,7 +56,7 @@ export function usePreQualQuestionnaires() {
         .eq('is_active', true)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as PreQualificationQuestionnaire[]
     },
     enabled: !!userProfile?.company_id,
@@ -82,7 +82,7 @@ export function usePreQualQuestionnaire(id: string | undefined) {
         .eq('id', id)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Sort sections and questions by sort_order
       if (data.sections) {
@@ -156,7 +156,7 @@ export function usePreQualSubmissions(filters: PreQualificationFilters = {}) {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return data as (PreQualificationSubmission & {
         subcontractor: any
         questionnaire: any
@@ -194,7 +194,7 @@ export function usePreQualSubmission(id: string | undefined) {
         .eq('id', id)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     enabled: !!id,
@@ -242,7 +242,7 @@ export function usePreQualifiedVendors(filters: PreQualificationFilters = {}) {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
       return data as PreQualifiedVendor[]
     },
     enabled: !!userProfile?.company_id,
@@ -317,7 +317,7 @@ export function useCreatePreQualSubmission() {
         .select()
         .single()
 
-      if (subError) throw subError
+      if (subError) {throw subError}
 
       // Create safety record if provided
       if (dto.safetyRecord) {
@@ -328,7 +328,7 @@ export function useCreatePreQualSubmission() {
             ...dto.safetyRecord,
           })
 
-        if (safetyError) throw safetyError
+        if (safetyError) {throw safetyError}
       }
 
       // Create financials if provided
@@ -340,7 +340,7 @@ export function useCreatePreQualSubmission() {
             ...dto.financials,
           })
 
-        if (finError) throw finError
+        if (finError) {throw finError}
       }
 
       // Create references if provided
@@ -354,7 +354,7 @@ export function useCreatePreQualSubmission() {
             }))
           )
 
-        if (refError) throw refError
+        if (refError) {throw refError}
       }
 
       return submission
@@ -399,7 +399,7 @@ export function useReviewPreQualSubmission() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // If approved, create/update pre-qualified vendor record
       if (review.status === 'approved' || review.status === 'conditionally_approved') {
@@ -465,7 +465,7 @@ export function useScorePreQualSubmission() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (_, { submissionId }) => {
@@ -534,7 +534,7 @@ export function useDeletePreQualSubmission() {
         .delete()
         .eq('id', submissionId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: preQualKeys.submissions() })
@@ -589,10 +589,10 @@ export function calculatePreQualScore(
             const value = parseFloat(answer)
             const thresholdValue = parseFloat(threshold)
 
-            if (operator === 'gte' && value >= thresholdValue) questionScore = 10
-            else if (operator === 'lte' && value <= thresholdValue) questionScore = 10
-            else if (operator === 'eq' && value === thresholdValue) questionScore = 10
-            else questionScore = 5 // Partial credit
+            if (operator === 'gte' && value >= thresholdValue) {questionScore = 10}
+            else if (operator === 'lte' && value <= thresholdValue) {questionScore = 10}
+            else if (operator === 'eq' && value === thresholdValue) {questionScore = 10}
+            else {questionScore = 5} // Partial credit
           } else {
             questionScore = 10 // No criteria, full credit for answering
           }
@@ -647,9 +647,9 @@ export function calculatePreQualScore(
     }
 
     // Safety programs
-    if (!safetyRecord.safetyProgramInPlace) safetyScore -= 10
-    if (!safetyRecord.ppePolicy) safetyScore -= 5
-    if (!safetyRecord.substanceAbusePolicy) safetyScore -= 5
+    if (!safetyRecord.safetyProgramInPlace) {safetyScore -= 10}
+    if (!safetyRecord.ppePolicy) {safetyScore -= 5}
+    if (!safetyRecord.substanceAbusePolicy) {safetyScore -= 5}
 
     totalScore += Math.max(0, safetyScore)
     maxScore += safetyMax

@@ -95,7 +95,7 @@ type ImportStep = 'upload' | 'mapping' | 'preview' | 'importing' | 'complete'
 // =============================================
 
 function formatDate(dateString: string | null | undefined): string {
-  if (!dateString) return '-'
+  if (!dateString) {return '-'}
   try {
     return format(parseISO(dateString), 'MMM d, yyyy')
   } catch {
@@ -177,7 +177,7 @@ interface ImportSummaryProps {
 }
 
 function ImportSummary({ summary, fileName }: ImportSummaryProps) {
-  if (!summary) return null
+  if (!summary) {return null}
 
   return (
     <div className="bg-muted/50 rounded-lg p-4 space-y-3">

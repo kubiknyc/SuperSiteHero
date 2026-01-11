@@ -20,30 +20,30 @@ import { Loader2, MapPin, X } from 'lucide-react'
 // Map Open-Meteo text conditions to WeatherCondition enum values
 function mapWeatherConditionToEnum(condition: string): WeatherCondition {
   const lower = condition.toLowerCase()
-  if (lower.includes('clear') || lower.includes('sunny')) return 'sunny'
-  if (lower.includes('partly')) return 'partly_cloudy'
-  if (lower.includes('overcast')) return 'overcast'
-  if (lower.includes('fog')) return 'fog'
-  if (lower.includes('drizzle')) return 'drizzle'
-  if (lower.includes('heavy rain') || lower.includes('violent')) return 'heavy_rain'
-  if (lower.includes('rain') || lower.includes('shower')) return 'rain'
-  if (lower.includes('heavy snow')) return 'heavy_snow'
-  if (lower.includes('snow')) return 'snow'
-  if (lower.includes('sleet')) return 'sleet'
-  if (lower.includes('hail')) return 'hail'
-  if (lower.includes('thunderstorm')) return 'thunderstorm'
-  if (lower.includes('storm')) return 'storm'
-  if (lower.includes('wind')) return 'wind'
+  if (lower.includes('clear') || lower.includes('sunny')) {return 'sunny'}
+  if (lower.includes('partly')) {return 'partly_cloudy'}
+  if (lower.includes('overcast')) {return 'overcast'}
+  if (lower.includes('fog')) {return 'fog'}
+  if (lower.includes('drizzle')) {return 'drizzle'}
+  if (lower.includes('heavy rain') || lower.includes('violent')) {return 'heavy_rain'}
+  if (lower.includes('rain') || lower.includes('shower')) {return 'rain'}
+  if (lower.includes('heavy snow')) {return 'heavy_snow'}
+  if (lower.includes('snow')) {return 'snow'}
+  if (lower.includes('sleet')) {return 'sleet'}
+  if (lower.includes('hail')) {return 'hail'}
+  if (lower.includes('thunderstorm')) {return 'thunderstorm'}
+  if (lower.includes('storm')) {return 'storm'}
+  if (lower.includes('wind')) {return 'wind'}
   return 'cloudy' // default
 }
 
 // Map weather condition string to precipitation type
 function mapConditionToPrecipType(condition: string, hasPrecp: boolean): PrecipitationType {
-  if (!hasPrecp) return 'none'
+  if (!hasPrecp) {return 'none'}
   const lower = condition.toLowerCase()
-  if (lower.includes('snow')) return 'snow'
-  if (lower.includes('sleet')) return 'sleet'
-  if (lower.includes('hail')) return 'hail'
+  if (lower.includes('snow')) {return 'snow'}
+  if (lower.includes('sleet')) {return 'sleet'}
+  if (lower.includes('hail')) {return 'hail'}
   return 'rain'
 }
 

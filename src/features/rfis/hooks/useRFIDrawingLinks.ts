@@ -77,7 +77,7 @@ export function useRFIDrawingLinks(rfiId: string | undefined) {
   return useQuery({
     queryKey: rfiDrawingLinkKeys.byRFI(rfiId || ''),
     queryFn: async () => {
-      if (!rfiId) throw new Error('RFI ID required')
+      if (!rfiId) {throw new Error('RFI ID required')}
 
       const { data, error } = await supabase
         .from('rfi_drawing_links')
@@ -96,7 +96,7 @@ export function useRFIDrawingLinks(rfiId: string | undefined) {
         .eq('rfi_id', rfiId)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFIDrawingLink[]
     },
     enabled: !!rfiId,
@@ -111,7 +111,7 @@ export function useRFIsByDrawing(documentId: string | undefined) {
   return useQuery({
     queryKey: rfiDrawingLinkKeys.byDocument(documentId || ''),
     queryFn: async () => {
-      if (!documentId) throw new Error('Document ID required')
+      if (!documentId) {throw new Error('Document ID required')}
 
       const { data, error } = await supabase
         .from('rfi_drawing_links')
@@ -129,7 +129,7 @@ export function useRFIsByDrawing(documentId: string | undefined) {
         .eq('document_id', documentId)
         .order('created_at', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     enabled: !!documentId,
@@ -170,7 +170,7 @@ export function useAddRFIDrawingLink() {
         `)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFIDrawingLink
     },
     onSuccess: (data) => {
@@ -210,7 +210,7 @@ export function useUpdateRFIDrawingLink() {
         `)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as RFIDrawingLink
     },
     onSuccess: (data) => {
@@ -238,7 +238,7 @@ export function useRemoveRFIDrawingLink() {
     }) => {
       const { error } = await supabase.from('rfi_drawing_links').delete().eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
       return { id, rfiId, documentId }
     },
     onSuccess: (data) => {

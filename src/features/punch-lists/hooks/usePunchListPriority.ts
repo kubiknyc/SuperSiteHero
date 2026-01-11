@@ -129,7 +129,7 @@ export function sortByPriority(items: PunchItemWithPriority[]): PunchItemWithPri
 }
 
 function calculateDaysOpen(createdAt: string | null): number {
-  if (!createdAt) return 0
+  if (!createdAt) {return 0}
   const created = new Date(createdAt)
   const now = new Date()
   const diffTime = Math.abs(now.getTime() - created.getTime())
@@ -137,7 +137,7 @@ function calculateDaysOpen(createdAt: string | null): number {
 }
 
 function isOverdue(dueDate: string | null): boolean {
-  if (!dueDate) return false
+  if (!dueDate) {return false}
   return new Date(dueDate) < new Date()
 }
 
@@ -152,10 +152,10 @@ function shouldEscalatePriority(
   }
 
   const level = getPriorityLevel(priority)
-  if (!level.escalationDays) return false
+  if (!level.escalationDays) {return false}
 
   // Already at highest priority
-  if (priority === 'critical') return false
+  if (priority === 'critical') {return false}
 
   // Check if days open exceeds escalation threshold
   return daysOpen >= level.escalationDays
@@ -172,7 +172,7 @@ export function usePunchItemsWithPriority(projectId: string | undefined) {
   return useQuery({
     queryKey: ['punch-items', 'with-priority', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('punch_items')
@@ -181,7 +181,7 @@ export function usePunchItemsWithPriority(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Enhance with priority calculations
       return (data || []).map((item): PunchItemWithPriority => {
@@ -212,7 +212,7 @@ export function usePunchItemsByPriority(
   return useQuery({
     queryKey: ['punch-items', 'by-priority', projectId, priority],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('punch_items')
@@ -222,7 +222,7 @@ export function usePunchItemsByPriority(
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as PunchItem[]
     },
     enabled: !!projectId,
@@ -283,7 +283,7 @@ export function useUpdatePunchItemPriority() {
       priority: PunchItemPriority
       reason?: string
     }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       // Get current item to log the change
       const { data: current, error: fetchError } = await supabase
@@ -292,7 +292,7 @@ export function useUpdatePunchItemPriority() {
         .eq('id', punchItemId)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       // Update priority
       const { data, error } = await supabase
@@ -305,7 +305,7 @@ export function useUpdatePunchItemPriority() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return {
         punchItem: data,
@@ -338,7 +338,7 @@ export function useBatchEscalatePunchItemPriorities() {
         currentPriority: PunchItemPriority
       }>
     ) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       const escalationMap: Record<PunchItemPriority, PunchItemPriority> = {
         low: 'normal',
@@ -363,7 +363,7 @@ export function useBatchEscalatePunchItemPriorities() {
             })
             .eq('id', punchItemId)
 
-          if (error) throw error
+          if (error) {throw error}
 
           return {
             punchItemId,

@@ -83,22 +83,22 @@ export function useAutoNumbering({
 
   // Get current state for this page
   const currentState = useMemo(() => {
-    if (!documentId) return null
+    if (!documentId) {return null}
     return numberingState[pageNumber] || null
   }, [documentId, pageNumber, numberingState])
 
   // Current number for this page
   const currentNumber = useMemo(() => {
-    if (!currentState) return config.startNumber
+    if (!currentState) {return config.startNumber}
     return currentState.currentNumber
   }, [currentState, config.startNumber])
 
   // Initialize state for a new page
   const initializePageState = useCallback((page: number) => {
-    if (!documentId) return
+    if (!documentId) {return}
 
     setNumberingState(prev => {
-      if (prev[page]) return prev
+      if (prev[page]) {return prev}
 
       // If resetOnNewPage, start from startNumber
       // Otherwise, continue from previous pages

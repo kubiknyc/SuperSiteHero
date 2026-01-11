@@ -257,9 +257,9 @@ export function getPriorityLabel(priority: string): string {
  * Get compliance score color
  */
 export function getComplianceScoreColor(score: number): string {
-  if (score >= 90) return 'text-green-600'
-  if (score >= 70) return 'text-yellow-600'
-  if (score >= 50) return 'text-orange-600'
+  if (score >= 90) {return 'text-green-600'}
+  if (score >= 70) {return 'text-yellow-600'}
+  if (score >= 50) {return 'text-orange-600'}
   return 'text-red-600'
 }
 
@@ -267,9 +267,9 @@ export function getComplianceScoreColor(score: number): string {
  * Get compliance score background color
  */
 export function getComplianceScoreBgColor(score: number): string {
-  if (score >= 90) return 'bg-green-100'
-  if (score >= 70) return 'bg-yellow-100'
-  if (score >= 50) return 'bg-orange-100'
+  if (score >= 90) {return 'bg-green-100'}
+  if (score >= 70) {return 'bg-yellow-100'}
+  if (score >= 50) {return 'bg-orange-100'}
   return 'bg-red-100'
 }
 
@@ -277,9 +277,9 @@ export function getComplianceScoreBgColor(score: number): string {
  * Get compliance score label
  */
 export function getComplianceScoreLabel(score: number): string {
-  if (score >= 90) return 'Excellent'
-  if (score >= 70) return 'Good'
-  if (score >= 50) return 'Fair'
+  if (score >= 90) {return 'Excellent'}
+  if (score >= 70) {return 'Good'}
+  if (score >= 50) {return 'Fair'}
   return 'Needs Improvement'
 }
 
@@ -287,7 +287,7 @@ export function getComplianceScoreLabel(score: number): string {
  * Format date for display
  */
 export function formatSafetyDate(dateString: string | null): string {
-  if (!dateString) return '-'
+  if (!dateString) {return '-'}
   return new Date(dateString).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -299,9 +299,9 @@ export function formatSafetyDate(dateString: string | null): string {
  * Format days count for display
  */
 export function formatDaysSince(days: number | null): string {
-  if (days === null) return '-'
-  if (days === 0) return 'Today'
-  if (days === 1) return '1 day'
+  if (days === null) {return '-'}
+  if (days === 0) {return 'Today'}
+  if (days === 1) {return '1 day'}
   return `${days} days`
 }
 

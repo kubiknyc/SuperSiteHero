@@ -180,10 +180,10 @@ export function ScopeTemplateManager({
 
   // Filter templates
   const filteredTemplates = useMemo(() => {
-    if (!library?.templates) return []
+    if (!library?.templates) {return []}
 
     return library.templates.filter((t) => {
-      if (selectedTrade && t.tradeCode !== selectedTrade) return false
+      if (selectedTrade && t.tradeCode !== selectedTrade) {return false}
       if (searchQuery) {
         const query = searchQuery.toLowerCase()
         return (
@@ -204,7 +204,7 @@ export function ScopeTemplateManager({
   }, [duplicateMutation])
 
   const handleDelete = useCallback(async () => {
-    if (!templateToDelete) return
+    if (!templateToDelete) {return}
     await deleteMutation.mutateAsync(templateToDelete)
     setTemplateToDelete(null)
     setShowDeleteDialog(false)
@@ -214,7 +214,7 @@ export function ScopeTemplateManager({
   }, [templateToDelete, deleteMutation, selectedTemplateId])
 
   const handleApply = useCallback(async (templateId: string) => {
-    if (!selectedPackageId) return
+    if (!selectedPackageId) {return}
     await applyMutation.mutateAsync({
       templateId,
       packageId: selectedPackageId,

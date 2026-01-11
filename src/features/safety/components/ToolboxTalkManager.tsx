@@ -154,7 +154,7 @@ function formatDate(date: string): string {
 }
 
 function formatTime(time: string | null): string {
-  if (!time) return ''
+  if (!time) {return ''}
   const [hours, minutes] = time.split(':')
   const hour = parseInt(hours)
   const ampm = hour >= 12 ? 'PM' : 'AM'
@@ -895,7 +895,7 @@ function TalkDetailDialog({
   }
 
   const handleAddAttendee = async () => {
-    if (!newAttendee.trim()) return
+    if (!newAttendee.trim()) {return}
     await addAttendeeMutation.mutateAsync({
       toolbox_talk_id: talkId,
       worker_name: newAttendee.trim(),

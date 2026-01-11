@@ -132,7 +132,7 @@ function pixelToNormalized(
 }
 
 function formatDate(dateString?: string): string {
-  if (!dateString) return ''
+  if (!dateString) {return ''}
   return new Date(dateString).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -380,7 +380,7 @@ function PhotoGalleryDialog({
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
-    if (!files || files.length === 0 || !onAddPhotos) return
+    if (!files || files.length === 0 || !onAddPhotos) {return}
 
     // Convert files to CapturedPhoto format
     const capturedPhotos: CapturedPhoto[] = Array.from(files).map((file) => ({
@@ -672,7 +672,7 @@ export function PhotoPinOverlay({
   // Handle overlay click for adding new pins
   const handleOverlayClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!enableAddPin || !addPinMode || !onAddPin) return
+      if (!enableAddPin || !addPinMode || !onAddPin) {return}
 
       const rect = e.currentTarget.getBoundingClientRect()
       const pixelX = (e.clientX - rect.left) / scale

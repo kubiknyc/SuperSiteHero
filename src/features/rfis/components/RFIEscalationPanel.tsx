@@ -59,13 +59,13 @@ function formatRFINumber(number: number | null): string {
 }
 
 function getDaysOverdueLabel(days: number): string {
-  if (days === 1) return '1 day overdue'
+  if (days === 1) {return '1 day overdue'}
   return `${days} days overdue`
 }
 
 function getSeverityColor(daysOverdue: number): string {
-  if (daysOverdue >= 7) return 'text-red-700 bg-red-100'
-  if (daysOverdue >= 3) return 'text-orange-700 bg-orange-100'
+  if (daysOverdue >= 7) {return 'text-red-700 bg-red-100'}
+  if (daysOverdue >= 3) {return 'text-orange-700 bg-orange-100'}
   return 'text-yellow-700 bg-yellow-100'
 }
 
@@ -193,7 +193,7 @@ export function RFIEscalationPanel({
   }
 
   const handleEscalateSelected = async () => {
-    if (selectedIds.size === 0) return
+    if (selectedIds.size === 0) {return}
 
     try {
       const results = await batchEscalate.mutateAsync(Array.from(selectedIds))

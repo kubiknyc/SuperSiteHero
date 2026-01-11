@@ -57,7 +57,7 @@ export function ResetPasswordPage() {
 
         // Set up auth state listener BEFORE checking session
         const { data } = supabase.auth.onAuthStateChange((event, session) => {
-          if (!isSubscribed) return
+          if (!isSubscribed) {return}
 
           // Clear timeout since we got an event
           if (timeoutId) {
@@ -85,7 +85,7 @@ export function ResetPasswordPage() {
         if (hasRecoveryToken) {
           // Give Supabase time to process the token and emit the event
           timeoutId = setTimeout(() => {
-            if (!isSubscribed) return
+            if (!isSubscribed) {return}
             // If we still haven't gotten a valid session after 5 seconds, show error
             setSessionError('This password reset link has expired or is invalid. Please request a new one.')
             setIsCheckingSession(false)
@@ -96,7 +96,7 @@ export function ResetPasswordPage() {
         // No recovery token in URL, check for existing session
         const { data: { session }, error } = await supabase.auth.getSession()
 
-        if (!isSubscribed) return
+        if (!isSubscribed) {return}
 
         if (error) {
           throw error
@@ -112,7 +112,7 @@ export function ResetPasswordPage() {
           setIsCheckingSession(false)
         }
       } catch (err) {
-        if (!isSubscribed) return
+        if (!isSubscribed) {return}
         console.error('Error checking recovery session:', err)
         setSessionError('An error occurred while verifying the reset link. Please try again.')
         setIsCheckingSession(false)

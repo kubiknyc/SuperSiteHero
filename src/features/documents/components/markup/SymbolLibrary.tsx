@@ -452,7 +452,7 @@ export function SymbolLibrary({
 
   // Handle final symbol placement
   const handlePlaceSymbol = useCallback(() => {
-    if (!previewSymbol) return
+    if (!previewSymbol) {return}
 
     onSymbolSelect(previewSymbol, {
       width: customWidth,
@@ -646,7 +646,7 @@ export function SymbolLibrary({
                       {selectedCategory === 'all' ? (
                         // Show all categories
                         (Object.keys(symbolsByCategory) as SymbolCategory[]).map(cat => {
-                          if (symbolsByCategory[cat].length === 0) return null
+                          if (symbolsByCategory[cat].length === 0) {return null}
                           return (
                             <div key={cat} className="space-y-2">
                               <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">

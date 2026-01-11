@@ -8,8 +8,6 @@ import {
   DEFAULT_LAYOUT_ID,
   getLayoutById,
   type NavigationLayout,
-  type NavItem as LayoutNavItem,
-  type NavGroup as LayoutNavGroup,
 } from '@/config/navigation-layouts'
 import { getStorageItem, STORAGE_KEYS } from '@/lib/utils/storage'
 

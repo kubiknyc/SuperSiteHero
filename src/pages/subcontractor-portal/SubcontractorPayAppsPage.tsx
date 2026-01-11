@@ -87,7 +87,7 @@ export function SubcontractorPayAppsPage() {
 
   // Get unique projects for filter
   const projects = useMemo(() => {
-    if (!applications) return []
+    if (!applications) {return []}
     const uniqueProjects = new Map<string, string>()
     applications.forEach((app) => {
       if (!uniqueProjects.has(app.project_id)) {
@@ -99,7 +99,7 @@ export function SubcontractorPayAppsPage() {
 
   // Filter applications
   const filteredApplications = useMemo(() => {
-    if (!applications) return []
+    if (!applications) {return []}
 
     let filtered = applications
 
@@ -126,7 +126,7 @@ export function SubcontractorPayAppsPage() {
 
   // Calculate tab counts
   const counts = useMemo(() => {
-    if (!applications) return { all: 0, pending: 0, approved: 0, paid: 0 }
+    if (!applications) {return { all: 0, pending: 0, approved: 0, paid: 0 }}
 
     return {
       all: applications.length,

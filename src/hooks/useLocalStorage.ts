@@ -54,7 +54,7 @@ export function useLocalStorage<T>(
 
   // Listen for changes from other tabs/windows
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined') {return}
 
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === key && event.newValue !== null) {
@@ -91,12 +91,12 @@ export function useRemoveFromLocalStorage(key: string): () => void {
  */
 export function useLocalStorageExists(key: string): boolean {
   const [exists, setExists] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return false
+    if (typeof window === 'undefined') {return false}
     return window.localStorage.getItem(key) !== null
   })
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined') {return}
 
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === key) {

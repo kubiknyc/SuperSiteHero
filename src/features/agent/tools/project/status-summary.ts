@@ -203,9 +203,9 @@ export const projectStatusSummaryTool = createTool<ProjectStatusInput, ProjectSt
 
     const varianceDays = project.schedule_variance_days || 0
     let scheduleStatus: 'ahead' | 'on_track' | 'behind' | 'critical' = 'on_track'
-    if (varianceDays > 5) scheduleStatus = 'ahead'
-    else if (varianceDays < -14) scheduleStatus = 'critical'
-    else if (varianceDays < -5) scheduleStatus = 'behind'
+    if (varianceDays > 5) {scheduleStatus = 'ahead'}
+    else if (varianceDays < -14) {scheduleStatus = 'critical'}
+    else if (varianceDays < -5) {scheduleStatus = 'behind'}
 
     // Calculate financial status
     const budget = project.budget || 0
@@ -214,25 +214,25 @@ export const projectStatusSummaryTool = createTool<ProjectStatusInput, ProjectSt
     const percentComplete = project.percent_complete || 0
 
     let financialStatus: 'under' | 'on_budget' | 'over' | 'critical' = 'on_budget'
-    if (percentSpent > percentComplete + 15) financialStatus = 'critical'
-    else if (percentSpent > percentComplete + 5) financialStatus = 'over'
-    else if (percentSpent < percentComplete - 10) financialStatus = 'under'
+    if (percentSpent > percentComplete + 15) {financialStatus = 'critical'}
+    else if (percentSpent > percentComplete + 5) {financialStatus = 'over'}
+    else if (percentSpent < percentComplete - 10) {financialStatus = 'under'}
 
     // Generate risks
     const risks: string[] = []
-    if (overdueRfis.length > 3) risks.push(`${overdueRfis.length} overdue RFIs may impact schedule`)
-    if (overdueSubmittals.length > 2) risks.push(`${overdueSubmittals.length} overdue submittals need attention`)
-    if (scheduleStatus === 'critical') risks.push('Project is significantly behind schedule')
-    if (financialStatus === 'critical') risks.push('Spending significantly ahead of progress')
-    if (criticalPunch.length > 0) risks.push(`${criticalPunch.length} critical punch items require immediate attention`)
-    if (pendingAmount > budget * 0.1) risks.push('Pending change orders represent >10% of budget')
+    if (overdueRfis.length > 3) {risks.push(`${overdueRfis.length} overdue RFIs may impact schedule`)}
+    if (overdueSubmittals.length > 2) {risks.push(`${overdueSubmittals.length} overdue submittals need attention`)}
+    if (scheduleStatus === 'critical') {risks.push('Project is significantly behind schedule')}
+    if (financialStatus === 'critical') {risks.push('Spending significantly ahead of progress')}
+    if (criticalPunch.length > 0) {risks.push(`${criticalPunch.length} critical punch items require immediate attention`)}
+    if (pendingAmount > budget * 0.1) {risks.push('Pending change orders represent >10% of budget')}
 
     // Generate highlights
     const highlights: string[] = []
-    if (daysSinceIncident && daysSinceIncident > 30) highlights.push(`${daysSinceIncident} days without safety incident`)
-    if (scheduleStatus === 'ahead') highlights.push('Project is ahead of schedule')
-    if (financialStatus === 'under') highlights.push('Spending is under budget relative to progress')
-    if (completedPunch.length > 0 && openPunch.length < 10) highlights.push('Punch list is well controlled')
+    if (daysSinceIncident && daysSinceIncident > 30) {highlights.push(`${daysSinceIncident} days without safety incident`)}
+    if (scheduleStatus === 'ahead') {highlights.push('Project is ahead of schedule')}
+    if (financialStatus === 'under') {highlights.push('Spending is under budget relative to progress')}
+    if (completedPunch.length > 0 && openPunch.length < 10) {highlights.push('Punch list is well controlled')}
 
     return {
       project: {

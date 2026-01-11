@@ -124,11 +124,11 @@ function calculateHealthScore(metrics: {
 
   // Determine status
   let status: ProjectProgressMetrics['healthScore']['status']
-  if (weightedScore >= 85) status = 'excellent'
-  else if (weightedScore >= 70) status = 'good'
-  else if (weightedScore >= 50) status = 'fair'
-  else if (weightedScore >= 30) status = 'poor'
-  else status = 'critical'
+  if (weightedScore >= 85) {status = 'excellent'}
+  else if (weightedScore >= 70) {status = 'good'}
+  else if (weightedScore >= 50) {status = 'fair'}
+  else if (weightedScore >= 30) {status = 'poor'}
+  else {status = 'critical'}
 
   return { value: Math.round(weightedScore), status, factors }
 }
@@ -136,9 +136,9 @@ function calculateHealthScore(metrics: {
 function calculateScheduleStatus(
   daysVariance: number
 ): ProjectProgressMetrics['schedule']['status'] {
-  if (daysVariance > 7) return 'ahead'
-  if (daysVariance >= -7) return 'on-track'
-  if (daysVariance >= -30) return 'at-risk'
+  if (daysVariance > 7) {return 'ahead'}
+  if (daysVariance >= -7) {return 'on-track'}
+  if (daysVariance >= -30) {return 'at-risk'}
   return 'behind'
 }
 
@@ -153,7 +153,7 @@ export function useProjectProgress(projectId: string | undefined) {
   return useQuery({
     queryKey: ['project-progress', projectId],
     queryFn: async (): Promise<ProjectProgressMetrics> => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       // Fetch all relevant data in parallel
       const [
@@ -367,7 +367,7 @@ export function useProjectsProgress(projectIds: string[]) {
   return useQuery({
     queryKey: ['projects-progress', projectIds],
     queryFn: async (): Promise<ProjectProgressSummary[]> => {
-      if (projectIds.length === 0) return []
+      if (projectIds.length === 0) {return []}
 
       const summaries: ProjectProgressSummary[] = []
 
@@ -426,11 +426,11 @@ export function useProjectsProgress(projectIds: string[]) {
 
         // Determine health status based on progress and issues
         let healthStatus: ProjectProgressSummary['healthStatus']
-        if (progress >= 80 && openIssues < 5) healthStatus = 'excellent'
-        else if (progress >= 60 && openIssues < 15) healthStatus = 'good'
-        else if (progress >= 40 && openIssues < 30) healthStatus = 'fair'
-        else if (progress >= 20) healthStatus = 'poor'
-        else healthStatus = 'critical'
+        if (progress >= 80 && openIssues < 5) {healthStatus = 'excellent'}
+        else if (progress >= 60 && openIssues < 15) {healthStatus = 'good'}
+        else if (progress >= 40 && openIssues < 30) {healthStatus = 'fair'}
+        else if (progress >= 20) {healthStatus = 'poor'}
+        else {healthStatus = 'critical'}
 
         summaries.push({
           projectId: project.id,

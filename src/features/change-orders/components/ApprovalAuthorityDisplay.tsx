@@ -78,7 +78,7 @@ function getRoleIcon(role: ApprovalRole) {
 }
 
 function formatCurrency(amount: number | null): string {
-  if (amount === null) return 'Unlimited'
+  if (amount === null) {return 'Unlimited'}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -196,14 +196,14 @@ export function ApprovalAuthorityDisplay({
 
   // Find required approval level for the amount
   const requiredLevel = useMemo(() => {
-    if (!amount) return null
+    if (!amount) {return null}
     return DEFAULT_APPROVAL_LEVELS.find(
       (level) => level.maxAmount === null || level.maxAmount >= amount
     )
   }, [amount])
 
   const handleRequestEscalation = async () => {
-    if (!changeOrderId || !approvalCheck?.escalateTo) return
+    if (!changeOrderId || !approvalCheck?.escalateTo) {return}
 
     try {
       await requestEscalation.mutateAsync({

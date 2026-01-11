@@ -77,7 +77,7 @@ interface AlertPermitDeadlinesOutput {
 // ============================================================================
 
 function calculateDaysUntil(date: string | null): number | null {
-  if (!date) return null
+  if (!date) {return null}
   const targetDate = new Date(date)
   const now = new Date()
   now.setHours(0, 0, 0, 0)

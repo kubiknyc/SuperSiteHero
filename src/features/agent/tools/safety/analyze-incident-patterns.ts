@@ -61,12 +61,12 @@ interface AnalyzeIncidentPatternsOutput {
 const STANDARD_HOURS_PER_WORKER_PER_YEAR = 2000
 
 function calculateTRIR(recordableIncidents: number, hoursWorked: number): number {
-  if (hoursWorked === 0) return 0
+  if (hoursWorked === 0) {return 0}
   return (recordableIncidents * 200000) / hoursWorked
 }
 
 function calculateDARTRate(dartIncidents: number, hoursWorked: number): number {
-  if (hoursWorked === 0) return 0
+  if (hoursWorked === 0) {return 0}
   return (dartIncidents * 200000) / hoursWorked
 }
 

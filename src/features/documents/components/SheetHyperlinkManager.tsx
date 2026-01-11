@@ -108,20 +108,20 @@ export function SheetHyperlinkManager({
 
   // Group links by reference type
   const groupedOutgoing = useMemo(() => {
-    if (!outgoingLinks) return {}
+    if (!outgoingLinks) {return {}}
     return outgoingLinks.reduce((acc, link) => {
       const type = link.referenceType || 'general'
-      if (!acc[type]) acc[type] = []
+      if (!acc[type]) {acc[type] = []}
       acc[type].push(link)
       return acc
     }, {} as Record<string, SheetReference[]>)
   }, [outgoingLinks])
 
   const groupedIncoming = useMemo(() => {
-    if (!incomingLinks) return {}
+    if (!incomingLinks) {return {}}
     return incomingLinks.reduce((acc, link) => {
       const type = link.referenceType || 'general'
-      if (!acc[type]) acc[type] = []
+      if (!acc[type]) {acc[type] = []}
       acc[type].push(link)
       return acc
     }, {} as Record<string, SheetBacklink[]>)
@@ -129,20 +129,20 @@ export function SheetHyperlinkManager({
 
   // Filter links by search term
   const filteredOutgoing = useMemo(() => {
-    if (!searchTerm) return groupedOutgoing
+    if (!searchTerm) {return groupedOutgoing}
     const term = searchTerm.toLowerCase()
     const filtered: Record<string, SheetReference[]> = {}
     for (const [type, links] of Object.entries(groupedOutgoing)) {
       const matchingLinks = links.filter(
         link => link.referenceText.toLowerCase().includes(term)
       )
-      if (matchingLinks.length > 0) filtered[type] = matchingLinks
+      if (matchingLinks.length > 0) {filtered[type] = matchingLinks}
     }
     return filtered
   }, [groupedOutgoing, searchTerm])
 
   const filteredIncoming = useMemo(() => {
-    if (!searchTerm) return groupedIncoming
+    if (!searchTerm) {return groupedIncoming}
     const term = searchTerm.toLowerCase()
     const filtered: Record<string, SheetBacklink[]> = {}
     for (const [type, links] of Object.entries(groupedIncoming)) {
@@ -151,7 +151,7 @@ export function SheetHyperlinkManager({
           link.referenceText.toLowerCase().includes(term) ||
           link.sourceDocumentName.toLowerCase().includes(term)
       )
-      if (matchingLinks.length > 0) filtered[type] = matchingLinks
+      if (matchingLinks.length > 0) {filtered[type] = matchingLinks}
     }
     return filtered
   }, [groupedIncoming, searchTerm])
@@ -508,7 +508,7 @@ function AddLinkDialog({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!targetDocumentId || !referenceText) return
+    if (!targetDocumentId || !referenceText) {return}
 
     try {
       await onAdd({

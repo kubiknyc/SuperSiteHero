@@ -74,19 +74,19 @@ export interface UseListPageStateReturn<TFilters extends Record<string, any>> {
 // ============================================================================
 
 function parseUrlValue(value: string | null): any {
-  if (value === null) return undefined
-  if (value === 'true') return true
-  if (value === 'false') return false
-  if (value === 'null') return null
-  if (!isNaN(Number(value)) && value !== '') return Number(value)
+  if (value === null) {return undefined}
+  if (value === 'true') {return true}
+  if (value === 'false') {return false}
+  if (value === 'null') {return null}
+  if (!isNaN(Number(value)) && value !== '') {return Number(value)}
   // Handle arrays (comma-separated)
-  if (value.includes(',')) return value.split(',')
+  if (value.includes(',')) {return value.split(',')}
   return value
 }
 
 function stringifyValue(value: any): string | null {
-  if (value === undefined || value === null) return null
-  if (Array.isArray(value)) return value.join(',')
+  if (value === undefined || value === null) {return null}
+  if (Array.isArray(value)) {return value.join(',')}
   return String(value)
 }
 
@@ -109,7 +109,7 @@ export function useListPageState<TFilters extends Record<string, any> = Record<s
   // ============================================================================
 
   const filters = useMemo(() => {
-    if (!syncWithUrl) return defaultFilters as TFilters
+    if (!syncWithUrl) {return defaultFilters as TFilters}
 
     const urlFilters: Record<string, any> = {}
 
@@ -129,7 +129,7 @@ export function useListPageState<TFilters extends Record<string, any> = Record<s
   }, [searchParams, syncWithUrl])
 
   const sort = useMemo((): SortConfig | null => {
-    if (!syncWithUrl) return defaultSort || null
+    if (!syncWithUrl) {return defaultSort || null}
 
     const sortField = searchParams.get('sort')
     const sortDir = searchParams.get('dir') as SortDirection | null
@@ -145,14 +145,14 @@ export function useListPageState<TFilters extends Record<string, any> = Record<s
   }, [searchParams, defaultSort, syncWithUrl])
 
   const viewMode = useMemo((): ViewMode => {
-    if (!syncWithUrl) return defaultView
+    if (!syncWithUrl) {return defaultView}
 
     const view = searchParams.get('view') as ViewMode | null
     return view || defaultView
   }, [searchParams, defaultView, syncWithUrl])
 
   const pagination = useMemo((): PaginationConfig => {
-    if (!syncWithUrl) return defaultPagination
+    if (!syncWithUrl) {return defaultPagination}
 
     const page = parseInt(searchParams.get('page') || '', 10)
     const pageSize = parseInt(searchParams.get('pageSize') || '', 10)
@@ -169,7 +169,7 @@ export function useListPageState<TFilters extends Record<string, any> = Record<s
 
   const updateParams = useCallback(
     (updates: Record<string, string | null>) => {
-      if (!syncWithUrl) return
+      if (!syncWithUrl) {return}
 
       setSearchParams((prev) => {
         const next = new URLSearchParams(prev)

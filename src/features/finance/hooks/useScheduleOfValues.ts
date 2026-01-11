@@ -44,7 +44,7 @@ export function useScheduleOfValues(projectId: string | undefined) {
   return useQuery({
     queryKey: sovKeys.byProject(projectId || ''),
     queryFn: async () => {
-      if (!projectId) return null
+      if (!projectId) {return null}
 
       const { data, error } = await supabase
         .from('schedule_of_values')
@@ -62,7 +62,7 @@ export function useScheduleOfValues(projectId: string | undefined) {
         throw error
       }
 
-      if (!data) return null
+      if (!data) {return null}
 
       // Calculate totals from line items
       const lineItems = data.sov_line_items || []
@@ -130,7 +130,7 @@ export function useSOVLineItems(sovId: string | undefined) {
   return useQuery({
     queryKey: sovKeys.lineItems(sovId || ''),
     queryFn: async () => {
-      if (!sovId) return []
+      if (!sovId) {return []}
 
       const { data, error } = await supabase
         .from('sov_line_items')
@@ -138,7 +138,7 @@ export function useSOVLineItems(sovId: string | undefined) {
         .eq('sov_id', sovId)
         .order('sort_order', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       return (data || []).map((li) => {
         const workTotal = (li.work_completed_previous || 0) + (li.work_completed_this_period || 0)
@@ -169,7 +169,7 @@ export function useSOVSummary(projectId: string | undefined) {
   return useQuery({
     queryKey: sovKeys.summary(projectId || ''),
     queryFn: async () => {
-      if (!projectId) return null
+      if (!projectId) {return null}
 
       const { data, error } = await supabase
         .from('sov_summary')
@@ -213,7 +213,7 @@ export function useCreateSOV() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return sov
     },
     onSuccess: (data) => {
@@ -258,7 +258,7 @@ export function useUpdateSOV() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return sov
     },
     onSuccess: (data) => {
@@ -310,7 +310,7 @@ export function useAddSOVLineItem() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return lineItem
     },
     onSuccess: (data) => {
@@ -356,7 +356,7 @@ export function useUpdateSOVLineItem() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return lineItem
     },
     onSuccess: (data) => {
@@ -409,7 +409,7 @@ export function useUpdateSOVLineItemBilling() {
             .select()
             .single()
 
-          if (error) throw error
+          if (error) {throw error}
           return data
         })
       )
@@ -451,7 +451,7 @@ export function useDeleteSOVLineItem() {
 
       const { error } = await supabase.from('sov_line_items').delete().eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
       return { id, sov_id: lineItem?.sov_id }
     },
     onSuccess: (data) => {
@@ -532,7 +532,7 @@ export function useRollBillingForward() {
         .select('*')
         .eq('sov_id', sovId)
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       // Update each line item
       await Promise.all(

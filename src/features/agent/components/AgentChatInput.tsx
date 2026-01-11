@@ -119,7 +119,7 @@ export function AgentChatInput({
 
   // Filter commands
   const filteredCommands = useMemo(() => {
-    if (!commandFilter) return COMMANDS.slice(0, 6)
+    if (!commandFilter) {return COMMANDS.slice(0, 6)}
     return COMMANDS.filter(
       (cmd) =>
         cmd.name.toLowerCase().includes(commandFilter.toLowerCase()) ||
@@ -176,7 +176,7 @@ export function AgentChatInput({
 
   // Handle submit
   const handleSubmit = useCallback(() => {
-    if (!value.trim() || isDisabled) return
+    if (!value.trim() || isDisabled) {return}
 
     onSend(value.trim(), mentions, attachments)
     setValue('')
@@ -269,7 +269,7 @@ export function AgentChatInput({
   // Handle file attachment
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
-    if (!files) return
+    if (!files) {return}
 
     const newAttachments: Attachment[] = []
     Array.from(files).forEach((file) => {

@@ -295,7 +295,7 @@ async function downloadProjectForOffline(
     .eq('id', projectId)
     .single()
 
-  if (projectError) throw projectError
+  if (projectError) {throw projectError}
 
   // Cache the project
   await StorageManager.cacheData(
@@ -470,7 +470,7 @@ function useCachedProjects() {
 // ============================================================================
 
 function formatBytes(bytes: number): string {
-  if (bytes === 0) return '0 B'
+  if (bytes === 0) {return '0 B'}
   const k = 1024
   const sizes = ['B', 'KB', 'MB', 'GB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
@@ -482,7 +482,7 @@ function formatBytes(bytes: number): string {
 // ============================================================================
 
 function StorageOverview({ quota }: { quota: any }) {
-  if (!quota) return null
+  if (!quota) {return null}
 
   const percentageUsed = quota.usage && quota.quota
     ? Math.round((quota.usage / quota.quota) * 100)

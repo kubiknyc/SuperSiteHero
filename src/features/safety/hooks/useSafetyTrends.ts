@@ -121,7 +121,7 @@ export function useDailyObservationStats(filters: TrendFilters = {}) {
   return useQuery({
     queryKey: safetyTrendKeys.daily(filters),
     queryFn: async (): Promise<DailyObservationStats[]> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       let query = db
         .from('safety_observation_daily_stats')
@@ -143,7 +143,7 @@ export function useDailyObservationStats(filters: TrendFilters = {}) {
       }
 
       const { data, error } = await query;
-      if (error) throw error;
+      if (error) {throw error;}
       return data || [];
     },
     enabled: !!userProfile?.company_id,
@@ -159,7 +159,7 @@ export function usePeriodObservationStats(filters: TrendFilters = {}) {
   return useQuery({
     queryKey: safetyTrendKeys.period(filters),
     queryFn: async (): Promise<PeriodObservationStats[]> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       let query = db
         .from('safety_observation_period_stats')
@@ -184,7 +184,7 @@ export function usePeriodObservationStats(filters: TrendFilters = {}) {
       }
 
       const { data, error } = await query;
-      if (error) throw error;
+      if (error) {throw error;}
       return data || [];
     },
     enabled: !!userProfile?.company_id,
@@ -200,7 +200,7 @@ export function useTrendSummary(projectId?: string, days = 30) {
   return useQuery({
     queryKey: safetyTrendKeys.summary(projectId, days),
     queryFn: async (): Promise<TrendSummary> => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       const startDate = format(subDays(new Date(), days), 'yyyy-MM-dd');
       const previousStartDate = format(subDays(new Date(), days * 2), 'yyyy-MM-dd');
@@ -307,7 +307,7 @@ export function useTrendSummary(projectId?: string, days = 30) {
 
       const { data: observations, error: obsError } = await observationsQuery;
 
-      if (obsError) throw obsError;
+      if (obsError) {throw obsError;}
 
       const obs = observations || [];
       const safe = obs.filter((o: any) =>
@@ -388,7 +388,7 @@ export function usePeriodComparison(
   return useQuery({
     queryKey: ['safety-trends', 'comparison', projectId, currentPeriodDays, periodType],
     queryFn: async () => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       let query = db
         .from('safety_observation_period_stats')
@@ -403,7 +403,7 @@ export function usePeriodComparison(
       }
 
       const { data, error } = await query;
-      if (error) throw error;
+      if (error) {throw error;}
 
       const [current, previous] = data || [];
 
@@ -460,7 +460,7 @@ export function useRefreshTrendStats() {
       endDate: string;
       projectId?: string;
     }) => {
-      if (!userProfile?.company_id) throw new Error('No company context');
+      if (!userProfile?.company_id) {throw new Error('No company context');}
 
       // This would call a server function to recalculate aggregates
       // For now, just invalidate the cache to refetch
@@ -471,7 +471,7 @@ export function useRefreshTrendStats() {
         p_end_date: endDate,
       });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return true;
     },
     onSuccess: () => {

@@ -88,7 +88,7 @@ function getWeekDates(startDate: Date, weekNumber: number): { start: Date; end: 
 }
 
 function extractTrade(activityName: string, subcontractorTrade?: string): string {
-  if (subcontractorTrade) return subcontractorTrade
+  if (subcontractorTrade) {return subcontractorTrade}
 
   const lowerName = activityName.toLowerCase()
   const tradePatterns: Array<[RegExp, string]> = [
@@ -109,7 +109,7 @@ function extractTrade(activityName: string, subcontractorTrade?: string): string
   ]
 
   for (const [pattern, trade] of tradePatterns) {
-    if (pattern.test(lowerName)) return trade
+    if (pattern.test(lowerName)) {return trade}
   }
 
   return 'General'
@@ -404,7 +404,7 @@ export const generateLookaheadTool = createTool<GenerateLookaheadInput, Generate
             // Track manpower estimates
             manpowerByTrade[trade] = (manpowerByTrade[trade] || 0) + 4 // Estimate 4 workers per activity
 
-            if (activity.is_critical) criticalPathCount++
+            if (activity.is_critical) {criticalPathCount++}
             totalActivities++
 
             // Check if at risk

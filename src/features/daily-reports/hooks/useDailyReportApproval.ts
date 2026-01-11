@@ -183,7 +183,7 @@ export function useDailyReportApproval(reportId: string | undefined) {
   return useQuery({
     queryKey: dailyReportApprovalKeys.detail(reportId || ''),
     queryFn: async () => {
-      if (!reportId) throw new Error('Report ID required');
+      if (!reportId) {throw new Error('Report ID required');}
 
       const { data, error } = await supabase
         .from('daily_report_approvals')
@@ -191,7 +191,7 @@ export function useDailyReportApproval(reportId: string | undefined) {
         .eq('daily_report_id', reportId)
         .single();
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (error && error.code !== 'PGRST116') {throw error;}
       return data as DailyReportApproval | null;
     },
     enabled: !!reportId,
@@ -205,7 +205,7 @@ export function useDailyReportApprovalHistory(reportId: string | undefined) {
   return useQuery({
     queryKey: dailyReportApprovalKeys.history(reportId || ''),
     queryFn: async () => {
-      if (!reportId) throw new Error('Report ID required');
+      if (!reportId) {throw new Error('Report ID required');}
 
       const { data, error } = await supabase
         .from('daily_report_approval_actions')
@@ -216,7 +216,7 @@ export function useDailyReportApprovalHistory(reportId: string | undefined) {
         .eq('daily_report_id', reportId)
         .order('performed_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as ApprovalActionWithUser[];
     },
     enabled: !!reportId,
@@ -230,7 +230,7 @@ export function usePendingApprovals(userId: string | undefined, userRole: string
   return useQuery({
     queryKey: dailyReportApprovalKeys.pending(userId || ''),
     queryFn: async () => {
-      if (!userId) throw new Error('User ID required');
+      if (!userId) {throw new Error('User ID required');}
 
       // Get reports that need approval based on role
       let query = supabase
@@ -253,7 +253,7 @@ export function usePendingApprovals(userId: string | undefined, userRole: string
 
       const { data, error } = await query.order('submitted_at', { ascending: true });
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data;
     },
     enabled: !!userId,
@@ -267,7 +267,7 @@ export function usePendingApprovalsCount(userId: string | undefined, userRole: s
   return useQuery({
     queryKey: dailyReportApprovalKeys.pendingCount(userId || ''),
     queryFn: async () => {
-      if (!userId) return 0;
+      if (!userId) {return 0;}
 
       let query = supabase
         .from('daily_reports')
@@ -284,7 +284,7 @@ export function usePendingApprovalsCount(userId: string | undefined, userRole: s
 
       const { count, error } = await query;
 
-      if (error) throw error;
+      if (error) {throw error;}
       return count || 0;
     },
     enabled: !!userId,
@@ -315,7 +315,7 @@ export function useSubmitForReview() {
         .select()
         .single();
 
-      if (reportError) throw reportError;
+      if (reportError) {throw reportError;}
 
       // Create or update approval record
       const { error: approvalError } = await supabase
@@ -329,7 +329,7 @@ export function useSubmitForReview() {
           onConflict: 'daily_report_id',
         });
 
-      if (approvalError) throw approvalError;
+      if (approvalError) {throw approvalError;}
 
       // Log action
       await supabase.from('daily_report_approval_actions').insert({
@@ -417,7 +417,7 @@ export function useReviewDailyReport() {
         .select()
         .single();
 
-      if (reportError) throw reportError;
+      if (reportError) {throw reportError;}
 
       // Update approval record
       const { error: approvalError } = await supabase
@@ -434,7 +434,7 @@ export function useReviewDailyReport() {
           onConflict: 'daily_report_id',
         });
 
-      if (approvalError) throw approvalError;
+      if (approvalError) {throw approvalError;}
 
       // Log action
       await supabase.from('daily_report_approval_actions').insert({
@@ -486,7 +486,7 @@ export function useSuperintendentSignoff() {
         })
         .eq('daily_report_id', dailyReportId);
 
-      if (approvalError) throw approvalError;
+      if (approvalError) {throw approvalError;}
 
       // Log action
       await supabase.from('daily_report_approval_actions').insert({
@@ -545,7 +545,7 @@ export function useAddApprovalComment() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data;
     },
     onSuccess: (_, variables) => {

@@ -47,7 +47,7 @@ export const ShopDrawingList = memo(function ShopDrawingList({
 
   // Sort data
   const sortedData = useMemo(() => {
-    if (!shopDrawings) return []
+    if (!shopDrawings) {return []}
 
     return [...shopDrawings].sort((a, b) => {
       let comparison = 0
@@ -66,8 +66,8 @@ export const ShopDrawingList = memo(function ShopDrawingList({
           comparison = a.review_status.localeCompare(b.review_status)
           break
         case 'date_required':
-          if (!a.date_required) return 1
-          if (!b.date_required) return -1
+          if (!a.date_required) {return 1}
+          if (!b.date_required) {return -1}
           comparison = new Date(a.date_required).getTime() - new Date(b.date_required).getTime()
           break
         case 'priority':

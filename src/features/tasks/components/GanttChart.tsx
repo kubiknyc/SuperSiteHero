@@ -80,7 +80,7 @@ const STATUS_COLORS = {
 
 // Critical path calculation using topological sort
 function calculateCriticalPath(tasks: Array<GanttTask & { startDate: Date; endDate: Date }>): Set<string> {
-  if (tasks.length === 0) return new Set()
+  if (tasks.length === 0) {return new Set()}
 
   // Build dependency graph
   const taskMap = new Map(tasks.map(t => [t.id, t]))
@@ -191,7 +191,7 @@ function calculateBaselineVariance(
   baselineStart: Date | null,
   baselineEnd: Date | null
 ): BaselineVariance | null {
-  if (!baselineStart || !baselineEnd) return null
+  if (!baselineStart || !baselineEnd) {return null}
 
   const startVarianceDays = differenceInDays(task.startDate, baselineStart)
   const endVarianceDays = differenceInDays(task.endDate, baselineEnd)
@@ -266,7 +266,7 @@ export function GanttChart({
   // Calculate overall schedule health
   const scheduleHealth = useMemo(() => {
     const tasksWithBaseline = Array.from(baselineVariances.values())
-    if (tasksWithBaseline.length === 0) return null
+    if (tasksWithBaseline.length === 0) {return null}
 
     const aheadCount = tasksWithBaseline.filter(v => v.isAheadOfSchedule).length
     const behindCount = tasksWithBaseline.filter(v => v.isBehindSchedule).length
@@ -286,7 +286,7 @@ export function GanttChart({
 
   // Handler to save current schedule as baseline
   const handleSaveBaseline = useCallback(() => {
-    if (!onSaveBaseline) return
+    if (!onSaveBaseline) {return}
     const tasksWithBaseline = normalizedTasks.map(task => ({
       ...task,
       baselineStartDate: task.startDate,
@@ -364,7 +364,7 @@ export function GanttChart({
 
   // Get baseline task style (dashed bar behind actual bar)
   const getBaselineStyle = useCallback((task: GanttTask & { startDate: Date; endDate: Date; baselineStartDate: Date | null; baselineEndDate: Date | null }) => {
-    if (!task.baselineStartDate || !task.baselineEndDate) return null
+    if (!task.baselineStartDate || !task.baselineEndDate) {return null}
 
     const startOffset = Math.max(0, differenceInDays(task.baselineStartDate, visibleStart))
     const endOffset = differenceInDays(task.baselineEndDate, visibleStart) + 1
@@ -382,10 +382,10 @@ export function GanttChart({
 
   // Get task color
   const getTaskColor = useCallback((task: GanttTask, isCritical: boolean) => {
-    if (isCritical && showCriticalPath) return '#DC2626' // Red for critical path
-    if (task.color) return task.color
-    if (task.status) return STATUS_COLORS[task.status]
-    if (task.priority) return PRIORITY_COLORS[task.priority]
+    if (isCritical && showCriticalPath) {return '#DC2626'} // Red for critical path
+    if (task.color) {return task.color}
+    if (task.status) {return STATUS_COLORS[task.status]}
+    if (task.priority) {return PRIORITY_COLORS[task.priority]}
     return '#3B82F6'
   }, [showCriticalPath])
 
@@ -395,12 +395,12 @@ export function GanttChart({
     taskId: string,
     mode: DragState['mode']
   ) => {
-    if (!editable) return
+    if (!editable) {return}
     e.preventDefault()
     e.stopPropagation()
 
     const task = normalizedTasks.find(t => t.id === taskId)
-    if (!task) return
+    if (!task) {return}
 
     setDragState({
       taskId,
@@ -412,12 +412,12 @@ export function GanttChart({
   }, [editable, normalizedTasks])
 
   const handleDragMove = useCallback((e: MouseEvent) => {
-    if (!dragState) return
+    if (!dragState) {return}
 
     const deltaX = e.clientX - dragState.startX
     const daysDelta = Math.round(deltaX / columnWidth)
 
-    if (daysDelta === 0) return
+    if (daysDelta === 0) {return}
 
     const newChanges = new Map(pendingChanges)
     const duration = differenceInDays(dragState.originalEnd, dragState.originalStart)
@@ -431,11 +431,11 @@ export function GanttChart({
     } else if (dragState.mode === 'resize-start') {
       newStart = addDays(dragState.originalStart, daysDelta)
       newEnd = dragState.originalEnd
-      if (newStart >= newEnd) return // Invalid
+      if (newStart >= newEnd) {return} // Invalid
     } else {
       newStart = dragState.originalStart
       newEnd = addDays(dragState.originalEnd, daysDelta)
-      if (newEnd <= newStart) return // Invalid
+      if (newEnd <= newStart) {return} // Invalid
     }
 
     newChanges.set(dragState.taskId, { startDate: newStart, endDate: newEnd })
@@ -690,14 +690,14 @@ export function GanttChart({
             {/* Dependency lines */}
             {showCriticalPath && normalizedTasks.map((task) => {
               const style = getTaskStyle(task)
-              if (!style || !task.dependencies) return null
+              if (!style || !task.dependencies) {return null}
 
               return task.dependencies.map((depId) => {
                 const depTask = normalizedTasks.find(t => t.id === depId)
-                if (!depTask) return null
+                if (!depTask) {return null}
 
                 const depStyle = getTaskStyle(depTask)
-                if (!depStyle) return null
+                if (!depStyle) {return null}
 
                 const depTaskIndex = normalizedTasks.findIndex(t => t.id === depId)
                 const taskIndex = normalizedTasks.findIndex(t => t.id === task.id)
@@ -739,7 +739,7 @@ export function GanttChart({
             {/* Task bars */}
             {normalizedTasks.map((task) => {
               const style = getTaskStyle(task)
-              if (!style) return null
+              if (!style) {return null}
 
               const isCritical = criticalPath.has(task.id)
               const color = getTaskColor(task, isCritical)

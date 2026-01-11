@@ -490,8 +490,8 @@ function buildWeatherSummary(weather?: {
 
   if (weather.temperature_high !== undefined || weather.temperature_low !== undefined) {
     const temps = []
-    if (weather.temperature_high !== undefined) temps.push(`High: ${weather.temperature_high}F`)
-    if (weather.temperature_low !== undefined) temps.push(`Low: ${weather.temperature_low}F`)
+    if (weather.temperature_high !== undefined) {temps.push(`High: ${weather.temperature_high}F`)}
+    if (weather.temperature_low !== undefined) {temps.push(`Low: ${weather.temperature_low}F`)}
     summary += `. ${temps.join(', ')}`
   }
 

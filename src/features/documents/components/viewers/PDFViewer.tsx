@@ -181,13 +181,13 @@ export function PDFViewer({
 
   // Get recent sheets for the dropdown
   const recentSheets = useMemo(() => {
-    if (!enableSheetNavigation) return []
+    if (!enableSheetNavigation) {return []}
     return getRecentSheets(5)
   }, [enableSheetNavigation, getRecentSheets])
 
   // Group documents by discipline for the sheet selector dropdown
   const documentsByDiscipline = useMemo(() => {
-    if (!allDocuments || allDocuments.length === 0) return {}
+    if (!allDocuments || allDocuments.length === 0) {return {}}
 
     const groups: Record<string, DocumentType[]> = {}
     allDocuments.forEach((doc) => {

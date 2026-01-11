@@ -706,7 +706,7 @@ export function JHAForm({
 
   const moveHazardStep = (index: number, direction: 'up' | 'down') => {
     const newIndex = direction === 'up' ? index - 1 : index + 1;
-    if (newIndex < 0 || newIndex >= hazardSteps.length) return;
+    if (newIndex < 0 || newIndex >= hazardSteps.length) {return;}
 
     const updated = [...hazardSteps];
     [updated[index], updated[newIndex]] = [updated[newIndex], updated[index]];
@@ -721,7 +721,7 @@ export function JHAForm({
   const handleApplyTemplate = (templateId: string) => {
     const allTemplates = templateCategories?.flatMap((c) => c.templates) || [];
     const template = allTemplates.find((t) => t.id === templateId);
-    if (!template) return;
+    if (!template) {return;}
 
     // Convert template hazards to form format
     if (template.default_hazards && template.default_hazards.length > 0) {
@@ -771,7 +771,7 @@ export function JHAForm({
   // Submit handler
   const handleSubmit = async (e: React.FormEvent, submitForReview = false) => {
     e.preventDefault();
-    if (!isValid) return;
+    if (!isValid) {return;}
 
     try {
       const baseData = {
@@ -829,7 +829,7 @@ export function JHAForm({
 
   // Handle acknowledgment submission
   const handleAcknowledgment = async (data: AcknowledgmentFormData) => {
-    if (!initialData?.id) return;
+    if (!initialData?.id) {return;}
 
     try {
       await addAckMutation.mutateAsync({

@@ -39,7 +39,7 @@ export function useOMManualSections(projectId: string | undefined) {
   return useQuery({
     queryKey: omManualKeys.sections(projectId || ''),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('om_manual_sections')
@@ -48,7 +48,7 @@ export function useOMManualSections(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('sort_order', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as OMManualSection[]
     },
     enabled: !!projectId,
@@ -62,7 +62,7 @@ export function useOMManualSection(sectionId: string | undefined) {
   return useQuery({
     queryKey: omManualKeys.section(sectionId || ''),
     queryFn: async () => {
-      if (!sectionId) throw new Error('Section ID required')
+      if (!sectionId) {throw new Error('Section ID required')}
 
       const { data, error } = await supabase
         .from('om_manual_sections')
@@ -70,7 +70,7 @@ export function useOMManualSection(sectionId: string | undefined) {
         .eq('id', sectionId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as OMManualSection
     },
     enabled: !!sectionId,
@@ -104,7 +104,7 @@ export function useCreateOMManualSection() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as OMManualSection
     },
     onSuccess: (data) => {
@@ -144,7 +144,7 @@ export function useUpdateOMManualSection() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as OMManualSection
     },
     onSuccess: (data) => {
@@ -170,7 +170,7 @@ export function useDeleteOMManualSection() {
         .select('project_id')
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (data) => {
@@ -207,7 +207,7 @@ export function useReorderOMManualSections() {
           .update({ sort_order: update.sort_order, updated_at: update.updated_at })
           .eq('id', update.id)
 
-        if (error) throw error
+        if (error) {throw error}
       }
 
       return projectId
@@ -229,7 +229,7 @@ export function useOMManualVersions(projectId: string | undefined) {
   return useQuery({
     queryKey: omManualKeys.versions(projectId || ''),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('om_manual_versions')
@@ -238,7 +238,7 @@ export function useOMManualVersions(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('version_number', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as OMManualVersion[]
     },
     enabled: !!projectId,
@@ -288,7 +288,7 @@ export function useGenerateOMManual() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as OMManualVersion
     },
     onSuccess: (data) => {
@@ -367,7 +367,7 @@ export function useInitializeOMManualSections() {
         .insert(sectionsToInsert)
         .select()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as OMManualSection[]
     },
     onSuccess: (data) => {

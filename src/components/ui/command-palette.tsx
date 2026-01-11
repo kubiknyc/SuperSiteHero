@@ -190,7 +190,7 @@ function getRecentSearches(): RecentSearch[] {
 }
 
 function saveRecentSearch(query: string) {
-  if (!query || query.length < 2) return
+  if (!query || query.length < 2) {return}
   try {
     const recent = getRecentSearches().filter((s) => s.query !== query)
     const updated = [{ query, timestamp: Date.now() }, ...recent].slice(0, MAX_RECENT_SEARCHES)
@@ -227,8 +227,8 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   const { data: searchResults, isLoading: searching } = useQuery({
     queryKey: ['global-search', query, typeFilter, userProfile?.company_id],
     queryFn: async (): Promise<SearchResult[]> => {
-      if (!query || query.length < 2) return []
-      if (!userProfile?.company_id) return []
+      if (!query || query.length < 2) {return []}
+      if (!userProfile?.company_id) {return []}
 
       const searchTerm = `%${query}%`
       const results: SearchResult[] = []
@@ -422,7 +422,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
 
   // Filter quick actions based on query
   const filteredActions = useMemo(() => {
-    if (!query) return QUICK_ACTIONS
+    if (!query) {return QUICK_ACTIONS}
     const lowerQuery = query.toLowerCase()
     return QUICK_ACTIONS.filter(
       (action) =>
@@ -453,7 +453,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   // Handle keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!open) return
+      if (!open) {return}
 
       switch (e.key) {
         case 'ArrowDown':

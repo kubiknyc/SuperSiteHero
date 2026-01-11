@@ -256,7 +256,7 @@ async function fetchBudgetAlerts(companyId: string): Promise<SystemAlert[]> {
       .limit(20)
 
     projectBudgets?.forEach((budget) => {
-      if (!budget.current_budget || budget.current_budget === 0) return
+      if (!budget.current_budget || budget.current_budget === 0) {return}
 
       const percentUsed = (budget.spent_amount / budget.current_budget) * 100
 
@@ -382,7 +382,7 @@ export function useAlertSystem(projectId?: string) {
 
       allAlerts.sort((a, b) => {
         const severityDiff = severityOrder[a.severity] - severityOrder[b.severity]
-        if (severityDiff !== 0) return severityDiff
+        if (severityDiff !== 0) {return severityDiff}
         return b.createdAt.getTime() - a.createdAt.getTime()
       })
 

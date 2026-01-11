@@ -131,7 +131,7 @@ export function useDrawingRegister(projectId: string | undefined) {
   return useQuery({
     queryKey: ['drawing-register', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('documents')
@@ -143,7 +143,7 @@ export function useDrawingRegister(projectId: string | undefined) {
         .order('drawing_discipline', { ascending: true })
         .order('drawing_number', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as DrawingDocument[]
     },
     enabled: !!projectId,
@@ -157,7 +157,7 @@ export function useDrawingRevisionHistory(drawingNumber: string | undefined, pro
   return useQuery({
     queryKey: ['drawing-revisions', projectId, drawingNumber],
     queryFn: async () => {
-      if (!projectId || !drawingNumber) throw new Error('Project ID and drawing number required')
+      if (!projectId || !drawingNumber) {throw new Error('Project ID and drawing number required')}
 
       const { data, error } = await supabase
         .from('documents')
@@ -167,7 +167,7 @@ export function useDrawingRevisionHistory(drawingNumber: string | undefined, pro
         .is('deleted_at', null)
         .order('revision_number', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as DrawingDocument[]
     },
     enabled: !!projectId && !!drawingNumber,
@@ -185,7 +185,7 @@ export function useDocumentRevisions(documentId: string | undefined) {
   return useQuery({
     queryKey: ['document-revisions', documentId],
     queryFn: async () => {
-      if (!documentId) throw new Error('Document ID required')
+      if (!documentId) {throw new Error('Document ID required')}
 
       const { data, error } = await supabase
         .from('document_revisions')
@@ -193,7 +193,7 @@ export function useDocumentRevisions(documentId: string | undefined) {
         .eq('document_id', documentId)
         .order('revision_number', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as DocumentRevision[]
     },
     enabled: !!documentId,
@@ -236,7 +236,7 @@ export function useCreateDocumentRevision() {
         p_asi_number: asiNumber || null,
       })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as string // Returns new revision ID
     },
     onSuccess: (_, variables) => {
@@ -258,7 +258,7 @@ export function useTransmittals(projectId: string | undefined) {
   return useQuery({
     queryKey: ['transmittals', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('document_transmittals')
@@ -270,7 +270,7 @@ export function useTransmittals(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('date_sent', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as DocumentTransmittal[]
     },
     enabled: !!projectId,
@@ -284,7 +284,7 @@ export function useTransmittal(transmittalId: string | undefined) {
   return useQuery({
     queryKey: ['transmittals', transmittalId],
     queryFn: async () => {
-      if (!transmittalId) throw new Error('Transmittal ID required')
+      if (!transmittalId) {throw new Error('Transmittal ID required')}
 
       const { data, error } = await supabase
         .from('document_transmittals')
@@ -299,7 +299,7 @@ export function useTransmittal(transmittalId: string | undefined) {
         .eq('id', transmittalId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as DocumentTransmittal
     },
     enabled: !!transmittalId,
@@ -337,7 +337,7 @@ export function useCreateTransmittal() {
         notes?: string
       }>
     }) => {
-      if (!userProfile?.company_id) throw new Error('User company not found')
+      if (!userProfile?.company_id) {throw new Error('User company not found')}
 
       // Get next transmittal number
       const { data: transmittalNumber, error: numError } = await supabase.rpc(
@@ -345,7 +345,7 @@ export function useCreateTransmittal() {
         { p_project_id: projectId }
       )
 
-      if (numError) throw numError
+      if (numError) {throw numError}
 
       // Create transmittal
       const { data: transmittal, error: transmittalError } = await supabase
@@ -363,7 +363,7 @@ export function useCreateTransmittal() {
         .select()
         .single()
 
-      if (transmittalError) throw transmittalError
+      if (transmittalError) {throw transmittalError}
 
       // Add items
       if (items.length > 0) {
@@ -382,7 +382,7 @@ export function useCreateTransmittal() {
             }))
           )
 
-        if (itemsError) throw itemsError
+        if (itemsError) {throw itemsError}
       }
 
       return transmittal as DocumentTransmittal
@@ -422,7 +422,7 @@ export function useUpdateTransmittalStatus() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as DocumentTransmittal
     },
     onSuccess: (data) => {
@@ -443,7 +443,7 @@ export function useDrawingsAffectedByASI(asiNumber: string | undefined, projectI
   return useQuery({
     queryKey: ['drawings-by-asi', projectId, asiNumber],
     queryFn: async () => {
-      if (!projectId || !asiNumber) throw new Error('Project ID and ASI number required')
+      if (!projectId || !asiNumber) {throw new Error('Project ID and ASI number required')}
 
       const { data, error } = await supabase
         .from('documents')
@@ -453,7 +453,7 @@ export function useDrawingsAffectedByASI(asiNumber: string | undefined, projectI
         .is('deleted_at', null)
         .order('drawing_number', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as DrawingDocument[]
     },
     enabled: !!projectId && !!asiNumber,
@@ -467,7 +467,7 @@ export function useProjectASIs(projectId: string | undefined) {
   return useQuery({
     queryKey: ['project-asis', projectId],
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('documents')
@@ -476,7 +476,7 @@ export function useProjectASIs(projectId: string | undefined) {
         .not('asi_number', 'is', null)
         .is('deleted_at', null)
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Get unique ASI numbers with dates
       const asiMap = new Map<string, string>()
@@ -530,7 +530,7 @@ export function useCompareRevisions(
         .eq('document_id', documentId)
         .in('id', [oldRevisionId, newRevisionId])
 
-      if (error) throw error
+      if (error) {throw error}
       if (!revisions || revisions.length !== 2) {
         throw new Error('Could not find both revisions')
       }
@@ -576,7 +576,7 @@ export function useRevisionStats(documentId: string | undefined) {
   return useQuery({
     queryKey: ['revision-stats', documentId],
     queryFn: async () => {
-      if (!documentId) throw new Error('Document ID required')
+      if (!documentId) {throw new Error('Document ID required')}
 
       const { data: revisions, error } = await supabase
         .from('document_revisions')
@@ -584,7 +584,7 @@ export function useRevisionStats(documentId: string | undefined) {
         .eq('document_id', documentId)
         .order('revision_number', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       const totalRevisions = revisions.length
       const currentRevision = revisions[revisions.length - 1]
@@ -656,7 +656,7 @@ export function useBulkCreateRevisions() {
           p_asi_number: revision.asiNumber || null,
         })
 
-        if (error) throw error
+        if (error) {throw error}
         results.push(data as string)
       }
 

@@ -149,7 +149,7 @@ interface XERTable {
 }
 
 function parseXERLine(line: string, fields: string[]): XERRecord | null {
-  if (!line.startsWith('%R')) return null
+  if (!line.startsWith('%R')) {return null}
   const values = line.substring(2).split('\t')
   const record: XERRecord = {}
   fields.forEach((field, index) => {
@@ -159,7 +159,7 @@ function parseXERLine(line: string, fields: string[]): XERRecord | null {
 }
 
 function parseXERDate(dateStr: string): string {
-  if (!dateStr) return ''
+  if (!dateStr) {return ''}
   try {
     // P6 date format: "2024-01-15 08:00" or "2024-01-15"
     const datePart = dateStr.split(' ')[0]
@@ -170,7 +170,7 @@ function parseXERDate(dateStr: string): string {
 }
 
 function parseXERNumber(numStr: string, defaultValue = 0): number {
-  if (!numStr) return defaultValue
+  if (!numStr) {return defaultValue}
   const parsed = parseFloat(numStr)
   return isNaN(parsed) ? defaultValue : parsed
 }
@@ -213,13 +213,13 @@ export function parseXER(xerContent: string): ParsedP6Data {
         // Field definitions
         currentFields = line.substring(2).split('\t').map((f) => f.trim())
         const table = tables.get(currentTable)
-        if (table) table.fields = currentFields
+        if (table) {table.fields = currentFields}
       } else if (line.startsWith('%R') && currentTable) {
         // Record
         const table = tables.get(currentTable)
         if (table) {
           const record = parseXERLine(line, table.fields)
-          if (record) table.records.push(record)
+          if (record) {table.records.push(record)}
         }
       }
     }
@@ -416,7 +416,7 @@ function getElementText(parent: Element, tagName: string): string | undefined {
 
 function getElementNumber(parent: Element, tagName: string, defaultValue = 0): number {
   const text = getElementText(parent, tagName)
-  if (!text) return defaultValue
+  if (!text) {return defaultValue}
   const parsed = parseFloat(text)
   return isNaN(parsed) ? defaultValue : parsed
 }
@@ -427,7 +427,7 @@ function getElementBool(parent: Element, tagName: string): boolean {
 }
 
 function parseP6XMLDate(dateStr: string | undefined): string {
-  if (!dateStr) return ''
+  if (!dateStr) {return ''}
   try {
     // P6 XML date format: "2024-01-15T08:00:00" or just "2024-01-15"
     const datePart = dateStr.split('T')[0]

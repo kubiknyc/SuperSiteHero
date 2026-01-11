@@ -51,7 +51,7 @@ export function useCostCodes(projectId: string | undefined) {
   return useQuery({
     queryKey: jobCostingKeys.costCodeList(projectId || ''),
     queryFn: async () => {
-      if (!projectId) return []
+      if (!projectId) {return []}
 
       const { data, error } = await supabase
         .from('cost_codes')
@@ -60,7 +60,7 @@ export function useCostCodes(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('code', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       return data as CostCode[]
     },
@@ -92,7 +92,7 @@ export function useFilteredCostCodes(filters: CostCodeFilters) {
 
       const { data, error } = await query.order('code', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Filter by variance if requested
       let result = data as CostCode[]
@@ -112,7 +112,7 @@ export function useCostCodeDetail(id: string | undefined) {
   return useQuery({
     queryKey: jobCostingKeys.costCodeDetail(id || ''),
     queryFn: async () => {
-      if (!id) return null
+      if (!id) {return null}
 
       const { data, error } = await supabase
         .from('cost_codes')
@@ -120,7 +120,7 @@ export function useCostCodeDetail(id: string | undefined) {
         .eq('id', id)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return data as CostCode
     },
@@ -139,7 +139,7 @@ export function useJobCostSummary(projectId: string | undefined) {
   return useQuery({
     queryKey: jobCostingKeys.summary(projectId || ''),
     queryFn: async () => {
-      if (!projectId) return null
+      if (!projectId) {return null}
 
       // Get all cost codes
       const { data: costCodes, error: ccError } = await supabase
@@ -149,7 +149,7 @@ export function useJobCostSummary(projectId: string | undefined) {
         .eq('is_active', true)
         .is('deleted_at', null)
 
-      if (ccError) throw ccError
+      if (ccError) {throw ccError}
 
       // Get project info
       const { data: project } = await supabase
@@ -165,7 +165,7 @@ export function useJobCostSummary(projectId: string | undefined) {
         .eq('project_id', projectId)
         .is('deleted_at', null)
 
-      if (txError) throw txError
+      if (txError) {throw txError}
 
       // Calculate totals by cost code and type
       const costCodeTotals = new Map<
@@ -313,7 +313,7 @@ export function useCostTransactions(projectId: string | undefined) {
   return useQuery({
     queryKey: jobCostingKeys.transactions(projectId || ''),
     queryFn: async () => {
-      if (!projectId) return []
+      if (!projectId) {return []}
 
       const { data, error } = await supabase
         .from('cost_transactions')
@@ -329,7 +329,7 @@ export function useCostTransactions(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('transaction_date', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       return data
     },
@@ -348,7 +348,7 @@ export function usePurchaseOrders(projectId: string | undefined) {
   return useQuery({
     queryKey: jobCostingKeys.purchaseOrders(projectId || ''),
     queryFn: async () => {
-      if (!projectId) return []
+      if (!projectId) {return []}
 
       // This assumes a purchase_orders table exists
       // If not, return empty array
@@ -380,7 +380,7 @@ export function useSubcontracts(projectId: string | undefined) {
   return useQuery({
     queryKey: jobCostingKeys.subcontracts(projectId || ''),
     queryFn: async () => {
-      if (!projectId) return []
+      if (!projectId) {return []}
 
       // Get subcontracts from the subcontractors table with project association
       try {
@@ -450,7 +450,7 @@ export function useCommittedCostSummary(projectId: string | undefined) {
   return useQuery({
     queryKey: jobCostingKeys.committedSummary(projectId || ''),
     queryFn: async (): Promise<CommittedCostSummary | null> => {
-      if (!projectId) return null
+      if (!projectId) {return null}
 
       const pos = purchaseOrders || []
       const subs = subcontracts || []
@@ -532,7 +532,7 @@ export function useCreateCostCode() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return costCode as CostCode
     },
     onSuccess: (data) => {
@@ -578,7 +578,7 @@ export function useUpdateCostCode() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return costCode as CostCode
     },
     onSuccess: (data) => {
@@ -633,7 +633,7 @@ export function useAddCostTransaction() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return transaction
     },
     onSuccess: (data) => {
@@ -676,7 +676,7 @@ export function useImportBudgetFromEstimate() {
         .select('*')
         .eq('estimate_id', estimateId)
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       // Create cost codes from estimate items
       const costCodes = await Promise.all(
@@ -697,7 +697,7 @@ export function useImportBudgetFromEstimate() {
             .select()
             .single()
 
-          if (error) throw error
+          if (error) {throw error}
           return costCode
         })
       )

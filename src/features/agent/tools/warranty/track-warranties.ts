@@ -240,10 +240,10 @@ export const trackWarrantiesTool = createTool<TrackWarrantiesInput, TrackWarrant
 
       const catSummary = categoryMap.get(category)!
       catSummary.total++
-      if (status === 'active') catSummary.active++
-      else if (status === 'expiring_soon') catSummary.expiring_soon++
-      else if (status === 'expired') catSummary.expired++
-      else catSummary.pending++
+      if (status === 'active') {catSummary.active++}
+      else if (status === 'expiring_soon') {catSummary.expiring_soon++}
+      else if (status === 'expired') {catSummary.expired++}
+      else {catSummary.pending++}
 
       // Add to appropriate lists
       if (status === 'expired') {

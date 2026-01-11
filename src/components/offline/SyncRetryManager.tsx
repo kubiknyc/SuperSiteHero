@@ -71,20 +71,20 @@ function formatRelativeTime(timestamp: number): string {
   const minutes = Math.floor(seconds / 60)
   const hours = Math.floor(minutes / 60)
 
-  if (hours > 0) return `${hours}h ago`
-  if (minutes > 0) return `${minutes}m ago`
-  if (seconds > 10) return `${seconds}s ago`
+  if (hours > 0) {return `${hours}h ago`}
+  if (minutes > 0) {return `${minutes}m ago`}
+  if (seconds > 10) {return `${seconds}s ago`}
   return 'Just now'
 }
 
 function formatCountdown(timestamp: number): string {
   const diff = timestamp - Date.now()
-  if (diff <= 0) return 'Now'
+  if (diff <= 0) {return 'Now'}
 
   const seconds = Math.floor(diff / 1000)
   const minutes = Math.floor(seconds / 60)
 
-  if (minutes > 0) return `in ${minutes}m ${seconds % 60}s`
+  if (minutes > 0) {return `in ${minutes}m ${seconds % 60}s`}
   return `in ${seconds}s`
 }
 

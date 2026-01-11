@@ -161,7 +161,7 @@ export class TaskScheduler {
    * Stop the scheduler
    */
   stop(): void {
-    if (!this.state.isRunning) return
+    if (!this.state.isRunning) {return}
 
     logger.info('[Scheduler] Stopping scheduler')
     this.state.isRunning = false
@@ -258,7 +258,7 @@ export class TaskScheduler {
    */
   setJobEnabled(jobId: string, enabled: boolean): void {
     const job = this.state.scheduledJobs.get(jobId)
-    if (!job) return
+    if (!job) {return}
 
     job.isEnabled = enabled
 
@@ -285,7 +285,7 @@ export class TaskScheduler {
    */
   updateJobSchedule(jobId: string, schedule: ScheduleConfig): void {
     const job = this.state.scheduledJobs.get(jobId)
-    if (!job) return
+    if (!job) {return}
 
     job.schedule = schedule
     job.nextRunAt = this.calculateNextRunTime(schedule)
@@ -399,7 +399,7 @@ export class TaskScheduler {
     const now = new Date()
     const [hours, minutes] = schedule.time.split(':').map(Number)
 
-    let nextRun = new Date(now)
+    const nextRun = new Date(now)
     nextRun.setHours(hours, minutes, 0, 0)
 
     // If the time has already passed today, start from tomorrow
@@ -462,7 +462,7 @@ export class TaskScheduler {
     const now = new Date()
 
     for (const [jobId, job] of this.state.scheduledJobs) {
-      if (!job.isEnabled || !job.nextRunAt) continue
+      if (!job.isEnabled || !job.nextRunAt) {continue}
 
       const nextRun = new Date(job.nextRunAt)
       if (nextRun < now && !this.state.timers.has(jobId)) {
@@ -480,7 +480,7 @@ export class TaskScheduler {
    * Get active projects for the company
    */
   private async getActiveProjects(): Promise<Array<{ id: string; name: string }>> {
-    if (!this.companyId) return []
+    if (!this.companyId) {return []}
 
     const { data, error } = await supabase
       .from('projects')
@@ -517,13 +517,13 @@ export class TaskScheduler {
 
     return Array.from(this.state.scheduledJobs.values())
       .filter((job) => {
-        if (!job.isEnabled || !job.nextRunAt) return false
+        if (!job.isEnabled || !job.nextRunAt) {return false}
         const nextRun = new Date(job.nextRunAt)
         return nextRun <= cutoff
       })
       .sort((a, b) => {
-        if (!a.nextRunAt) return 1
-        if (!b.nextRunAt) return -1
+        if (!a.nextRunAt) {return 1}
+        if (!b.nextRunAt) {return -1}
         return new Date(a.nextRunAt).getTime() - new Date(b.nextRunAt).getTime()
       })
   }

@@ -90,12 +90,12 @@ export function useSubcontracts(filters: SubcontractFilters = {}) {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Get payment totals for each contract
       const contractIds = data?.map((c: any) => c.id) || []
 
-      if (contractIds.length === 0) return []
+      if (contractIds.length === 0) {return []}
 
       const { data: payments } = await db
         .from('subcontract_payments')
@@ -171,7 +171,7 @@ export function useSubcontract(id: string | undefined) {
         .eq('id', id)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Get counts
       const [{ count: changeOrdersCount }, { count: paymentsCount }] = await Promise.all([
@@ -194,8 +194,8 @@ export function useSubcontract(id: string | undefined) {
       let invoicedAmount = 0
       let paidAmount = 0
       paymentData?.forEach((p: any) => {
-        if (p.status !== 'rejected') invoicedAmount += p.net_payment_due || 0
-        if (p.status === 'paid') paidAmount += p.paid_amount || 0
+        if (p.status !== 'rejected') {invoicedAmount += p.net_payment_due || 0}
+        if (p.status === 'paid') {paidAmount += p.paid_amount || 0}
       })
 
       return {
@@ -230,7 +230,7 @@ export function useSubcontractsByProject(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('contract_number', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Subcontract[]
     },
     enabled: !!projectId && !!userProfile?.company_id,
@@ -258,7 +258,7 @@ export function useSubcontractSummary(projectId?: string) {
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       const summary: SubcontractSummary = {
         totalContracts: data?.length || 0,
@@ -311,7 +311,7 @@ export function useSubcontractAmendments(subcontractId: string | undefined) {
         .eq('subcontract_id', subcontractId)
         .order('amendment_number', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SubcontractAmendment[]
     },
     enabled: !!subcontractId,
@@ -335,7 +335,7 @@ export function useSubcontractPayments(subcontractId: string | undefined) {
         .eq('subcontract_id', subcontractId)
         .order('payment_number', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SubcontractPayment[]
     },
     enabled: !!subcontractId,
@@ -362,7 +362,7 @@ export function useSubcontractChangeOrders(subcontractId: string | undefined) {
         .eq('subcontract_id', subcontractId)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SubcontractChangeOrder[]
     },
     enabled: !!subcontractId,
@@ -393,7 +393,7 @@ export function useCreateSubcontract() {
       let nextNumber = 1
       if (existing?.[0]?.contract_number) {
         const match = existing[0].contract_number.match(/SC-(\d+)/)
-        if (match) nextNumber = parseInt(match[1]) + 1
+        if (match) {nextNumber = parseInt(match[1]) + 1}
       }
 
       const contractNumber = `SC-${String(nextNumber).padStart(3, '0')}`
@@ -424,7 +424,7 @@ export function useCreateSubcontract() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Subcontract
     },
     onSuccess: () => {
@@ -459,7 +459,7 @@ export function useCreateSubcontractFromBid() {
         .eq('id', dto.submissionId)
         .single()
 
-      if (subError) throw subError
+      if (subError) {throw subError}
 
       // Generate contract number
       const { data: existing } = await db
@@ -472,7 +472,7 @@ export function useCreateSubcontractFromBid() {
       let nextNumber = 1
       if (existing?.[0]?.contract_number) {
         const match = existing[0].contract_number.match(/SC-(\d+)/)
-        if (match) nextNumber = parseInt(match[1]) + 1
+        if (match) {nextNumber = parseInt(match[1]) + 1}
       }
 
       const contractNumber = `SC-${String(nextNumber).padStart(3, '0')}`
@@ -524,7 +524,7 @@ export function useCreateSubcontractFromBid() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Subcontract
     },
     onSuccess: () => {
@@ -562,7 +562,7 @@ export function useUpdateSubcontract() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Subcontract
     },
     onSuccess: (data) => {
@@ -608,7 +608,7 @@ export function useUpdateSubcontractStatus() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as Subcontract
     },
     onSuccess: (data) => {
@@ -655,7 +655,7 @@ export function useCreateAmendment() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as SubcontractAmendment
     },
     onSuccess: (_, { subcontractId }) => {
@@ -691,7 +691,7 @@ export function useExecuteAmendment() {
         .eq('id', amendmentId)
         .single()
 
-      if (amendError) throw amendError
+      if (amendError) {throw amendError}
 
       // Get current subcontract
       const { data: contract, error: contractError } = await db
@@ -700,7 +700,7 @@ export function useExecuteAmendment() {
         .eq('id', subcontractId)
         .single()
 
-      if (contractError) throw contractError
+      if (contractError) {throw contractError}
 
       // Update subcontract
       const updates: any = {
@@ -731,7 +731,7 @@ export function useExecuteAmendment() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (_, { subcontractId }) => {
@@ -759,7 +759,7 @@ export function useDeleteSubcontract() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', id)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: subcontractKeys.lists() })
@@ -811,6 +811,6 @@ export function formatContractValue(value: number): string {
  * Calculate percent complete
  */
 export function calculatePercentComplete(invoiced: number, contractValue: number): number {
-  if (contractValue <= 0) return 0
+  if (contractValue <= 0) {return 0}
   return Math.min(100, Math.round((invoiced / contractValue) * 100))
 }

@@ -115,7 +115,7 @@ export function useShopDrawings(projectId: string | undefined, filters?: ShopDra
   return useQuery({
     queryKey: shopDrawingKeys.list(projectId || '', filters),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       let query = supabase
         .from('submittals')
@@ -159,7 +159,7 @@ export function useShopDrawings(projectId: string | undefined, filters?: ShopDra
         .order('spec_section', { ascending: true })
         .order('drawing_number', { ascending: true })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Add computed fields
       const shopDrawings = (data as ShopDrawingWithDetails[]).map((sd) => ({
@@ -196,7 +196,7 @@ export function useShopDrawing(shopDrawingId: string | undefined) {
   return useQuery({
     queryKey: shopDrawingKeys.detail(shopDrawingId || ''),
     queryFn: async () => {
-      if (!shopDrawingId) throw new Error('Shop drawing ID required')
+      if (!shopDrawingId) {throw new Error('Shop drawing ID required')}
 
       const { data, error } = await supabase
         .from('submittals')
@@ -211,7 +211,7 @@ export function useShopDrawing(shopDrawingId: string | undefined) {
         .eq('submittal_type', 'shop_drawing')
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       const sd = data as ShopDrawingWithDetails
       return {
@@ -241,7 +241,7 @@ export function useShopDrawingRevisions(shopDrawingId: string | undefined) {
   return useQuery({
     queryKey: shopDrawingKeys.revisions(shopDrawingId || ''),
     queryFn: async () => {
-      if (!shopDrawingId) throw new Error('Shop drawing ID required')
+      if (!shopDrawingId) {throw new Error('Shop drawing ID required')}
 
       // Get the current shop drawing to find its drawing_number
       const { data: current, error: currentError } = await supabase
@@ -250,8 +250,8 @@ export function useShopDrawingRevisions(shopDrawingId: string | undefined) {
         .eq('id', shopDrawingId)
         .single()
 
-      if (currentError) throw currentError
-      if (!current?.drawing_number) return []
+      if (currentError) {throw currentError}
+      if (!current?.drawing_number) {return []}
 
       // Get all revisions with the same drawing_number
       const { data, error } = await supabase
@@ -263,7 +263,7 @@ export function useShopDrawingRevisions(shopDrawingId: string | undefined) {
         .is('deleted_at', null)
         .order('revision_number', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as ShopDrawing[]
     },
     enabled: !!shopDrawingId,
@@ -314,7 +314,7 @@ export function useCreateShopDrawing() {
 
   return useMutation({
     mutationFn: async (data: CreateShopDrawingDTO) => {
-      if (!userProfile?.company_id) throw new Error('Company ID required')
+      if (!userProfile?.company_id) {throw new Error('Company ID required')}
 
       // Generate drawing number
       const { data: countData } = await supabase
@@ -350,7 +350,7 @@ export function useCreateShopDrawing() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return created as ShopDrawing
     },
     onSuccess: (data) => {
@@ -386,7 +386,7 @@ export function useUpdateShopDrawing() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as ShopDrawing
     },
     onSuccess: (data) => {
@@ -409,7 +409,7 @@ export function useDeleteShopDrawing() {
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', shopDrawingId)
 
-      if (error) throw error
+      if (error) {throw error}
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: shopDrawingKeys.all })
@@ -443,7 +443,7 @@ export function useTransitionShopDrawingStatus() {
         .eq('id', id)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       const currentStatus = current.review_status as SubmittalReviewStatus
 
@@ -494,7 +494,7 @@ export function useTransitionShopDrawingStatus() {
         `)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Create review record if it's a review action
       if (['approved', 'approved_as_noted', 'revise_resubmit', 'rejected'].includes(newStatus)) {
@@ -562,7 +562,7 @@ export function useCreateShopDrawingRevision() {
       shopDrawingId: string
       changeDescription?: string
     }) => {
-      if (!userProfile?.id) throw new Error('User not authenticated')
+      if (!userProfile?.id) {throw new Error('User not authenticated')}
 
       // Get current shop drawing
       const { data: current, error: fetchError } = await supabase
@@ -571,7 +571,7 @@ export function useCreateShopDrawingRevision() {
         .eq('id', shopDrawingId)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       // Update current shop drawing for new revision
       const { data, error } = await supabase
@@ -591,7 +591,7 @@ export function useCreateShopDrawingRevision() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Create history entry
       await supabase.from('submittal_history').insert({

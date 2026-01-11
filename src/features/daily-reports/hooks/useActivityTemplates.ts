@@ -174,7 +174,7 @@ export function useActivityTemplates(filters: ActivityTemplateFilters = {}) {
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as ActivityTemplate[];
     },
   });
@@ -198,7 +198,7 @@ export function useActivityTemplate(templateId: string | undefined) {
   return useQuery({
     queryKey: activityTemplateKeys.detail(templateId || ''),
     queryFn: async () => {
-      if (!templateId) throw new Error('Template ID required');
+      if (!templateId) {throw new Error('Template ID required');}
 
       const { data, error } = await supabase
         .from('activity_templates')
@@ -206,7 +206,7 @@ export function useActivityTemplate(templateId: string | undefined) {
         .eq('id', templateId)
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as ActivityTemplate;
     },
     enabled: !!templateId,
@@ -231,7 +231,7 @@ export function useActivityTemplateCategories(projectId?: string) {
 
       const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {throw error;}
 
       // Count templates per category
       const categoryCounts: Record<ActivityCategory, number> = {} as Record<ActivityCategory, number>;
@@ -263,7 +263,7 @@ export function usePopularActivityTemplates(projectId: string, limit = 10) {
         .order('usage_count', { ascending: false })
         .limit(limit);
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as ActivityTemplate[];
     },
     enabled: !!projectId,
@@ -292,7 +292,7 @@ export function useCreateActivityTemplate() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as ActivityTemplate;
     },
     onSuccess: (data) => {
@@ -319,7 +319,7 @@ export function useUpdateActivityTemplate() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data as ActivityTemplate;
     },
     onSuccess: (data) => {
@@ -342,7 +342,7 @@ export function useDeleteActivityTemplate() {
         .delete()
         .eq('id', templateId);
 
-      if (error) throw error;
+      if (error) {throw error;}
       return templateId;
     },
     onSuccess: () => {
@@ -370,7 +370,7 @@ export function useIncrementTemplateUsage() {
           .update({ usage_count: supabase.rpc('increment', { x: 1 }) as any })
           .eq('id', templateId);
 
-        if (updateError) throw updateError;
+        if (updateError) {throw updateError;}
       }
 
       return data;
@@ -419,7 +419,7 @@ export function useApplyActivityTemplate() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {throw error;}
       return data;
     },
   });

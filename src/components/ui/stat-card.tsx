@@ -51,7 +51,7 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
     return id
   }, [color])
 
-  if (!data || data.length < 2) return null
+  if (!data || data.length < 2) {return null}
 
   const max = Math.max(...data)
   const min = Math.min(...data)

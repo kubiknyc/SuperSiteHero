@@ -43,7 +43,7 @@ export function useWarrantyClaims(projectId: string | undefined) {
   return useQuery({
     queryKey: warrantyClaimKeys.claims(projectId || ''),
     queryFn: async () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
 
       const { data, error } = await supabase
         .from('warranty_claims')
@@ -58,7 +58,7 @@ export function useWarrantyClaims(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WarrantyClaimWithDetails[]
     },
     enabled: !!projectId,
@@ -72,7 +72,7 @@ export function useWarrantyClaimsByWarranty(warrantyId: string | undefined) {
   return useQuery({
     queryKey: warrantyClaimKeys.byWarranty(warrantyId || ''),
     queryFn: async () => {
-      if (!warrantyId) throw new Error('Warranty ID required')
+      if (!warrantyId) {throw new Error('Warranty ID required')}
 
       const { data, error } = await supabase
         .from('warranty_claims')
@@ -86,7 +86,7 @@ export function useWarrantyClaimsByWarranty(warrantyId: string | undefined) {
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WarrantyClaimWithDetails[]
     },
     enabled: !!warrantyId,
@@ -100,7 +100,7 @@ export function useWarrantyClaim(claimId: string | undefined) {
   return useQuery({
     queryKey: warrantyClaimKeys.claim(claimId || ''),
     queryFn: async () => {
-      if (!claimId) throw new Error('Claim ID required')
+      if (!claimId) {throw new Error('Claim ID required')}
 
       const { data: claim, error: claimError } = await supabase
         .from('warranty_claims')
@@ -114,7 +114,7 @@ export function useWarrantyClaim(claimId: string | undefined) {
         .eq('id', claimId)
         .single()
 
-      if (claimError) throw claimError
+      if (claimError) {throw claimError}
 
       // Fetch activities
       const { data: activities, error: activitiesError } = await supabase
@@ -123,7 +123,7 @@ export function useWarrantyClaim(claimId: string | undefined) {
         .eq('warranty_claim_id', claimId)
         .order('created_at', { ascending: false })
 
-      if (activitiesError) throw activitiesError
+      if (activitiesError) {throw activitiesError}
 
       return {
         ...claim,
@@ -165,7 +165,7 @@ export function useCreateWarrantyClaim() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Create initial activity
       await supabase.from('warranty_claim_activities').insert({
@@ -213,7 +213,7 @@ export function useUpdateWarrantyClaim() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Create activity for status change
       if (updates.status && updates.status !== currentClaim?.status) {
@@ -254,7 +254,7 @@ export function useDeleteWarrantyClaim() {
         .select('project_id, warranty_id')
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data
     },
     onSuccess: (data) => {
@@ -302,7 +302,7 @@ export function useSubmitWarrantyClaim() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Create activity
       await supabase.from('warranty_claim_activities').insert({
@@ -355,7 +355,7 @@ export function useRecordContractorResponse() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Create activity
       await supabase.from('warranty_claim_activities').insert({
@@ -413,7 +413,7 @@ export function useResolveWarrantyClaim() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Create activity
       await supabase.from('warranty_claim_activities').insert({
@@ -462,7 +462,7 @@ export function useDenyWarrantyClaim() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Create activity
       await supabase.from('warranty_claim_activities').insert({
@@ -506,7 +506,7 @@ export function useOwnerSignOffClaim() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Create activity
       await supabase.from('warranty_claim_activities').insert({
@@ -539,7 +539,7 @@ export function useWarrantyClaimActivities(claimId: string | undefined) {
   return useQuery({
     queryKey: warrantyClaimKeys.activities(claimId || ''),
     queryFn: async () => {
-      if (!claimId) throw new Error('Claim ID required')
+      if (!claimId) {throw new Error('Claim ID required')}
 
       const { data, error } = await supabase
         .from('warranty_claim_activities')
@@ -547,7 +547,7 @@ export function useWarrantyClaimActivities(claimId: string | undefined) {
         .eq('warranty_claim_id', claimId)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WarrantyClaimActivity[]
     },
     enabled: !!claimId,
@@ -583,7 +583,7 @@ export function useAddClaimActivity() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as WarrantyClaimActivity
     },
     onSuccess: (data) => {

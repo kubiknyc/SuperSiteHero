@@ -165,7 +165,7 @@ export function DependencyEditor({
 
   // Filter predecessors based on search
   const filteredPredecessors = useMemo(() => {
-    if (!predecessorSearch.trim()) return availablePredecessors
+    if (!predecessorSearch.trim()) {return availablePredecessors}
     const search = predecessorSearch.toLowerCase()
     return availablePredecessors.filter(t =>
       t.title.toLowerCase().includes(search) ||
@@ -326,7 +326,7 @@ export function DependencyEditor({
                 <div className="space-y-3">
                   {dependencies.map(dep => {
                     const predTask = getTaskById(dep.predecessorId)
-                    if (!predTask) return null
+                    if (!predTask) {return null}
 
                     return (
                       <div

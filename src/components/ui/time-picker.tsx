@@ -50,7 +50,7 @@ export interface TimePickerProps {
 // ============================================================================
 
 function formatTime(time: TimeValue | null, use24Hour: boolean): string {
-  if (!time) return ''
+  if (!time) {return ''}
 
   const { hours, minutes } = time
 
@@ -64,31 +64,31 @@ function formatTime(time: TimeValue | null, use24Hour: boolean): string {
 }
 
 function parseTime(timeStr: string, use24Hour: boolean): TimeValue | null {
-  if (!timeStr) return null
+  if (!timeStr) {return null}
 
   const cleanStr = timeStr.trim().toUpperCase()
 
   if (use24Hour) {
     const match = cleanStr.match(/^(\d{1,2}):(\d{2})$/)
-    if (!match) return null
+    if (!match) {return null}
 
     const hours = parseInt(match[1], 10)
     const minutes = parseInt(match[2], 10)
 
-    if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) return null
+    if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59) {return null}
 
     return { hours, minutes }
   }
 
   // 12-hour format
   const match = cleanStr.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)?$/)
-  if (!match) return null
+  if (!match) {return null}
 
   let hours = parseInt(match[1], 10)
   const minutes = parseInt(match[2], 10)
   const period = match[3]
 
-  if (hours < 1 || hours > 12 || minutes < 0 || minutes > 59) return null
+  if (hours < 1 || hours > 12 || minutes < 0 || minutes > 59) {return null}
 
   if (period === 'PM' && hours !== 12) {
     hours += 12
@@ -104,12 +104,12 @@ function isTimeValid(time: TimeValue, minTime?: TimeValue, maxTime?: TimeValue):
 
   if (minTime) {
     const minMinutes = minTime.hours * 60 + minTime.minutes
-    if (timeMinutes < minMinutes) return false
+    if (timeMinutes < minMinutes) {return false}
   }
 
   if (maxTime) {
     const maxMinutes = maxTime.hours * 60 + maxTime.minutes
-    if (timeMinutes > maxMinutes) return false
+    if (timeMinutes > maxMinutes) {return false}
   }
 
   return true
@@ -241,7 +241,7 @@ export function TimePicker({
   }
 
   const handlePeriodChange = (period: 'AM' | 'PM') => {
-    if (!value) return
+    if (!value) {return}
 
     let newHours = value.hours
     if (period === 'AM' && newHours >= 12) {

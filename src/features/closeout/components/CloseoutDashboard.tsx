@@ -80,7 +80,7 @@ export function CloseoutDashboard({ projectId, className }: CloseoutDashboardPro
 
   // Handle complete milestone
   const handleCompleteMilestone = async () => {
-    if (!selectedMilestone) return
+    if (!selectedMilestone) {return}
 
     try {
       await completeMilestone.mutateAsync({
@@ -98,7 +98,7 @@ export function CloseoutDashboard({ projectId, className }: CloseoutDashboardPro
 
   // Handle owner sign-off
   const handleOwnerSignOff = async () => {
-    if (!selectedMilestone) return
+    if (!selectedMilestone) {return}
 
     try {
       await ownerSignOff.mutateAsync({
@@ -143,9 +143,9 @@ export function CloseoutDashboard({ projectId, className }: CloseoutDashboardPro
 
   // Get overall status color
   const getProgressColor = (percentage: number) => {
-    if (percentage >= 80) return 'bg-green-500'
-    if (percentage >= 50) return 'bg-yellow-500'
-    if (percentage >= 25) return 'bg-orange-500'
+    if (percentage >= 80) {return 'bg-green-500'}
+    if (percentage >= 50) {return 'bg-yellow-500'}
+    if (percentage >= 25) {return 'bg-orange-500'}
     return 'bg-red-500'
   }
 

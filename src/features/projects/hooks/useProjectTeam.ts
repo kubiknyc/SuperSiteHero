@@ -22,7 +22,7 @@ export function useProjectTeam(projectId: string | undefined) {
   return useQuery({
     queryKey: projectTeamKeys.team(projectId || ''),
     queryFn: () => {
-      if (!projectId) throw new Error('Project ID required')
+      if (!projectId) {throw new Error('Project ID required')}
       return projectTeamApi.getProjectTeam(projectId)
     },
     enabled: !!projectId,
@@ -37,7 +37,7 @@ export function useAvailableUsers(projectId: string | undefined, companyId: stri
   return useQuery({
     queryKey: projectTeamKeys.availableUsers(projectId || '', companyId || ''),
     queryFn: () => {
-      if (!projectId || !companyId) throw new Error('Project ID and Company ID required')
+      if (!projectId || !companyId) {throw new Error('Project ID and Company ID required')}
       return projectTeamApi.getAvailableUsers(projectId, companyId)
     },
     enabled: !!projectId && !!companyId,

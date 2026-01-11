@@ -152,7 +152,7 @@ export const analyzeLaborProductivityTool = createTool<AnalyzeLaborProductivityI
     const endDate = date_range_end || now.toISOString().split('T')[0]
 
     // Get labor/timekeeping data
-    let laborQuery = supabase
+    const laborQuery = supabase
       .from('daily_reports')
       .select(`
         *,
@@ -194,8 +194,8 @@ export const analyzeLaborProductivityTool = createTool<AnalyzeLaborProductivityI
     const weeklyData = new Map<string, WeeklyTrend>()
 
     let totalHours = 0
-    let totalWorkers = new Set<string>()
-    let totalDays = new Set<string>()
+    const totalWorkers = new Set<string>()
+    const totalDays = new Set<string>()
     let weatherImpactHours = 0
 
     for (const report of dailyReports || []) {
@@ -470,7 +470,7 @@ function getIndustryBenchmark(trade: string): BenchmarkData | null {
 }
 
 function calculateProductivityTrend(dailyHours: number[]): 'improving' | 'stable' | 'declining' {
-  if (dailyHours.length < 5) return 'stable'
+  if (dailyHours.length < 5) {return 'stable'}
 
   const midpoint = Math.floor(dailyHours.length / 2)
   const firstHalf = dailyHours.slice(0, midpoint)
@@ -481,8 +481,8 @@ function calculateProductivityTrend(dailyHours: number[]): 'improving' | 'stable
 
   const change = ((secondAvg - firstAvg) / firstAvg) * 100
 
-  if (change > 10) return 'improving'
-  if (change < -10) return 'declining'
+  if (change > 10) {return 'improving'}
+  if (change < -10) {return 'declining'}
   return 'stable'
 }
 
@@ -638,7 +638,7 @@ function identifyImprovements(
 }
 
 function calculateOverallIndex(byTrade: TradeProductivity[]): number {
-  if (byTrade.length === 0) return 100
+  if (byTrade.length === 0) {return 100}
 
   // Weighted average of variances from benchmark
   const totalHours = byTrade.reduce((sum, t) => sum + t.total_hours, 0)

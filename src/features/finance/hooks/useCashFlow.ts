@@ -52,7 +52,7 @@ export function useCashFlowProjection(projectId: string | undefined, options?: C
   return useQuery({
     queryKey: cashFlowKeys.projection(projectId || ''),
     queryFn: async (): Promise<CashFlowProjection | null> => {
-      if (!projectId) return null
+      if (!projectId) {return null}
 
       // Get project info
       const { data: project, error: projectError } = await supabase
@@ -61,7 +61,7 @@ export function useCashFlowProjection(projectId: string | undefined, options?: C
         .eq('id', projectId)
         .single()
 
-      if (projectError) throw projectError
+      if (projectError) {throw projectError}
 
       // Get SOV data
       const { data: sov } = await supabase
@@ -144,7 +144,7 @@ export function useCashFlowProjection(projectId: string | undefined, options?: C
 
         // Calculate actual disbursements from cost transactions
         const monthTransactions = (transactions || []).filter((tx) => {
-          if (!tx.transaction_date) return false
+          if (!tx.transaction_date) {return false}
           const txDate = parseISO(tx.transaction_date)
           return isWithinInterval(txDate, { start: monthStart, end: monthEnd })
         })
@@ -337,7 +337,7 @@ export function useMultiProjectCashFlow(projectIds: string[] | undefined) {
   return useQuery({
     queryKey: cashFlowKeys.multiProject(projectIds || []),
     queryFn: async () => {
-      if (!projectIds || projectIds.length === 0) return []
+      if (!projectIds || projectIds.length === 0) {return []}
 
       const projections = await Promise.all(
         projectIds.map(async (projectId) => {

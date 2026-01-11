@@ -394,8 +394,8 @@ function generateMonthlyForecast(
 
     // Determine confidence level
     let confidence: 'high' | 'medium' | 'low' = 'high'
-    if (i >= 2) confidence = 'medium'
-    if (i >= 4) confidence = 'low'
+    if (i >= 2) {confidence = 'medium'}
+    if (i >= 4) {confidence = 'low'}
 
     forecast.push({
       period: periodName,

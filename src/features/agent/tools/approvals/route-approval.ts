@@ -99,13 +99,13 @@ function calculateAvailability(user: {
   last_login?: string
   is_active?: boolean
 }): boolean {
-  if (!user.is_active) return false
+  if (!user.is_active) {return false}
 
   // Check if user has logged in within last 7 days
   if (user.last_login) {
     const lastLogin = new Date(user.last_login)
     const daysSinceLogin = (Date.now() - lastLogin.getTime()) / (1000 * 60 * 60 * 24)
-    if (daysSinceLogin > 7) return false
+    if (daysSinceLogin > 7) {return false}
   }
 
   return true
@@ -260,7 +260,7 @@ export const routeApprovalTool = createTool<RouteApprovalInput, RouteApprovalOut
 
       for (const member of matchingMembers) {
         const user = member.users as { id: string; full_name: string; email: string; last_sign_in_at?: string }
-        if (!user) continue
+        if (!user) {continue}
 
         const pendingCount = pendingByUser.get(user.id) || 0
         const avgResponse = avgResponseByUser.get(user.id) || 24
@@ -271,12 +271,12 @@ export const routeApprovalTool = createTool<RouteApprovalInput, RouteApprovalOut
         })
 
         let confidence = 0.5
-        let reasoning = `Matched role: ${role}`
+        const reasoning = `Matched role: ${role}`
 
         // Boost confidence based on factors
-        if (isAvailable) confidence += 0.2
-        if (pendingCount < 5) confidence += 0.15
-        if (avgResponse < 24) confidence += 0.15
+        if (isAvailable) {confidence += 0.2}
+        if (pendingCount < 5) {confidence += 0.15}
+        if (avgResponse < 24) {confidence += 0.15}
 
         approverRecommendations.push({
           user_id: user.id,

@@ -125,7 +125,9 @@ function groupRoutesByAuth(routeList: RouteConfig[]): Map<string, RouteConfig[]>
   const groups = new Map<string, RouteConfig[]>();
 
   for (const route of routeList) {
-    if (route.skip) continue;
+    if (route.skip) {
+      continue;
+    }
 
     const auth = route.auth;
     if (!groups.has(auth)) {

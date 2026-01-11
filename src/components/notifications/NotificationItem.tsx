@@ -11,7 +11,7 @@ import {
   Bell, Check, MessageSquare, FileText, Shield, DollarSign,
   Calendar, ClipboardList, CheckSquare, ChevronRight, Loader2,
   Clock, X, Eye, ExternalLink, Send, ThumbsUp, ThumbsDown,
-  AlertTriangle, Users, Folder
+  Users, Folder
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -62,23 +62,6 @@ interface NotificationItemProps {
   compact?: boolean
 }
 
-// Icon mapping for notification types
-const TYPE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  rfi: MessageSquare,
-  submittal: FileText,
-  task: CheckSquare,
-  daily_report: ClipboardList,
-  punch_item: CheckSquare,
-  safety: Shield,
-  incident: AlertTriangle,
-  payment: DollarSign,
-  schedule: Calendar,
-  approval: ThumbsUp,
-  mention: Users,
-  comment: MessageSquare,
-  document: Folder,
-  default: Bell,
-}
 
 // Priority colors
 const PRIORITY_STYLES: Record<string, { bg: string; text: string; border: string }> = {
@@ -88,19 +71,69 @@ const PRIORITY_STYLES: Record<string, { bg: string; text: string; border: string
   low: { bg: 'bg-gray-50', text: 'text-gray-600', border: '' },
 }
 
-function getIcon(type: string | null) {
-  if (!type) return Bell
+// Memoized icon renderer - renders notification type icon
+// Note: Dynamic component selection is intentional here for icon mapping
+const NotificationIcon = memo(function NotificationIcon({
+  type,
+  className
+}: {
+  type: string | null
+  className?: string
+}) {
+  // Determine which icon to render based on notification type
+  if (!type) {
+    return <Bell className={className} />
+  }
   const category = type.split('_')[0]
-  return TYPE_ICONS[category] || TYPE_ICONS.default
-}
+  switch (category) {
+    case 'rfi':
+      return <MessageSquare className={className} />
+    case 'submittal':
+      return <FileText className={className} />
+    case 'task':
+    case 'punch':
+      return <CheckSquare className={className} />
+    case 'daily':
+      return <ClipboardList className={className} />
+    case 'safety':
+    case 'incident':
+      return <Shield className={className} />
+    case 'payment':
+      return <DollarSign className={className} />
+    case 'schedule':
+      return <Calendar className={className} />
+    case 'approval':
+      return <ThumbsUp className={className} />
+    case 'mention':
+      return <Users className={className} />
+    case 'comment':
+      return <MessageSquare className={className} />
+    case 'document':
+      return <Folder className={className} />
+    default:
+      return <Bell className={className} />
+  }
+})
 
 function getNotificationCategory(type: string | null): string {
-  if (!type) return 'general'
-  if (type.includes('rfi')) return 'rfi'
-  if (type.includes('task')) return 'task'
-  if (type.includes('approval')) return 'approval'
-  if (type.includes('submittal')) return 'submittal'
-  if (type.includes('safety') || type.includes('incident')) return 'safety'
+  if (!type) {
+    return 'general'
+  }
+  if (type.includes('rfi')) {
+    return 'rfi'
+  }
+  if (type.includes('task')) {
+    return 'task'
+  }
+  if (type.includes('approval')) {
+    return 'approval'
+  }
+  if (type.includes('submittal')) {
+    return 'submittal'
+  }
+  if (type.includes('safety') || type.includes('incident')) {
+    return 'safety'
+  }
   return 'general'
 }
 
@@ -116,7 +149,6 @@ export const NotificationItem = memo(function NotificationItem({
   showSwipeActions = true,
   compact = false,
 }: NotificationItemProps) {
-  const Icon = getIcon(notification.type)
   const category = getNotificationCategory(notification.type)
   const isRead = notification.is_read ?? false
   const priority = notification.priority || 'normal'
@@ -129,20 +161,26 @@ export const NotificationItem = memo(function NotificationItem({
   const containerRef = useRef<HTMLDivElement>(null)
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    if (!showSwipeActions) return
+    if (!showSwipeActions) {
+      return
+    }
     touchStartX.current = e.touches[0].clientX
     setIsSwiping(true)
   }, [showSwipeActions])
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!isSwiping || !showSwipeActions) return
+    if (!isSwiping || !showSwipeActions) {
+      return
+    }
     const diff = e.touches[0].clientX - touchStartX.current
     // Only allow left swipe (negative values) with max of -100px
     setSwipeOffset(Math.max(-100, Math.min(0, diff)))
   }, [isSwiping, showSwipeActions])
 
   const handleTouchEnd = useCallback(() => {
-    if (!showSwipeActions) return
+    if (!showSwipeActions) {
+      return
+    }
     setIsSwiping(false)
     if (swipeOffset < -50 && onDismiss) {
       // Dismiss if swiped more than 50px
@@ -343,7 +381,11 @@ export const NotificationItem = memo(function NotificationItem({
         onClick={handleClick}
         role="button"
         tabIndex={0}
-        onKeyDown={(e) => { if (e.key === 'Enter') handleClick() }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            handleClick()
+          }
+        }}
       >
         {/* Icon / Avatar */}
         <div className="flex-shrink-0">
@@ -360,7 +402,7 @@ export const NotificationItem = memo(function NotificationItem({
               isRead ? 'bg-muted' : 'bg-primary/10',
               compact && 'p-1.5'
             )}>
-              <Icon className={cn('h-4 w-4', compact && 'h-3.5 w-3.5')} />
+              <NotificationIcon type={notification.type} className={cn('h-4 w-4', compact && 'h-3.5 w-3.5')} />
             </div>
           )}
         </div>

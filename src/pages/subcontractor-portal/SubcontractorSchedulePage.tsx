@@ -411,8 +411,8 @@ function ActivitiesList({ filter }: { filter: 'all' | 'upcoming' | 'overdue' | '
 
   // Sort by planned start date
   const sortedActivities = [...filteredActivities].sort((a, b) => {
-    if (!a.planned_start) return 1
-    if (!b.planned_start) return -1
+    if (!a.planned_start) {return 1}
+    if (!b.planned_start) {return -1}
     return new Date(a.planned_start).getTime() - new Date(b.planned_start).getTime()
   })
 

@@ -363,7 +363,7 @@ export function checkThresholdTrigger(
   threshold: AlertThreshold,
   currentValue: number
 ): boolean {
-  if (!threshold.enabled) return false
+  if (!threshold.enabled) {return false}
 
   switch (threshold.operator) {
     case 'gt':

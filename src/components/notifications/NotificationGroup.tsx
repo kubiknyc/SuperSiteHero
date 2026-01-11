@@ -78,7 +78,9 @@ export function NotificationGroup({
     }
   }, [collapsible])
 
-  if (group.notifications.length === 0) return null
+  if (group.notifications.length === 0) {
+    return null
+  }
 
   const GroupIcon = group.icon
   const ChevronIcon = isExpanded ? ChevronDown : ChevronRight

@@ -164,22 +164,22 @@ function getActionBadge(action: string) {
 }
 
 function formatUserAgent(ua: string | null): string {
-  if (!ua) return 'Unknown'
+  if (!ua) {return 'Unknown'}
 
   // Parse browser
   let browser = 'Unknown Browser'
-  if (ua.includes('Chrome')) browser = 'Chrome'
-  else if (ua.includes('Firefox')) browser = 'Firefox'
-  else if (ua.includes('Safari')) browser = 'Safari'
-  else if (ua.includes('Edge')) browser = 'Edge'
+  if (ua.includes('Chrome')) {browser = 'Chrome'}
+  else if (ua.includes('Firefox')) {browser = 'Firefox'}
+  else if (ua.includes('Safari')) {browser = 'Safari'}
+  else if (ua.includes('Edge')) {browser = 'Edge'}
 
   // Parse OS
   let os = 'Unknown OS'
-  if (ua.includes('Windows')) os = 'Windows'
-  else if (ua.includes('Mac')) os = 'macOS'
-  else if (ua.includes('Linux')) os = 'Linux'
-  else if (ua.includes('Android')) os = 'Android'
-  else if (ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS'
+  if (ua.includes('Windows')) {os = 'Windows'}
+  else if (ua.includes('Mac')) {os = 'macOS'}
+  else if (ua.includes('Linux')) {os = 'Linux'}
+  else if (ua.includes('Android')) {os = 'Android'}
+  else if (ua.includes('iPhone') || ua.includes('iPad')) {os = 'iOS'}
 
   return `${browser} on ${os}`
 }
@@ -197,7 +197,7 @@ function AuditLogDetailDialog({
   open: boolean
   onClose: () => void
 }) {
-  if (!log) return null
+  if (!log) {return null}
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -324,7 +324,7 @@ export function AuditLogsPage() {
 
   // Fetch users for filter dropdown
   useEffect(() => {
-    if (!userProfile?.company_id) return
+    if (!userProfile?.company_id) {return}
 
     const fetchUsers = async () => {
       const { data } = await supabase
@@ -376,7 +376,7 @@ export function AuditLogsPage() {
 
   // Fetch audit logs
   const fetchLogs = useCallback(async () => {
-    if (!userProfile?.company_id) return
+    if (!userProfile?.company_id) {return}
 
     setLoading(true)
     try {
@@ -448,7 +448,7 @@ export function AuditLogsPage() {
 
   // Export logs to CSV
   const handleExport = async () => {
-    if (!userProfile?.company_id) return
+    if (!userProfile?.company_id) {return}
 
     setExporting(true)
     try {
@@ -462,13 +462,13 @@ export function AuditLogsPage() {
         .lte('created_at', end.toISOString())
         .order('created_at', { ascending: false })
 
-      if (filters.userId) query = query.eq('user_id', filters.userId)
-      if (filters.action) query = query.eq('action', filters.action)
-      if (filters.resourceType) query = query.eq('resource_type', filters.resourceType)
+      if (filters.userId) {query = query.eq('user_id', filters.userId)}
+      if (filters.action) {query = query.eq('action', filters.action)}
+      if (filters.resourceType) {query = query.eq('resource_type', filters.resourceType)}
 
       const { data, error } = await query
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Convert to CSV
       const headers = [

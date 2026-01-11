@@ -130,7 +130,7 @@ interface CategorySectionProps {
 function CategorySection({ category, shortcuts, searchQuery }: CategorySectionProps) {
   const Icon = CATEGORY_ICONS[category]
   const filteredShortcuts = useMemo(() => {
-    if (!searchQuery) return shortcuts
+    if (!searchQuery) {return shortcuts}
     const query = searchQuery.toLowerCase()
     return shortcuts.filter(
       (s) =>
@@ -140,7 +140,7 @@ function CategorySection({ category, shortcuts, searchQuery }: CategorySectionPr
     )
   }, [shortcuts, searchQuery])
 
-  if (filteredShortcuts.length === 0) return null
+  if (filteredShortcuts.length === 0) {return null}
 
   return (
     <div className="mb-6 last:mb-0">
@@ -205,7 +205,7 @@ export function KeyboardShortcutsHelp({
 
   // Count filtered shortcuts
   const filteredCount = useMemo(() => {
-    if (!searchQuery) return totalCount
+    if (!searchQuery) {return totalCount}
     const query = searchQuery.toLowerCase()
     return shortcuts.filter(
       (s) =>

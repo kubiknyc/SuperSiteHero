@@ -133,7 +133,7 @@ function calculateMetricsAtDate(
     const budget = activity.budgeted_cost || 0
     bac += budget
 
-    if (!activity.planned_start || !activity.planned_finish) return
+    if (!activity.planned_start || !activity.planned_finish) {return}
 
     const plannedStart = parseISO(activity.planned_start)
     const plannedFinish = parseISO(activity.planned_finish)
@@ -218,23 +218,23 @@ function calculateEVMetrics(pv: number, ev: number, ac: number, bac: number): Ea
 }
 
 function getScheduleStatus(spi: number): 'ahead' | 'on_track' | 'behind' | 'critical' {
-  if (spi >= 1.05) return 'ahead'
-  if (spi >= 0.95) return 'on_track'
-  if (spi >= 0.80) return 'behind'
+  if (spi >= 1.05) {return 'ahead'}
+  if (spi >= 0.95) {return 'on_track'}
+  if (spi >= 0.80) {return 'behind'}
   return 'critical'
 }
 
 function getCostStatus(cpi: number): 'under_budget' | 'on_budget' | 'over_budget' | 'critical' {
-  if (cpi >= 1.05) return 'under_budget'
-  if (cpi >= 0.95) return 'on_budget'
-  if (cpi >= 0.80) return 'over_budget'
+  if (cpi >= 1.05) {return 'under_budget'}
+  if (cpi >= 0.95) {return 'on_budget'}
+  if (cpi >= 0.80) {return 'over_budget'}
   return 'critical'
 }
 
 function getOverallHealth(spi: number, cpi: number): 'healthy' | 'at_risk' | 'critical' {
   const csi = spi * cpi
-  if (csi >= 0.9) return 'healthy'
-  if (csi >= 0.7) return 'at_risk'
+  if (csi >= 0.9) {return 'healthy'}
+  if (csi >= 0.7) {return 'at_risk'}
   return 'critical'
 }
 
@@ -243,7 +243,7 @@ function determineTrend(
   previous: number
 ): 'improving' | 'stable' | 'declining' {
   const change = current - previous
-  if (Math.abs(change) < 0.02) return 'stable'
+  if (Math.abs(change) < 0.02) {return 'stable'}
   return change > 0 ? 'improving' : 'declining'
 }
 

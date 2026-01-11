@@ -176,7 +176,7 @@ function analyzeChanges(changesA: string, changesB: string, docType: string): Ch
 
   // Parse change descriptions
   const parseChanges = (text: string): string[] => {
-    if (!text) return []
+    if (!text) {return []}
     return text.split(/[;\n]/).map(s => s.trim()).filter(s => s.length > 5)
   }
 

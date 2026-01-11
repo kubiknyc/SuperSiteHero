@@ -80,7 +80,7 @@ export function DrawingRegister({
 
   // Group drawings by discipline
   const groupedDrawings = useMemo(() => {
-    if (!drawings) return {}
+    if (!drawings) {return {}}
 
     let filtered = drawings
 
@@ -127,7 +127,7 @@ export function DrawingRegister({
 
   // Get unique document sets from data
   const availableSets = useMemo(() => {
-    if (!drawings) return []
+    if (!drawings) {return []}
     const sets = new Set(drawings.map((d) => d.document_set).filter(Boolean))
     return Array.from(sets) as string[]
   }, [drawings])
@@ -153,7 +153,7 @@ export function DrawingRegister({
 
   // Export drawing register as CSV
   const handleExport = () => {
-    if (!drawings || drawings.length === 0) return
+    if (!drawings || drawings.length === 0) {return}
 
     const headers = [
       'Drawing Number',

@@ -145,14 +145,14 @@ export function ProgressStepper({
   const sizes = sizeClasses[size]
 
   const getStepStatus = (index: number): StepStatus => {
-    if (errorSteps.includes(index)) return 'error'
-    if (index < currentStep) return 'completed'
-    if (index === currentStep) return 'current'
+    if (errorSteps.includes(index)) {return 'error'}
+    if (index < currentStep) {return 'completed'}
+    if (index === currentStep) {return 'current'}
     return 'upcoming'
   }
 
   const handleStepClick = (index: number) => {
-    if (!onStepClick) return
+    if (!onStepClick) {return}
 
     const status = getStepStatus(index)
     if (status === 'completed' && allowClickCompleted) {
@@ -163,7 +163,7 @@ export function ProgressStepper({
   }
 
   const isClickable = (index: number): boolean => {
-    if (!onStepClick) return false
+    if (!onStepClick) {return false}
     const status = getStepStatus(index)
     return status === 'current' || (status === 'completed' && allowClickCompleted)
   }

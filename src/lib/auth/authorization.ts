@@ -273,7 +273,7 @@ export const PERMISSION_MATRIX: Record<Permission, UserRole[]> = {
  */
 export function hasPermission(role: UserRole, permission: Permission): boolean {
   const allowedRoles = PERMISSION_MATRIX[permission]
-  if (!allowedRoles) return false
+  if (!allowedRoles) {return false}
   return allowedRoles.includes(role)
 }
 
@@ -328,7 +328,7 @@ export function isManagementRole(role: UserRole): boolean {
  * Create an authorization context from a user profile
  */
 export function createAuthContext(userProfile: UserProfile | null): AuthContext | null {
-  if (!userProfile) return null
+  if (!userProfile) {return null}
 
   const role = (userProfile.role || 'viewer') as UserRole
   const permissions = new Set(getRolePermissions(role))
@@ -499,7 +499,7 @@ export function createAuthGuard(userProfile: UserProfile | null): AuthorizationG
 
     requireSameCompany(companyId: string): void {
       // Admin can access any company
-      if (context.role === 'admin') return
+      if (context.role === 'admin') {return}
 
       if (context.companyId !== companyId) {
         throw new ApiErrorClass({

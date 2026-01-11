@@ -66,7 +66,7 @@ function useProjectContingency(projectId: string) {
         .eq('id', projectId)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return data as ProjectContingency
     },
     enabled: !!projectId,
@@ -86,7 +86,7 @@ function useApprovedChangeOrders(projectId: string) {
         .is('deleted_at', null)
         .order('date_owner_approved', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Format with display number
       return (data || []).map((co) => ({
@@ -117,7 +117,7 @@ function usePendingChangeOrders(projectId: string) {
         .in('status', ['pending_estimate', 'estimate_complete', 'pending_internal_approval', 'internally_approved', 'pending_owner_review'])
         .is('deleted_at', null)
 
-      if (error) throw error
+      if (error) {throw error}
 
       const pendingTotal = (data || []).reduce((sum, co) => sum + (co.proposed_amount || 0), 0)
       return { items: data || [], total: pendingTotal }
@@ -128,7 +128,7 @@ function usePendingChangeOrders(projectId: string) {
 
 // Format currency
 function formatCurrency(amount: number | null | undefined): string {
-  if (amount == null) return '$0'
+  if (amount == null) {return '$0'}
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -168,7 +168,7 @@ export function ContingencyTracker({ projectId, className }: ContingencyTrackerP
 
   // Calculate contingency metrics
   const metrics = useMemo(() => {
-    if (!project) return null
+    if (!project) {return null}
 
     const contingencyAmount = project.contingency_amount || 0
     const contingencyUsed = project.contingency_used || 0

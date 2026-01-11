@@ -43,7 +43,7 @@ export function usePaymentApplications(projectId: string | undefined) {
   return useQuery({
     queryKey: paymentAppKeys.byProject(projectId || ''),
     queryFn: async () => {
-      if (!projectId) return []
+      if (!projectId) {return []}
 
       const { data, error } = await supabase
         .from('aia_g702_applications')
@@ -52,7 +52,7 @@ export function usePaymentApplications(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('application_number', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as AIAG702[]
     },
     enabled: !!projectId,
@@ -66,7 +66,7 @@ export function usePaymentApplication(id: string | undefined) {
   return useQuery({
     queryKey: paymentAppKeys.detail(id || ''),
     queryFn: async () => {
-      if (!id) return null
+      if (!id) {return null}
 
       const { data, error } = await supabase
         .from('aia_g702_applications')
@@ -79,7 +79,7 @@ export function usePaymentApplication(id: string | undefined) {
         .eq('id', id)
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
 
       return {
         ...data,
@@ -97,7 +97,7 @@ export function useG703(g702Id: string | undefined) {
   return useQuery({
     queryKey: paymentAppKeys.g703(g702Id || ''),
     queryFn: async () => {
-      if (!g702Id) return null
+      if (!g702Id) {return null}
 
       // Get G702 info
       const { data: g702, error: g702Error } = await supabase
@@ -106,7 +106,7 @@ export function useG703(g702Id: string | undefined) {
         .eq('id', g702Id)
         .single()
 
-      if (g702Error) throw g702Error
+      if (g702Error) {throw g702Error}
 
       // Get G703 line items
       const { data: lineItems, error: lineItemsError } = await supabase
@@ -115,7 +115,7 @@ export function useG703(g702Id: string | undefined) {
         .eq('g702_id', g702Id)
         .order('sort_order', { ascending: true })
 
-      if (lineItemsError) throw lineItemsError
+      if (lineItemsError) {throw lineItemsError}
 
       // Calculate totals
       const totals = (lineItems || []).reduce(
@@ -184,7 +184,7 @@ export function useFilteredApplications(filters: BillingFilters) {
 
       const { data, error } = await query.order('period_to', { ascending: false })
 
-      if (error) throw error
+      if (error) {throw error}
       return data as AIAG702[]
     },
   })
@@ -212,7 +212,7 @@ export function useCreatePaymentApplication() {
         p_created_by: user?.id,
       })
 
-      if (error) throw error
+      if (error) {throw error}
 
       // Fetch the created application
       const { data: application, error: fetchError } = await supabase
@@ -221,7 +221,7 @@ export function useCreatePaymentApplication() {
         .eq('id', g702Id)
         .single()
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       return application as AIAG702
     },
@@ -268,7 +268,7 @@ export function useUpdatePaymentApplication() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return application as AIAG702
     },
     onSuccess: (data) => {
@@ -341,7 +341,7 @@ export function useUpdateG703LineItem() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return lineItem as AIAG703LineItem
     },
     onSuccess: (data) => {
@@ -382,7 +382,7 @@ export function useSubmitPaymentApplication() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return application as AIAG702
     },
     onSuccess: (data) => {
@@ -435,7 +435,7 @@ export function useApprovePaymentApplication() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return application as AIAG702
     },
     onSuccess: (data) => {
@@ -485,7 +485,7 @@ export function useMarkApplicationPaid() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return application as AIAG702
     },
     onSuccess: (data) => {
@@ -532,7 +532,7 @@ export function useRejectPaymentApplication() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return application as AIAG702
     },
     onSuccess: (data) => {
@@ -597,7 +597,7 @@ export function useAddSignature() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return application as AIAG702
     },
     onSuccess: (data) => {
@@ -631,7 +631,7 @@ export function useRecalculateG702Totals() {
         .select('*')
         .eq('g702_id', g702Id)
 
-      if (fetchError) throw fetchError
+      if (fetchError) {throw fetchError}
 
       // Calculate totals
       const totals = (lineItems || []).reduce(
@@ -676,7 +676,7 @@ export function useRecalculateG702Totals() {
         .select()
         .single()
 
-      if (error) throw error
+      if (error) {throw error}
       return updated as AIAG702
     },
     onSuccess: (data) => {

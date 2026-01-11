@@ -66,7 +66,7 @@ interface CollapsibleSidebarProps {
 }
 
 export function CollapsibleSidebar({ className }: CollapsibleSidebarProps) {
-  const { signOut, userProfile } = useAuth()
+  const { userProfile } = useAuth()
   const location = useLocation()
 
   // Sidebar state

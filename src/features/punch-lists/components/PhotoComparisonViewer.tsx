@@ -113,7 +113,7 @@ export function PhotoComparisonViewer({
 
   // Handle slider drag
   const handleSliderDrag = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    if (!sliderRef.current) return
+    if (!sliderRef.current) {return}
 
     const rect = sliderRef.current.getBoundingClientRect()
     const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX
@@ -164,7 +164,7 @@ export function PhotoComparisonViewer({
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!isFullscreen) return
+      if (!isFullscreen) {return}
 
       switch (e.key) {
         case 'Escape':
@@ -209,7 +209,7 @@ export function PhotoComparisonViewer({
 
   // Render photo metadata
   const renderPhotoMetadata = (photo: ComparisonPhoto | undefined, label: string) => {
-    if (!photo || !showMetadata) return null
+    if (!photo || !showMetadata) {return null}
 
     return (
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-white text-xs">
@@ -942,7 +942,7 @@ export function PhotoThumbnailStrip({
   type,
   className,
 }: PhotoThumbnailStripProps) {
-  if (photos.length <= 1) return null
+  if (photos.length <= 1) {return null}
 
   const colorClass = type === 'before' ? 'ring-amber-500' : 'ring-green-500'
 

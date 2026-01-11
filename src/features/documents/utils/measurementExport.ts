@@ -123,7 +123,7 @@ export function exportToCSV(
   }
 
   // Sort data if grouping is enabled
-  let sortedData = [...data]
+  const sortedData = [...data]
   if (options.groupByType) {
     sortedData.sort((a, b) => a.type.localeCompare(b.type))
   }
@@ -260,7 +260,7 @@ export function exportCountsToCSV(
 
   let globalIndex = 0
   categorizedMarkers.forEach(({ category, markers: catMarkers }) => {
-    if (catMarkers.length === 0) return
+    if (catMarkers.length === 0) {return}
 
     catMarkers.forEach((marker) => {
       globalIndex++
@@ -382,10 +382,10 @@ export function convertToSimpleExportData(
 ): SimpleMeasurementExportData[] {
   return measurements.map((m) => {
     let type: 'distance' | 'area' | 'angle' | 'count' = 'distance'
-    if (m.type === 'area' || m.type === 'perimeter') type = 'area'
-    else if (m.type === 'angle') type = 'angle'
-    else if (m.type === 'count') type = 'count'
-    else type = 'distance'
+    if (m.type === 'area' || m.type === 'perimeter') {type = 'area'}
+    else if (m.type === 'angle') {type = 'angle'}
+    else if (m.type === 'count') {type = 'count'}
+    else {type = 'distance'}
 
     return {
       type,

@@ -149,8 +149,8 @@ function mutationToUploadItem(mutation: QueuedMutation): UploadQueueItem {
     'application/octet-stream'
 
   let type: 'photo' | 'document' | 'file' = 'file'
-  if (mimeType.startsWith('image/')) type = 'photo'
-  else if (mimeType.includes('pdf') || mimeType.includes('document')) type = 'document'
+  if (mimeType.startsWith('image/')) {type = 'photo'}
+  else if (mimeType.includes('pdf') || mimeType.includes('document')) {type = 'document'}
 
   return {
     id: mutation.id,
@@ -400,7 +400,7 @@ function useUploadQueue() {
 // ============================================================================
 
 function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 B'
+  if (bytes === 0) {return '0 B'}
   const k = 1024
   const sizes = ['B', 'KB', 'MB', 'GB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))

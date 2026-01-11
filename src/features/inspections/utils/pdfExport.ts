@@ -76,7 +76,7 @@ export interface InspectionPDFData {
  * Format date for documents
  */
 function formatDate(date: string | null | undefined): string {
-  if (!date) return 'N/A'
+  if (!date) {return 'N/A'}
   try {
     return format(new Date(date), 'MMMM d, yyyy')
   } catch {
@@ -88,7 +88,7 @@ function formatDate(date: string | null | undefined): string {
  * Format time for documents
  */
 function formatTime(time: string | null | undefined): string {
-  if (!time) return 'N/A'
+  if (!time) {return 'N/A'}
   try {
     // Parse time string (HH:MM:SS format)
     const [hours, minutes] = time.split(':')
@@ -281,7 +281,7 @@ async function addPhotosSection(
   photos: InspectionPhoto[],
   startY: number
 ): Promise<number> {
-  if (!photos || photos.length === 0) return startY
+  if (!photos || photos.length === 0) {return startY}
 
   let y = startY
 

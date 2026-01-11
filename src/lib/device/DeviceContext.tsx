@@ -49,12 +49,12 @@ export interface DeviceContextValue {
 const DeviceContext = createContext<DeviceContextValue | null>(null);
 
 function getOrientation(): Orientation {
-  if (typeof window === 'undefined') return 'portrait';
+  if (typeof window === 'undefined') {return 'portrait';}
   return window.innerWidth > window.innerHeight ? 'landscape' : 'portrait';
 }
 
 function getIsTouchDevice(): boolean {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === 'undefined') {return false;}
   return (
     'ontouchstart' in window ||
     navigator.maxTouchPoints > 0 ||
@@ -81,7 +81,7 @@ export function DeviceProvider({ children }: DeviceProviderProps) {
 
   // Handle resize and orientation changes
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {return;}
 
     let timeoutId: ReturnType<typeof setTimeout>;
 

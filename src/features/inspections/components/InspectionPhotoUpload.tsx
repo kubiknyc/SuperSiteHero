@@ -58,7 +58,7 @@ export function InspectionPhotoUpload({
 
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
-    if (files.length === 0) return
+    if (files.length === 0) {return}
 
     // Validate files
     const validFiles: File[] = []
@@ -105,7 +105,7 @@ export function InspectionPhotoUpload({
   }, [])
 
   const uploadPhotos = async () => {
-    if (selectedFiles.length === 0) return
+    if (selectedFiles.length === 0) {return}
 
     setIsUploading(true)
 
