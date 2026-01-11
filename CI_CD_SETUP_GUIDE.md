@@ -1,6 +1,6 @@
 # CI/CD Setup Guide
 
-This guide walks through setting up all new CI/CD workflows for SuperSiteHero.
+This guide walks through setting up all new CI/CD workflows for JobSight.
 
 ## Prerequisites
 
@@ -46,7 +46,7 @@ Repeat for staging environment:
 ### Via GitHub CLI (Recommended)
 
 ```bash
-cd /path/to/SuperSiteHero
+cd /path/to/JobSight
 
 # Supabase Secrets
 gh secret set SUPABASE_ACCESS_TOKEN --body "your-supabase-token"

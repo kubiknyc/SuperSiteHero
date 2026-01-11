@@ -79,6 +79,12 @@ export { analyzeProgressPhotosTool } from './photos/analyze-progress'
 // Labor tools
 export { analyzeLaborProductivityTool } from './labor/analyze-productivity'
 
+// Equipment tools
+export { scheduleMaintenanceTool } from './equipment/schedule-maintenance'
+export { predictMaterialShortageTool } from './equipment/predict-material-shortage'
+export { analyzeEquipmentUtilizationTool } from './equipment/analyze-utilization'
+export { optimizeRentalsTool } from './equipment/optimize-rentals'
+
 // ============================================================================
 // Field Operations Tools (Daily Reports Enhancement)
 // ============================================================================
@@ -109,6 +115,30 @@ export { identifyScheduleRisksTool } from './schedule/identify-risks'
 export { generateLookaheadTool } from './schedule/generate-lookahead'
 export { detectResourceConflictsTool } from './schedule/detect-resource-conflicts'
 export { predictWeatherImpactTool } from './schedule/predict-weather-impact'
+
+// ============================================================================
+// Approval Workflow Tools
+// ============================================================================
+export { routeApprovalTool } from './approvals/route-approval'
+export { predictApprovalTimelineTool } from './approvals/predict-approval-timeline'
+export { flagRejectionRiskTool } from './approvals/flag-rejection-risk'
+export { escalateStalledTool } from './approvals/escalate-stalled'
+
+// ============================================================================
+// Payment Tools
+// ============================================================================
+export { draftPayAppTool } from './payments/draft-pay-app'
+export { generateLienWaiverTool } from './payments/generate-lien-waiver'
+export { analyzeInvoiceTool } from './payments/analyze-invoice'
+export { predictCashFlowTool } from './payments/predict-cash-flow'
+
+// ============================================================================
+// Permit Tools
+// ============================================================================
+export { trackPermitsTool } from './permits/track-permits'
+export { alertPermitDeadlinesTool } from './permits/alert-permit-deadlines'
+export { checkComplianceTool } from './permits/check-compliance'
+export { generatePermitAppTool } from './permits/generate-permit-app'
 
 // ============================================================================
 // Initialize Tools
@@ -143,6 +173,10 @@ export function initializeTools(): void {
     procurement: ['track_materials'],
     communication: ['draft_construction_letter'],
     photos: ['analyze_progress_photos'],
-    labor: ['analyze_labor_productivity']
+    labor: ['analyze_labor_productivity'],
+    equipment: ['schedule_maintenance', 'predict_material_shortage', 'analyze_equipment_utilization', 'optimize_rentals'],
+    approvals: ['route_approval', 'predict_approval_timeline', 'flag_rejection_risk', 'escalate_stalled'],
+    payments: ['draft_pay_app', 'generate_lien_waiver', 'analyze_invoice', 'predict_cash_flow'],
+    permits: ['track_permits', 'alert_permit_deadlines', 'check_compliance', 'generate_permit_app']
   })
 }

@@ -243,7 +243,7 @@ jobs:
         with:
           context: .
           push: false
-          tags: supersitehero:${{ github.sha }}
+          tags: jobsight:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
         continue-on-error: true
@@ -251,7 +251,7 @@ jobs:
       - name: Log Docker build info
         run: |
           echo "Docker image build completed"
-          echo "Tag: supersitehero:${{ github.sha }}"
+          echo "Tag: jobsight:${{ github.sha }}"
 
   # ==================== PERFORMANCE METRICS ====================
   performance-metrics:

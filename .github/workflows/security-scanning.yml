@@ -220,14 +220,14 @@ jobs:
       - name: Build Docker image for scanning
         run: |
           echo "Building Docker image for security scan..."
-          docker build -t supersitehero:${{ github.sha }} . || echo "Dockerfile not found, skipping"
+          docker build -t jobsight:${{ github.sha }} . || echo "Dockerfile not found, skipping"
         continue-on-error: true
 
       - name: Scan with Trivy
         uses: aquasecurity/trivy-action@master
         if: success()
         with:
-          image-ref: supersitehero:${{ github.sha }}
+          image-ref: jobsight:${{ github.sha }}
           format: 'sarif'
           output: 'trivy-results.sarif'
         continue-on-error: true

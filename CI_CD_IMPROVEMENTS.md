@@ -1,10 +1,10 @@
-# CI/CD Pipeline Improvements - SuperSiteHero
+# CI/CD Pipeline Improvements - JobSight
 
-This document outlines all CI/CD pipeline enhancements implemented for the SuperSiteHero project.
+This document outlines all CI/CD pipeline enhancements implemented for the JobSight project.
 
 ## Overview
 
-SuperSiteHero's CI/CD pipeline has been significantly enhanced to provide:
+JobSight's CI/CD pipeline has been significantly enhanced to provide:
 - Automated Supabase Edge Function deployments
 - Database migration automation
 - Advanced security scanning (SAST, dependency scanning, secret detection)

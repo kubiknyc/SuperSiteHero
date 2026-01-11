@@ -1,6 +1,6 @@
 # CI/CD Pipeline - Complete Index
 
-Welcome to SuperSiteHero's automated CI/CD system!
+Welcome to JobSight's automated CI/CD system!
 
 ## Start Here
 
