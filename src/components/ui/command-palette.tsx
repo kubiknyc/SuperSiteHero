@@ -3,7 +3,7 @@
  * Provides quick navigation and search across all features
  */
 
-import { useState, useEffect, useCallback, useMemo, Fragment } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
@@ -153,19 +153,6 @@ const QUICK_ACTIONS: QuickAction[] = [
   },
 ]
 
-const TYPE_ICONS: Record<string, React.ElementType> = {
-  project: Building2,
-  task: ClipboardList,
-  rfi: AlertCircle,
-  submittal: FileText,
-  change_order: DollarSign,
-  punch_item: ListChecks,
-  document: FolderOpen,
-  daily_report: Calendar,
-  contact: Users,
-  safety: Shield,
-}
-
 const TYPE_LABELS: Record<string, string> = {
   project: 'Project',
   task: 'Task',
@@ -215,12 +202,19 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [typeFilter, setTypeFilter] = useState<EntityType | 'all'>('all')
   const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([])
+  const prevOpenRef = useRef(open)
+  const prevItemsLengthRef = useRef(0)
 
-  // Load recent searches on mount
+  // Handle dialog open/close state changes
   useEffect(() => {
-    if (open) {
+    if (open && !prevOpenRef.current) {
+      // Dialog just opened - reset state
+      setQuery('')
+      setSelectedIndex(0)
+      setTypeFilter('all')
       setRecentSearches(getRecentSearches())
     }
+    prevOpenRef.current = open
   }, [open])
 
   // Search across all entities
@@ -464,7 +458,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
           e.preventDefault()
           setSelectedIndex((prev) => Math.max(prev - 1, 0))
           break
-        case 'Enter':
+        case 'Enter': {
           e.preventDefault()
           const selected = allItems[selectedIndex]
           if (selected) {
@@ -479,6 +473,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
             onOpenChange(false)
           }
           break
+        }
         case 'Escape':
           e.preventDefault()
           onOpenChange(false)
@@ -488,16 +483,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
 
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [open, selectedIndex, allItems, navigate, onOpenChange])
-
-  // Reset state when dialog opens/closes
-  useEffect(() => {
-    if (open) {
-      setQuery('')
-      setSelectedIndex(0)
-      setTypeFilter('all')
-    }
-  }, [open])
+  }, [open, selectedIndex, allItems, navigate, onOpenChange, query])
 
   // Save search to recent when selecting a result
   const handleSelectWithSave = useCallback((link: string, searchQuery?: string) => {
@@ -522,7 +508,10 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
 
   // Reset selected index when items change
   useEffect(() => {
-    setSelectedIndex(0)
+    if (prevItemsLengthRef.current !== allItems.length) {
+      setSelectedIndex(0)
+      prevItemsLengthRef.current = allItems.length
+    }
   }, [allItems.length])
 
   const handleSelect = useCallback((link: string) => {

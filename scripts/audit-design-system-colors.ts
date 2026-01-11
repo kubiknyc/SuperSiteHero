@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable security/detect-object-injection, security/detect-non-literal-fs-filename */
 /**
  * Design System Color Compliance Audit Script
  * Scans all TSX files for color violations

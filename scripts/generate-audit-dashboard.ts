@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable security/detect-object-injection, security/detect-non-literal-fs-filename */
 /**
  * Generate Design System Audit Dashboard
  * Combines all audit reports into an interactive HTML dashboard

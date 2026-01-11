@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+/* eslint-disable security/detect-object-injection, security/detect-non-literal-fs-filename */
 /**
  * Autonomous Test Runner
  *

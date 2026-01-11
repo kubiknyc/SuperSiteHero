@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable security/detect-object-injection, security/detect-non-literal-fs-filename */
 /**
  * Design System Touch Target Compliance Audit Script
  * Scans all TSX files for touch target violations (WCAG 2.1 Level AA requires 44px minimum)

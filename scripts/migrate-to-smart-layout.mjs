@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable security/detect-object-injection, security/detect-non-literal-fs-filename */
 /**
  * Migration script: AppLayout -> SmartLayout
  * Migrates all pages from the old AppLayout to the new SmartLayout component

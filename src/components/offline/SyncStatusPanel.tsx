@@ -7,13 +7,12 @@
  */
 
 import { useState, useMemo } from 'react'
-import { formatDistanceToNow, format } from 'date-fns'
+import { formatDistanceToNow } from 'date-fns'
 import {
   Cloud,
   CloudOff,
   RefreshCw,
   AlertTriangle,
-  Check,
   Clock,
   HardDrive,
   Trash2,
@@ -23,7 +22,6 @@ import {
   WifiOff,
   Loader2,
   X,
-  Download,
   Upload,
   AlertCircle,
   CheckCircle2,
@@ -62,7 +60,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
-import { useOfflineSync, useSyncStatusDisplay } from '@/hooks/useOfflineSync'
+import { useOfflineSync } from '@/hooks/useOfflineSync'
 import type { PendingSyncItem, SyncConflict } from '@/stores/offline-store'
 
 // ============================================================================

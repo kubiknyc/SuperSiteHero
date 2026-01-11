@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+/* eslint-disable security/detect-object-injection, security/detect-non-literal-fs-filename */
 
 /**
  * Phase 2 Color Migration Script

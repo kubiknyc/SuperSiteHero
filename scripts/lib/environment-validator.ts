@@ -1,3 +1,4 @@
+/* eslint-disable security/detect-object-injection, security/detect-non-literal-fs-filename */
 /**
  * Environment Validator
  *

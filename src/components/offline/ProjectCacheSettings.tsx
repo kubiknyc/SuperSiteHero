@@ -14,7 +14,6 @@ import {
   Download,
   Trash2,
   HardDrive,
-  CheckCircle2,
   Loader2,
   AlertCircle,
   FolderOpen,
@@ -36,11 +35,6 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -99,7 +93,7 @@ interface ProjectCacheSettingsProps {
 // ============================================================================
 
 // Extended type for project cache metadata stored in IndexedDB
-interface ProjectCacheMetadata {
+interface _ProjectCacheMetadata {
   id: string
   projectId: string
   projectName: string
@@ -642,7 +636,7 @@ function CachedProjectCard({
   )
 }
 
-function DownloadProjectForm({
+function _DownloadProjectForm({
   onDownload,
   isDownloading,
 }: {
@@ -722,8 +716,8 @@ export function ProjectCacheSettings({ className, trigger }: ProjectCacheSetting
   const storageQuota = useStorageQuota()
   const {
     cachedProjects,
-    downloading,
-    downloadProject,
+    downloading: _downloading,
+    downloadProject: _downloadProject,
     clearProjectCache,
     clearAllCache,
   } = useCachedProjects()
@@ -732,12 +726,12 @@ export function ProjectCacheSettings({ className, trigger }: ProjectCacheSetting
     return cachedProjects.reduce((sum, project) => sum + project.storageSize, 0)
   }, [cachedProjects])
 
-  const handleDownloadProject = async (projectId: string, options: {
+  const _handleDownloadProject = async (projectId: string, options: {
     includePhotos: boolean
     includeDocuments: boolean
   }) => {
     try {
-      await downloadProject(projectId, options)
+      await _downloadProject(projectId, options)
       toast.success('Download complete', {
         description: 'Project is now available offline',
       })

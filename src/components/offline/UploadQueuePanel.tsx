@@ -8,7 +8,7 @@
  * - Upload progress per item
  */
 
-import { useState, useMemo, useCallback, useEffect } from 'react'
+import { useMemo, useCallback, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { formatDistanceToNow } from 'date-fns'
 import {
@@ -132,7 +132,7 @@ function photoToUploadItem(photo: QueuedPhoto): UploadQueueItem {
 // Convert QueuedMutation (sync queue item) to UploadQueueItem format
 function mutationToUploadItem(mutation: QueuedMutation): UploadQueueItem {
   // Check if this mutation contains file data
-  const hasFileData = mutation.data &&
+  const _hasFileData = mutation.data &&
     (mutation.data.file || mutation.data.fileData || mutation.data.blob)
 
   const fileSize = mutation.data?.fileSize ||
@@ -430,7 +430,7 @@ function UploadItem({
   onRetry: (id: string) => void
   onCancel: (id: string) => void
 }) {
-  const FileIcon = getFileIcon(item.type, item.mimeType)
+  const FileIcon = useMemo(() => getFileIcon(item.type, item.mimeType), [item.type, item.mimeType])
 
   const getStatusBadge = () => {
     switch (item.status) {

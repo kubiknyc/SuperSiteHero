@@ -10,7 +10,7 @@
  * - Sync progress bar during active sync
  */
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, memo } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import {
   Cloud,
@@ -198,6 +198,8 @@ function PendingSyncItemCard({
     }
   }
 
+  const EntityIcon = useMemo(() => getEntityTypeIcon(item.entityType), [item.entityType])
+
   const getStatusBadge = () => {
     switch (item.status) {
       case 'pending':
@@ -225,8 +227,6 @@ function PendingSyncItemCard({
         return null
     }
   }
-
-  const EntityIcon = getEntityTypeIcon(item.entityType)
 
   return (
     <div
@@ -302,7 +302,7 @@ function ConflictItemCard({
   onResolve: (id: string, resolution: 'local' | 'server' | 'merge') => void
 }) {
   const [expanded, setExpanded] = useState(false)
-  const EntityIcon = getEntityTypeIcon(conflict.entityType)
+  const EntityIcon = useMemo(() => getEntityTypeIcon(conflict.entityType), [conflict.entityType])
 
   return (
     <div className="p-3 rounded-lg border border-destructive/30 bg-destructive/5">

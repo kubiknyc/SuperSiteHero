@@ -8,7 +8,7 @@
  * - "Working offline" badge
  */
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { WifiOff, Wifi, CloudOff, Cloud, AlertTriangle } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
@@ -28,17 +28,17 @@ export function OfflineIndicator({
 }: OfflineIndicatorProps) {
   const isOnline = useIsOnline()
   const pendingSyncs = usePendingSyncs()
-  const [previousOnlineState, setPreviousOnlineState] = useState<boolean | null>(null)
+  const previousOnlineRef = useRef<boolean | null>(null)
 
   // Show toast notification on connection change
   useEffect(() => {
-    if (previousOnlineState === null) {
-      // First render, just set the state
-      setPreviousOnlineState(isOnline)
+    if (previousOnlineRef.current === null) {
+      // First render, just set the ref
+      previousOnlineRef.current = isOnline
       return
     }
 
-    if (previousOnlineState !== isOnline) {
+    if (previousOnlineRef.current !== isOnline) {
       if (isOnline) {
         // Coming back online
         toast.success('Back online', {
@@ -54,9 +54,9 @@ export function OfflineIndicator({
           duration: 4000,
         })
       }
-      setPreviousOnlineState(isOnline)
+      previousOnlineRef.current = isOnline
     }
-  }, [isOnline, previousOnlineState, pendingSyncs])
+  }, [isOnline, pendingSyncs])
 
   // Badge variant - minimal indicator
   if (variant === 'badge') {
