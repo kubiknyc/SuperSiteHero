@@ -1,0 +1,81 @@
+# Dependencies
+node_modules/
+
+# Build outputs (already in .vercel/output when using --prebuilt)
+dist/
+build/
+
+# Test files
+tests/
+e2e/
+playwright/
+playwright-report/
+playwright.auth/
+test-results/
+test-results-new/
+coverage/
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Test output files
+*.log
+*-output.txt
+*-results.txt
+*-results.json
+test_*.txt
+test-*.txt
+test-*.json
+temp_*.txt
+temp-*.txt
+phase*-results.*
+e2e-*.txt
+e2e-*.log
+
+# Large/unnecessary files
+nul
+*.sql
+lint-*.txt
+lint-*.json
+eslint-*.json
+
+# Documentation (not needed for deployment)
+*.md
+docs/
+
+# Development tools
+.claude/
+.github/
+.vscode/
+.taskmaster/
+.serena/
+.supabase/
+.netlify/
+.playwright-mcp/
+CCPlugins/
+claudia/
+examples/
+patches/
+
+# Mobile builds
+ios/
+android/
+app-store-screenshots/
+
+# Config files not needed at runtime
+*.config.ts
+*.config.js
+!vite.config.ts
+tsconfig*.json
+components.json
+capacitor.config.ts
+.semgrep.yml
+.lighthouserc.js
+netlify.toml
+
+# Misc
+welcome-to-docker/
+migrations/
+supabase/
+scripts/
