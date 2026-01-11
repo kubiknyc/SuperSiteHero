@@ -14,7 +14,7 @@ concurrency:
 env:
   NODE_VERSION: '20'
   NODE_OPTIONS: '--max-old-space-size=8192'
-  CACHE_VERSION: 'v1'  # Bump this to bust npm cache
+  CACHE_VERSION: 'v2'  # Bump this to bust npm cache
 
 jobs:
   # ==================== QUICK CHECKS (< 2 min) ====================
@@ -40,8 +40,11 @@ jobs:
 
       - name: Install dependencies
         run: |
+          echo "Node version: $(node --version)"
+          echo "npm version: $(npm --version)"
           npm ci --legacy-peer-deps
-          # Verify vite is installed
+          echo "Checking if vite exists..."
+          ls -la node_modules/.bin/vite || echo "vite not found in node_modules/.bin"
           npx vite --version
 
       - name: TypeScript type check
