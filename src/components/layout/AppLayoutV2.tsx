@@ -4,21 +4,23 @@
 // Enhanced with Industrial Precision design system
 
 import { type ReactNode, useEffect, useState, useCallback } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/lib/auth/AuthContext'
+import { useTheme } from '@/lib/theme'
 import { MobileBottomNav } from '@/components/layout/MobileBottomNav'
 import { MobileOfflineBanner } from '@/components/mobile/MobileOfflineIndicator'
 import { useTabletMode, useTabletSidebar } from '@/hooks/useTabletMode'
 import { initOfflineListeners } from '@/stores/offline-store'
-import { Menu, X } from 'lucide-react'
+import { Menu } from 'lucide-react'
 
-import {
-  CollapsibleSidebar,
-  SIDEBAR_COLLAPSED_WIDTH,
-  SIDEBAR_EXPANDED_WIDTH,
-  useSidebarState,
-} from './CollapsibleSidebar'
+// New Modern Minimal Navigation Sidebar
+import { NavigationSidebar } from './sidebar'
+
+// Sidebar dimensions
+const SIDEBAR_COLLAPSED_WIDTH = 72
+const SIDEBAR_EXPANDED_WIDTH = 280
+
 import { StickyHeader } from './StickyHeader'
 import { ActionPanel } from './ActionPanel'
 
@@ -63,8 +65,10 @@ export function AppLayoutV2({
   showHeaderStats,
   hideHeader = false,
 }: AppLayoutV2Props) {
-  const { userProfile } = useAuth()
+  const { userProfile, signOut } = useAuth()
   const location = useLocation()
+  const navigate = useNavigate()
+  const { resolvedTheme, toggleTheme } = useTheme()
 
   // Tablet mode detection
   const { isTablet, isLandscape, isPortrait, isTouchDevice } = useTabletMode()
@@ -141,6 +145,35 @@ export function AppLayoutV2({
     setActionPanelOpen(false)
   }, [])
 
+  // Handle logout
+  const handleLogout = useCallback(async () => {
+    await signOut()
+    navigate('/login')
+  }, [signOut, navigate])
+
+  // Handle search trigger (command palette)
+  const handleSearchTrigger = useCallback(() => {
+    // Trigger global search command palette
+    const event = new KeyboardEvent('keydown', {
+      key: 'k',
+      metaKey: true,
+      bubbles: true,
+    })
+    document.dispatchEvent(event)
+  }, [])
+
+  // Build user object for sidebar
+  const sidebarUser = userProfile
+    ? {
+        name: `${userProfile.first_name} ${userProfile.last_name}`,
+        email: userProfile.email || '',
+        role: userProfile.role || 'User',
+      }
+    : undefined
+
+  // Check if user is admin
+  const isAdmin = userProfile?.role === 'admin' || userProfile?.role === 'owner'
+
   // Determine layout mode
   const showPersistentSidebar = !isTablet || isLandscape
   const showDrawerSidebar = isTablet && isPortrait
@@ -201,12 +234,29 @@ export function AppLayoutV2({
         </button>
       )}
 
-      {/* Sidebar - Desktop uses CollapsibleSidebar */}
-      {!isTablet && <CollapsibleSidebar />}
+      {/* Navigation Sidebar - Modern Minimal Design */}
+      {!isTablet && (
+        <NavigationSidebar
+          user={sidebarUser}
+          isAdmin={isAdmin}
+          isDarkMode={resolvedTheme === 'dark'}
+          onThemeToggle={toggleTheme}
+          onLogout={handleLogout}
+          onSearchTrigger={handleSearchTrigger}
+          onExpandedChange={(expanded) => setIsPinned(expanded)}
+        />
+      )}
 
       {/* Tablet sidebar (drawer style for portrait, persistent for landscape) */}
       {isTablet && (
-        <CollapsibleSidebar
+        <NavigationSidebar
+          user={sidebarUser}
+          isAdmin={isAdmin}
+          isDarkMode={resolvedTheme === 'dark'}
+          onThemeToggle={toggleTheme}
+          onLogout={handleLogout}
+          onSearchTrigger={handleSearchTrigger}
+          onExpandedChange={(expanded) => setIsPinned(expanded)}
           className={cn(
             showDrawerSidebar && [
               'w-72 transform transition-all duration-300 ease-out',
