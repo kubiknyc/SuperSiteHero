@@ -506,7 +506,7 @@ function CommandSuggestions({
   onSelect: (command: CommandSuggestion) => void
 }) {
   return (
-    <div className="absolute bottom-full left-0 right-0 mb-2 bg-popover border rounded-lg shadow-lg overflow-hidden z-50">
+    <div className="absolute bottom-full left-0 right-0 mb-2 bg-popover border rounded-lg shadow-lg overflow-hidden z-[70]">
       <div className="p-2 text-xs text-muted-foreground border-b flex items-center gap-2">
         <Sparkles className="h-3 w-3" />
         Commands
@@ -551,7 +551,7 @@ function MentionSuggestions({
 }) {
   if (isLoading) {
     return (
-      <div className="absolute bottom-full left-0 right-0 mb-2 bg-popover border rounded-lg shadow-lg overflow-hidden z-50">
+      <div className="absolute bottom-full left-0 right-0 mb-2 bg-popover border rounded-lg shadow-lg overflow-hidden z-[70]">
         <div className="p-4 flex items-center justify-center">
           <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
         </div>
@@ -561,7 +561,7 @@ function MentionSuggestions({
 
   if (suggestions.length === 0) {
     return (
-      <div className="absolute bottom-full left-0 right-0 mb-2 bg-popover border rounded-lg shadow-lg overflow-hidden z-50">
+      <div className="absolute bottom-full left-0 right-0 mb-2 bg-popover border rounded-lg shadow-lg overflow-hidden z-[70]">
         <div className="p-3 text-sm text-muted-foreground text-center">
           No matches found
         </div>
@@ -570,7 +570,7 @@ function MentionSuggestions({
   }
 
   return (
-    <div className="absolute bottom-full left-0 right-0 mb-2 bg-popover border rounded-lg shadow-lg overflow-hidden z-50">
+    <div className="absolute bottom-full left-0 right-0 mb-2 bg-popover border rounded-lg shadow-lg overflow-hidden z-[70]">
       <div className="p-2 text-xs text-muted-foreground border-b flex items-center gap-2">
         <AtSign className="h-3 w-3" />
         Mentions

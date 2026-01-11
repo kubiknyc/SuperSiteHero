@@ -215,7 +215,7 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
         {isOpen && (
           <div
             ref={dropdownRef}
-            className="absolute z-50 w-72 max-h-64 overflow-auto rounded-md border bg-popover shadow-lg animate-in fade-in-0 zoom-in-95"
+            className="absolute z-[70] w-72 max-h-64 overflow-auto rounded-md border bg-popover shadow-lg animate-in fade-in-0 zoom-in-95"
             style={{ top: dropdownPosition.top, left: dropdownPosition.left }}
           >
             {/* Loading state */}

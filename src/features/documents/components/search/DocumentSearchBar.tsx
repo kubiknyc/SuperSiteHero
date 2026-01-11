@@ -190,7 +190,7 @@ export function DocumentSearchBar({
       {shouldShowDropdown && showSuggestions && (
         <div
           ref={dropdownRef}
-          className="absolute z-50 w-full mt-1 bg-card border border-border rounded-lg shadow-lg overflow-hidden"
+          className="absolute z-[70] w-full mt-1 bg-card border border-border rounded-lg shadow-lg overflow-hidden"
         >
           {/* Search Results */}
           {hasResults && (

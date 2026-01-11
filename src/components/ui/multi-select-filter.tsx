@@ -86,7 +86,7 @@ export function MultiSelectFilter({
 
       {isOpen && (
         <div
-          className="absolute z-50 mt-1 w-56 bg-card border rounded-md shadow-lg max-h-64 overflow-y-auto"
+          className="absolute z-[70] mt-1 w-56 bg-card border rounded-md shadow-lg max-h-64 overflow-y-auto"
           role="listbox"
           aria-label={`${label} filter options`}
         >
