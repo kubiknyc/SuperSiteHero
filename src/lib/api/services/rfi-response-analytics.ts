@@ -96,7 +96,7 @@ export function calculateBusinessDays(
   let businessDays = 0
   const current = new Date(start)
 
-  while (current <= end) {
+  while (current < end) {
     const dayOfWeek = current.getDay()
     if (dayOfWeek !== 0 && dayOfWeek !== 6) {
       // Not Sunday (0) or Saturday (6)
