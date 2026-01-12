@@ -92,7 +92,7 @@ jobs:
     if: github.event.inputs.environment == 'production'
     environment:
       name: production
-      url: https://sitehero.org
+      url: https://jobsightapp.com
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

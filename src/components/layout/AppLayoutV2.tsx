@@ -268,51 +268,51 @@ export function AppLayoutV2({
         />
       )}
 
-      {/* Main content wrapper */}
+      {/* Main content wrapper - single container that adapts to screen size */}
       <div
         className={cn(
           'relative min-h-screen',
           'transition-[margin-left] duration-300',
-          '[transition-timing-function:cubic-bezier(0.32,0.72,0,1)]',
-          // Desktop: dynamic margin based on sidebar state
-          !isTablet && 'hidden md:block'
+          '[transition-timing-function:cubic-bezier(0.32,0.72,0,1)]'
         )}
         style={{
+          // Only apply sidebar margin on desktop (md+)
           marginLeft: !isTablet ? getSidebarOffset() : undefined,
         }}
       >
-        {/* Sticky Header */}
+        {/* Sticky Header - only show on md+ screens */}
         {!hideHeader && (
-          <StickyHeader
-            title={title}
-            subtitle={subtitle}
-            projectId={currentProjectId || undefined}
-            onActionPanelToggle={handleActionPanelToggle}
-            actionPanelOpen={actionPanelOpen}
-            showStats={shouldShowStats}
-          />
+          <div className="hidden md:block">
+            <StickyHeader
+              title={title}
+              subtitle={subtitle}
+              projectId={currentProjectId || undefined}
+              onActionPanelToggle={handleActionPanelToggle}
+              actionPanelOpen={actionPanelOpen}
+              showStats={shouldShowStats}
+            />
+          </div>
         )}
 
-        {/* Main content with enhanced spacing */}
+        {/* Main content - single instance with responsive styles */}
         <main
           className={cn(
-            'relative min-h-[calc(100vh-72px)]',
-            // Mobile bottom padding for nav
+            'relative',
+            // Desktop: account for sticky header height
+            'md:min-h-[calc(100vh-72px)]',
+            // Mobile: full height
+            'min-h-screen',
+            // Bottom padding for navigation
             'pb-24 md:pb-6',
             // Tablet portrait: add top padding for menu button
             isTablet && isPortrait && 'pt-16'
           )}
         >
-          {/* Content container with max-width for readability */}
+          {/* Content container */}
           <div className="relative">
             {children}
           </div>
         </main>
-      </div>
-
-      {/* Mobile layout fallback */}
-      <div className="md:hidden">
-        <main className="relative min-h-screen pb-24">{children}</main>
       </div>
 
       {/* Action Panel (slide-out) */}

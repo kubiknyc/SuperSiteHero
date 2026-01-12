@@ -218,12 +218,17 @@ async function createAuthUser(
   email: string,
   password: string
 ): Promise<{ id: string; isNew: boolean } | null> {
-  // Check if user already exists by trying to get user by email
-  const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers()
-  const existingUser = existingUsers?.users?.find((u) => u.email === email)
+  // Try to get user by email first using admin API
+  try {
+    const { data: existingUsers, error: listError } = await supabaseAdmin.auth.admin.listUsers({
+      filter: `email.eq.${email}`,
+    })
 
-  if (existingUser) {
-    return { id: existingUser.id, isNew: false }
+    if (!listError && existingUsers?.users?.length > 0) {
+      return { id: existingUsers.users[0].id, isNew: false }
+    }
+  } catch {
+    // If listUsers fails, try to create and handle "already exists" error
   }
 
   // Create new auth user
@@ -234,6 +239,15 @@ async function createAuthUser(
   })
 
   if (error) {
+    // Check if user already exists - try to get their ID
+    if (error.message.includes('already been registered')) {
+      // User exists in auth but we couldn't list them - get by trying to create again
+      const { data: allUsers } = await supabaseAdmin.auth.admin.listUsers()
+      const existingUser = allUsers?.users?.find((u) => u.email === email)
+      if (existingUser) {
+        return { id: existingUser.id, isNew: false }
+      }
+    }
     console.error(`   Failed to create auth user ${email}:`, error.message)
     return null
   }
@@ -266,6 +280,7 @@ async function createUserProfile(
   }
 
   // Create user profile
+  // Note: approval_status constraint requires approved_at and approved_by when status is 'approved'
   const { error } = await supabaseAdmin.from('users').insert({
     id: userId,
     company_id: companyId,
@@ -275,6 +290,9 @@ async function createUserProfile(
     role: userData.role,
     phone: userData.phone,
     is_active: true,
+    approval_status: 'approved',
+    approved_at: new Date().toISOString(),
+    approved_by: userId, // Self-approved for test users
     notification_preferences: {
       email: true,
       push: true,

@@ -636,7 +636,7 @@ function CachedProjectCard({
   )
 }
 
-function _DownloadProjectForm({
+function DownloadProjectForm({
   onDownload,
   isDownloading,
 }: {

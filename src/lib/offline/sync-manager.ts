@@ -6,7 +6,7 @@ import { OfflineClient } from '../api/offline-client';
 import { useOfflineStore, type SyncConflict } from '@/stores/offline-store';
 import { logger } from '@/lib/utils/logger';
 import { supabase } from '@/lib/supabase';
-import { priorityQueue, type SyncBatch } from './priority-queue';
+import { priorityQueue, type SyncBatch, type PrioritySyncItem } from './priority-queue';
 import { bandwidthDetector, type NetworkSpeed } from './bandwidth-detector';
 import { putInStore, STORES } from './indexeddb';
 
@@ -406,6 +406,43 @@ export class SyncManager {
   }
 
   /**
+   * Sync a single priority queue item to Supabase
+   */
+  private static async syncItem(item: PrioritySyncItem): Promise<void> {
+    const { entityType, entityId, operation, data } = item;
+
+    switch (operation) {
+      case 'create': {
+        const { error: createError } = await supabase
+          .from(entityType as 'projects')
+          .insert(data as any);
+        if (createError) throw createError;
+        break;
+      }
+
+      case 'update': {
+        const { error: updateError } = await supabase
+          .from(entityType as 'projects')
+          .update(data as any)
+          .eq('id', entityId);
+        if (updateError) throw updateError;
+        break;
+      }
+
+      case 'delete': {
+        const { error: deleteError } = await supabase
+          .from(entityType as 'projects')
+          .delete()
+          .eq('id', entityId);
+        if (deleteError) throw deleteError;
+        break;
+      }
+    }
+
+    logger.log(`[SyncManager] Synced ${operation} for ${entityType}:${entityId}`);
+  }
+
+  /**
    * Process next batch from priority queue
    */
   static async processNextBatch(): Promise<{
@@ -431,9 +468,12 @@ export class SyncManager {
         // Mark as syncing
         priorityQueue.updateItemStatus(item.id, 'syncing');
 
-        // Sync the item (implement actual sync logic here)
-        // This would call your OfflineClient or Supabase methods
-        // await this.syncItem(item);
+        // Sync the item to Supabase
+        await this.syncItem(item);
+
+        // Update telemetry
+        this.telemetry.items_synced = (this.telemetry.items_synced || 0) + 1;
+        this.telemetry.total_bytes = (this.telemetry.total_bytes || 0) + item.size;
 
         // Mark as completed
         priorityQueue.updateItemStatus(item.id, 'completed');
@@ -441,6 +481,7 @@ export class SyncManager {
       } catch (error) {
         logger.error(`[SyncManager] Failed to sync item ${item.id}:`, error);
         priorityQueue.updateItemStatus(item.id, 'failed', error instanceof Error ? error.message : 'Unknown error');
+        this.telemetry.errors = (this.telemetry.errors || 0) + 1;
         failed++;
       }
     }

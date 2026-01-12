@@ -22,6 +22,7 @@ import type {
 // Import values separately (not as types)
 import { MODEL_PRICING, DEFAULT_MODELS } from '@/types/ai'
 import { logger } from '../../utils/logger';
+import { vaultService } from '@/lib/security/vault';
 
 
 // Re-export for convenience
@@ -393,13 +394,13 @@ class LocalProvider implements AIProvider {
 // ============================================================================
 
 /**
- * Get the API key for the current provider
- * Supports both direct encrypted keys and vault references
+ * Get the API key ID for the current provider
+ * Returns the vault secret ID or legacy encrypted key
  */
-function getApiKeyForProvider(config: AIConfiguration): string | undefined {
+function getApiKeyIdForProvider(config: AIConfiguration): string | undefined {
   const provider = config.default_provider || config.provider
 
-  // Check for provider-specific keys first (preferred)
+  // Check for provider-specific vault key IDs first (preferred)
   if (provider === 'openai' && config.openai_api_key_id) {
     return config.openai_api_key_id
   }
@@ -413,6 +414,31 @@ function getApiKeyForProvider(config: AIConfiguration): string | undefined {
   }
 
   return undefined
+}
+
+/**
+ * Resolve API key from vault or legacy storage
+ * Attempts to retrieve from vault first, falls back to direct value
+ */
+async function resolveApiKey(keyIdOrValue: string): Promise<string | null> {
+  // Check if it looks like a UUID (vault secret ID)
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+  if (uuidRegex.test(keyIdOrValue)) {
+    // It's a vault secret ID - retrieve from vault
+    try {
+      const secret = await vaultService.getSecret(keyIdOrValue);
+      if (secret) {
+        return secret;
+      }
+      logger.warn('[AI Provider] Vault secret not found, treating as direct key');
+    } catch (error) {
+      logger.warn('[AI Provider] Vault lookup failed, treating as direct key:', error);
+    }
+  }
+
+  // Return as-is (legacy direct key or vault unavailable)
+  return keyIdOrValue;
 }
 
 /**
@@ -452,9 +478,52 @@ function isAIEnabled(config: AIConfiguration): boolean {
   )
 }
 
-export function getAIProvider(config: AIConfiguration): AIProvider {
+/**
+ * Get AI provider instance (async to support vault key resolution)
+ */
+export async function getAIProvider(config: AIConfiguration): Promise<AIProvider> {
   const provider = config.default_provider || config.provider
-  const apiKey = getApiKeyForProvider(config)
+  const keyIdOrValue = getApiKeyIdForProvider(config)
+  const model = getModelForProvider(config)
+
+  switch (provider) {
+    case 'openai': {
+      if (!keyIdOrValue) {
+        throw new Error('OpenAI API key not configured. Please add your API key in Settings → AI.')
+      }
+      const apiKey = await resolveApiKey(keyIdOrValue)
+      if (!apiKey) {
+        throw new Error('Failed to retrieve OpenAI API key from secure storage.')
+      }
+      return new OpenAIProvider(apiKey, model)
+    }
+
+    case 'anthropic': {
+      if (!keyIdOrValue) {
+        throw new Error('Anthropic API key not configured. Please add your API key in Settings → AI.')
+      }
+      const apiKey = await resolveApiKey(keyIdOrValue)
+      if (!apiKey) {
+        throw new Error('Failed to retrieve Anthropic API key from secure storage.')
+      }
+      return new AnthropicProvider(apiKey, model)
+    }
+
+    case 'local':
+      return new LocalProvider(undefined, model)
+
+    default:
+      throw new Error(`Unknown AI provider: ${provider}`)
+  }
+}
+
+/**
+ * Synchronous version for backward compatibility
+ * Uses the key ID directly (for edge functions that handle vault internally)
+ */
+export function getAIProviderSync(config: AIConfiguration): AIProvider {
+  const provider = config.default_provider || config.provider
+  const apiKey = getApiKeyIdForProvider(config)
   const model = getModelForProvider(config)
 
   switch (provider) {
@@ -524,12 +593,36 @@ export const aiConfigurationApi = {
       updateData.anthropic_model = dto.anthropic_model || dto.model_preference
     }
 
-    // API Keys - store directly in the key_id fields (vault integration TODO)
-    if (dto.openai_api_key || (dto.api_key && (dto.default_provider || dto.provider) === 'openai')) {
-      updateData.openai_api_key_id = dto.openai_api_key || dto.api_key
+    // API Keys - store in vault and save secret ID
+    const openaiKey = dto.openai_api_key || (dto.api_key && (dto.default_provider || dto.provider) === 'openai' ? dto.api_key : null)
+    const anthropicKey = dto.anthropic_api_key || (dto.api_key && (dto.default_provider || dto.provider) === 'anthropic' ? dto.api_key : null)
+
+    if (openaiKey) {
+      try {
+        const secretId = await vaultService.createSecret(openaiKey, {
+          name: `openai_api_key_${existing?.id || 'new'}`,
+          description: 'OpenAI API key for AI features'
+        })
+        updateData.openai_api_key_id = secretId
+      } catch (vaultError) {
+        // Vault not available - store directly (less secure but functional)
+        logger.warn('[AI Config] Vault unavailable, storing key directly:', vaultError)
+        updateData.openai_api_key_id = openaiKey
+      }
     }
-    if (dto.anthropic_api_key || (dto.api_key && (dto.default_provider || dto.provider) === 'anthropic')) {
-      updateData.anthropic_api_key_id = dto.anthropic_api_key || dto.api_key
+
+    if (anthropicKey) {
+      try {
+        const secretId = await vaultService.createSecret(anthropicKey, {
+          name: `anthropic_api_key_${existing?.id || 'new'}`,
+          description: 'Anthropic API key for AI features'
+        })
+        updateData.anthropic_api_key_id = secretId
+      } catch (vaultError) {
+        // Vault not available - store directly (less secure but functional)
+        logger.warn('[AI Config] Vault unavailable, storing key directly:', vaultError)
+        updateData.anthropic_api_key_id = anthropicKey
+      }
     }
 
     // Feature toggles
@@ -565,12 +658,43 @@ export const aiConfigurationApi = {
       return data as AIConfiguration
     } else {
       // Create new configuration with defaults
+      // Store API keys in vault if provided
+      let openaiKeyId: string | null = null
+      let anthropicKeyId: string | null = null
+
+      const newOpenaiKey = dto.openai_api_key || (dto.api_key && (dto.default_provider || dto.provider) === 'openai' ? dto.api_key : null)
+      const newAnthropicKey = dto.anthropic_api_key || (dto.api_key && (dto.default_provider || dto.provider) === 'anthropic' ? dto.api_key : null)
+
+      if (newOpenaiKey) {
+        try {
+          openaiKeyId = await vaultService.createSecret(newOpenaiKey, {
+            name: `openai_api_key_new_${Date.now()}`,
+            description: 'OpenAI API key for AI features'
+          })
+        } catch (vaultError) {
+          logger.warn('[AI Config] Vault unavailable for new config, storing key directly:', vaultError)
+          openaiKeyId = newOpenaiKey
+        }
+      }
+
+      if (newAnthropicKey) {
+        try {
+          anthropicKeyId = await vaultService.createSecret(newAnthropicKey, {
+            name: `anthropic_api_key_new_${Date.now()}`,
+            description: 'Anthropic API key for AI features'
+          })
+        } catch (vaultError) {
+          logger.warn('[AI Config] Vault unavailable for new config, storing key directly:', vaultError)
+          anthropicKeyId = newAnthropicKey
+        }
+      }
+
       const insertData = {
         default_provider: dto.default_provider || dto.provider || 'openai',
         openai_model: dto.openai_model || 'gpt-4o-mini',
         anthropic_model: dto.anthropic_model || 'claude-3-haiku-20240307',
-        openai_api_key_id: dto.openai_api_key || (dto.api_key && (dto.default_provider || dto.provider) === 'openai' ? dto.api_key : null),
-        anthropic_api_key_id: dto.anthropic_api_key || (dto.api_key && (dto.default_provider || dto.provider) === 'anthropic' ? dto.api_key : null),
+        openai_api_key_id: openaiKeyId,
+        anthropic_api_key_id: anthropicKeyId,
         enable_rfi_routing: dto.enable_rfi_routing ?? dto.features_enabled?.rfi_routing ?? true,
         enable_smart_summaries: dto.enable_smart_summaries ?? dto.features_enabled?.smart_summaries ?? true,
         enable_action_item_extraction: dto.enable_action_item_extraction ?? true,
@@ -598,11 +722,17 @@ export const aiConfigurationApi = {
   async testConfiguration(config: AIConfiguration): Promise<{ success: boolean; error?: string }> {
     try {
       const providerType = config.default_provider || config.provider
-      const apiKey = getApiKeyForProvider(config)
+      const keyIdOrValue = getApiKeyIdForProvider(config)
       const model = getModelForProvider(config)
 
-      if (!apiKey) {
+      if (!keyIdOrValue) {
         return { success: false, error: 'API key not configured' }
+      }
+
+      // Resolve key from vault if needed
+      const apiKey = await resolveApiKey(keyIdOrValue)
+      if (!apiKey) {
+        return { success: false, error: 'Failed to retrieve API key from secure storage' }
       }
 
       // Use Edge Function to avoid CORS issues
@@ -796,7 +926,7 @@ export const aiService = {
       throw new Error(`AI budget exceeded (${usedPercent}% used). Please increase your budget.`)
     }
 
-    const provider = getAIProvider(config)
+    const provider = await getAIProvider(config)
     const result = await provider.complete(prompt, options)
 
     // Log usage
@@ -829,7 +959,7 @@ export const aiService = {
       throw new Error(`AI budget exceeded (${usedPercent}% used). Please increase your budget.`)
     }
 
-    const provider = getAIProvider(config)
+    const provider = await getAIProvider(config)
     const startTime = Date.now()
     const data = await provider.extractJSON<T>(prompt, options)
     const latencyMs = Date.now() - startTime

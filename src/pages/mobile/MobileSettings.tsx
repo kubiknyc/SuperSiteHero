@@ -9,7 +9,7 @@
  * - Sign out
  */
 
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   User,
@@ -34,6 +34,7 @@ import { useAuth } from '../../lib/auth/AuthContext';
 import { useDevice } from '../../lib/device';
 import { useTheme } from '../../lib/theme/darkMode';
 import { cn } from '../../lib/utils';
+import { MobileHelpSheet } from './MobileHelpSheet';
 
 interface SettingsItemProps {
   icon: React.ElementType;
@@ -79,6 +80,7 @@ export const MobileSettings = memo(function MobileSettings() {
   const { user, signOut } = useAuth();
   const { mode, setMode, resetMode, hasOverride } = useDevice();
   const { theme, setTheme } = useTheme();
+  const [helpSheetOpen, setHelpSheetOpen] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
@@ -194,7 +196,7 @@ export const MobileSettings = memo(function MobileSettings() {
           <SettingsItem
             icon={HelpCircle}
             label="Help & Support"
-            onClick={() => {/* TODO: Open help */}}
+            onClick={() => setHelpSheetOpen(true)}
           />
           <SettingsItem
             icon={Shield}
@@ -223,6 +225,9 @@ export const MobileSettings = memo(function MobileSettings() {
       <p className="text-center text-xs text-muted-foreground">
         JobSight Mobile v1.0.0
       </p>
+
+      {/* Help Sheet */}
+      <MobileHelpSheet open={helpSheetOpen} onOpenChange={setHelpSheetOpen} />
     </div>
   );
 });

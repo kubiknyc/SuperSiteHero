@@ -458,6 +458,7 @@ async function seedE2EPhase2Data() {
   console.log('✅ Using project:', projectName, '(', projectId, ')')
 
   // Step 3: Seed Subcontractors
+  // Note: subcontractors table uses project_id, not company_id
   console.log('\n3️⃣  Seeding subcontractors...')
   const subcontractorIds: Record<string, string> = {}
 
@@ -465,8 +466,8 @@ async function seedE2EPhase2Data() {
     const { data: existing } = await supabase
       .from('subcontractors')
       .select('id')
-      .eq('company_id', companyId)
-      .eq('email', sub.email)
+      .eq('project_id', projectId)
+      .eq('company_name', sub.company_name)
       .maybeSingle()
 
     if (existing) {
@@ -476,13 +477,11 @@ async function seedE2EPhase2Data() {
       const { data: newSub, error } = await supabase
         .from('subcontractors')
         .insert({
-          company_id: companyId,
+          project_id: projectId,
           company_name: sub.company_name,
-          contact_name: sub.contact_name,
-          email: sub.email,
-          phone: sub.phone,
           trade: sub.trade,
           status: 'active',
+          created_by: userId,
         })
         .select()
         .single()
@@ -559,22 +558,21 @@ async function seedE2EPhase2Data() {
       ballInCourtEntity = 'architect'
     }
 
+    // Note: submittals table schema - removed columns that don't exist:
+    // drawing_number, priority, long_lead_item
     const { error } = await supabase
       .from('submittals')
       .insert({
         project_id: projectId,
         company_id: companyId,
         submittal_number: `${sd.spec_section}-${shopDrawingSequence}`,
-        drawing_number: drawingNumber,
         revision_number: 0,
         title: sd.title,
-        description: `E2E test shop drawing: ${sd.title}`,
+        description: `E2E test shop drawing: ${sd.title}. Priority: ${sd.priority}. ${sd.long_lead_item ? 'Long lead item.' : ''}`,
         spec_section: sd.spec_section,
         spec_section_title: sd.spec_section_title,
         submittal_type: 'shop_drawing',
         discipline: sd.discipline,
-        priority: sd.priority,
-        long_lead_item: sd.long_lead_item || false,
         review_status: sd.review_status,
         approval_code: sd.approval_code || null,
         approval_code_date: sd.approval_code ? dateReturned : null,
@@ -600,11 +598,13 @@ async function seedE2EPhase2Data() {
   // Step 5: Seed Cost Codes
   console.log('\n5️⃣  Seeding cost codes...')
 
+  // Note: cost_codes table only has basic fields, no budget/cost tracking columns
+  // Budget data is tracked in a separate table or calculated from transactions
   for (const cc of COST_CODES_TEST_DATA) {
     const { data: existing } = await supabase
       .from('cost_codes')
       .select('id')
-      .eq('project_id', projectId)
+      .eq('company_id', companyId)
       .eq('code', cc.code)
       .maybeSingle()
 
@@ -616,17 +616,12 @@ async function seedE2EPhase2Data() {
     const { error } = await supabase
       .from('cost_codes')
       .insert({
-        project_id: projectId,
         company_id: companyId,
         code: cc.code,
         name: cc.name,
+        description: `Budget: $${cc.original_budget.toLocaleString()}, Committed: $${cc.committed_cost.toLocaleString()}, Actual: $${cc.actual_cost.toLocaleString()}`,
         cost_type: cc.cost_type,
-        original_budget: cc.original_budget,
-        revised_budget: cc.original_budget,
-        committed_cost: cc.committed_cost,
-        actual_cost: cc.actual_cost,
         is_active: true,
-        created_by: userId,
       })
 
     if (error) {
@@ -659,14 +654,20 @@ async function seedE2EPhase2Data() {
 export { seedE2EPhase2Data, SHOP_DRAWINGS_TEST_DATA, COST_CODES_TEST_DATA, SUBCONTRACTORS_TEST_DATA }
 
 // Run if called directly
-const isMainModule = import.meta.url === `file://${process.argv[1].replace(/\\/g, '/')}`
+// Note: tsx runs this file directly, so we check if it's the main module
+const scriptPath = process.argv[1]
+const isMainModule = scriptPath && (
+  scriptPath.endsWith('seed-e2e-phase2-data.ts') ||
+  import.meta.url.includes('seed-e2e-phase2-data')
+)
+
 if (isMainModule) {
   seedE2EPhase2Data()
+    .then(() => {
+      process.exit(0)
+    })
     .catch((error) => {
       console.error('\n❌ Seeding failed:', error)
       process.exit(1)
-    })
-    .finally(() => {
-      process.exit(0)
     })
 }

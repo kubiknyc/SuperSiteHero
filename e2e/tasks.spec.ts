@@ -41,12 +41,24 @@ test.describe('Tasks Management', () => {
   });
 
   test('should show task filters and sorting options', async ({ page }) => {
-    // Look for common filter elements
-    const filters = page.locator('[data-testid*="filter"], select, [role="combobox"]');
+    // Wait for page to fully load
+    await page.waitForTimeout(2000);
 
-    // Should have at least one filter or sort option
-    const count = await filters.count();
-    expect(count).toBeGreaterThan(0);
+    // Look for common filter elements - the tasks page has select elements and search input
+    // The TasksPage has: #project-select, #status-filter, #priority-filter, #search
+    const projectFilter = page.locator('#project-select');
+    const statusFilter = page.locator('#status-filter');
+    const priorityFilter = page.locator('#priority-filter');
+    const searchInput = page.locator('#search, input[placeholder*="search" i]');
+
+    // Should have at least one filter element visible
+    const hasProjectFilter = await projectFilter.isVisible({ timeout: 5000 }).catch(() => false);
+    const hasStatusFilter = await statusFilter.isVisible({ timeout: 3000 }).catch(() => false);
+    const hasPriorityFilter = await priorityFilter.isVisible({ timeout: 3000 }).catch(() => false);
+    const hasSearch = await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false);
+
+    // At least one filter should be visible (page might not show project filter if no projects)
+    expect(hasProjectFilter || hasStatusFilter || hasPriorityFilter || hasSearch).toBeTruthy();
   });
 
   test('should navigate to create task page', async ({ page }) => {
@@ -122,29 +134,39 @@ test.describe('Tasks Management', () => {
   });
 
   test('should validate required fields on create', async ({ page }) => {
-    // Navigate to create page
-    const createButton = page.locator('button, a').filter({ hasText: /new task|create task|add task/i }).first();
+    // Navigate directly to create page with a project ID (required)
+    await page.goto('/tasks/new?projectId=test-project');
+    await page.waitForLoadState('networkidle');
 
-    if (!(await createButton.isVisible({ timeout: 5000 }).catch(() => false))) {
-      test.skip();
+    // Check if form is visible - TaskForm has input#title
+    const titleInput = page.locator('#title').first();
+    const formVisible = await titleInput.isVisible({ timeout: 5000 }).catch(() => false);
+
+    if (!formVisible) {
+      test.skip(true, 'Task create form not found');
       return;
     }
 
-    await createButton.click();
-
-    await page.waitForLoadState('networkidle');
+    // Track if validation dialog appeared
+    let dialogAppeared = false;
+    page.on('dialog', async dialog => {
+      dialogAppeared = true;
+      await dialog.accept();
+    });
 
     // Try to submit without filling required fields
-    const submitButton = page.locator('button[type="submit"], button:has-text("Create"), button:has-text("Save")').first();
-    if (await submitButton.isVisible().catch(() => false)) {
+    const submitButton = page.locator('button:has-text("Save Task"), button[type="submit"]').first();
+    if (await submitButton.isVisible({ timeout: 3000 }).catch(() => false)) {
       await submitButton.click();
+      await page.waitForTimeout(1500);
     }
 
-    // Should show validation error or form should still be visible (validation prevented submission)
-    const errorMessage = page.locator('[role="alert"], .error, .text-red-500, .text-destructive, [data-testid*="error"]');
-    const hasError = await errorMessage.first().isVisible({ timeout: 5000 }).catch(() => false);
-    const hasForm = await page.locator('form').isVisible({ timeout: 3000 }).catch(() => false);
-    expect(hasError || hasForm).toBeTruthy();
+    // Either validation dialog appeared or browser validation prevented submission
+    // Check that we didn't navigate away (still on /tasks/new)
+    const stillOnCreatePage = page.url().includes('/tasks/new');
+    const titleStillVisible = await titleInput.isVisible({ timeout: 2000 }).catch(() => false);
+
+    expect(dialogAppeared || stillOnCreatePage || titleStillVisible).toBeTruthy();
   });
 
   test('should filter tasks by status', async ({ page }) => {
@@ -174,20 +196,52 @@ test.describe('Tasks Management', () => {
     // Wait for tasks to load
     await page.waitForTimeout(2000);
 
-    // Look for first task link or button
-    const firstTask = page.locator('[data-testid*="task-"] a, [role="row"] a, .task-item a, button:has-text("View")').first();
+    // Check for empty state first - the TasksPage shows "No tasks yet" or "No matching tasks"
+    const emptyState = page.locator('h3').filter({ hasText: /no tasks|no matching/i });
+    const loadingState = page.locator('text=/loading tasks/i');
 
-    if (await firstTask.isVisible().catch(() => false)) {
-      await firstTask.click();
+    // Wait for loading to complete
+    if (await loadingState.isVisible({ timeout: 1000 }).catch(() => false)) {
+      await page.waitForTimeout(3000);
+    }
 
-      // Should navigate to detail page or show content
-      const hasDetailUrl = page.url().includes('/tasks/');
-      const detailContent = page.locator('[data-testid="task-detail"], .task-detail, main');
+    // Check for empty state
+    if (await emptyState.isVisible({ timeout: 2000 }).catch(() => false)) {
+      test.skip(true, 'No tasks exist - test data may be missing');
+      return;
+    }
+
+    // Look for task view links - pattern is <Link to="/tasks/{uuid}"><Button><Eye/></Button></Link>
+    // These links have UUIDs in the href and contain buttons with Eye icons
+    const taskViewLinks = page.locator('a[href*="/tasks/"]').filter({ hasNotText: /new/i });
+    const linkCount = await taskViewLinks.count();
+
+    // Filter out sidebar navigation links - only want task detail links with UUIDs
+    let targetLink = null;
+    for (let i = 0; i < linkCount; i++) {
+      const href = await taskViewLinks.nth(i).getAttribute('href');
+      // Check if it's a UUID-based task detail link (not /tasks or /tasks/new)
+      if (href && /\/tasks\/[0-9a-f-]{36}/.test(href)) {
+        targetLink = taskViewLinks.nth(i);
+        break;
+      }
+    }
+
+    if (targetLink) {
+      // Click the first view link/button
+      await targetLink.click();
+      await page.waitForLoadState('networkidle');
+      await page.waitForTimeout(1000);
+
+      // Should navigate to detail page - check URL pattern for UUID
+      const currentUrl = page.url();
+      const hasDetailUrl = /\/tasks\/[0-9a-f-]{36}/.test(currentUrl);
+      const detailContent = page.locator('main');
       const hasDetailContent = await detailContent.isVisible({ timeout: 5000 }).catch(() => false);
       expect(hasDetailUrl || hasDetailContent).toBeTruthy();
     } else {
-      // Skip if no tasks exist
-      test.skip();
+      // No task detail links found - likely no tasks exist
+      test.skip(true, 'No task detail links found - test data may be missing');
     }
   });
 

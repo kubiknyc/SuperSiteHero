@@ -86,22 +86,17 @@ test.describe('Change Orders Management', () => {
 
     await createButton.click();
     await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1000);
 
-    // The form uses specific IDs - check for project selector first
-    const projectSelect = page.locator('#project_select');
+    // Wait for the form card to appear
+    const formCard = page.locator('form, [class*="CardContent"]').first();
+    await formCard.waitFor({ state: 'visible', timeout: 10000 }).catch(() => {});
+
+    // Check for project select - the key form element
+    const projectSelect = page.locator('select#project_select');
     const formVisible = await projectSelect.isVisible({ timeout: 5000 }).catch(() => false);
 
     if (!formVisible) {
-      // Form didn't appear - check if there's a database/loading error
-      const pageError = page.locator('[role="alert"]').filter({ hasText: /error|failed/i });
-      const hasPageError = await pageError.isVisible({ timeout: 2000 }).catch(() => false);
-      if (hasPageError) {
-        test.skip(true, 'Create page shows error - feature may have issues');
-        return;
-      }
-      // Form didn't appear - create functionality may not be fully implemented
-      test.skip(true, 'Create form did not appear - feature may not be implemented');
+      test.skip(true, 'Create form did not appear');
       return;
     }
 

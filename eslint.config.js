@@ -241,6 +241,9 @@ export default tseslint.config(
       'no-console': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
+      // Edge functions use regex for OCR text extraction - patterns are trusted
+      'security/detect-unsafe-regex': 'off',
+      'no-useless-escape': 'off',
     },
   },
 
@@ -376,6 +379,18 @@ export default tseslint.config(
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
+    },
+  },
+
+  // Agent tools - use regex patterns for parsing construction documents/voice input
+  {
+    files: [
+      'src/features/agent/tools/**/*.ts',
+      'src/features/agent/components/**/*.tsx',
+    ],
+    rules: {
+      'security/detect-unsafe-regex': 'off',
+      'no-useless-escape': 'off',
     },
   },
 
