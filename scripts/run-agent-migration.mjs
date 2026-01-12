@@ -1,4 +1,4 @@
-/* eslint-disable security/detect-object-injection, security/detect-non-literal-fs-filename */
+/* eslint-disable security/detect-object-injection */
 /**
  * Run the agent system migration directly
  */

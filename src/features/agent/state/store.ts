@@ -30,6 +30,7 @@ const initialState: AgentStoreState = {
   isChatMinimized: false,
   isProcessing: false,
   streamingMessageId: null,
+  activeAbortController: null,
   pendingConfirmations: [],
   error: null,
 }
@@ -247,10 +248,13 @@ export const useAgentStore = create<AgentStore>()(
             throw new Error('Session not found')
           }
 
-          set({ isProcessing: true, error: null })
+          // Create AbortController for this request
+          const abortController = new AbortController()
+          set({ isProcessing: true, error: null, activeAbortController: abortController })
 
           try {
             const response = await agentOrchestrator.processMessage(session, content, {
+              abortSignal: abortController.signal,
               onStreamChunk: (chunk) => {
                 // Handle streaming updates
                 if (chunk.type === 'text_delta') {
@@ -274,23 +278,34 @@ export const useAgentStore = create<AgentStore>()(
               },
             })
 
-            set({ isProcessing: false, streamingMessageId: null })
+            set({ isProcessing: false, streamingMessageId: null, activeAbortController: null })
             return response
           } catch (error) {
             const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-            logger.error('[AgentStore] Error sending message:', error)
+            // Don't log abort errors as they're intentional
+            if (errorMessage !== 'Request aborted') {
+              logger.error('[AgentStore] Error sending message:', error)
+            }
             set({
               isProcessing: false,
               streamingMessageId: null,
-              error: errorMessage || 'Failed to send message',
+              activeAbortController: null,
+              error: errorMessage === 'Request aborted' ? null : (errorMessage || 'Failed to send message'),
             })
             throw error
           }
         },
 
         cancelProcessing: () => {
-          // TODO: Implement abort controller
-          set({ isProcessing: false, streamingMessageId: null })
+          const controller = get().activeAbortController
+          if (controller) {
+            controller.abort()
+          }
+          set({
+            isProcessing: false,
+            streamingMessageId: null,
+            activeAbortController: null,
+          })
         },
 
         // ======================================================================

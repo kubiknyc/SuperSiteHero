@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* eslint-disable security/detect-object-injection, security/detect-non-literal-fs-filename */
+/* eslint-disable security/detect-non-literal-fs-filename */
 /**
  * Design System Dark Mode Compliance Audit Script
  * Scans all TSX files for missing dark mode variants

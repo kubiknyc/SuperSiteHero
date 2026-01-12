@@ -42,6 +42,7 @@ const MobileDailyReportDetail = lazy(() => import('./pages/mobile/MobileDailyRep
 // Mobile Photo Progress
 const MobilePhotoProgressList = lazy(() => import('./pages/mobile/MobilePhotoProgress').then(m => ({ default: m.MobilePhotoProgressList })));
 const MobilePhotoCapture = lazy(() => import('./pages/mobile/MobilePhotoCapture').then(m => ({ default: m.MobilePhotoCapture })));
+const MobilePhotoDetail = lazy(() => import('./pages/mobile/MobilePhotoProgress').then(m => ({ default: m.MobilePhotoDetail })));
 
 // Mobile Punch Lists
 const MobilePunchListsList = lazy(() => import('./pages/mobile/MobilePunchLists').then(m => ({ default: m.MobilePunchListsList })));
@@ -126,6 +127,7 @@ export function MobileApp() {
         {/* Photo Progress - mobile prefixed */}
         <Route path="/mobile/photo-progress" element={<MobileProtectedRoute><MobilePhotoProgressList /></MobileProtectedRoute>} />
         <Route path="/mobile/photo-progress/capture" element={<ProtectedRoute><MobilePhotoCapture /></ProtectedRoute>} />
+        <Route path="/mobile/photo-progress/:photoId" element={<MobileProtectedRoute><MobilePhotoDetail /></MobileProtectedRoute>} />
 
         {/* Punch Lists - mobile prefixed */}
         <Route path="/mobile/punch-lists" element={<MobileProtectedRoute><MobilePunchListsList /></MobileProtectedRoute>} />
@@ -158,8 +160,10 @@ export function MobileApp() {
 
         <Route path="/photo-progress" element={<MobileProtectedRoute><MobilePhotoProgressList /></MobileProtectedRoute>} />
         <Route path="/photo-progress/capture" element={<ProtectedRoute><MobilePhotoCapture /></ProtectedRoute>} />
+        <Route path="/photo-progress/:photoId" element={<MobileProtectedRoute><MobilePhotoDetail /></MobileProtectedRoute>} />
         <Route path="/projects/:projectId/photo-progress" element={<MobileProtectedRoute><MobilePhotoProgressList /></MobileProtectedRoute>} />
         <Route path="/projects/:projectId/photo-progress/capture" element={<ProtectedRoute><MobilePhotoCapture /></ProtectedRoute>} />
+        <Route path="/projects/:projectId/photo-progress/:photoId" element={<MobileProtectedRoute><MobilePhotoDetail /></MobileProtectedRoute>} />
 
         <Route path="/punch-lists" element={<MobileProtectedRoute><MobilePunchListsList /></MobileProtectedRoute>} />
         <Route path="/punch-lists/new" element={<MobileProtectedRoute><MobilePunchItemForm /></MobileProtectedRoute>} />

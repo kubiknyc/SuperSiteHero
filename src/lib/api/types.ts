@@ -1,11 +1,23 @@
 // File: /src/lib/api/types.ts
 // Shared API types and error definitions
 
+import type { PostgrestError } from '@supabase/supabase-js'
+
+/**
+ * Structured error details from API responses
+ */
+export interface ApiErrorDetails {
+  hint?: string
+  message?: string
+  code?: string
+  [key: string]: unknown
+}
+
 export interface ApiError {
   code: string
   message: string
   status?: number
-  details?: any
+  details?: ApiErrorDetails | PostgrestError | Error
 }
 
 export interface ApiResponse<T> {
@@ -35,10 +47,15 @@ export interface PaginatedResponse<T> {
 }
 
 // Query filter types for common patterns
+/**
+ * Valid filter values for Supabase queries
+ */
+export type FilterValue = string | number | boolean | null | string[] | number[]
+
 export interface QueryFilter {
   column: string
   operator: 'eq' | 'neq' | 'gt' | 'gte' | 'lt' | 'lte' | 'like' | 'ilike' | 'in'
-  value: any
+  value: FilterValue
 }
 
 export interface QueryOptions {

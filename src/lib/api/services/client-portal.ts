@@ -5,6 +5,7 @@
  */
 
 import { supabase } from '@/lib/supabase'
+import { fromExtended } from '@/lib/supabase-typed'
 import { ApiErrorClass } from '../errors'
 import type {
   ClientPortalSettings,
@@ -30,7 +31,7 @@ export const clientPortalApi = {
     try {
       // Use .rpc() or raw query for views that aren't in the generated types
       const { data, error } = await supabase
-        .from('client_project_summary' as any)
+        fromExtended('client_project_summary')
         .select('*')
         .order('name')
 
@@ -52,7 +53,7 @@ export const clientPortalApi = {
   async getClientProject(projectId: string): Promise<ClientProjectView | null> {
     try {
       const { data, error } = await supabase
-        .from('client_project_summary' as any)
+        fromExtended('client_project_summary')
         .select('*')
         .eq('id', projectId)
         .single()
@@ -79,7 +80,7 @@ export const clientPortalApi = {
     try {
       // Get project counts
       const { data: projects, error: projectsError } = await supabase
-        .from('client_project_summary' as any)
+        fromExtended('client_project_summary')
         .select('id, status')
 
       if (projectsError) {throw projectsError}
@@ -147,7 +148,7 @@ export const clientPortalApi = {
   async getPortalSettings(projectId: string): Promise<ClientPortalSettings | null> {
     try {
       const { data, error } = await supabase
-        .from('client_portal_settings' as any)
+        fromExtended('client_portal_settings')
         .select('*')
         .eq('project_id', projectId)
         .single()
@@ -175,9 +176,8 @@ export const clientPortalApi = {
     updates: UpdateClientPortalSettingsDTO
   ): Promise<ClientPortalSettings> {
     try {
-      const { data, error } = await supabase
-        .from('client_portal_settings' as any)
-        .update(updates as any)
+      const { data, error } = await fromExtended('client_portal_settings')
+        .update(updates)
         .eq('project_id', projectId)
         .select()
         .single()

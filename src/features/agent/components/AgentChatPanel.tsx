@@ -23,6 +23,7 @@ import {
   Sun,
   PanelRightClose,
   Plus,
+  StopCircle,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -103,6 +104,7 @@ export function AgentChatPanel({
     minimizeChat,
     maximizeChat,
     sendMessage,
+    cancelProcessing,
     createSession,
     setActiveSession,
     clearError,
@@ -277,6 +279,7 @@ export function AgentChatPanel({
           onShowHistory={() => setShowHistory(true)}
           onMinimize={minimizeChat}
           onClose={closeChat}
+          onCancel={cancelProcessing}
           showTimestamps={showTimestamps}
           showToolDetails={showToolDetails}
           compactMode={compactMode}
@@ -468,6 +471,7 @@ function ChatHeader({
   onShowHistory,
   onMinimize,
   onClose,
+  onCancel,
   showTimestamps,
   showToolDetails,
   compactMode,
@@ -481,6 +485,7 @@ function ChatHeader({
   onShowHistory: () => void
   onMinimize: () => void
   onClose: () => void
+  onCancel: () => void
   showTimestamps: boolean
   showToolDetails: boolean
   compactMode: boolean
@@ -505,10 +510,13 @@ function ChatHeader({
           </h3>
           <p className="text-xs text-muted-foreground">
             {isProcessing ? (
-              <span className="flex items-center gap-1">
-                <Loader2 className="h-3 w-3 animate-spin" />
-                Thinking...
-              </span>
+              <button
+                onClick={onCancel}
+                className="flex items-center gap-1 text-destructive hover:underline cursor-pointer"
+              >
+                <StopCircle className="h-3 w-3" />
+                Cancel
+              </button>
             ) : (
               'Ready to help'
             )}

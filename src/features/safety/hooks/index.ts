@@ -25,3 +25,7 @@ export * from './useOSHA300A'
 
 // Safety Trends hooks
 export * from './useSafetyTrends'
+
+// Offline sync
+export * from './useSafetySync'
+export * from './useIncidentsOffline'

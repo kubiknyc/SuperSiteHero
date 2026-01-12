@@ -226,7 +226,7 @@ export function getClientIP(req: Request): string {
     if (value) {
       // x-forwarded-for can contain multiple IPs, take the first
       const ip = value.split(',')[0].trim()
-      if (ip) return ip
+      if (ip) {return ip}
     }
   }
 

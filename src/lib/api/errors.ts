@@ -1,7 +1,8 @@
 // File: /src/lib/api/errors.ts
 // Error handling utilities and custom error classes
 
-import type { ApiError } from './types'
+import type { ApiError, ApiErrorDetails } from './types'
+import type { PostgrestError } from '@supabase/supabase-js'
 
 /**
  * Custom error class for API errors
@@ -9,7 +10,7 @@ import type { ApiError } from './types'
 export class ApiErrorClass extends Error implements ApiError {
   code: string
   status?: number
-  details?: any
+  details?: ApiErrorDetails | PostgrestError | Error
 
   constructor(error: ApiError) {
     super(error.message)

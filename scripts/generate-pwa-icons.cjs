@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* eslint-disable security/detect-object-injection, security/detect-non-literal-fs-filename */
+/* eslint-disable security/detect-non-literal-fs-filename */
 /**
  * PWA Icon Generator Script
  *

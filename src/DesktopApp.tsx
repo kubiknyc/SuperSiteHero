@@ -49,6 +49,7 @@ const TaskEditPage = lazy(() => import('./pages/tasks/TaskEditPage').then(m => (
 
 // Change Orders feature
 const ChangeOrdersPage = lazy(() => import('./pages/change-orders/ChangeOrdersPage').then(m => ({ default: m.ChangeOrdersPage })));
+const ChangeOrderCreatePage = lazy(() => import('./pages/change-orders/ChangeOrderCreatePage').then(m => ({ default: m.ChangeOrderCreatePage })));
 const ChangeOrderDetailPage = lazy(() => import('./pages/change-orders/ChangeOrderDetailPage').then(m => ({ default: m.ChangeOrderDetailPage })));
 
 // Documents feature
@@ -395,6 +396,7 @@ export function DesktopApp() {
 
         {/* Change Orders feature */}
         <Route path="/change-orders" element={<ProtectedRoute><ChangeOrdersPage /></ProtectedRoute>} />
+        <Route path="/change-orders/new" element={<ProtectedRoute><ChangeOrderCreatePage /></ProtectedRoute>} />
         <Route path="/change-orders/:id" element={<ProtectedRoute><ChangeOrderDetailPage /></ProtectedRoute>} />
 
         {/* Workflows feature */}

@@ -25,6 +25,11 @@ export const STORES = {
 } as const;
 
 /**
+ * Valid store names for type-safe store access
+ */
+export type StoreName = typeof STORES[keyof typeof STORES];
+
+/**
  * IndexedDB database instance
  */
 export type OfflineDB = IDBPDatabase<{
@@ -85,7 +90,8 @@ export async function initDatabase(): Promise<OfflineDB> {
   }
 
   try {
-    dbInstance = await openDB<any>(DB_NAME, DB_VERSION, {
+    // Use type assertion to work with the properly typed OfflineDB
+    dbInstance = await openDB(DB_NAME, DB_VERSION, {
       upgrade(db, oldVersion, newVersion, _transaction) {
         logger.log(`Upgrading database from version ${oldVersion} to ${newVersion}`);
 
@@ -202,67 +208,75 @@ export async function deleteDatabase(): Promise<void> {
 
 /**
  * Get all records from a store
+ * @param storeName - Must be a valid store name from STORES constant
  */
-export async function getAllFromStore<T>(storeName: string): Promise<T[]> {
+export async function getAllFromStore<T>(storeName: StoreName): Promise<T[]> {
   const db = await getDatabase();
-  return await db.getAll(storeName as any);
+  // Cast needed because idb library types don't support dynamic store names
+  return await db.getAll(storeName as keyof typeof db.objectStoreNames);
 }
 
 /**
  * Get a single record by key
  */
 export async function getFromStore<T>(
-  storeName: string,
+  storeName: StoreName,
   key: string
 ): Promise<T | undefined> {
   const db = await getDatabase();
-  return await db.get(storeName as any, key);
+  // Cast needed because idb library types don't support dynamic store names
+  return await db.get(storeName as keyof typeof db.objectStoreNames, key);
 }
 
 /**
  * Add a record to a store
  */
-export async function addToStore<T>(storeName: string, value: T): Promise<string> {
+export async function addToStore<T>(storeName: StoreName, value: T): Promise<string> {
   const db = await getDatabase();
-  const key = await db.add(storeName as any, value as any);
+  // Casts needed because idb library types don't support dynamic store names
+  const key = await db.add(storeName as keyof typeof db.objectStoreNames, value as never);
   return String(key);
 }
 
 /**
  * Update/put a record in a store
  */
-export async function putInStore<T>(storeName: string, value: T): Promise<string> {
+export async function putInStore<T>(storeName: StoreName, value: T): Promise<string> {
   const db = await getDatabase();
-  const key = await db.put(storeName as any, value as any);
+  // Casts needed because idb library types don't support dynamic store names
+  const key = await db.put(storeName as keyof typeof db.objectStoreNames, value as never);
   return String(key);
 }
 
 /**
  * Delete a record from a store
  */
-export async function deleteFromStore(storeName: string, key: string): Promise<void> {
+export async function deleteFromStore(storeName: StoreName, key: string): Promise<void> {
   const db = await getDatabase();
-  await db.delete(storeName as any, key);
+  // Cast needed because idb library types don't support dynamic store names
+  await db.delete(storeName as keyof typeof db.objectStoreNames, key);
 }
 
 /**
  * Clear all records from a store
  */
-export async function clearStore(storeName: string): Promise<void> {
+export async function clearStore(storeName: StoreName): Promise<void> {
   const db = await getDatabase();
-  await db.clear(storeName as any);
+  // Cast needed because idb library types don't support dynamic store names
+  await db.clear(storeName as keyof typeof db.objectStoreNames);
 }
 
 /**
  * Get records from a store by index
  */
 export async function getByIndex<T>(
-  storeName: string,
+  storeName: StoreName,
   indexName: string,
-  value: any
+  value: unknown
 ): Promise<T[]> {
   const db = await getDatabase();
-  const tx = db.transaction(storeName as any, 'readonly');
+  // Cast needed because idb library types don't support dynamic store names
+  const tx = db.transaction(storeName as keyof typeof db.objectStoreNames, 'readonly');
   const index = tx.store.index(indexName);
   return await index.getAll(value);
 }
@@ -270,21 +284,23 @@ export async function getByIndex<T>(
 /**
  * Count records in a store
  */
-export async function countRecords(storeName: string): Promise<number> {
+export async function countRecords(storeName: StoreName): Promise<number> {
   const db = await getDatabase();
-  return await db.count(storeName as any);
+  // Cast needed because idb library types don't support dynamic store names
+  return await db.count(storeName as keyof typeof db.objectStoreNames);
 }
 
 /**
  * Count records by index value
  */
 export async function countByIndex(
-  storeName: string,
+  storeName: StoreName,
   indexName: string,
-  value: any
+  value: unknown
 ): Promise<number> {
   const db = await getDatabase();
-  const tx = db.transaction(storeName as any, 'readonly');
+  // Cast needed because idb library types don't support dynamic store names
+  const tx = db.transaction(storeName as keyof typeof db.objectStoreNames, 'readonly');
   const index = tx.store.index(indexName);
   return await index.count(value);
 }

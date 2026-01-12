@@ -4,12 +4,12 @@
  */
 
 import React, {
-  useState,
   useRef,
   useCallback,
   useEffect,
   KeyboardEvent,
   useMemo,
+  useState,
 } from 'react'
 import {
   Send,
@@ -46,6 +46,7 @@ import {
 } from '@/components/ui/popover'
 import { useChatStore } from '../state/chat-store'
 import { useMentionSuggestions, useChatCommands } from '../hooks/useAgentChat'
+import { useVoiceToText } from '@/hooks/useVoiceToText'
 import type { Mention, Attachment } from '../types/chat'
 
 // ============================================================================
@@ -107,7 +108,6 @@ export function AgentChatInput({
   const [commandFilter, setCommandFilter] = useState('')
   const [mentionFilter, setMentionFilter] = useState('')
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const [isRecording, setIsRecording] = useState(false)
 
   // Refs
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -116,6 +116,33 @@ export function AgentChatInput({
   // Hooks
   const { suggestions: mentionSuggestions, isLoading: isLoadingMentions, searchMentions } = useMentionSuggestions(projectId)
   const { getCommandSuggestions } = useChatCommands()
+
+  // Voice input hook
+  const {
+    isListening: isRecording,
+    isSupported: isVoiceSupported,
+    transcript: voiceTranscript,
+    error: voiceError,
+    errorMessage: voiceErrorMessage,
+    startListening,
+    stopListening,
+    clearTranscript,
+    resetError: resetVoiceError,
+  } = useVoiceToText({
+    language: 'en-US',
+    interimResults: true,
+    continuous: false,
+    silenceTimeout: 3000,
+    onTranscript: (text, isFinal) => {
+      if (isFinal) {
+        // Append transcribed text to existing input
+        setValue((prev) => (prev ? `${prev} ${text}` : text))
+      }
+    },
+    onEnd: () => {
+      clearTranscript()
+    },
+  })
 
   // Filter commands
   const filteredCommands = useMemo(() => {
@@ -300,11 +327,15 @@ export function AgentChatInput({
     setMentions((prev) => prev.filter((m) => m.id !== id))
   }, [])
 
-  // Voice input toggle (placeholder - needs actual implementation)
+  // Voice input toggle
   const handleVoiceToggle = useCallback(() => {
-    setIsRecording((prev) => !prev)
-    // TODO: Implement voice input using Web Speech API
-  }, [])
+    if (isRecording) {
+      stopListening()
+    } else {
+      resetVoiceError()
+      startListening()
+    }
+  }, [isRecording, startListening, stopListening, resetVoiceError])
 
   return (
     <div className="relative">
@@ -389,6 +420,17 @@ export function AgentChatInput({
               {value.length}/{maxLength}
             </span>
           )}
+
+          {/* Voice recording indicator */}
+          {isRecording && voiceTranscript && (
+            <div className="absolute left-3 bottom-2 flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+              </span>
+              <span className="italic truncate max-w-[200px]">{voiceTranscript}...</span>
+            </div>
+          )}
         </div>
 
         {/* Action Buttons */}
@@ -414,7 +456,7 @@ export function AgentChatInput({
           )}
 
           {/* Voice Input Button */}
-          {showVoiceInput && (
+          {showVoiceInput && isVoiceSupported && (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -423,7 +465,7 @@ export function AgentChatInput({
                     size="icon"
                     className={cn('h-10 w-10 shrink-0', isRecording && 'animate-pulse')}
                     onClick={handleVoiceToggle}
-                    disabled={isDisabled}
+                    disabled={isDisabled || !!voiceError}
                   >
                     {isRecording ? (
                       <MicOff className="h-4 w-4" />
@@ -433,7 +475,7 @@ export function AgentChatInput({
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  {isRecording ? 'Stop recording' : 'Voice input'}
+                  {voiceError ? voiceErrorMessage : isRecording ? 'Stop recording' : 'Voice input'}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

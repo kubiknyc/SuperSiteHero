@@ -27,6 +27,7 @@ export default tseslint.config(
       'android/**',
       'ios/**',
       '.capacitor/**',
+      '.vercel/**',
       // Lighthouse config (uses CommonJS)
       '.lighthouserc.js',
       // Supabase generated files
@@ -36,6 +37,9 @@ export default tseslint.config(
       'public/*.min.mjs',
       // Docker demo project (separate codebase)
       'welcome-to-docker/**',
+      // ESLint output files
+      'eslint-output.json',
+      'eslint-results.json',
     ],
   },
 

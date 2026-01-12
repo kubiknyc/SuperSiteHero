@@ -186,3 +186,7 @@ export {
   type DrawingBookmarksHook,
   type DrawingBookmarksWithUtilitiesHook,
 } from './useDrawingBookmarks'
+
+// Offline sync
+export * from './useDocumentSync'
+export * from './useDocumentsOffline'

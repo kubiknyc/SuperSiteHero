@@ -6,6 +6,7 @@
  */
 
 import { supabaseUntyped as supabase } from '@/lib/supabase'
+import { fromExtended } from '@/lib/supabase-typed'
 import type {
   ActionItem,
   ActionItemWithContext,
@@ -31,7 +32,7 @@ export async function getActionItems(
   filters: ActionItemFilters
 ): Promise<ActionItemWithContext[]> {
   let query = supabase
-    .from('action_items_with_context' as any)
+    fromExtended('action_items_with_context')
     .select('*')
     .order('due_date', { ascending: true, nullsFirst: false })
 
@@ -142,7 +143,7 @@ export async function getActionItems(
  */
 export async function getActionItem(id: string): Promise<ActionItemWithContext | null> {
   const { data, error } = await supabase
-    .from('action_items_with_context' as any)
+    fromExtended('action_items_with_context')
     .select('*')
     .eq('id', id)
     .single()
@@ -421,7 +422,7 @@ export async function getProjectSummary(
   projectId: string
 ): Promise<ActionItemProjectSummary | null> {
   const { data, error } = await supabase
-    .from('action_item_summary_by_project' as any)
+    fromExtended('action_item_summary_by_project')
     .select('*')
     .eq('project_id', projectId)
     .single()
@@ -440,7 +441,7 @@ export async function getItemsByAssignee(
   projectId: string
 ): Promise<ActionItemsByAssignee[]> {
   const { data, error } = await supabase
-    .from('action_items_by_assignee' as any)
+    fromExtended('action_items_by_assignee')
     .select('*')
     .eq('project_id', projectId)
     .order('open_items', { ascending: false })
@@ -460,7 +461,7 @@ export async function getOverdueItems(
   limit = 50
 ): Promise<ActionItemWithContext[]> {
   let query = supabase
-    .from('action_items_with_context' as any)
+    fromExtended('action_items_with_context')
     .select('*')
     .eq('urgency_status', 'overdue')
     .order('due_date', { ascending: true })
@@ -487,7 +488,7 @@ export async function getItemsDueSoon(
   limit = 50
 ): Promise<ActionItemWithContext[]> {
   let query = supabase
-    .from('action_items_with_context' as any)
+    fromExtended('action_items_with_context')
     .select('*')
     .in('urgency_status', ['due_today', 'due_soon'])
     .order('due_date', { ascending: true })
@@ -514,7 +515,7 @@ export async function getEscalatedItems(
   limit = 50
 ): Promise<ActionItemWithContext[]> {
   let query = supabase
-    .from('action_items_with_context' as any)
+    fromExtended('action_items_with_context')
     .select('*')
     .gt('escalation_level', 0)
     .neq('status', 'completed')
@@ -619,7 +620,7 @@ export async function getItemsNeedingEscalation(
   level1Date.setDate(today.getDate() - config.level1Days)
 
   const { data, error } = await supabase
-    .from('action_items_with_context' as any)
+    fromExtended('action_items_with_context')
     .select('*')
     .eq('status', 'open')
     .or('status.eq.in_progress')
@@ -766,7 +767,7 @@ export async function getEscalationStats(projectId?: string): Promise<{
   avgDaysOverdue: number
 }> {
   let query = supabase
-    .from('action_items_with_context' as any)
+    fromExtended('action_items_with_context')
     .select('escalation_level, due_date')
     .in('status', ['open', 'in_progress'])
 

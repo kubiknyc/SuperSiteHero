@@ -12,6 +12,7 @@ import { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, Bell, ChevronDown } from 'lucide-react';
 import { useSelectedProject } from '../../hooks/useSelectedProject';
+import { useUnreadNotificationCount } from '../../features/notifications/hooks/useNotifications';
 import { Button } from '../ui/button';
 import { cn } from '../../lib/utils';
 
@@ -21,6 +22,7 @@ interface MobileHeaderProps {
 
 export const MobileHeader = memo(function MobileHeader({ onMenuClick }: MobileHeaderProps) {
   const { selectedProject } = useSelectedProject();
+  const { data: unreadCount = 0 } = useUnreadNotificationCount();
 
   return (
     <header className="sticky top-0 z-40 bg-background border-b border-border safe-area-top">
@@ -71,8 +73,9 @@ export const MobileHeader = memo(function MobileHeader({ onMenuClick }: MobileHe
         >
           <Link to="/messages">
             <Bell className="h-5 w-5" />
-            {/* Notification badge - TODO: connect to real notification count */}
-            {/* <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full" /> */}
+            {unreadCount > 0 && (
+              <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full" />
+            )}
           </Link>
         </Button>
       </div>

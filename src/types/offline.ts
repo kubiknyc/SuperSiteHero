@@ -3,11 +3,12 @@
 
 /**
  * Cached data stored in IndexedDB
+ * @template T The type of data being cached (defaults to Record<string, unknown>)
  */
-export interface CachedData {
+export interface CachedData<T = Record<string, unknown>> {
   key: string;              // Format: "{table}:{id}" or "{table}:list:{filter_hash}"
   table: string;            // projects, daily_reports, rfis, etc.
-  data: any;                // The actual record(s)
+  data: T | T[];            // The actual record(s) - typed instead of any
   timestamp: number;        // When cached (Date.now())
   expiresAt: number;        // TTL timestamp
   version: number;          // For conflict resolution
@@ -16,12 +17,13 @@ export interface CachedData {
 
 /**
  * Mutation queued for sync when online
+ * @template T The type of data being mutated (defaults to Record<string, unknown>)
  */
-export interface QueuedMutation {
+export interface QueuedMutation<T = Record<string, unknown>> {
   id: string;               // UUID
   type: 'create' | 'update' | 'delete';
   table: string;            // Database table
-  data?: any;               // Data for create/update
+  data?: Partial<T>;        // Data for create/update - typed instead of any
   recordId?: string;        // Record ID for updates/deletes
   timestamp: number;        // When queued
   retryCount: number;       // Number of retry attempts
@@ -46,13 +48,14 @@ export interface UserDownload {
 
 /**
  * Data conflict detected during sync
+ * @template T The type of data in conflict (defaults to Record<string, unknown>)
  */
-export interface Conflict {
+export interface Conflict<T = Record<string, unknown>> {
   id: string;               // UUID
   table: string;            // Database table
   recordId: string;         // Record ID
-  localVersion: any;        // Local version of the data
-  remoteVersion: any;       // Remote version from server
+  localVersion: T;          // Local version of the data - typed instead of any
+  remoteVersion: T;         // Remote version from server - typed instead of any
   timestamp: number;        // When conflict detected
   resolved: boolean;        // Whether conflict has been resolved
   resolution?: 'local' | 'remote' | 'manual'; // How it was resolved

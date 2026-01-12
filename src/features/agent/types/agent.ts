@@ -228,6 +228,9 @@ export interface AgentStoreState {
   isProcessing: boolean
   streamingMessageId: string | null
 
+  // Abort controller for cancelling requests
+  activeAbortController: AbortController | null
+
   // Pending confirmations
   pendingConfirmations: PendingConfirmation[]
 

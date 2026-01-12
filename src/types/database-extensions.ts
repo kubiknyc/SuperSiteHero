@@ -1306,3 +1306,292 @@ export interface DrawingBookmarksTable {
 export type DrawingBookmarkRow = DrawingBookmarksTable['Row']
 export type DrawingBookmarkInsert = DrawingBookmarksTable['Insert']
 export type DrawingBookmarkUpdate = DrawingBookmarksTable['Update']
+
+// =============================================
+// Extended Tables Interface for Type-Safe Access
+// =============================================
+
+/**
+ * ActionItemWithContext view row type
+ * This is a database view combining action items with related context
+ */
+export interface ActionItemWithContext {
+  id: string
+  project_id: string
+  title: string
+  description: string | null
+  status: 'open' | 'in_progress' | 'completed' | 'cancelled'
+  priority: 'low' | 'normal' | 'high' | 'urgent'
+  due_date: string | null
+  assigned_to: string | null
+  assigned_to_name: string | null
+  created_by: string
+  created_by_name: string | null
+  entity_type: string | null
+  entity_id: string | null
+  entity_title: string | null
+  project_name: string | null
+  company_id: string
+  created_at: string
+  updated_at: string
+}
+
+/**
+ * ClientProjectSummary view row type
+ * This is a database view for client portal project summaries
+ */
+export interface ClientProjectSummary {
+  id: string
+  name: string
+  status: string
+  start_date: string | null
+  end_date: string | null
+  company_id: string
+  address: string | null
+  city: string | null
+  state: string | null
+  progress_percent: number | null
+  budget: number | null
+  spent: number | null
+  open_rfis: number | null
+  open_submittals: number | null
+  open_punch_items: number | null
+}
+
+/**
+ * ClientPortalSettings table row type
+ */
+export interface ClientPortalSettingsRow {
+  id: string
+  project_id: string
+  show_budget: boolean
+  show_contract_value: boolean
+  show_schedule: boolean
+  show_daily_reports: boolean
+  show_documents: boolean
+  show_photos: boolean
+  show_rfis: boolean
+  show_change_orders: boolean
+  show_punch_lists: boolean
+  welcome_message: string | null
+  custom_logo_url: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface ClientPortalSettingsInsert {
+  id?: string
+  project_id: string
+  show_budget?: boolean
+  show_contract_value?: boolean
+  show_schedule?: boolean
+  show_daily_reports?: boolean
+  show_documents?: boolean
+  show_photos?: boolean
+  show_rfis?: boolean
+  show_change_orders?: boolean
+  show_punch_lists?: boolean
+  welcome_message?: string | null
+  custom_logo_url?: string | null
+  created_at?: string
+  updated_at?: string
+}
+
+export interface ClientPortalSettingsUpdate {
+  show_budget?: boolean
+  show_contract_value?: boolean
+  show_schedule?: boolean
+  show_daily_reports?: boolean
+  show_documents?: boolean
+  show_photos?: boolean
+  show_rfis?: boolean
+  show_change_orders?: boolean
+  show_punch_lists?: boolean
+  welcome_message?: string | null
+  custom_logo_url?: string | null
+  updated_at?: string
+}
+
+/**
+ * ActionItemProjectSummary view row type
+ */
+export interface ActionItemProjectSummary {
+  project_id: string
+  total_items: number
+  open_items: number
+  in_progress_items: number
+  completed_items: number
+  overdue_items: number
+  escalated_items: number
+  chronic_items: number
+  completion_rate: number
+}
+
+/**
+ * ActionItemsByAssignee view row type
+ */
+export interface ActionItemsByAssignee {
+  project_id: string
+  assignee: string
+  assigned_company: string | null
+  total_items: number
+  open_items: number
+  overdue_items: number
+  nearest_due_date: string | null
+}
+
+/**
+ * Centralized interface for all extended tables not in generated types.
+ * Use with the fromExtended() helper for type-safe database access.
+ */
+export interface ExtendedTables {
+  // Database Views (read-only)
+  action_items_with_context: {
+    Row: ActionItemWithContext
+    Insert: never
+    Update: never
+  }
+  action_item_summary_by_project: {
+    Row: ActionItemProjectSummary
+    Insert: never
+    Update: never
+  }
+  action_items_by_assignee: {
+    Row: ActionItemsByAssignee
+    Insert: never
+    Update: never
+  }
+  client_project_summary: {
+    Row: ClientProjectSummary
+    Insert: never
+    Update: never
+  }
+
+  // Client portal settings table
+  client_portal_settings: {
+    Row: ClientPortalSettingsRow
+    Insert: ClientPortalSettingsInsert
+    Update: ClientPortalSettingsUpdate
+  }
+
+  // DocuSign tables
+  docusign_connections: {
+    Row: DocuSignConnectionRow
+    Insert: DocuSignConnectionInsert
+    Update: DocuSignConnectionUpdate
+  }
+  docusign_envelopes: {
+    Row: DocuSignEnvelopeRow
+    Insert: DocuSignEnvelopeInsert
+    Update: DocuSignEnvelopeUpdate
+  }
+  docusign_envelope_recipients: {
+    Row: DocuSignEnvelopeRecipientRow
+    Insert: DocuSignEnvelopeRecipientInsert
+    Update: DocuSignEnvelopeRecipientUpdate
+  }
+  docusign_envelope_events: {
+    Row: DocuSignEnvelopeEventRow
+    Insert: DocuSignEnvelopeEventInsert
+    Update: never
+  }
+  docusign_oauth_states: {
+    Row: DocuSignOAuthStateRow
+    Insert: DocuSignOAuthStateInsert
+    Update: never
+  }
+
+  // Lien waiver tables
+  lien_waivers: {
+    Row: LienWaiversTable['Row']
+    Insert: LienWaiversTable['Insert']
+    Update: LienWaiversTable['Update']
+  }
+  lien_waiver_templates: {
+    Row: LienWaiverTemplatesTable['Row']
+    Insert: LienWaiverTemplatesTable['Insert']
+    Update: LienWaiverTemplatesTable['Update']
+  }
+  lien_waiver_requirements: {
+    Row: LienWaiverRequirementsTable['Row']
+    Insert: LienWaiverRequirementsTable['Insert']
+    Update: LienWaiverRequirementsTable['Update']
+  }
+  lien_waiver_history: {
+    Row: LienWaiverHistoryTable['Row']
+    Insert: LienWaiverHistoryTable['Insert']
+    Update: LienWaiverHistoryTable['Update']
+  }
+
+  // Drawing bookmarks
+  drawing_bookmarks: {
+    Row: DrawingBookmarksTable['Row']
+    Insert: DrawingBookmarksTable['Insert']
+    Update: DrawingBookmarksTable['Update']
+  }
+
+  // Approval workflow tables
+  approval_workflows: {
+    Row: ApprovalWorkflowsTable['Row']
+    Insert: ApprovalWorkflowsTable['Insert']
+    Update: ApprovalWorkflowsTable['Update']
+  }
+  approval_steps: {
+    Row: ApprovalStepsTable['Row']
+    Insert: ApprovalStepsTable['Insert']
+    Update: ApprovalStepsTable['Update']
+  }
+  approval_requests: {
+    Row: ApprovalRequestsTable['Row']
+    Insert: ApprovalRequestsTable['Insert']
+    Update: ApprovalRequestsTable['Update']
+  }
+  approval_actions: {
+    Row: ApprovalActionsTable['Row']
+    Insert: ApprovalActionsTable['Insert']
+    Update: ApprovalActionsTable['Update']
+  }
+
+  // Weather logs
+  weather_logs: {
+    Row: WeatherLogsTable['Row']
+    Insert: WeatherLogsTable['Insert']
+    Update: WeatherLogsTable['Update']
+  }
+
+  // Daily report templates and versions
+  daily_report_templates: {
+    Row: DailyReportTemplate
+    Insert: DailyReportTemplateInsert
+    Update: DailyReportTemplateUpdate
+  }
+  daily_report_versions: {
+    Row: DailyReportVersion
+    Insert: DailyReportVersionInsert
+    Update: DailyReportVersionUpdate
+  }
+
+  // Cost estimates
+  cost_estimates: {
+    Row: CostEstimate
+    Insert: CostEstimateInsert
+    Update: CostEstimateUpdate
+  }
+  cost_estimate_items: {
+    Row: CostEstimateItem
+    Insert: CostEstimateItemInsert
+    Update: CostEstimateItemUpdate
+  }
+
+  // Takeoff templates
+  takeoff_templates: {
+    Row: TakeoffTemplate
+    Insert: TakeoffTemplateInsert
+    Update: TakeoffTemplateUpdate
+  }
+}
+
+/**
+ * Union type of all extended table names
+ */
+export type ExtendedTableName = keyof ExtendedTables

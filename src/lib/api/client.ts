@@ -77,10 +77,10 @@ class ApiClient {
    * Handles null values correctly by using .is() instead of .eq()
    * @private
    */
-  private applyFilters(
-    query: any,
+  private applyFilters<Q extends { eq: Function; is: Function; not: Function; neq: Function; gt: Function; gte: Function; lt: Function; lte: Function; like: Function; ilike: Function; in: Function }>(
+    query: Q,
     filters: QueryFilter[]
-  ) {
+  ): Q {
     let modifiedQuery = query
 
     for (const filter of filters) {
@@ -145,10 +145,10 @@ class ApiClient {
    * Apply ordering to a Supabase query
    * @private
    */
-  private applyOrdering(
-    query: any,
+  private applyOrdering<Q extends { order: Function }>(
+    query: Q,
     orderBy: { column: string; ascending?: boolean }
-  ) {
+  ): Q {
     return query.order(orderBy.column, {
       ascending: orderBy.ascending !== false,
     })
@@ -159,10 +159,10 @@ class ApiClient {
    * Supports both offset-based and page-based pagination
    * @private
    */
-  private applyPagination(
-    query: any,
+  private applyPagination<Q extends { range: Function }>(
+    query: Q,
     pagination: { page?: number; limit?: number; offset?: number }
-  ) {
+  ): Q {
     if (!pagination.limit) {
       return query
     }
