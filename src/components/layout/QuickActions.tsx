@@ -2,6 +2,7 @@
 // Quick action buttons for common tasks
 // Part of the v2 desktop layout redesign
 // Enhanced with Industrial Precision design system
+// Now supports role-based quick actions
 
 import { Link } from 'react-router-dom'
 import { cn } from '@/lib/utils'
@@ -15,6 +16,8 @@ import {
   FileQuestion,
   LucideIcon,
 } from 'lucide-react'
+import { useQuickActions } from '@/hooks/useRoleNavigation'
+import type { QuickAction as RoleQuickAction } from '@/config/role-navigation'
 
 // ============================================================================
 // TYPES
@@ -313,3 +316,86 @@ export function QuickActions({
 
 // Legacy export for backward compatibility - use getProjectActions() instead
 export const projectQuickActions = getProjectActions()
+
+// ============================================================================
+// ROLE-BASED QUICK ACTIONS
+// ============================================================================
+
+/**
+ * Convert role-based quick action to component format
+ */
+function convertRoleAction(action: RoleQuickAction): QuickAction {
+  // Map solid color classes to component color scheme
+  const colorMap: Record<string, { color: string; bgColor: string; hoverColor: string }> = {
+    'bg-blue-500': {
+      color: 'text-blue-600 dark:text-blue-400',
+      bgColor: 'bg-blue-50 dark:bg-blue-950',
+      hoverColor: 'hover:bg-blue-100 dark:hover:bg-blue-900',
+    },
+    'bg-green-500': {
+      color: 'text-emerald-600 dark:text-emerald-400',
+      bgColor: 'bg-emerald-50 dark:bg-emerald-950',
+      hoverColor: 'hover:bg-emerald-100 dark:hover:bg-emerald-900',
+    },
+    'bg-orange-500': {
+      color: 'text-amber-600 dark:text-amber-400',
+      bgColor: 'bg-amber-50 dark:bg-amber-950',
+      hoverColor: 'hover:bg-amber-100 dark:hover:bg-amber-900',
+    },
+    'bg-purple-500': {
+      color: 'text-purple-600 dark:text-purple-400',
+      bgColor: 'bg-purple-50 dark:bg-purple-950',
+      hoverColor: 'hover:bg-purple-100 dark:hover:bg-purple-900',
+    },
+    'bg-red-500': {
+      color: 'text-rose-600 dark:text-rose-400',
+      bgColor: 'bg-rose-50 dark:bg-rose-950',
+      hoverColor: 'hover:bg-rose-100 dark:hover:bg-rose-900',
+    },
+    'bg-gray-500': {
+      color: 'text-gray-600 dark:text-gray-400',
+      bgColor: 'bg-gray-50 dark:bg-gray-950',
+      hoverColor: 'hover:bg-gray-100 dark:hover:bg-gray-900',
+    },
+  }
+
+  const colors = colorMap[action.color] || colorMap['bg-blue-500']
+
+  return {
+    id: action.id,
+    label: action.label,
+    icon: action.icon,
+    path: action.path,
+    ...colors,
+  }
+}
+
+/**
+ * RoleBasedQuickActions - Uses the current user's role-specific actions
+ */
+interface RoleBasedQuickActionsProps {
+  /** Project ID to append to action paths */
+  projectId?: string
+  /** Additional CSS classes */
+  className?: string
+  /** Use compact inline style */
+  compact?: boolean
+}
+
+export function RoleBasedQuickActions({
+  projectId,
+  className,
+  compact = false,
+}: RoleBasedQuickActionsProps) {
+  const roleActions = useQuickActions()
+  const actions = roleActions.map(convertRoleAction)
+
+  return (
+    <QuickActions
+      actions={actions}
+      projectId={projectId}
+      className={className}
+      compact={compact}
+    />
+  )
+}

@@ -18,7 +18,7 @@ import { GlobalSearchBar } from '@/features/search/components/GlobalSearchBar'
 import { Button } from '@/components/ui/button'
 import { LogoIconLight } from '@/components/brand'
 import { NavigationGroup } from './NavigationGroup'
-import { primaryNavItems, navigationGroups } from '@/config/navigation'
+import { useRoleNavigation } from '@/hooks/useRoleNavigation'
 
 interface AppLayoutProps {
   children: ReactNode
@@ -36,8 +36,17 @@ export function AppLayout({ children }: AppLayoutProps) {
   const projectIdMatch = location.pathname.match(/\/projects\/([^/]+)/)
   const currentProjectId = projectIdMatch ? projectIdMatch[1] : null
 
-  // Get user role
-  const userRole = userProfile?.role || 'user'
+  // Get role-based navigation
+  const {
+    primaryItems,
+    groups,
+    currentRole,
+    roleLabel,
+    expandedGroupsByDefault,
+  } = useRoleNavigation()
+
+  // Get user role for conditional rendering
+  const userRole = currentRole
 
   // Initialize offline event listeners
   useEffect(() => {
@@ -170,9 +179,9 @@ export function AppLayout({ children }: AppLayoutProps) {
           isTablet ? "p-3 space-y-2" : "p-4 space-y-2",
           isTouchDevice && "scroll-smooth-touch"
         )}>
-          {/* Primary Navigation Items (always visible) */}
+          {/* Primary Navigation Items (role-based) */}
           <div className="space-y-1">
-            {primaryNavItems.map((item) => {
+            {primaryItems.map((item) => {
               const isActive = location.pathname === item.path || location.pathname.startsWith(item.path + '/')
               const Icon = item.icon
               const BadgeComponent = typeof item.badge === 'function' ? item.badge : null
@@ -216,16 +225,16 @@ export function AppLayout({ children }: AppLayoutProps) {
             <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-gray-600 rounded-full" />
           </div>
 
-          {/* Grouped Navigation (collapsible) */}
+          {/* Grouped Navigation (role-based, collapsible) */}
           <div className="space-y-2">
-            {navigationGroups.map((group) => (
+            {groups.map((group) => (
               <NavigationGroup
                 key={group.id}
                 id={group.id}
                 label={group.label}
                 icon={group.icon}
                 items={group.items}
-                defaultExpanded={group.defaultExpanded}
+                defaultExpanded={expandedGroupsByDefault.includes(group.id)}
               />
             ))}
           </div>
@@ -284,8 +293,8 @@ export function AppLayout({ children }: AppLayoutProps) {
                 {userProfile.first_name} {userProfile.last_name}
               </p>
               <p className="text-xs text-gray-400 mt-0.5">{userProfile.email}</p>
-              <span className="inline-flex mt-2 px-2 py-0.5 text-xs font-medium text-primary bg-primary/10 rounded-full capitalize">
-                {userProfile.role}
+              <span className="inline-flex mt-2 px-2 py-0.5 text-xs font-medium text-primary bg-primary/10 rounded-full">
+                {roleLabel}
               </span>
             </div>
           )}

@@ -143,6 +143,7 @@ C/
 dev-debug.log
 # Dependency directories
 node_modules/
+node_modules/**/.settings/
 .vscode
 # OS specific
 

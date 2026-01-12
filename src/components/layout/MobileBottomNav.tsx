@@ -6,11 +6,14 @@ import { cn } from '@/lib/utils'
 import { Menu } from 'lucide-react'
 import { useState, memo, useCallback } from 'react'
 import { MobileNavDrawer } from './MobileNavDrawer'
-import { mobileBottomNavItems } from '@/config/navigation'
+import { useRoleNavigation } from '@/hooks/useRoleNavigation'
 
 export const MobileBottomNav = memo(function MobileBottomNav() {
   const location = useLocation()
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  // Get role-based mobile navigation items
+  const { mobileBottomNav } = useRoleNavigation()
 
   const openDrawer = useCallback(() => setIsDrawerOpen(true), [])
   const closeDrawer = useCallback(() => setIsDrawerOpen(false), [])
@@ -24,7 +27,7 @@ export const MobileBottomNav = memo(function MobileBottomNav() {
         role="navigation"
       >
         <div className="flex items-center justify-around h-16">
-          {mobileBottomNavItems.map((item) => {
+          {mobileBottomNav.map((item) => {
             const isActive = location.pathname === item.path ||
               (item.path !== '/' && location.pathname.startsWith(item.path))
             const Icon = item.icon

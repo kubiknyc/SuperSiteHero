@@ -9,6 +9,7 @@ import { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { RouteLoadingFallback } from './components/loading/RouteLoadingFallback';
+import { RoleBasedRedirect } from './components/auth/RoleBasedRedirect';
 
 // Auth pages - lazy loaded for smaller initial bundle
 // Using V2 versions with premium construction industry design
@@ -28,6 +29,14 @@ const AdminApprovalDashboard = lazy(() => import('./features/registration/AdminA
 
 // Dashboard - lazy loaded for smaller initial bundle
 const DashboardPage = lazy(() => import('./pages/DashboardPage').then(m => ({ default: m.DashboardPage })));
+
+// Role-specific dashboards - lazy loaded
+const OwnerDashboard = lazy(() => import('./pages/dashboard/roles/OwnerDashboard').then(m => ({ default: m.OwnerDashboard })));
+const AdminDashboard = lazy(() => import('./pages/dashboard/roles/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
+const PMDashboard = lazy(() => import('./pages/dashboard/roles/PMDashboard').then(m => ({ default: m.PMDashboard })));
+const SuperintendentDashboard = lazy(() => import('./pages/dashboard/roles/SuperintendentDashboard').then(m => ({ default: m.SuperintendentDashboard })));
+const ForemanDashboard = lazy(() => import('./pages/dashboard/roles/ForemanDashboard').then(m => ({ default: m.ForemanDashboard })));
+const WorkerDashboard = lazy(() => import('./pages/dashboard/roles/WorkerDashboard').then(m => ({ default: m.WorkerDashboard })));
 
 // All other pages are lazy loaded to reduce initial bundle size
 // Projects feature
@@ -376,8 +385,19 @@ export function DesktopApp() {
         <Route path="/terms" element={<TermsOfServicePage />} />
 
         {/* Protected routes */}
-        <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+        {/* Root route uses RoleBasedRedirect to route users to their role-specific dashboard */}
+        <Route path="/" element={<ProtectedRoute><RoleBasedRedirect /></ProtectedRoute>} />
+
+        {/* Generic dashboard fallback */}
         <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+
+        {/* Role-specific dashboards */}
+        <Route path="/dashboard/owner" element={<ProtectedRoute><OwnerDashboard /></ProtectedRoute>} />
+        <Route path="/dashboard/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+        <Route path="/dashboard/pm" element={<ProtectedRoute><PMDashboard /></ProtectedRoute>} />
+        <Route path="/dashboard/superintendent" element={<ProtectedRoute><SuperintendentDashboard /></ProtectedRoute>} />
+        <Route path="/dashboard/foreman" element={<ProtectedRoute><ForemanDashboard /></ProtectedRoute>} />
+        <Route path="/dashboard/worker" element={<ProtectedRoute><WorkerDashboard /></ProtectedRoute>} />
 
         {/* Field Dashboard */}
         <Route path="/field-dashboard" element={<ProtectedRoute><FieldDashboardPage /></ProtectedRoute>} />
@@ -639,8 +659,10 @@ export function DesktopApp() {
         <Route path="/reports/public/:token" element={<PublicReportPage />} />
 
         {/* Subcontractor Portal feature */}
-        <Route path="/portal" element={<ProtectedRoute requiredRole="subcontractor"><SubcontractorLayout /></ProtectedRoute>}>
+        {/* /sub is the base path, /sub/dashboard is the index/landing page */}
+        <Route path="/sub" element={<ProtectedRoute requiredRole="subcontractor"><SubcontractorLayout /></ProtectedRoute>}>
           <Route index element={<SubcontractorDashboardPage />} />
+          <Route path="dashboard" element={<SubcontractorDashboardPage />} />
           <Route path="projects" element={<SubcontractorProjectsPage />} />
           <Route path="bids" element={<SubcontractorBidsPage />} />
           <Route path="bids/:bidId" element={<BidDetailPage />} />
@@ -663,6 +685,7 @@ export function DesktopApp() {
         {/* Client Portal feature */}
         <Route path="/client" element={<ProtectedRoute requiredRole="client"><ClientPortalLayout /></ProtectedRoute>}>
           <Route index element={<ClientDashboard />} />
+          <Route path="dashboard" element={<ClientDashboard />} />
           <Route path="projects/:projectId" element={<ClientProjectDetail />} />
           <Route path="settings/notifications" element={<ClientNotificationSettingsPage />} />
           <Route path="projects/:projectId/schedule" element={<ClientSchedule />} />
