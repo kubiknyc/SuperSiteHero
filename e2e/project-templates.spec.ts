@@ -27,7 +27,7 @@ test.describe('Project Templates', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to project templates page
     await page.goto('/settings/project-templates');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await waitForContentLoad(page);
   });
 
@@ -487,7 +487,7 @@ test.describe('Project Templates', () => {
   test('should create template from existing project', async ({ page }) => {
     // Navigate to a project detail page first
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await waitForContentLoad(page);
 
     // Look for a project link
@@ -501,7 +501,7 @@ test.describe('Project Templates', () => {
 
     // Click on project
     await projectLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await waitForContentLoad(page);
 
     // Look for "Save as Template" or similar action
@@ -574,7 +574,7 @@ test.describe('Project Templates', () => {
   test('should use template to create new project', async ({ page }) => {
     // Navigate to templates page
     await page.goto('/settings/project-templates');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await waitForContentLoad(page);
 
     // Look for a template card
@@ -588,7 +588,7 @@ test.describe('Project Templates', () => {
 
     // Try to click "Use Template" or go to new project page
     await page.goto('/projects/new');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await waitForContentLoad(page);
 
     // Look for template selector

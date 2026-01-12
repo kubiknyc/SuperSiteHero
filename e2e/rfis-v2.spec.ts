@@ -42,7 +42,7 @@ const testRFI = {
 async function login(page: any) {
   // Navigate to login page
   await page.goto('/login')
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('domcontentloaded')
 
   // Fill credentials
   await page.fill('input[name="email"]', TEST_EMAIL)
@@ -62,7 +62,7 @@ async function login(page: any) {
   })
 
   // Wait for page to be fully loaded
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('domcontentloaded')
 }
 
 // ============================================================================
@@ -96,26 +96,26 @@ test.describe('RFIs V2 - Setup & Navigation', () => {
   test('should access RFIs V2 from project view', async ({ page }) => {
     // Navigate to projects first
     await page.goto('/projects')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Click first project if available
     const firstProject = page.locator('[data-testid*="project-"], .project-card, [role="article"]').first()
     if (await firstProject.isVisible({ timeout: 5000 })) {
       await firstProject.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Look for RFIs V2 link/tab
       const rfisLink = page.locator('a, button, [role="tab"]').filter({ hasText: /rfi.*v2|rfis v2/i }).first()
       if (await rfisLink.isVisible({ timeout: 2000 })) {
         await rfisLink.click()
-        await page.waitForLoadState('networkidle')
+        await page.waitForLoadState('domcontentloaded')
         await expect(page).toHaveURL(/rfis-v2/)
       } else {
         // Try generic RFIs link that might go to V2
         const genericRFIsLink = page.locator('a, button, [role="tab"]').filter({ hasText: /^rfis$/i }).first()
         if (await genericRFIsLink.isVisible({ timeout: 2000 })) {
           await genericRFIsLink.click()
-          await page.waitForLoadState('networkidle')
+          await page.waitForLoadState('domcontentloaded')
         } else {
           test.skip()
         }

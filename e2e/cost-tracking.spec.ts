@@ -64,22 +64,22 @@ async function login(page: Page) {
 async function navigateToCostTracking(page: Page) {
   // Try direct navigation
   await page.goto('/cost-tracking');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   // If redirected, try through project
   if (!page.url().includes('cost-tracking') && !page.url().includes('budget')) {
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await projectLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const costLink = page.locator('a:has-text("Cost"), a:has-text("Budget"), a[href*="cost"], a[href*="budget"]');
       if (await costLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
         await costLink.first().click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
       }
     }
   }
@@ -88,7 +88,7 @@ async function navigateToCostTracking(page: Page) {
 // Helper to navigate to budget page
 async function navigateToBudget(page: Page) {
   await page.goto('/budget');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   if (!page.url().includes('budget')) {
     await navigateToCostTracking(page);
@@ -255,7 +255,7 @@ test.describe('Cost Transactions', () => {
 
     if (await transactionsTab.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await transactionsTab.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
 
     const transactions = page.locator('[data-testid="transaction"], .transaction-row, tr[data-transaction-id]');
@@ -308,7 +308,7 @@ test.describe('Cost Transactions', () => {
     if (await dateFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       const today = new Date().toISOString().split('T')[0];
       await dateFilter.first().fill(today);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -317,7 +317,7 @@ test.describe('Cost Transactions', () => {
 
     if (await categoryFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await categoryFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });
@@ -337,7 +337,7 @@ test.describe('EVM Dashboard', () => {
 
     if (await evmTab.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await evmTab.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
 
     const evmContent = page.locator('text=/earned value|evm|cpi|spi/i, [data-testid="evm-dashboard"]');
@@ -351,7 +351,7 @@ test.describe('EVM Dashboard', () => {
     const evmTab = page.locator('button:has-text("EVM"), a:has-text("EVM")');
     if (await evmTab.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await evmTab.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
 
     const cpiMetric = page.locator('text=/cpi/i, [data-testid="cpi"]');
@@ -367,7 +367,7 @@ test.describe('EVM Dashboard', () => {
     const evmTab = page.locator('button:has-text("EVM"), a:has-text("EVM")');
     if (await evmTab.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await evmTab.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
 
     const chart = page.locator('canvas, svg, [data-testid="evm-chart"], .chart');
@@ -401,7 +401,7 @@ test.describe('Division Breakdown', () => {
 
     if (await divisionFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await divisionFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -499,7 +499,7 @@ test.describe('Search and Filter', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('general');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -517,7 +517,7 @@ test.describe('Search and Filter', () => {
       await endDate.first().fill(new Date().toISOString().split('T')[0]);
     }
 
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should clear filters', async ({ page }) => {
@@ -525,7 +525,7 @@ test.describe('Search and Filter', () => {
 
     if (await clearButton.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await clearButton.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });

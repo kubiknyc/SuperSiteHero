@@ -28,7 +28,7 @@ test.use({ storageState: 'playwright/.auth/admin.json' })
 test.describe('Company Settings - Main Settings Page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await waitForContentLoad(page)
   })
 
@@ -62,7 +62,7 @@ test.describe('Company Settings - Main Settings Page', () => {
 
     if (await companyLink.isVisible({ timeout: 3000 })) {
       await companyLink.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
       await waitForContentLoad(page)
 
       expect(page.url()).toContain('/settings/company')
@@ -87,7 +87,7 @@ test.describe('Company Settings - Main Settings Page', () => {
 test.describe('Company Settings - Company Profile', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/company')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await waitForContentLoad(page)
   })
 
@@ -317,7 +317,7 @@ test.describe('Company Settings - Company Profile', () => {
 test.describe('Company Settings - User Management', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/users')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await waitForContentLoad(page)
   })
 
@@ -448,7 +448,7 @@ test.describe('Company Settings - User Management', () => {
 test.describe('Company Settings - Project Templates', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/project-templates')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await waitForContentLoad(page)
   })
 
@@ -482,7 +482,7 @@ test.describe('Company Settings - Project Templates', () => {
 test.describe('Company Settings - Integrations', () => {
   test('should display QuickBooks integration page', async ({ page }) => {
     await page.goto('/settings/quickbooks')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await waitForContentLoad(page)
 
     const heading = page.locator('h1, h2').filter({ hasText: /quickbooks/i }).first()
@@ -491,7 +491,7 @@ test.describe('Company Settings - Integrations', () => {
 
   test('should show QuickBooks connection status', async ({ page }) => {
     await page.goto('/settings/quickbooks')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await waitForContentLoad(page)
 
     const statusText = page.locator('text=/connected|not connected|disconnected/i').first()
@@ -505,7 +505,7 @@ test.describe('Company Settings - Integrations', () => {
 
   test('should display DocuSign integration page', async ({ page }) => {
     await page.goto('/settings/docusign')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await waitForContentLoad(page)
 
     const heading = page.locator('h1, h2').filter({ hasText: /docusign/i }).first()
@@ -514,7 +514,7 @@ test.describe('Company Settings - Integrations', () => {
 
   test('should display calendar integrations page', async ({ page }) => {
     await page.goto('/settings/calendar')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await waitForContentLoad(page)
 
     const heading = page.locator('h1, h2').filter({ hasText: /calendar/i }).first()
@@ -531,7 +531,7 @@ test.describe('Company Settings - Integrations', () => {
 test.describe('Company Settings - Notification Preferences', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/notifications')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await waitForContentLoad(page)
   })
 
@@ -581,7 +581,7 @@ test.describe('Company Settings - Notification Preferences', () => {
 test.describe('Company Settings - Approval Workflows', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/approval-workflows')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await waitForContentLoad(page)
   })
 
@@ -611,7 +611,7 @@ test.describe('Company Settings - Approval Workflows', () => {
 test.describe('Company Settings - Roles & Permissions', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/roles')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await waitForContentLoad(page)
   })
 
@@ -646,7 +646,7 @@ test.describe('Company Settings - Roles & Permissions', () => {
 test.describe('Company Settings - Distribution Lists', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/distribution-lists')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await waitForContentLoad(page)
   })
 
@@ -680,7 +680,7 @@ test.describe('Company Settings - Distribution Lists', () => {
 test.describe('Company Settings - AI Settings', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/ai')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await waitForContentLoad(page)
   })
 
@@ -720,7 +720,7 @@ test.describe('Company Settings - AI Settings', () => {
 test.describe('Company Settings - Audit Logs', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/audit-logs')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await waitForContentLoad(page)
   })
 
@@ -773,7 +773,7 @@ test.describe('Company Settings - Audit Logs', () => {
 test.describe('Company Settings - Data Management', () => {
   test('should allow navigation between settings sections', async ({ page }) => {
     await page.goto('/settings')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await waitForContentLoad(page)
 
     // Test navigation to multiple sections
@@ -788,14 +788,14 @@ test.describe('Company Settings - Data Management', () => {
 
       if (await link.isVisible({ timeout: 2000 })) {
         await link.click()
-        await page.waitForLoadState('networkidle')
+        await page.waitForLoadState('domcontentloaded')
         await waitForContentLoad(page)
 
         expect(page.url()).toContain(section.path)
 
         // Go back to settings
         await page.goto('/settings')
-        await page.waitForLoadState('networkidle')
+        await page.waitForLoadState('domcontentloaded')
         await waitForContentLoad(page)
       }
     }
@@ -803,7 +803,7 @@ test.describe('Company Settings - Data Management', () => {
 
   test('should display cost codes page if available', async ({ page }) => {
     await page.goto('/settings/cost-codes')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await waitForContentLoad(page)
 
     const heading = page.locator('h1, h2').filter({ hasText: /cost.*code/i }).first()

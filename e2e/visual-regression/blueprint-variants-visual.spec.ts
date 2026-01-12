@@ -30,7 +30,7 @@ test.describe('PolishedVariant1Professional - Visual Regression', () => {
       await page.goto('/blueprint-samples/variants/1-professional');
 
       // Wait for page to be fully loaded
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Wait for blueprint pattern to render
       await page.waitForTimeout(500);
@@ -53,7 +53,7 @@ test.describe('PolishedVariant1Professional - Visual Regression', () => {
       await page.goto('/blueprint-samples/variants/1-professional');
 
       // Wait for page to be fully loaded
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Enable dark mode
       await page.evaluate(() => {
@@ -75,7 +75,7 @@ test.describe('PolishedVariant1Professional - Visual Regression', () => {
   test('desktop - focus states visible', async ({ page }) => {
     await page.setViewportSize({ width: 1024, height: 768 });
     await page.goto('/blueprint-samples/variants/1-professional');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Tab to first focusable element (Back button)
     await page.keyboard.press('Tab');
@@ -101,7 +101,7 @@ test.describe('PolishedVariant1Professional - Visual Regression', () => {
   test('desktop - stat card hover state', async ({ page }) => {
     await page.setViewportSize({ width: 1024, height: 768 });
     await page.goto('/blueprint-samples/variants/1-professional');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Hover over first stat card
     const statCard = page.locator('button[aria-label*="Active Projects"]').first();

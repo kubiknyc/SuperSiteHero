@@ -85,17 +85,17 @@ export class CostEstimatesPage {
   // Navigation methods
   async goto() {
     await this.page.goto('/cost-estimates')
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async gotoEstimateDetail(estimateId: string) {
     await this.page.goto(`/cost-estimates/${estimateId}`)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async gotoFromProject(projectId: string) {
     await this.page.goto(`/projects/${projectId}/cost-estimates`)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // Search and filter methods
@@ -147,13 +147,13 @@ export class CostEstimatesPage {
   async clickEstimate(index: number = 0) {
     const estimateRow = this.getEstimateRow(index)
     await estimateRow.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // Create estimate
   async clickCreateEstimateButton() {
     await this.createEstimateButton.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async createEstimate(data: {
@@ -195,7 +195,7 @@ export class CostEstimatesPage {
 
     // Submit
     await this.page.locator('button[type="submit"], button').filter({ hasText: /create|save/i }).first().click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // Update estimate
@@ -245,7 +245,7 @@ export class CostEstimatesPage {
 
     // Submit
     await this.page.locator('button[type="submit"], button').filter({ hasText: /save|update/i }).first().click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // Line items management
@@ -457,7 +457,7 @@ export class CostEstimatesPage {
         await formatOption.click()
       }
 
-      await this.page.waitForLoadState('networkidle')
+      await this.page.waitForLoadState('domcontentloaded')
     }
   }
 
@@ -480,7 +480,7 @@ export class CostEstimatesPage {
         await this.page.locator('button').filter({ hasText: /compare|view comparison/i }).first().click()
       }
 
-      await this.page.waitForLoadState('networkidle')
+      await this.page.waitForLoadState('domcontentloaded')
     }
   }
 
@@ -505,7 +505,7 @@ export class CostEstimatesPage {
         await confirmButton.click()
       }
 
-      await this.page.waitForLoadState('networkidle')
+      await this.page.waitForLoadState('domcontentloaded')
     }
   }
 
@@ -525,7 +525,7 @@ export class CostEstimatesPage {
 
       // Confirm
       await this.page.locator('button[type="submit"], button').filter({ hasText: /duplicate|copy|create/i }).first().click()
-      await this.page.waitForLoadState('networkidle')
+      await this.page.waitForLoadState('domcontentloaded')
     }
   }
 

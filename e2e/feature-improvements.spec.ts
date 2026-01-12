@@ -21,7 +21,7 @@ test.use({ storageState: 'playwright/.auth/user.json' });
 test.describe('Dashboard Click-Through Navigation', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/dashboard');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should navigate to filtered list when clicking stat card', async ({ page }) => {
@@ -43,7 +43,7 @@ test.describe('Dashboard Click-Through Navigation', () => {
 
     if (await rfisCard.isVisible({ timeout: 5000 }).catch(() => false)) {
       await rfisCard.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show filter badge or active filters
       const filterBadge = page.locator('[data-testid="filter-badge"], .filter-active, .badge');
@@ -58,7 +58,7 @@ test.describe('Dashboard Click-Through Navigation', () => {
 test.describe('Global Search (Cmd+K)', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/dashboard');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should open command palette with keyboard shortcut', async ({ page }) => {
@@ -114,7 +114,7 @@ test.describe('Global Search (Cmd+K)', () => {
 
       // Press Enter or click first result
       await page.keyboard.press('Enter');
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should navigate somewhere
       expect(page.url().length > 0).toBeTruthy();
@@ -125,7 +125,7 @@ test.describe('Global Search (Cmd+K)', () => {
 test.describe('Daily Reports Copy Feature', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/daily-reports');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should show copy from yesterday button in create dialog', async ({ page }) => {
@@ -148,7 +148,7 @@ test.describe('Daily Reports Copy Feature', () => {
 test.describe('RFI Escalation System', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/rfis');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display overdue RFI indicators', async ({ page }) => {
@@ -182,7 +182,7 @@ test.describe('RFI Escalation System', () => {
 test.describe('Submittal Reminders', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/submittals');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display submittals approaching deadline', async ({ page }) => {
@@ -200,7 +200,7 @@ test.describe('Submittal Reminders', () => {
 test.describe('Change Order Approval Authority', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/change-orders');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display approval authority information', async ({ page }) => {
@@ -209,7 +209,7 @@ test.describe('Change Order Approval Authority', () => {
 
     if (await changeOrderLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await changeOrderLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for approval authority display
       const approvalInfo = page.locator('[class*="approval"], [data-testid*="authority"], text=/approval limit/i');
@@ -225,7 +225,7 @@ test.describe('Change Order Approval Authority', () => {
 
     if (await changeOrderLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await changeOrderLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for audit log or history section
       const auditLog = page.locator('[data-testid="audit-log"], text=/audit|history|timeline/i');
@@ -239,7 +239,7 @@ test.describe('Change Order Approval Authority', () => {
 test.describe('Punch List Priorities and Escalation', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/punch-lists');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display priority badges on punch items', async ({ page }) => {
@@ -281,7 +281,7 @@ test.describe('Punch List Priorities and Escalation', () => {
 test.describe('Checklist Conditional Logic', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/checklists');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display checklists page', async ({ page }) => {
@@ -297,7 +297,7 @@ test.describe('Gantt Chart Interactions', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to a project with schedule/gantt
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display gantt chart on project schedule', async ({ page }) => {
@@ -306,7 +306,7 @@ test.describe('Gantt Chart Interactions', () => {
 
     if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await projectLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for schedule or gantt tab
       const scheduleTab = page.locator('a, button').filter({ hasText: /schedule|gantt|tasks/i });
@@ -328,7 +328,7 @@ test.describe('Gantt Chart Interactions', () => {
 test.describe('Offline Sync Functionality', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/dashboard');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display offline indicator when offline', async ({ page }) => {

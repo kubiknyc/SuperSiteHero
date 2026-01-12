@@ -21,7 +21,7 @@ test.describe('Projects', () => {
 
   test('should display projects list', async ({ page }) => {
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Should show main content area
     const mainContent = page.locator('main, [role="main"]');
@@ -30,7 +30,7 @@ test.describe('Projects', () => {
 
   test('should open create project dialog or page', async ({ page }) => {
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for create button with various labels
     const createButton = page.locator('button:has-text("New"), button:has-text("Create"), button:has-text("Add"), a:has-text("New Project")');
@@ -56,7 +56,7 @@ test.describe('Projects', () => {
 
   test('should navigate to project detail page', async ({ page }) => {
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for any project link
     const projectLink = page.locator('a[href*="/projects/"]').first();
@@ -76,7 +76,7 @@ test.describe('Projects', () => {
 
   test('should show project detail with content', async ({ page }) => {
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Click on first project
     const projectLink = page.locator('a[href*="/projects/"]').first();
@@ -89,7 +89,7 @@ test.describe('Projects', () => {
 
     await projectLink.click();
     await expect(page).toHaveURL(/\/projects\/[a-z0-9-]+/i, { timeout: 10000 });
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Should have some content visible
     const content = page.locator('main, h1, h2');

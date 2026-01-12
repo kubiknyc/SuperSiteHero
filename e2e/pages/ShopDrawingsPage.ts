@@ -309,17 +309,17 @@ export class ShopDrawingsPage {
 
   async goto(): Promise<void> {
     await this.page.goto('/shop-drawings')
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async gotoDetail(shopDrawingId: string): Promise<void> {
     await this.page.goto(`/shop-drawings/${shopDrawingId}`)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async goBack(): Promise<void> {
     await this.backButton.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // ============================================================================
@@ -338,7 +338,7 @@ export class ShopDrawingsPage {
 
   async clickShopDrawingRow(index: number): Promise<void> {
     await this.tableRows.nth(index).click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async getRowText(index: number): Promise<string> {

@@ -22,7 +22,7 @@ test.describe('PolishedVariant1Professional - Comprehensive Interactions', () =>
 
   test.beforeEach(async ({ page }) => {
     await page.goto(url);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(500);
   });
 
@@ -134,7 +134,7 @@ test.describe('PolishedVariant1Professional - Comprehensive Interactions', () =>
       for (const projectName of projects) {
         // Reload page to reset state
         await page.goto(url);
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         const projectLink = page.getByRole('link', { name: new RegExp(`View project: ${projectName}`) });
 
@@ -401,7 +401,7 @@ test.describe('PolishedVariant1Professional - Comprehensive Interactions', () =>
     test('should complete page load animations', async ({ page }) => {
       // Reload page to trigger animations
       await page.reload();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Wait for animations to complete
       await page.waitForTimeout(1000);

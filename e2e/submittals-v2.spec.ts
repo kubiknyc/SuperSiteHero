@@ -44,7 +44,7 @@ const testSubmittal = {
  */
 async function navigateToSubmittals(page: any) {
   await page.goto('/submittals-v2');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 /**
@@ -56,17 +56,17 @@ async function navigateToProjectSubmittals(page: any, projectId?: string) {
   } else {
     // Navigate via projects page
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const firstProject = page.locator('[data-testid*="project-"], .project-card, [role="article"]').first();
     if (await firstProject.isVisible({ timeout: 5000 })) {
       await firstProject.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const submittalsLink = page.locator('a, button, [role="tab"]').filter({ hasText: /submittal/i }).first();
       if (await submittalsLink.isVisible({ timeout: 3000 })) {
         await submittalsLink.click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
       }
     }
   }
@@ -321,7 +321,7 @@ test.describe('Submittals V2 - View Details', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show detail view
       const detailHeading = page.locator('h1, h2, h3');
@@ -337,7 +337,7 @@ test.describe('Submittals V2 - View Details', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for submittal number (format: "03 30 00-1")
       const submittalNumber = page.locator('text=/\\d{2}\\s\\d{2}\\s\\d{2}-\\d+/');
@@ -353,7 +353,7 @@ test.describe('Submittals V2 - View Details', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for revision indicator
       const revisionIndicator = page.locator('text=/rev|revision/i, [data-testid*="revision"]');
@@ -372,7 +372,7 @@ test.describe('Submittals V2 - View Details', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for status badge
       const statusBadge = page.locator('[data-testid*="status"], .status-badge, .badge');
@@ -388,7 +388,7 @@ test.describe('Submittals V2 - View Details', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for ball in court section
       const ballInCourt = page.locator('text=/ball in court/i, [data-testid*="ball-in-court"]');
@@ -406,7 +406,7 @@ test.describe('Submittals V2 - View Details', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for items section
       const itemsSection = page.locator('text=/items/i, [data-testid*="items"]');
@@ -424,7 +424,7 @@ test.describe('Submittals V2 - View Details', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for attachments/documents section
       const attachmentsSection = page.locator('text=/attachment|document|file/i');
@@ -453,7 +453,7 @@ test.describe('Submittals V2 - Upload Documents', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for upload button
       const uploadButton = page.locator('button').filter({ hasText: /upload|attach|add.*file/i });
@@ -471,7 +471,7 @@ test.describe('Submittals V2 - Upload Documents', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const uploadButton = page.locator('button').filter({ hasText: /upload|attach|add.*file/i }).first();
 
@@ -502,7 +502,7 @@ test.describe('Submittals V2 - Upload Documents', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for document list
       const documentList = page.locator('[data-testid*="document"], .document-list, .attachment-list');
@@ -532,7 +532,7 @@ test.describe('Submittals V2 - Review Workflow', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for submit button (only visible for not_submitted status)
       const submitButton = page.locator('button').filter({ hasText: /^submit/i });
@@ -558,7 +558,7 @@ test.describe('Submittals V2 - Review Workflow', () => {
 
       if (await submittedSubmittal.isVisible({ timeout: 5000 }).catch(() => false)) {
         await submittedSubmittal.click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         // Look for review button
         const reviewButton = page.locator('button').filter({ hasText: /review|approve|reject/i });
@@ -579,7 +579,7 @@ test.describe('Submittals V2 - Review Workflow', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const reviewButton = page.locator('button').filter({ hasText: /review/i }).first();
 
@@ -604,7 +604,7 @@ test.describe('Submittals V2 - Review Workflow', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const reviewButton = page.locator('button').filter({ hasText: /review/i }).first();
 
@@ -631,7 +631,7 @@ test.describe('Submittals V2 - Review Workflow', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const reviewButton = page.locator('button').filter({ hasText: /review/i }).first();
 
@@ -662,7 +662,7 @@ test.describe('Submittals V2 - Review Workflow', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for history or activity section
       const historySection = page.locator('text=/history|activity|timeline/i, [data-testid*="history"]');
@@ -691,7 +691,7 @@ test.describe('Submittals V2 - Comments and Markups', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for reviews section
       const reviewsSection = page.locator('text=/review|comment/i').first();
@@ -714,7 +714,7 @@ test.describe('Submittals V2 - Comments and Markups', () => {
 
       if (await reviewedSubmittal.isVisible({ timeout: 5000 }).catch(() => false)) {
         await reviewedSubmittal.click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         // Look for reviewer information
         const reviewerInfo = page.locator('[data-testid*="reviewer"], .reviewer-info');
@@ -735,7 +735,7 @@ test.describe('Submittals V2 - Comments and Markups', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const reviewButton = page.locator('button').filter({ hasText: /review/i }).first();
 
@@ -762,7 +762,7 @@ test.describe('Submittals V2 - Comments and Markups', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for review attachments section
       const reviewAttachments = page.locator('[data-testid*="review-attachment"], .review-attachment');
@@ -792,7 +792,7 @@ test.describe('Submittals V2 - Revision Tracking', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for revision number display
       const revisionNumber = page.locator('text=/rev\\s*\\d+|revision\\s*\\d+/i, [data-testid*="revision"]');
@@ -811,7 +811,7 @@ test.describe('Submittals V2 - Revision Tracking', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for revision history section
       const revisionHistory = page.locator('text=/revision.*history/i, [data-testid*="revision-history"]');
@@ -834,7 +834,7 @@ test.describe('Submittals V2 - Revision Tracking', () => {
 
       if (await reviseSubmittal.isVisible({ timeout: 5000 }).catch(() => false)) {
         await reviseSubmittal.click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         // Look for resubmit button
         const resubmitButton = page.locator('button').filter({ hasText: /resubmit|submit/i });
@@ -855,7 +855,7 @@ test.describe('Submittals V2 - Revision Tracking', () => {
     if (count > 0) {
       const firstSubmittal = getSubmittalRow(page, 0);
       await firstSubmittal.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for formatted submittal number
       const formattedNumber = page.locator('text=/\\d{2}\\s\\d{2}\\s\\d{2}-\\d+(\\s+Rev\\s+\\d+)?/');
@@ -1041,7 +1041,7 @@ test.describe('Submittals V2 - Register/Log View', () => {
 
     if (await registerView.first().isVisible({ timeout: 5000 }).catch(() => false)) {
       await registerView.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
 
     expect(await page.isVisible('body')).toBe(true);
@@ -1169,7 +1169,7 @@ test.describe('Submittals V2 - Error Handling', () => {
 
   test('should handle invalid submittal ID gracefully', async ({ page }) => {
     await page.goto('/submittals-v2/invalid-id-12345');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Should show error or redirect
     const errorMessage = page.locator('text=/not found|error|invalid/i, [role="alert"]');

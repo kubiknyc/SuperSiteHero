@@ -36,19 +36,19 @@ async function login(page: Page) {
 async function navigateToLookAhead(page: Page) {
   // First navigate to projects to find a project
   await page.goto('/projects');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   // Click on the first project to get to project detail
   const projectLink = page.locator('a[href*="/projects/"]').first();
   if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
     await projectLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for look-ahead link in project navigation
     const lookAheadLink = page.locator('a:has-text("Look"), a:has-text("Look-Ahead"), a:has-text("Look Ahead"), a[href*="look-ahead"]');
     if (await lookAheadLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
       await lookAheadLink.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       return;
     }
 
@@ -57,14 +57,14 @@ async function navigateToLookAhead(page: Page) {
     const projectMatch = currentUrl.match(/\/projects\/([^/]+)/);
     if (projectMatch) {
       await page.goto(`/projects/${projectMatch[1]}/look-ahead`);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       return;
     }
   }
 
   // Fallback: try direct routes (may 404 without project context)
   await page.goto('/look-ahead').catch(() => null);
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 // Helper function to navigate to snapshots page
@@ -79,7 +79,7 @@ async function navigateToSnapshots(page: Page) {
     await page.goto('/look-ahead/snapshots').catch(() => null);
   }
 
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 test.describe('Look-Ahead Planning', () => {
@@ -481,7 +481,7 @@ test.describe('Look-Ahead Snapshots', () => {
 
     if (await snapshotsLink.isVisible({ timeout: 5000 })) {
       await snapshotsLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should navigate to snapshots page
       await expect(page).toHaveURL(/snapshot/, { timeout: 10000 });

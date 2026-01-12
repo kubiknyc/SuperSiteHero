@@ -56,14 +56,14 @@ async function login(page: Page) {
 // Helper function to navigate to equipment
 async function navigateToEquipment(page: Page) {
   await page.goto('/equipment');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   if (!page.url().includes('equipment')) {
     // Try through project or main nav
     const equipmentLink = page.locator('a:has-text("Equipment"), a[href*="equipment"]');
     if (await equipmentLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
       await equipmentLink.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   }
 }
@@ -313,7 +313,7 @@ test.describe('Maintenance Scheduling', () => {
 
     if (await equipmentItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await equipmentItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const historySection = page.locator('[data-testid="maintenance-history"], text=/maintenance history|service history/i');
       const hasHistory = await historySection.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -338,7 +338,7 @@ test.describe('Equipment Detail', () => {
 
     if (await equipmentItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await equipmentItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show equipment details
       const detailContent = page.locator('h1, h2, [data-testid="equipment-detail"]');
@@ -351,7 +351,7 @@ test.describe('Equipment Detail', () => {
 
     if (await equipmentItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await equipmentItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show serial number
       const serialNumber = page.locator('text=/serial|SN-/i');
@@ -370,7 +370,7 @@ test.describe('Equipment Detail', () => {
 
     if (await equipmentItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await equipmentItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const depreciation = page.locator('text=/depreciation|current value/i, [data-testid="depreciation"]');
       const hasDepreciation = await depreciation.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -397,7 +397,7 @@ test.describe('Filter Equipment', () => {
       await statusFilter.first().selectOption('active').catch(() =>
         statusFilter.first().selectOption({ index: 1 })
       );
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -406,7 +406,7 @@ test.describe('Filter Equipment', () => {
 
     if (await typeFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await typeFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -415,7 +415,7 @@ test.describe('Filter Equipment', () => {
 
     if (await locationFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await locationFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -425,7 +425,7 @@ test.describe('Filter Equipment', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('excavator');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -434,7 +434,7 @@ test.describe('Filter Equipment', () => {
 
     if (await maintenanceFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await maintenanceFilter.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });
@@ -470,7 +470,7 @@ test.describe('Edit Equipment', () => {
 
     if (await equipmentItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await equipmentItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const editButton = page.locator('button:has-text("Edit"), [data-testid="edit-button"]');
 

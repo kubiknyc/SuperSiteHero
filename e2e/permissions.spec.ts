@@ -34,7 +34,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_USER_PASSWORD || TEST_PASSWORD;
 async function navigateToRolesPage(page: Page) {
   // Try direct navigation first
   await page.goto('/settings/roles');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
   await waitForContentLoad(page);
 
   // If redirected, try through settings menu

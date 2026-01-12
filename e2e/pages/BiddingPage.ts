@@ -85,17 +85,17 @@ export class BiddingPage {
   // Navigation methods
   async goto() {
     await this.page.goto('/bidding')
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async gotoPackageDetail(packageId: string) {
     await this.page.goto(`/bidding/${packageId}`)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async gotoFromProject(projectId: string) {
     await this.page.goto(`/projects/${projectId}/bidding`)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // Search and filter methods
@@ -161,13 +161,13 @@ export class BiddingPage {
   async clickBidPackage(index: number = 0) {
     const packageRow = this.getBidPackageRow(index)
     await packageRow.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // Create bid package
   async clickCreatePackageButton() {
     await this.createPackageButton.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async createBidPackage(data: {
@@ -216,7 +216,7 @@ export class BiddingPage {
 
     // Submit
     await this.page.locator('button[type="submit"], button').filter({ hasText: /create|save/i }).first().click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // Update bid package
@@ -264,7 +264,7 @@ export class BiddingPage {
 
     // Submit
     await this.page.locator('button[type="submit"], button').filter({ hasText: /save|update/i }).first().click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // Bidder management
@@ -357,7 +357,7 @@ export class BiddingPage {
 
     // Submit
     await this.page.locator('button[type="submit"], button').filter({ hasText: /submit.*bid|send.*bid/i }).first().click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async getBidSubmissionCount(): Promise<number> {
@@ -373,7 +373,7 @@ export class BiddingPage {
   async compareBids() {
     if (await this.compareBidsButton.isVisible({ timeout: 2000 }).catch(() => false)) {
       await this.compareBidsButton.click()
-      await this.page.waitForLoadState('networkidle')
+      await this.page.waitForLoadState('domcontentloaded')
     }
   }
 
@@ -430,7 +430,7 @@ export class BiddingPage {
 
     // Confirm award
     await this.page.locator('button').filter({ hasText: /confirm|award/i }).first().click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async expectPackageAwarded() {
@@ -450,7 +450,7 @@ export class BiddingPage {
       const saveButton = this.page.locator('button').filter({ hasText: /save|update/i }).first()
       if (await saveButton.isVisible({ timeout: 2000 }).catch(() => false)) {
         await saveButton.click()
-        await this.page.waitForLoadState('networkidle')
+        await this.page.waitForLoadState('domcontentloaded')
       }
     }
   }
@@ -467,7 +467,7 @@ export class BiddingPage {
         await confirmButton.click()
       }
 
-      await this.page.waitForLoadState('networkidle')
+      await this.page.waitForLoadState('domcontentloaded')
     }
   }
 
@@ -483,7 +483,7 @@ export class BiddingPage {
         await confirmButton.click()
       }
 
-      await this.page.waitForLoadState('networkidle')
+      await this.page.waitForLoadState('domcontentloaded')
     }
   }
 

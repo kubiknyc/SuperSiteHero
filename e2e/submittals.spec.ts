@@ -22,7 +22,7 @@ test.describe('Submittals', () => {
 
   test('should navigate to submittals from project', async ({ page }) => {
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     const projectVisible = await projectLink.isVisible({ timeout: 5000 }).catch(() => false);
@@ -31,7 +31,7 @@ test.describe('Submittals', () => {
       return;
     }
     await projectLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const submittalsLink = page.locator('a:has-text("Submittals"), a[href*="submittals"]');
     const submittalsVisible = await submittalsLink.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -46,7 +46,7 @@ test.describe('Submittals', () => {
 
   test('should display submittals list with content', async ({ page }) => {
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     const projectVisible = await projectLink.isVisible({ timeout: 5000 }).catch(() => false);
@@ -55,7 +55,7 @@ test.describe('Submittals', () => {
       return;
     }
     await projectLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const submittalsLink = page.locator('a:has-text("Submittals"), a[href*="submittals"]');
     const submittalsVisible = await submittalsLink.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -64,7 +64,7 @@ test.describe('Submittals', () => {
       return;
     }
     await submittalsLink.first().click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Should show main content
     const content = page.locator('main, h1, h2');
@@ -73,7 +73,7 @@ test.describe('Submittals', () => {
 
   test('should open create submittal form', async ({ page }) => {
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     const projectVisible = await projectLink.isVisible({ timeout: 5000 }).catch(() => false);
@@ -82,7 +82,7 @@ test.describe('Submittals', () => {
       return;
     }
     await projectLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const submittalsLink = page.locator('a:has-text("Submittals"), a[href*="submittals"]');
     const submittalsVisible = await submittalsLink.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -91,7 +91,7 @@ test.describe('Submittals', () => {
       return;
     }
     await submittalsLink.first().click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for create button
     const createButton = page.locator('button:has-text("New"), button:has-text("Create"), button:has-text("Add")');
@@ -121,7 +121,7 @@ test.describe('Submittals', () => {
 
   test('should view submittal details', async ({ page }) => {
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     const projectVisible = await projectLink.isVisible({ timeout: 5000 }).catch(() => false);
@@ -130,7 +130,7 @@ test.describe('Submittals', () => {
       return;
     }
     await projectLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const submittalsLink = page.locator('a:has-text("Submittals"), a[href*="submittals"]');
     const submittalsVisible = await submittalsLink.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -139,7 +139,7 @@ test.describe('Submittals', () => {
       return;
     }
     await submittalsLink.first().click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Click on first submittal
     const submittalLink = page.locator('a[href*="submittals/"]').first();

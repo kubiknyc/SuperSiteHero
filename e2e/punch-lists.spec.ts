@@ -35,7 +35,7 @@ test.describe('Punch Lists Management', () => {
 
     // Navigate to punch lists page
     await page.goto('/punch-lists');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display punch lists page with filters', async ({ page }) => {
@@ -89,7 +89,7 @@ test.describe('Punch Lists Management', () => {
     const createButton = page.locator('button, a').filter({ hasText: /new|create|add/i }).first();
     await createButton.click();
 
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(1000);
 
     // Fill in punch item description
@@ -147,7 +147,7 @@ test.describe('Punch Lists Management', () => {
     const createButton = page.locator('button, a').filter({ hasText: /new|create|add/i }).first();
     await createButton.click();
 
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(1000);
 
     // Try to submit empty form
@@ -259,7 +259,7 @@ test.describe('Punch Lists Management', () => {
 
     if (await firstItem.isVisible()) {
       await firstItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show description, location, assignee, status
       const contentElements = page.locator('text=/description|location|assign|status|trade/i');
@@ -280,7 +280,7 @@ test.describe('Punch Lists Management', () => {
 
     if (await firstItem.isVisible()) {
       await firstItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for edit button
       const editButton = page.locator('button, a').filter({ hasText: /edit/i }).first();
@@ -311,14 +311,14 @@ test.describe('Punch Lists Management', () => {
 
     if (await firstItem.isVisible()) {
       await firstItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for edit button
       const editButton = page.locator('button, a').filter({ hasText: /edit/i }).first();
 
       if (await editButton.isVisible()) {
         await editButton.click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         // Update description
         const descriptionField = page.locator('textarea[name="description"], textarea[name="notes"], input[name="description"]').first();
@@ -362,7 +362,7 @@ test.describe('Punch Lists Management', () => {
 
     if (await firstItem.isVisible()) {
       await firstItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for status change control
       const statusControl = page.locator('select[name="status"], [data-testid="status-select"], button:has-text("In Progress")').first();
@@ -399,7 +399,7 @@ test.describe('Punch Lists Management', () => {
 
     if (await firstItem.isVisible()) {
       await firstItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for status control
       const statusControl = page.locator('select[name="status"], [data-testid="status-select"], button:has-text("Close"), button:has-text("Complete")').first();
@@ -434,7 +434,7 @@ test.describe('Punch Lists Management', () => {
 
     if (await firstItem.isVisible()) {
       await firstItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for verify button or status
       const verifyButton = page.locator('button:has-text("Verify"), button:has-text("Mark as Verified"), select[name="status"]').first();
@@ -470,7 +470,7 @@ test.describe('Punch Lists Management', () => {
 
     if (await firstItem.isVisible()) {
       await firstItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for photo upload or add photo button
       const photoButton = page.locator('button:has-text("Add Photo"), button:has-text("Upload Photo"), input[type="file"]').first();
@@ -507,7 +507,7 @@ test.describe('Punch Lists Management', () => {
 
     if (await firstItem.isVisible()) {
       await firstItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for photo gallery or image elements
       const photoElements = page.locator('[data-testid*="photo"], [data-testid*="image"], img[alt*="punch"], .photo-gallery');
@@ -653,7 +653,7 @@ test.describe('Punch Lists Management', () => {
 
     if (await firstItem.isVisible()) {
       await firstItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for activity log or history
       const activityLog = page.locator('[data-testid*="activity"], [data-testid*="history"], text=/activity|history|timeline/i');
@@ -697,7 +697,7 @@ test.describe('Punch Lists Management', () => {
 
     if (await firstItem.isVisible()) {
       await firstItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for responsible party or contractor info
       const responsibleParty = page.locator('text=/responsible|contractor|assignee|assigned to/i');

@@ -81,12 +81,12 @@ export class MessagingPage {
   // Navigation methods
   async goto() {
     await this.page.goto('/messages')
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async gotoConversation(conversationId: string) {
     await this.page.goto(`/messages/${conversationId}`)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // Project selection
@@ -128,14 +128,14 @@ export class MessagingPage {
   async selectConversation(index: number = 0) {
     const conversation = this.getConversationItem(index)
     await conversation.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
     await this.page.waitForTimeout(500)
   }
 
   async selectConversationByName(name: string) {
     const conversation = this.getConversationByName(name)
     await conversation.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
     await this.page.waitForTimeout(500)
   }
 
@@ -196,7 +196,7 @@ export class MessagingPage {
     const createButton = this.page.locator('[role="dialog"] button').filter({ hasText: /create|start|next|continue/i }).last()
     if (await createButton.isEnabled({ timeout: 2000 })) {
       await createButton.click()
-      await this.page.waitForLoadState('networkidle')
+      await this.page.waitForLoadState('domcontentloaded')
       await this.page.waitForTimeout(500)
     }
   }
@@ -242,7 +242,7 @@ export class MessagingPage {
     const createButton = this.page.locator('[role="dialog"] button').filter({ hasText: /create|start/i }).last()
     if (await createButton.isEnabled({ timeout: 2000 })) {
       await createButton.click()
-      await this.page.waitForLoadState('networkidle')
+      await this.page.waitForLoadState('domcontentloaded')
       await this.page.waitForTimeout(500)
     }
   }

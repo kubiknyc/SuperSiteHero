@@ -160,17 +160,17 @@ export class RegistrationPage {
 
   async goto(): Promise<void> {
     await this.page.goto('/register')
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async gotoPendingApproval(): Promise<void> {
     await this.page.goto('/pending-approval')
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async gotoAdminApproval(): Promise<void> {
     await this.page.goto('/settings/user-approvals')
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // ============================================================================

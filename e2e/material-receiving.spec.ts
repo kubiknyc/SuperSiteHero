@@ -57,17 +57,17 @@ async function login(page: Page) {
 async function navigateToMaterialReceiving(page: Page) {
   // Try direct project route
   await page.goto('/projects');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   const projectLink = page.locator('a[href*="/projects/"]').first();
   if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
     await projectLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const materialLink = page.locator('a:has-text("Material"), a[href*="material-receiving"]');
     if (await materialLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
       await materialLink.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   }
 }
@@ -317,7 +317,7 @@ test.describe('Filter Deliveries', () => {
       await statusFilter.first().selectOption('received').catch(() =>
         statusFilter.first().selectOption({ index: 1 })
       );
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -326,7 +326,7 @@ test.describe('Filter Deliveries', () => {
 
     if (await categoryFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await categoryFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -337,7 +337,7 @@ test.describe('Filter Deliveries', () => {
       await conditionFilter.first().selectOption('damaged').catch(() =>
         conditionFilter.first().selectOption({ index: 1 })
       );
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -349,7 +349,7 @@ test.describe('Filter Deliveries', () => {
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
       await startDate.first().fill(thirtyDaysAgo.toISOString().split('T')[0]);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -359,7 +359,7 @@ test.describe('Filter Deliveries', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('concrete');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });
@@ -412,7 +412,7 @@ test.describe('Delivery Detail', () => {
 
     if (await deliveryItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await deliveryItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show delivery details
       const detailContent = page.locator('h1, h2, [data-testid="delivery-detail"]');
@@ -425,7 +425,7 @@ test.describe('Delivery Detail', () => {
 
     if (await deliveryItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await deliveryItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show ticket number
       const ticketNumber = page.locator('text=/TKT-|ticket/i');
@@ -471,7 +471,7 @@ test.describe('Edit Delivery', () => {
 
     if (await deliveryItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await deliveryItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const editButton = page.locator('button:has-text("Edit"), [data-testid="edit-button"]');
 

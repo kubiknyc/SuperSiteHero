@@ -77,18 +77,18 @@ async function login(page: Page) {
 async function navigateToTakeoffs(page: Page) {
   // Try direct navigation first
   await page.goto('/projects');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   const projectLink = page.locator('a[href*="/projects/"]').first();
   if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
     await projectLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for takeoffs navigation link
     const takeoffsLink = page.locator('a:has-text("Takeoff"), a[href*="takeoff"]');
     if (await takeoffsLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
       await takeoffsLink.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   }
 }
@@ -96,24 +96,24 @@ async function navigateToTakeoffs(page: Page) {
 async function navigateToDocumentTakeoff(page: Page) {
   // Navigate to documents first
   await page.goto('/projects');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   const projectLink = page.locator('a[href*="/projects/"]').first();
   if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
     await projectLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Navigate to drawings/documents
     const documentsLink = page.locator('a:has-text("Drawing"), a:has-text("Document"), a[href*="document"]');
     if (await documentsLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
       await documentsLink.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Click on first document/drawing
       const firstDoc = page.locator('[data-testid="document-item"]:first-child, [data-testid="drawing-item"]:first-child');
       if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
         await firstDoc.click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
       }
     }
   }
@@ -768,7 +768,7 @@ test.describe('Takeoff Groups and Categories', () => {
 
     if (await groupFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await groupFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
     }
   });
@@ -1147,7 +1147,7 @@ test.describe('Search and Filtering', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('concrete');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       await expect(searchInput.first()).toHaveValue('concrete');
     }
@@ -1158,7 +1158,7 @@ test.describe('Search and Filtering', () => {
 
     if (await categoryFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await categoryFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
     }
   });
@@ -1168,7 +1168,7 @@ test.describe('Search and Filtering', () => {
 
     if (await unitFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await unitFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -1177,7 +1177,7 @@ test.describe('Search and Filtering', () => {
 
     if (await drawingFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await drawingFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -1207,7 +1207,7 @@ test.describe('Search and Filtering', () => {
 
     if (await clearButton.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await clearButton.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });

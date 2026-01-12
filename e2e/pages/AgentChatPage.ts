@@ -180,12 +180,14 @@ export class AgentChatPage {
 
   async goto(path: string = '/'): Promise<void> {
     await this.page.goto(path)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
+    // Wait for main content to be visible
+    await this.page.locator('main, [role="main"], .min-h-screen').first().waitFor({ timeout: 10000 }).catch(() => {})
   }
 
   async gotoWithProject(projectId: string): Promise<void> {
     await this.page.goto(`/projects/${projectId}`)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // ============================================================================

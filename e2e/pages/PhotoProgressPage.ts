@@ -68,12 +68,12 @@ export class PhotoProgressPage {
   // Navigation methods
   async goto() {
     await this.page.goto('/photo-progress');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async gotoFromProject(projectId: string) {
     await this.page.goto(`/projects/${projectId}/photo-progress`);
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async switchToLocationsTab() {
@@ -146,7 +146,7 @@ export class PhotoProgressPage {
   async clickLocation(index: number = 0) {
     const location = this.getLocationCard(index);
     await location.click();
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async createLocation(data: {
@@ -266,7 +266,7 @@ export class PhotoProgressPage {
   async clickComparison(index: number = 0) {
     const comparison = this.getComparisonCard(index);
     await comparison.click();
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async createComparison(data: {
@@ -361,7 +361,7 @@ export class PhotoProgressPage {
   async clickReport(index: number = 0) {
     const report = this.getReportCard(index);
     await report.click();
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async generateReport(data: {

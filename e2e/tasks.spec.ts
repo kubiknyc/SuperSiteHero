@@ -24,7 +24,7 @@ test.describe('Tasks Management', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to tasks page
     await page.goto('/tasks');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display tasks list page', async ({ page }) => {
@@ -92,7 +92,7 @@ test.describe('Tasks Management', () => {
 
     await createButton.click();
 
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Fill in task title
     const taskTitle = `Test Task ${Date.now()}`;
@@ -136,7 +136,7 @@ test.describe('Tasks Management', () => {
   test('should validate required fields on create', async ({ page }) => {
     // Navigate directly to create page with a project ID (required)
     await page.goto('/tasks/new?projectId=test-project');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Check if form is visible - TaskForm has input#title
     const titleInput = page.locator('#title').first();
@@ -230,7 +230,7 @@ test.describe('Tasks Management', () => {
     if (targetLink) {
       // Click the first view link/button
       await targetLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
 
       // Should navigate to detail page - check URL pattern for UUID
@@ -254,7 +254,7 @@ test.describe('Tasks Management', () => {
 
     if (await firstTask.isVisible().catch(() => false)) {
       await firstTask.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for edit button
       const editButton = page.locator('button, a').filter({ hasText: /edit/i }).first();
@@ -284,7 +284,7 @@ test.describe('Tasks Management', () => {
 
     if (await firstTask.isVisible()) {
       await firstTask.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for status change button or dropdown
       const statusControl = page.locator('select[name="status"], [data-testid="status-select"], button:has-text("In Progress"), button:has-text("Complete")').first();

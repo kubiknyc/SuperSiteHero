@@ -119,7 +119,7 @@ test.describe('Tier 1 Critical Pages - Light Mode', () => {
           await browserPage.waitForSelector(page.waitFor);
         } else {
           // Wait for page to be fully loaded
-          await browserPage.waitForLoadState('networkidle');
+          await browserPage.waitForLoadState('domcontentloaded');
         }
 
         // Take screenshot
@@ -160,7 +160,7 @@ test.describe('Tier 1 Critical Pages - Dark Mode', () => {
           await browserPage.waitForSelector(page.waitFor);
         } else {
           // Wait for page to be fully loaded
-          await browserPage.waitForLoadState('networkidle');
+          await browserPage.waitForLoadState('domcontentloaded');
         }
 
         // Take screenshot
@@ -195,7 +195,7 @@ test.describe('Tier 2 Important Features - Light Mode', () => {
         if (page.waitFor) {
           await browserPage.waitForSelector(page.waitFor);
         } else {
-          await browserPage.waitForLoadState('networkidle');
+          await browserPage.waitForLoadState('domcontentloaded');
         }
 
         await expect(browserPage).toHaveScreenshot(
@@ -229,7 +229,7 @@ test.describe('Tier 2 Important Features - Dark Mode', () => {
         if (page.waitFor) {
           await browserPage.waitForSelector(page.waitFor);
         } else {
-          await browserPage.waitForLoadState('networkidle');
+          await browserPage.waitForLoadState('domcontentloaded');
         }
 
         await expect(browserPage).toHaveScreenshot(
@@ -252,7 +252,7 @@ test.describe('Tier 2 Important Features - Dark Mode', () => {
 test.describe('Dark Mode Transitions', () => {
   test('transition from light to dark is smooth', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Start in light mode
     await disableDarkMode(page);
@@ -269,7 +269,7 @@ test.describe('Dark Mode Transitions', () => {
 
   test('transition from dark to light is smooth', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Start in dark mode
     await enableDarkMode(page);
@@ -293,7 +293,7 @@ test.describe('Component-Specific Dark Mode', () => {
   test('navigation menu in dark mode', async ({ page }) => {
     await page.goto('/');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Click on navigation if it exists
     const navButton = page.locator('[aria-label*="menu" i], [aria-label*="navigation" i]').first();
@@ -307,7 +307,7 @@ test.describe('Component-Specific Dark Mode', () => {
   test('modal dialogs in dark mode', async ({ page }) => {
     await page.goto('/daily-reports/new');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Modal should be visible on this page
     await expect(page).toHaveScreenshot('modal-dialog-dark.png', {
@@ -318,7 +318,7 @@ test.describe('Component-Specific Dark Mode', () => {
   test('dropdown menus in dark mode', async ({ page }) => {
     await page.goto('/');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Find and click a dropdown if present
     const dropdown = page.locator('[role="combobox"], select').first();
@@ -332,7 +332,7 @@ test.describe('Component-Specific Dark Mode', () => {
   test('data tables in dark mode', async ({ page }) => {
     await page.goto('/daily-reports');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const table = page.locator('table').first();
     if (await table.isVisible()) {
@@ -343,7 +343,7 @@ test.describe('Component-Specific Dark Mode', () => {
   test('forms in dark mode', async ({ page }) => {
     await page.goto('/daily-reports/new');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     await expect(page).toHaveScreenshot('form-dark.png', {
       animations: 'disabled',
@@ -353,7 +353,7 @@ test.describe('Component-Specific Dark Mode', () => {
   test('cards and containers in dark mode', async ({ page }) => {
     await page.goto('/');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const card = page.locator('[class*="card"]').first();
     if (await card.isVisible()) {
@@ -370,7 +370,7 @@ test.describe('Status Colors in Dark Mode', () => {
   test('status badges maintain visibility', async ({ page }) => {
     await page.goto('/projects');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Find status badges
     const badges = page.locator('[class*="badge"]');
@@ -382,7 +382,7 @@ test.describe('Status Colors in Dark Mode', () => {
   test('priority indicators are distinguishable', async ({ page }) => {
     await page.goto('/tasks');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     await expect(page).toHaveScreenshot('priority-indicators-dark.png');
   });
@@ -390,7 +390,7 @@ test.describe('Status Colors in Dark Mode', () => {
   test('approval status colors are clear', async ({ page }) => {
     await page.goto('/change-orders');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     await expect(page).toHaveScreenshot('approval-status-dark.png');
   });

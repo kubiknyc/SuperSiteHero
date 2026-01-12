@@ -26,7 +26,7 @@ test.describe('User Profile Management', () => {
   test('should navigate to profile page', async ({ page }) => {
     // Try navigation from settings or user menu
     await page.goto('/profile')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Should be on profile page
     await expect(page).toHaveURL(/profile/)
@@ -34,7 +34,7 @@ test.describe('User Profile Management', () => {
 
   test('should display user profile information', async ({ page }) => {
     await page.goto('/profile')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Should show user information
     const emailElement = page.locator(`text="${TEST_EMAIL}"`)
@@ -52,7 +52,7 @@ test.describe('User Profile Management', () => {
 
   test('should display avatar or placeholder', async ({ page }) => {
     await page.goto('/profile')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Look for avatar image or placeholder
     const avatar = page.locator(
@@ -72,7 +72,7 @@ test.describe('User Profile Management', () => {
 
   test('should allow editing first name', async ({ page }) => {
     await page.goto('/profile/edit')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Find first name input
     const firstNameInput = page.locator(
@@ -96,7 +96,7 @@ test.describe('User Profile Management', () => {
 
   test('should allow editing last name', async ({ page }) => {
     await page.goto('/profile/edit')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Find last name input
     const lastNameInput = page.locator(
@@ -118,7 +118,7 @@ test.describe('User Profile Management', () => {
 
   test('should allow editing phone number', async ({ page }) => {
     await page.goto('/profile/edit')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Find phone input
     const phoneInput = page.locator(
@@ -140,7 +140,7 @@ test.describe('User Profile Management', () => {
 
   test('should have save/update button', async ({ page }) => {
     await page.goto('/profile/edit')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Look for save button
     const saveButton = page.locator(
@@ -166,7 +166,7 @@ test.describe('User Profile Management', () => {
 
   test('should have avatar upload functionality', async ({ page }) => {
     await page.goto('/profile/edit')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Look for upload button or file input
     const uploadControl = page.locator(
@@ -185,7 +185,7 @@ test.describe('User Profile Management', () => {
 
   test('should display current role', async ({ page }) => {
     await page.goto('/profile')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Look for role display
     const roleElement = page.locator('text=/role|admin|user|owner|project manager/i')
@@ -199,7 +199,7 @@ test.describe('User Profile Management', () => {
 
   test('should navigate to MFA setup from profile', async ({ page }) => {
     await page.goto('/profile')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Look for MFA/security link
     const mfaLink = page.locator(
@@ -227,7 +227,7 @@ test.describe('User Profile Management', () => {
 
   test('should show email as read-only', async ({ page }) => {
     await page.goto('/profile/edit')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Email should be displayed but not editable
     const emailDisplay = page.locator(`text="${TEST_EMAIL}"`)
@@ -248,7 +248,7 @@ test.describe('User Profile Management', () => {
 
   test('should allow canceling profile edit', async ({ page }) => {
     await page.goto('/profile/edit')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Look for cancel button
     const cancelButton = page.locator('button:has-text("Cancel"), a:has-text("Cancel")').first()
@@ -267,7 +267,7 @@ test.describe('User Profile Management', () => {
 
   test('should validate required fields', async ({ page }) => {
     await page.goto('/profile/edit')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Try to submit with empty required field
     const firstNameInput = page.locator('input[name*="first"]').first()
@@ -299,7 +299,7 @@ test.describe('User Profile Management', () => {
 
   test('should display company information', async ({ page }) => {
     await page.goto('/profile')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Look for company name or info
     const companyElement = page.locator('text=/company/i')
@@ -313,7 +313,7 @@ test.describe('User Profile Management', () => {
 
   test('should handle profile photo removal', async ({ page }) => {
     await page.goto('/profile/edit')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Look for remove photo option
     const removeButton = page.locator(
@@ -331,7 +331,7 @@ test.describe('User Profile Management', () => {
 
   test('should show account creation date', async ({ page }) => {
     await page.goto('/profile')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Look for creation/joined date
     const dateElement = page.locator('text=/joined|created|member since/i')
@@ -349,7 +349,7 @@ test.describe('MFA Setup', () => {
 
   test('should navigate to MFA setup page', async ({ page }) => {
     await page.goto('/auth/mfa-setup')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Should be on MFA setup page
     await expect(page).toHaveURL(/mfa-setup/)
@@ -357,7 +357,7 @@ test.describe('MFA Setup', () => {
 
   test('should display MFA setup instructions', async ({ page }) => {
     await page.goto('/auth/mfa-setup')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Should have instructions
     const instructions = page.locator('text=/scan|authenticator|code|app/i')
@@ -372,7 +372,7 @@ test.describe('MFA Setup', () => {
 
   test('should display QR code for MFA setup', async ({ page }) => {
     await page.goto('/auth/mfa-setup')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Look for QR code or canvas
     const qrCode = page.locator('canvas, img[alt*="qr"], [data-testid*="qr"]').first()
@@ -386,7 +386,7 @@ test.describe('MFA Setup', () => {
 
   test('should have verification code input', async ({ page }) => {
     await page.goto('/auth/mfa-setup')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Look for code input
     const codeInput = page.locator(
@@ -404,7 +404,7 @@ test.describe('MFA Setup', () => {
 
   test('should have verify/enable button', async ({ page }) => {
     await page.goto('/auth/mfa-setup')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Look for verify button
     const verifyButton = page.locator(

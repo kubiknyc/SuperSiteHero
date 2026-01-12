@@ -22,7 +22,7 @@ test.use({ storageState: 'playwright/.auth/user.json' });
 test.describe('AI Features - Settings Configuration', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await waitForContentLoad(page);
   });
 
@@ -185,7 +185,7 @@ test.describe('AI Features - Settings Configuration', () => {
 test.describe('AI Features - Smart Summaries', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/daily-reports');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await waitForContentLoad(page);
   });
 
@@ -314,7 +314,7 @@ test.describe('AI Features - Smart Summaries', () => {
 test.describe('AI Features - Meeting Action Items', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/meetings');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await waitForContentLoad(page);
   });
 
@@ -410,7 +410,7 @@ test.describe('AI Features - Meeting Action Items', () => {
 test.describe('AI Features - Semantic Search', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await waitForContentLoad(page);
   });
 
@@ -522,7 +522,7 @@ test.describe('AI Features - Semantic Search', () => {
 test.describe('AI Features - Document Enhancement', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/documents');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await waitForContentLoad(page);
   });
 
@@ -605,7 +605,7 @@ test.describe('AI Features - Document Enhancement', () => {
 test.describe('AI Features - Risk Prediction & Analytics', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/analytics');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await waitForContentLoad(page);
   });
 
@@ -653,7 +653,7 @@ test.describe('AI Features - Risk Prediction & Analytics', () => {
 test.describe('AI Features - RFI Auto-Routing', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/rfis');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await waitForContentLoad(page);
   });
 
@@ -733,7 +733,7 @@ test.describe('AI Features - RFI Auto-Routing', () => {
 test.describe('AI Features - Budget and Rate Limiting', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/ai');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await waitForContentLoad(page);
   });
 
@@ -804,7 +804,7 @@ test.describe('AI Features - Budget and Rate Limiting', () => {
 test.describe('AI Features - Test Connection', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/ai');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await waitForContentLoad(page);
   });
 

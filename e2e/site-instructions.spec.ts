@@ -44,7 +44,7 @@ const testInstruction = {
 
 async function login(page: Page) {
   await page.goto('/login')
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('domcontentloaded')
 
   await page.fill('input[name="email"], input[type="email"]', TEST_EMAIL)
   await page.fill('input[name="password"], input[type="password"]', TEST_PASSWORD)
@@ -56,12 +56,12 @@ async function login(page: Page) {
     timeout: 20000,
   })
 
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('domcontentloaded')
 }
 
 async function navigateToSiteInstructions(page: Page) {
   await page.goto('/site-instructions')
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('domcontentloaded')
 }
 
 async function selectProject(page: Page) {
@@ -177,7 +177,7 @@ test.describe('Site Instructions - CRUD Operations', () => {
 
     if (await createButton.isVisible({ timeout: 5000 }).catch(() => false)) {
       await createButton.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       await expect(page).toHaveURL(/site-instructions\/new/)
     } else {
@@ -187,7 +187,7 @@ test.describe('Site Instructions - CRUD Operations', () => {
 
   test('should display create form fields', async ({ page }) => {
     await page.goto('/site-instructions/new')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     if (page.url().includes('/new')) {
       const titleInput = page.locator('input[name="title"], input[placeholder*="title" i]')
@@ -202,7 +202,7 @@ test.describe('Site Instructions - CRUD Operations', () => {
 
   test('should validate required fields on create', async ({ page }) => {
     await page.goto('/site-instructions/new')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     if (page.url().includes('/new')) {
       const submitButton = page.locator('button[type="submit"], button').filter({ hasText: /create|save|issue/i }).first()
@@ -224,7 +224,7 @@ test.describe('Site Instructions - CRUD Operations', () => {
 
     if (await instructionCard.isVisible({ timeout: 5000 }).catch(() => false)) {
       await instructionCard.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const detailHeading = page.locator('h1, h2').first()
       await expect(detailHeading).toBeVisible()
@@ -238,7 +238,7 @@ test.describe('Site Instructions - CRUD Operations', () => {
 
     if (await instructionLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await instructionLink.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       if (page.url().includes('/site-instructions/') && !page.url().includes('/new')) {
         const descriptionSection = page.locator('text=/description/i').first()
@@ -259,7 +259,7 @@ test.describe('Site Instructions - CRUD Operations', () => {
 
     if (await instructionLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await instructionLink.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const editButton = page.locator('a, button').filter({ hasText: /edit/i })
       const hasEditButton = await editButton.first().isVisible({ timeout: 5000 }).catch(() => false)
@@ -275,7 +275,7 @@ test.describe('Site Instructions - CRUD Operations', () => {
 
     if (await draftInstruction.isVisible({ timeout: 5000 }).catch(() => false)) {
       await draftInstruction.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const deleteButton = page.locator('button').filter({ hasText: /delete/i })
       const hasDeleteButton = await deleteButton.first().isVisible({ timeout: 3000 }).catch(() => false)
@@ -310,7 +310,7 @@ test.describe('Site Instructions - Workflow Status', () => {
 
     if (await draftInstruction.isVisible({ timeout: 5000 }).catch(() => false)) {
       await draftInstruction.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const issueButton = page.locator('button').filter({ hasText: /issue/i })
       await expect(issueButton.first()).toBeVisible({ timeout: 5000 })
@@ -322,7 +322,7 @@ test.describe('Site Instructions - Workflow Status', () => {
 
     if (await issuedInstruction.isVisible({ timeout: 5000 }).catch(() => false)) {
       await issuedInstruction.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const acknowledgeButton = page.locator('button').filter({ hasText: /acknowledge/i })
       const hasAcknowledgeButton = await acknowledgeButton.first().isVisible({ timeout: 3000 }).catch(() => false)
@@ -343,7 +343,7 @@ test.describe('Site Instructions - Workflow Status', () => {
 
     if (await acknowledgedInstruction.isVisible({ timeout: 5000 }).catch(() => false)) {
       await acknowledgedInstruction.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const startButton = page.locator('button').filter({ hasText: /start work|start/i })
       const hasStartButton = await startButton.first().isVisible({ timeout: 3000 }).catch(() => false)
@@ -357,7 +357,7 @@ test.describe('Site Instructions - Workflow Status', () => {
 
     if (await inProgressInstruction.isVisible({ timeout: 5000 }).catch(() => false)) {
       await inProgressInstruction.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const completeButton = page.locator('button').filter({ hasText: /complete|mark complete/i })
       const hasCompleteButton = await completeButton.first().isVisible({ timeout: 3000 }).catch(() => false)
@@ -371,7 +371,7 @@ test.describe('Site Instructions - Workflow Status', () => {
 
     if (await completedInstruction.isVisible({ timeout: 5000 }).catch(() => false)) {
       await completedInstruction.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const verifyButton = page.locator('button').filter({ hasText: /verify/i })
       const hasVerifyButton = await verifyButton.first().isVisible({ timeout: 3000 }).catch(() => false)
@@ -385,7 +385,7 @@ test.describe('Site Instructions - Workflow Status', () => {
 
     if (await activeInstruction.isVisible({ timeout: 5000 }).catch(() => false)) {
       await activeInstruction.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const voidButton = page.locator('button').filter({ hasText: /void/i })
       const hasVoidButton = await voidButton.first().isVisible({ timeout: 3000 }).catch(() => false)
@@ -411,7 +411,7 @@ test.describe('Site Instructions - QR Code Generation', () => {
 
     if (await issuedInstruction.isVisible({ timeout: 5000 }).catch(() => false)) {
       await issuedInstruction.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const qrButton = page.locator('button').filter({ hasText: /qr code|qr/i })
       const hasQRButton = await qrButton.first().isVisible({ timeout: 3000 }).catch(() => false)
@@ -425,7 +425,7 @@ test.describe('Site Instructions - QR Code Generation', () => {
 
     if (await issuedInstruction.isVisible({ timeout: 5000 }).catch(() => false)) {
       await issuedInstruction.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const qrButton = page.locator('button').filter({ hasText: /qr code/i }).first()
 
@@ -446,7 +446,7 @@ test.describe('Site Instructions - QR Code Generation', () => {
 
     if (await issuedInstruction.isVisible({ timeout: 5000 }).catch(() => false)) {
       await issuedInstruction.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const qrButton = page.locator('button').filter({ hasText: /qr code/i }).first()
 
@@ -467,7 +467,7 @@ test.describe('Site Instructions - QR Code Generation', () => {
 
     if (await issuedInstruction.isVisible({ timeout: 5000 }).catch(() => false)) {
       await issuedInstruction.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const qrButton = page.locator('button').filter({ hasText: /qr code/i }).first()
 
@@ -493,7 +493,7 @@ test.describe('Site Instructions - Public Acknowledgement', () => {
     // This test would require a valid token
     // For now, test the error state
     await page.goto('/site-instructions/acknowledge/invalid-token')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     const errorMessage = page.locator('text=/invalid|expired/i, [role="alert"]')
     const hasErrorMessage = await errorMessage.first().isVisible({ timeout: 10000 }).catch(() => false)
@@ -503,7 +503,7 @@ test.describe('Site Instructions - Public Acknowledgement', () => {
 
   test('should show invalid token message for bad token', async ({ page }) => {
     await page.goto('/site-instructions/acknowledge/bad-token-12345')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     const invalidMessage = page.locator('text=/invalid|not valid/i')
     await expect(invalidMessage.first()).toBeVisible({ timeout: 10000 })
@@ -511,7 +511,7 @@ test.describe('Site Instructions - Public Acknowledgement', () => {
 
   test('should display sign in option on acknowledgement page', async ({ page }) => {
     await page.goto('/site-instructions/acknowledge/test-token')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     const signInButton = page.locator('a, button').filter({ hasText: /sign in|login/i })
     await expect(signInButton.first()).toBeVisible({ timeout: 10000 })
@@ -519,7 +519,7 @@ test.describe('Site Instructions - Public Acknowledgement', () => {
 
   test('should show scan another code option', async ({ page }) => {
     await page.goto('/site-instructions/acknowledge/invalid-token')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     const scanButton = page.locator('button').filter({ hasText: /scan.*code|another/i })
     const hasScanButton = await scanButton.first().isVisible({ timeout: 5000 }).catch(() => false)
@@ -562,7 +562,7 @@ test.describe('Site Instructions - Acknowledgement Tracking', () => {
 
     if (await acknowledgedInstruction.isVisible({ timeout: 5000 }).catch(() => false)) {
       await acknowledgedInstruction.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const acknowledgedBy = page.locator('text=/acknowledged by|by:/i')
       const hasAcknowledgedBy = await acknowledgedBy.first().isVisible({ timeout: 3000 }).catch(() => false)
@@ -576,7 +576,7 @@ test.describe('Site Instructions - Acknowledgement Tracking', () => {
 
     if (await acknowledgedInstruction.isVisible({ timeout: 5000 }).catch(() => false)) {
       await acknowledgedInstruction.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const timestamp = page.locator('text=/acknowledged at|date:/i')
       const hasTimestamp = await timestamp.first().isVisible({ timeout: 3000 }).catch(() => false)
@@ -590,7 +590,7 @@ test.describe('Site Instructions - Acknowledgement Tracking', () => {
 
     if (await acknowledgedInstruction.isVisible({ timeout: 5000 }).catch(() => false)) {
       await acknowledgedInstruction.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const signature = page.locator('text=/signature/i, img[alt*="signature" i]')
       const hasSignature = await signature.first().isVisible({ timeout: 3000 }).catch(() => false)
@@ -875,7 +875,7 @@ test.describe('Site Instructions - Error Handling', () => {
 
   test('should handle missing instruction gracefully', async ({ page }) => {
     await page.goto('/site-instructions/non-existent-id')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     const errorMessage = page.locator('text=/not found|error|failed/i')
     const backButton = page.locator('button, a').filter({ hasText: /back/i })
@@ -921,7 +921,7 @@ test.describe('Site Instructions - Mobile', () => {
 
   test('should be responsive on mobile acknowledgement page', async ({ page }) => {
     await page.goto('/site-instructions/acknowledge/test-token')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     const content = page.locator('main, [role="main"]')
     await expect(content.first()).toBeVisible({ timeout: 10000 })
@@ -970,7 +970,7 @@ test.describe('Site Instructions - Accessibility', () => {
 
   test('should have accessible form inputs', async ({ page }) => {
     await page.goto('/site-instructions/new')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     if (page.url().includes('/new')) {
       const inputs = page.locator('input, textarea, select')

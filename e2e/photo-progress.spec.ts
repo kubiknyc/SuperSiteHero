@@ -52,12 +52,12 @@ async function navigateToPhotoProgress(page: Page) {
     await navLink.first().click();
   } else {
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await projectLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const photoLink = page.locator('a:has-text("Photo Progress"), a[href*="photo-progress"]');
       if (await photoLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
@@ -69,7 +69,7 @@ async function navigateToPhotoProgress(page: Page) {
       await page.goto('/photo-progress');
     }
   }
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 // ============================================================================
@@ -246,7 +246,7 @@ test.describe('Photo Locations', () => {
     }
 
     await firstLocation.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Should show location details or photos
     await expect(page.locator('h1, h2').first()).toBeVisible({ timeout: 5000 });
@@ -257,7 +257,7 @@ test.describe('Photo Locations', () => {
 
     if (await firstLocation.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstLocation.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const captureButton = page.locator('button:has-text("Capture"), button:has-text("Take Photo"), button:has-text("Add Photo")');
       if (await captureButton.first().isVisible({ timeout: 3000 }).catch(() => false)) {
@@ -376,7 +376,7 @@ test.describe('Photo Comparisons', () => {
 
     if (await firstComparison.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstComparison.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show before/after slider
       const slider = page.locator('[data-testid="before-after-slider"], .before-after-slider, .comparison-slider');
@@ -397,7 +397,7 @@ test.describe('Photo Comparisons', () => {
 
     if (await firstComparison.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstComparison.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const shareButton = page.locator('button:has-text("Share"), [data-testid="share-button"]');
       if (await shareButton.first().isVisible({ timeout: 3000 }).catch(() => false)) {
@@ -428,7 +428,7 @@ test.describe('Before/After Slider', () => {
 
     if (await firstComparison.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstComparison.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const slider = page.locator('[data-testid="before-after-slider"], .before-after-slider');
       if (await slider.isVisible({ timeout: 3000 }).catch(() => false)) {
@@ -455,7 +455,7 @@ test.describe('Before/After Slider', () => {
 
     if (await firstComparison.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstComparison.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const slider = page.locator('[data-testid="before-after-slider"], .before-after-slider');
       if (await slider.isVisible({ timeout: 3000 }).catch(() => false)) {
@@ -596,7 +596,7 @@ test.describe('Photo Reports', () => {
 
     if (await firstReport.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstReport.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const downloadButton = page.locator('button:has-text("Download"), button:has-text("Export"), a:has-text("Download")');
       if (await downloadButton.first().isVisible({ timeout: 3000 }).catch(() => false)) {
@@ -621,7 +621,7 @@ test.describe('Photo Lightbox', () => {
 
     if (await firstLocation.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstLocation.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const photo = page.locator('[data-testid*="photo-"], .photo-card, .progress-photo, img').first();
 
@@ -642,7 +642,7 @@ test.describe('Photo Lightbox', () => {
 
     if (await firstLocation.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstLocation.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const photo = page.locator('[data-testid*="photo-"], .photo-card, img').first();
 
@@ -668,7 +668,7 @@ test.describe('Photo Lightbox', () => {
 
     if (await firstLocation.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstLocation.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const photo = page.locator('[data-testid*="photo-"], .photo-card, img').first();
 
@@ -709,7 +709,7 @@ test.describe('Search and Filtering', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('building');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const hasResults = await page.locator('[data-testid*="location-"]').first().isVisible({ timeout: 3000 }).catch(() => false);
       const hasNoResults = await page.locator('text=/no.*results|no.*location|not found/i').first().isVisible({ timeout: 2000 }).catch(() => false);
@@ -725,7 +725,7 @@ test.describe('Search and Filtering', () => {
 
     if (await buildingFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await buildingFilter.first().selectOption({ index: 1 });
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(500);
     }
   });
@@ -735,7 +735,7 @@ test.describe('Search and Filtering', () => {
 
     if (await floorFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await floorFilter.first().selectOption({ index: 1 });
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(500);
     }
   });
@@ -817,7 +817,7 @@ test.describe('Mobile Responsiveness', () => {
 
     if (await firstComparison.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstComparison.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const slider = page.locator('[data-testid="before-after-slider"], .before-after-slider');
       if (await slider.isVisible({ timeout: 3000 }).catch(() => false)) {
@@ -918,7 +918,7 @@ test.describe('Performance', () => {
     const startTime = Date.now();
 
     await navigateToPhotoProgress(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const loadTime = Date.now() - startTime;
     expect(loadTime).toBeLessThan(10000);

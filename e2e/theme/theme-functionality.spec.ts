@@ -40,7 +40,7 @@ async function setSystemColorScheme(page: Page, scheme: 'light' | 'dark'): Promi
 test.describe('Theme Toggle', () => {
   test('theme toggle button exists', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for theme toggle button
     const themeToggle = page.locator(
@@ -62,7 +62,7 @@ test.describe('Theme Toggle', () => {
     await page.goto('/');
     await clearThemeStorage(page);
     await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Ensure we start in light mode
     await page.evaluate(() => {
@@ -87,7 +87,7 @@ test.describe('Theme Toggle', () => {
 
   test('can toggle from dark to light mode', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Start in dark mode
     await page.evaluate(() => {
@@ -112,7 +112,7 @@ test.describe('Theme Toggle', () => {
 
   test('theme toggle persists across navigation', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Set dark mode
     await page.evaluate(() => {
@@ -124,14 +124,14 @@ test.describe('Theme Toggle', () => {
 
     // Navigate to another page
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Theme should persist
     expect(await getCurrentTheme(page)).toBe('dark');
 
     // Navigate to another page
     await page.goto('/daily-reports');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Theme should still persist
     expect(await getCurrentTheme(page)).toBe('dark');
@@ -145,7 +145,7 @@ test.describe('Theme Persistence', () => {
   test('theme preference is saved to localStorage', async ({ page }) => {
     await page.goto('/');
     await clearThemeStorage(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Set dark theme
     await page.evaluate(() => {
@@ -159,7 +159,7 @@ test.describe('Theme Persistence', () => {
 
   test('theme is restored from localStorage on page load', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Set theme in localStorage
     await page.evaluate(() => {
@@ -168,7 +168,7 @@ test.describe('Theme Persistence', () => {
 
     // Reload page
     await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Allow time for theme to be applied
     await page.waitForTimeout(500);
@@ -180,7 +180,7 @@ test.describe('Theme Persistence', () => {
 
   test('light theme preference persists after reload', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Set light theme
     await page.evaluate(() => {
@@ -189,7 +189,7 @@ test.describe('Theme Persistence', () => {
     });
 
     await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(500);
 
     const currentTheme = await getCurrentTheme(page);
@@ -198,7 +198,7 @@ test.describe('Theme Persistence', () => {
 
   test('system theme preference persists', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Set system preference
     await page.evaluate(() => {
@@ -206,7 +206,7 @@ test.describe('Theme Persistence', () => {
     });
 
     await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const storedTheme = await getStoredTheme(page);
     expect(storedTheme).toBe('system');
@@ -230,7 +230,7 @@ test.describe('System Preference Detection', () => {
     });
 
     await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(500);
 
     // Should apply dark mode based on system preference
@@ -251,7 +251,7 @@ test.describe('System Preference Detection', () => {
     });
 
     await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(500);
 
     // Should apply light mode based on system preference
@@ -261,7 +261,7 @@ test.describe('System Preference Detection', () => {
 
   test('updates theme when system preference changes', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Set theme to 'system' mode
     await page.evaluate(() => {
@@ -271,7 +271,7 @@ test.describe('System Preference Detection', () => {
     // Start with dark system preference
     await setSystemColorScheme(page, 'dark');
     await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(500);
 
     expect(await getCurrentTheme(page)).toBe('dark');
@@ -293,7 +293,7 @@ test.describe('System Preference Detection', () => {
 test.describe('Theme Transitions', () => {
   test('no flash of unstyled content on load', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Set dark theme
     await page.evaluate(() => {
@@ -309,7 +309,7 @@ test.describe('Theme Transitions', () => {
       return document.documentElement.classList.contains('dark');
     });
 
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const themeAfterLoad = await getCurrentTheme(page);
 
@@ -320,7 +320,7 @@ test.describe('Theme Transitions', () => {
 
   test('smooth transition between themes', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Check if transition CSS is applied
     const hasTransition = await page.evaluate(() => {
@@ -350,7 +350,7 @@ test.describe('Theme Transitions', () => {
 
   test('no layout shift during theme change', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Get initial layout
     const initialLayout = await page.evaluate(() => {
@@ -385,7 +385,7 @@ test.describe('Theme Transitions', () => {
 test.describe('Meta Theme Color', () => {
   test('meta theme-color exists', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const metaThemeColor = await page.locator('meta[name="theme-color"]').count();
     expect(metaThemeColor).toBeGreaterThan(0);
@@ -393,7 +393,7 @@ test.describe('Meta Theme Color', () => {
 
   test('meta theme-color updates in dark mode', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Get light mode theme color
     const lightThemeColor = await page.evaluate(() => {
@@ -428,7 +428,7 @@ test.describe('Meta Theme Color', () => {
   test('meta theme-color on mobile viewport', async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const metaThemeColor = await page.evaluate(() => {
       const meta = document.querySelector('meta[name="theme-color"]');
@@ -446,7 +446,7 @@ test.describe('Meta Theme Color', () => {
 test.describe('Theme Accessibility', () => {
   test('theme toggle has accessible label', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const themeToggle = page.locator(
       '[aria-label*="theme" i], [aria-label*="dark mode" i], [aria-label*="light mode" i]'
@@ -463,7 +463,7 @@ test.describe('Theme Accessibility', () => {
 
   test('theme state is announced to screen readers', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Check if there's an element that announces theme state
     const announcement = page.locator('[role="status"], [aria-live="polite"]').first();
@@ -477,7 +477,7 @@ test.describe('Theme Accessibility', () => {
 
   test('keyboard navigation works for theme toggle', async ({ page }) => {
     await page.goto('/');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Try to find and focus theme toggle
     const themeToggle = page.locator(

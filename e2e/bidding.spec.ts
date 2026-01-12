@@ -59,7 +59,7 @@ const testBidSubmission = {
 async function login(page: Page) {
   // Navigate to login page
   await page.goto('/login')
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('domcontentloaded')
 
   // Fill credentials
   await page.fill('input[name="email"]', TEST_EMAIL)
@@ -77,7 +77,7 @@ async function login(page: Page) {
   })
 
   // Wait for page to be fully loaded
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('domcontentloaded')
 }
 
 // ============================================================================
@@ -111,19 +111,19 @@ test.describe('Bidding - Setup & Navigation', () => {
   test('should access bidding from project view', async ({ page }) => {
     // Navigate to projects first
     await page.goto('/projects')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Click first project if available
     const firstProject = page.locator('[data-testid*="project-"], .project-card, a[href*="/projects/"]').first()
     if (await firstProject.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstProject.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Look for bidding link/tab
       const biddingLink = page.locator('a, button, [role="tab"]').filter({ hasText: /bidding|bid.*package/i }).first()
       if (await biddingLink.isVisible({ timeout: 3000 }).catch(() => false)) {
         await biddingLink.click()
-        await page.waitForLoadState('networkidle')
+        await page.waitForLoadState('domcontentloaded')
         await expect(page.locator('h1, h2').filter({ hasText: /bidding|bid.*package/i })).toBeVisible()
       } else {
         test.skip()
@@ -398,7 +398,7 @@ test.describe('Bidding - Create New Bid Package', () => {
       const cancelButton = page.locator('button').filter({ hasText: /cancel/i }).first()
       if (await cancelButton.isVisible({ timeout: 3000 }).catch(() => false)) {
         await cancelButton.click()
-        await page.waitForLoadState('networkidle')
+        await page.waitForLoadState('domcontentloaded')
 
         // Should return to list
         await expect(biddingPage.pageHeading).toBeVisible()

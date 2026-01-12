@@ -59,12 +59,12 @@ export class QualityControlPage {
   // Navigation methods
   async goto() {
     await this.page.goto('/quality-control');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async gotoFromProject(projectId: string) {
     await this.page.goto(`/projects/${projectId}/quality-control`);
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async switchToNCRTab() {
@@ -141,7 +141,7 @@ export class QualityControlPage {
   async clickNCR(index: number = 0) {
     const ncr = this.getNCRRow(index);
     await ncr.click();
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   // Create NCR

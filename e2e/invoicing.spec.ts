@@ -53,22 +53,22 @@ async function login(page: Page) {
 // Helper function to navigate to invoices
 async function navigateToInvoices(page: Page) {
   await page.goto('/invoices');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   if (!page.url().includes('invoice')) {
     // Try through project
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await projectLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const invoiceLink = page.locator('a:has-text("Invoice"), a[href*="invoice"]');
       if (await invoiceLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
         await invoiceLink.first().click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
       }
     }
   }
@@ -231,7 +231,7 @@ test.describe('Invoice Detail', () => {
 
     if (await invoiceItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await invoiceItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       await expect(page).toHaveURL(/\/invoice/, { timeout: 10000 });
     }
@@ -242,7 +242,7 @@ test.describe('Invoice Detail', () => {
 
     if (await invoiceItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await invoiceItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show invoice number
       const invoiceNumber = page.locator('text=/INV-|#\\d+/');
@@ -261,7 +261,7 @@ test.describe('Invoice Detail', () => {
 
     if (await invoiceItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await invoiceItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const lineItems = page.locator('[data-testid="line-item"], .invoice-line, tr[data-line-id]');
       const hasLineItems = await lineItems.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -275,7 +275,7 @@ test.describe('Invoice Detail', () => {
 
     if (await invoiceItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await invoiceItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const status = page.locator('text=/draft|sent|paid|overdue|pending/i, [data-testid="status-badge"]');
       const hasStatus = await status.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -316,7 +316,7 @@ test.describe('Edit Invoice', () => {
 
     if (await invoiceItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await invoiceItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const editButton = page.locator('button:has-text("Edit"), [data-testid="edit-button"]');
       if (await editButton.first().isVisible({ timeout: 3000 }).catch(() => false)) {
@@ -355,7 +355,7 @@ test.describe('Invoice Status Workflow', () => {
 
     if (await invoiceItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await invoiceItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const statusButton = page.locator('button:has-text("Status"), select[name="status"], [data-testid="status-select"]');
       const hasStatusControl = await statusButton.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -407,7 +407,7 @@ test.describe('Filter Invoices', () => {
       await statusFilter.first().selectOption('paid').catch(() =>
         statusFilter.first().selectOption({ index: 1 })
       );
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -416,7 +416,7 @@ test.describe('Filter Invoices', () => {
 
     if (await projectFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await projectFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -428,7 +428,7 @@ test.describe('Filter Invoices', () => {
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
       await startDate.first().fill(thirtyDaysAgo.toISOString().split('T')[0]);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -438,7 +438,7 @@ test.describe('Filter Invoices', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('INV-');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -447,7 +447,7 @@ test.describe('Filter Invoices', () => {
 
     if (await clearButton.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await clearButton.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });
@@ -522,7 +522,7 @@ test.describe('Export Invoices', () => {
 
     if (await invoiceItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await invoiceItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const pdfButton = page.locator('button:has-text("PDF"), button:has-text("Download PDF")');
 
@@ -571,7 +571,7 @@ test.describe('Mobile Responsiveness', () => {
 
     if (await invoiceItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await invoiceItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const pageContent = page.locator('h1, h2');
       await expect(pageContent.first()).toBeVisible({ timeout: 5000 });

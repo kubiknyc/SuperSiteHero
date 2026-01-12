@@ -70,22 +70,22 @@ async function login(page: Page) {
 async function navigateToBudget(page: Page) {
   // Try direct navigation
   await page.goto('/budget');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   // If redirected, try through project
   if (!page.url().includes('budget')) {
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await projectLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const budgetLink = page.locator('a:has-text("Budget"), a[href*="budget"]');
       if (await budgetLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
         await budgetLink.first().click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
       }
     }
   }
@@ -554,7 +554,7 @@ test.describe('Budget Variance Analysis', () => {
 
     if (await varianceFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await varianceFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Verify filter was applied
       await page.waitForTimeout(1000);
@@ -601,7 +601,7 @@ test.describe('Cost Code Integration', () => {
 
     if (await costCodeFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await costCodeFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
     }
   });
@@ -830,7 +830,7 @@ test.describe('Search and Filtering', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('general');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Verify search was applied
       await expect(searchInput.first()).toHaveValue('general');
@@ -842,7 +842,7 @@ test.describe('Search and Filtering', () => {
 
     if (await categoryFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await categoryFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
     }
   });
@@ -852,7 +852,7 @@ test.describe('Search and Filtering', () => {
 
     if (await statusFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await statusFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -870,7 +870,7 @@ test.describe('Search and Filtering', () => {
       await endDate.first().fill(new Date().toISOString().split('T')[0]);
     }
 
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should clear all filters', async ({ page }) => {
@@ -878,7 +878,7 @@ test.describe('Search and Filtering', () => {
 
     if (await clearButton.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await clearButton.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -905,7 +905,7 @@ test.describe('Search and Filtering', () => {
 
     if (await maxAmount.first().isVisible({ timeout: 2000 }).catch(() => false)) {
       await maxAmount.first().fill('50000');
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });

@@ -75,18 +75,18 @@ export class InsurancePage {
   // Navigation methods
   async goto() {
     await this.page.goto('/insurance');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async gotoFromProject(projectId: string) {
     await this.page.goto(`/projects/${projectId}/insurance`);
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async selectProject(index: number = 1) {
     if (await this.projectSelector.isVisible({ timeout: 3000 }).catch(() => false)) {
       await this.projectSelector.selectOption({ index });
-      await this.page.waitForLoadState('networkidle');
+      await this.page.waitForLoadState('domcontentloaded');
     }
   }
 
@@ -199,7 +199,7 @@ export class InsurancePage {
     const certificate = this.getCertificateRow(index);
     if (await certificate.isVisible({ timeout: 5000 }).catch(() => false)) {
       await certificate.click();
-      await this.page.waitForLoadState('networkidle');
+      await this.page.waitForLoadState('domcontentloaded');
     }
   }
 
@@ -284,7 +284,7 @@ export class InsurancePage {
     const submitButton = this.page.locator('button[type="submit"], button:has-text("Submit"), button:has-text("Save")').first();
     if (await submitButton.isVisible({ timeout: 3000 }).catch(() => false)) {
       await submitButton.click();
-      await this.page.waitForLoadState('networkidle');
+      await this.page.waitForLoadState('domcontentloaded');
     }
   }
 
@@ -344,7 +344,7 @@ export class InsurancePage {
     const submitButton = this.page.locator('button[type="submit"], button:has-text("Send"), button:has-text("Request")').first();
     if (await submitButton.isVisible({ timeout: 3000 }).catch(() => false)) {
       await submitButton.click();
-      await this.page.waitForLoadState('networkidle');
+      await this.page.waitForLoadState('domcontentloaded');
     }
   }
 
@@ -426,7 +426,7 @@ export class InsurancePage {
       const saveButton = this.page.locator('button[type="submit"], button:has-text("Save")').first();
       if (await saveButton.isVisible({ timeout: 3000 }).catch(() => false)) {
         await saveButton.click();
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('domcontentloaded');
       }
     }
   }
@@ -440,7 +440,7 @@ export class InsurancePage {
       const confirmButton = this.page.locator('button:has-text("Confirm"), button:has-text("Delete")').first();
       if (await confirmButton.isVisible({ timeout: 2000 }).catch(() => false)) {
         await confirmButton.click();
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('domcontentloaded');
       }
     }
   }

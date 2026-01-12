@@ -52,17 +52,17 @@ async function login(page: Page) {
 // Helper function to navigate to drawings
 async function navigateToDrawings(page: Page) {
   await page.goto('/projects');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   const projectLink = page.locator('a[href*="/projects/"]').first();
   if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
     await projectLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const drawingsLink = page.locator('a:has-text("Drawing"), a[href*="drawing"]');
     if (await drawingsLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
       await drawingsLink.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   }
 }
@@ -132,7 +132,7 @@ test.describe('Sheet Index', () => {
 
     if (await sheetIndexTab.first().isVisible({ timeout: 5000 }).catch(() => false)) {
       await sheetIndexTab.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show sheet index content
       const sheetContent = page.locator('[data-testid="sheet-index"], text=/sheet|index/i');
@@ -147,7 +147,7 @@ test.describe('Sheet Index', () => {
 
     if (await sheetIndexTab.first().isVisible({ timeout: 5000 }).catch(() => false)) {
       await sheetIndexTab.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const disciplineSection = page.locator('[data-testid="discipline-section"], text=/architectural|structural|mechanical/i');
       const hasDiscipline = await disciplineSection.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -161,7 +161,7 @@ test.describe('Sheet Index', () => {
 
     if (await sheetIndexTab.first().isVisible({ timeout: 5000 }).catch(() => false)) {
       await sheetIndexTab.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const sheetNumber = page.locator('text=/A\\d+|S\\d+|M\\d+|E\\d+/');
       const hasSheetNumber = await sheetNumber.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -186,7 +186,7 @@ test.describe('Transmittal Log', () => {
 
     if (await transmittalLogTab.first().isVisible({ timeout: 5000 }).catch(() => false)) {
       await transmittalLogTab.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show transmittal log content
       const logContent = page.locator('[data-testid="transmittal-log"], text=/transmittal/i');
@@ -201,7 +201,7 @@ test.describe('Transmittal Log', () => {
 
     if (await transmittalLogTab.first().isVisible({ timeout: 5000 }).catch(() => false)) {
       await transmittalLogTab.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const transmittalItem = page.locator('[data-testid="transmittal-item"], .transmittal-row');
       const hasItems = await transmittalItem.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -364,7 +364,7 @@ test.describe('Filter Drawings', () => {
       await disciplineFilter.first().selectOption('Architectural').catch(() =>
         disciplineFilter.first().selectOption({ index: 1 })
       );
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -373,7 +373,7 @@ test.describe('Filter Drawings', () => {
 
     if (await revisionFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await revisionFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -383,7 +383,7 @@ test.describe('Filter Drawings', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('floor plan');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });

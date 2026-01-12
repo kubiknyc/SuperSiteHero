@@ -38,7 +38,7 @@ test.describe('Safety Incidents', () => {
 
   test('should navigate to safety incidents from project', async ({ page }) => {
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     const projectVisible = await projectLink.isVisible({ timeout: 5000 }).catch(() => false);
@@ -47,7 +47,7 @@ test.describe('Safety Incidents', () => {
       return;
     }
     await projectLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for safety/incidents navigation link
     const incidentsLink = page.locator('a:has-text("Safety"), a:has-text("Incidents"), a[href*="incidents"], a[href*="safety"]');
@@ -64,7 +64,7 @@ test.describe('Safety Incidents', () => {
   test('should display safety incidents list page', async ({ page }) => {
     // Try direct navigation to incidents page
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Should show main content area
     const content = page.locator('main, h1, h2, [role="main"]');
@@ -91,7 +91,7 @@ test.describe('Safety Incidents', () => {
   test('should open create incident form', async ({ page }) => {
     // Navigate to incidents page
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for create button
     const createButton = page.locator('button:has-text("New"), button:has-text("Create"), button:has-text("Add"), button:has-text("Report"), a:has-text("New Incident")');
@@ -115,7 +115,7 @@ test.describe('Safety Incidents', () => {
 
   test('should create new incident report with basic details', async ({ page }) => {
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const createButton = page.locator('button:has-text("New"), button:has-text("Create"), button:has-text("Report")');
     const buttonVisible = await createButton.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -161,7 +161,7 @@ test.describe('Safety Incidents', () => {
 
   test('should add incident type and severity', async ({ page }) => {
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const createButton = page.locator('button:has-text("New"), button:has-text("Create")');
     const buttonVisible = await createButton.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -210,7 +210,7 @@ test.describe('Safety Incidents', () => {
 
   test('should add incident location', async ({ page }) => {
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const createButton = page.locator('button:has-text("New"), button:has-text("Create")');
     const buttonVisible = await createButton.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -242,7 +242,7 @@ test.describe('Safety Incidents', () => {
 
   test('should add involved parties and witnesses', async ({ page }) => {
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const createButton = page.locator('button:has-text("New"), button:has-text("Create")');
     const buttonVisible = await createButton.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -276,7 +276,7 @@ test.describe('Safety Incidents', () => {
 
   test('should upload incident photos', async ({ page }) => {
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const createButton = page.locator('button:has-text("New"), button:has-text("Create")');
     const buttonVisible = await createButton.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -315,7 +315,7 @@ test.describe('Safety Incidents', () => {
 
   test('should record corrective actions', async ({ page }) => {
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const createButton = page.locator('button:has-text("New"), button:has-text("Create")');
     const buttonVisible = await createButton.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -347,7 +347,7 @@ test.describe('Safety Incidents', () => {
 
   test('should edit incident details', async ({ page }) => {
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Click on first incident
     const incidentLink = page.locator('a[href*="incidents/"], tr, .incident-card, [data-testid*="incident-item"]').first();
@@ -378,7 +378,7 @@ test.describe('Safety Incidents', () => {
 
   test('should change incident status', async ({ page }) => {
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const incidentLink = page.locator('a[href*="incidents/"], tr, .incident-card').first();
     const incidentVisible = await incidentLink.isVisible({ timeout: 5000 }).catch(() => false);
@@ -411,7 +411,7 @@ test.describe('Safety Incidents', () => {
 
   test('should filter by severity', async ({ page }) => {
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for severity filter
     const severityFilter = page.locator('select[name*="severity"], button:has-text("Severity"), [data-testid*="severity-filter"]');
@@ -435,7 +435,7 @@ test.describe('Safety Incidents', () => {
 
   test('should filter by incident type', async ({ page }) => {
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for type filter
     const typeFilter = page.locator('select[name*="type"], button:has-text("Type"), [data-testid*="type-filter"]');
@@ -459,7 +459,7 @@ test.describe('Safety Incidents', () => {
 
   test('should filter by date range', async ({ page }) => {
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for date filters
     const dateFilter = page.locator('input[type="date"], button[aria-label*="date" i], [data-testid*="date-filter"]');
@@ -485,7 +485,7 @@ test.describe('Safety Incidents', () => {
 
   test('should view incident detail page', async ({ page }) => {
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Click on first incident
     const incidentLink = page.locator('a[href*="incidents/"]').first();
@@ -507,7 +507,7 @@ test.describe('Safety Incidents', () => {
 
   test('should generate OSHA 300 log entries', async ({ page }) => {
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for OSHA or reports button
     const oshaButton = page.locator('button:has-text("OSHA"), a:has-text("OSHA"), button:has-text("300 Log"), a:has-text("Reports")');
@@ -539,7 +539,7 @@ test.describe('Safety Incidents', () => {
 
   test('should search incidents', async ({ page }) => {
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for search input
     const searchInput = page.locator('input[type="search"], input[placeholder*="search" i], input[aria-label*="search" i]');
@@ -557,7 +557,7 @@ test.describe('Safety Incidents', () => {
 
   test('should validate required fields on create', async ({ page }) => {
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const createButton = page.locator('button:has-text("New"), button:has-text("Create")');
     const buttonVisible = await createButton.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -592,7 +592,7 @@ test.describe('Safety Incidents', () => {
 
   test('should add follow-up actions to incident', async ({ page }) => {
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const incidentLink = page.locator('a[href*="incidents/"]').first();
     const incidentVisible = await incidentLink.isVisible({ timeout: 5000 }).catch(() => false);
@@ -629,7 +629,7 @@ test.describe('Safety Incidents', () => {
 
   test('should display incident statistics or summary', async ({ page }) => {
     await page.goto('/safety/incidents').catch(() => page.goto('/incidents'));
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for statistics or summary cards
     const statsIndicator = page.locator('[data-testid*="stat"], .stat, .metric, text=/Total.*Incident/i, text=/Open.*Case/i');

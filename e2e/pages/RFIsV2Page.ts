@@ -72,17 +72,17 @@ export class RFIsV2Page {
   // Navigation methods
   async goto() {
     await this.page.goto('/rfis-v2')
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async gotoRFIDetail(rfiId: string) {
     await this.page.goto(`/rfis-v2/${rfiId}`)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async gotoFromProject(projectId: string) {
     await this.page.goto(`/projects/${projectId}/rfis-v2`)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // Search and filter methods
@@ -173,7 +173,7 @@ export class RFIsV2Page {
   async clickRFI(index: number = 0) {
     const rfi = this.getRFIRow(index)
     await rfi.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // Create RFI
@@ -233,7 +233,7 @@ export class RFIsV2Page {
     // Submit as draft or submit directly
     const submitButton = this.page.locator('button[type="submit"], button').filter({ hasText: /create|save|submit/i }).first()
     await submitButton.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async saveDraft(data: {
@@ -258,7 +258,7 @@ export class RFIsV2Page {
       // If no explicit draft button, just save
       await this.page.locator('button[type="submit"], button').filter({ hasText: /save/i }).first().click()
     }
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // RFI detail page actions
@@ -355,7 +355,7 @@ export class RFIsV2Page {
 
     // Submit
     await this.page.locator('button[type="submit"], button').filter({ hasText: /save|update/i }).first().click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async deleteRFI() {

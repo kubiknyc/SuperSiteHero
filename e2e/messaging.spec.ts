@@ -38,7 +38,7 @@ const TEST_GROUP_NAME = `Test Group ${Date.now()}`
 async function login(page: Page) {
   // Navigate to login page
   await page.goto('/login')
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('domcontentloaded')
 
   // Fill credentials
   await page.fill('input[name="email"]', TEST_EMAIL)
@@ -56,7 +56,7 @@ async function login(page: Page) {
   })
 
   // Wait for page to be fully loaded
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('domcontentloaded')
 }
 
 // ============================================================================
@@ -116,13 +116,13 @@ test.describe('Messaging - Setup & Navigation', () => {
 
   test('should be accessible from main navigation', async ({ page }) => {
     await page.goto('/dashboard')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Look for messages link in navigation
     const messagesLink = page.locator('a[href*="/messages"], a').filter({ hasText: /messages/i })
     if (await messagesLink.first().isVisible({ timeout: 5000 })) {
       await messagesLink.first().click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
       await expect(page).toHaveURL(/\/messages/)
     }
   })
@@ -288,7 +288,7 @@ test.describe('Messaging - Create Conversation', () => {
       const createButton = page.locator('[role="dialog"] button').filter({ hasText: /create|start|continue/i }).last()
       if (await createButton.isEnabled({ timeout: 2000 })) {
         await createButton.click()
-        await page.waitForLoadState('networkidle')
+        await page.waitForLoadState('domcontentloaded')
 
         // Should navigate to new conversation
         expect(page.url()).toMatch(/\/messages\/[a-f0-9-]+/)
@@ -1087,7 +1087,7 @@ test.describe('Messaging - Error Handling', () => {
 
   test('should handle invalid conversation ID', async ({ page }) => {
     await page.goto('/messages/invalid-conversation-id-12345')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Should show error or redirect
     const errorMessage = page.locator('text=/not found|error|invalid/i, [role="alert"]')

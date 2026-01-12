@@ -33,13 +33,13 @@ async function login(page: Page) {
 // Helper to navigate to project settings
 async function navigateToProjectSettings(page: Page) {
   await page.goto('/projects')
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('domcontentloaded')
 
   // Click first project
   const projectLink = page.locator('a[href*="/projects/"]').first()
   if (await projectLink.isVisible({ timeout: 5000 })) {
     await projectLink.click()
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Click settings button
     const settingsButton = page.locator(
@@ -50,7 +50,7 @@ async function navigateToProjectSettings(page: Page) {
 
     if (await settingsButton.isVisible({ timeout: 3000 })) {
       await settingsButton.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
     }
   }
 }

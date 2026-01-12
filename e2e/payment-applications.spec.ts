@@ -53,22 +53,22 @@ async function login(page: Page) {
 // Helper function to navigate to payment applications
 async function navigateToPaymentApplications(page: Page) {
   await page.goto('/payment-applications');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   if (!page.url().includes('payment-application')) {
     // Try through project
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await projectLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const payAppLink = page.locator('a:has-text("Payment"), a[href*="payment"]');
       if (await payAppLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
         await payAppLink.first().click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
       }
     }
   }
@@ -212,7 +212,7 @@ test.describe('Payment Application Detail', () => {
 
     if (await appItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await appItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       await expect(page).toHaveURL(/\/payment-application/, { timeout: 10000 });
     }
@@ -223,7 +223,7 @@ test.describe('Payment Application Detail', () => {
 
     if (await appItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await appItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show application number
       const appNumber = page.locator('text=/PA-|#\\d+|Application/');
@@ -238,7 +238,7 @@ test.describe('Payment Application Detail', () => {
 
     if (await appItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await appItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const lineItems = page.locator('[data-testid="line-item"], .sov-row, tr[data-line-id], text=/schedule of values/i');
       const hasLineItems = await lineItems.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -252,7 +252,7 @@ test.describe('Payment Application Detail', () => {
 
     if (await appItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await appItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const retainage = page.locator('text=/retainage/i, [data-testid="retainage"]');
       const hasRetainage = await retainage.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -266,7 +266,7 @@ test.describe('Payment Application Detail', () => {
 
     if (await appItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await appItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const aiaFormat = page.locator('text=/g702|g703|aia/i, [data-testid="aia-format"]');
       const hasAIA = await aiaFormat.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -291,7 +291,7 @@ test.describe('Line Items Management', () => {
 
     if (await appItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await appItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const addLineButton = page.locator('button:has-text("Add Line"), button:has-text("Add Item")');
 
@@ -310,7 +310,7 @@ test.describe('Line Items Management', () => {
 
     if (await appItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await appItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const lineItem = page.locator('[data-testid="line-item"], .sov-row').first();
 
@@ -329,7 +329,7 @@ test.describe('Line Items Management', () => {
 
     if (await appItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await appItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const percentInput = page.locator('input[name="percent_complete"], input[type="number"][max="100"]');
 
@@ -355,7 +355,7 @@ test.describe('Status Workflow', () => {
 
     if (await appItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await appItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const submitButton = page.locator('button:has-text("Submit"), button:has-text("Send for Approval")');
 
@@ -370,7 +370,7 @@ test.describe('Status Workflow', () => {
 
     if (await appItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await appItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const status = page.locator('[data-testid="status-badge"], text=/draft|submitted|approved|paid|rejected/i');
       const hasStatus = await status.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -384,7 +384,7 @@ test.describe('Status Workflow', () => {
 
     if (await appItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await appItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const workflow = page.locator('[data-testid="approval-workflow"], text=/approval|workflow/i');
       const hasWorkflow = await workflow.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -421,7 +421,7 @@ test.describe('Lien Waiver Integration', () => {
 
     if (await appItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await appItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const lienWaiverLink = page.locator('a:has-text("Lien Waiver"), button:has-text("Lien Waiver"), text=/lien waiver/i');
       const hasLink = await lienWaiverLink.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -435,7 +435,7 @@ test.describe('Lien Waiver Integration', () => {
 
     if (await appItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await appItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const createWaiverButton = page.locator('button:has-text("Create Lien Waiver"), button:has-text("Generate Waiver")');
 
@@ -463,7 +463,7 @@ test.describe('Filter Payment Applications', () => {
       await statusFilter.first().selectOption('approved').catch(() =>
         statusFilter.first().selectOption({ index: 1 })
       );
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -472,7 +472,7 @@ test.describe('Filter Payment Applications', () => {
 
     if (await projectFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await projectFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -482,7 +482,7 @@ test.describe('Filter Payment Applications', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('PA-');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });
@@ -502,7 +502,7 @@ test.describe('Export Payment Applications', () => {
 
     if (await appItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await appItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const exportButton = page.locator('button:has-text("Export"), button:has-text("Print"), button:has-text("PDF")');
 
@@ -517,7 +517,7 @@ test.describe('Export Payment Applications', () => {
 
     if (await appItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await appItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const g702Button = page.locator('button:has-text("G702"), a:has-text("G702")');
 
@@ -532,7 +532,7 @@ test.describe('Export Payment Applications', () => {
 
     if (await appItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await appItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const g703Button = page.locator('button:has-text("G703"), a:has-text("G703")');
 
@@ -581,7 +581,7 @@ test.describe('Mobile Responsiveness', () => {
 
     if (await appItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await appItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const pageContent = page.locator('h1, h2');
       await expect(pageContent.first()).toBeVisible({ timeout: 5000 });

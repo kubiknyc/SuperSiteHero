@@ -42,22 +42,22 @@ async function login(page: Page) {
 async function navigateToAnalytics(page: Page) {
   // Try direct navigation
   await page.goto('/analytics');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   // If redirected or need project selection, go through project
   if (!page.url().includes('analytics')) {
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await projectLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const analyticsLink = page.locator('a:has-text("Analytics"), a[href*="analytics"]');
       if (await analyticsLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
         await analyticsLink.first().click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
       }
     }
   }
@@ -116,7 +116,7 @@ test.describe('Project Selection', () => {
 
   test('should show project selector', async ({ page }) => {
     await page.goto('/analytics');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectSelector = page.locator('select[name="project"], [data-testid="project-selector"], button:has-text("Select Project")');
 
@@ -132,7 +132,7 @@ test.describe('Project Selection', () => {
 
     if (await projectSelector.first().isVisible({ timeout: 5000 }).catch(() => false)) {
       await projectSelector.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Dashboard should update
       await page.waitForTimeout(1000);
@@ -141,7 +141,7 @@ test.describe('Project Selection', () => {
 
   test('should show all projects option', async ({ page }) => {
     await page.goto('/analytics');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const allProjectsOption = page.locator('text=/all projects|all|portfolio/i, option:has-text("All")');
 
@@ -399,7 +399,7 @@ test.describe('Date Range', () => {
 
     if (await dateRangeButton.first().isVisible({ timeout: 5000 }).catch(() => false)) {
       await dateRangeButton.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Data should refresh
       await page.waitForTimeout(1000);

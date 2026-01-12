@@ -42,14 +42,14 @@ async function login(page: Page) {
   await page.waitForSelector('[data-testid="user-menu"], [aria-label="User menu"], button:has-text("Logout"), button:has-text("Sign out")', { timeout: 10000 });
 
   // Wait for page to be fully loaded
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 // Helper to navigate to daily reports
 async function navigateToDailyReports(page: Page) {
   // Direct navigation to daily reports page (most reliable)
   await page.goto('/daily-reports');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
   await expect(page).toHaveURL(/daily-reports/, { timeout: 10000 });
 }
 

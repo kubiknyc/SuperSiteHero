@@ -25,12 +25,12 @@ class BiometricSetupPage {
 
   async navigateToSettings() {
     await this.page.goto('/settings/security');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async navigateToBiometricSetup() {
     await this.page.goto('/settings/biometric');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async getBiometricToggle() {
@@ -94,7 +94,7 @@ class LoginPage {
 
   async navigate() {
     await this.page.goto('/login');
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState('domcontentloaded');
   }
 
   async login(email: string, password: string) {

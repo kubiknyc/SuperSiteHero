@@ -121,7 +121,7 @@ test.describe('DocuSign Integration', () => {
       await page.goto('/settings/integrations/docusign')
 
       // Wait for page to load
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Check if connected (look for account info)
       const accountInfo = page.locator(
@@ -143,7 +143,7 @@ test.describe('DocuSign Integration', () => {
       await page.goto('/payment-applications')
 
       // Wait for list to load
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Find first payment application
       const firstPayApp = page.locator('[data-testid="payment-app-card"]').first()
@@ -178,7 +178,7 @@ test.describe('DocuSign Integration', () => {
       await page.goto('/payment-applications')
 
       // Wait for page to load
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Open first payment app
       const firstPayApp = page.locator('[data-testid="payment-app-card"]').first()
@@ -220,7 +220,7 @@ test.describe('DocuSign Integration', () => {
     test('should validate required fields before sending', async ({ page }) => {
       // Navigate to payment applications
       await page.goto('/payment-applications')
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Open first payment app and signature dialog
       const firstPayApp = page.locator('[data-testid="payment-app-card"]').first()
@@ -263,7 +263,7 @@ test.describe('DocuSign Integration', () => {
     test('should successfully create envelope with valid data', async ({ page }) => {
       // Navigate to payment applications
       await page.goto('/payment-applications')
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Open first payment app
       const firstPayApp = page.locator('[data-testid="payment-app-card"]').first()
@@ -323,7 +323,7 @@ test.describe('DocuSign Integration', () => {
     test('should show envelope list', async ({ page }) => {
       // Navigate to DocuSign dashboard
       await page.goto('/docusign')
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Should show envelope list or empty state
       const envelopeList = page.locator(
@@ -335,7 +335,7 @@ test.describe('DocuSign Integration', () => {
     test('should display envelope status badges', async ({ page }) => {
       // Navigate to DocuSign dashboard
       await page.goto('/docusign')
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Look for status badges
       const statusBadge = page.locator(
@@ -353,7 +353,7 @@ test.describe('DocuSign Integration', () => {
     test('should view envelope details', async ({ page }) => {
       // Navigate to DocuSign dashboard
       await page.goto('/docusign')
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Find first envelope
       const firstEnvelope = page.locator('[data-testid="envelope-card"], .envelope-item').first()
@@ -376,7 +376,7 @@ test.describe('DocuSign Integration', () => {
     test('should show envelope statistics', async ({ page }) => {
       // Navigate to DocuSign dashboard
       await page.goto('/docusign')
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Should show stats
       const statsSection = page.locator(
@@ -388,7 +388,7 @@ test.describe('DocuSign Integration', () => {
     test('should allow voiding pending envelope', async ({ page }) => {
       // Navigate to DocuSign dashboard
       await page.goto('/docusign')
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Find a pending envelope
       const pendingEnvelope = page.locator(
@@ -426,7 +426,7 @@ test.describe('DocuSign Integration', () => {
     test('should allow resending envelope', async ({ page }) => {
       // Navigate to DocuSign dashboard
       await page.goto('/docusign')
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Find a sent envelope
       const sentEnvelope = page.locator(
@@ -462,7 +462,7 @@ test.describe('DocuSign Integration', () => {
     test('should allow disconnecting DocuSign', async ({ page }) => {
       // Navigate to DocuSign settings
       await page.goto('/settings/integrations/docusign')
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Look for disconnect button (only visible when connected)
       const disconnectButton = page.locator(
@@ -509,7 +509,7 @@ test.describe('DocuSign Integration', () => {
     test('should support keyboard navigation', async ({ page }) => {
       // Navigate to DocuSign dashboard
       await page.goto('/docusign')
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Press Tab to navigate
       await page.keyboard.press('Tab')

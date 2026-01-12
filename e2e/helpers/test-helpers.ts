@@ -36,7 +36,7 @@ export async function loginAsTestUser(
   await page.goto('/login');
 
   // Wait for login page to be fully loaded
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   // Fill in credentials
   await page.fill('input[type="email"], input[name="email"]', email);
@@ -74,7 +74,7 @@ export async function logout(page: Page) {
  */
 export async function navigateToPage(page: Page, path: string) {
   await page.goto(path);
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 /**
@@ -258,7 +258,7 @@ export async function waitForPageLoad(page: Page) {
     // Add small delay for Firefox to ensure stability
     await page.waitForTimeout(500);
   } else {
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   }
 
   // Wait for common loaders to disappear
@@ -290,7 +290,7 @@ export async function navigateToEdit(page: Page) {
 
   if (await editButton.isVisible()) {
     await editButton.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     return true;
   }
   return false;

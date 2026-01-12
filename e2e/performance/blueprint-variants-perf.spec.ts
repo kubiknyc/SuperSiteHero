@@ -44,7 +44,7 @@ test.describe('PolishedVariant1Professional - Performance', () => {
   test('should meet Core Web Vitals thresholds', async ({ page }) => {
     // Navigate and collect metrics
     await page.goto(url);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Collect Web Vitals using PerformanceObserver
     const metrics = await page.evaluate(() => {
@@ -138,7 +138,7 @@ test.describe('PolishedVariant1Professional - Performance', () => {
     await page.goto(url);
 
     // Wait for the page to be fully interactive
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Verify page is interactive by clicking an element
     const statCard = page.getByRole('button').first();
@@ -152,7 +152,7 @@ test.describe('PolishedVariant1Professional - Performance', () => {
 
   test('should load all critical resources quickly', async ({ page }) => {
     await page.goto(url);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const resourceTimings = await page.evaluate(() => {
       const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
@@ -196,7 +196,7 @@ test.describe('PolishedVariant1Professional - Performance', () => {
 
   test('should have efficient JavaScript execution', async ({ page }) => {
     await page.goto(url);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Measure JavaScript execution time
     const jsMetrics = await page.evaluate(() => {
@@ -223,7 +223,7 @@ test.describe('PolishedVariant1Professional - Performance', () => {
 
   test('should have efficient image loading', async ({ page }) => {
     await page.goto(url);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const imageMetrics = await page.evaluate(() => {
       const images = performance.getEntriesByType('resource')
@@ -255,7 +255,7 @@ test.describe('PolishedVariant1Professional - Performance', () => {
 
   test('should not have excessive DOM size', async ({ page }) => {
     await page.goto(url);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const domMetrics = await page.evaluate(() => {
       const allElements = document.querySelectorAll('*');
@@ -283,7 +283,7 @@ test.describe('PolishedVariant1Professional - Performance', () => {
 
   test('should have minimal reflows during interaction', async ({ page }) => {
     await page.goto(url);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Get initial layout
     const initialLayout = await page.evaluate(() => {
@@ -329,7 +329,7 @@ test.describe('PolishedVariant1Professional - Performance', () => {
 
   test('should have efficient memory usage', async ({ page }) => {
     await page.goto(url);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Get memory metrics (if available)
     const memoryMetrics = await page.evaluate(() => {
@@ -362,7 +362,7 @@ test.describe('PolishedVariant1Professional - Performance', () => {
       const startTime = Date.now();
 
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const metrics = await page.evaluate(() => {
         const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];

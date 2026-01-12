@@ -24,7 +24,7 @@ test.describe('Approvals Feature', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to approvals
     await page.goto('/approvals');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display my approvals page', async ({ page }) => {

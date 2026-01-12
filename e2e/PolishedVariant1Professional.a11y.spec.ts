@@ -23,7 +23,7 @@ test.describe('PolishedVariant1Professional - Accessibility', () => {
     await page.goto('/blueprint-samples/variants/1-professional');
 
     // Wait for page to be fully loaded
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(500);
   });
 
@@ -123,7 +123,7 @@ test.describe('PolishedVariant1Professional - Accessibility', () => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
     await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Get all interactive elements
     const interactiveElements = page.locator('button, a, input, select, textarea');

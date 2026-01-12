@@ -43,7 +43,7 @@ async function loginAsAdmin(page: Page) {
 async function navigateToUserApprovals(page: Page) {
   // Try direct navigation first
   await page.goto('/settings/user-approvals');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   // If redirected, try through settings menu
   if (!page.url().includes('user-approvals')) {
@@ -51,12 +51,12 @@ async function navigateToUserApprovals(page: Page) {
     const settingsLink = page.locator('a[href="/settings"], a:has-text("Settings")');
     if (await settingsLink.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await settingsLink.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const userApprovalsLink = page.locator('a[href*="user-approvals"], a:has-text("User Approvals")');
       if (await userApprovalsLink.first().isVisible({ timeout: 3000 }).catch(() => false)) {
         await userApprovalsLink.first().click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
       }
     }
   }
@@ -253,7 +253,7 @@ test.describe('Access Control', () => {
 
     // Try to access admin page
     await page.goto('/settings/user-approvals');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Should either redirect or show access denied
     const accessDenied = page.locator('text=/access denied|unauthorized|permission|forbidden/i');
@@ -294,7 +294,7 @@ test.describe('Search and Filter Pending Users', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('test@');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Results should update
       const hasResults = await page.locator('[data-testid="pending-user"], [data-testid="user-item"]').first().isVisible({ timeout: 3000 }).catch(() => false);

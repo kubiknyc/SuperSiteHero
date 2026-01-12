@@ -38,7 +38,7 @@ const testActionItem = {
 async function login(page: any) {
   // Navigate to login page
   await page.goto('/login')
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('domcontentloaded')
 
   // Fill credentials
   await page.fill('input[name="email"]', TEST_EMAIL)
@@ -58,7 +58,7 @@ async function login(page: any) {
   })
 
   // Wait for page to be fully loaded
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('domcontentloaded')
 }
 
 // ============================================================================
@@ -95,19 +95,19 @@ test.describe('Action Items - Setup & Navigation', () => {
   test('should access from project view', async ({ page }) => {
     // Navigate to projects first
     await page.goto('/projects')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Click first project if available
     const firstProject = page.locator('[data-testid*="project-"], .project-card, [role="article"]').first()
     if (await firstProject.isVisible({ timeout: 5000 })) {
       await firstProject.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Look for action items link/tab
       const actionItemsLink = page.locator('a, button, [role="tab"]').filter({ hasText: /action.*item/i }).first()
       if (await actionItemsLink.isVisible()) {
         await actionItemsLink.click()
-        await page.waitForLoadState('networkidle')
+        await page.waitForLoadState('domcontentloaded')
         await expect(page.locator('h1, h2').filter({ hasText: /action item/i })).toBeVisible()
       } else {
         test.skip()
@@ -120,13 +120,13 @@ test.describe('Action Items - Setup & Navigation', () => {
   test('should access from meeting view', async ({ page }) => {
     // Navigate to meetings first
     await page.goto('/meetings')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Click first meeting if available
     const firstMeeting = page.locator('[data-testid*="meeting-"], .meeting-card, [role="article"]').first()
     if (await firstMeeting.isVisible({ timeout: 5000 })) {
       await firstMeeting.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Look for action items section
       const actionItemsSection = page.locator('text=/action item/i')
@@ -438,7 +438,7 @@ test.describe('Action Items - Filtering & Search', () => {
 
     // Navigate away and back
     await page.goto('/dashboard')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
     await actionItemsPage.goto()
 
     // Filter might or might not persist depending on implementation

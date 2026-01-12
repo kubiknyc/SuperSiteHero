@@ -54,22 +54,22 @@ async function login(page: Page) {
 // Helper function to navigate to lien waivers
 async function navigateToLienWaivers(page: Page) {
   await page.goto('/lien-waivers');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   if (!page.url().includes('lien-waiver')) {
     // Try through project
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await projectLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const lienWaiverLink = page.locator('a:has-text("Lien"), a[href*="lien"]');
       if (await lienWaiverLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
         await lienWaiverLink.first().click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
       }
     }
   }
@@ -304,7 +304,7 @@ test.describe('Lien Waiver Detail', () => {
 
     if (await waiverItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await waiverItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       await expect(page).toHaveURL(/\/lien-waiver/, { timeout: 10000 });
     }
@@ -315,7 +315,7 @@ test.describe('Lien Waiver Detail', () => {
 
     if (await waiverItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await waiverItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show waiver type
       const waiverType = page.locator('text=/conditional|unconditional/i');
@@ -334,7 +334,7 @@ test.describe('Lien Waiver Detail', () => {
 
     if (await waiverItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await waiverItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const payAppLink = page.locator('a:has-text("Payment Application"), text=/payment app|pay app/i');
       const hasPayAppLink = await payAppLink.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -348,7 +348,7 @@ test.describe('Lien Waiver Detail', () => {
 
     if (await waiverItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await waiverItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const signatureStatus = page.locator('text=/signed|unsigned|pending signature/i, [data-testid="signature-status"]');
       const hasSignatureStatus = await signatureStatus.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -389,7 +389,7 @@ test.describe('Edit Lien Waiver', () => {
 
     if (await waiverItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await waiverItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const editButton = page.locator('button:has-text("Edit"), [data-testid="edit-button"]');
 
@@ -446,7 +446,7 @@ test.describe('Payment Application Link', () => {
 
     if (await waiverItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await waiverItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const payAppLink = page.locator('a[href*="payment-application"]');
 
@@ -474,7 +474,7 @@ test.describe('Filter Lien Waivers', () => {
       await typeFilter.first().selectOption('conditional').catch(() =>
         typeFilter.first().selectOption({ index: 1 })
       );
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -485,7 +485,7 @@ test.describe('Filter Lien Waivers', () => {
       await statusFilter.first().selectOption('signed').catch(() =>
         statusFilter.first().selectOption({ index: 1 })
       );
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -494,7 +494,7 @@ test.describe('Filter Lien Waivers', () => {
 
     if (await projectFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await projectFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -504,7 +504,7 @@ test.describe('Filter Lien Waivers', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('LW-');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });
@@ -571,7 +571,7 @@ test.describe('Export Lien Waivers', () => {
 
     if (await waiverItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await waiverItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const exportButton = page.locator('button:has-text("Print"), button:has-text("Export"), button:has-text("PDF")');
 

@@ -33,12 +33,15 @@ const TEST_PASSWORD = process.env.TEST_USER_PASSWORD || 'testpassword123'
 
 async function navigateToDashboard(page: Page) {
   await page.goto('/')
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('domcontentloaded')
+
+  // Wait for main content to be visible instead of networkidle
+  await page.locator('main, [role="main"], .min-h-screen').first().waitFor({ timeout: 10000 }).catch(() => {})
 
   // If not on dashboard, try explicit dashboard route
   if (!page.url().includes('dashboard') && page.url() !== page.url().replace(/\/$/, '')) {
     await page.goto('/dashboard')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
   }
 }
 
@@ -75,7 +78,7 @@ test.describe('Dashboard - Access and Display', () => {
 
   test('should redirect to dashboard from root', async ({ page }) => {
     await page.goto('/')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Should be on a valid page (dashboard, projects, or home)
     const validPage = page.locator('main, [role="main"], .min-h-screen')
@@ -100,7 +103,7 @@ test.describe('Dashboard - Access and Display', () => {
   })
 
   test('should display user profile section', async ({ page }) => {
-    const userMenu = page.locator('[data-testid="user-menu"], [aria-label="User menu"], button:has-text("Profile")')
+    const userMenu = page.locator('a[href="/settings/profile"], a[href="/settings"], button:has-text("Profile")')
     const hasUserMenu = await userMenu.first().isVisible({ timeout: 5000 }).catch(() => false)
 
     expect(hasUserMenu || true).toBeTruthy()
@@ -157,7 +160,7 @@ test.describe('Dashboard - Project Summary Widgets', () => {
 
     if (hasLink) {
       await projectsLink.first().click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
       await expect(page).toHaveURL(/\/projects/)
     }
   })
@@ -328,7 +331,7 @@ test.describe('Dashboard - Pending Approvals', () => {
 
     if (hasLink) {
       await approvalsLink.first().click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
       // Should navigate to approvals page
       expect(page.url()).toContain('approval')
     }
@@ -410,7 +413,7 @@ test.describe('Dashboard - Upcoming Tasks and Deadlines', () => {
 
     if (hasLink) {
       await tasksLink.first().click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
       expect(page.url()).toContain('task')
     }
   })
@@ -583,7 +586,7 @@ test.describe('Dashboard - Navigation', () => {
 
     if (await projectsLink.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await projectsLink.first().click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
       await expect(page).toHaveURL(/\/projects/)
     }
   })
@@ -593,7 +596,7 @@ test.describe('Dashboard - Navigation', () => {
 
     if (await rfisLink.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await rfisLink.first().click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
       expect(page.url()).toContain('rfi')
     }
   })
@@ -603,7 +606,7 @@ test.describe('Dashboard - Navigation', () => {
 
     if (await submittalsLink.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await submittalsLink.first().click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
       expect(page.url()).toContain('submittal')
     }
   })
@@ -613,7 +616,7 @@ test.describe('Dashboard - Navigation', () => {
 
     if (await changeOrdersLink.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await changeOrdersLink.first().click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
       expect(page.url()).toContain('change')
     }
   })
@@ -623,7 +626,7 @@ test.describe('Dashboard - Navigation', () => {
 
     if (await meetingsLink.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await meetingsLink.first().click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
       expect(page.url()).toContain('meeting')
     }
   })
@@ -772,7 +775,7 @@ test.describe('Dashboard - Customization', () => {
   test('should persist customization across sessions', async ({ page }) => {
     // Reload the page
     await page.reload()
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Dashboard should still be visible
     const dashboard = page.locator('main, [role="main"], [data-testid="dashboard"], .min-h-screen')

@@ -45,12 +45,12 @@ async function navigateToQualityControl(page: Page) {
     await navLink.first().click();
   } else {
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await projectLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const qcLink = page.locator('a:has-text("Quality Control"), a[href*="quality-control"]');
       if (await qcLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
@@ -62,7 +62,7 @@ async function navigateToQualityControl(page: Page) {
       await page.goto('/quality-control');
     }
   }
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 // ============================================================================
@@ -283,7 +283,7 @@ test.describe('NCR Workflow', () => {
 
     if (await firstNCR.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstNCR.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show NCR details
       await expect(page.locator('h1, h2').first()).toBeVisible({ timeout: 5000 });
@@ -307,7 +307,7 @@ test.describe('NCR Workflow', () => {
 
     if (await firstNCR.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstNCR.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for investigation button
       const investigationButton = page.locator('button:has-text("Start Investigation"), button:has-text("Begin Investigation")');
@@ -323,7 +323,7 @@ test.describe('NCR Workflow', () => {
 
     if (await firstNCR.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstNCR.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for corrective actions section
       const correctiveSection = page.locator('text=/corrective action|actions|remediation/i, [data-testid="corrective-actions"]');
@@ -344,7 +344,7 @@ test.describe('NCR Workflow', () => {
 
     if (await firstNCR.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstNCR.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for verification section or button
       const verificationSection = page.locator('text=/verification|verify|close/i, button:has-text("Submit for Verification"), button:has-text("Request Verification")');
@@ -359,7 +359,7 @@ test.describe('NCR Workflow', () => {
 
     if (await firstNCR.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstNCR.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for void button
       const voidButton = page.locator('button:has-text("Void"), [data-testid="void-button"]');
@@ -386,7 +386,7 @@ test.describe('Search and Filtering', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('test');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const hasResults = await page.locator('[data-testid*="ncr-"]').first().isVisible({ timeout: 3000 }).catch(() => false);
       const hasNoResults = await page.locator('text=/no.*results|no.*ncr|not found/i').first().isVisible({ timeout: 2000 }).catch(() => false);
@@ -404,7 +404,7 @@ test.describe('Search and Filtering', () => {
       await statusFilter.first().selectOption('open').catch(() =>
         statusFilter.first().selectOption({ index: 1 })
       );
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(500);
     }
   });
@@ -414,7 +414,7 @@ test.describe('Search and Filtering', () => {
 
     if (await categoryFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await categoryFilter.first().selectOption({ index: 1 });
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(500);
     }
   });
@@ -424,7 +424,7 @@ test.describe('Search and Filtering', () => {
 
     if (await severityFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await severityFilter.first().selectOption({ index: 1 });
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(500);
     }
   });
@@ -441,7 +441,7 @@ test.describe('Search and Filtering', () => {
 
     if (await clearButton.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await clearButton.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       if (await searchInput.first().isVisible()) {
         await expect(searchInput.first()).toHaveValue('');
@@ -591,7 +591,7 @@ test.describe('Mobile Responsiveness', () => {
 
     if (await firstNCR.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstNCR.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       await expect(page.locator('h1, h2').first()).toBeVisible({ timeout: 5000 });
 
@@ -708,7 +708,7 @@ test.describe('Performance', () => {
     const startTime = Date.now();
 
     await navigateToQualityControl(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const loadTime = Date.now() - startTime;
     expect(loadTime).toBeLessThan(10000);

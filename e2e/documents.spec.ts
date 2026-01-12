@@ -57,7 +57,7 @@ async function navigateToDocuments(page: Page) {
   } else {
     await page.goto('/documents');
   }
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 async function selectProject(page: Page) {
@@ -70,7 +70,7 @@ async function selectProject(page: Page) {
       await projectSelector.click();
       await page.locator('[data-testid="project-option"]:first-child, [role="option"]:first-child').click();
     }
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   }
 }
 
@@ -105,7 +105,7 @@ test.describe('Document Library', () => {
     await selectProject(page);
 
     // Wait for documents to load
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Should show either documents or empty state or page content
     const hasDocuments = await page.locator('[data-testid="document-item"], [data-testid="document-row"], tr[data-document-id]').first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -150,7 +150,7 @@ test.describe('Document Library', () => {
       const firstFolder = folderTree.locator('[data-testid="folder-item"]:first-child, [role="treeitem"]:first-child');
       if (await firstFolder.isVisible()) {
         await firstFolder.click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         // Verify breadcrumb updates or folder content changes
         const breadcrumb = page.locator('[data-testid="breadcrumb"], nav[aria-label="Breadcrumb"]');
@@ -172,7 +172,7 @@ test.describe('Document Library', () => {
 
       // Click on root to go back
       await breadcrumb.locator('a, button').first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });
@@ -303,7 +303,7 @@ test.describe('Document Detail Page', () => {
 
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Check for common metadata fields
       const metadataFields = [
@@ -331,7 +331,7 @@ test.describe('Document Detail Page', () => {
 
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for version history section or button
       const versionSection = page.locator('text=/version.*history|versions/i, [data-testid="version-history"]');
@@ -347,7 +347,7 @@ test.describe('Document Detail Page', () => {
 
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for edit button
       const editBtn = page.locator('button:has-text("Edit"), button[aria-label*="edit" i], [data-testid="edit-metadata"]');
@@ -367,7 +367,7 @@ test.describe('Document Detail Page', () => {
 
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for download button
       const downloadBtn = page.locator('button:has-text("Download"), a:has-text("Download"), [data-testid="download-button"]');
@@ -380,7 +380,7 @@ test.describe('Document Detail Page', () => {
 
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for delete button
       const deleteBtn = page.locator('button:has-text("Delete"), button[aria-label*="delete" i], [data-testid="delete-button"]');
@@ -406,7 +406,7 @@ test.describe('Document Detail Page', () => {
 
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for pin button
       const pinBtn = page.locator('button:has-text("Pin"), button[aria-label*="pin" i], [data-testid="pin-button"]');
@@ -491,7 +491,7 @@ test.describe('Folder Management', () => {
       const folder = folderTree.locator('[data-testid="folder-item"], [role="treeitem"]').first();
       if (await folder.isVisible()) {
         await folder.click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         // URL might change or document list should update
         // This is implementation-dependent
@@ -540,7 +540,7 @@ test.describe('Search and Filtering', () => {
       await page.waitForTimeout(500); // Debounce
 
       // Results should update
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Either show filtered results or "no results"
       const hasResults = await page.locator('[data-testid="document-item"]').first().isVisible({ timeout: 3000 }).catch(() => false);
@@ -556,7 +556,7 @@ test.describe('Search and Filtering', () => {
     if (await statusFilter.isVisible({ timeout: 3000 }).catch(() => false)) {
       // Select "current" status
       await statusFilter.selectOption('current');
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // All visible documents should have "current" status badge
       const statusBadges = page.locator('[data-testid="document-status"], .status-badge');
@@ -575,7 +575,7 @@ test.describe('Search and Filtering', () => {
     if (await typeFilter.isVisible({ timeout: 3000 }).catch(() => false)) {
       // Select "drawing" type
       await typeFilter.selectOption('drawing');
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Verify filter applied
       await page.waitForTimeout(500);
@@ -600,7 +600,7 @@ test.describe('Search and Filtering', () => {
       await searchInput.fill('a');
     }
 
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Page should update with filtered results
   });
@@ -618,7 +618,7 @@ test.describe('Search and Filtering', () => {
     // Clear filters
     if (await clearBtn.isVisible({ timeout: 2000 }).catch(() => false)) {
       await clearBtn.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Search input should be cleared
       if (await searchInput.isVisible()) {
@@ -632,7 +632,7 @@ test.describe('Search and Filtering', () => {
 
     if (await searchInput.isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.fill('a');
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for results count indicator
       const countIndicator = page.locator('text=/\\d+.*results|\\d+.*documents|showing.*\\d+/i');
@@ -659,7 +659,7 @@ test.describe('Document Markup', () => {
 
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Find markup/annotate button
       const markupBtn = page.locator('button:has-text("Markup"), button:has-text("Annotate"), button:has-text("Open Markup"), [data-testid="markup-button"]');
@@ -687,7 +687,7 @@ test.describe('Document Markup', () => {
     const firstDoc = page.locator('[data-testid="document-item"]:first-child');
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const markupBtn = page.locator('button:has-text("Markup"), button:has-text("Annotate")');
       if (await markupBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
@@ -718,7 +718,7 @@ test.describe('Document Markup', () => {
 
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for zoom controls on document viewer
       const zoomIn = page.locator('button[aria-label*="zoom in" i], button:has-text("+"), [data-testid="zoom-in"]');
@@ -738,7 +738,7 @@ test.describe('Document Markup', () => {
 
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const markupBtn = page.locator('button:has-text("Markup"), button:has-text("Annotate")');
       if (await markupBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
@@ -764,7 +764,7 @@ test.describe('Document Markup', () => {
 
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const markupBtn = page.locator('button:has-text("Markup"), button:has-text("Annotate")');
       if (await markupBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
@@ -798,7 +798,7 @@ test.describe('Version Management', () => {
 
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for version history section
       const versionHistory = page.locator('text=/version.*history|versions/i, [data-testid="version-history"]');
@@ -819,7 +819,7 @@ test.describe('Version Management', () => {
 
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for upload version button
       const uploadVersionBtn = page.locator('button:has-text("Upload Version"), button:has-text("New Version"), [data-testid="upload-version"]');
@@ -842,7 +842,7 @@ test.describe('Version Management', () => {
 
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for "Current" badge on version history
       const currentBadge = page.locator('text=/current/i, [data-testid="current-version-badge"]');
@@ -858,7 +858,7 @@ test.describe('Version Management', () => {
 
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for compare versions button
       const compareBtn = page.locator('button:has-text("Compare"), [data-testid="compare-versions"]');
@@ -887,7 +887,7 @@ test.describe('PDF Viewer', () => {
 
     if (await pdfDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await pdfDoc.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for PDF viewer
       const pdfViewer = page.locator('[data-testid="pdf-viewer"], canvas, .react-pdf__Page, iframe[src*="pdf"]');
@@ -902,7 +902,7 @@ test.describe('PDF Viewer', () => {
 
     if (await pdfDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await pdfDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for page navigation
       const prevPage = page.locator('button[aria-label*="previous" i], button:has-text("Prev")');
@@ -924,7 +924,7 @@ test.describe('PDF Viewer', () => {
 
     if (await pdfDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await pdfDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for zoom controls
       const zoomIn = page.locator('button[aria-label*="zoom in" i], button:has-text("+")');
@@ -944,7 +944,7 @@ test.describe('PDF Viewer', () => {
 
     if (await pdfDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await pdfDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for fit controls
       const fitWidth = page.locator('button:has-text("Fit Width"), button[aria-label*="fit width" i]');
@@ -1191,7 +1191,7 @@ test.describe('Performance', () => {
     await selectProject(page);
 
     // Wait for content to load
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const loadTime = Date.now() - startTime;
 
@@ -1223,7 +1223,7 @@ test.describe('Performance', () => {
     await selectProject(page);
 
     // Wait for initial load
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Check for pagination or infinite scroll
     const pagination = page.locator('[data-testid="pagination"], .pagination, button:has-text("Load More")');
@@ -1256,7 +1256,7 @@ test.describe('Feature Integration', () => {
 
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for "Link to Report" or similar option
       const linkBtn = page.locator('button:has-text("Link"), button:has-text("Attach to Report")');
@@ -1276,7 +1276,7 @@ test.describe('Feature Integration', () => {
 
     if (await firstProject.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstProject.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for documents tab or section
       const docsTab = page.locator('a:has-text("Documents"), button:has-text("Documents"), [data-testid="documents-tab"]');
@@ -1285,7 +1285,7 @@ test.describe('Feature Integration', () => {
         await docsTab.click();
 
         // Should show project documents
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
       }
     }
   });

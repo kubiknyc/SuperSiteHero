@@ -82,18 +82,18 @@ export class MeetingsPage {
   // Navigation methods
   async goto() {
     await this.page.goto('/meetings')
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async gotoFromProject(projectId: string) {
     await this.page.goto(`/projects/${projectId}/meetings`)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // Actions
   async clickNewMeeting() {
     await this.newMeetingButton.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // Search and filter methods
@@ -198,13 +198,13 @@ export class MeetingsPage {
   async clickMeeting(index: number = 0) {
     const card = this.getMeetingCard(index)
     await card.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async clickMeetingByName(name: string) {
     const card = this.getMeetingByName(name)
     await card.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // Get meeting card info

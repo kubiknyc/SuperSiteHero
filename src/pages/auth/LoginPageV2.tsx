@@ -2,7 +2,7 @@
 // Premium login page with construction industry aesthetic
 // Features: Blueprint grid, industrial styling, dramatic animations
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { Button } from '@/components/ui/button'
@@ -47,15 +47,36 @@ export function LoginPageV2() {
   const [biometricAvailable, setBiometricAvailable] = useState(false)
   const [checkingBiometric, setCheckingBiometric] = useState(true)
   const [mounted, setMounted] = useState(false)
+  const [showSlowWarning, setShowSlowWarning] = useState(false)
+
+  // Track mounted state for safe state updates
+  const mountedRef = useRef(true)
 
   const { signIn } = useAuth()
   const navigate = useNavigate()
   const { success, error } = useToast()
 
-  // Mount animation
+  // Mount animation and cleanup
   useEffect(() => {
     setMounted(true)
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+    }
   }, [])
+
+  // Show slow warning after 5 seconds of loading
+  useEffect(() => {
+    if (loading) {
+      const timer = setTimeout(() => {
+        if (mountedRef.current) {
+          setShowSlowWarning(true)
+        }
+      }, 5000)
+      return () => clearTimeout(timer)
+    }
+    setShowSlowWarning(false)
+  }, [loading])
 
   // Rate limiting
   const rateLimit = useRateLimit({
@@ -95,12 +116,28 @@ export function LoginPageV2() {
 
     setLoading(true)
 
+    // Create timeout promise to prevent indefinite waiting
+    const SIGN_IN_TIMEOUT_MS = 30000
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      setTimeout(() => {
+        reject(new Error('Sign in timed out. Please check your connection and try again.'))
+      }, SIGN_IN_TIMEOUT_MS)
+    })
+
     try {
-      await signIn(email, password)
+      // Race between sign-in and timeout
+      await Promise.race([signIn(email, password), timeoutPromise])
+
+      // Only update state if still mounted
+      if (!mountedRef.current) return
+
       rateLimit.reset()
       success('Welcome back', 'You have been signed in successfully.')
       navigate('/')
     } catch (err) {
+      // Only update state if still mounted
+      if (!mountedRef.current) return
+
       const state = rateLimit.recordAttempt()
       if (state.isLocked) {
         error('Account Locked', `Too many failed attempts. Try again in ${rateLimit.formattedLockoutTime}.`)
@@ -108,7 +145,9 @@ export function LoginPageV2() {
         error('Sign In Failed', err instanceof Error ? err.message : 'Invalid credentials')
       }
     } finally {
-      setLoading(false)
+      if (mountedRef.current) {
+        setLoading(false)
+      }
     }
   }
 
@@ -414,6 +453,15 @@ export function LoginPageV2() {
                 </button>
               </div>
             </div>
+
+            {/* Slow Connection Warning */}
+            {loading && showSlowWarning && (
+              <div className="p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                <p className="text-sm text-yellow-400 text-center">
+                  This is taking longer than expected. Please check your connection.
+                </p>
+              </div>
+            )}
 
             {/* Submit Button */}
             <Button

@@ -25,7 +25,7 @@ test.describe('Checklists Management', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to checklists page
     await page.goto('/checklists');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display checklists dashboard', async ({ page }) => {
@@ -44,7 +44,7 @@ test.describe('Checklists Management', () => {
       await templatesButton.click();
 
       // Should show templates
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       expect(await page.locator('text=/template/i').count()).toBeGreaterThan(0);
     } else {
       test.skip();
@@ -59,7 +59,7 @@ test.describe('Checklists Management', () => {
 
     if (await startButton.isVisible()) {
       await startButton.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show checklist items
       const checklistItems = page.locator('[type="checkbox"], [role="checkbox"]');
@@ -77,7 +77,7 @@ test.describe('Checklists Management', () => {
 
     if (await activeChecklist.isVisible()) {
       await activeChecklist.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Find first checkbox
       const firstCheckbox = page.locator('[type="checkbox"], [role="checkbox"]').first();
@@ -104,7 +104,7 @@ test.describe('Checklists Management', () => {
 
     if (await activeChecklist.isVisible()) {
       await activeChecklist.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for notes/comments field
       const notesField = page.locator('textarea, input[placeholder*="note" i]').first();
@@ -130,7 +130,7 @@ test.describe('Checklists Management', () => {
 
     if (await activeChecklist.isVisible()) {
       await activeChecklist.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for complete button
       const completeButton = page.locator('button').filter({ hasText: /complete|finish|submit/i }).first();
@@ -156,7 +156,7 @@ test.describe('Checklists Management', () => {
 
     if (await historyLink.isVisible()) {
       await historyLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       expect(await page.locator('text=/execution|history/i').count()).toBeGreaterThan(0);
     } else {

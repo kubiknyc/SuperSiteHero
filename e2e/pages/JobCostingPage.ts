@@ -241,7 +241,7 @@ export class JobCostingPage {
     } else {
       await this.page.goto('/cost-tracking')
     }
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async gotoPaymentApplications(projectId?: string): Promise<void> {
@@ -250,7 +250,7 @@ export class JobCostingPage {
     } else {
       await this.page.goto('/payment-applications')
     }
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // ============================================================================

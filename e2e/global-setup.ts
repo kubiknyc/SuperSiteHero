@@ -180,32 +180,69 @@ async function createAuthenticatedSession(options: {
     await page.click('button[type="submit"]');
 
     // Wait a moment to see if there are any errors
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(3000);
 
-    // Check for error messages
-    const errorMessage = await page.locator('[role="alert"], .error, [data-testid="error-message"]').textContent().catch(() => null);
+    // Check for error messages - look for common error patterns
+    const errorSelectors = [
+      '[role="alert"]',
+      '.error',
+      '[data-testid="error-message"]',
+      '.text-destructive',
+      '.text-red-500',
+      '[class*="error"]',
+    ];
+
+    let errorMessage = null;
+    for (const selector of errorSelectors) {
+      const errorElement = page.locator(selector);
+      if (await errorElement.isVisible({ timeout: 1000 }).catch(() => false)) {
+        errorMessage = await errorElement.textContent().catch(() => null);
+        if (errorMessage) break;
+      }
+    }
+
     if (errorMessage) {
       console.log(`   ⚠️  Error message found: ${errorMessage}`);
+      console.log(`   ⚠️  The test user may not exist in Supabase. Please create the user manually.`);
+      console.log(`   ⚠️  User email: ${email}`);
     }
 
     // Take screenshot for debugging
     await page.screenshot({ path: path.join(__dirname, '../playwright/.auth/login-debug.png') });
     console.log(`   📸 Screenshot saved to playwright/.auth/login-debug.png`);
 
-    // Wait for successful login (redirect away from login page)
-    console.log(`   → Waiting for redirect...`);
-    await page.waitForURL(url => !url.pathname.includes('/login'), {
-      timeout: 30000,
-    });
+    // Check if we're already on the dashboard (URL changed) or still on login
+    const currentUrl = page.url();
+    console.log(`   → Current URL after submit: ${currentUrl}`);
+
+    if (currentUrl.includes('/login') || currentUrl === baseURL || currentUrl === `${baseURL}/`) {
+      // Still on login page, try waiting for redirect with more context
+      console.log(`   → Waiting for redirect from login page...`);
+      try {
+        await page.waitForURL(url => !url.pathname.includes('/login') && url.pathname !== '/', {
+          timeout: 30000,
+        });
+      } catch (redirectError) {
+        // If redirect fails, check if we're now authenticated (app might stay on same URL)
+        const dashboardHeading = page.locator('h1:has-text("Dashboard")');
+        const welcomeText = page.getByText(/Welcome back/i);
+
+        if (await dashboardHeading.isVisible({ timeout: 5000 }).catch(() => false) ||
+            await welcomeText.isVisible({ timeout: 5000 }).catch(() => false)) {
+          console.log(`   → Login successful (dashboard content visible)`);
+        } else {
+          throw redirectError;
+        }
+      }
+    }
 
     // Verify we're logged in by checking for authenticated indicators
-    // The UI shows a user avatar button with initials, dashboard content, or welcome message
-    const userIndicator = page.locator('[data-testid="user-menu"]')
-      .or(page.locator('[aria-label="User menu"]'))
-      .or(page.locator('button:has-text("Logout")'))
-      .or(page.locator('button:has-text("Sign out")'))
+    // The UI shows a user avatar link to profile, dashboard content, or welcome message
+    const userIndicator = page.locator('a[href="/settings/profile"]')
+      .or(page.locator('a[href="/settings"]'))
       .or(page.getByText(/Welcome back/i))
       .or(page.locator('h1:has-text("Dashboard")'))
+      .or(page.locator('button:has-text("Sign Out")'))
       .or(page.locator('[class*="avatar"]'));
     await userIndicator.first().waitFor({ timeout: 10000 });
 

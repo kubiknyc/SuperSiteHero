@@ -21,7 +21,7 @@ test.describe('Visual Regression - Tasks Page', () => {
   test.beforeEach(async ({ page }) => {
     await loginAsTestUser(page, TEST_EMAIL, TEST_PASSWORD);
     await page.goto('/tasks');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should match tasks list page snapshot', async ({ page }) => {
@@ -46,7 +46,7 @@ test.describe('Visual Regression - Tasks Page', () => {
 
     if (await firstTask.isVisible()) {
       await firstTask.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
 
       await expect(page).toHaveScreenshot('task-detail-page.png', {
@@ -63,7 +63,7 @@ test.describe('Visual Regression - Tasks Page', () => {
 
     if (await createButton.isVisible()) {
       await createButton.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
 
       await expect(page).toHaveScreenshot('task-create-form.png', {
@@ -80,7 +80,7 @@ test.describe('Visual Regression - Change Orders Page', () => {
   test.beforeEach(async ({ page }) => {
     await loginAsTestUser(page, TEST_EMAIL, TEST_PASSWORD);
     await page.goto('/change-orders');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should match change orders list page snapshot', async ({ page }) => {
@@ -106,7 +106,7 @@ test.describe('Visual Regression - Change Orders Page', () => {
 
     if (await firstCO.isVisible()) {
       await firstCO.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
 
       await expect(page).toHaveScreenshot('change-order-detail-page.png', {
@@ -121,7 +121,7 @@ test.describe('Visual Regression - Change Orders Page', () => {
   test('should match change order create form snapshot', async ({ page }) => {
     const createButton = page.locator('button, a').filter({ hasText: /new|create|add/i }).first();
     await createButton.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(1000);
 
     await expect(page).toHaveScreenshot('change-order-create-form.png', {
@@ -151,7 +151,7 @@ test.describe('Visual Regression - Punch Lists Page', () => {
   test.beforeEach(async ({ page }) => {
     await loginAsTestUser(page, TEST_EMAIL, TEST_PASSWORD);
     await page.goto('/punch-lists');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should match punch lists page snapshot', async ({ page }) => {
@@ -177,7 +177,7 @@ test.describe('Visual Regression - Punch Lists Page', () => {
 
     if (await firstItem.isVisible()) {
       await firstItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
 
       await expect(page).toHaveScreenshot('punch-item-detail.png', {
@@ -194,7 +194,7 @@ test.describe('Visual Regression - Punch Lists Page', () => {
 
     if (await createButton.isVisible()) {
       await createButton.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
 
       await expect(page).toHaveScreenshot('punch-item-create-form.png', {
@@ -211,7 +211,7 @@ test.describe('Visual Regression - Schedule/Gantt Page', () => {
   test.beforeEach(async ({ page }) => {
     await loginAsTestUser(page, TEST_EMAIL, TEST_PASSWORD);
     await page.goto('/schedule');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should match schedule page snapshot', async ({ page }) => {
@@ -262,7 +262,7 @@ test.describe('Visual Regression - Inspections Page', () => {
   test.beforeEach(async ({ page }) => {
     await loginAsTestUser(page, TEST_EMAIL, TEST_PASSWORD);
     await page.goto('/inspections');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should match inspections list page snapshot', async ({ page }) => {
@@ -288,7 +288,7 @@ test.describe('Visual Regression - Inspections Page', () => {
 
     if (await firstInspection.isVisible()) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
 
       await expect(page).toHaveScreenshot('inspection-detail-page.png', {
@@ -305,7 +305,7 @@ test.describe('Visual Regression - Inspections Page', () => {
 
     if (await createButton.isVisible()) {
       await createButton.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
 
       await expect(page).toHaveScreenshot('inspection-create-form.png', {
@@ -322,7 +322,7 @@ test.describe('Visual Regression - Safety Incidents Page', () => {
   test.beforeEach(async ({ page }) => {
     await loginAsTestUser(page, TEST_EMAIL, TEST_PASSWORD);
     await page.goto('/safety/incidents');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should match safety incidents list page snapshot', async ({ page }) => {
@@ -348,7 +348,7 @@ test.describe('Visual Regression - Safety Incidents Page', () => {
 
     if (await firstIncident.isVisible()) {
       await firstIncident.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
 
       await expect(page).toHaveScreenshot('incident-detail-page.png', {
@@ -365,7 +365,7 @@ test.describe('Visual Regression - Safety Incidents Page', () => {
 
     if (await createButton.isVisible()) {
       await createButton.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
 
       await expect(page).toHaveScreenshot('incident-create-form.png', {
@@ -398,7 +398,7 @@ test.describe('Visual Regression - Checklists Page', () => {
   test.beforeEach(async ({ page }) => {
     await loginAsTestUser(page, TEST_EMAIL, TEST_PASSWORD);
     await page.goto('/checklists');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should match checklists page snapshot', async ({ page }) => {
@@ -424,7 +424,7 @@ test.describe('Visual Regression - Checklists Page', () => {
 
     if (await activeChecklist.isVisible()) {
       await activeChecklist.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
 
       await expect(page).toHaveScreenshot('checklist-execution-page.png', {
@@ -441,7 +441,7 @@ test.describe('Visual Regression - Workflows Page', () => {
   test.beforeEach(async ({ page }) => {
     await loginAsTestUser(page, TEST_EMAIL, TEST_PASSWORD);
     await page.goto('/workflows');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should match workflows list page snapshot', async ({ page }) => {
@@ -467,7 +467,7 @@ test.describe('Visual Regression - Workflows Page', () => {
 
     if (await firstWorkflow.isVisible()) {
       await firstWorkflow.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
 
       await expect(page).toHaveScreenshot('workflow-detail-with-steps.png', {
@@ -484,7 +484,7 @@ test.describe('Visual Regression - Dashboard', () => {
   test.beforeEach(async ({ page }) => {
     await loginAsTestUser(page, TEST_EMAIL, TEST_PASSWORD);
     await page.goto('/dashboard');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should match dashboard page snapshot', async ({ page }) => {

@@ -36,7 +36,7 @@ test.describe('Accessibility - WCAG 2.1 Compliance', () => {
     for (const page of CRITICAL_PAGES) {
       test(`${page.name} page should have no critical accessibility violations`, async ({ page: browserPage }) => {
         await browserPage.goto(page.path);
-        await browserPage.waitForLoadState('networkidle');
+        await browserPage.waitForLoadState('domcontentloaded');
 
         // Run axe accessibility scan
         const accessibilityScanResults = await new AxeBuilder({ page: browserPage })
@@ -76,7 +76,7 @@ test.describe('Accessibility - WCAG 2.1 Compliance', () => {
     for (const page of PUBLIC_PAGES) {
       test(`${page.name} page should have no critical accessibility violations`, async ({ page: browserPage }) => {
         await browserPage.goto(page.path);
-        await browserPage.waitForLoadState('networkidle');
+        await browserPage.waitForLoadState('domcontentloaded');
 
         const accessibilityScanResults = await new AxeBuilder({ page: browserPage })
           .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
@@ -103,7 +103,7 @@ test.describe('Accessibility - WCAG 2.1 Compliance', () => {
   test.describe('Interactive Components', () => {
     test('Modal dialogs should be accessible', async ({ page }) => {
       await page.goto('/daily-reports');
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Try to open a create dialog
       const createButton = page.locator('button:has-text("New"), button:has-text("Create"), button:has-text("Add")');
@@ -130,7 +130,7 @@ test.describe('Accessibility - WCAG 2.1 Compliance', () => {
 
     test('Form inputs should have proper labels', async ({ page }) => {
       await page.goto('/daily-reports');
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Open create form
       const createButton = page.locator('button:has-text("New"), button:has-text("Create")');
@@ -168,7 +168,7 @@ test.describe('Accessibility - WCAG 2.1 Compliance', () => {
 
     test('Navigation should be keyboard accessible', async ({ page }) => {
       await page.goto('/dashboard');
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Test keyboard navigation
       await page.keyboard.press('Tab');
@@ -196,7 +196,7 @@ test.describe('Accessibility - WCAG 2.1 Compliance', () => {
   test.describe('Color and Contrast', () => {
     test('Text should have sufficient color contrast', async ({ page }) => {
       await page.goto('/dashboard');
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const contrastResults = await new AxeBuilder({ page })
         .withTags(['wcag2aa'])
@@ -226,7 +226,7 @@ test.describe('Accessibility - WCAG 2.1 Compliance', () => {
   test.describe('Screen Reader Support', () => {
     test('Images should have alt text', async ({ page }) => {
       await page.goto('/dashboard');
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const imageResults = await new AxeBuilder({ page })
         .withTags(['wcag2a'])
@@ -242,7 +242,7 @@ test.describe('Accessibility - WCAG 2.1 Compliance', () => {
 
     test('Headings should be in logical order', async ({ page }) => {
       await page.goto('/dashboard');
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const headingResults = await new AxeBuilder({ page })
         .withTags(['wcag2a'])
@@ -269,7 +269,7 @@ test.describe('Accessibility - WCAG 2.1 Compliance', () => {
 
     test('ARIA attributes should be valid', async ({ page }) => {
       await page.goto('/dashboard');
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const ariaResults = await new AxeBuilder({ page })
         .withTags(['wcag2a', 'wcag2aa'])

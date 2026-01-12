@@ -23,7 +23,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
   test.describe('Long Text Handling', () => {
     test('should handle extremely long stat card labels without breaking layout', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Get initial layout
       const statCard = page.getByRole('button').filter({ hasText: 'Active Projects' }).first();
@@ -56,7 +56,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
 
     test('should handle extremely long project names without overflow', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Inject long project name
       await page.evaluate(() => {
@@ -81,7 +81,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
 
     test('should handle long activity descriptions gracefully', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Inject very long activity description
       await page.evaluate(() => {
@@ -116,7 +116,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
       for (const width of breakpoints) {
         await page.setViewportSize({ width, height: 768 });
         await page.goto(url);
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         // Inject long text
         await page.evaluate(() => {
@@ -142,7 +142,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
   test.describe('Missing Data Scenarios', () => {
     test('should handle empty stat values gracefully', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Remove stat values
       await page.evaluate(() => {
@@ -175,7 +175,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
 
     test('should handle missing project images', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Remove all images
       await page.evaluate(() => {
@@ -197,7 +197,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
 
     test('should handle zero values in stat cards', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Set all stats to zero
       await page.evaluate(() => {
@@ -225,7 +225,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
 
     test('should handle missing activity metadata (time, user)', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Remove time elements
       await page.evaluate(() => {
@@ -248,7 +248,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
   test.describe('Extreme Values', () => {
     test('should handle extremely large stat numbers (999+)', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Set extremely large values
       await page.evaluate(() => {
@@ -278,7 +278,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
 
     test('should handle negative percentage changes', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Set negative changes
       await page.evaluate(() => {
@@ -300,7 +300,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
 
     test('should handle hundreds of activity items', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Get initial activity count
       const initialCount = await page.evaluate(() => {
@@ -341,7 +341,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
     test('should handle very wide viewport (4K+ resolution)', async ({ page }) => {
       await page.setViewportSize({ width: 3840, height: 2160 });
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Verify content is centered/constrained
       const main = page.locator('main');
@@ -360,7 +360,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
     test('should handle very narrow viewport (< 320px)', async ({ page }) => {
       await page.setViewportSize({ width: 280, height: 653 });
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Verify content is still accessible
       await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
@@ -387,7 +387,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
   test.describe('Layout Stability Under Stress', () => {
     test('should maintain layout during rapid theme switching', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const heading = page.getByRole('heading', { name: 'Dashboard' });
       const initialBox = await heading.boundingBox();
@@ -412,7 +412,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
 
     test('should handle rapid viewport resizing', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Rapidly resize viewport
       const sizes = [
@@ -437,7 +437,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
 
     test('should handle concurrent interactions', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Perform multiple interactions simultaneously
       const statCard = page.getByRole('button').first();
@@ -461,7 +461,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
 
     test('should recover from scroll position changes during interaction', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Scroll down
       await page.evaluate(() => window.scrollTo(0, 500));
@@ -485,7 +485,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
   test.describe('Error Resilience', () => {
     test('should handle missing CSS gracefully', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Disable all stylesheets
       await page.evaluate(() => {
@@ -515,7 +515,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
       });
 
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Inject intentional error
       await page.evaluate(() => {
@@ -536,7 +536,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
 
     test('should handle rapid DOM mutations', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Perform rapid DOM changes
       await page.evaluate(() => {
@@ -564,7 +564,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
       await page.route('**/*.ttf', route => route.abort());
 
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Content should still be readable with fallback fonts
       await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
@@ -583,7 +583,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
   test.describe('Overflow and Truncation', () => {
     test('should truncate long text with ellipsis where appropriate', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Inject long text into areas that should truncate
       await page.evaluate(() => {
@@ -621,7 +621,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
       for (const width of breakpoints) {
         await page.setViewportSize({ width, height: 768 });
         await page.goto(url);
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         // Inject extremely wide content
         await page.evaluate(() => {
@@ -653,7 +653,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
     test('should handle content that exceeds viewport height', async ({ page }) => {
       await page.setViewportSize({ width: 375, height: 400 });
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Verify vertical scroll is available
       const scrollHeight = await page.evaluate(() => document.documentElement.scrollHeight);
@@ -675,7 +675,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
   test.describe('Accessibility Under Edge Conditions', () => {
     test('should maintain ARIA labels with missing content', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Remove content but keep structure
       await page.evaluate(() => {
@@ -704,7 +704,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
 
     test('should maintain keyboard navigation with extreme content', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Add hundreds of focusable elements
       await page.evaluate(() => {
@@ -736,7 +736,7 @@ test.describe('PolishedVariant1Professional - Edge Cases', () => {
 
     test('should maintain focus visibility with high contrast text', async ({ page }) => {
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Simulate high contrast mode
       await page.evaluate(() => {

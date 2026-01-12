@@ -38,7 +38,7 @@ async function login(page: Page) {
 async function navigateToCalendar(page: Page) {
   // Try direct navigation to meetings page (which likely has calendar view)
   await page.goto('/meetings').catch(() => null)
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('domcontentloaded')
   await waitForContentLoad(page)
 
   // If meetings page doesn't exist, try other routes
@@ -46,7 +46,7 @@ async function navigateToCalendar(page: Page) {
   if (!currentUrl.includes('/meetings')) {
     // Try calendar route
     await page.goto('/calendar').catch(() => null)
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
   }
 }
 
@@ -54,7 +54,7 @@ async function navigateToCalendar(page: Page) {
 async function navigateToCalendarSettings(page: Page) {
   // First try settings page
   await page.goto('/settings').catch(() => null)
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('domcontentloaded')
   await waitForContentLoad(page)
 
   // Look for calendar/integrations tab

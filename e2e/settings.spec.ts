@@ -27,7 +27,7 @@ test.describe('Settings - Main Settings Page', () => {
   // Pre-authenticated session is used via storageState above - no manual login needed
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display settings page with navigation', async ({ page }) => {
@@ -74,7 +74,7 @@ test.describe('Settings - Company Profile', () => {
   // Pre-authenticated session is used via storageState above - no manual login needed
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/company');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display company profile page', async ({ page }) => {
@@ -135,7 +135,7 @@ test.describe('Settings - User Management', () => {
   // Pre-authenticated session is used via storageState above - no manual login needed
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/users');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display user management page', async ({ page }) => {
@@ -223,7 +223,7 @@ test.describe('Settings - Approval Workflows', () => {
   // Pre-authenticated session is used via storageState above - no manual login needed
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/approval-workflows');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display approval workflows page', async ({ page }) => {
@@ -255,7 +255,7 @@ test.describe('Settings - Project Templates', () => {
   // Pre-authenticated session is used via storageState above - no manual login needed
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/project-templates');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display project templates page', async ({ page }) => {
@@ -291,7 +291,7 @@ test.describe('Settings - Distribution Lists', () => {
   // Pre-authenticated session is used via storageState above - no manual login needed
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/distribution-lists');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display distribution lists page', async ({ page }) => {
@@ -317,7 +317,7 @@ test.describe('Settings - Roles & Permissions', () => {
   // Pre-authenticated session is used via storageState above - no manual login needed
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/roles');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display roles & permissions page', async ({ page }) => {
@@ -342,7 +342,7 @@ test.describe('Settings - Notification Preferences', () => {
   // Pre-authenticated session is used via storageState above - no manual login needed
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/notifications');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display notification preferences page', async ({ page }) => {
@@ -401,7 +401,7 @@ test.describe('Settings - QuickBooks Integration', () => {
   // Pre-authenticated session is used via storageState above - no manual login needed
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/quickbooks');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display QuickBooks integration page', async ({ page }) => {
@@ -434,7 +434,7 @@ test.describe('Settings - Calendar Integrations', () => {
   // Pre-authenticated session is used via storageState above - no manual login needed
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/calendar');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display calendar integrations page', async ({ page }) => {
@@ -457,7 +457,7 @@ test.describe('Settings - AI Settings', () => {
   // Pre-authenticated session is used via storageState above - no manual login needed
   test.beforeEach(async ({ page }) => {
     await page.goto('/settings/ai');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display AI settings page', async ({ page }) => {

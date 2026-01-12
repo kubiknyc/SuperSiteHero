@@ -63,17 +63,17 @@ export class ActionItemsPage {
   // Navigation methods
   async goto() {
     await this.page.goto('/action-items')
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async gotoFromProject(projectId: string) {
     await this.page.goto(`/projects/${projectId}/action-items`)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async gotoFromMeeting(meetingId: string) {
     await this.page.goto(`/meetings/${meetingId}/action-items`)
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // Search and filter methods
@@ -147,7 +147,7 @@ export class ActionItemsPage {
   async clickActionItem(index: number = 0) {
     const item = this.getActionItemRow(index)
     await item.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // Action item actions (from dropdown menu)
@@ -259,7 +259,7 @@ export class ActionItemsPage {
   // Create action item
   async clickCreateButton() {
     await this.createButton.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async createActionItem(data: {
@@ -304,7 +304,7 @@ export class ActionItemsPage {
 
     // Submit
     await this.page.locator('button[type="submit"], button').filter({ hasText: /create|save/i }).first().click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // Edit action item
@@ -312,7 +312,7 @@ export class ActionItemsPage {
     const item = this.getActionItemRow(index)
     const editButton = item.locator('button, a').filter({ hasText: /edit/i }).first()
     await editButton.click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   async updateActionItem(data: Partial<{
@@ -345,7 +345,7 @@ export class ActionItemsPage {
 
     // Submit
     await this.page.locator('button[type="submit"], button').filter({ hasText: /save|update/i }).first().click()
-    await this.page.waitForLoadState('networkidle')
+    await this.page.waitForLoadState('domcontentloaded')
   }
 
   // View action item detail

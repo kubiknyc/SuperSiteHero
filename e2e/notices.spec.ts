@@ -53,22 +53,22 @@ async function login(page: Page) {
 // Helper function to navigate to notices
 async function navigateToNotices(page: Page) {
   await page.goto('/notices');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   if (!page.url().includes('notice')) {
     // Try through project
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await projectLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const noticeLink = page.locator('a:has-text("Notice"), a[href*="notice"]');
       if (await noticeLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
         await noticeLink.first().click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
       }
     }
   }
@@ -257,7 +257,7 @@ test.describe('Deadline Tracking', () => {
 
     if (await overdueFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await overdueFilter.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });
@@ -277,7 +277,7 @@ test.describe('Notice Detail', () => {
 
     if (await noticeItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await noticeItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       await expect(page).toHaveURL(/\/notice/, { timeout: 10000 });
     }
@@ -288,7 +288,7 @@ test.describe('Notice Detail', () => {
 
     if (await noticeItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await noticeItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show title
       const title = page.locator('h1, h2, [data-testid="notice-title"]');
@@ -307,7 +307,7 @@ test.describe('Notice Detail', () => {
 
     if (await noticeItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await noticeItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const responseButton = page.locator('button:has-text("Respond"), button:has-text("Add Response")');
 
@@ -335,7 +335,7 @@ test.describe('Filter Notices', () => {
       await statusFilter.first().selectOption('open').catch(() =>
         statusFilter.first().selectOption({ index: 1 })
       );
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -344,7 +344,7 @@ test.describe('Filter Notices', () => {
 
     if (await projectFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await projectFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -353,7 +353,7 @@ test.describe('Filter Notices', () => {
 
     if (await typeFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await typeFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -363,7 +363,7 @@ test.describe('Filter Notices', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('test notice');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });
@@ -399,7 +399,7 @@ test.describe('Edit Notice', () => {
 
     if (await noticeItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await noticeItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const editButton = page.locator('button:has-text("Edit"), [data-testid="edit-button"]');
 

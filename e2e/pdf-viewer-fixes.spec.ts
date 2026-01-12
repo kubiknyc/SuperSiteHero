@@ -53,7 +53,7 @@ async function navigateToDocuments(page: Page) {
   } else {
     await page.goto('/documents');
   }
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 async function selectProject(page: Page) {
@@ -65,7 +65,7 @@ async function selectProject(page: Page) {
       await projectSelector.click();
       await page.locator('[data-testid="project-option"]:first-child, [role="option"]:first-child').click();
     }
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   }
 }
 
@@ -146,7 +146,7 @@ test.describe('PDF.js Version Consistency', () => {
     const firstDoc = page.locator('[data-testid="document-item"]:first-child');
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(2000);
 
       // Check for version mismatch errors
@@ -173,7 +173,7 @@ test.describe('PDF.js Version Consistency', () => {
     const firstDoc = page.locator('[data-testid="document-item"]:first-child');
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Wait for PDF worker to load
       await page.waitForTimeout(3000);
@@ -203,7 +203,7 @@ test.describe('Storage Bucket Access', () => {
     const firstDoc = page.locator('[data-testid="document-item"]:first-child');
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(2000);
 
       // Check for 400 errors from storage bucket
@@ -229,7 +229,7 @@ test.describe('Storage Bucket Access', () => {
     const firstDoc = page.locator('[data-testid="document-item"]:first-child');
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Wait for PDF to start loading
       const pdfViewer = page.locator('[data-testid="pdf-viewer"], canvas, .react-pdf__Page');
@@ -259,7 +259,7 @@ test.describe('MIME Type Validation', () => {
     const firstDoc = page.locator('[data-testid="document-item"]:first-child');
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(2000);
 
       // Check for 406 errors
@@ -284,7 +284,7 @@ test.describe('MIME Type Validation', () => {
     const firstDoc = page.locator('[data-testid="document-item"]:first-child');
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // PDF should load successfully
       const pdfViewer = page.locator('[data-testid="pdf-viewer"], canvas, .react-pdf__Page');
@@ -360,7 +360,7 @@ test.describe('PDF Viewer Functionality', () => {
     const firstDoc = page.locator('[data-testid="document-item"]:first-child');
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Wait for PDF to load
       const pdfViewer = page.locator('[data-testid="pdf-viewer"], canvas, .react-pdf__Page');
@@ -401,7 +401,7 @@ test.describe('PDF Viewer Functionality', () => {
     const firstDoc = page.locator('[data-testid="document-item"]:first-child');
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Wait for PDF to load
       const pdfViewer = page.locator('[data-testid="pdf-viewer"], canvas, .react-pdf__Page');
@@ -439,7 +439,7 @@ test.describe('Comprehensive Error Check', () => {
     const firstDoc = page.locator('[data-testid="document-item"]:first-child');
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Wait for PDF to fully load
       const pdfViewer = page.locator('[data-testid="pdf-viewer"], canvas, .react-pdf__Page');
@@ -505,7 +505,7 @@ test.describe('Network Response Validation', () => {
     const firstDoc = page.locator('[data-testid="document-item"]:first-child');
     if (await firstDoc.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstDoc.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(3000);
 
       console.log(`\n📡 Network Requests:`);

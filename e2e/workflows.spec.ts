@@ -25,7 +25,7 @@ test.describe('Workflows Management', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to workflows page
     await page.goto('/workflows');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display workflows list page', async ({ page }) => {
@@ -72,7 +72,7 @@ test.describe('Workflows Management', () => {
 
     if (await firstWorkflow.isVisible()) {
       await firstWorkflow.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for step indicators
       const stepElements = page.locator('text=/step|stage|phase/i, [data-testid*="step"]');
@@ -105,7 +105,7 @@ test.describe('Workflows Management', () => {
 
     if (await firstWorkflow.isVisible()) {
       await firstWorkflow.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for complete/action button
       const actionButton = page.locator('button').filter({ hasText: /complete|approve|submit/i }).first();

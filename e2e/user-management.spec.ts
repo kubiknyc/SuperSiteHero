@@ -47,19 +47,19 @@ async function loginAsAdmin(page: Page) {
 
 async function navigateToUserManagement(page: Page) {
   await page.goto('/settings/users');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
   await waitForContentLoad(page);
 }
 
 async function navigateToAuditLogs(page: Page) {
   await page.goto('/settings/audit-logs');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
   await waitForContentLoad(page);
 }
 
 async function navigateToRolesPermissions(page: Page) {
   await page.goto('/settings/roles');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
   await waitForContentLoad(page);
 }
 
@@ -740,7 +740,7 @@ test.describe('User Management - Access Control', () => {
 
     // Try to access user management
     await page.goto('/settings/users');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Should either redirect or show access denied
     const accessDenied = page.locator('text=/access denied|unauthorized|permission|forbidden|admin only/i');
@@ -759,7 +759,7 @@ test.describe('User Management - Access Control', () => {
     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/settings/audit-logs');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const accessDenied = page.locator('text=/access denied|admin|owner|permission/i');
     const denied = await accessDenied.first().isVisible({ timeout: 5000 }).catch(() => false);

@@ -53,22 +53,22 @@ async function login(page: Page) {
 // Helper function to navigate to transmittals
 async function navigateToTransmittals(page: Page) {
   await page.goto('/transmittals');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   if (!page.url().includes('transmittal')) {
     // Try through project
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await projectLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const transmittalLink = page.locator('a:has-text("Transmittal"), a[href*="transmittal"]');
       if (await transmittalLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
         await transmittalLink.first().click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
       }
     }
   }
@@ -216,7 +216,7 @@ test.describe('Transmittal Detail', () => {
 
     if (await transmittalItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await transmittalItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       await expect(page).toHaveURL(/\/transmittal/, { timeout: 10000 });
     }
@@ -227,7 +227,7 @@ test.describe('Transmittal Detail', () => {
 
     if (await transmittalItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await transmittalItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show transmittal number
       const transmittalNumber = page.locator('text=/TR-|#\\d+/');
@@ -242,7 +242,7 @@ test.describe('Transmittal Detail', () => {
 
     if (await transmittalItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await transmittalItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const attachments = page.locator('[data-testid="attachments"], text=/attached|items|documents/i');
       const hasAttachments = await attachments.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -279,7 +279,7 @@ test.describe('Submit Transmittal', () => {
 
     if (await transmittalItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await transmittalItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const sendButton = page.locator('button:has-text("Send"), button:has-text("Submit")');
 
@@ -327,7 +327,7 @@ test.describe('Edit Transmittal', () => {
 
     if (await transmittalItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await transmittalItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const editButton = page.locator('button:has-text("Edit"), a:has-text("Edit"), [data-testid="edit-button"]');
 
@@ -369,7 +369,7 @@ test.describe('Filter Transmittals', () => {
       await statusFilter.first().selectOption('sent').catch(() =>
         statusFilter.first().selectOption({ index: 1 })
       );
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -378,7 +378,7 @@ test.describe('Filter Transmittals', () => {
 
     if (await projectFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await projectFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -388,7 +388,7 @@ test.describe('Filter Transmittals', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('TR-');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });

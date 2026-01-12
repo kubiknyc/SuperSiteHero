@@ -29,20 +29,21 @@
       "Bash(where gh:*)",
       "Bash(git checkout:*)",
       "Bash(npm test:*)",
-      "Bash(claude mcp:*)"
+      "Bash(claude mcp:*)",
+      "mcp__supabase__execute_sql"
     ],
     "deny": [],
     "ask": [],
     "defaultMode": "dontAsk"
   },
-  "statusLine": {
-    "type": "command",
-    "command": "python .claude/scripts/context-monitor.py"
-  },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "filesystem",
     "github",
     "supabase"
   ],
-  "enableAllProjectMcpServers": true
+  "statusLine": {
+    "type": "command",
+    "command": "python .claude/scripts/context-monitor.py"
+  }
 }

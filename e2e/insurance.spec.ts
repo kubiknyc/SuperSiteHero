@@ -59,7 +59,7 @@ function getDateInPast(days: number): string {
 async function login(page: Page) {
   // Navigate to login page
   await page.goto('/login');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   // Fill credentials
   await page.fill('input[name="email"], input[type="email"]', TEST_EMAIL);
@@ -79,20 +79,20 @@ async function login(page: Page) {
   });
 
   // Wait for page to be fully loaded
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 async function navigateToInsurance(page: Page) {
   // Try direct navigation first
   await page.goto('/insurance');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   // If redirected, try through navigation
   if (!page.url().includes('insurance')) {
     const insuranceLink = page.locator('a[href="/insurance"], a[href*="insurance"]').first();
     if (await insuranceLink.isVisible({ timeout: 3000 }).catch(() => false)) {
       await insuranceLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   }
 }
@@ -103,18 +103,18 @@ async function navigateToProjectInsurance(page: Page, projectId?: string) {
   } else {
     // Navigate to projects and select first one
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const firstProject = page.locator('a[href*="/projects/"]').first();
     if (await firstProject.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstProject.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Click insurance tab/link
       const insuranceTab = page.locator('a[href*="insurance"], button:has-text("Insurance")').first();
       if (await insuranceTab.isVisible({ timeout: 3000 }).catch(() => false)) {
         await insuranceTab.click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
       }
     }
   }
@@ -124,7 +124,7 @@ async function selectProject(page: Page) {
   const projectSelector = page.locator('select[name="project"], [data-testid="project-selector"]');
   if (await projectSelector.isVisible({ timeout: 3000 }).catch(() => false)) {
     await projectSelector.selectOption({ index: 1 });
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   }
 }
 
@@ -348,7 +348,7 @@ test.describe('Certificate Details', () => {
 
     if (await firstCertificate.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstCertificate.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show certificate details
       const detailContent = page.locator('[data-testid="certificate-detail"], h1, h2');
@@ -361,7 +361,7 @@ test.describe('Certificate Details', () => {
 
     if (await firstCertificate.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstCertificate.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Check for key metadata fields
       const hasContractor = await page.locator('text=/contractor|company/i').first().isVisible({ timeout: 3000 }).catch(() => false);
@@ -377,7 +377,7 @@ test.describe('Certificate Details', () => {
 
     if (await firstCertificate.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstCertificate.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for document preview or download link
       const preview = page.locator('[data-testid="document-preview"], iframe, embed, object').first();
@@ -395,7 +395,7 @@ test.describe('Certificate Details', () => {
 
     if (await firstCertificate.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstCertificate.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Check for coverage information
       const coverageSection = page.locator('text=/coverage|limit|amount/i').first();
@@ -410,7 +410,7 @@ test.describe('Certificate Details', () => {
 
     if (await firstCertificate.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstCertificate.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Status badge should be visible
       const statusBadge = page.locator('[data-testid="status-badge"], .badge, .status').filter({ hasText: /valid|expiring|expired/i });
@@ -425,7 +425,7 @@ test.describe('Certificate Details', () => {
 
     if (await firstCertificate.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstCertificate.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for edit button
       const editButton = page.locator('button:has-text("Edit"), a:has-text("Edit"), [data-testid="edit-certificate"]');
@@ -491,7 +491,7 @@ test.describe('Expiration Alerts', () => {
 
     if (await firstCertificate.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstCertificate.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for reminder/alert settings
       const reminderButton = page.locator('button:has-text("Set Reminder"), button:has-text("Alert"), [data-testid="set-reminder"]');

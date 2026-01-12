@@ -24,7 +24,7 @@ test.describe('Change Orders Management', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to change orders page
     await page.goto('/change-orders');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display change orders list page', async ({ page }) => {
@@ -85,7 +85,7 @@ test.describe('Change Orders Management', () => {
     }
 
     await createButton.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Wait for the form card to appear
     const formCard = page.locator('form, [class*="CardContent"]').first();
@@ -234,7 +234,7 @@ test.describe('Change Orders Management', () => {
     await targetCard.click();
 
     // Wait for navigation
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(1000);
 
     // Should navigate to detail page - URL should contain UUID pattern
@@ -260,7 +260,7 @@ test.describe('Change Orders Management', () => {
 
     await changeOrderCards.first().scrollIntoViewIfNeeded();
     await changeOrderCards.first().click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for cost information on detail page
     const costElements = page.locator('text=/\\$|cost|amount|total|proposed|approved/i');
@@ -284,7 +284,7 @@ test.describe('Change Orders Management', () => {
 
     await changeOrderCards.first().scrollIntoViewIfNeeded();
     await changeOrderCards.first().click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await page.waitForTimeout(1000);
 
     // Look for edit button on detail page
@@ -319,7 +319,7 @@ test.describe('Change Orders Management', () => {
 
     await changeOrderCards.first().scrollIntoViewIfNeeded();
     await changeOrderCards.first().click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for approval/status indicators on detail page
     const approvalElements = page.locator('text=/approv|pending|reject|draft|status/i');

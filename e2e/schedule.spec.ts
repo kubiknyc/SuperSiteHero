@@ -42,19 +42,19 @@ async function login(page: Page) {
 async function navigateToSchedule(page: Page) {
   // First navigate to projects to find a project
   await page.goto('/projects');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   // Click on the first project to get to project detail
   const projectLink = page.locator('a[href*="/projects/"]').first();
   if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
     await projectLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for schedule/gantt link in project navigation
     const scheduleLink = page.locator('a:has-text("Schedule"), a:has-text("Gantt"), a[href*="schedule"], a[href*="gantt"]');
     if (await scheduleLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
       await scheduleLink.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       return;
     }
 
@@ -63,14 +63,14 @@ async function navigateToSchedule(page: Page) {
     const projectMatch = currentUrl.match(/\/projects\/([^/]+)/);
     if (projectMatch) {
       await page.goto(`/projects/${projectMatch[1]}/schedule`);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       return;
     }
   }
 
   // Fallback: try direct routes (may 404 without project context)
   await page.goto('/schedule').catch(() => null);
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 test.describe('Schedule and Gantt Chart', () => {
@@ -638,7 +638,7 @@ test.describe('Schedule and Gantt Chart', () => {
     const loadingVisible = await loadingIndicator.isVisible({ timeout: 1000 }).catch(() => false);
 
     await navigationPromise;
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Loading state might be very brief
     expect(typeof loadingVisible).toBe('boolean');

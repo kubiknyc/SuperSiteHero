@@ -63,22 +63,22 @@ async function login(page: Page) {
 // Helper function to navigate to procurement
 async function navigateToProcurement(page: Page) {
   await page.goto('/procurement');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   if (!page.url().includes('procurement')) {
     // Try through project
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await projectLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const procurementLink = page.locator('a:has-text("Procurement"), a[href*="procurement"]');
       if (await procurementLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
         await procurementLink.first().click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
       }
     }
   }
@@ -246,7 +246,7 @@ test.describe('Vendor Management', () => {
 
     if (await vendorsTab.first().isVisible({ timeout: 5000 }).catch(() => false)) {
       await vendorsTab.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const vendorsList = page.locator('[data-testid="vendor-item"], .vendor-card');
       const emptyState = page.locator('text=/no vendors|empty/i');
@@ -427,7 +427,7 @@ test.describe('Filter Purchase Orders', () => {
       await statusFilter.first().selectOption('approved').catch(() =>
         statusFilter.first().selectOption({ index: 1 })
       );
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -436,7 +436,7 @@ test.describe('Filter Purchase Orders', () => {
 
     if (await projectFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await projectFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -445,7 +445,7 @@ test.describe('Filter Purchase Orders', () => {
 
     if (await vendorFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await vendorFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -455,7 +455,7 @@ test.describe('Filter Purchase Orders', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('PO-');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -464,7 +464,7 @@ test.describe('Filter Purchase Orders', () => {
 
     if (await clearButton.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await clearButton.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });
@@ -484,7 +484,7 @@ test.describe('Purchase Order Detail', () => {
 
     if (await poItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await poItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show PO details
       const poNumber = page.locator('text=/PO-|#\\d+/');
@@ -499,7 +499,7 @@ test.describe('Purchase Order Detail', () => {
 
     if (await poItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await poItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const lineItems = page.locator('[data-testid="line-item"], .po-line, tr[data-line-id]');
       const hasLineItems = await lineItems.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -513,7 +513,7 @@ test.describe('Purchase Order Detail', () => {
 
     if (await poItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await poItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const editButton = page.locator('button:has-text("Edit"), [data-testid="edit-button"]');
 

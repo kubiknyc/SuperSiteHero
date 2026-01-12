@@ -62,12 +62,12 @@ async function navigateToInspections(page: Page) {
   } else {
     // Navigate through project if direct link not available
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await projectLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const inspectionsLink = page.locator('a:has-text("Inspections"), a[href*="inspections"]');
       if (await inspectionsLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
@@ -79,7 +79,7 @@ async function navigateToInspections(page: Page) {
       await page.goto('/inspections');
     }
   }
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 }
 
 // ============================================================================
@@ -308,7 +308,7 @@ test.describe('Inspection Detail Page', () => {
 
     if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show inspection details
       await expect(page.locator('h1, h2').first()).toBeVisible({ timeout: 5000 });
@@ -332,7 +332,7 @@ test.describe('Inspection Detail Page', () => {
 
     if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for add finding button
       const addFindingButton = page.locator('button:has-text("Add Finding"), button:has-text("Add Item"), button:has-text("Add Checklist Item")');
@@ -373,7 +373,7 @@ test.describe('Inspection Detail Page', () => {
 
     if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for photo upload button
       const addPhotoButton = page.locator('button:has-text("Add Photo"), button:has-text("Upload Photo"), button:has-text("Attach Photo"), input[type="file"]');
@@ -396,7 +396,7 @@ test.describe('Inspection Detail Page', () => {
 
     if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for edit button
       const editButton = page.locator('button:has-text("Edit"), button[aria-label*="edit" i], [data-testid="edit-button"]');
@@ -430,7 +430,7 @@ test.describe('Inspection Detail Page', () => {
 
     if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for signature section or button
       const signatureButton = page.locator('button:has-text("Sign"), button:has-text("Add Signature"), [data-testid="signature-button"]');
@@ -458,7 +458,7 @@ test.describe('Inspection Detail Page', () => {
 
     if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for complete button
       const completeButton = page.locator('button:has-text("Complete"), button:has-text("Mark Complete"), button:has-text("Finish")');
@@ -481,7 +481,7 @@ test.describe('Inspection Detail Page', () => {
 
     if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for download or export button
       const downloadButton = page.locator('button:has-text("Download"), button:has-text("Export"), button:has-text("PDF"), a:has-text("Download")');
@@ -511,7 +511,7 @@ test.describe('Inspection Photos', () => {
 
     if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for photo upload button or file input
       const uploadButton = page.locator(
@@ -536,7 +536,7 @@ test.describe('Inspection Photos', () => {
 
     if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const uploadButton = page.locator('button:has-text("Add Photo"), button:has-text("Upload")').first();
 
@@ -560,7 +560,7 @@ test.describe('Inspection Photos', () => {
 
     if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const uploadButton = page.locator('button:has-text("Add Photo"), button:has-text("Upload")').first();
 
@@ -596,7 +596,7 @@ test.describe('Inspection Photos', () => {
 
     if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for photos section
       const photosSection = page.locator(
@@ -631,7 +631,7 @@ test.describe('Inspection Photos', () => {
 
     if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const uploadButton = page.locator('button:has-text("Add Photo"), button:has-text("Upload")').first();
 
@@ -664,7 +664,7 @@ test.describe('Inspection Photos', () => {
 
     if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const uploadButton = page.locator('button:has-text("Add Photo"), button:has-text("Upload")').first();
 
@@ -695,7 +695,7 @@ test.describe('Inspection Photos', () => {
 
     if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for existing photo
       const photoCard = page.locator('[data-testid*="photo-"], img[alt*="inspection"]').first();
@@ -729,7 +729,7 @@ test.describe('Inspection Photos', () => {
 
     if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for existing photo
       const photoCard = page.locator('[data-testid*="photo-"], img[alt*="inspection"]').first();
@@ -758,7 +758,7 @@ test.describe('Inspection Photos', () => {
 
     if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for existing photo
       const photoCard = page.locator('[data-testid*="photo-"]').first();
@@ -784,7 +784,7 @@ test.describe('Inspection Photos', () => {
 
     if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Look for reorder controls (drag handles, up/down buttons)
       const reorderControls = page.locator(
@@ -822,7 +822,7 @@ test.describe('Search and Filtering', () => {
       await page.waitForTimeout(500); // Debounce
 
       // Results should update
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Either show filtered results or "no results"
       const hasResults = await page.locator('[data-testid="inspection-item"]').first().isVisible({ timeout: 3000 }).catch(() => false);
@@ -843,7 +843,7 @@ test.describe('Search and Filtering', () => {
       await statusFilter.first().selectOption('completed').catch(() =>
         statusFilter.first().selectOption({ index: 1 })
       );
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Verify filter applied
       await page.waitForTimeout(500);
@@ -868,7 +868,7 @@ test.describe('Search and Filtering', () => {
       await typeFilter.first().selectOption('safety').catch(() =>
         typeFilter.first().selectOption({ index: 1 })
       );
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Verify filter applied
       await page.waitForTimeout(500);
@@ -898,7 +898,7 @@ test.describe('Search and Filtering', () => {
         await endDateInput.first().fill(endDate.toISOString().split('T')[0]);
       }
 
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -915,7 +915,7 @@ test.describe('Search and Filtering', () => {
     // Clear filters
     if (await clearButton.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await clearButton.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Search input should be cleared
       if (await searchInput.first().isVisible()) {
@@ -942,7 +942,7 @@ test.describe('Search and Filtering', () => {
       await searchInput.first().fill('test');
     }
 
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Page should update with filtered results or show no results
     await page.waitForTimeout(1000);
@@ -1004,7 +1004,7 @@ test.describe('Mobile Responsiveness', () => {
 
     if (await firstInspection.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstInspection.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Detail page should be visible
       await expect(page.locator('h1, h2').first()).toBeVisible({ timeout: 5000 });
@@ -1136,7 +1136,7 @@ test.describe('Performance', () => {
     await navigateToInspections(page);
 
     // Wait for content to load
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const loadTime = Date.now() - startTime;
 

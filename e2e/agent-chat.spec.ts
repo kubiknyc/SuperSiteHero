@@ -423,7 +423,7 @@ test.describe('Agent Chat - State Persistence', () => {
 
     // Navigate to another page
     await page.goto('/projects')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Chat state may or may not persist
   })

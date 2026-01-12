@@ -55,17 +55,17 @@ async function login(page: Page) {
 // Helper function to navigate to JSA
 async function navigateToJSA(page: Page) {
   await page.goto('/projects');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   const projectLink = page.locator('a[href*="/projects/"]').first();
   if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
     await projectLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const jsaLink = page.locator('a:has-text("JSA"), a:has-text("Job Safety"), a[href*="jsa"]');
     if (await jsaLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
       await jsaLink.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   }
 }
@@ -238,7 +238,7 @@ test.describe('JSA Detail', () => {
 
     if (await jsaItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await jsaItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       await expect(page).toHaveURL(/\/jsa/, { timeout: 10000 });
     }
@@ -249,7 +249,7 @@ test.describe('JSA Detail', () => {
 
     if (await jsaItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await jsaItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show task description
       const taskDescription = page.locator('[data-testid="task-description"], text=/task/i');
@@ -268,7 +268,7 @@ test.describe('JSA Detail', () => {
 
     if (await jsaItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await jsaItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const hazardControl = page.locator('[data-testid="hazard-control"], text=/control|mitigation/i');
       const hasHazardControl = await hazardControl.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -282,7 +282,7 @@ test.describe('JSA Detail', () => {
 
     if (await jsaItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await jsaItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const location = page.locator('[data-testid="work-location"], text=/location/i');
       const hasLocation = await location.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -318,7 +318,7 @@ test.describe('JSA Scheduling', () => {
 
     if (await jsaItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await jsaItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const rescheduleButton = page.locator('button:has-text("Reschedule"), button:has-text("Change Date")');
 
@@ -344,7 +344,7 @@ test.describe('Filter JSAs', () => {
 
     if (await statusFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await statusFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -354,7 +354,7 @@ test.describe('Filter JSAs', () => {
     if (await dateFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       const today = new Date().toISOString().split('T')[0];
       await dateFilter.first().fill(today);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -364,7 +364,7 @@ test.describe('Filter JSAs', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('concrete');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });
@@ -400,7 +400,7 @@ test.describe('Edit JSA', () => {
 
     if (await jsaItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await jsaItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const editButton = page.locator('button:has-text("Edit"), [data-testid="edit-button"]');
 

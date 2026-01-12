@@ -42,7 +42,7 @@ test.describe('Heading Contrast - Dark Mode', () => {
     test(`${pageDef.name} - headings meet WCAG AA contrast`, async ({ page }) => {
       await page.goto(pageDef.url);
       await enableDarkMode(page);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const violations = await checkHeadingContrast(page);
 
@@ -64,7 +64,7 @@ test.describe('Body Text Contrast - Dark Mode', () => {
     test(`${pageDef.name} - body text meets WCAG AA contrast`, async ({ page }) => {
       await page.goto(pageDef.url);
       await enableDarkMode(page);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const violations = await checkBodyTextContrast(page);
 
@@ -86,7 +86,7 @@ test.describe('Form Label Contrast - Dark Mode', () => {
   test('Login form labels', async ({ page }) => {
     await page.goto('/login');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const violations = await checkLabelContrast(page);
 
@@ -101,7 +101,7 @@ test.describe('Form Label Contrast - Dark Mode', () => {
   test('Daily Report form labels', async ({ page }) => {
     await page.goto('/daily-reports/new');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const violations = await checkLabelContrast(page);
 
@@ -122,7 +122,7 @@ test.describe('Interactive Elements Contrast - Dark Mode', () => {
     test(`${pageDef.name} - buttons and links meet contrast`, async ({ page }) => {
       await page.goto(pageDef.url);
       await enableDarkMode(page);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const violations = await checkInteractiveContrast(page);
 
@@ -144,7 +144,7 @@ test.describe('Navigation Contrast - Dark Mode', () => {
   test('main navigation items', async ({ page }) => {
     await page.goto('/');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Check navigation items specifically
     const navViolations = await checkPageContrast(page, [
@@ -166,7 +166,7 @@ test.describe('Navigation Contrast - Dark Mode', () => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto('/');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Try to open mobile menu
     const menuButton = page.locator('[aria-label*="menu" i]').first();
@@ -178,7 +178,7 @@ test.describe('Navigation Contrast - Dark Mode', () => {
         await page.waitForTimeout(200);
         await menuButton.click();
       }
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(300);
 
       const navViolations = await checkPageContrast(page, [
@@ -199,7 +199,7 @@ test.describe('Status Indicators - Dark Mode', () => {
   test('status badges on Projects page', async ({ page }) => {
     await page.goto('/projects');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const badgeViolations = await checkPageContrast(page, [
       '[class*="badge"]',
@@ -218,7 +218,7 @@ test.describe('Status Indicators - Dark Mode', () => {
   test('priority indicators on Tasks page', async ({ page }) => {
     await page.goto('/tasks');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const priorityViolations = await checkPageContrast(page, [
       '[class*="priority"]',
@@ -236,7 +236,7 @@ test.describe('Status Indicators - Dark Mode', () => {
   test('approval status on Change Orders', async ({ page }) => {
     await page.goto('/change-orders');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const approvalViolations = await checkPageContrast(page, [
       '[class*="approval"]',
@@ -259,7 +259,7 @@ test.describe('UI Components - Dark Mode', () => {
   test('card components', async ({ page }) => {
     await page.goto('/');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const cardViolations = await checkPageContrast(page, [
       '[class*="card"] h1',
@@ -280,7 +280,7 @@ test.describe('UI Components - Dark Mode', () => {
   test('table components', async ({ page }) => {
     await page.goto('/daily-reports');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const tableViolations = await checkPageContrast(page, [
       'table th',
@@ -300,7 +300,7 @@ test.describe('UI Components - Dark Mode', () => {
   test('modal dialogs', async ({ page }) => {
     await page.goto('/daily-reports/new');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const modalViolations = await checkPageContrast(page, [
       '[role="dialog"] h1',
@@ -320,7 +320,7 @@ test.describe('UI Components - Dark Mode', () => {
   test('dropdown menus', async ({ page }) => {
     await page.goto('/');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Find and open a dropdown
     const dropdown = page.locator('[role="combobox"]').first();
@@ -346,7 +346,7 @@ test.describe('Error and Alert Messages - Dark Mode', () => {
   test('error messages visibility', async ({ page }) => {
     await page.goto('/login');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Try to submit empty form to trigger errors
     const submitButton = page.getByRole('button', { name: 'Sign in', exact: true });
@@ -367,7 +367,7 @@ test.describe('Error and Alert Messages - Dark Mode', () => {
   test('toast notifications', async ({ page }) => {
     await page.goto('/');
     await enableDarkMode(page);
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Check for toast notifications if present
     const toastViolations = await checkPageContrast(page, [

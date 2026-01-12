@@ -40,7 +40,7 @@ test.describe('PolishedVariant1Professional - Cross-Browser Responsive', () => {
 
         // Navigate to component
         await page.goto(url);
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(500);
 
         // Verify main heading exists
@@ -63,7 +63,7 @@ test.describe('PolishedVariant1Professional - Cross-Browser Responsive', () => {
       test(`${bp.name} - interactive elements work in all browsers`, async ({ page, browserName }) => {
         await page.setViewportSize({ width: bp.width, height: bp.height });
         await page.goto(url);
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         // Test back button navigation
         const backButton = page.getByLabel('Back to Blueprint Variants');
@@ -88,7 +88,7 @@ test.describe('PolishedVariant1Professional - Cross-Browser Responsive', () => {
       test(`${bp.name} - keyboard navigation works in all browsers`, async ({ page, browserName }) => {
         await page.setViewportSize({ width: bp.width, height: bp.height });
         await page.goto(url);
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         // Tab to first focusable element
         await page.keyboard.press('Tab');
@@ -114,7 +114,7 @@ test.describe('PolishedVariant1Professional - Cross-Browser Responsive', () => {
     test('desktop - dark mode works in all browsers', async ({ page, browserName }) => {
       await page.setViewportSize({ width: 1024, height: 768 });
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Enable dark mode
       await page.evaluate(() => {
@@ -145,7 +145,7 @@ test.describe('PolishedVariant1Professional - Cross-Browser Responsive', () => {
         // Set mobile viewport
         await page.setViewportSize({ width: bp.width, height: bp.height });
         await page.goto(url);
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(500);
 
         // Verify main heading
@@ -162,7 +162,7 @@ test.describe('PolishedVariant1Professional - Cross-Browser Responsive', () => {
       test(`${bp.name} - touch interactions work on mobile`, async ({ page }) => {
         await page.setViewportSize({ width: bp.width, height: bp.height });
         await page.goto(url);
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         // Test tap on stat card
         const statCard = page.getByRole('button').first();
@@ -181,7 +181,7 @@ test.describe('PolishedVariant1Professional - Cross-Browser Responsive', () => {
       test(`${bp.name} - touch targets meet 44px minimum`, async ({ page }) => {
         await page.setViewportSize({ width: bp.width, height: bp.height });
         await page.goto(url);
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
 
         // Get all interactive elements
         const interactiveElements = page.locator('button, a, input, select, textarea');
@@ -211,7 +211,7 @@ test.describe('PolishedVariant1Professional - Cross-Browser Responsive', () => {
     test('mobile - scroll behavior works correctly', async ({ page }) => {
       await page.setViewportSize({ width: 375, height: 667 });
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Get initial scroll position
       const initialScroll = await page.evaluate(() => window.scrollY);
@@ -250,7 +250,7 @@ test.describe('PolishedVariant1Professional - Cross-Browser Responsive', () => {
       test.skip(browserName !== 'webkit', 'WebKit-specific test');
 
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Verify rendering works in Safari
       await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
@@ -266,7 +266,7 @@ test.describe('PolishedVariant1Professional - Cross-Browser Responsive', () => {
       test.skip(browserName !== 'firefox', 'Firefox-specific test');
 
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Verify rendering works in Firefox
       await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
@@ -278,7 +278,7 @@ test.describe('PolishedVariant1Professional - Cross-Browser Responsive', () => {
       test.skip(browserName !== 'chromium', 'Chromium-specific test');
 
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Verify rendering works in Chrome
       await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
@@ -292,7 +292,7 @@ test.describe('PolishedVariant1Professional - Cross-Browser Responsive', () => {
       // Test mobile (single column)
       await page.setViewportSize({ width: 375, height: 667 });
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const statsGrid = page.locator('.grid').first();
       let gridClasses = await statsGrid.getAttribute('class');
@@ -319,7 +319,7 @@ test.describe('PolishedVariant1Professional - Cross-Browser Responsive', () => {
       // Portrait
       await page.setViewportSize({ width: 375, height: 667 });
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
 
@@ -338,7 +338,7 @@ test.describe('PolishedVariant1Professional - Cross-Browser Responsive', () => {
       const startTime = Date.now();
 
       await page.goto(url);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const loadTime = Date.now() - startTime;
 
@@ -352,7 +352,7 @@ test.describe('PolishedVariant1Professional - Cross-Browser Responsive', () => {
       await page.goto(url);
 
       // Wait for initial render
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
       await page.waitForTimeout(1000);
 
       // Take initial position of a stable element

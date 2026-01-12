@@ -46,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // If offline, wait briefly for connectivity before attempting
     if (!isOnline()) {
       logger.log('[Auth] Offline detected, waiting for connectivity...')
-      const online = await waitForOnline(5000) // Wait up to 5 seconds
+      const online = await waitForOnline(3000) // Wait up to 3 seconds
       if (!online) {
         logger.warn('[Auth] Still offline, cannot fetch user profile')
         setUserProfile(null)
@@ -74,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         return data
       },
-      { maxRetries: 3, baseDelayMs: 1000 },
+      { maxRetries: 2, baseDelayMs: 500 },
       'fetch user profile'
     )
 
@@ -225,7 +225,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         return data
       },
-      { maxRetries: 2, baseDelayMs: 1000 },
+      { maxRetries: 1, baseDelayMs: 500 },
       'sign in'
     )
 

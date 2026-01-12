@@ -68,7 +68,7 @@ const testEquipmentCost = {
 async function login(page: Page) {
   // Navigate to login page
   await page.goto('/login')
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('domcontentloaded')
 
   // Fill credentials
   await page.fill('input[name="email"]', TEST_EMAIL)
@@ -86,7 +86,7 @@ async function login(page: Page) {
   })
 
   // Wait for page to be fully loaded
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('domcontentloaded')
 }
 
 // ============================================================================
@@ -120,19 +120,19 @@ test.describe('Cost Estimates - Setup & Navigation', () => {
   test('should access cost estimates from project view', async ({ page }) => {
     // Navigate to projects first
     await page.goto('/projects')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Click first project if available
     const firstProject = page.locator('[data-testid*="project-"], .project-card, a[href*="/projects/"]').first()
     if (await firstProject.isVisible({ timeout: 5000 }).catch(() => false)) {
       await firstProject.click()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Look for cost estimates link/tab
       const costEstimatesLink = page.locator('a, button, [role="tab"]').filter({ hasText: /cost.*estimate/i }).first()
       if (await costEstimatesLink.isVisible({ timeout: 3000 }).catch(() => false)) {
         await costEstimatesLink.click()
-        await page.waitForLoadState('networkidle')
+        await page.waitForLoadState('domcontentloaded')
         await expect(page.locator('h1, h2').filter({ hasText: /cost.*estimate/i })).toBeVisible()
       } else {
         test.skip()
@@ -387,7 +387,7 @@ test.describe('Cost Estimates - Create New', () => {
       const cancelButton = page.locator('button').filter({ hasText: /cancel/i }).first()
       if (await cancelButton.isVisible({ timeout: 3000 }).catch(() => false)) {
         await cancelButton.click()
-        await page.waitForLoadState('networkidle')
+        await page.waitForLoadState('domcontentloaded')
 
         // Should return to list
         await expect(costEstimatesPage.pageHeading).toBeVisible()

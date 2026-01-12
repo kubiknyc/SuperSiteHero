@@ -31,7 +31,7 @@ test.describe('Subcontractor Portal - Dashboard', () => {
     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/portal');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display subcontractor dashboard', async ({ page }) => {
@@ -84,7 +84,7 @@ test.describe('Subcontractor Portal - Projects', () => {
     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/portal/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display projects list', async ({ page }) => {
@@ -143,7 +143,7 @@ test.describe('Subcontractor Portal - Bids', () => {
     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/portal/bids');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display bids list', async ({ page }) => {
@@ -263,7 +263,7 @@ test.describe('Subcontractor Portal - Punch Items', () => {
     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/portal/punch-items');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display punch items assigned to subcontractor', async ({ page }) => {
@@ -350,7 +350,7 @@ test.describe('Subcontractor Portal - Tasks', () => {
     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/portal/tasks');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display tasks assigned to subcontractor', async ({ page }) => {
@@ -415,7 +415,7 @@ test.describe('Subcontractor Portal - Compliance', () => {
     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/portal/compliance');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display compliance page', async ({ page }) => {
@@ -470,7 +470,7 @@ test.describe('Subcontractor Portal - Daily Reports', () => {
     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
     await page.goto('/portal/daily-reports');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
   });
 
   test('should display daily reports list', async ({ page }) => {

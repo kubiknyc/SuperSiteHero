@@ -33,13 +33,13 @@ async function login(page: Page) {
 // Helper to navigate to closeout page
 async function navigateToCloseout(page: Page) {
   await page.goto('/projects')
-  await page.waitForLoadState('networkidle')
+  await page.waitForLoadState('domcontentloaded')
 
   // Click first project
   const projectLink = page.locator('a[href*="/projects/"]').first()
   if (await projectLink.isVisible({ timeout: 5000 })) {
     await projectLink.click()
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Navigate to closeout from project detail
     // Try multiple ways to get to closeout
@@ -50,11 +50,11 @@ async function navigateToCloseout(page: Page) {
       // Direct navigation as fallback
       await page.goto('/closeout')
     }
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
   } else {
     // No projects, navigate directly
     await page.goto('/closeout')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
   }
 }
 
@@ -66,7 +66,7 @@ test.describe('Project Closeout', () => {
 
   test('should navigate to closeout page', async ({ page }) => {
     await page.goto('/closeout')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Should show closeout page
     await expect(page).toHaveURL(/closeout/)
@@ -248,7 +248,7 @@ test.describe('Project Closeout', () => {
 
   test('should handle project selection', async ({ page }) => {
     await page.goto('/closeout')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Look for project selector
     const projectSelector = page.locator(

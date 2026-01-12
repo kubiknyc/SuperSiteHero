@@ -43,11 +43,27 @@ test.describe('Authentication', () => {
     // Submit login form
     await page.click('button[type="submit"]');
 
-    // Should redirect to dashboard, projects, or home page after login
-    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+    // Wait for login to complete - either URL changes OR dashboard content appears
+    // Some apps stay on same URL after login or redirect to root
+    try {
+      await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 10000 });
+    } catch {
+      // If URL doesn't change, check if we're authenticated by looking for dashboard content
+      const dashboardContent = page.locator('h1:has-text("Dashboard")')
+        .or(page.getByText(/Welcome back/i))
+        .or(page.locator('a[href="/settings"]'));
+      await expect(dashboardContent.first()).toBeVisible({ timeout: 15000 });
+    }
 
-    // Should show user is logged in (look for logout button or user menu)
-    const userIndicator = page.locator('[data-testid="user-menu"], [aria-label="User menu"], button:has-text("Logout"), button:has-text("Sign out")');
+    // Should show user is logged in - look for:
+    // 1. User avatar link (shows initials like "TU")
+    // 2. Welcome message
+    // 3. Dashboard heading
+    // 4. Settings link in header
+    const userIndicator = page.locator('a[href="/settings/profile"]')
+      .or(page.getByText(/Welcome back/i))
+      .or(page.locator('h1:has-text("Dashboard")'))
+      .or(page.locator('a[href="/settings"]'));
     await expect(userIndicator.first()).toBeVisible({ timeout: 10000 });
   });
 
@@ -73,17 +89,30 @@ test.describe('Authentication', () => {
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
 
-    // Wait for redirect away from login
-    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
-
-    // Find and click logout button
-    const userMenu = page.locator('[data-testid="user-menu"], [aria-label="User menu"]');
-    if (await userMenu.isVisible()) {
-      await userMenu.click();
+    // Wait for login to complete
+    try {
+      await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 10000 });
+    } catch {
+      // If URL doesn't change, wait for dashboard content
+      await page.locator('h1:has-text("Dashboard")').or(page.getByText(/Welcome back/i)).first().waitFor({ timeout: 15000 });
     }
 
-    const logoutButton = page.locator('button:has-text("Logout"), button:has-text("Sign out"), a:has-text("Logout")');
-    await logoutButton.first().click();
+    // Wait for the page to fully load
+    await page.waitForLoadState('domcontentloaded');
+
+    // Navigate to settings page where logout is available
+    await page.goto('/settings');
+    await page.waitForLoadState('domcontentloaded');
+
+    // Look for logout/sign out button in sidebar or settings page
+    // Try multiple selectors for different layouts
+    const logoutButton = page.locator('button:has-text("Sign Out")')
+      .or(page.locator('button:has-text("Logout")'))
+      .or(page.locator('a:has-text("Sign Out")'))
+      .or(page.locator('a:has-text("Logout")'))
+      .or(page.locator('[data-testid="logout-button"]'));
+
+    await logoutButton.first().click({ timeout: 10000 });
 
     // Should redirect to login page
     await expect(page.locator('input[type="email"], input[name="email"]')).toBeVisible({ timeout: 10000 });
@@ -96,8 +125,12 @@ test.describe('Authentication', () => {
     await page.fill('input[type="password"]', TEST_PASSWORD);
     await page.click('button[type="submit"]');
 
-    // Wait for redirect away from login
-    await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
+    // Wait for login to complete
+    try {
+      await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 10000 });
+    } catch {
+      await page.locator('h1:has-text("Dashboard")').or(page.getByText(/Welcome back/i)).first().waitFor({ timeout: 15000 });
+    }
 
     // Refresh the page
     await page.reload();

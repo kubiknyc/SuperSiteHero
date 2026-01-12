@@ -23,7 +23,7 @@ test.describe('RFIs', () => {
 
   test('should navigate to RFIs from project', async ({ page }) => {
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     const projectVisible = await projectLink.isVisible({ timeout: 5000 }).catch(() => false);
@@ -32,7 +32,7 @@ test.describe('RFIs', () => {
       return;
     }
     await projectLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const rfisLink = page.locator('a:has-text("RFIs"), a[href*="rfis"]');
     const rfisVisible = await rfisLink.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -47,7 +47,7 @@ test.describe('RFIs', () => {
 
   test('should display RFIs list with content', async ({ page }) => {
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     const projectVisible = await projectLink.isVisible({ timeout: 5000 }).catch(() => false);
@@ -56,7 +56,7 @@ test.describe('RFIs', () => {
       return;
     }
     await projectLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const rfisLink = page.locator('a:has-text("RFIs"), a[href*="rfis"]');
     const rfisVisible = await rfisLink.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -65,7 +65,7 @@ test.describe('RFIs', () => {
       return;
     }
     await rfisLink.first().click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Should show main content
     const content = page.locator('main, h1, h2');
@@ -74,7 +74,7 @@ test.describe('RFIs', () => {
 
   test('should open create RFI form', async ({ page }) => {
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     const projectVisible = await projectLink.isVisible({ timeout: 5000 }).catch(() => false);
@@ -83,7 +83,7 @@ test.describe('RFIs', () => {
       return;
     }
     await projectLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const rfisLink = page.locator('a:has-text("RFIs"), a[href*="rfis"]');
     const rfisVisible = await rfisLink.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -92,7 +92,7 @@ test.describe('RFIs', () => {
       return;
     }
     await rfisLink.first().click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Look for create button
     const createButton = page.locator('button:has-text("New"), button:has-text("Create"), button:has-text("Add")');
@@ -122,7 +122,7 @@ test.describe('RFIs', () => {
 
   test('should view RFI details', async ({ page }) => {
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     const projectVisible = await projectLink.isVisible({ timeout: 5000 }).catch(() => false);
@@ -131,7 +131,7 @@ test.describe('RFIs', () => {
       return;
     }
     await projectLink.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const rfisLink = page.locator('a:has-text("RFIs"), a[href*="rfis"]');
     const rfisVisible = await rfisLink.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -140,7 +140,7 @@ test.describe('RFIs', () => {
       return;
     }
     await rfisLink.first().click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Click on first RFI
     const rfiLink = page.locator('a[href*="rfis/"]').first();

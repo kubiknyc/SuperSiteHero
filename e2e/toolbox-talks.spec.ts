@@ -55,22 +55,22 @@ async function login(page: Page) {
 // Helper function to navigate to toolbox talks
 async function navigateToToolboxTalks(page: Page) {
   await page.goto('/toolbox-talks');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   if (!page.url().includes('toolbox')) {
     // Try through project
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await projectLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const toolboxLink = page.locator('a:has-text("Toolbox"), a[href*="toolbox"]');
       if (await toolboxLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
         await toolboxLink.first().click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
       }
     }
   }
@@ -246,7 +246,7 @@ test.describe('Attendance Tracking', () => {
 
     if (await talkItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await talkItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const attendanceSection = page.locator('[data-testid="attendance"], text=/attendance|attendees/i');
       const hasAttendance = await attendanceSection.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -260,7 +260,7 @@ test.describe('Attendance Tracking', () => {
 
     if (await talkItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await talkItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const addAttendeeButton = page.locator('button:has-text("Add Attendee"), button:has-text("Add")');
 
@@ -343,7 +343,7 @@ test.describe('Toolbox Talk Detail', () => {
 
     if (await talkItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await talkItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       await expect(page).toHaveURL(/\/toolbox-talk/, { timeout: 10000 });
     }
@@ -354,7 +354,7 @@ test.describe('Toolbox Talk Detail', () => {
 
     if (await talkItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await talkItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show topic
       const topic = page.locator('h1, h2, [data-testid="talk-topic"]');
@@ -382,7 +382,7 @@ test.describe('Filter Toolbox Talks', () => {
       await statusFilter.first().selectOption('completed').catch(() =>
         statusFilter.first().selectOption({ index: 1 })
       );
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -391,7 +391,7 @@ test.describe('Filter Toolbox Talks', () => {
 
     if (await categoryFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await categoryFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -401,7 +401,7 @@ test.describe('Filter Toolbox Talks', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('fall protection');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });
@@ -437,7 +437,7 @@ test.describe('Edit Toolbox Talk', () => {
 
     if (await talkItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await talkItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const editButton = page.locator('button:has-text("Edit"), a:has-text("Edit"), [data-testid="edit-button"]');
 

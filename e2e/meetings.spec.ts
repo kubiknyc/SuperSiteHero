@@ -122,7 +122,7 @@ test.describe('Meetings - Setup & Navigation', () => {
   test('should access from project view', async ({ page }) => {
     // First get a project ID from the projects page
     await page.goto('/projects')
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     const firstProjectLink = page.locator('a[href*="/projects/"]').first()
     const href = await firstProjectLink.getAttribute('href')
@@ -197,7 +197,7 @@ test.describe('Meetings - CRUD Operations', () => {
     await meetingsPage.clickNewMeeting()
 
     // Wait for form to load
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Fill form
     const nameInput = page.locator('input[name="meeting_name"], input[name="name"]').first()
@@ -247,7 +247,7 @@ test.describe('Meetings - CRUD Operations', () => {
 
   test('should create meeting with minimal required fields', async ({ page }) => {
     await meetingsPage.clickNewMeeting()
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Fill only required fields
     const nameInput = page.locator('input[name="meeting_name"], input[name="name"]')
@@ -261,7 +261,7 @@ test.describe('Meetings - CRUD Operations', () => {
       .filter({ hasText: /create|save/i })
       .first()
     await submitButton.click()
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Should succeed or show what's missing
     const errorVisible = await page.locator('[role="alert"]')
@@ -277,7 +277,7 @@ test.describe('Meetings - CRUD Operations', () => {
 
   test('should validate required fields on creation', async ({ page }) => {
     await meetingsPage.clickNewMeeting()
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Try to submit without filling required fields
     const submitButton = page.locator('button[type="submit"]')
@@ -309,7 +309,7 @@ test.describe('Meetings - CRUD Operations', () => {
     if (meetingCount > 0) {
       // Click first meeting to go to detail page
       await meetingsPage.clickMeeting(0)
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Look for edit button
       const editButton = page.locator('button, a')
@@ -318,7 +318,7 @@ test.describe('Meetings - CRUD Operations', () => {
 
       if (await editButton.isVisible()) {
         await editButton.click()
-        await page.waitForLoadState('networkidle')
+        await page.waitForLoadState('domcontentloaded')
 
         // Make a small edit
         const nameInput = page.locator('input[name="meeting_name"], input[name="name"]')
@@ -341,7 +341,7 @@ test.describe('Meetings - CRUD Operations', () => {
 
     if (meetingCount > 0) {
       await meetingsPage.clickMeeting(0)
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Look for status selector/button
       const statusControl = page.locator('select[name="status"], button')
@@ -361,7 +361,7 @@ test.describe('Meetings - CRUD Operations', () => {
 
     if (meetingCount > 0) {
       await meetingsPage.clickMeeting(0)
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Look for cancel button
       const cancelButton = page.locator('button')
@@ -384,7 +384,7 @@ test.describe('Meetings - CRUD Operations', () => {
 
     if (meetingCount > 0) {
       await meetingsPage.clickMeeting(0)
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Look for delete button
       const deleteButton = page.locator('button')
@@ -407,7 +407,7 @@ test.describe('Meetings - CRUD Operations', () => {
 
     if (meetingCount > 0) {
       await meetingsPage.clickMeeting(0)
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Should show meeting details
       const detailsVisible = await page.locator('h1, h2, h3')
@@ -425,7 +425,7 @@ test.describe('Meetings - CRUD Operations', () => {
 
     if (meetingCount > 0) {
       await meetingsPage.clickMeeting(0)
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Look for tabs
       const tabs = page.locator('[role="tab"], button')
@@ -444,7 +444,7 @@ test.describe('Meetings - CRUD Operations', () => {
     const testMeeting = generateTestMeeting()
 
     await meetingsPage.clickNewMeeting()
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Create meeting
     const nameInput = page.locator('input[name="meeting_name"], input[name="name"]')
@@ -457,7 +457,7 @@ test.describe('Meetings - CRUD Operations', () => {
       .filter({ hasText: /create|save/i })
       .first()
     await submitButton.click()
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Navigate back to list
     await meetingsPage.goto()
@@ -494,7 +494,7 @@ test.describe('Meetings - Attendee Management', () => {
 
     if (meetingCount > 0) {
       await meetingsPage.clickMeeting(0)
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Look for attendees tab or section
       const attendeesTab = page.locator('[role="tab"], button')
@@ -523,7 +523,7 @@ test.describe('Meetings - Attendee Management', () => {
 
     if (meetingCount > 0) {
       await meetingsPage.clickMeeting(0)
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const attendeesTab = page.locator('[role="tab"], button')
         .filter({ hasText: /attendees/i })
@@ -546,7 +546,7 @@ test.describe('Meetings - Attendee Management', () => {
 
     if (meetingCount > 0) {
       await meetingsPage.clickMeeting(0)
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const attendeesTab = page.locator('[role="tab"], button')
         .filter({ hasText: /attendees/i })
@@ -572,7 +572,7 @@ test.describe('Meetings - Attendee Management', () => {
 
     if (meetingCount > 0) {
       await meetingsPage.clickMeeting(0)
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const attendeesTab = page.locator('[role="tab"], button')
         .filter({ hasText: /attendees/i })
@@ -597,7 +597,7 @@ test.describe('Meetings - Attendee Management', () => {
 
     if (meetingCount > 0) {
       await meetingsPage.clickMeeting(0)
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Look for send invitation button
       const sendButton = page.locator('button')
@@ -642,7 +642,7 @@ test.describe('Meetings - Action Items Integration', () => {
 
     if (meetingCount > 0) {
       await meetingsPage.clickMeeting(0)
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Look for action items tab
       const actionItemsTab = page.locator('[role="tab"], button')
@@ -671,7 +671,7 @@ test.describe('Meetings - Action Items Integration', () => {
 
     if (meetingCount > 0) {
       await meetingsPage.clickMeeting(0)
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const actionItemsTab = page.locator('[role="tab"], button')
         .filter({ hasText: /action item/i })
@@ -696,7 +696,7 @@ test.describe('Meetings - Action Items Integration', () => {
 
     if (meetingCount > 0) {
       await meetingsPage.clickMeeting(0)
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const actionItemsTab = page.locator('[role="tab"], button')
         .filter({ hasText: /action item/i })
@@ -721,7 +721,7 @@ test.describe('Meetings - Action Items Integration', () => {
 
     if (meetingCount > 0) {
       await meetingsPage.clickMeeting(0)
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const actionItemsTab = page.locator('[role="tab"], button')
         .filter({ hasText: /action item/i })
@@ -746,7 +746,7 @@ test.describe('Meetings - Action Items Integration', () => {
 
     if (meetingCount > 0) {
       await meetingsPage.clickMeeting(0)
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       const actionItemsTab = page.locator('[role="tab"], button')
         .filter({ hasText: /action item/i })
@@ -956,7 +956,7 @@ test.describe('Meetings - Error Handling', () => {
   test('should show validation errors on invalid input', async ({ page }) => {
     await meetingsPage.goto()
     await meetingsPage.clickNewMeeting()
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState('domcontentloaded')
 
     // Try to submit without required fields
     const submitButton = page.locator('button[type="submit"]')
@@ -991,7 +991,7 @@ test.describe('Meetings - Error Handling', () => {
 
     if (hasNewButton) {
       await meetingsPage.clickNewMeeting()
-      await page.waitForLoadState('networkidle')
+      await page.waitForLoadState('domcontentloaded')
 
       // Fill form
       const nameInput = page.locator('input[name="meeting_name"], input[name="name"]')

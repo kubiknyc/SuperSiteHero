@@ -27,7 +27,7 @@ test.describe('Daily Reports', () => {
     // Navigate directly to daily reports page
     // Note: Direct navigation used due to responsive menu visibility issues
     await page.goto('/daily-reports');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Dismiss any PWA install banner that might appear
     const pwaBanner = page.locator('[class*="fixed"][class*="bottom"]').filter({ hasText: /home screen|install/i });
@@ -60,7 +60,7 @@ test.describe('Daily Reports', () => {
   test('should open create daily report form', async ({ page }) => {
     // Navigate directly to daily reports page
     await page.goto('/daily-reports');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Click create button - the page has "New Report" button that links to /daily-reports/new
     const createButton = page.locator('a[href="/daily-reports/new"], button:has-text("New Report"), button:has-text("New")').first();
@@ -71,7 +71,7 @@ test.describe('Daily Reports', () => {
     }
 
     await createButton.click();
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Should navigate to /daily-reports/new and show form with project selector or date field
     const projectSelect = page.locator('#project_select, select').first();
@@ -84,7 +84,7 @@ test.describe('Daily Reports', () => {
   test('should create a daily report with weather', async ({ page }) => {
     // Navigate directly to create page
     await page.goto('/daily-reports/new');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // The NewDailyReportPageV2 has a two-step process:
     // 1. Select project and date
@@ -161,7 +161,7 @@ test.describe('Daily Reports', () => {
   test('should view daily report details', async ({ page }) => {
     // Navigate directly to daily reports page
     await page.goto('/daily-reports');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     // Click on existing report - be more specific to avoid clicking non-report elements
     const reportLink = page.locator('a[href*="daily-reports/"]').first();
@@ -179,7 +179,7 @@ test.describe('Daily Reports', () => {
     }
 
     // Wait for navigation or content to load
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
     await waitForContentLoad(page);
 
     // Look for detail elements in the main content area (avoiding header elements)

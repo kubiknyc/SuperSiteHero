@@ -55,22 +55,22 @@ async function login(page: Page) {
 // Helper function to navigate to permits
 async function navigateToPermits(page: Page) {
   await page.goto('/permits');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   if (!page.url().includes('permit')) {
     // Try through project
     await page.goto('/projects');
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
 
     const projectLink = page.locator('a[href*="/projects/"]').first();
     if (await projectLink.isVisible({ timeout: 5000 }).catch(() => false)) {
       await projectLink.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const permitLink = page.locator('a:has-text("Permit"), a[href*="permit"]');
       if (await permitLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
         await permitLink.first().click();
-        await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
       }
     }
   }
@@ -273,7 +273,7 @@ test.describe('Permit Detail', () => {
 
     if (await permitItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await permitItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       await expect(page).toHaveURL(/\/permit/, { timeout: 10000 });
     }
@@ -284,7 +284,7 @@ test.describe('Permit Detail', () => {
 
     if (await permitItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await permitItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show permit number
       const permitNumber = page.locator('text=/PERM-|#\\d+/');
@@ -303,7 +303,7 @@ test.describe('Permit Detail', () => {
 
     if (await permitItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await permitItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const inspections = page.locator('text=/inspection|required inspection/i, [data-testid="inspections"]');
       const hasInspections = await inspections.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -317,7 +317,7 @@ test.describe('Permit Detail', () => {
 
     if (await permitItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await permitItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const criticalIndicator = page.locator('text=/critical|work cannot proceed|required/i, [data-testid="critical-badge"]');
       const hasCritical = await criticalIndicator.first().isVisible({ timeout: 5000 }).catch(() => false);
@@ -353,7 +353,7 @@ test.describe('Permit Status Workflow', () => {
 
     if (await permitItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await permitItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const statusSelect = page.locator('select[name="status"], [data-testid="status-select"]');
       const statusButton = page.locator('button:has-text("Status"), button:has-text("Update Status")');
@@ -406,7 +406,7 @@ test.describe('Filter Permits', () => {
       await statusFilter.first().selectOption('active').catch(() =>
         statusFilter.first().selectOption({ index: 1 })
       );
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -417,7 +417,7 @@ test.describe('Filter Permits', () => {
       await typeFilter.first().selectOption('Building').catch(() =>
         typeFilter.first().selectOption({ index: 1 })
       );
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -430,7 +430,7 @@ test.describe('Filter Permits', () => {
       } else {
         await expirationFilter.first().click();
       }
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -440,7 +440,7 @@ test.describe('Filter Permits', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('Building');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -449,7 +449,7 @@ test.describe('Filter Permits', () => {
 
     if (await criticalFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await criticalFilter.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });
@@ -485,7 +485,7 @@ test.describe('Edit Permit', () => {
 
     if (await permitItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await permitItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const editButton = page.locator('button:has-text("Edit"), [data-testid="edit-button"]');
 

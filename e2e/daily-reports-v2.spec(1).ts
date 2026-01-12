@@ -43,7 +43,7 @@ async function navigateToDailyReports(page: Page) {
   await page.goto('/projects');
   const projectLink = page.locator('a[href*="/projects/"]').first();
   await projectLink.click();
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   const dailyReportsLink = page.locator('a:has-text("Daily Reports"), a[href*="daily-reports"]');
   await dailyReportsLink.first().click();

@@ -40,14 +40,14 @@ function generateContact() {
 // Helper function to navigate to contacts
 async function navigateToContacts(page: Page) {
   await page.goto('/contacts');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   if (!page.url().includes('contact')) {
     // Try through main nav
     const contactsLink = page.locator('a:has-text("Contacts"), a[href*="contact"]');
     if (await contactsLink.first().isVisible({ timeout: 5000 }).catch(() => false)) {
       await contactsLink.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   }
 }
@@ -379,7 +379,7 @@ test.describe('Contact Detail', () => {
 
     if (await contactItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await contactItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       await expect(page).toHaveURL(/\/contact/, { timeout: 10000 });
     }
@@ -390,7 +390,7 @@ test.describe('Contact Detail', () => {
 
     if (await contactItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await contactItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show email
       const email = page.locator('text=/@/');
@@ -409,7 +409,7 @@ test.describe('Contact Detail', () => {
 
     if (await contactItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await contactItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       // Should show call/email actions
       const callButton = page.locator('a[href^="tel:"], button:has-text("Call")');
@@ -439,7 +439,7 @@ test.describe('Filter and Search Contacts', () => {
     if (await searchInput.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await searchInput.first().fill('John');
       await page.waitForTimeout(500);
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -450,7 +450,7 @@ test.describe('Filter and Search Contacts', () => {
       await typeFilter.first().selectOption('Subcontractor').catch(() =>
         typeFilter.first().selectOption({ index: 1 })
       );
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -459,7 +459,7 @@ test.describe('Filter and Search Contacts', () => {
 
     if (await projectFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await projectFilter.first().selectOption({ index: 1 }).catch(() => {});
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -468,7 +468,7 @@ test.describe('Filter and Search Contacts', () => {
 
     if (await primaryFilter.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await primaryFilter.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 
@@ -477,7 +477,7 @@ test.describe('Filter and Search Contacts', () => {
 
     if (await clearButton.first().isVisible({ timeout: 3000 }).catch(() => false)) {
       await clearButton.first().click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
     }
   });
 });
@@ -513,7 +513,7 @@ test.describe('Edit Contact', () => {
 
     if (await contactItem.isVisible({ timeout: 5000 }).catch(() => false)) {
       await contactItem.click();
-      await page.waitForLoadState('networkidle');
+      await page.waitForLoadState('domcontentloaded');
 
       const editButton = page.locator('button:has-text("Edit"), a:has-text("Edit"), [data-testid="edit-button"]');
 
