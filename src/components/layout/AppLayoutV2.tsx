@@ -4,25 +4,26 @@
 // Enhanced with Industrial Precision design system
 
 import { type ReactNode, useEffect, useState, useCallback } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/lib/auth/AuthContext'
-import { useTheme } from '@/lib/theme'
 import { MobileBottomNav } from '@/components/layout/MobileBottomNav'
 import { MobileOfflineBanner } from '@/components/mobile/MobileOfflineIndicator'
 import { useTabletMode, useTabletSidebar } from '@/hooks/useTabletMode'
 import { initOfflineListeners } from '@/stores/offline-store'
-import { Menu } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 
-// New Modern Minimal Navigation Sidebar
-import { NavigationSidebar } from './sidebar'
-
-// Sidebar dimensions
-const SIDEBAR_COLLAPSED_WIDTH = 72
-const SIDEBAR_EXPANDED_WIDTH = 280
-
+import {
+  CollapsibleSidebar,
+  SIDEBAR_COLLAPSED_WIDTH,
+  SIDEBAR_EXPANDED_WIDTH,
+  useSidebarState,
+} from './CollapsibleSidebar'
 import { StickyHeader } from './StickyHeader'
 import { ActionPanel } from './ActionPanel'
+
+// Premium easing
+const SPRING_EASING = 'cubic-bezier(0.32, 0.72, 0, 1)'
 
 // Page title map for auto-detection
 const pageTitles: Record<string, { title: string; subtitle?: string }> = {
@@ -62,10 +63,8 @@ export function AppLayoutV2({
   showHeaderStats,
   hideHeader = false,
 }: AppLayoutV2Props) {
-  const { userProfile, signOut } = useAuth()
+  const { userProfile } = useAuth()
   const location = useLocation()
-  const navigate = useNavigate()
-  const { resolvedTheme, toggleTheme } = useTheme()
 
   // Tablet mode detection
   const { isTablet, isLandscape, isPortrait, isTouchDevice } = useTabletMode()
@@ -142,46 +141,14 @@ export function AppLayoutV2({
     setActionPanelOpen(false)
   }, [])
 
-  // Handle logout
-  const handleLogout = useCallback(async () => {
-    await signOut()
-    navigate('/login')
-  }, [signOut, navigate])
-
-  // Handle search trigger (command palette)
-  const handleSearchTrigger = useCallback(() => {
-    // Trigger global search command palette
-    const event = new KeyboardEvent('keydown', {
-      key: 'k',
-      metaKey: true,
-      bubbles: true,
-    })
-    document.dispatchEvent(event)
-  }, [])
-
-  // Build user object for sidebar
-  const sidebarUser = userProfile
-    ? {
-        name: `${userProfile.first_name} ${userProfile.last_name}`,
-        email: userProfile.email || '',
-        role: userProfile.role || 'User',
-      }
-    : undefined
-
-  // Check if user is admin
-  const isAdmin = userProfile?.role === 'admin' || userProfile?.role === 'owner'
-
   // Determine layout mode
+  const showPersistentSidebar = !isTablet || isLandscape
   const showDrawerSidebar = isTablet && isPortrait
 
   // Calculate main content margin based on sidebar state
   const getSidebarOffset = () => {
-    if (isTablet && isPortrait) {
-      return 0
-    }
-    if (isTablet && isLandscape) {
-      return 240 // Slightly narrower for tablet
-    }
+    if (isTablet && isPortrait) return 0
+    if (isTablet && isLandscape) return 240 // Slightly narrower for tablet
     return isPinned ? SIDEBAR_EXPANDED_WIDTH : SIDEBAR_COLLAPSED_WIDTH
   }
 
@@ -234,29 +201,12 @@ export function AppLayoutV2({
         </button>
       )}
 
-      {/* Navigation Sidebar - Modern Minimal Design */}
-      {!isTablet && (
-        <NavigationSidebar
-          user={sidebarUser}
-          isAdmin={isAdmin}
-          isDarkMode={resolvedTheme === 'dark'}
-          onThemeToggle={toggleTheme}
-          onLogout={handleLogout}
-          onSearchTrigger={handleSearchTrigger}
-          onExpandedChange={(expanded) => setIsPinned(expanded)}
-        />
-      )}
+      {/* Sidebar - Desktop uses CollapsibleSidebar */}
+      {!isTablet && <CollapsibleSidebar />}
 
       {/* Tablet sidebar (drawer style for portrait, persistent for landscape) */}
       {isTablet && (
-        <NavigationSidebar
-          user={sidebarUser}
-          isAdmin={isAdmin}
-          isDarkMode={resolvedTheme === 'dark'}
-          onThemeToggle={toggleTheme}
-          onLogout={handleLogout}
-          onSearchTrigger={handleSearchTrigger}
-          onExpandedChange={(expanded) => setIsPinned(expanded)}
+        <CollapsibleSidebar
           className={cn(
             showDrawerSidebar && [
               'w-72 transform transition-all duration-300 ease-out',
@@ -268,51 +218,51 @@ export function AppLayoutV2({
         />
       )}
 
-      {/* Main content wrapper - single container that adapts to screen size */}
+      {/* Main content wrapper */}
       <div
         className={cn(
           'relative min-h-screen',
           'transition-[margin-left] duration-300',
-          '[transition-timing-function:cubic-bezier(0.32,0.72,0,1)]'
+          '[transition-timing-function:cubic-bezier(0.32,0.72,0,1)]',
+          // Desktop: dynamic margin based on sidebar state
+          !isTablet && 'hidden md:block'
         )}
         style={{
-          // Only apply sidebar margin on desktop (md+)
           marginLeft: !isTablet ? getSidebarOffset() : undefined,
         }}
       >
-        {/* Sticky Header - only show on md+ screens */}
+        {/* Sticky Header */}
         {!hideHeader && (
-          <div className="hidden md:block">
-            <StickyHeader
-              title={title}
-              subtitle={subtitle}
-              projectId={currentProjectId || undefined}
-              onActionPanelToggle={handleActionPanelToggle}
-              actionPanelOpen={actionPanelOpen}
-              showStats={shouldShowStats}
-            />
-          </div>
+          <StickyHeader
+            title={title}
+            subtitle={subtitle}
+            projectId={currentProjectId || undefined}
+            onActionPanelToggle={handleActionPanelToggle}
+            actionPanelOpen={actionPanelOpen}
+            showStats={shouldShowStats}
+          />
         )}
 
-        {/* Main content - single instance with responsive styles */}
+        {/* Main content with enhanced spacing */}
         <main
           className={cn(
-            'relative',
-            // Desktop: account for sticky header height
-            'md:min-h-[calc(100vh-72px)]',
-            // Mobile: full height
-            'min-h-screen',
-            // Bottom padding for navigation
+            'relative min-h-[calc(100vh-72px)]',
+            // Mobile bottom padding for nav
             'pb-24 md:pb-6',
             // Tablet portrait: add top padding for menu button
             isTablet && isPortrait && 'pt-16'
           )}
         >
-          {/* Content container */}
+          {/* Content container with max-width for readability */}
           <div className="relative">
             {children}
           </div>
         </main>
+      </div>
+
+      {/* Mobile layout fallback */}
+      <div className="md:hidden">
+        <main className="relative min-h-screen pb-24">{children}</main>
       </div>
 
       {/* Action Panel (slide-out) */}
