@@ -43,11 +43,18 @@ jobs:
         shell: bash
         run: |
           echo "Checking migration file naming conventions..."
+          shopt -s nullglob
           migration_count=0
-          for file in migrations/*.sql supabase/migrations/*.sql 2>/dev/null; do
+          for file in migrations/*.sql supabase/migrations/*.sql; do
             if [ -f "$file" ]; then
               filename=$(basename "$file")
-              if [[ $filename =~ ^[0-9]{3}_[a-z_]+\.sql$ ]]; then
+              # Pattern allows:
+              # - NNN_description.sql (e.g., 001_initial_setup.sql)
+              # - _NNN_description.sql (disabled, e.g., _126_site_instruction.sql)
+              # - NNNx_description.sql (suffixed, e.g., 027b_seed_templates.sql)
+              # - YYYYMMDD_description.sql (timestamp, e.g., 20241214_milestone.sql)
+              # - YYYYMMDDNNNNNN_description.sql (full timestamp, e.g., 20250101000001_budget.sql)
+              if [[ $filename =~ ^_?[0-9]{3}[a-z]?_[a-z0-9_]+\.sql$ ]] || [[ $filename =~ ^[0-9]{8}[0-9]*_[a-z0-9_]+\.sql$ ]]; then
                 echo "✓ Valid: $filename"
                 ((migration_count++))
               else
@@ -60,9 +67,11 @@ jobs:
           echo "Total migrations found: $migration_count"
 
       - name: Check for SQL syntax errors
+        shell: bash
         run: |
           echo "Checking SQL syntax..."
-          for file in migrations/*.sql supabase/migrations/*.sql 2>/dev/null; do
+          shopt -s nullglob
+          for file in migrations/*.sql supabase/migrations/*.sql; do
             if [ -f "$file" ]; then
               filename=$(basename "$file")
               echo "Validating SQL syntax: $filename"
@@ -77,8 +86,9 @@ jobs:
         shell: bash
         run: |
           echo "Scanning for potentially dangerous operations..."
+          shopt -s nullglob
           dangerous_patterns=("DROP TABLE" "DELETE FROM" "TRUNCATE" "DROP SCHEMA")
-          for file in migrations/*.sql supabase/migrations/*.sql 2>/dev/null; do
+          for file in migrations/*.sql supabase/migrations/*.sql; do
             if [ -f "$file" ]; then
               filename=$(basename "$file")
               for pattern in "${dangerous_patterns[@]}"; do
@@ -92,9 +102,11 @@ jobs:
         continue-on-error: true
 
       - name: Validate data preservation
+        shell: bash
         run: |
           echo "Checking migration safety patterns..."
-          for file in migrations/*.sql supabase/migrations/*.sql 2>/dev/null; do
+          shopt -s nullglob
+          for file in migrations/*.sql supabase/migrations/*.sql; do
             if [ -f "$file" ]; then
               filename=$(basename "$file")
               # Check if ALTER operations include proper change management
