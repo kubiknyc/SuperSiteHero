@@ -11,7 +11,7 @@ permissions:
   packages: write
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: '22'
   CACHE_NAME_PREFIX: ${{ github.workflow }}
   ARTIFACT_RETENTION_DAYS: 7
 

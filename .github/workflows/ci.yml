@@ -14,7 +14,7 @@ concurrency:
 env:
   NODE_VERSION: '22'
   NODE_OPTIONS: '--max-old-space-size=8192'
-  CACHE_VERSION: 'v3'  # Bump this to bust npm cache
+  CACHE_VERSION: 'v5'  # Bump this to bust npm cache
 
 jobs:
   # ==================== QUICK CHECKS (< 2 min) ====================
@@ -34,14 +34,16 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.npm
-          key: npm-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}
+          key: npm-${{ env.CACHE_VERSION }}-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            npm-${{ env.CACHE_VERSION }}-
+            npm-${{ env.CACHE_VERSION }}-${{ runner.os }}-
 
       - name: Install dependencies
         run: |
           echo "Node version: $(node --version)"
           echo "npm version: $(npm --version)"
+          # Clear any corrupted npm cache from cross-platform issues
+          npm cache clean --force
           npm ci --legacy-peer-deps
           echo "Checking if vite exists..."
           ls -la node_modules/.bin/vite || echo "vite not found in node_modules/.bin"
@@ -82,12 +84,14 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.npm
-          key: npm-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}
+          key: npm-${{ env.CACHE_VERSION }}-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            npm-${{ env.CACHE_VERSION }}-
+            npm-${{ env.CACHE_VERSION }}-${{ runner.os }}-
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: |
+          npm cache clean --force
+          npm ci --legacy-peer-deps
 
       - name: Run unit tests
         run: npm run test:unit
@@ -126,12 +130,14 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.npm
-          key: npm-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}
+          key: npm-${{ env.CACHE_VERSION }}-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            npm-${{ env.CACHE_VERSION }}-
+            npm-${{ env.CACHE_VERSION }}-${{ runner.os }}-
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: |
+          npm cache clean --force
+          npm ci --legacy-peer-deps
 
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
@@ -169,12 +175,14 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.npm
-          key: npm-${{ env.CACHE_VERSION }}-${{ hashFiles('**/package-lock.json') }}
+          key: npm-${{ env.CACHE_VERSION }}-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            npm-${{ env.CACHE_VERSION }}-
+            npm-${{ env.CACHE_VERSION }}-${{ runner.os }}-
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: |
+          npm cache clean --force
+          npm ci --legacy-peer-deps
 
       - name: ESLint Security Check
         run: npx eslint . --rule "security/*:error" --quiet --max-warnings 0

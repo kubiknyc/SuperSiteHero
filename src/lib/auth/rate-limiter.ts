@@ -301,16 +301,45 @@ export function useRateLimit(options: UseRateLimitOptions): UseRateLimitResult {
 
 export interface CaptchaResult {
   verified: boolean
-  token?: string
+  error?: string
 }
 
 /**
- * Placeholder for CAPTCHA verification
- * In production, integrate with hCaptcha, reCAPTCHA, or Turnstile
+ * Verify CAPTCHA token via Supabase Edge Function
+ * Uses Cloudflare Turnstile for verification
  */
-export async function verifyCaptcha(_token: string): Promise<CaptchaResult> {
-  // TODO: Implement actual CAPTCHA verification
-  // This would call a Supabase Edge Function to verify the token
-  logger.debug('[RateLimiter] CAPTCHA verification called')
-  return { verified: true }
+export async function verifyCaptcha(token: string): Promise<CaptchaResult> {
+  if (!token) {
+    logger.warn('[RateLimiter] CAPTCHA verification called without token')
+    return { verified: false, error: 'No CAPTCHA token provided' }
+  }
+
+  try {
+    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+    if (!supabaseUrl) {
+      logger.error('[RateLimiter] VITE_SUPABASE_URL not configured')
+      return { verified: false, error: 'CAPTCHA service not configured' }
+    }
+
+    const response = await fetch(`${supabaseUrl}/functions/v1/verify-captcha`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token }),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      logger.warn('[RateLimiter] CAPTCHA verification failed:', errorData)
+      return { verified: false, error: errorData.error || 'Verification failed' }
+    }
+
+    const result = await response.json()
+    logger.debug('[RateLimiter] CAPTCHA verification result:', { verified: result.success })
+    return { verified: result.success === true }
+  } catch (error) {
+    logger.error('[RateLimiter] CAPTCHA verification error:', error)
+    return { verified: false, error: 'Network error during verification' }
+  }
 }
