@@ -39,7 +39,7 @@ jobs:
       - name: Run TypeScript type check
         run: npm run type-check
         env:
-          NODE_OPTIONS: '--max-old-space-size=8192'
+          NODE_OPTIONS: '--max-old-space-size=16384'
 
   # ==================== UNIT TESTS ====================
   unit-tests:

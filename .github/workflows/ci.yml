@@ -13,7 +13,7 @@ concurrency:
 
 env:
   NODE_VERSION: '22'
-  NODE_OPTIONS: '--max-old-space-size=8192'
+  NODE_OPTIONS: '--max-old-space-size=16384'
   CACHE_VERSION: 'v6'  # Bump this to bust npm cache
 
 jobs:
@@ -52,7 +52,7 @@ jobs:
       - name: TypeScript type check
         run: npm run type-check
         env:
-          NODE_OPTIONS: '--max-old-space-size=8192'
+          NODE_OPTIONS: '--max-old-space-size=16384'
 
       - name: ESLint
         # Note: React Compiler plugin emits informational "Compilation Skipped" messages as errors
@@ -63,7 +63,7 @@ jobs:
       - name: Build check
         run: npm run build
         env:
-          NODE_OPTIONS: '--max-old-space-size=8192'
+          NODE_OPTIONS: '--max-old-space-size=16384'
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
