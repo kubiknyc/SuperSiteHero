@@ -26,7 +26,7 @@ interface MobileBottomNavV2Props {
 
 interface NavItemConfig {
   label: string;
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   path: string;
   isAction?: boolean;
 }
