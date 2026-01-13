@@ -20,8 +20,8 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  NODE_VERSION: '20'
-  CACHE_VERSION: 'v2'
+  NODE_VERSION: '22'
+  CACHE_VERSION: 'v3'
   NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
   NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
 

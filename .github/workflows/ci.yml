@@ -12,9 +12,9 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: '22'
   NODE_OPTIONS: '--max-old-space-size=8192'
-  CACHE_VERSION: 'v2'  # Bump this to bust npm cache
+  CACHE_VERSION: 'v3'  # Bump this to bust npm cache
 
 jobs:
   # ==================== QUICK CHECKS (< 2 min) ====================
