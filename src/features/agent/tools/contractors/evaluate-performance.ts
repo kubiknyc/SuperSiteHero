@@ -143,7 +143,8 @@ export const evaluateContractorPerformanceTool = createTool<EvaluatePerformanceI
       byTrade[trade].count++
       byTrade[trade].avg_score = (byTrade[trade].avg_score * (byTrade[trade].count - 1) + perf.metrics.overall_score) / byTrade[trade].count
 
-      if (!byTrade[trade].top_performer || perf.metrics.overall_score > performances.find(p => p.company_name === byTrade[trade].top_performer)?.metrics.overall_score!) {
+      const currentTopPerf = performances.find(p => p.company_name === byTrade[trade].top_performer)
+      if (!byTrade[trade].top_performer || perf.metrics.overall_score > (currentTopPerf?.metrics.overall_score ?? 0)) {
         byTrade[trade].top_performer = perf.company_name
       }
     }

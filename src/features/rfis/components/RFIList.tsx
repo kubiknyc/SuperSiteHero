@@ -2,7 +2,7 @@
 // Table list of RFIs with filtering and sorting capabilities
 // Uses virtualization for large datasets (50+ items) for better performance
 
-import { useMemo } from 'react'
+import { useMemo, useCallback } from 'react'
 import { format, isPast } from 'date-fns'
 import {
   Card,
@@ -78,23 +78,23 @@ export function RFIList({ rfis, isLoading, onSelectRFI, filters }: RFIListProps)
   })
 
   // Check if RFI is overdue
-  const isOverdue = (dueDate: string | null): boolean => {
+  const isOverdue = useCallback((dueDate: string | null): boolean => {
     if (!dueDate) {return false}
     return isPast(new Date(dueDate))
-  }
+  }, [])
 
   // Format date with fallback
-  const formatDate = (date: string | null): string => {
+  const formatDate = useCallback((date: string | null): string => {
     if (!date) {return '-'}
     try {
       return date ? format(new Date(date), 'MMM d, yyyy') : 'N/A'
     } catch {
       return '-'
     }
-  }
+  }, [])
 
   // Render assignees display
-  const renderAssignees = (assignees: string[] | null) => {
+  const renderAssignees = useCallback((assignees: string[] | null) => {
     if (!assignees || assignees.length === 0) {return <span>Unassigned</span>}
     if (assignees.length === 1) {
       return <UserName userId={assignees[0]} fallback="Unknown User" />
@@ -105,48 +105,12 @@ export function RFIList({ rfis, isLoading, onSelectRFI, filters }: RFIListProps)
         <span> +{assignees.length - 1}</span>
       </span>
     )
-  }
-
-  // Loading state
-  if (isLoading) {
-    return (
-      <Card>
-        <CardContent className="p-12">
-          <div className="flex flex-col items-center justify-center">
-            <Loader2 className="h-12 w-12 text-disabled animate-spin mb-4" />
-            <p className="text-secondary">Loading RFIs...</p>
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  // Empty state
-  if (filteredRFIs.length === 0) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>RFIs</CardTitle>
-        </CardHeader>
-        <CardContent className="p-12">
-          <div className="flex flex-col items-center justify-center">
-            <AlertCircle className="h-12 w-12 text-gray-300 mb-4" />
-            <p className="text-secondary font-medium">No RFIs found</p>
-            <p className="text-sm text-muted mt-2">
-              {filters?.status || filters?.priority
-                ? 'Try adjusting your filters'
-                : 'Create your first RFI to get started'}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
+  }, [])
 
   // Use virtualization for large datasets
   const useVirtualization = filteredRFIs.length >= VIRTUALIZATION_THRESHOLD
 
-  // Memoized columns for virtualized table
+  // Memoized columns for virtualized table - must be called before any early returns
   const virtualizedColumns = useMemo(() => [
     {
       key: 'number',
@@ -230,6 +194,42 @@ export function RFIList({ rfis, isLoading, onSelectRFI, filters }: RFIListProps)
       ),
     },
   ], [onSelectRFI, renderAssignees, isOverdue, formatDate])
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <Card>
+        <CardContent className="p-12">
+          <div className="flex flex-col items-center justify-center">
+            <Loader2 className="h-12 w-12 text-disabled animate-spin mb-4" />
+            <p className="text-secondary">Loading RFIs...</p>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  // Empty state
+  if (filteredRFIs.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>RFIs</CardTitle>
+        </CardHeader>
+        <CardContent className="p-12">
+          <div className="flex flex-col items-center justify-center">
+            <AlertCircle className="h-12 w-12 text-gray-300 mb-4" />
+            <p className="text-secondary font-medium">No RFIs found</p>
+            <p className="text-sm text-muted mt-2">
+              {filters?.status || filters?.priority
+                ? 'Try adjusting your filters'
+                : 'Create your first RFI to get started'}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
 
   // Virtualized table for large datasets (50+ RFIs)
   if (useVirtualization) {

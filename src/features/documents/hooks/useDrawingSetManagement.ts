@@ -2,6 +2,12 @@
 // Comprehensive hook for drawing set management features
 // Coordinates sheet hyperlinks, revision clouds, bulk markup, and migrations
 
+/* eslint-disable security/detect-unsafe-regex */
+// The regex patterns in this file are used to match standard construction drawing
+// number formats (e.g., A-101, 3/A-501). While they may trigger false positives
+// from the unsafe-regex rule due to nested quantifiers, they are intentional and
+// operate on bounded, user-provided text in controlled contexts.
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react'
 import { supabase } from '@/lib/supabase'

@@ -85,60 +85,27 @@ export function DocumentList({
   }, [onView])
 
   // Format file size in human-readable format
-  const formatFileSize = (bytes: number | null): string => {
+  const formatFileSize = useCallback((bytes: number | null): string => {
     if (!bytes || bytes === 0) {return 'N/A'}
     const k = 1024
     const sizes = ['Bytes', 'KB', 'MB', 'GB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
     return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i]
-  }
+  }, [])
 
   // Format date in readable format
-  const formatDate = (dateString: string | null): string => {
+  const formatDate = useCallback((dateString: string | null): string => {
     try {
       return dateString ? format(new Date(dateString), 'MMM d, yyyy') : 'N/A'
     } catch {
       return 'N/A'
     }
-  }
-
-  // Loading state with skeleton rows
-  if (isLoading) {
-    return (
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex items-center justify-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin text-disabled" />
-            <span className="ml-3 text-secondary">Loading documents...</span>
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  // Empty state
-  if (documents.length === 0) {
-    return (
-      <Card>
-        <CardContent className="p-6">
-          <div className="text-center py-12">
-            <DocumentTypeIcon type="general" className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-            <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">
-              No documents found
-            </h3>
-            <p className="text-muted">
-              Upload your first document to get started.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
+  }, [])
 
   // Use virtualization for large datasets
   const useVirtualization = documents.length >= VIRTUALIZATION_THRESHOLD
 
-  // Memoized columns for virtualized table
+  // Memoized columns for virtualized table - must be called before any early returns
   const virtualizedColumns = useMemo(() => [
     {
       key: 'name',
@@ -229,6 +196,39 @@ export function DocumentList({
       ),
     },
   ], [searchTerm, handleOpenInPopup, onView, onEdit, onDelete, formatFileSize, formatDate])
+
+  // Loading state with skeleton rows
+  if (isLoading) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="w-8 h-8 animate-spin text-disabled" />
+            <span className="ml-3 text-secondary">Loading documents...</span>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  // Empty state
+  if (documents.length === 0) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <div className="text-center py-12">
+            <DocumentTypeIcon type="general" className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+            <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">
+              No documents found
+            </h3>
+            <p className="text-muted">
+              Upload your first document to get started.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
 
   // Virtualized table for large datasets (50+ documents)
   if (useVirtualization) {

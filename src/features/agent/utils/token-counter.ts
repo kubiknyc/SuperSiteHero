@@ -39,9 +39,9 @@ export function estimateTokens(text: string): number {
   // Count different character types
   const words = text.split(/\s+/).filter(Boolean)
   const codeBlocks = (text.match(/```[\s\S]*?```/g) || []).join('').length
-  const punctuation = (text.match(/[.,!?;:'"()\[\]{}]/g) || []).length
-  const numbers = (text.match(/\d+/g) || []).join('').length
-  const specialChars = (text.match(/[^a-zA-Z0-9\s.,!?;:'"()\[\]{}]/g) || []).length
+  const _punctuation = (text.match(/[.,!?;:'"()[\]{}]/g) || []).length
+  const _numbers = (text.match(/\d+/g) || []).join('').length
+  const specialChars = (text.match(/[^a-zA-Z0-9\s.,!?;:'"()[\]{}]/g) || []).length
 
   // Base estimation: ~4 chars per token for normal text
   let baseTokens = Math.ceil(text.length / 4)

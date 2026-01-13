@@ -4139,7 +4139,8 @@ export const subcontractorPortalApi = {
       let expiringCerts = 0
       let expiredCerts = 0
 
-      (safetyCerts || []).forEach((cert: any) => {
+      const certsToProcess = safetyCerts || []
+      certsToProcess.forEach((cert: any) => {
         if (cert.status === 'approved') {
           const expDate = cert.expiration_date ? new Date(cert.expiration_date) : null
           if (!expDate || expDate > thirtyDaysFromNow) {

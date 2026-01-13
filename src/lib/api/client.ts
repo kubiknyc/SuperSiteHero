@@ -77,6 +77,7 @@ class ApiClient {
    * Handles null values correctly by using .is() instead of .eq()
    * @private
    */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   private applyFilters<Q extends { eq: Function; is: Function; not: Function; neq: Function; gt: Function; gte: Function; lt: Function; lte: Function; like: Function; ilike: Function; in: Function }>(
     query: Q,
     filters: QueryFilter[]
@@ -145,6 +146,7 @@ class ApiClient {
    * Apply ordering to a Supabase query
    * @private
    */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   private applyOrdering<Q extends { order: Function }>(
     query: Q,
     orderBy: { column: string; ascending?: boolean }
@@ -159,6 +161,7 @@ class ApiClient {
    * Supports both offset-based and page-based pagination
    * @private
    */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   private applyPagination<Q extends { range: Function }>(
     query: Q,
     pagination: { page?: number; limit?: number; offset?: number }

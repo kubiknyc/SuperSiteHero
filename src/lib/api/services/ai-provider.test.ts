@@ -653,7 +653,7 @@ describe('AI Provider Service', () => {
       ]
 
       // Not all may have pricing, but some should be defined
-      const hasSomePricing = anthropicModels.some((model) => MODEL_PRICING.hasOwnProperty(model))
+      const hasSomePricing = anthropicModels.some((model) => Object.prototype.hasOwnProperty.call(MODEL_PRICING, model))
       expect(hasSomePricing).toBe(true)
     })
   })
