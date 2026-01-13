@@ -132,7 +132,7 @@ const documentUploadedHandler: TaskHandler<DocumentUploadedInput, DocumentProces
     task: AgentTask,
     context: TaskContext
   ): Promise<TaskResult<DocumentProcessingOutput>> {
-    const input = task.input_data as DocumentUploadedInput
+    const input = task.input_data as unknown as DocumentUploadedInput
     const startTime = Date.now()
     let totalTokens = 0
 
@@ -146,12 +146,11 @@ const documentUploadedHandler: TaskHandler<DocumentUploadedInput, DocumentProces
           file_name,
           file_type,
           description,
-          category,
-          ocr_text,
+          document_type,
           project_id
         `)
         .eq('id', input.document_id)
-        .single()
+        .single() as { data: any; error: any }
 
       if (fetchError || !document) {
         return {
@@ -176,7 +175,6 @@ const documentUploadedHandler: TaskHandler<DocumentUploadedInput, DocumentProces
         await supabase
           .from('documents')
           .update({
-            category: classification.category,
             agent_classification: classification,
             agent_processed_at: new Date().toISOString(),
           })
@@ -268,13 +266,7 @@ const documentUploadedHandler: TaskHandler<DocumentUploadedInput, DocumentProces
 // Helper Functions
 // ============================================================================
 
-async function classifyDocument(document: {
-  name: string
-  file_name: string
-  file_type: string
-  description: string | null
-  ocr_text: string | null
-}): Promise<{ classification: DocumentClassification; tokens: number }> {
+async function classifyDocument(document: Record<string, unknown>): Promise<{ classification: DocumentClassification; tokens: number }> {
   let prompt = `Classify this construction document:
 
 Document Name: ${document.name}
@@ -286,7 +278,7 @@ File Type: ${document.file_type}`
   }
 
   if (document.ocr_text) {
-    const textSample = document.ocr_text.slice(0, 3000)
+    const textSample = String(document.ocr_text).slice(0, 3000)
     prompt += `\n\nDocument Text (excerpt):\n${textSample}`
   }
 
@@ -306,15 +298,11 @@ File Type: ${document.file_type}`
   }
 }
 
-async function extractMetadata(document: {
-  name: string
-  file_type: string
-  ocr_text: string | null
-}): Promise<{ metadata: ExtractedMetadata; tokens: number }> {
+async function extractMetadata(document: Record<string, unknown>): Promise<{ metadata: ExtractedMetadata; tokens: number }> {
   if (!document.ocr_text) {
     return {
       metadata: {
-        title: document.name,
+        title: String(document.name),
         date: null,
         revision: null,
         sheet_number: null,
@@ -332,7 +320,7 @@ async function extractMetadata(document: {
 File: ${document.name} (${document.file_type})
 
 Content:
-${document.ocr_text.slice(0, 4000)}`
+${String(document.ocr_text).slice(0, 4000)}`
 
   const result = await aiService.extractJSON<ExtractedMetadata>(
     'document_metadata',
@@ -351,10 +339,7 @@ ${document.ocr_text.slice(0, 4000)}`
 }
 
 async function linkToEntities(
-  document: {
-    name: string
-    ocr_text: string | null
-  },
+  document: Record<string, unknown>,
   projectId: string
 ): Promise<{ entities: LinkedEntity[]; tokens: number }> {
   // Fetch project items
@@ -371,7 +356,7 @@ async function linkToEntities(
       .limit(50),
     supabase
       .from('change_orders')
-      .select('id, number, title')
+      .select('id, co_number, title')
       .eq('project_id', projectId)
       .limit(50),
   ])
@@ -392,7 +377,7 @@ async function linkToEntities(
 
   if (changeOrders.data) {
     for (const co of changeOrders.data) {
-      items.push(`CO ${co.number}: ${co.title} [change_order:${co.id}]`)
+      items.push(`CO ${(co as any).co_number}: ${(co as any).title} [change_order:${(co as any).id}]`)
     }
   }
 
@@ -401,7 +386,7 @@ async function linkToEntities(
   }
 
   const prompt = ENTITY_LINKING_PROMPT.replace('{items}', items.join('\n')) +
-    `\n\nDocument: ${document.name}\n${document.ocr_text?.slice(0, 2000) || 'No text available'}`
+    `\n\nDocument: ${document.name}\n${document.ocr_text ? String(document.ocr_text).slice(0, 2000) : 'No text available'}`
 
   try {
     const result = await aiService.extractJSON<LinkedEntity[]>(
@@ -573,7 +558,7 @@ export function subscribeToDocumentUploads(companyId: string): () => void {
 // Register Handler
 // ============================================================================
 
-registerTaskHandler(documentUploadedHandler)
+registerTaskHandler(documentUploadedHandler as unknown as TaskHandler)
 
 // ============================================================================
 // Exports

@@ -164,7 +164,7 @@ export const analyzeLaborProductivityTool = createTool<AnalyzeLaborProductivityI
       .lte('report_date', endDate)
       .is('deleted_at', null)
 
-    const { data: dailyReports } = await laborQuery.order('report_date', { ascending: true })
+    const { data: dailyReports } = await laborQuery.order('report_date', { ascending: true }) as any
 
     // Get schedule activities for productivity targets
     const { data: activities } = await supabase
@@ -199,15 +199,17 @@ export const analyzeLaborProductivityTool = createTool<AnalyzeLaborProductivityI
     let weatherImpactHours = 0
 
     for (const report of dailyReports || []) {
-      const reportDate = report.report_date
+      const reportAny = report as any
+      const reportDate = reportAny.report_date
       totalDays.add(reportDate)
 
       // Process labor entries
-      for (const entry of report.labor_entries || []) {
-        const trade = entry.trade || entry.craft || 'General'
-        const hours = entry.hours || entry.regular_hours || 0
-        const workers = entry.headcount || entry.workers || 1
-        const workerId = entry.worker_id || `${trade}-${reportDate}`
+      for (const entry of reportAny.labor_entries || []) {
+        const entryAny = entry as any
+        const trade = entryAny.trade || entryAny.craft || 'General'
+        const hours = entryAny.hours || entryAny.regular_hours || 0
+        const workers = entryAny.headcount || entryAny.workers || 1
+        const workerId = entryAny.worker_id || `${trade}-${reportDate}`
 
         // Skip if trade filter is specified and doesn't match
         if (trade_filter && trade_filter.length > 0 && !trade_filter.includes(trade)) {
@@ -236,14 +238,14 @@ export const analyzeLaborProductivityTool = createTool<AnalyzeLaborProductivityI
         tradeData.dailyHours.push(hours)
 
         // Track activity if specified
-        const activityName = entry.activity || entry.work_description || 'General Work'
+        const activityName = entryAny.activity || entryAny.work_description || 'General Work'
         if (!activityMap.has(activityName)) {
           activityMap.set(activityName, {
             activity: activityName,
             trade,
             hours_worked: 0,
-            units_completed: entry.quantity || 0,
-            unit_of_measure: entry.unit || 'LF',
+            units_completed: entryAny.quantity || 0,
+            unit_of_measure: entryAny.unit || 'LF',
             productivity_rate: 0,
             planned_rate: null,
             efficiency: 100,
@@ -254,7 +256,7 @@ export const analyzeLaborProductivityTool = createTool<AnalyzeLaborProductivityI
 
         const activityData = activityMap.get(activityName)!
         activityData.hours_worked += hours
-        activityData.units_completed += entry.quantity || 0
+        activityData.units_completed += entryAny.quantity || 0
 
         // Track weekly
         const weekStart = getWeekStart(reportDate)
@@ -278,8 +280,9 @@ export const analyzeLaborProductivityTool = createTool<AnalyzeLaborProductivityI
       }
 
       // Track weather impact
-      if (report.weather) {
-        const weatherDelay = report.weather.delay_hours || 0
+      if (reportAny.weather) {
+        const weatherAny = reportAny.weather as any
+        const weatherDelay = weatherAny.delay_hours || 0
         weatherImpactHours += weatherDelay
 
         const weekStart = getWeekStart(reportDate)
@@ -331,15 +334,18 @@ export const analyzeLaborProductivityTool = createTool<AnalyzeLaborProductivityI
         : 0
 
       // Find matching scheduled activity for planned rate
-      const matchedActivity = activities?.find(a =>
+      const matchedActivity = activities?.find((a: any) =>
         (a.name || a.title || '').toLowerCase().includes(data.activity.toLowerCase())
       )
 
-      if (matchedActivity && matchedActivity.planned_productivity) {
-        data.planned_rate = matchedActivity.planned_productivity
-        data.efficiency = data.planned_rate > 0
-          ? Math.round((data.productivity_rate / data.planned_rate) * 100)
-          : 100
+      if (matchedActivity) {
+        const matchedAny = matchedActivity as any
+        if (matchedAny.planned_productivity) {
+          data.planned_rate = matchedAny.planned_productivity
+          data.efficiency = data.planned_rate > 0
+            ? Math.round((data.productivity_rate / data.planned_rate) * 100)
+            : 100
+        }
       }
 
       byActivity.push(data)
@@ -386,7 +392,7 @@ export const analyzeLaborProductivityTool = createTool<AnalyzeLaborProductivityI
     // Overall metrics
     const daysWorked = totalDays.size
     const avgDailyWorkers = daysWorked > 0 ? totalWorkers.size / daysWorked : 0
-    const plannedHours = activities?.reduce((sum, a) => sum + (a.planned_hours || 0), 0) || totalHours
+    const plannedHours = activities?.reduce((sum: number, a: any) => sum + (a.planned_hours || 0), 0) || totalHours
     const varianceFromPlan = plannedHours > 0
       ? Math.round(((totalHours - plannedHours) / plannedHours) * 100)
       : 0

@@ -416,7 +416,7 @@ export class SyncManager {
         const { error: createError } = await supabase
           .from(entityType as 'projects')
           .insert(data as any);
-        if (createError) throw createError;
+        if (createError) {throw createError;}
         break;
       }
 
@@ -425,7 +425,7 @@ export class SyncManager {
           .from(entityType as 'projects')
           .update(data as any)
           .eq('id', entityId);
-        if (updateError) throw updateError;
+        if (updateError) {throw updateError;}
         break;
       }
 
@@ -434,7 +434,7 @@ export class SyncManager {
           .from(entityType as 'projects')
           .delete()
           .eq('id', entityId);
-        if (deleteError) throw deleteError;
+        if (deleteError) {throw deleteError;}
         break;
       }
     }

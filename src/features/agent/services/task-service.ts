@@ -83,7 +83,7 @@ class TaskService {
         task_type: dto.task_type,
         status: dto.scheduled_for ? 'scheduled' : 'pending',
         priority: dto.priority || 100,
-        input_data: dto.input_data,
+        input_data: dto.input_data as any,
         target_entity_type: dto.target_entity_type || null,
         target_entity_id: dto.target_entity_id || null,
         scheduled_for: dto.scheduled_for || null,
@@ -98,7 +98,7 @@ class TaskService {
       throw error
     }
 
-    return data as AgentTask
+    return data as unknown as AgentTask
   }
 
   /**
@@ -117,7 +117,7 @@ class TaskService {
       throw error
     }
 
-    return data as AgentTask
+    return data as unknown as AgentTask
   }
 
   /**
@@ -180,7 +180,7 @@ class TaskService {
     }
 
     return {
-      tasks: (data || []) as AgentTask[],
+      tasks: (data || []) as unknown as AgentTask[],
       total: count || 0,
     }
   }
@@ -200,7 +200,7 @@ class TaskService {
 
     const { data, error } = await supabase
       .from('agent_tasks')
-      .update(updateData)
+      .update(updateData as any)
       .eq('id', taskId)
       .select()
       .single()
@@ -210,7 +210,7 @@ class TaskService {
       throw error
     }
 
-    return data as AgentTask
+    return data as unknown as AgentTask
   }
 
   /**
@@ -246,14 +246,14 @@ class TaskService {
     const { data, error } = await supabase.rpc('get_pending_agent_tasks', {
       p_company_id: null, // Will be filtered by RLS
       p_limit: limit,
-    })
+    }) as { data: any; error: any }
 
     if (error) {
       logger.error('[TaskService] Error getting pending tasks:', error)
       throw error
     }
 
-    return (data || []) as AgentTask[]
+    return (data || []) as unknown as AgentTask[]
   }
 
   /**
@@ -262,14 +262,14 @@ class TaskService {
   async claimTask(taskId: string): Promise<AgentTask | null> {
     const { data, error } = await supabase.rpc('claim_agent_task', {
       p_task_id: taskId,
-    })
+    }) as { data: any; error: any }
 
     if (error) {
       logger.error('[TaskService] Error claiming task:', error)
       throw error
     }
 
-    return data as AgentTask | null
+    return data as unknown as AgentTask | null
   }
 
   /**
@@ -285,14 +285,14 @@ class TaskService {
       p_output_data: outputData,
       p_tokens_used: metrics?.tokensUsed || null,
       p_cost_cents: metrics?.costCents || null,
-    })
+    }) as { data: any; error: any }
 
     if (error) {
       logger.error('[TaskService] Error completing task:', error)
       throw error
     }
 
-    return data as AgentTask
+    return data as unknown as AgentTask
   }
 
   /**
@@ -309,14 +309,14 @@ class TaskService {
       p_error_message: errorMessage,
       p_error_details: errorDetails || null,
       p_should_retry: shouldRetry,
-    })
+    }) as { data: any; error: any }
 
     if (error) {
       logger.error('[TaskService] Error failing task:', error)
       throw error
     }
 
-    return data as AgentTask
+    return data as unknown as AgentTask
   }
 
   // ============================================================================
@@ -483,7 +483,7 @@ class TaskService {
       throw error
     }
 
-    return (data || []) as AgentTask[]
+    return (data || []) as unknown as AgentTask[]
   }
 
   /**
@@ -502,7 +502,7 @@ class TaskService {
       throw error
     }
 
-    return (data || []) as AgentTask[]
+    return (data || []) as unknown as AgentTask[]
   }
 
   /**
@@ -528,7 +528,7 @@ class TaskService {
         completed_at: null,
         retry_count: 0,
         next_retry_at: null,
-      })
+      } as any)
       .eq('id', taskId)
       .select()
       .single()
@@ -538,7 +538,7 @@ class TaskService {
       throw error
     }
 
-    return data as AgentTask
+    return data as unknown as AgentTask
   }
 
   /**

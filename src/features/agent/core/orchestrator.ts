@@ -248,7 +248,7 @@ export class AgentOrchestrator {
       return []
     }
 
-    const messages = data as AgentMessage[]
+    const messages = (data || []) as unknown as AgentMessage[]
 
     // If we have a model, use token-aware trimming
     if (model && messages.length > 10) {
@@ -936,11 +936,11 @@ If you don't need to use a tool, respond normally without the JSON format.`
         session_id: sessionId,
         role: message.role,
         content: message.content || '',
-        tool_calls: message.tool_calls,
+        tool_calls: message.tool_calls as any,
         tool_call_id: message.tool_call_id,
         tool_name: message.tool_name,
-        tool_input: message.tool_input,
-        tool_output: message.tool_output,
+        tool_input: message.tool_input as any,
+        tool_output: message.tool_output as any,
         tool_error: message.tool_error,
         tokens_used: message.tokens_used,
         model_used: message.model_used,
@@ -953,7 +953,7 @@ If you don't need to use a tool, respond normally without the JSON format.`
       throw error
     }
 
-    return data as AgentMessage
+    return data as unknown as AgentMessage
   }
 
   /**
@@ -978,7 +978,7 @@ If you don't need to use a tool, respond normally without the JSON format.`
   /**
    * Get agent configuration for a company
    */
-  private async getAgentConfig(companyId: string) {
+  private async getAgentConfig(companyId: string): Promise<any> {
     const { data, error } = await supabase
       .from('agent_configuration')
       .select('*')
@@ -989,7 +989,7 @@ If you don't need to use a tool, respond normally without the JSON format.`
       logger.error('[Orchestrator] Error fetching agent config:', error)
     }
 
-    return data
+    return data as any
   }
 
   /**

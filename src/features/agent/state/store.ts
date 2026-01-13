@@ -71,7 +71,7 @@ export const useAgentStore = create<AgentStore>()(
 
             const sessionsMap = new Map<string, AgentSession>()
             for (const session of sessions || []) {
-              sessionsMap.set(session.id, session as AgentSession)
+              sessionsMap.set(session.id, session as unknown as AgentSession)
             }
 
             set({
@@ -123,13 +123,13 @@ export const useAgentStore = create<AgentStore>()(
                 context_entity_id: dto?.context_entity_id,
                 system_context: dto?.system_context || {},
                 status: 'active',
-              })
+              } as any)
               .select()
               .single()
 
             if (error) {throw error}
 
-            const newSession = session as AgentSession
+            const newSession = session as unknown as AgentSession
 
             set((state) => ({
               sessions: new Map(state.sessions).set(newSession.id, newSession),
@@ -155,7 +155,7 @@ export const useAgentStore = create<AgentStore>()(
               .update({
                 status: 'ended',
                 ended_at: new Date().toISOString(),
-              })
+              } as any)
               .eq('id', sessionId)
 
             set((state) => {

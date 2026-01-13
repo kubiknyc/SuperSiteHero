@@ -43,7 +43,7 @@ export function useAgentMessages(
     refetch,
   } = useQuery({
     queryKey: ['agent-messages', sessionId],
-    queryFn: async () => {
+    queryFn: async (): Promise<AgentMessage[]> => {
       if (!sessionId) {return []}
 
       const { data, error } = await supabase
@@ -54,7 +54,7 @@ export function useAgentMessages(
         .limit(limit)
 
       if (error) {throw error}
-      return data as AgentMessage[]
+      return (data || []) as unknown as AgentMessage[]
     },
     enabled: enabled && !!sessionId,
     staleTime: 0, // Always fetch fresh data
@@ -126,7 +126,7 @@ export function useAgentMessages(
 export function useAgentMessage(messageId: string | null | undefined) {
   return useQuery({
     queryKey: ['agent-message', messageId],
-    queryFn: async () => {
+    queryFn: async (): Promise<AgentMessage | null> => {
       if (!messageId) {return null}
 
       const { data, error } = await supabase
@@ -136,7 +136,7 @@ export function useAgentMessage(messageId: string | null | undefined) {
         .single()
 
       if (error) {throw error}
-      return data as AgentMessage
+      return data as unknown as AgentMessage
     },
     enabled: !!messageId,
   })
@@ -182,11 +182,11 @@ export function useAddMessage(sessionId: string) {
           session_id: sessionId,
           role: message.role,
           content: message.content,
-          tool_calls: message.tool_calls,
+          tool_calls: message.tool_calls as any,
           tool_call_id: message.tool_call_id,
           tool_name: message.tool_name,
-          tool_input: message.tool_input,
-          tool_output: message.tool_output,
+          tool_input: message.tool_input as any,
+          tool_output: message.tool_output as any,
           tool_error: message.tool_error,
           tokens_used: message.tokens_used,
           model_used: message.model_used,
@@ -207,10 +207,10 @@ export function useAddMessage(sessionId: string) {
       queryClient.setQueryData<AgentMessage[]>(
         ['agent-messages', sessionId],
         (old = []) =>
-          old.map((m) => (m.id === tempId ? (data as AgentMessage) : m))
+          old.map((m) => (m.id === tempId ? (data as unknown as AgentMessage) : m))
       )
 
-      return data as AgentMessage
+      return data as unknown as AgentMessage
     },
     [sessionId, queryClient]
   )

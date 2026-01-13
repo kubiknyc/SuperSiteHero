@@ -83,7 +83,7 @@ export function useAgentSession(options: UseAgentSessionOptions = {}): UseAgentS
     error: sessionError,
   } = useQuery({
     queryKey: [SESSION_QUERY_KEY, activeSessionId],
-    queryFn: async () => {
+    queryFn: async (): Promise<AgentSession | null> => {
       if (!activeSessionId) {return null}
 
       const { data, error } = await supabase
@@ -93,7 +93,7 @@ export function useAgentSession(options: UseAgentSessionOptions = {}): UseAgentS
         .single()
 
       if (error) {throw error}
-      return data as AgentSession
+      return data as unknown as AgentSession
     },
     enabled: !!activeSessionId,
     staleTime: 30000, // 30 seconds
@@ -133,7 +133,7 @@ export function useAgentSession(options: UseAgentSessionOptions = {}): UseAgentS
 
       const { error } = await supabase
         .from('agent_sessions')
-        .update(dto)
+        .update(dto as any)
         .eq('id', activeSessionId)
 
       if (error) {throw error}

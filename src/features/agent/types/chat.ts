@@ -59,6 +59,7 @@ export type StreamChunkType =
   | 'tool_call_end'
   | 'tool_result'
   | 'message_complete'
+  | 'confirmation_required'
   | 'error'
 
 export interface StreamChunk {

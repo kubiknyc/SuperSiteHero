@@ -15,7 +15,8 @@ export interface NavItem {
   path: string
   label: string
   icon: LucideIcon
-  badge?: number
+  badge?: number | React.ComponentType
+  description?: string
 }
 
 interface NavLinkItemProps {
@@ -90,7 +91,7 @@ export function NavLinkItem({
       {isExpanded && (
         <>
           <span className="flex-1 text-sm whitespace-nowrap">{item.label}</span>
-          {item.badge !== undefined && item.badge > 0 && (
+          {item.badge !== undefined && (typeof item.badge === 'number' ? item.badge > 0 : true) && (
             <span
               className={cn(
                 'px-2 py-0.5 text-xs font-medium rounded-full',
@@ -98,14 +99,14 @@ export function NavLinkItem({
                 isNested && 'px-1.5'
               )}
             >
-              {item.badge}
+              {typeof item.badge === 'number' ? item.badge : <item.badge />}
             </span>
           )}
         </>
       )}
 
       {/* Badge dot when collapsed */}
-      {!isExpanded && item.badge !== undefined && item.badge > 0 && (
+      {!isExpanded && item.badge !== undefined && (typeof item.badge === 'number' ? item.badge > 0 : true) && (
         <span
           className={cn(
             'absolute bg-blue-500 rounded-full',
@@ -124,9 +125,9 @@ export function NavLinkItem({
         <TooltipContent side="right" sideOffset={12}>
           <p className="flex items-center gap-2">
             {item.label}
-            {item.badge !== undefined && item.badge > 0 && (
+            {item.badge !== undefined && (typeof item.badge === 'number' ? item.badge > 0 : true) && (
               <span className="px-1.5 py-0.5 text-xs bg-blue-500/20 text-blue-400 rounded">
-                {item.badge}
+                {typeof item.badge === 'number' ? item.badge : <item.badge />}
               </span>
             )}
           </p>

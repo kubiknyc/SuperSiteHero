@@ -149,4 +149,11 @@ node_modules/**/.settings/
 
 # Task files
 # tasks.json
-# tasks/ 
+# tasks/
+
+# Claude temp files
+tmpclaude-*
+.planning/
+
+# Backup type files
+*.ts.backup

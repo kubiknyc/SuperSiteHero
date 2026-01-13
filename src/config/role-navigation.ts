@@ -539,7 +539,7 @@ export function isPortalRole(role: DefaultRole): boolean {
  * Get portal base path for portal roles
  */
 export function getPortalBasePath(role: DefaultRole): string | null {
-  if (role === 'subcontractor') return '/sub';
-  if (role === 'client') return '/client';
+  if (role === 'subcontractor') {return '/sub';}
+  if (role === 'client') {return '/client';}
   return null;
 }

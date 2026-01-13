@@ -30,6 +30,12 @@ export {
   inspectionResultHandler,
 } from './inspection-result'
 
+// Import subscription functions for use in initializeAllTriggers
+import { subscribeToDocumentUploads } from './document-uploaded'
+import { subscribeToRFICreation } from './rfi-created'
+import { subscribeToReportSubmissions } from './report-submitted'
+import { subscribeToInspectionResults } from './inspection-result'
+
 /**
  * Initialize all realtime subscriptions for a company
  */

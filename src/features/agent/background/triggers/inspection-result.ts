@@ -127,7 +127,7 @@ const inspectionResultHandler: TaskHandler<InspectionResultInput, InspectionProc
     task: AgentTask,
     context: TaskContext
   ): Promise<TaskResult<InspectionProcessingOutput>> {
-    const input = task.input_data as InspectionResultInput
+    const input = task.input_data as unknown as InspectionResultInput
     let totalTokens = 0
 
     try {
@@ -451,9 +451,9 @@ async function sendInspectionNotifications(
     // Get relevant users to notify
     const { data: projectUsers } = await supabase
       .from('project_users')
-      .select('user_id, role')
+      .select('user_id, project_role')
       .eq('project_id', inspection.project_id)
-      .in('role', ['project_manager', 'superintendent', 'quality_manager', 'admin'])
+      .in('project_role', ['project_manager', 'superintendent', 'quality_manager', 'admin'])
 
     if (!projectUsers || projectUsers.length === 0) {return false}
 
@@ -476,7 +476,7 @@ async function sendInspectionNotifications(
 
     for (const user of projectUsers) {
       await supabase.from('notifications').insert({
-        user_id: user.user_id,
+        user_id: (user as any).user_id,
         company_id: task.company_id,
         title,
         message,
@@ -604,7 +604,7 @@ export function subscribeToInspectionResults(companyId: string): () => void {
 // Register Handler
 // ============================================================================
 
-registerTaskHandler(inspectionResultHandler)
+registerTaskHandler(inspectionResultHandler as unknown as TaskHandler)
 
 // ============================================================================
 // Exports

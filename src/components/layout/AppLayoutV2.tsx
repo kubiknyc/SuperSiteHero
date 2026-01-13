@@ -147,8 +147,8 @@ export function AppLayoutV2({
 
   // Calculate main content margin based on sidebar state
   const getSidebarOffset = () => {
-    if (isTablet && isPortrait) return 0
-    if (isTablet && isLandscape) return 240 // Slightly narrower for tablet
+    if (isTablet && isPortrait) {return 0}
+    if (isTablet && isLandscape) {return 240} // Slightly narrower for tablet
     return isPinned ? SIDEBAR_EXPANDED_WIDTH : SIDEBAR_COLLAPSED_WIDTH
   }
 

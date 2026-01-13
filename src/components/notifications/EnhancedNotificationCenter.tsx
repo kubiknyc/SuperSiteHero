@@ -107,15 +107,15 @@ export function EnhancedNotificationCenter({
       user_id: '', // Not available in NotificationItemData, but required for GroupedNotification
       type: n.type || 'general',
       title: n.title,
-      message: n.message,
+      message: n.message || null,
       is_read: n.is_read ?? false,
       created_at: n.created_at || new Date().toISOString(),
       priority: n.priority || 'normal',
-      project_id: n.project?.id || null,
-      project_name: n.project?.name || null,
-      sender_id: n.sender?.id || null,
-      sender_name: n.sender?.name || null,
-      sender_avatar_url: n.sender?.avatar_url || null,
+      project_id: n.project?.id ?? null,
+      project_name: n.project?.name ?? null,
+      sender_id: n.sender?.id ?? null,
+      sender_name: n.sender?.name ?? null,
+      sender_avatar_url: n.sender?.avatar_url ?? null,
     })),
     groupBy
   )
@@ -309,17 +309,50 @@ export function EnhancedNotificationCenter({
               </div>
             ) : (
               <div className="divide-y">
-                {groups.map(group => (
-                  <NotificationGroup
-                    key={group.key}
-                    group={group as NotificationGroupData}
-                    onMarkAsRead={onMarkAsRead}
-                    onClick={onClick}
-                    onApprove={handleApprove}
-                    onReject={handleReject}
-                    isActionPending={isActionPending}
-                  />
-                ))}
+                {groups.map(group => {
+                  // Convert GroupedNotification[] to NotificationItemData[]
+                  const groupData: NotificationGroupData = {
+                    key: group.key,
+                    label: group.label,
+                    count: group.count,
+                    unreadCount: group.unreadCount,
+                    notifications: group.notifications.map(gn => {
+                      // Find the original notification to preserve all properties
+                      const original = filteredNotifications.find(fn => fn.id === gn.id);
+                      return original || {
+                        id: gn.id,
+                        type: gn.type,
+                        title: gn.title,
+                        message: gn.message,
+                        is_read: gn.is_read,
+                        created_at: gn.created_at,
+                        priority: gn.priority,
+                        related_to_id: null,
+                        related_to_type: null,
+                        sender: gn.sender_id ? {
+                          id: gn.sender_id,
+                          name: gn.sender_name || '',
+                          avatar_url: gn.sender_avatar_url,
+                        } : undefined,
+                        project: gn.project_id ? {
+                          id: gn.project_id,
+                          name: gn.project_name || '',
+                        } : undefined,
+                      };
+                    }),
+                  };
+                  return (
+                    <NotificationGroup
+                      key={group.key}
+                      group={groupData}
+                      onMarkAsRead={onMarkAsRead}
+                      onClick={onClick}
+                      onApprove={handleApprove}
+                      onReject={handleReject}
+                      isActionPending={isActionPending}
+                    />
+                  );
+                })}
               </div>
             )}
           </ScrollArea>

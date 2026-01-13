@@ -77,28 +77,32 @@ export const analyzeChangeOrderImpactTool = createTool<AnalyzeImpactInput, Analy
     required: ['project_id', 'description']
   },
 
-  async execute(input: AnalyzeImpactInput, context: AgentContext): Promise<AnalyzeImpactOutput> {
+  async execute(input: AnalyzeImpactInput, context: AgentContext) {
     const { project_id, description, estimated_cost = 0, estimated_days = 0, affected_areas = [], change_type = 'modification' } = input
 
     // Get project budget info
     const { data: project } = await supabase
       .from('projects')
-      .select('id, name, budget, contract_value, contingency_amount, contingency_used, spent_to_date')
+      .select('id, name, budget')
       .eq('id', project_id)
       .single()
+
+    const projectAny = project as any
 
     // Get existing change orders for comparison
     const { data: existingCOs } = await supabase
       .from('change_orders')
-      .select('id, co_number, title, description, requested_amount, approved_amount, schedule_impact_days, status')
+      .select('id, title, description, status')
       .eq('project_id', project_id)
       .order('created_at', { ascending: false })
       .limit(20)
 
+    const existingCOsAny = existingCOs as any[]
+
     // Calculate cost analysis
-    const originalContract = project?.contract_value || project?.budget || 0
-    const contingencyTotal = project?.contingency_amount || 0
-    const contingencyUsed = project?.contingency_used || 0
+    const originalContract = projectAny?.contract_value || project?.budget || 0
+    const contingencyTotal = projectAny?.contingency_amount || 0
+    const contingencyUsed = projectAny?.contingency_used || 0
     const contingencyRemaining = contingencyTotal - contingencyUsed
 
     const percentOfContract = originalContract > 0
@@ -137,7 +141,7 @@ export const analyzeChangeOrderImpactTool = createTool<AnalyzeImpactInput, Analy
     }
 
     // Find similar past change orders
-    const similarCOs = findSimilarChangeOrders(description, existingCOs || [])
+    const similarCOs = findSimilarChangeOrders(description, existingCOsAny || [])
 
     // Identify risk factors
     const riskFactors = identifyRiskFactors(
@@ -216,16 +220,16 @@ function findSimilarChangeOrders(description: string, existingCOs: any[]): Array
   const keywords = description.toLowerCase().split(/\s+/).filter(w => w.length > 3)
 
   return existingCOs
-    .filter(co => {
-      const coText = (co.title + ' ' + co.description).toLowerCase()
+    .filter((co: any) => {
+      const coText = ((co.title || '') + ' ' + (co.description || '')).toLowerCase()
       return keywords.some(kw => coText.includes(kw))
     })
     .slice(0, 3)
-    .map(co => ({
-      number: co.co_number || 'N/A',
+    .map((co: any) => ({
+      number: co.co_number || co.pco_number || 'N/A',
       description: co.title || co.description?.substring(0, 50) || 'N/A',
-      final_cost: co.approved_amount || co.requested_amount || 0,
-      days_added: co.schedule_impact_days || 0
+      final_cost: co.approved_amount || co.proposed_amount || 0,
+      days_added: co.schedule_impact_days || co.approved_days || 0
     }))
 }
 

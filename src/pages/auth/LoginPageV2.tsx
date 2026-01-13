@@ -129,14 +129,14 @@ export function LoginPageV2() {
       await Promise.race([signIn(email, password), timeoutPromise])
 
       // Only update state if still mounted
-      if (!mountedRef.current) return
+      if (!mountedRef.current) {return}
 
       rateLimit.reset()
       success('Welcome back', 'You have been signed in successfully.')
       navigate('/')
     } catch (err) {
       // Only update state if still mounted
-      if (!mountedRef.current) return
+      if (!mountedRef.current) {return}
 
       const state = rateLimit.recordAttempt()
       if (state.isLocked) {

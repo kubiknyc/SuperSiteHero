@@ -132,25 +132,55 @@ function photoToUploadItem(photo: QueuedPhoto): UploadQueueItem {
 // Convert QueuedMutation (sync queue item) to UploadQueueItem format
 function mutationToUploadItem(mutation: QueuedMutation): UploadQueueItem {
   // Check if this mutation contains file data
-  const _hasFileData = mutation.data &&
-    (mutation.data.file || mutation.data.fileData || mutation.data.blob)
+  const data = mutation.data;
+  const _hasFileData = data &&
+    (('file' in data) || ('fileData' in data) || ('blob' in data));
 
-  const fileSize = mutation.data?.fileSize ||
-    mutation.data?.file?.size ||
-    (mutation.data?.blob ? mutation.data.blob.size : 0) ||
-    0
+  // Extract file size with type guards
+  let fileSize = 0;
+  if (data) {
+    if ('fileSize' in data && typeof data.fileSize === 'number') {
+      fileSize = data.fileSize;
+    } else if ('file' in data && data.file && typeof data.file === 'object' && 'size' in data.file) {
+      fileSize = data.file.size as number;
+    } else if ('blob' in data && data.blob && typeof data.blob === 'object' && 'size' in data.blob) {
+      fileSize = data.blob.size as number;
+    }
+  }
 
-  const fileName = mutation.data?.fileName ||
-    mutation.data?.file?.name ||
-    `${mutation.table}-${mutation.recordId?.slice(0, 8) || 'unknown'}`
+  // Extract file name with type guards
+  let fileName = `${mutation.table}-${mutation.recordId?.slice(0, 8) || 'unknown'}`;
+  if (data) {
+    if ('fileName' in data && typeof data.fileName === 'string') {
+      fileName = data.fileName;
+    } else if ('file' in data && data.file && typeof data.file === 'object' && 'name' in data.file) {
+      fileName = data.file.name as string;
+    }
+  }
 
-  const mimeType = mutation.data?.mimeType ||
-    mutation.data?.file?.type ||
-    'application/octet-stream'
+  // Extract mime type with type guards
+  let mimeType = 'application/octet-stream';
+  if (data) {
+    if ('mimeType' in data && typeof data.mimeType === 'string') {
+      mimeType = data.mimeType;
+    } else if ('file' in data && data.file && typeof data.file === 'object' && 'type' in data.file) {
+      mimeType = data.file.type as string;
+    }
+  }
 
-  let type: 'photo' | 'document' | 'file' = 'file'
+  let type: 'photo' | 'document' | 'file' = 'file';
   if (mimeType.startsWith('image/')) {type = 'photo'}
   else if (mimeType.includes('pdf') || mimeType.includes('document')) {type = 'document'}
+
+  // Extract entity name with type guards
+  let entityName: string | undefined;
+  if (data) {
+    if ('name' in data && typeof data.name === 'string') {
+      entityName = data.name;
+    } else if ('title' in data && typeof data.title === 'string') {
+      entityName = data.title;
+    }
+  }
 
   return {
     id: mutation.id,
@@ -169,7 +199,7 @@ function mutationToUploadItem(mutation: QueuedMutation): UploadQueueItem {
     relatedEntity: mutation.table ? {
       type: mutation.table.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
       id: mutation.recordId || mutation.id,
-      name: mutation.data?.name || mutation.data?.title,
+      name: entityName,
     } : undefined,
   }
 }
@@ -189,17 +219,21 @@ async function getUploadQueueItems(): Promise<UploadQueueItem[]> {
     const mutations = await getAllFromStore<QueuedMutation>(STORES.SYNC_QUEUE)
     for (const mutation of mutations) {
       // Only include mutations that involve file uploads
-      if (mutation.data && (
-        mutation.data.file ||
-        mutation.data.fileData ||
-        mutation.data.blob ||
-        mutation.data.attachment ||
-        mutation.type === 'create' && (
-          mutation.table === 'documents' ||
-          mutation.table === 'photos' ||
-          mutation.table === 'attachments'
-        )
-      )) {
+      const data = mutation.data;
+      const hasFileData = data && (
+        ('file' in data) ||
+        ('fileData' in data) ||
+        ('blob' in data) ||
+        ('attachment' in data)
+      );
+
+      const isFileTable = mutation.type === 'create' && (
+        mutation.table === 'documents' ||
+        mutation.table === 'photos' ||
+        mutation.table === 'attachments'
+      );
+
+      if (hasFileData || isFileTable) {
         items.push(mutationToUploadItem(mutation))
       }
     }

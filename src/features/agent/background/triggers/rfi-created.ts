@@ -25,7 +25,7 @@ interface SimilarRFI {
   id: string
   number: string
   subject: string
-  answer: string | null
+  response: string | null
   assigned_to_role: string | null
   similarity_score: number
   relevant_excerpt: string | null
@@ -121,7 +121,7 @@ const rfiCreatedHandler: TaskHandler<RFICreatedInput, RFIProcessingOutput> = {
     task: AgentTask,
     context: TaskContext
   ): Promise<TaskResult<RFIProcessingOutput>> {
-    const input = task.input_data as RFICreatedInput
+    const input = task.input_data as unknown as RFICreatedInput
     let totalTokens = 0
 
     try {
@@ -261,7 +261,7 @@ async function findSimilarRFIs(
       rfi_number,
       subject,
       question,
-      answer,
+      response,
       assigned_to,
       status
     `)
@@ -278,7 +278,7 @@ async function findSimilarRFIs(
   const searchTerms = searchText.split(/\s+/).filter((t) => t.length > 3)
 
   const scored = rfis.map((rfi) => {
-    const rfiText = `${rfi.subject} ${rfi.question} ${rfi.answer || ''}`.toLowerCase()
+    const rfiText = `${rfi.subject} ${rfi.question} ${(rfi as any).response || ''}`.toLowerCase()
 
     let matchCount = 0
     let excerpt: string | null = null
@@ -287,12 +287,12 @@ async function findSimilarRFIs(
       if (rfiText.includes(term)) {
         matchCount++
         // Find a relevant excerpt
-        if (!excerpt && rfi.answer) {
-          const idx = rfi.answer.toLowerCase().indexOf(term)
+        if (!excerpt && (rfi as any).response) {
+          const idx = (rfi as any).response.toLowerCase().indexOf(term)
           if (idx >= 0) {
             const start = Math.max(0, idx - 50)
-            const end = Math.min(rfi.answer.length, idx + 100)
-            excerpt = rfi.answer.slice(start, end)
+            const end = Math.min((rfi as any).response.length, idx + 100)
+            excerpt = (rfi as any).response.slice(start, end)
           }
         }
       }
@@ -304,10 +304,10 @@ async function findSimilarRFIs(
 
     return {
       id: rfi.id,
-      number: rfi.rfi_number,
+      number: (rfi as any).rfi_number,
       subject: rfi.subject,
-      answer: rfi.answer,
-      assigned_to_role: rfi.assigned_to,
+      response: (rfi as any).response,
+      assigned_to_role: (rfi as any).assigned_to,
       similarity_score: Math.round(similarity),
       relevant_excerpt: excerpt,
     }
@@ -320,9 +320,9 @@ async function findSimilarRFIs(
 }
 
 function hasUsefulPrecedents(similarRfis: SimilarRFI[]): boolean {
-  // Check if we have at least one similar RFI with a useful answer
+  // Check if we have at least one similar RFI with a useful response
   return similarRfis.some(
-    (rfi) => rfi.similarity_score >= 40 && rfi.answer && rfi.answer.length > 50
+    (rfi) => rfi.similarity_score >= 40 && rfi.response && rfi.response.length > 50
   )
 }
 
@@ -341,7 +341,7 @@ async function suggestRouting(
     .from('project_users')
     .select(`
       user_id,
-      role,
+      project_role,
       users!inner(id, first_name, last_name)
     `)
     .eq('project_id', rfi.project_id)
@@ -361,7 +361,7 @@ ${similarRfis.map((r) => `- ${r.number}: ${r.subject} (assigned to: ${r.assigned
 
   if (teamMembers && teamMembers.length > 0) {
     prompt += `\n\nProject Team:
-${teamMembers.map((m: any) => `- ${m.users.first_name} ${m.users.last_name} (${m.role}) [${m.user_id}]`).join('\n')}`
+${teamMembers.map((m: any) => `- ${m.users.first_name} ${m.users.last_name} (${m.project_role}) [${m.user_id}]`).join('\n')}`
   }
 
   const result = await aiService.extractJSON<RoutingSuggestion>(
@@ -390,7 +390,7 @@ async function draftResponse(
   similarRfis: SimilarRFI[]
 ): Promise<{ draft: ResponseDraft; tokens: number }> {
   // Use similar RFIs as context for drafting
-  const answeredRfis = similarRfis.filter((r) => r.answer && r.answer.length > 50)
+  const answeredRfis = similarRfis.filter((r) => r.response && r.response.length > 50)
 
   let prompt = `Draft a response for this RFI:
 
@@ -404,7 +404,7 @@ ${rfi.spec_section ? `Spec Section: ${rfi.spec_section}` : ''}`
 ${answeredRfis.map((r) => `
 --- ${r.number}: ${r.subject} ---
 Question context: (similarity: ${r.similarity_score}%)
-Answer: ${r.answer}
+Answer: ${r.response}
 `).join('\n')}`
   }
 
@@ -573,7 +573,7 @@ export function subscribeToRFICreation(companyId: string): () => void {
 // Register Handler
 // ============================================================================
 
-registerTaskHandler(rfiCreatedHandler)
+registerTaskHandler(rfiCreatedHandler as unknown as TaskHandler)
 
 // ============================================================================
 // Exports

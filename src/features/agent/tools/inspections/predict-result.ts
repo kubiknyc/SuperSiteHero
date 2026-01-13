@@ -177,33 +177,39 @@ export const predictInspectionResultTool = createTool<PredictInspectionResultInp
     // Get historical inspection data
     const { data: historicalInspections } = await supabase
       .from('inspections')
-      .select('result, failure_reason, notes')
+      .select('result, inspection_type')
       .eq('project_id', project_id)
       .eq('inspection_type', inspection_type)
       .not('result', 'is', null)
 
+    const historicalInspectionsAny = historicalInspections as any[]
+
     // Also get company-wide history for this type
     const { data: companyHistory } = await supabase
       .from('inspections')
-      .select('result, failure_reason')
+      .select('result')
       .eq('inspection_type', inspection_type)
       .not('result', 'is', null)
       .limit(100)
 
+    const companyHistoryAny = companyHistory as any[]
+
     // Calculate pass rate
-    const totalHistorical = companyHistory?.length || 0
-    const passedHistorical = companyHistory?.filter(i => i.result === 'pass').length || 0
+    const totalHistorical = companyHistoryAny?.length || 0
+    const passedHistorical = companyHistoryAny?.filter((i: any) => i.result === 'pass').length || 0
     const passRate = totalHistorical > 0 ? (passedHistorical / totalHistorical) * 100 : 75 // Default to 75% if no history
 
     // Extract common issues
-    const failureReasons = companyHistory
-      ?.filter(i => i.result === 'fail' && i.failure_reason)
-      .map(i => i.failure_reason) || []
+    const failureReasons = companyHistoryAny
+      ?.filter((i: any) => i.result === 'fail' && i.failure_reasons)
+      .map((i: any) => i.failure_reasons) || []
 
     const issueCount = new Map<string, number>()
     for (const reason of failureReasons) {
-      const normalized = reason.toLowerCase()
-      issueCount.set(normalized, (issueCount.get(normalized) || 0) + 1)
+      if (typeof reason === 'string') {
+        const normalized = reason.toLowerCase()
+        issueCount.set(normalized, (issueCount.get(normalized) || 0) + 1)
+      }
     }
 
     const commonIssues = Array.from(issueCount.entries())

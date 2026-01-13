@@ -197,7 +197,7 @@ async function createAuthenticatedSession(options: {
       const errorElement = page.locator(selector);
       if (await errorElement.isVisible({ timeout: 1000 }).catch(() => false)) {
         errorMessage = await errorElement.textContent().catch(() => null);
-        if (errorMessage) break;
+        if (errorMessage) {break;}
       }
     }
 

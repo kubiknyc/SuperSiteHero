@@ -137,7 +137,7 @@ export function useAgentConfig(options: UseAgentConfigOptions = {}): UseAgentCon
         throw error
       }
 
-      return data as AgentConfiguration
+      return data as unknown as AgentConfiguration
     },
     enabled,
     staleTime: 60000, // 1 minute
@@ -179,13 +179,13 @@ export function useAgentConfig(options: UseAgentConfigOptions = {}): UseAgentCon
           .update({
             ...updates,
             updated_at: new Date().toISOString(),
-          })
+          } as any)
           .eq('company_id', profile.company_id)
           .select()
           .single()
 
         if (error) {throw error}
-        result = data as AgentConfiguration
+        result = data as unknown as AgentConfiguration
       } else {
         // Create new configuration with defaults + updates
         const newConfig = {
@@ -196,12 +196,12 @@ export function useAgentConfig(options: UseAgentConfigOptions = {}): UseAgentCon
 
         const { data, error } = await supabase
           .from('agent_configuration')
-          .insert(newConfig)
+          .insert(newConfig as any)
           .select()
           .single()
 
         if (error) {throw error}
-        result = data as AgentConfiguration
+        result = data as unknown as AgentConfiguration
       }
 
       return result

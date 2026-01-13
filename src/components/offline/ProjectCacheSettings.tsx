@@ -122,9 +122,13 @@ async function calculateProjectStorageSize(projectId: string): Promise<number> {
     for await (const cursor of tx.store) {
       const entry = cursor.value as CachedData
       // Check if this cache entry belongs to the project
-      if (entry.key.includes(projectId) ||
-          (entry.data && typeof entry.data === 'object' &&
-           (entry.data.project_id === projectId || entry.data.projectId === projectId))) {
+      const belongsToProject = entry.key.includes(projectId) ||
+        (entry.data && typeof entry.data === 'object' && !Array.isArray(entry.data) && (
+          ('project_id' in entry.data && entry.data.project_id === projectId) ||
+          ('projectId' in entry.data && entry.data.projectId === projectId)
+        ));
+
+      if (belongsToProject) {
         // Estimate size based on JSON serialization
         totalSize += new Blob([JSON.stringify(entry.data)]).size
       }
@@ -160,14 +164,15 @@ async function getCachedProjectsFromDB(): Promise<CachedProject[]> {
       let projectName = 'Unknown Project'
       let projectStatus: 'active' | 'completed' | 'archived' = 'active'
 
-      if (entry.table === 'projects' && entry.data) {
+      if (entry.table === 'projects' && entry.data && !Array.isArray(entry.data)) {
         // This is a project record itself
-        projectId = entry.data.id
-        projectName = entry.data.name || projectName
-        projectStatus = entry.data.status || projectStatus
-      } else if (entry.data && typeof entry.data === 'object') {
+        if ('id' in entry.data) {projectId = entry.data.id as string}
+        if ('name' in entry.data) {projectName = (entry.data.name as string) || projectName}
+        if ('status' in entry.data) {projectStatus = (entry.data.status as 'active' | 'completed' | 'archived') || projectStatus}
+      } else if (entry.data && typeof entry.data === 'object' && !Array.isArray(entry.data)) {
         // Check for project_id in the data
-        projectId = entry.data.project_id || entry.data.projectId
+        if ('project_id' in entry.data) {projectId = entry.data.project_id as string}
+        else if ('projectId' in entry.data) {projectId = entry.data.projectId as string}
       }
 
       // Try to extract from key pattern: "table:project_id:..."
@@ -194,9 +199,9 @@ async function getCachedProjectsFromDB(): Promise<CachedProject[]> {
         existing.lastAccessedAt = Math.max(existing.lastAccessedAt, entry.syncedAt || entry.timestamp)
 
         // Update name/status if this is a project record
-        if (entry.table === 'projects' && entry.data) {
-          existing.projectName = entry.data.name || existing.projectName
-          existing.projectStatus = entry.data.status || existing.projectStatus
+        if (entry.table === 'projects' && entry.data && !Array.isArray(entry.data)) {
+          if ('name' in entry.data) {existing.projectName = (entry.data.name as string) || existing.projectName}
+          if ('status' in entry.data) {existing.projectStatus = (entry.data.status as 'active' | 'completed' | 'archived') || existing.projectStatus}
         }
 
         existing.items.push(entry)
@@ -356,12 +361,12 @@ async function clearProjectCacheFromDB(projectId: string): Promise<void> {
       const entry = cursor.value as CachedData
 
       // Check if this entry belongs to the project
-      const belongsToProject =
-        entry.key.includes(projectId) ||
-        (entry.data && typeof entry.data === 'object' &&
-         (entry.data.project_id === projectId ||
-          entry.data.projectId === projectId ||
-          entry.data.id === projectId))
+      const belongsToProject = entry.key.includes(projectId) ||
+        (entry.data && typeof entry.data === 'object' && !Array.isArray(entry.data) && (
+          ('project_id' in entry.data && entry.data.project_id === projectId) ||
+          ('projectId' in entry.data && entry.data.projectId === projectId) ||
+          ('id' in entry.data && entry.data.id === projectId)
+        ))
 
       if (belongsToProject) {
         await cursor.delete()

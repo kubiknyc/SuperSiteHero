@@ -209,78 +209,97 @@ export const flagRejectionRiskTool = createTool<FlagRejectionRiskInput, FlagReje
         itemValue = data.amount as number | undefined
       }
     } else if (item_type === 'invoice') {
-      const { data } = await supabase
-        .from('invoices')
-        .select('*')
-        .eq('id', item_id)
-        .single()
-      if (data) {
-        itemData = data as Record<string, unknown>
-        itemDescription = `Invoice #${data.invoice_number} - ${data.vendor_name}`
-        itemValue = data.amount as number | undefined
+      try {
+        const { data } = await (supabase as any)
+          .from('invoices')
+          .select('*')
+          .eq('id', item_id)
+          .single()
+        if (data) {
+          itemData = data as Record<string, unknown>
+          itemDescription = `Invoice #${data.invoice_number || 'N/A'} - ${data.vendor_name || 'Unknown'}`
+          itemValue = data.amount as number | undefined
+        }
+      } catch (e) {
+        itemDescription = `Invoice ${item_id}`
       }
     } else if (item_type === 'submittal') {
-      const { data } = await supabase
-        .from('submittals')
-        .select('*')
-        .eq('id', item_id)
-        .single()
-      if (data) {
-        itemData = data as Record<string, unknown>
-        itemDescription = `${data.number}: ${data.title}`
+      try {
+        const { data } = await (supabase as any)
+          .from('submittals')
+          .select('*')
+          .eq('id', item_id)
+          .single()
+        if (data) {
+          itemData = data as Record<string, unknown>
+          itemDescription = `${data.number || 'N/A'}: ${data.title || 'Submittal'}`
+        }
+      } catch (e) {
+        itemDescription = `Submittal ${item_id}`
       }
     } else if (item_type === 'rfi') {
-      const { data } = await supabase
-        .from('rfis')
-        .select('*')
-        .eq('id', item_id)
-        .single()
-      if (data) {
-        itemData = data as Record<string, unknown>
-        itemDescription = `RFI #${data.number}: ${data.subject}`
+      try {
+        const { data } = await (supabase as any)
+          .from('rfis')
+          .select('*')
+          .eq('id', item_id)
+          .single()
+        if (data) {
+          itemData = data as Record<string, unknown>
+          itemDescription = `RFI #${data.number || 'N/A'}: ${data.subject || 'Unknown'}`
+        }
+      } catch (e) {
+        itemDescription = `RFI ${item_id}`
       }
     } else if (item_type === 'payment_application') {
-      const { data } = await supabase
-        .from('payment_applications')
-        .select('*')
-        .eq('id', item_id)
-        .single()
-      if (data) {
-        itemData = data as Record<string, unknown>
-        itemDescription = `Payment Application #${(data as Record<string, unknown>).application_number}`
-        itemValue = (data as Record<string, unknown>).amount as number | undefined
+      try {
+        const { data } = await (supabase as any)
+          .from('payment_applications')
+          .select('*')
+          .eq('id', item_id)
+          .single()
+        if (data) {
+          itemData = data as Record<string, unknown>
+          itemDescription = `Payment Application #${data.application_number || 'N/A'}`
+          itemValue = data.amount as number | undefined
+        }
+      } catch (e) {
+        itemDescription = `Payment Application ${item_id}`
       }
     } else if (item_type === 'purchase_order') {
-      const { data } = await supabase
-        .from('purchase_orders')
-        .select('*')
-        .eq('id', item_id)
-        .single()
-      if (data) {
-        itemData = data as Record<string, unknown>
-        itemDescription = `PO #${(data as Record<string, unknown>).po_number}`
-        itemValue = (data as Record<string, unknown>).amount as number | undefined
+      try {
+        const { data } = await (supabase as any)
+          .from('purchase_orders')
+          .select('*')
+          .eq('id', item_id)
+          .single()
+        if (data) {
+          itemData = data as Record<string, unknown>
+          itemDescription = `PO #${data.po_number || 'N/A'}`
+          itemValue = data.amount as number | undefined
+        }
+      } catch (e) {
+        itemDescription = `Purchase Order ${item_id}`
       }
     }
 
     // Get historical rejection data for this item type
-    const { data: historicalItems } = await supabase
+    const { data: historicalItems } = await (supabase
       .from('workflow_items')
-      .select('id, status, rejection_reason, revision_count, created_at, completed_at')
+      .select('id, status, created_at, updated_at')
       .eq('project_id', project_id)
-      .eq('item_type', item_type)
       .order('created_at', { ascending: false })
-      .limit(100)
+      .limit(100)) as any
 
     // Calculate historical statistics
     const totalItems = historicalItems?.length || 0
-    const rejectedItems = historicalItems?.filter(item =>
+    const rejectedItems = historicalItems?.filter((item: any) =>
       item.status === 'rejected' || (item.revision_count && item.revision_count > 0)
     ) || []
     const rejectionRate = totalItems > 0 ? rejectedItems.length / totalItems : 0.2 // Default 20% if no history
 
     // Count revision statistics
-    const revisionCounts = historicalItems?.map(item => item.revision_count || 0) || []
+    const revisionCounts = historicalItems?.map((item: any) => item.revision_count || 0) || []
     const avgRevisions = revisionCounts.length > 0
       ? revisionCounts.reduce((a, b) => a + b, 0) / revisionCounts.length
       : 0
@@ -288,9 +307,10 @@ export const flagRejectionRiskTool = createTool<FlagRejectionRiskInput, FlagReje
     // Analyze rejection reasons from history
     const rejectionReasonCounts = new Map<string, number>()
     for (const item of rejectedItems) {
-      if (item.rejection_reason) {
-        const count = rejectionReasonCounts.get(item.rejection_reason) || 0
-        rejectionReasonCounts.set(item.rejection_reason, count + 1)
+      const itemAny = item as any
+      if (itemAny.rejection_reason) {
+        const count = rejectionReasonCounts.get(itemAny.rejection_reason) || 0
+        rejectionReasonCounts.set(itemAny.rejection_reason, count + 1)
       }
     }
 

@@ -137,7 +137,7 @@ const reportSubmittedHandler: TaskHandler<ReportSubmittedInput, ReportProcessing
     task: AgentTask,
     context: TaskContext
   ): Promise<TaskResult<ReportProcessingOutput>> {
-    const input = task.input_data as ReportSubmittedInput
+    const input = task.input_data as unknown as ReportSubmittedInput
     let totalTokens = 0
 
     try {
@@ -147,20 +147,20 @@ const reportSubmittedHandler: TaskHandler<ReportSubmittedInput, ReportProcessing
         .select(`
           id,
           report_date,
-          summary,
-          work_performed,
-          weather_conditions,
+          work_summary,
+          work_completed,
+          weather_condition,
           temperature_high,
           temperature_low,
-          delays,
+          observations,
           issues,
-          notes,
+          comments,
           total_workers,
           project_id,
           created_by
         `)
         .eq('id', input.report_id)
-        .single()
+        .single() as { data: any; error: any }
 
       if (fetchError || !report) {
         return {
@@ -316,21 +316,11 @@ function computeMetrics(
 }
 
 function buildReportContent(
-  report: {
-    report_date: string
-    summary: string | null
-    work_performed: string | null
-    weather_conditions: string | null
-    temperature_high: number | null
-    temperature_low: number | null
-    delays: string | null
-    issues: string | null
-    notes: string | null
-  },
+  report: Record<string, unknown>,
   laborEntries: Array<{ trade: string | null; headcount: number | null; hours_worked: number | null }>,
   equipmentEntries: Array<{ equipment_name: string | null; hours_used: number | null; status: string | null }>
 ): string {
-  const date = new Date(report.report_date).toLocaleDateString('en-US', {
+  const date = new Date(report.report_date as string).toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
@@ -339,17 +329,17 @@ function buildReportContent(
 
   let content = `DAILY FIELD REPORT - ${date}\n\n`
 
-  content += `WEATHER: ${report.weather_conditions || 'Not recorded'}\n`
+  content += `WEATHER: ${report.weather_condition || 'Not recorded'}\n`
   if (report.temperature_high) {content += `High: ${report.temperature_high}F `}
   if (report.temperature_low) {content += `Low: ${report.temperature_low}F`}
   content += '\n\n'
 
-  if (report.summary) {
-    content += `SUMMARY:\n${report.summary}\n\n`
+  if (report.work_summary) {
+    content += `SUMMARY:\n${report.work_summary}\n\n`
   }
 
-  if (report.work_performed) {
-    content += `WORK PERFORMED:\n${report.work_performed}\n\n`
+  if (report.work_completed) {
+    content += `WORK COMPLETED:\n${report.work_completed}\n\n`
   }
 
   if (laborEntries.length > 0) {
@@ -368,16 +358,16 @@ function buildReportContent(
     content += '\n'
   }
 
-  if (report.delays) {
-    content += `DELAYS:\n${report.delays}\n\n`
+  if (report.observations) {
+    content += `OBSERVATIONS:\n${report.observations}\n\n`
   }
 
   if (report.issues) {
     content += `ISSUES:\n${report.issues}\n\n`
   }
 
-  if (report.notes) {
-    content += `NOTES:\n${report.notes}\n\n`
+  if (report.comments) {
+    content += `COMMENTS:\n${report.comments}\n\n`
   }
 
   return content
@@ -488,7 +478,7 @@ async function createTaskFromActionItem(
 
 async function notifyAboutIssues(
   task: AgentTask,
-  report: { report_date: string; project_id: string },
+  report: Record<string, unknown>,
   issues: FlaggedIssue[]
 ): Promise<void> {
   const criticalIssues = issues.filter((i) => i.severity === 'critical' || i.severity === 'high')
@@ -499,12 +489,12 @@ async function notifyAboutIssues(
     const { data: managers } = await supabase
       .from('project_users')
       .select('user_id')
-      .eq('project_id', report.project_id)
-      .in('role', ['project_manager', 'superintendent', 'admin'])
+      .eq('project_id', report.project_id as string)
+      .in('project_role', ['project_manager', 'superintendent', 'admin'])
 
     if (!managers || managers.length === 0) {return}
 
-    const date = new Date(report.report_date).toLocaleDateString()
+    const date = new Date(report.report_date as string).toLocaleDateString()
     const issueList = criticalIssues
       .slice(0, 3)
       .map((i) => `- [${i.severity.toUpperCase()}] ${i.issue_type}: ${i.description}`)
@@ -512,7 +502,7 @@ async function notifyAboutIssues(
 
     for (const manager of managers) {
       await supabase.from('notifications').insert({
-        user_id: manager.user_id,
+        user_id: (manager as any).user_id,
         company_id: task.company_id,
         title: `Daily Report ${date} - Issues Flagged`,
         message: `${criticalIssues.length} issue(s) require attention:\n${issueList}`,
@@ -638,7 +628,7 @@ export function subscribeToReportSubmissions(companyId: string): () => void {
 // Register Handler
 // ============================================================================
 
-registerTaskHandler(reportSubmittedHandler)
+registerTaskHandler(reportSubmittedHandler as unknown as TaskHandler)
 
 // ============================================================================
 // Exports
