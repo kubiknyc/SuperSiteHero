@@ -219,49 +219,264 @@ export default defineConfig(({ mode }) => {
     // Code splitting and chunk optimization
     rollupOptions: {
       output: {
-        manualChunks: {
-          // Separate vendor chunks for better caching and parallel loading
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-query': ['@tanstack/react-query'],
-          'vendor-supabase': ['@supabase/supabase-js'],
-          'vendor-ui': ['lucide-react', 'date-fns', 'clsx', 'tailwind-merge', 'class-variance-authority'],
-          'vendor-state': ['zustand', 'react-hot-toast'],
-          // Additional chunks for larger libraries - load separately for better caching
-          'vendor-forms': ['zod', 'react-hook-form'],
-          'vendor-charts': ['recharts'],
-          // Heavy image/photo libraries - lazy loaded only when needed
-          'vendor-image-processing': ['browser-image-compression', 'jszip'],
-          'vendor-canvas': ['konva', 'react-konva', 'use-image'],
-          'vendor-photo-viewer': [
-            '@photo-sphere-viewer/core',
-            '@photo-sphere-viewer/gyroscope-plugin'
-          ],
-          // Heavy PDF and Excel libraries - lazy loaded
-          'vendor-pdf': ['jspdf', 'pdfjs-dist'],
-          'vendor-excel': ['exceljs'],
-          // Animation library
-          'vendor-animation': ['framer-motion'],
-          // Drag and drop libraries
-          'vendor-dnd': ['@dnd-kit/core', '@dnd-kit/sortable', '@dnd-kit/utilities'],
-          // Radix UI primitives - grouped for better caching
-          'vendor-radix': [
-            '@radix-ui/react-accordion',
-            '@radix-ui/react-avatar',
-            '@radix-ui/react-collapsible',
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-label',
-            '@radix-ui/react-progress',
-            '@radix-ui/react-scroll-area',
-            '@radix-ui/react-select',
-            '@radix-ui/react-separator',
-            '@radix-ui/react-slider',
-            '@radix-ui/react-slot',
-            '@radix-ui/react-switch',
-            '@radix-ui/react-tooltip',
-          ],
-          // 3D visualization libraries - heavy, rarely used
-          'vendor-three': ['three', '@react-three/fiber', '@react-three/drei'],
+        manualChunks: (id: string) => {
+          // Core React - essential, load first
+          if (id.includes('node_modules/react/') ||
+              id.includes('node_modules/react-dom/') ||
+              id.includes('node_modules/react-router')) {
+            return 'vendor-react';
+          }
+
+          // TanStack Query - core data fetching
+          if (id.includes('node_modules/@tanstack/')) {
+            return 'vendor-query';
+          }
+
+          // Supabase client
+          if (id.includes('node_modules/@supabase/')) {
+            return 'vendor-supabase';
+          }
+
+          // Core UI utilities - frequently used
+          if (id.includes('node_modules/lucide-react/') ||
+              id.includes('node_modules/clsx/') ||
+              id.includes('node_modules/tailwind-merge/') ||
+              id.includes('node_modules/class-variance-authority/')) {
+            return 'vendor-ui';
+          }
+
+          // Date handling
+          if (id.includes('node_modules/date-fns/')) {
+            return 'vendor-date';
+          }
+
+          // State management
+          if (id.includes('node_modules/zustand/') ||
+              id.includes('node_modules/react-hot-toast/') ||
+              id.includes('node_modules/sonner/')) {
+            return 'vendor-state';
+          }
+
+          // Forms and validation
+          if (id.includes('node_modules/zod/') ||
+              id.includes('node_modules/react-hook-form/') ||
+              id.includes('node_modules/@hookform/')) {
+            return 'vendor-forms';
+          }
+
+          // Charts - heavy, lazy loaded
+          if (id.includes('node_modules/recharts/')) {
+            return 'vendor-charts';
+          }
+
+          // Image processing - lazy loaded
+          if (id.includes('node_modules/browser-image-compression/')) {
+            return 'vendor-image-compression';
+          }
+
+          // JSZip - lazy loaded for downloads
+          if (id.includes('node_modules/jszip/')) {
+            return 'vendor-zip';
+          }
+
+          // Canvas/Konva - lazy loaded for drawing
+          if (id.includes('node_modules/konva/') ||
+              id.includes('node_modules/react-konva/') ||
+              id.includes('node_modules/use-image/')) {
+            return 'vendor-canvas';
+          }
+
+          // Photo sphere viewer - lazy loaded
+          if (id.includes('node_modules/@photo-sphere-viewer/')) {
+            return 'vendor-photo-viewer';
+          }
+
+          // PDF libraries - lazy loaded, split into separate chunks
+          if (id.includes('node_modules/jspdf/') ||
+              id.includes('node_modules/jspdf-autotable/')) {
+            return 'vendor-jspdf';
+          }
+          if (id.includes('node_modules/pdfjs-dist/')) {
+            return 'vendor-pdfjs';
+          }
+          if (id.includes('node_modules/react-pdf/')) {
+            return 'vendor-react-pdf';
+          }
+
+          // Excel - lazy loaded
+          if (id.includes('node_modules/exceljs/')) {
+            return 'vendor-excel';
+          }
+
+          // Animation - frequently used but can be deferred
+          if (id.includes('node_modules/framer-motion/')) {
+            return 'vendor-animation';
+          }
+
+          // Drag and drop
+          if (id.includes('node_modules/@dnd-kit/')) {
+            return 'vendor-dnd';
+          }
+
+          // Radix UI primitives
+          if (id.includes('node_modules/@radix-ui/')) {
+            return 'vendor-radix';
+          }
+
+          // 3D visualization - very heavy, rarely used
+          if (id.includes('node_modules/three/')) {
+            return 'vendor-three-core';
+          }
+          if (id.includes('node_modules/@react-three/')) {
+            return 'vendor-three-react';
+          }
+
+          // QR code scanning - lazy loaded
+          if (id.includes('node_modules/html5-qrcode/')) {
+            return 'vendor-qrcode-scanner';
+          }
+          if (id.includes('node_modules/qrcode.react/')) {
+            return 'vendor-qrcode-render';
+          }
+
+          // Emoji picker - lazy loaded
+          if (id.includes('node_modules/emoji-picker-react/')) {
+            return 'vendor-emoji';
+          }
+
+          // HTML to canvas - lazy loaded for screenshots
+          if (id.includes('node_modules/html2canvas/')) {
+            return 'vendor-html2canvas';
+          }
+
+          // TensorFlow - very heavy, AI features
+          if (id.includes('node_modules/@tensorflow/')) {
+            return 'vendor-tensorflow';
+          }
+
+          // Tesseract OCR - very heavy, lazy loaded
+          if (id.includes('node_modules/tesseract.js/')) {
+            return 'vendor-tesseract';
+          }
+
+          // Video.js - heavy, lazy loaded for video features
+          if (id.includes('node_modules/video.js/')) {
+            return 'vendor-video';
+          }
+
+          // Math.js - lazy loaded for calculations
+          if (id.includes('node_modules/mathjs/')) {
+            return 'vendor-math';
+          }
+
+          // Capacitor - mobile native features
+          if (id.includes('node_modules/@capacitor/')) {
+            return 'vendor-capacitor';
+          }
+
+          // Sentry - error tracking
+          if (id.includes('node_modules/@sentry/')) {
+            return 'vendor-sentry';
+          }
+
+          // Day picker calendar
+          if (id.includes('node_modules/react-day-picker/')) {
+            return 'vendor-calendar';
+          }
+
+          // React dropzone for file uploads
+          if (id.includes('node_modules/react-dropzone/')) {
+            return 'vendor-dropzone';
+          }
+
+          // DOMPurify for security
+          if (id.includes('node_modules/dompurify/')) {
+            return 'vendor-security';
+          }
+
+          // Vercel analytics
+          if (id.includes('node_modules/@vercel/')) {
+            return 'vendor-analytics';
+          }
+
+          // 21st extension
+          if (id.includes('node_modules/@21st-extension/')) {
+            return 'vendor-21st';
+          }
+
+          // IDB (IndexedDB) - offline storage
+          if (id.includes('node_modules/idb/')) {
+            return 'vendor-idb';
+          }
+
+          // Workbox - PWA/service worker
+          if (id.includes('node_modules/workbox-')) {
+            return 'vendor-workbox';
+          }
+
+          // Web vitals - performance monitoring
+          if (id.includes('node_modules/web-vitals/')) {
+            return 'vendor-monitoring';
+          }
+
+          // UUID generation
+          if (id.includes('node_modules/uuid/')) {
+            return 'vendor-utils';
+          }
+
+          // Pako compression
+          if (id.includes('node_modules/pako/')) {
+            return 'vendor-compression';
+          }
+
+          // EXIF reader
+          if (id.includes('node_modules/exifr/')) {
+            return 'vendor-exif';
+          }
+
+          // Debug utility
+          if (id.includes('node_modules/debug/')) {
+            return 'vendor-debug';
+          }
+
+          // RecordRTC for audio/video recording
+          if (id.includes('node_modules/recordrtc/')) {
+            return 'vendor-recording';
+          }
+
+          // Pixelmatch for image comparison
+          if (id.includes('node_modules/pixelmatch/')) {
+            return 'vendor-image-compare';
+          }
+
+          // RBush for spatial indexing
+          if (id.includes('node_modules/rbush/')) {
+            return 'vendor-spatial';
+          }
+
+          // React virtual for virtualized lists
+          if (id.includes('node_modules/@tanstack/react-virtual/')) {
+            return 'vendor-virtual';
+          }
+
+          // pg (PostgreSQL) - should not be in frontend bundle normally
+          if (id.includes('node_modules/pg/')) {
+            return 'vendor-pg';
+          }
+
+          // Tailwind animate
+          if (id.includes('node_modules/tailwindcss-animate/')) {
+            return 'vendor-tw-animate';
+          }
+
+          // Group remaining small node_modules - let them be naturally code-split
+          // by returning undefined instead of grouping into vendor-misc
+          if (id.includes('node_modules/')) {
+            // Only group truly small/common utilities together
+            return 'vendor-misc';
+          }
+
+          return undefined;
         }
       }
     },

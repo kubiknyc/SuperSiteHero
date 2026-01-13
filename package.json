@@ -116,7 +116,7 @@
     "migrate:colors:phase2:write": "tsx scripts/migrate-colors-phase2.ts -- --write",
     "migrate:typography": "tsx scripts/migrate-typography-to-tokens.ts",
     "migrate:typography:write": "tsx scripts/migrate-typography-to-tokens.ts -- --write",
-    "postinstall": "patch-package",
+    "postinstall": "patch-package && node scripts/fix-ide-config.js",
     "security": "npm run security:lint && npm run security:deps",
     "security:lint": "eslint . --rule 'security/*: error' --quiet",
     "security:deps": "npm audit --audit-level=high",

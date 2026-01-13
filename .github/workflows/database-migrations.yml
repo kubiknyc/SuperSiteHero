@@ -40,6 +40,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Validate migration naming convention
+        shell: bash
         run: |
           echo "Checking migration file naming conventions..."
           migration_count=0
@@ -73,6 +74,7 @@ jobs:
           done
 
       - name: Check for dangerous operations
+        shell: bash
         run: |
           echo "Scanning for potentially dangerous operations..."
           dangerous_patterns=("DROP TABLE" "DELETE FROM" "TRUNCATE" "DROP SCHEMA")
