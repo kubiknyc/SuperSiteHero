@@ -57,7 +57,13 @@ jobs:
         run: |
           echo "Checking Edge Functions for syntax errors..."
           for func_dir in supabase/functions/*/; do
-            echo "Validating $(basename "$func_dir")..."
+            func_name=$(basename "$func_dir")
+            # Skip test directories and hidden directories
+            if [[ "$func_name" == "__tests__" ]] || [[ "$func_name" == _* ]]; then
+              echo "Skipping $func_name (test/hidden directory)"
+              continue
+            fi
+            echo "Validating $func_name..."
             deno check "$func_dir/index.ts" 2>&1 || exit 1
           done
 
@@ -65,7 +71,12 @@ jobs:
         run: |
           echo "Linting Edge Functions..."
           for func_dir in supabase/functions/*/; do
-            echo "Linting $(basename "$func_dir")..."
+            func_name=$(basename "$func_dir")
+            # Skip test directories and hidden directories
+            if [[ "$func_name" == "__tests__" ]] || [[ "$func_name" == _* ]]; then
+              continue
+            fi
+            echo "Linting $func_name..."
             deno lint --strict "$func_dir/index.ts" || true
           done
 
@@ -74,6 +85,10 @@ jobs:
           echo "Running security checks on Edge Functions..."
           for func_dir in supabase/functions/*/; do
             func_name=$(basename "$func_dir")
+            # Skip test directories and hidden directories
+            if [[ "$func_name" == "__tests__" ]] || [[ "$func_name" == _* ]]; then
+              continue
+            fi
             echo "Security check: $func_name"
           done
 
