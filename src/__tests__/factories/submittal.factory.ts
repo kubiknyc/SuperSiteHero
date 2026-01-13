@@ -4,7 +4,8 @@
  */
 
 import { faker } from '@faker-js/faker';
-import type { WorkflowItem, WorkflowType, SubmittalProcurement } from '@/types/database';
+// Types imported for reference but not directly used - using Mock interfaces instead
+// import type { WorkflowItem, WorkflowType, SubmittalProcurement } from '@/types/database-extensions';
 
 // ============================================================================
 // Types

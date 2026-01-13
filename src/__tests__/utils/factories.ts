@@ -16,8 +16,8 @@ export interface MockUser {
   updated_at: string;
 }
 
-// Import the actual Project type from database
-import type { Project } from '@/types/database';
+// Import the actual Project type from database extensions
+import type { Project } from '@/types/database-extensions';
 
 export interface MockDailyLog {
   id: string;

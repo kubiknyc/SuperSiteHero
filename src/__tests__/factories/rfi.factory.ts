@@ -4,7 +4,7 @@
  */
 
 import { faker } from '@faker-js/faker';
-import type { WorkflowItem, WorkflowItemComment, WorkflowItemHistory, WorkflowType } from '@/types/database';
+import type { WorkflowItem, WorkflowItemComment, WorkflowItemHistory, WorkflowType } from '@/types/database-extensions';
 
 // Factory options
 export interface RFIFactoryOptions {
