@@ -92,11 +92,9 @@ rules:
     languages: [typescript, javascript]
     severity: ERROR
 
-  # Detect dangerouslySetInnerHTML in React
+  # Detect dangerouslySetInnerHTML in React (XSS risk) - uses regex to avoid YAML parsing issues
   - id: react-dangerous-html
-    patterns:
-      - pattern: <$TAG dangerouslySetInnerHTML={{__html: $VAR}} />
-      - pattern-not: <$TAG dangerouslySetInnerHTML={{__html: "..."}} />
+    pattern-regex: 'dangerouslySetInnerHTML\s*=\s*\{\{\s*__html\s*:'
     paths:
       exclude:
         - '*.test.tsx'
@@ -123,9 +121,7 @@ rules:
 
   # Detect missing key prop in React lists
   - id: react-missing-key
-    patterns:
-      - pattern: $ARR.map(($ITEM) => <$TAG>...</$TAG>)
-      - pattern-not: $ARR.map(($ITEM) => <$TAG key={...}>...</$TAG>)
+    pattern-regex: '\.map\s*\(\s*\([^)]*\)\s*=>\s*<[A-Z][a-zA-Z]*(?![^>]*\bkey\b)[^>]*>'
     message: Missing 'key' prop in list items. This can cause performance issues and bugs.
     languages: [tsx, typescript]
     severity: WARNING
