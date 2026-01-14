@@ -48,22 +48,12 @@ jobs:
       - name: Build Release APK
         working-directory: android
         run: ./gradlew assembleRelease
-        env:
-          # If you have these secrets, gradle can sign it. 
-          # For now, we often just build. 
-          # To sign properly, you usually modify build.gradle to read these or use a signing action.
-          # Here we keep it simple: just build. 
-          # Real signing setup usually involves decoding a keystore file.
-          # We will use a separate step for signing to keep gradle clean if possible, 
-          # or assume the user has configured gradle to read env vars.
-          # For standard Capacitor, we often use r0adkll/sign-android-release or similar.
-          # Let's use the standard build command first.
           
       # This step handles the keystore file from secrets
       - name: Sign Release APK
         uses: r0adkll/sign-android-release@v1
         id: sign_app
-        if: ${{ secrets.ANDROID_KEYSTORE_FILE != '' }}
+        if: secrets.ANDROID_KEYSTORE_FILE != ''
         with:
           releaseDirectory: android/app/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.ANDROID_KEYSTORE_FILE }}
