@@ -41,7 +41,6 @@ jobs:
       - name: Run Semgrep with custom rules
         run: |
           semgrep scan \
-            --config auto \
             --config .semgrep.yml \
             --sarif \
             --output semgrep.sarif \
@@ -53,7 +52,6 @@ jobs:
         if: always()
         run: |
           semgrep scan \
-            --config auto \
             --config .semgrep.yml \
             --text \
             --output semgrep.txt \
