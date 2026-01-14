@@ -58,13 +58,11 @@ jobs:
 
       - name: TypeScript type check
         run: npm run type-check
-        env:
-          NODE_OPTIONS: '--max-old-space-size=8192'
 
       - name: Build check
         run: npm run build
         env:
-          NODE_OPTIONS: '--max-old-space-size=8192'
+          NODE_OPTIONS: '--max-old-space-size=16384'
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
