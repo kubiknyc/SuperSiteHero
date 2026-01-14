@@ -1,0 +1,82 @@
+name: Android Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'android/**'
+      - 'src/**'
+      - 'capacitor.config.ts'
+
+jobs:
+  build:
+    name: Build Android Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Web App
+        run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Sync Capacitor
+        run: npx cap sync android
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Build Release APK
+        working-directory: android
+        run: ./gradlew assembleRelease
+        env:
+          # If you have these secrets, gradle can sign it. 
+          # For now, we often just build. 
+          # To sign properly, you usually modify build.gradle to read these or use a signing action.
+          # Here we keep it simple: just build. 
+          # Real signing setup usually involves decoding a keystore file.
+          # We will use a separate step for signing to keep gradle clean if possible, 
+          # or assume the user has configured gradle to read env vars.
+          # For standard Capacitor, we often use r0adkll/sign-android-release or similar.
+          # Let's use the standard build command first.
+          
+      # This step handles the keystore file from secrets
+      - name: Sign Release APK
+        uses: r0adkll/sign-android-release@v1
+        id: sign_app
+        if: ${{ secrets.ANDROID_KEYSTORE_FILE != '' }}
+        with:
+          releaseDirectory: android/app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.ANDROID_KEYSTORE_FILE }}
+          alias: ${{ secrets.ANDROID_KEY_ALIAS }}
+          keyStorePassword: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: "34.0.0"
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-release
+          path: |
+            ${{ steps.sign_app.outputs.signedReleaseFile }}
+            android/app/build/outputs/apk/release/*.apk
