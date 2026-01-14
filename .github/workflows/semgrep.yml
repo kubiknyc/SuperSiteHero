@@ -20,6 +20,7 @@ jobs:
     permissions:
       contents: read
       security-events: write
+      pull-requests: write
 
     container:
       image: semgrep/semgrep
@@ -28,9 +29,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Run Semgrep
-        run: semgrep scan --config auto --config .semgrep.yml --sarif --output semgrep.sarif
+      - name: Validate Semgrep config
+        run: |
+          if [ -f .semgrep.yml ]; then
+            echo "Custom Semgrep rules found: .semgrep.yml"
+            semgrep --validate --config .semgrep.yml
+          else
+            echo "No custom Semgrep rules found, using auto config only"
+          fi
+
+      - name: Run Semgrep with custom rules
+        run: |
+          semgrep scan \
+            --config auto \
+            --config .semgrep.yml \
+            --sarif \
+            --output semgrep.sarif \
+            --verbose \
+            --metrics=off
         continue-on-error: true
+
+      - name: Generate human-readable report
+        if: always()
+        run: |
+          semgrep scan \
+            --config auto \
+            --config .semgrep.yml \
+            --text \
+            --output semgrep.txt \
+            --metrics=off || true
 
       - name: Upload SARIF to GitHub Security
         uses: github/codeql-action/upload-sarif@v3
@@ -38,3 +65,57 @@ jobs:
         with:
           sarif_file: semgrep.sarif
           category: semgrep
+
+      - name: Upload Semgrep reports as artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: semgrep-reports
+          path: |
+            semgrep.sarif
+            semgrep.txt
+          retention-days: 30
+
+      - name: Comment PR with findings summary
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let summary = '## Semgrep SAST Scan Results\n\n';
+
+            try {
+              const sarifContent = fs.readFileSync('semgrep.sarif', 'utf8');
+              const sarif = JSON.parse(sarifContent);
+
+              if (sarif.runs && sarif.runs[0] && sarif.runs[0].results) {
+                const results = sarif.runs[0].results;
+                const critical = results.filter(r => r.level === 'error').length;
+                const warnings = results.filter(r => r.level === 'warning').length;
+                const notes = results.filter(r => r.level === 'note').length;
+
+                summary += `- **Critical Issues**: ${critical}\n`;
+                summary += `- **Warnings**: ${warnings}\n`;
+                summary += `- **Notes**: ${notes}\n\n`;
+
+                if (critical > 0) {
+                  summary += '⚠️ Critical security issues found! Please review the Security tab.\n';
+                } else if (warnings > 0) {
+                  summary += '✅ No critical issues, but some warnings to review.\n';
+                } else {
+                  summary += '✅ No security issues detected.\n';
+                }
+              } else {
+                summary += 'No findings to report.\n';
+              }
+            } catch (error) {
+              summary += `Error reading SARIF report: ${error.message}\n`;
+            }
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: summary
+            });
+        continue-on-error: true

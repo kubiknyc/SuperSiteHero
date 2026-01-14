@@ -1,7 +1,17 @@
-name: E2E Quick Check
+# Quick E2E Check Workflow
+#
+# Fast PR feedback workflow - runs subset of critical tests only:
+# - Offline persistence & CRUD
+# - Authentication (MFA, RBAC)
+# - Projects CRUD
+#
+# Triggers:
+# - On pull requests to main/develop - provides fast feedback (~10 min)
+# - Manual dispatch
+#
+# After merge, comprehensive testing runs via e2e-tests.yml
 
-# Faster workflow for quick feedback on PRs
-# Runs only critical tests to provide fast CI feedback
+name: E2E Quick Check - PR Feedback
 
 on:
   pull_request:
@@ -11,6 +21,9 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+env:
+  NODE_OPTIONS: '--max-old-space-size=4096'
 
 jobs:
   quick-check:

@@ -20,6 +20,7 @@ jobs:
   cache-setup:
     name: Setup Build Cache
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     outputs:
       cache-hit: ${{ steps.cache.outputs.cache-hit }}
     steps:
@@ -79,6 +80,7 @@ jobs:
   build-optimization:
     name: Build Optimization Analysis
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: cache-setup
     steps:
       - name: Checkout code
@@ -110,6 +112,7 @@ jobs:
   create-artifacts:
     name: Create Build Artifacts
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: cache-setup
     steps:
       - name: Checkout code
@@ -168,6 +171,7 @@ jobs:
   test-artifacts:
     name: Create Test Artifacts
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: cache-setup
     steps:
       - name: Checkout code
@@ -198,6 +202,7 @@ jobs:
   cleanup-artifacts:
     name: Cleanup Old Artifacts
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - name: Delete artifacts older than retention period
@@ -226,6 +231,7 @@ jobs:
   docker-build:
     name: Build Docker Image
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     needs: cache-setup
     if: github.event_name == 'push'
     steps:
@@ -254,6 +260,7 @@ jobs:
   performance-metrics:
     name: Build Performance Metrics
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     needs: [create-artifacts]
     if: always()
     steps:
@@ -282,6 +289,7 @@ jobs:
   artifact-summary:
     name: Artifact Management Summary
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     needs: [cache-setup, create-artifacts, test-artifacts]
     if: always()
     steps:

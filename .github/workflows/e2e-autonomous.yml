@@ -1,26 +1,21 @@
 # Autonomous E2E Testing Workflow
 #
-# This workflow runs comprehensive E2E tests in phases:
+# This workflow runs comprehensive E2E tests in phases with advanced features:
 # 1. Critical Tests (Auth, Offline) - must pass first
 # 2. CRUD Tests - parallel execution
 # 3. Workflow Tests - parallel execution
-# 4. Feature Tests - sharded execution
-# 5. Quality Tests - multi-browser
+# 4. Feature Tests - sharded execution for faster runs
+# 5. Quality Tests - multi-browser (Chromium, Firefox, WebKit)
 #
 # Triggers:
-# - Every 6 hours (scheduled)
-# - On push to main/develop
-# - On pull requests to main
+# - Every 6 hours (scheduled) - continuous monitoring
+# - Manual dispatch - on-demand testing
 
-name: Autonomous E2E Tests
+name: Autonomous E2E Tests - Scheduled
 
 on:
   schedule:
     - cron: '0 */6 * * *'  # Every 6 hours
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main]
   workflow_dispatch:
     inputs:
       test_phase:

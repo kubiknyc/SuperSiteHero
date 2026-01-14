@@ -1,8 +1,22 @@
-name: E2E Tests
+# Comprehensive E2E Testing Workflow
+#
+# This workflow runs the complete E2E test suite on main/develop branches:
+# - Phase 9: Offline Tests (CRITICAL)
+# - Phase 2: Authentication Tests (CRITICAL)
+# - Phase 3: CRUD Tests
+# - Phase 4: Workflow Tests
+# - Phases 5-8: Feature Tests
+# - Phase 10: Quality Tests (multi-browser)
+#
+# Triggers:
+# - On push to main/develop - ensures code merged to main is tested
+# - Manual dispatch - on-demand testing
+#
+# For PRs, use e2e-quick-check.yml for faster feedback
+
+name: E2E Tests - Comprehensive
 
 on:
-  pull_request:
-    branches: [main, develop]
   push:
     branches: [main, develop]
   workflow_dispatch: # Allow manual trigger
@@ -291,6 +305,7 @@ jobs:
   test-summary:
     name: Generate Test Summary
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: [offline-tests, auth-tests, crud-tests, workflow-tests, feature-tests, quality-tests]
     if: always()
 

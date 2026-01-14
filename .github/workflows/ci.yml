@@ -13,7 +13,7 @@ concurrency:
 
 env:
   NODE_VERSION: '22'
-  NODE_OPTIONS: '--max-old-space-size=16384'
+  NODE_OPTIONS: '--max-old-space-size=8192'
   CACHE_VERSION: 'v6'  # Bump this to bust npm cache
 
 jobs:
@@ -21,6 +21,7 @@ jobs:
   quick-checks:
     name: Quick Checks
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -49,28 +50,36 @@ jobs:
           ls -la node_modules/.bin/vite || echo "vite not found in node_modules/.bin"
           npx vite --version
 
-      - name: TypeScript type check
-        run: npm run type-check
-        env:
-          NODE_OPTIONS: '--max-old-space-size=16384'
-
-      - name: ESLint
+      - name: Run ESLint
         # Note: React Compiler plugin emits informational "Compilation Skipped" messages as errors
         # These are not actual code problems but compiler optimization hints. We allow these to pass.
         run: npm run lint || echo "::warning::ESLint reported issues - check output above"
         continue-on-error: true
 
+      - name: TypeScript type check
+        run: npm run type-check
+        env:
+          NODE_OPTIONS: '--max-old-space-size=8192'
+
       - name: Build check
         run: npm run build
         env:
-          NODE_OPTIONS: '--max-old-space-size=16384'
+          NODE_OPTIONS: '--max-old-space-size=8192'
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: dist/
+          retention-days: 7
+
   # ==================== UNIT TESTS ====================
   unit-tests:
-    name: Unit Tests
+    name: Unit Tests with Coverage
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: quick-checks
     steps:
       - name: Checkout code
@@ -80,6 +89,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+
       - name: Cache npm dependencies
         uses: actions/cache@v4
         with:
@@ -92,12 +102,6 @@ jobs:
         run: |
           npm cache clean --force
           npm ci --legacy-peer-deps
-
-      - name: Run unit tests
-        run: npm run test:unit
-        env:
-          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
       - name: Run tests with coverage
         run: npm run test:coverage
@@ -113,11 +117,28 @@ jobs:
           path: coverage/
           retention-days: 7
 
-  # ==================== E2E TESTS (Chromium only for speed) ====================
-  e2e-tests:
-    name: E2E Tests
+      - name: Coverage Summary Comment
+        uses: romeovs/lcov-reporter-action@v0.3.1
+        if: github.event_name == 'pull_request'
+        with:
+          lcov-file: ./coverage/lcov.info
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          delete-old-comments: true
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage/lcov.info
+          fail_ci_if_error: false
+        continue-on-error: true
+
+  # ==================== E2E TESTS (Fast path for PRs) ====================
+  e2e-tests-fast:
+    name: E2E Tests (Chromium - Fast)
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     needs: quick-checks
+    if: github.event_name == 'pull_request'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -126,6 +147,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+
       - name: Cache npm dependencies
         uses: actions/cache@v4
         with:
@@ -142,7 +164,7 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Run E2E tests
+      - name: Run E2E tests (Chromium only)
         run: npx playwright test --project=chromium
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
@@ -153,14 +175,261 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: playwright-report
+          name: playwright-report-chromium
           path: playwright-report/
+          retention-days: 7
+
+  # ==================== E2E TESTS (Full suite for main/develop) ====================
+  e2e-tests-full:
+    name: E2E Tests (${{ matrix.project }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: quick-checks
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, firefox, webkit]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ env.CACHE_VERSION }}-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-${{ env.CACHE_VERSION }}-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: |
+          npm cache clean --force
+          npm ci --legacy-peer-deps
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps ${{ matrix.project }}
+
+      - name: Run E2E tests
+        run: npx playwright test --project=${{ matrix.project }}
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          NODE_OPTIONS: '--max-old-space-size=8192'
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-${{ matrix.project }}
+          path: playwright-report/
+          retention-days: 7
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-${{ matrix.project }}
+          path: test-results/
+          retention-days: 7
+
+  # ==================== ADDITIONAL TEST SUITES (main/develop only) ====================
+  mobile-e2e-tests:
+    name: Mobile E2E Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: quick-checks
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ env.CACHE_VERSION }}-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-${{ env.CACHE_VERSION }}-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: |
+          npm cache clean --force
+          npm ci --legacy-peer-deps
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Run mobile E2E tests
+        run: npx playwright test --project="Mobile Chrome" --project="Mobile Safari"
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Upload Playwright report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-mobile
+          path: playwright-report/
+          retention-days: 7
+
+  visual-regression:
+    name: Visual Regression Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: quick-checks
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ env.CACHE_VERSION }}-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-${{ env.CACHE_VERSION }}-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: |
+          npm cache clean --force
+          npm ci --legacy-peer-deps
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run visual regression tests
+        run: npx playwright test e2e/visual-regression/ --project=chromium
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Upload visual snapshots
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: visual-snapshots
+          path: |
+            e2e/visual-regression/*.spec.ts-snapshots/
+            test-results/
+          retention-days: 7
+
+  accessibility-tests:
+    name: Accessibility Tests (WCAG 2.1 AA)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: quick-checks
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ env.CACHE_VERSION }}-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-${{ env.CACHE_VERSION }}-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: |
+          npm cache clean --force
+          npm ci --legacy-peer-deps
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run accessibility tests
+        run: npx playwright test --grep "a11y" --project=chromium
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Upload accessibility report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: accessibility-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+
+  performance-tests:
+    name: Performance Tests (Core Web Vitals)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: quick-checks
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: npm-${{ env.CACHE_VERSION }}-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            npm-${{ env.CACHE_VERSION }}-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: |
+          npm cache clean --force
+          npm ci --legacy-peer-deps
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Run performance tests
+        run: npx playwright test e2e/performance/blueprint-variants-perf.spec.ts --project=chromium
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Upload performance report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-report
+          path: |
+            playwright-report/
+            test-results/
           retention-days: 7
 
   # ==================== SECURITY SCAN ====================
   security:
     name: Security Scan
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
       security-events: write
@@ -193,6 +462,10 @@ jobs:
         run: npm audit --audit-level=high
         continue-on-error: true
 
+      - name: Check for known vulnerabilities
+        run: npx audit-ci --high
+        continue-on-error: true
+
       - name: Security Scan Summary
         if: always()
         run: |
@@ -202,20 +475,34 @@ jobs:
           echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| ESLint Security | Completed |" >> $GITHUB_STEP_SUMMARY
           echo "| npm audit | Completed |" >> $GITHUB_STEP_SUMMARY
+          echo "| audit-ci | Completed |" >> $GITHUB_STEP_SUMMARY
           echo "| Semgrep SAST | See separate workflow |" >> $GITHUB_STEP_SUMMARY
 
   # ==================== STATUS CHECK ====================
   ci-success:
     name: CI Success
     runs-on: ubuntu-latest
-    needs: [quick-checks, unit-tests, e2e-tests]
+    timeout-minutes: 5
+    needs: [quick-checks, unit-tests, e2e-tests-fast, e2e-tests-full]
     if: always()
     steps:
-      - name: Check all jobs passed
+      - name: Check required jobs passed (PR)
+        if: github.event_name == 'pull_request'
         run: |
           if [[ "${{ needs.quick-checks.result }}" != "success" ]] || \
              [[ "${{ needs.unit-tests.result }}" != "success" ]] || \
-             [[ "${{ needs.e2e-tests.result }}" != "success" ]]; then
+             [[ "${{ needs.e2e-tests-fast.result }}" != "success" ]]; then
+            echo "One or more required jobs failed"
+            exit 1
+          fi
+          echo "All required CI checks passed!"
+
+      - name: Check all jobs passed (main/develop)
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop')
+        run: |
+          if [[ "${{ needs.quick-checks.result }}" != "success" ]] || \
+             [[ "${{ needs.unit-tests.result }}" != "success" ]] || \
+             [[ "${{ needs.e2e-tests-full.result }}" != "success" ]]; then
             echo "One or more jobs failed"
             exit 1
           fi

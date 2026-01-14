@@ -82,3 +82,151 @@ rules:
     message: Potential open redirect vulnerability. Validate the redirect URL against an allowlist.
     languages: [typescript, javascript]
     severity: WARNING
+
+  # Detect dangerous innerHTML usage (XSS risk)
+  - id: dangerous-innerhtml
+    patterns:
+      - pattern: $EL.innerHTML = $VAR
+      - pattern-not: $EL.innerHTML = "..."
+    message: Potential XSS vulnerability. Avoid using innerHTML with dynamic content. Use textContent or sanitize the input.
+    languages: [typescript, javascript]
+    severity: ERROR
+
+  # Detect dangerouslySetInnerHTML in React
+  - id: react-dangerous-html
+    patterns:
+      - pattern: <$TAG dangerouslySetInnerHTML={{__html: $VAR}} />
+      - pattern-not: <$TAG dangerouslySetInnerHTML={{__html: "..."}} />
+    paths:
+      exclude:
+        - '*.test.tsx'
+        - '__tests__/**'
+    message: Potential XSS vulnerability. Ensure content is properly sanitized before using dangerouslySetInnerHTML.
+    languages: [typescript, tsx]
+    severity: WARNING
+
+  # Detect weak crypto usage
+  - id: weak-crypto
+    patterns:
+      - pattern-regex: Math\.random\(\)
+    paths:
+      include:
+        - '**/auth/**'
+        - '**/security/**'
+        - '**/crypto/**'
+      exclude:
+        - '*.test.ts'
+        - '*.test.tsx'
+    message: Math.random() is not cryptographically secure. Use crypto.getRandomValues() instead for security-sensitive operations.
+    languages: [typescript, javascript]
+    severity: WARNING
+
+  # Detect missing key prop in React lists
+  - id: react-missing-key
+    patterns:
+      - pattern: $ARR.map(($ITEM) => <$TAG>...</$TAG>)
+      - pattern-not: $ARR.map(($ITEM) => <$TAG key={...}>...</$TAG>)
+    message: Missing 'key' prop in list items. This can cause performance issues and bugs.
+    languages: [tsx, typescript]
+    severity: WARNING
+    paths:
+      exclude:
+        - '*.test.tsx'
+
+  # Detect useEffect without dependencies
+  - id: react-useeffect-missing-deps
+    patterns:
+      - pattern: |
+          useEffect(() => {
+            ...
+          })
+    message: useEffect is missing a dependency array. Add [] for mount-only effects or specify dependencies.
+    languages: [typescript, tsx]
+    severity: WARNING
+    paths:
+      exclude:
+        - '*.test.tsx'
+
+  # Detect unvalidated API responses
+  - id: unvalidated-api-response
+    patterns:
+      - pattern: const { data } = await $CLIENT.from($TABLE).$METHOD(...)
+      - pattern-not-inside: |
+          const { data, error } = await $CLIENT.from($TABLE).$METHOD(...)
+          if (error) {
+            ...
+          }
+    message: API response is not validated. Check for errors before using data.
+    languages: [typescript]
+    severity: WARNING
+    paths:
+      include:
+        - 'src/lib/api/**'
+        - 'src/features/**/hooks/**'
+
+  # Detect hardcoded file paths
+  - id: hardcoded-file-path
+    patterns:
+      - pattern-regex: (C:|D:|/Users|/home)/[a-zA-Z0-9_/\.-]+
+    paths:
+      exclude:
+        - '*.test.ts'
+        - '*.test.tsx'
+        - '*.md'
+        - 'e2e/**'
+    message: Hardcoded file path detected. Use environment variables or relative paths instead.
+    languages: [typescript, javascript]
+    severity: WARNING
+
+  # Detect disabled TypeScript checks
+  - id: ts-ignore-usage
+    patterns:
+      - pattern-regex: '@ts-ignore|@ts-nocheck'
+    message: TypeScript check is disabled. Fix the type error instead of suppressing it.
+    languages: [typescript, tsx]
+    severity: INFO
+    paths:
+      exclude:
+        - '*.test.ts'
+        - '*.test.tsx'
+
+  # Detect non-null assertions (!.)
+  - id: non-null-assertion
+    patterns:
+      - pattern-regex: \w+!\.
+    message: Non-null assertion operator (!) can cause runtime errors. Add proper null checks instead.
+    languages: [typescript, tsx]
+    severity: INFO
+    paths:
+      exclude:
+        - '*.test.ts'
+        - '*.test.tsx'
+
+  # Detect CORS configuration issues
+  - id: insecure-cors
+    patterns:
+      - pattern-regex: (Access-Control-Allow-Origin|cors).*\*
+    message: Overly permissive CORS configuration detected. Use specific origins instead of wildcards.
+    languages: [typescript, javascript]
+    severity: WARNING
+    paths:
+      exclude:
+        - '*.test.ts'
+        - 'vite.config.ts'
+
+  # Detect direct DOM manipulation in React
+  - id: react-direct-dom
+    patterns:
+      - pattern: document.getElementById(...)
+      - pattern: document.querySelector(...)
+      - pattern: document.querySelectorAll(...)
+    paths:
+      include:
+        - 'src/features/**'
+        - 'src/components/**'
+      exclude:
+        - '*.test.tsx'
+        - 'src/lib/**'
+    message: Avoid direct DOM manipulation in React components. Use refs or state instead.
+    languages: [typescript, tsx]
+    severity: INFO

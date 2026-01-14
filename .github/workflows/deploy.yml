@@ -30,6 +30,7 @@ jobs:
   deploy-preview:
     name: Deploy Preview
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     if: github.event_name == 'push' || github.event.inputs.environment == 'preview'
     outputs:
       url: ${{ steps.deploy.outputs.url }}
@@ -89,6 +90,7 @@ jobs:
   deploy-production:
     name: Deploy Production
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     if: github.event.inputs.environment == 'production'
     environment:
       name: production
@@ -133,6 +135,7 @@ jobs:
   smoke-tests:
     name: Smoke Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: [deploy-preview]
     if: always() && needs.deploy-preview.result == 'success'
     steps:
@@ -164,6 +167,7 @@ jobs:
   notify:
     name: Notify
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     needs: [deploy-preview, smoke-tests]
     if: always()
     steps:

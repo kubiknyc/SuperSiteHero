@@ -21,6 +21,7 @@ jobs:
   dependency-scan:
     name: Dependency Security Scan
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
       fail-fast: false
     steps:
@@ -52,6 +53,7 @@ jobs:
   sast-scan:
     name: Static Application Security Testing (SAST)
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -73,14 +75,6 @@ jobs:
             p/owasp-top-ten
             p/react
             p/typescript
-          generateSarif: true
-        continue-on-error: true
-
-      - name: Upload Semgrep results to GitHub
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        with:
-          sarif_file: semgrep.sarif
         continue-on-error: true
 
       - name: ESLint security scan
@@ -93,6 +87,7 @@ jobs:
   code-quality:
     name: Code Quality Analysis
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -120,6 +115,7 @@ jobs:
   secret-detection:
     name: Secret Detection
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -139,6 +135,7 @@ jobs:
   vulnerability-db:
     name: Vulnerability Database Scan
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -162,6 +159,7 @@ jobs:
   license-scan:
     name: License Compliance Check
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -185,6 +183,7 @@ jobs:
   supply-chain:
     name: Supply Chain Security
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -206,6 +205,7 @@ jobs:
   container-scan:
     name: Container Image Scan
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     if: github.event_name == 'push'
     steps:
       - name: Checkout code
@@ -244,6 +244,7 @@ jobs:
   security-summary:
     name: Security Scan Summary
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: [dependency-scan, sast-scan, code-quality, secret-detection, vulnerability-db, license-scan, supply-chain, container-scan]
     if: always()
     steps:
