@@ -48,12 +48,12 @@ jobs:
       - name: Build Release APK
         working-directory: android
         run: ./gradlew assembleRelease
-          
+
       # This step handles the keystore file from secrets
       - name: Sign Release APK
         uses: r0adkll/sign-android-release@v1
         id: sign_app
-        if: ${{ secrets.ANDROID_KEYSTORE_FILE }}
+        if: "${{ secrets.ANDROID_KEYSTORE_FILE != '' }}"
         with:
           releaseDirectory: android/app/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.ANDROID_KEYSTORE_FILE }}
