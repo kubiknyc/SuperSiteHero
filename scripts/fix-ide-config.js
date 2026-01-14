@@ -2,6 +2,12 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
+// Skip in CI environments (Vercel, GitHub Actions, etc.)
+if (process.env.CI || process.env.VERCEL) {
+    console.log('Skipping IDE config fix in CI environment');
+    process.exit(0);
+}
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '..');
