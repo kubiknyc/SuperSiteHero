@@ -49,11 +49,20 @@ jobs:
         working-directory: android
         run: ./gradlew assembleRelease
 
+      - name: Check for Signing Secrets
+        id: check_secrets
+        run: |
+          if [ "${{ secrets.ANDROID_KEYSTORE_FILE }}" != "" ]; then
+            echo "has_secrets=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_secrets=false" >> $GITHUB_OUTPUT
+          fi
+
       # This step handles the keystore file from secrets
       - name: Sign Release APK
         uses: r0adkll/sign-android-release@v1
         id: sign_app
-        if: "${{ secrets.ANDROID_KEYSTORE_FILE != '' }}"
+        if: steps.check_secrets.outputs.has_secrets == 'true'
         with:
           releaseDirectory: android/app/build/outputs/apk/release
           signingKeyBase64: ${{ secrets.ANDROID_KEYSTORE_FILE }}
@@ -68,5 +77,5 @@ jobs:
         with:
           name: android-release
           path: |
-            ${{ steps.sign_app.outputs.signedReleaseFile }}
             android/app/build/outputs/apk/release/*.apk
+            ${{ steps.sign_app.outputs.signedReleaseFile }}
