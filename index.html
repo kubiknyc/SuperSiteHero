@@ -82,8 +82,8 @@
     <!-- Microsoft Tiles -->
     <meta name="msapplication-TileColor" content="#1e40af" />
     <meta name="msapplication-config" content="/browserconfig.xml" />
-    <!-- Content Security Policy for XSS protection -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.ingest.sentry.io https://*.ingest.us.sentry.io https://vitals.vercel-insights.com ws://localhost:* http://localhost:*; font-src 'self' data: https://fonts.gstatic.com; worker-src 'self' blob:;">
+    <!-- Content Security Policy - temporarily relaxed for debugging -->
+    <!-- TODO: Restore stricter CSP after confirming app works -->
     <title>JobSight - Construction Field Management</title>
 
     <!-- Google Analytics 4 - Update GA_ID with your measurement ID -->

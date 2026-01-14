@@ -17,7 +17,7 @@ import { AgentProvider, AgentFAB, AgentChatPanel } from './features/agent'
 import { initDatabase, requestPersistentStorage } from './lib/offline/indexeddb'
 import { initSyncManager } from './lib/offline/sync-manager'
 import { logger } from './lib/utils/logger'
-import { initWebVitalsMonitoring } from '../tests/performance/web-vitals-baseline'
+import { initWebVitalsMonitoring } from './lib/monitoring/web-vitals'
 import { DeviceProvider, useDevice } from './lib/device'
 import { LayoutVersionProvider } from './hooks/useLayoutVersion'
 
