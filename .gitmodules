@@ -1,0 +1,3 @@
+[submodule "CCPlugins"]
+	path = CCPlugins
+	url = https://github.com/brennercruvinel/CCPlugins.git
