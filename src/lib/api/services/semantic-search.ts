@@ -4,7 +4,7 @@
  * Uses the existing AI service for query expansion, NOT vector embeddings.
  */
 
-import { supabaseUntyped } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { aiService } from './ai-provider'
 import { logger } from '@/lib/utils/logger'
 
@@ -424,7 +424,7 @@ async function searchEntity(
 
     if (entityType === 'message') {
       // Messages need special handling - join through conversations to projects
-      query = supabaseUntyped
+      query = supabase
         .from(config.table)
         .select(`
           id,
@@ -443,7 +443,7 @@ async function searchEntity(
         `)
     } else {
       // Standard query for entities with direct project_id
-      query = supabaseUntyped
+      query = supabase
         .from(config.table)
         .select(`
           id,

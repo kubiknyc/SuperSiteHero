@@ -44,7 +44,7 @@ vi.mock('@/lib/supabase', () => ({
       })),
     })),
   },
-  supabaseUntyped: {
+  supabase: {
     from: vi.fn(() => ({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({

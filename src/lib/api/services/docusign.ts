@@ -5,7 +5,7 @@
  * Integrates with construction documents: payment applications, change orders, lien waivers.
  */
 
-import { supabaseUntyped, supabase } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { fromExtended } from '@/lib/supabase-typed'
 import type {
   DSConnection,
@@ -175,7 +175,7 @@ export async function completeConnection(
   const isDemo = state.is_demo
 
   // Exchange code for tokens via Edge Function (keeps client_secret secure)
-  const { data: sessionData } = await supabaseUntyped.auth.getSession()
+  const { data: sessionData } = await supabase.auth.getSession()
   const accessToken = sessionData?.session?.access_token
 
   if (!accessToken) {
@@ -262,7 +262,7 @@ export async function refreshToken(connectionId: string): Promise<void> {
   }
 
   // Refresh token via Edge Function (keeps client_secret secure)
-  const { data: sessionData } = await supabaseUntyped.auth.getSession()
+  const { data: sessionData } = await supabase.auth.getSession()
   const accessToken = sessionData?.session?.access_token
 
   if (!accessToken) {

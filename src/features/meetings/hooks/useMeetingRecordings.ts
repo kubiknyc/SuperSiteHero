@@ -4,7 +4,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase, supabaseUntyped } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 import type {
   MeetingRecording,
   TranscriptionSegment,
@@ -32,7 +32,7 @@ export function useMeetingRecordings(meetingId: string | undefined) {
     queryFn: async () => {
       if (!meetingId) {throw new Error('Meeting ID required');}
 
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('meeting_recordings')
         .select('*')
         .eq('meeting_id', meetingId)
@@ -55,7 +55,7 @@ export function useMeetingRecording(recordingId: string | undefined) {
     queryFn: async () => {
       if (!recordingId) {throw new Error('Recording ID required');}
 
-      const { data: recording, error: recordingError } = await supabaseUntyped
+      const { data: recording, error: recordingError } = await supabase
         .from('meeting_recordings')
         .select('*')
         .eq('id', recordingId)
@@ -66,7 +66,7 @@ export function useMeetingRecording(recordingId: string | undefined) {
       // Fetch segments if transcription is complete
       let segments: TranscriptionSegment[] = [];
       if (recording.transcription_status === 'completed') {
-        const { data: segmentsData, error: segmentsError } = await supabaseUntyped
+        const { data: segmentsData, error: segmentsError } = await supabase
           .from('recording_transcription_segments')
           .select('*')
           .eq('recording_id', recordingId)
@@ -95,7 +95,7 @@ export function useTranscriptionSegments(recordingId: string | undefined) {
     queryFn: async () => {
       if (!recordingId) {throw new Error('Recording ID required');}
 
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('recording_transcription_segments')
         .select('*')
         .eq('recording_id', recordingId)
@@ -123,7 +123,7 @@ export function useStartTranscription() {
       language?: string;
     }) => {
       // Update status to pending
-      await supabaseUntyped
+      await supabase
         .from('meeting_recordings')
         .update({ transcription_status: 'pending' })
         .eq('id', recordingId);
@@ -157,7 +157,7 @@ export function useDeleteRecording() {
   return useMutation({
     mutationFn: async (recordingId: string) => {
       // Get recording details for cleanup
-      const { data: recording, error: fetchError } = await supabaseUntyped
+      const { data: recording, error: fetchError } = await supabase
         .from('meeting_recordings')
         .select('meeting_id, storage_bucket, storage_path')
         .eq('id', recordingId)
@@ -166,7 +166,7 @@ export function useDeleteRecording() {
       if (fetchError) {throw fetchError;}
 
       // Soft delete the record
-      const { error } = await supabaseUntyped
+      const { error } = await supabase
         .from('meeting_recordings')
         .update({ deleted_at: new Date().toISOString() })
         .eq('id', recordingId);
@@ -197,7 +197,7 @@ export function useSearchTranscriptions(companyId: string | undefined, searchQue
     queryFn: async () => {
       if (!companyId || !searchQuery.trim()) {return [];}
 
-      const { data, error } = await supabaseUntyped.rpc('search_recording_transcriptions', {
+      const { data, error } = await supabase.rpc('search_recording_transcriptions', {
         p_company_id: companyId,
         p_search_query: searchQuery,
       });
@@ -244,7 +244,7 @@ export function useUpdateRecording() {
       recordingId: string;
       updates: Partial<MeetingRecording>;
     }) => {
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('meeting_recordings')
         .update(updates)
         .eq('id', recordingId)

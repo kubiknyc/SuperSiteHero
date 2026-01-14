@@ -44,7 +44,7 @@ const mockData = [
 
 // Mock dependencies
 vi.mock('@/lib/supabase', () => ({
-  supabaseUntyped: {
+  supabase: {
     from: vi.fn(() => createChainableMock(mockData)),
   },
 }))

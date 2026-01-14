@@ -1,7 +1,7 @@
 // File: /src/lib/auth/biometric.ts
 // Web Authentication API (WebAuthn) integration for biometric authentication
 
-import { supabaseUntyped } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { logger } from '@/lib/utils/logger'
 
 /**
@@ -415,7 +415,7 @@ async function saveBiometricCredential(
     transports: AuthenticatorTransport[]
   }
 ): Promise<BiometricCredential> {
-  const { data: credential, error } = await supabaseUntyped
+  const { data: credential, error } = await supabase
     .from('biometric_credentials')
     .insert({
       user_id: userId,
@@ -449,7 +449,7 @@ async function saveBiometricCredential(
  * Get user's biometric credentials
  */
 export async function getUserBiometricCredentials(userId: string): Promise<BiometricCredential[]> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('biometric_credentials')
     .select('*')
     .eq('user_id', userId)
@@ -475,7 +475,7 @@ export async function getUserBiometricCredentials(userId: string): Promise<Biome
  * Delete a biometric credential
  */
 export async function deleteBiometricCredential(credentialId: string): Promise<boolean> {
-  const { error } = await supabaseUntyped
+  const { error } = await supabase
     .from('biometric_credentials')
     .delete()
     .eq('id', credentialId)
@@ -493,7 +493,7 @@ export async function deleteBiometricCredential(credentialId: string): Promise<b
  * Update credential last used timestamp
  */
 async function updateCredentialLastUsed(credentialId: string): Promise<void> {
-  const { error } = await supabaseUntyped
+  const { error } = await supabase
     .from('biometric_credentials')
     .update({ last_used: new Date().toISOString() })
     .eq('credential_id', credentialId)
@@ -508,7 +508,7 @@ async function updateCredentialLastUsed(credentialId: string): Promise<void> {
  */
 export async function getBiometricSettings(userId: string): Promise<BiometricSettings> {
   // Get settings from user preferences
-  const { data: prefs, error: prefsError } = await supabaseUntyped
+  const { data: prefs, error: prefsError } = await supabase
     .from('user_preferences')
     .select('biometric_enabled, biometric_reauth_interval')
     .eq('user_id', userId)
@@ -544,7 +544,7 @@ export async function updateBiometricSettings(
     updateData.biometric_reauth_interval = settings.reauthInterval
   }
 
-  const { error } = await supabaseUntyped
+  const { error } = await supabase
     .from('user_preferences')
     .upsert({
       user_id: userId,
@@ -602,7 +602,7 @@ export function clearBiometricAuthSession(): void {
  * Find user by credential ID (for passwordless login)
  */
 export async function findUserByCredentialId(credentialId: string): Promise<string | null> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('biometric_credentials')
     .select('user_id')
     .eq('credential_id', credentialId)

@@ -14,7 +14,7 @@ vi.mock('@/lib/supabase', () => ({
       getUser: vi.fn(),
     },
   },
-  supabaseUntyped: {
+  supabase: {
     from: vi.fn(),
     auth: {
       getUser: vi.fn(),

@@ -3,7 +3,7 @@
 // Includes auto-creation of punch items and tasks for failed items
 
 import { useCallback } from 'react'
-import { supabaseUntyped as supabase } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { notificationService, type NotificationRecipient } from '@/lib/notifications/notification-service'
 import { logger } from '@/lib/utils/logger'
 import { punchListsApi } from '@/lib/api/services/punch-lists'

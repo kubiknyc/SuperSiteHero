@@ -2,7 +2,7 @@
 // QuickBooks Online Integration API service
 
 import { ApiErrorClass } from '../errors'
-import { supabase, supabaseUntyped } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import {
   connectionNeedsRefresh,
   connectionNeedsReauth,
@@ -35,7 +35,7 @@ export const quickbooksApi = {
    */
   async getConnectionStatus(companyId: string): Promise<QBConnectionStatus> {
     try {
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('qb_connections')
         .select('*')
         .eq('company_id', companyId)
@@ -91,7 +91,7 @@ export const quickbooksApi = {
    */
   async getConnection(companyId: string): Promise<QBConnection | null> {
     try {
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('qb_connections')
         .select('*')
         .eq('company_id', companyId)
@@ -183,7 +183,7 @@ export const quickbooksApi = {
     updates: UpdateQBConnectionDTO
   ): Promise<QBConnection> {
     try {
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('qb_connections')
         .update(updates)
         .eq('id', connectionId)
@@ -234,7 +234,7 @@ export const quickbooksApi = {
     connectionId?: string
   ): Promise<QBAccountMapping[]> {
     try {
-      let query = supabaseUntyped
+      let query = supabase
         .from('qb_account_mappings')
         .select(`
           *,
@@ -269,7 +269,7 @@ export const quickbooksApi = {
     mapping: CreateQBAccountMappingDTO
   ): Promise<QBAccountMapping> {
     try {
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('qb_account_mappings')
         .insert({
           company_id: companyId,
@@ -299,7 +299,7 @@ export const quickbooksApi = {
     updates: Partial<CreateQBAccountMappingDTO>
   ): Promise<QBAccountMapping> {
     try {
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('qb_account_mappings')
         .update(updates)
         .eq('id', mappingId)
@@ -323,7 +323,7 @@ export const quickbooksApi = {
    */
   async deleteAccountMapping(mappingId: string): Promise<void> {
     try {
-      const { error } = await supabaseUntyped
+      const { error } = await supabase
         .from('qb_account_mappings')
         .delete()
         .eq('id', mappingId)
@@ -345,14 +345,14 @@ export const quickbooksApi = {
   async setDefaultMapping(mappingId: string, connectionId: string): Promise<void> {
     try {
       // First, clear any existing default
-      await supabaseUntyped
+      await supabase
         .from('qb_account_mappings')
         .update({ is_default: false })
         .eq('connection_id', connectionId)
         .eq('is_default', true)
 
       // Set the new default
-      const { error } = await supabaseUntyped
+      const { error } = await supabase
         .from('qb_account_mappings')
         .update({ is_default: true })
         .eq('id', mappingId)
@@ -381,7 +381,7 @@ export const quickbooksApi = {
     localEntityId: string
   ): Promise<QBEntityMapping | null> {
     try {
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('qb_entity_mappings')
         .select('*')
         .eq('company_id', companyId)
@@ -413,7 +413,7 @@ export const quickbooksApi = {
     }
   ): Promise<QBEntityMapping[]> {
     try {
-      let query = supabaseUntyped
+      let query = supabase
         .from('qb_entity_mappings')
         .select('*')
         .eq('company_id', companyId)
@@ -526,7 +526,7 @@ export const quickbooksApi = {
     priority: number = 5
   ): Promise<QBPendingSync> {
     try {
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('qb_pending_syncs')
         .insert({
           company_id: companyId,
@@ -557,7 +557,7 @@ export const quickbooksApi = {
    */
   async retrySync(pendingSyncId: string): Promise<void> {
     try {
-      const { error } = await supabaseUntyped
+      const { error } = await supabase
         .from('qb_pending_syncs')
         .update({
           status: 'pending',
@@ -581,7 +581,7 @@ export const quickbooksApi = {
    */
   async cancelPendingSync(pendingSyncId: string): Promise<void> {
     try {
-      const { error } = await supabaseUntyped
+      const { error } = await supabase
         .from('qb_pending_syncs')
         .delete()
         .eq('id', pendingSyncId)
@@ -614,7 +614,7 @@ export const quickbooksApi = {
     }
   ): Promise<QBSyncLog[]> {
     try {
-      let query = supabaseUntyped
+      let query = supabase
         .from('qb_sync_logs')
         .select('*')
         .eq('company_id', companyId)
@@ -654,7 +654,7 @@ export const quickbooksApi = {
    */
   async getSyncLog(logId: string): Promise<QBSyncLog> {
     try {
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('qb_sync_logs')
         .select('*')
         .eq('id', logId)
@@ -688,7 +688,7 @@ export const quickbooksApi = {
     }
   ): Promise<QBPendingSync[]> {
     try {
-      let query = supabaseUntyped
+      let query = supabase
         .from('qb_pending_syncs')
         .select('*')
         .eq('company_id', companyId)
@@ -731,7 +731,7 @@ export const quickbooksApi = {
   async getSyncStats(companyId: string): Promise<QBSyncStats> {
     try {
       // Get total mapped entities count
-      const { count: totalMapped, error: mappedError } = await supabaseUntyped
+      const { count: totalMapped, error: mappedError } = await supabase
         .from('qb_entity_mappings')
         .select('*', { count: 'exact', head: true })
         .eq('company_id', companyId)
@@ -739,7 +739,7 @@ export const quickbooksApi = {
       if (mappedError) {throw mappedError}
 
       // Get pending syncs count
-      const { count: pendingCount, error: pendingError } = await supabaseUntyped
+      const { count: pendingCount, error: pendingError } = await supabase
         .from('qb_pending_syncs')
         .select('*', { count: 'exact', head: true })
         .eq('company_id', companyId)
@@ -748,7 +748,7 @@ export const quickbooksApi = {
       if (pendingError) {throw pendingError}
 
       // Get failed syncs count
-      const { count: failedCount, error: failedError } = await supabaseUntyped
+      const { count: failedCount, error: failedError } = await supabase
         .from('qb_entity_mappings')
         .select('*', { count: 'exact', head: true })
         .eq('company_id', companyId)
@@ -757,7 +757,7 @@ export const quickbooksApi = {
       if (failedError) {throw failedError}
 
       // Get last sync time
-      const { data: lastLog, error: logError } = await supabaseUntyped
+      const { data: lastLog, error: logError } = await supabase
         .from('qb_sync_logs')
         .select('completed_at')
         .eq('company_id', companyId)
@@ -769,7 +769,7 @@ export const quickbooksApi = {
       if (logError) {throw logError}
 
       // Get counts by entity type
-      const { data: entityCounts, error: entityError } = await supabaseUntyped
+      const { data: entityCounts, error: entityError } = await supabase
         .from('qb_entity_mappings')
         .select('qb_entity_type, sync_status')
         .eq('company_id', companyId)

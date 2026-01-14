@@ -4,7 +4,7 @@
  */
 
 import { useQuery } from '@tanstack/react-query'
-import { supabaseUntyped } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth/AuthContext'
 import type { LienWaiverStatus } from '@/types/lien-waiver'
 
@@ -71,7 +71,7 @@ export function useMissingWaivers(projectId?: string) {
       const today = new Date().toISOString().split('T')[0]
 
       // Type assertion needed until Supabase types are regenerated
-      let query = supabaseUntyped
+      let query = supabase
         .from('lien_waivers')
         .select(`
           id,
@@ -139,7 +139,7 @@ export function useMissingWaiversSummary() {
 
       // Get all pending/missing waivers
       // Type assertion needed until Supabase types are regenerated
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('lien_waivers')
         .select(`
           id,

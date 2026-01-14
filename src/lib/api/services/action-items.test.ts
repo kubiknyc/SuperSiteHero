@@ -55,7 +55,7 @@ const {
 }))
 
 vi.mock('@/lib/supabase', () => ({
-  supabaseUntyped: {
+  supabase: {
     from: mockFrom,
     rpc: mockRpc,
   },

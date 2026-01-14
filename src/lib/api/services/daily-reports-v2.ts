@@ -3,7 +3,7 @@
  * Complete API for enhanced daily report system
  */
 
-import { supabase, supabaseUntyped } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 import { ApiErrorClass } from '../errors';
 import type {
   DailyReportV2,
@@ -163,16 +163,16 @@ export const dailyReportsV2Api = {
         visitorsResult,
         photosResult,
       ] = await Promise.all([
-        supabaseUntyped.from('daily_report_workforce').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<WorkforceEntryV2[]>>,
-        supabaseUntyped.from('daily_report_equipment').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<EquipmentEntryV2[]>>,
-        supabaseUntyped.from('daily_report_delays').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<DelayEntry[]>>,
-        supabaseUntyped.from('daily_report_safety_incidents').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<SafetyIncident[]>>,
-        supabaseUntyped.from('daily_report_inspections').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<InspectionEntry[]>>,
-        supabaseUntyped.from('daily_report_tm_work').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<TMWorkEntry[]>>,
-        supabaseUntyped.from('daily_report_progress').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<ProgressEntry[]>>,
-        supabaseUntyped.from('daily_report_deliveries').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<DeliveryEntryV2[]>>,
-        supabaseUntyped.from('daily_report_visitors').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<VisitorEntryV2[]>>,
-        supabaseUntyped.from('daily_report_photos').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<PhotoEntryV2[]>>,
+        supabase.from('daily_report_workforce').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<WorkforceEntryV2[]>>,
+        supabase.from('daily_report_equipment').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<EquipmentEntryV2[]>>,
+        supabase.from('daily_report_delays').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<DelayEntry[]>>,
+        supabase.from('daily_report_safety_incidents').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<SafetyIncident[]>>,
+        supabase.from('daily_report_inspections').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<InspectionEntry[]>>,
+        supabase.from('daily_report_tm_work').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<TMWorkEntry[]>>,
+        supabase.from('daily_report_progress').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<ProgressEntry[]>>,
+        supabase.from('daily_report_deliveries').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<DeliveryEntryV2[]>>,
+        supabase.from('daily_report_visitors').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<VisitorEntryV2[]>>,
+        supabase.from('daily_report_photos').select('*').eq('daily_report_id', reportId) as Promise<SupabaseQueryResult<PhotoEntryV2[]>>,
       ]);
 
       const result: DailyReportWithRelated = {
@@ -401,7 +401,7 @@ export const dailyReportsV2Api = {
 
       // Copy workforce if requested
       if (request.copy_workforce !== false) {
-        const { data: workforce }: SupabaseQueryResult<WorkforceEntryV2[]> = await supabaseUntyped
+        const { data: workforce }: SupabaseQueryResult<WorkforceEntryV2[]> = await supabase
           .from('daily_report_workforce')
           .select('*')
           .eq('daily_report_id', sourceReportId);
@@ -418,7 +418,7 @@ export const dailyReportsV2Api = {
 
       // Copy equipment if requested
       if (request.copy_equipment !== false) {
-        const { data: equipment }: SupabaseQueryResult<EquipmentEntryV2[]> = await supabaseUntyped
+        const { data: equipment }: SupabaseQueryResult<EquipmentEntryV2[]> = await supabase
           .from('daily_report_equipment')
           .select('*')
           .eq('daily_report_id', sourceReportId);
@@ -472,7 +472,7 @@ export const workforceApi = {
   async upsert(entries: WorkforceEntryV2[]): Promise<WorkforceEntryV2[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error }: SupabaseQueryResult<WorkforceEntryV2[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<WorkforceEntryV2[]> = await supabase
       .from('daily_report_workforce')
       .upsert(entries, { onConflict: 'id' })
       .select();
@@ -482,7 +482,7 @@ export const workforceApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+    const { error }: SupabaseQueryResult<null> = await supabase
       .from('daily_report_workforce')
       .delete()
       .eq('id', id);
@@ -491,7 +491,7 @@ export const workforceApi = {
   },
 
   async deleteByReportId(reportId: string): Promise<void> {
-    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+    const { error }: SupabaseQueryResult<null> = await supabase
       .from('daily_report_workforce')
       .delete()
       .eq('daily_report_id', reportId);
@@ -508,7 +508,7 @@ export const equipmentApi = {
   async upsert(entries: EquipmentEntryV2[]): Promise<EquipmentEntryV2[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error }: SupabaseQueryResult<EquipmentEntryV2[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<EquipmentEntryV2[]> = await supabase
       .from('daily_report_equipment')
       .upsert(entries, { onConflict: 'id' })
       .select();
@@ -518,7 +518,7 @@ export const equipmentApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+    const { error }: SupabaseQueryResult<null> = await supabase
       .from('daily_report_equipment')
       .delete()
       .eq('id', id);
@@ -533,7 +533,7 @@ export const equipmentApi = {
 
 export const delaysApi = {
   async getByReportId(reportId: string): Promise<DelayEntry[]> {
-    const { data, error }: SupabaseQueryResult<DelayEntry[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<DelayEntry[]> = await supabase
       .from('daily_report_delays')
       .select('*')
       .eq('daily_report_id', reportId)
@@ -546,7 +546,7 @@ export const delaysApi = {
   async upsert(entries: DelayEntry[]): Promise<DelayEntry[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error }: SupabaseQueryResult<DelayEntry[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<DelayEntry[]> = await supabase
       .from('daily_report_delays')
       .upsert(entries, { onConflict: 'id' })
       .select();
@@ -556,7 +556,7 @@ export const delaysApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+    const { error }: SupabaseQueryResult<null> = await supabase
       .from('daily_report_delays')
       .delete()
       .eq('id', id);
@@ -572,7 +572,7 @@ export const delaysApi = {
     startDate: string,
     endDate: string
   ): Promise<DelayEntry[]> {
-    const { data, error }: SupabaseQueryResult<DelayEntry[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<DelayEntry[]> = await supabase
       .from('daily_report_delays')
       .select(`
         *,
@@ -594,7 +594,7 @@ export const delaysApi = {
 
 export const safetyIncidentsApi = {
   async getByReportId(reportId: string): Promise<SafetyIncident[]> {
-    const { data, error }: SupabaseQueryResult<SafetyIncident[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<SafetyIncident[]> = await supabase
       .from('daily_report_safety_incidents')
       .select('*')
       .eq('daily_report_id', reportId)
@@ -607,7 +607,7 @@ export const safetyIncidentsApi = {
   async upsert(entries: SafetyIncident[]): Promise<SafetyIncident[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error }: SupabaseQueryResult<SafetyIncident[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<SafetyIncident[]> = await supabase
       .from('daily_report_safety_incidents')
       .upsert(entries, { onConflict: 'id' })
       .select();
@@ -617,7 +617,7 @@ export const safetyIncidentsApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+    const { error }: SupabaseQueryResult<null> = await supabase
       .from('daily_report_safety_incidents')
       .delete()
       .eq('id', id);
@@ -629,7 +629,7 @@ export const safetyIncidentsApi = {
    * Get OSHA-reportable incidents for a project
    */
   async getOshaIncidents(projectId: string): Promise<SafetyIncident[]> {
-    const { data, error }: SupabaseQueryResult<SafetyIncident[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<SafetyIncident[]> = await supabase
       .from('daily_report_safety_incidents')
       .select(`
         *,
@@ -650,7 +650,7 @@ export const safetyIncidentsApi = {
 
 export const inspectionsApi = {
   async getByReportId(reportId: string): Promise<InspectionEntry[]> {
-    const { data, error }: SupabaseQueryResult<InspectionEntry[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<InspectionEntry[]> = await supabase
       .from('daily_report_inspections')
       .select('*')
       .eq('daily_report_id', reportId)
@@ -663,7 +663,7 @@ export const inspectionsApi = {
   async upsert(entries: InspectionEntry[]): Promise<InspectionEntry[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error }: SupabaseQueryResult<InspectionEntry[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<InspectionEntry[]> = await supabase
       .from('daily_report_inspections')
       .upsert(entries, { onConflict: 'id' })
       .select();
@@ -673,7 +673,7 @@ export const inspectionsApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+    const { error }: SupabaseQueryResult<null> = await supabase
       .from('daily_report_inspections')
       .delete()
       .eq('id', id);
@@ -688,7 +688,7 @@ export const inspectionsApi = {
 
 export const tmWorkApi = {
   async getByReportId(reportId: string): Promise<TMWorkEntry[]> {
-    const { data, error }: SupabaseQueryResult<TMWorkEntry[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<TMWorkEntry[]> = await supabase
       .from('daily_report_tm_work')
       .select('*')
       .eq('daily_report_id', reportId)
@@ -701,7 +701,7 @@ export const tmWorkApi = {
   async upsert(entries: TMWorkEntry[]): Promise<TMWorkEntry[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error }: SupabaseQueryResult<TMWorkEntry[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<TMWorkEntry[]> = await supabase
       .from('daily_report_tm_work')
       .upsert(entries, { onConflict: 'id' })
       .select();
@@ -711,7 +711,7 @@ export const tmWorkApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+    const { error }: SupabaseQueryResult<null> = await supabase
       .from('daily_report_tm_work')
       .delete()
       .eq('id', id);
@@ -726,7 +726,7 @@ export const tmWorkApi = {
 
 export const progressApi = {
   async getByReportId(reportId: string): Promise<ProgressEntry[]> {
-    const { data, error }: SupabaseQueryResult<ProgressEntry[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<ProgressEntry[]> = await supabase
       .from('daily_report_progress')
       .select('*')
       .eq('daily_report_id', reportId)
@@ -739,7 +739,7 @@ export const progressApi = {
   async upsert(entries: ProgressEntry[]): Promise<ProgressEntry[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error }: SupabaseQueryResult<ProgressEntry[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<ProgressEntry[]> = await supabase
       .from('daily_report_progress')
       .upsert(entries, { onConflict: 'id' })
       .select();
@@ -749,7 +749,7 @@ export const progressApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+    const { error }: SupabaseQueryResult<null> = await supabase
       .from('daily_report_progress')
       .delete()
       .eq('id', id);
@@ -766,7 +766,7 @@ export const deliveriesApi = {
   async upsert(entries: DeliveryEntryV2[]): Promise<DeliveryEntryV2[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error }: SupabaseQueryResult<DeliveryEntryV2[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<DeliveryEntryV2[]> = await supabase
       .from('daily_report_deliveries')
       .upsert(entries, { onConflict: 'id' })
       .select();
@@ -776,7 +776,7 @@ export const deliveriesApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+    const { error }: SupabaseQueryResult<null> = await supabase
       .from('daily_report_deliveries')
       .delete()
       .eq('id', id);
@@ -793,7 +793,7 @@ export const visitorsApi = {
   async upsert(entries: VisitorEntryV2[]): Promise<VisitorEntryV2[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error }: SupabaseQueryResult<VisitorEntryV2[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<VisitorEntryV2[]> = await supabase
       .from('daily_report_visitors')
       .upsert(entries, { onConflict: 'id' })
       .select();
@@ -803,7 +803,7 @@ export const visitorsApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+    const { error }: SupabaseQueryResult<null> = await supabase
       .from('daily_report_visitors')
       .delete()
       .eq('id', id);
@@ -818,7 +818,7 @@ export const visitorsApi = {
 
 export const photosApi = {
   async getByReportId(reportId: string): Promise<PhotoEntryV2[]> {
-    const { data, error }: SupabaseQueryResult<PhotoEntryV2[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<PhotoEntryV2[]> = await supabase
       .from('daily_report_photos')
       .select('*')
       .eq('daily_report_id', reportId)
@@ -831,7 +831,7 @@ export const photosApi = {
   async upsert(entries: PhotoEntryV2[]): Promise<PhotoEntryV2[]> {
     if (entries.length === 0) {return [];}
 
-    const { data, error }: SupabaseQueryResult<PhotoEntryV2[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<PhotoEntryV2[]> = await supabase
       .from('daily_report_photos')
       .upsert(entries, { onConflict: 'id' })
       .select();
@@ -841,7 +841,7 @@ export const photosApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+    const { error }: SupabaseQueryResult<null> = await supabase
       .from('daily_report_photos')
       .delete()
       .eq('id', id);
@@ -850,7 +850,7 @@ export const photosApi = {
   },
 
   async updateStatus(id: string, status: PhotoEntryV2['upload_status']): Promise<void> {
-    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+    const { error }: SupabaseQueryResult<null> = await supabase
       .from('daily_report_photos')
       .update({ upload_status: status })
       .eq('id', id);
@@ -867,7 +867,7 @@ export const templatesApi = {
   async getForProject(projectId: string): Promise<DailyReportTemplate[]> {
     const { data: user } = await supabase.auth.getUser();
 
-    const { data, error }: SupabaseQueryResult<DailyReportTemplate[]> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<DailyReportTemplate[]> = await supabase
       .from('daily_report_templates')
       .select('*')
       .or(`project_id.eq.${projectId},user_id.eq.${user.user?.id}`)
@@ -878,7 +878,7 @@ export const templatesApi = {
   },
 
   async create(template: Omit<DailyReportTemplate, 'id' | 'created_at' | 'updated_at'>): Promise<DailyReportTemplate> {
-    const { data, error }: SupabaseQueryResult<DailyReportTemplate> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<DailyReportTemplate> = await supabase
       .from('daily_report_templates')
       .insert(template)
       .select()
@@ -890,7 +890,7 @@ export const templatesApi = {
   },
 
   async update(id: string, updates: Partial<DailyReportTemplate>): Promise<DailyReportTemplate> {
-    const { data, error }: SupabaseQueryResult<DailyReportTemplate> = await supabaseUntyped
+    const { data, error }: SupabaseQueryResult<DailyReportTemplate> = await supabase
       .from('daily_report_templates')
       .update(updates)
       .eq('id', id)
@@ -903,7 +903,7 @@ export const templatesApi = {
   },
 
   async delete(id: string): Promise<void> {
-    const { error }: SupabaseQueryResult<null> = await supabaseUntyped
+    const { error }: SupabaseQueryResult<null> = await supabase
       .from('daily_report_templates')
       .delete()
       .eq('id', id);

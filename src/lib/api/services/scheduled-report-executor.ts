@@ -5,7 +5,7 @@
  * This provides a "Run Now" capability for testing scheduled reports.
  */
 
-import { supabaseUntyped } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { logger } from '@/lib/utils/logger'
 import { reportExportService, type ReportExportOptions } from '@/features/reports/services/reportExportService'
 import { getScheduledReport, getReportTemplate } from './report-builder'
@@ -190,7 +190,7 @@ export async function executeScheduledReport(scheduleId: string): Promise<Execut
         // Get project name if available
         let projectName: string | undefined
         if (schedule.project_id) {
-            const { data: project } = await supabaseUntyped
+            const { data: project } = await supabase
                 .from('projects')
                 .select('name')
                 .eq('id', schedule.project_id)
@@ -241,7 +241,7 @@ export async function executeScheduledReport(scheduleId: string): Promise<Execut
         }
 
         // 7. Update last_run_at timestamp
-        await supabaseUntyped
+        await supabase
             .from('scheduled_reports')
             .update({
                 last_run_at: executedAt,

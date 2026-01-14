@@ -14,7 +14,7 @@ import type {
   ReportFieldType,
   ChartConfiguration,
 } from '@/types/report-builder'
-import { supabaseUntyped } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { logger } from '@/lib/utils/logger'
 
 // ============================================================================
@@ -265,7 +265,7 @@ async function fetchReportData(options: ReportExportOptions): Promise<Record<str
   // Build select columns
   const selectColumns = fields.map(f => f.field_name).join(', ')
 
-  let query = supabaseUntyped
+  let query = supabase
     .from(tableName)
     .select(selectColumns || '*')
 

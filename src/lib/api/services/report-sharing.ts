@@ -7,7 +7,7 @@
  * - List all shares for a report
  */
 
-import { supabaseUntyped } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { logger } from '@/lib/utils/logger'
 import type {
   SharedReport,
@@ -24,7 +24,7 @@ import type {
  * Get all shares for a specific report template
  */
 export async function getReportShares(reportTemplateId: string): Promise<SharedReport[]> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('shared_reports')
     .select(`
       *,
@@ -46,7 +46,7 @@ export async function getReportShares(reportTemplateId: string): Promise<SharedR
  * Get a single shared report by ID
  */
 export async function getReportShare(shareId: string): Promise<SharedReport | null> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('shared_reports')
     .select(`
       *,
@@ -70,7 +70,7 @@ export async function getReportShare(shareId: string): Promise<SharedReport | nu
  * This uses a database function that also tracks view counts
  */
 export async function getSharedReportByToken(token: string): Promise<PublicSharedReportData | null> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .rpc('get_shared_report_by_token', { p_token: token })
 
   if (error) {
@@ -120,7 +120,7 @@ export async function getSharedReportByToken(token: string): Promise<PublicShare
  * Get all shared reports for the current user's company
  */
 export async function getCompanySharedReports(companyId: string): Promise<SharedReport[]> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('shared_reports')
     .select(`
       *,
@@ -146,10 +146,10 @@ export async function getCompanySharedReports(companyId: string): Promise<Shared
  * Create a new report share
  */
 export async function createReportShare(input: CreateReportShareDTO): Promise<SharedReport> {
-  const { data: authData } = await supabaseUntyped.auth.getUser()
+  const { data: authData } = await supabase.auth.getUser()
   const userId = authData?.user?.id
 
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('shared_reports')
     .insert({
       report_template_id: input.reportTemplateId,
@@ -193,7 +193,7 @@ export async function updateReportShare(
   if (input.showBranding !== undefined) {updates.show_branding = input.showBranding}
   if (input.customMessage !== undefined) {updates.custom_message = input.customMessage}
 
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('shared_reports')
     .update(updates)
     .eq('id', shareId)
@@ -216,7 +216,7 @@ export async function updateReportShare(
  * Delete a report share
  */
 export async function deleteReportShare(shareId: string): Promise<void> {
-  const { error } = await supabaseUntyped
+  const { error } = await supabase
     .from('shared_reports')
     .delete()
     .eq('id', shareId)
@@ -231,7 +231,7 @@ export async function deleteReportShare(shareId: string): Promise<void> {
  * Regenerate the public token for a share (for security)
  */
 export async function regenerateShareToken(shareId: string): Promise<string> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .rpc('regenerate_share_token', { p_share_id: shareId })
 
   if (error) {

@@ -5,7 +5,7 @@
  * and integration with tasks, RFIs, and constraints.
  */
 
-import { supabaseUntyped as supabase } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { fromExtended } from '@/lib/supabase-typed'
 import type {
   ActionItem,

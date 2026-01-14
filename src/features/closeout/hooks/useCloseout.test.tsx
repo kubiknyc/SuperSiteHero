@@ -55,7 +55,7 @@ const mockSupabaseFrom = vi.fn()
 
 // Mock Supabase
 vi.mock('@/lib/supabase', () => ({
-  supabaseUntyped: {
+  supabase: {
     from: (...args: unknown[]) => mockSupabaseFrom(...args),
   },
 }))

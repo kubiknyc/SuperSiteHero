@@ -11,7 +11,7 @@ import {
 } from '../report-sharing'
 
 vi.mock('@/lib/supabase', () => ({
-  supabaseUntyped: {
+  supabase: {
     from: vi.fn(),
     auth: {
       getUser: vi.fn(),
@@ -38,8 +38,8 @@ describe('Report Sharing API', () => {
         order: vi.fn().mockResolvedValue({ data: mockShares, error: null }),
       }
 
-      const supabaseUntyped = require('@/lib/supabase').supabaseUntyped
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      const supabase = require('@/lib/supabase').supabase
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await reportSharingApi.getReportShares('template-1')
 
@@ -57,8 +57,8 @@ describe('Report Sharing API', () => {
         single: vi.fn().mockResolvedValue({ data: mockShare, error: null }),
       }
 
-      const supabaseUntyped = require('@/lib/supabase').supabaseUntyped
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      const supabase = require('@/lib/supabase').supabase
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await reportSharingApi.getReportShare('1')
 
@@ -72,8 +72,8 @@ describe('Report Sharing API', () => {
         single: vi.fn().mockResolvedValue({ data: null, error: { code: 'PGRST116' } }),
       }
 
-      const supabaseUntyped = require('@/lib/supabase').supabaseUntyped
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      const supabase = require('@/lib/supabase').supabase
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await reportSharingApi.getReportShare('999')
 
@@ -93,8 +93,8 @@ describe('Report Sharing API', () => {
         company_name: 'ACME Corp',
       }]
 
-      const supabaseUntyped = require('@/lib/supabase').supabaseUntyped
-      vi.mocked(supabaseUntyped.rpc).mockResolvedValue({ data: mockData, error: null } as any)
+      const supabase = require('@/lib/supabase').supabase
+      vi.mocked(supabase.rpc).mockResolvedValue({ data: mockData, error: null } as any)
 
       const result = await reportSharingApi.getSharedReportByToken('abc123')
 
@@ -103,8 +103,8 @@ describe('Report Sharing API', () => {
     })
 
     it('should return null when token invalid', async () => {
-      const supabaseUntyped = require('@/lib/supabase').supabaseUntyped
-      vi.mocked(supabaseUntyped.rpc).mockResolvedValue({ data: [], error: null } as any)
+      const supabase = require('@/lib/supabase').supabase
+      vi.mocked(supabase.rpc).mockResolvedValue({ data: [], error: null } as any)
 
       const result = await reportSharingApi.getSharedReportByToken('invalid')
 
@@ -115,8 +115,8 @@ describe('Report Sharing API', () => {
   describe('createReportShare', () => {
     it('should create new share', async () => {
       const mockUser = { user: { id: 'user-1' } }
-      const supabaseUntyped = require('@/lib/supabase').supabaseUntyped
-      vi.mocked(supabaseUntyped.auth.getUser).mockResolvedValue({ data: mockUser } as any)
+      const supabase = require('@/lib/supabase').supabase
+      vi.mocked(supabase.auth.getUser).mockResolvedValue({ data: mockUser } as any)
 
       const mockQuery = {
         insert: vi.fn().mockReturnThis(),
@@ -124,7 +124,7 @@ describe('Report Sharing API', () => {
         single: vi.fn().mockResolvedValue({ data: { id: '1' }, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await reportSharingApi.createReportShare({
         reportTemplateId: 'template-1',
@@ -145,8 +145,8 @@ describe('Report Sharing API', () => {
         single: vi.fn().mockResolvedValue({ data: { id: '1' }, error: null }),
       }
 
-      const supabaseUntyped = require('@/lib/supabase').supabaseUntyped
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      const supabase = require('@/lib/supabase').supabase
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       await reportSharingApi.updateReportShare('1', {
         isPublic: false,
@@ -169,8 +169,8 @@ describe('Report Sharing API', () => {
         eq: vi.fn().mockResolvedValue({ error: null }),
       }
 
-      const supabaseUntyped = require('@/lib/supabase').supabaseUntyped
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      const supabase = require('@/lib/supabase').supabase
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       await reportSharingApi.deleteReportShare('1')
 
@@ -180,8 +180,8 @@ describe('Report Sharing API', () => {
 
   describe('regenerateShareToken', () => {
     it('should regenerate token', async () => {
-      const supabaseUntyped = require('@/lib/supabase').supabaseUntyped
-      vi.mocked(supabaseUntyped.rpc).mockResolvedValue({ data: 'new-token-123', error: null } as any)
+      const supabase = require('@/lib/supabase').supabase
+      vi.mocked(supabase.rpc).mockResolvedValue({ data: 'new-token-123', error: null } as any)
 
       const result = await reportSharingApi.regenerateShareToken('share-1')
 

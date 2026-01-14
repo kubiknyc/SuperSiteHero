@@ -8,9 +8,6 @@ import type { LookAheadActivity, LookAheadActivityStatus } from '@/types/look-ah
 import type { ProgressEntry } from '@/types/daily-reports-v2'
 import { logger } from '../../utils/logger';
 
-
-const supabaseUntyped = supabase as any
-
 /**
  * Progress summary for an activity across multiple daily reports
  */
@@ -64,7 +61,7 @@ export async function getLinkedProgressEntries(
   dateFrom?: string,
   dateTo?: string
 ): Promise<ProgressEntry[]> {
-  let query = supabaseUntyped
+  let query = supabase
     .from('daily_report_progress_entries')
     .select(`
       *,
@@ -137,7 +134,7 @@ export async function calculateProgressSummaries(
   // Get look-ahead activities for these IDs
   const activityIds = Array.from(progressByActivity.keys())
 
-  const { data: activities, error } = await supabaseUntyped
+  const { data: activities, error } = await supabase
     .from('look_ahead_activities')
     .select('*')
     .in('id', activityIds)
@@ -282,7 +279,7 @@ export async function syncActivityFromProgress(
   }
 
   try {
-    const { error } = await supabaseUntyped
+    const { error } = await supabase
       .from('look_ahead_activities')
       .update(updates)
       .eq('id', activityId)
@@ -347,7 +344,7 @@ export async function linkProgressToActivity(
   progressEntryId: string,
   activityId: string
 ): Promise<void> {
-  const { error } = await supabaseUntyped
+  const { error } = await supabase
     .from('daily_report_progress_entries')
     .update({
       activity_id: activityId,
@@ -367,7 +364,7 @@ export async function linkProgressToActivity(
 export async function unlinkProgressFromActivity(
   progressEntryId: string
 ): Promise<void> {
-  const { error } = await supabaseUntyped
+  const { error } = await supabase
     .from('daily_report_progress_entries')
     .update({
       activity_id: null,
@@ -391,7 +388,7 @@ export async function autoLinkProgressEntries(
   dateTo?: string
 ): Promise<{ linked: number; unmatched: number }> {
   // Get unlinked progress entries
-  let query = supabaseUntyped
+  let query = supabase
     .from('daily_report_progress_entries')
     .select(`
       *,
@@ -423,7 +420,7 @@ export async function autoLinkProgressEntries(
   }
 
   // Get all look-ahead activities for the project
-  const { data: activities, error: activitiesError } = await supabaseUntyped
+  const { data: activities, error: activitiesError } = await supabase
     .from('look_ahead_activities')
     .select('id, activity_name, trade, location')
     .eq('project_id', projectId)
@@ -501,7 +498,7 @@ export async function getSyncStatus(projectId: string): Promise<{
 }> {
   const summaries = await calculateProgressSummaries(projectId)
 
-  const { count: totalActivities } = await supabaseUntyped
+  const { count: totalActivities } = await supabase
     .from('look_ahead_activities')
     .select('*', { count: 'exact', head: true })
     .eq('project_id', projectId)

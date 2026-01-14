@@ -1,14 +1,14 @@
 import { vi } from 'vitest'
 
 // Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
-import { supabase, supabaseUntyped } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { quickbooksApi } from '../quickbooks'
 
 vi.mock('@/lib/supabase', () => ({
   supabase: {
     functions: { invoke: vi.fn() },
   },
-  supabaseUntyped: {
+  supabase: {
     from: vi.fn(),
   },
 }))
@@ -36,7 +36,7 @@ describe('QuickBooks API', () => {
         maybeSingle: vi.fn().mockResolvedValue({ data: mockConnection, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await quickbooksApi.getConnectionStatus('comp1')
 
@@ -51,7 +51,7 @@ describe('QuickBooks API', () => {
         maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await quickbooksApi.getConnectionStatus('comp1')
 
@@ -141,7 +141,7 @@ describe('QuickBooks API', () => {
         order: vi.fn().mockResolvedValue({ data: mockMappings, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await quickbooksApi.getAccountMappings('comp1')
 
@@ -167,7 +167,7 @@ describe('QuickBooks API', () => {
         }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await quickbooksApi.createAccountMapping('comp1', 'conn1', newMapping)
 
@@ -193,7 +193,7 @@ describe('QuickBooks API', () => {
         eq: vi.fn().mockResolvedValue({ error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from)
+      vi.mocked(supabase.from)
         .mockReturnValueOnce(mockClearQuery as any)
         .mockReturnValueOnce(mockSetQuery as any)
 
@@ -284,7 +284,7 @@ describe('QuickBooks API', () => {
         single: vi.fn().mockResolvedValue({ data: mockQueue, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await quickbooksApi.queueForSync('comp1', 'conn1', 'bill', 'bill1', 8)
 
@@ -299,7 +299,7 @@ describe('QuickBooks API', () => {
         eq: vi.fn().mockResolvedValue({ error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       await quickbooksApi.retrySync('queue1')
 
@@ -324,7 +324,7 @@ describe('QuickBooks API', () => {
         limit: vi.fn().mockResolvedValue({ data: mockLogs, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await quickbooksApi.getSyncLogs('comp1', { limit: 10 })
 
@@ -375,7 +375,7 @@ describe('QuickBooks API', () => {
         eq: vi.fn().mockResolvedValue({ data: [], error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from)
+      vi.mocked(supabase.from)
         .mockReturnValueOnce(mockCountQuery1 as any)
         .mockReturnValueOnce(mockCountQuery2 as any)
         .mockReturnValueOnce(mockCountQuery3 as any)
@@ -436,7 +436,7 @@ describe('QuickBooks API', () => {
           maybeSingle: vi.fn().mockResolvedValue({ data: expiredConnection, error: null }),
         }
 
-        vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+        vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
         const result = await quickbooksApi.getConnectionStatus('comp1')
 
@@ -480,7 +480,7 @@ describe('QuickBooks API', () => {
           maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
         }
 
-        vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+        vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
         const result = await quickbooksApi.getConnectionStatus('comp1')
 
@@ -498,7 +498,7 @@ describe('QuickBooks API', () => {
           }),
         }
 
-        vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+        vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
         await expect(quickbooksApi.getAccountMappings('comp1')).rejects.toThrow()
       })
@@ -537,7 +537,7 @@ describe('QuickBooks API', () => {
           eq: vi.fn().mockResolvedValue({ error: null }),
         }
 
-        vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+        vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
         await quickbooksApi.retrySync('queue1')
 
@@ -568,7 +568,7 @@ describe('QuickBooks API', () => {
           maybeSingle: vi.fn().mockResolvedValue({ data: sandboxConnection, error: null }),
         }
 
-        vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+        vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
         const result = await quickbooksApi.getConnectionStatus('comp1')
 
@@ -595,7 +595,7 @@ describe('QuickBooks API', () => {
           maybeSingle: vi.fn().mockResolvedValue({ data: connectionWithNull, error: null }),
         }
 
-        vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+        vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
         const result = await quickbooksApi.getConnectionStatus('comp1')
 

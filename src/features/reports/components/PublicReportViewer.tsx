@@ -47,7 +47,7 @@ import {
 import { usePublicSharedReport } from '../hooks/useReportSharing'
 import { ChartRenderer } from './ChartRenderer'
 import { reportExportService, type ReportExportOptions } from '../services/reportExportService'
-import { supabaseUntyped } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import type { ReportDataSource, ReportOutputFormat } from '@/types/report-builder'
 import { logger } from '../../../lib/utils/logger'
 
@@ -196,7 +196,7 @@ export function PublicReportViewer() {
       // Build select columns from display fields
       const selectColumns = displayFields.map(f => f.field).join(', ')
 
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from(tableName)
         .select(selectColumns || '*')
         .eq('company_id', sharedReport.companyId)

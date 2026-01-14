@@ -5,7 +5,7 @@
  * and generated reports.
  */
 
-import { supabaseUntyped } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { logger } from '@/lib/utils/logger'
 import type {
   ReportTemplate,
@@ -39,7 +39,7 @@ import type {
  * Get all report templates with optional filters
  */
 export async function getReportTemplates(filters: ReportTemplateFilters = {}): Promise<ReportTemplate[]> {
-  let query = supabaseUntyped
+  let query = supabase
     .from('report_templates')
     .select(`
       *,
@@ -86,7 +86,7 @@ export async function getReportTemplates(filters: ReportTemplateFilters = {}): P
  * Get a single report template by ID
  */
 export async function getReportTemplate(id: string): Promise<ReportTemplate | null> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('report_templates')
     .select(`
       *,
@@ -113,10 +113,10 @@ export async function getReportTemplate(id: string): Promise<ReportTemplate | nu
  * Create a new report template
  */
 export async function createReportTemplate(input: CreateReportTemplateDTO): Promise<ReportTemplate> {
-  const { data: authData } = await supabaseUntyped.auth.getUser()
+  const { data: authData } = await supabase.auth.getUser()
   const userId = authData?.user?.id
 
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('report_templates')
     .insert({
       company_id: input.company_id,
@@ -157,7 +157,7 @@ export async function updateReportTemplate(id: string, input: UpdateReportTempla
   if (input.include_charts !== undefined) {updates.include_charts = input.include_charts}
   if (input.include_summary !== undefined) {updates.include_summary = input.include_summary}
 
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('report_templates')
     .update(updates)
     .eq('id', id)
@@ -176,7 +176,7 @@ export async function updateReportTemplate(id: string, input: UpdateReportTempla
  * Delete a report template (soft delete)
  */
 export async function deleteReportTemplate(id: string): Promise<void> {
-  const { error } = await supabaseUntyped
+  const { error } = await supabase
     .from('report_templates')
     .update({ deleted_at: new Date().toISOString() })
     .eq('id', id)
@@ -269,7 +269,7 @@ export async function duplicateReportTemplate(id: string, newName: string): Prom
  */
 export async function setTemplateFields(templateId: string, fields: ReportTemplateFieldInput[]): Promise<ReportTemplateField[]> {
   // Delete existing fields
-  await supabaseUntyped
+  await supabase
     .from('report_template_fields')
     .delete()
     .eq('template_id', templateId)
@@ -277,7 +277,7 @@ export async function setTemplateFields(templateId: string, fields: ReportTempla
   if (fields.length === 0) {return []}
 
   // Insert new fields
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('report_template_fields')
     .insert(fields.map((f, index) => ({
       template_id: templateId,
@@ -309,7 +309,7 @@ export async function setTemplateFields(templateId: string, fields: ReportTempla
  */
 export async function setTemplateFilters(templateId: string, filters: ReportTemplateFilterInput[]): Promise<ReportTemplateFilter[]> {
   // Delete existing filters
-  await supabaseUntyped
+  await supabase
     .from('report_template_filters')
     .delete()
     .eq('template_id', templateId)
@@ -317,7 +317,7 @@ export async function setTemplateFilters(templateId: string, filters: ReportTemp
   if (filters.length === 0) {return []}
 
   // Insert new filters
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('report_template_filters')
     .insert(filters.map((f, index) => ({
       template_id: templateId,
@@ -349,7 +349,7 @@ export async function setTemplateFilters(templateId: string, filters: ReportTemp
  */
 export async function setTemplateSorting(templateId: string, sorting: ReportTemplateSortingInput[]): Promise<ReportTemplateSorting[]> {
   // Delete existing sorting
-  await supabaseUntyped
+  await supabase
     .from('report_template_sorting')
     .delete()
     .eq('template_id', templateId)
@@ -357,7 +357,7 @@ export async function setTemplateSorting(templateId: string, sorting: ReportTemp
   if (sorting.length === 0) {return []}
 
   // Insert new sorting
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('report_template_sorting')
     .insert(sorting.map(s => ({
       template_id: templateId,
@@ -384,7 +384,7 @@ export async function setTemplateSorting(templateId: string, sorting: ReportTemp
  */
 export async function setTemplateGrouping(templateId: string, grouping: ReportTemplateGroupingInput[]): Promise<ReportTemplateGrouping[]> {
   // Delete existing grouping
-  await supabaseUntyped
+  await supabase
     .from('report_template_grouping')
     .delete()
     .eq('template_id', templateId)
@@ -392,7 +392,7 @@ export async function setTemplateGrouping(templateId: string, grouping: ReportTe
   if (grouping.length === 0) {return []}
 
   // Insert new grouping
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('report_template_grouping')
     .insert(grouping.map(g => ({
       template_id: templateId,
@@ -418,7 +418,7 @@ export async function setTemplateGrouping(templateId: string, grouping: ReportTe
  * Get all scheduled reports with optional filters
  */
 export async function getScheduledReports(filters: ScheduledReportFilters = {}): Promise<ScheduledReport[]> {
-  let query = supabaseUntyped
+  let query = supabase
     .from('scheduled_reports')
     .select(`
       *,
@@ -462,7 +462,7 @@ export async function getScheduledReports(filters: ScheduledReportFilters = {}):
  * Get a single scheduled report
  */
 export async function getScheduledReport(id: string): Promise<ScheduledReport | null> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('scheduled_reports')
     .select(`
       *,
@@ -486,10 +486,10 @@ export async function getScheduledReport(id: string): Promise<ScheduledReport | 
  * Create a scheduled report
  */
 export async function createScheduledReport(input: CreateScheduledReportDTO): Promise<ScheduledReport> {
-  const { data: authData } = await supabaseUntyped.auth.getUser()
+  const { data: authData } = await supabase.auth.getUser()
   const userId = authData?.user?.id
 
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('scheduled_reports')
     .insert({
       template_id: input.template_id,
@@ -540,7 +540,7 @@ export async function updateScheduledReport(id: string, input: UpdateScheduledRe
   if (input.project_id !== undefined) {updates.project_id = input.project_id}
   if (input.is_active !== undefined) {updates.is_active = input.is_active}
 
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('scheduled_reports')
     .update(updates)
     .eq('id', id)
@@ -559,7 +559,7 @@ export async function updateScheduledReport(id: string, input: UpdateScheduledRe
  * Delete a scheduled report
  */
 export async function deleteScheduledReport(id: string): Promise<void> {
-  const { error } = await supabaseUntyped
+  const { error } = await supabase
     .from('scheduled_reports')
     .delete()
     .eq('id', id)
@@ -585,7 +585,7 @@ export async function toggleScheduledReportActive(id: string, isActive: boolean)
  * Get all generated reports with optional filters
  */
 export async function getGeneratedReports(filters: GeneratedReportFilters = {}): Promise<GeneratedReport[]> {
-  let query = supabaseUntyped
+  let query = supabase
     .from('generated_reports')
     .select(`
       *,
@@ -645,7 +645,7 @@ export async function getGeneratedReports(filters: GeneratedReportFilters = {}):
  * Get a single generated report
  */
 export async function getGeneratedReport(id: string): Promise<GeneratedReport | null> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('generated_reports')
     .select(`
       *,
@@ -669,10 +669,10 @@ export async function getGeneratedReport(id: string): Promise<GeneratedReport | 
  * Create a generated report record (when generating a report)
  */
 export async function createGeneratedReport(input: GenerateReportDTO & { report_name: string }): Promise<GeneratedReport> {
-  const { data: authData } = await supabaseUntyped.auth.getUser()
+  const { data: authData } = await supabase.auth.getUser()
   const userId = authData?.user?.id
 
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('generated_reports')
     .insert({
       template_id: input.template_id,
@@ -718,7 +718,7 @@ export async function updateGeneratedReportStatus(
     error_message?: string
   }
 ): Promise<GeneratedReport> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('generated_reports')
     .update({
       status,
@@ -744,7 +744,7 @@ export async function updateGeneratedReportStatus(
  * Get all field definitions for a data source
  */
 export async function getFieldDefinitions(dataSource: ReportDataSource): Promise<ReportFieldDefinition[]> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('report_field_definitions')
     .select('*')
     .eq('data_source', dataSource)
@@ -762,7 +762,7 @@ export async function getFieldDefinitions(dataSource: ReportDataSource): Promise
  * Get all field definitions for multiple data sources
  */
 export async function getAllFieldDefinitions(): Promise<Record<ReportDataSource, ReportFieldDefinition[]>> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('report_field_definitions')
     .select('*')
     .order('data_source', { ascending: true })
@@ -789,7 +789,7 @@ export async function getAllFieldDefinitions(): Promise<Record<ReportDataSource,
  * Get default fields for a data source
  */
 export async function getDefaultFields(dataSource: ReportDataSource): Promise<ReportFieldDefinition[]> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('report_field_definitions')
     .select('*')
     .eq('data_source', dataSource)

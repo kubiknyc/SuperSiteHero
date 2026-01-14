@@ -1,7 +1,7 @@
 import { vi } from 'vitest'
 
 // Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
-import { supabase, supabaseUntyped } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import * as reportBuilder from '../report-builder'
 
 vi.mock('@/lib/supabase', () => ({
@@ -11,7 +11,7 @@ vi.mock('@/lib/supabase', () => ({
       getUser: vi.fn(),
     },
   },
-  supabaseUntyped: {
+  supabase: {
     from: vi.fn(),
     auth: {
       getUser: vi.fn(),
@@ -39,7 +39,7 @@ describe('Report Builder API', () => {
         or: vi.fn().mockResolvedValue({ data: mockTemplates, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await reportBuilder.getReportTemplates({ company_id: 'company-1' })
 
@@ -54,7 +54,7 @@ describe('Report Builder API', () => {
         eq: vi.fn().mockResolvedValue({ data: [], error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       await reportBuilder.getReportTemplates({
         company_id: 'company-1',
@@ -83,7 +83,7 @@ describe('Report Builder API', () => {
         single: vi.fn().mockResolvedValue({ data: mockTemplate, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await reportBuilder.getReportTemplate('1')
 
@@ -99,7 +99,7 @@ describe('Report Builder API', () => {
         single: vi.fn().mockResolvedValue({ data: null, error: { code: 'PGRST116' } }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await reportBuilder.getReportTemplate('999')
 
@@ -110,7 +110,7 @@ describe('Report Builder API', () => {
   describe('createReportTemplate', () => {
     it('should create new template', async () => {
       const mockUser = { user: { id: 'user-1' } }
-      vi.mocked(supabaseUntyped.auth.getUser).mockResolvedValue({ data: mockUser } as any)
+      vi.mocked(supabase.auth.getUser).mockResolvedValue({ data: mockUser } as any)
 
       const mockQuery = {
         insert: vi.fn().mockReturnThis(),
@@ -118,7 +118,7 @@ describe('Report Builder API', () => {
         single: vi.fn().mockResolvedValue({ data: { id: '1' }, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await reportBuilder.createReportTemplate({
         company_id: 'company-1',
@@ -139,7 +139,7 @@ describe('Report Builder API', () => {
         single: vi.fn().mockResolvedValue({ data: { id: '1' }, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       await reportBuilder.updateReportTemplate('1', { name: 'Updated' })
 
@@ -154,7 +154,7 @@ describe('Report Builder API', () => {
         eq: vi.fn().mockResolvedValue({ error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       await reportBuilder.deleteReportTemplate('1')
 
@@ -178,10 +178,10 @@ describe('Report Builder API', () => {
       }
 
       const mockUser = { user: { id: 'user-1' } }
-      vi.mocked(supabaseUntyped.auth.getUser).mockResolvedValue({ data: mockUser } as any)
+      vi.mocked(supabase.auth.getUser).mockResolvedValue({ data: mockUser } as any)
 
       let callCount = 0
-      vi.mocked(supabaseUntyped.from).mockImplementation(() => {
+      vi.mocked(supabase.from).mockImplementation(() => {
         callCount++
         if (callCount === 1) {
           return {
@@ -230,7 +230,7 @@ describe('Report Builder API', () => {
       }
 
       let callCount = 0
-      vi.mocked(supabaseUntyped.from).mockImplementation(() => {
+      vi.mocked(supabase.from).mockImplementation(() => {
         callCount++
         return (callCount === 1 ? mockDeleteQuery : mockInsertQuery) as any
       })

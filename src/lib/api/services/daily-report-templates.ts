@@ -8,7 +8,7 @@
  * - Template library management
  */
 
-import { supabase, supabaseUntyped } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 import { ApiErrorClass } from '../errors';
 import type {
   DailyReportTemplate,
@@ -83,7 +83,7 @@ export const dailyReportTemplatesApi = {
    */
   async getTemplates(filters?: TemplateFilters): Promise<DailyReportTemplate[]> {
     try {
-      let query = supabaseUntyped
+      let query = supabase
         .from('daily_report_templates')
         .select('*')
         .order('usage_count', { ascending: false })

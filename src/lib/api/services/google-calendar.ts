@@ -3,7 +3,7 @@
  */
 
 import { ApiErrorClass } from '../errors';
-import { supabase, supabaseUntyped } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 import type {
   GoogleCalendarConnection,
   GoogleCalendarConnectionStatus,
@@ -29,7 +29,7 @@ export const googleCalendarApi = {
    */
   async getConnectionStatus(userId: string): Promise<GoogleCalendarConnectionStatus> {
     try {
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('google_calendar_connections')
         .select('*')
         .eq('user_id', userId)
@@ -88,7 +88,7 @@ export const googleCalendarApi = {
    */
   async getConnection(userId: string): Promise<GoogleCalendarConnection | null> {
     try {
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('google_calendar_connections')
         .select('*')
         .eq('user_id', userId)
@@ -190,7 +190,7 @@ export const googleCalendarApi = {
     updates: UpdateGCalConnectionDTO
   ): Promise<GoogleCalendarConnection> {
     try {
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('google_calendar_connections')
         .update({
           ...updates,
@@ -217,7 +217,7 @@ export const googleCalendarApi = {
    */
   async disconnect(connectionId: string): Promise<void> {
     try {
-      const { error } = await supabaseUntyped
+      const { error } = await supabase
         .from('google_calendar_connections')
         .update({
           is_active: false,
@@ -351,7 +351,7 @@ export const googleCalendarApi = {
    */
   async getMeetingMapping(meetingId: string): Promise<CalendarEventMapping | null> {
     try {
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('calendar_event_mappings')
         .select('*')
         .eq('local_entity_type', 'meeting')
@@ -382,7 +382,7 @@ export const googleCalendarApi = {
     }
   ): Promise<CalendarEventMapping[]> {
     try {
-      let query = supabaseUntyped
+      let query = supabase
         .from('calendar_event_mappings')
         .select('*')
         .eq('connection_id', connectionId);
@@ -429,7 +429,7 @@ export const googleCalendarApi = {
     }
   ): Promise<CalendarSyncQueueItem[]> {
     try {
-      let query = supabaseUntyped
+      let query = supabase
         .from('calendar_sync_queue')
         .select('*')
         .eq('connection_id', connectionId);
@@ -465,7 +465,7 @@ export const googleCalendarApi = {
    */
   async cancelPendingSync(syncId: string): Promise<void> {
     try {
-      const { error } = await supabaseUntyped
+      const { error } = await supabase
         .from('calendar_sync_queue')
         .update({
           status: 'cancelled',
@@ -500,7 +500,7 @@ export const googleCalendarApi = {
     }
   ): Promise<CalendarSyncLog[]> {
     try {
-      let query = supabaseUntyped
+      let query = supabase
         .from('calendar_sync_logs')
         .select('*')
         .eq('connection_id', connectionId);
@@ -542,7 +542,7 @@ export const googleCalendarApi = {
   async getSyncStats(connectionId: string): Promise<CalendarSyncStats> {
     try {
       // Get synced meetings count
-      const { count: syncedCount, error: syncedError } = await supabaseUntyped
+      const { count: syncedCount, error: syncedError } = await supabase
         .from('calendar_event_mappings')
         .select('*', { count: 'exact', head: true })
         .eq('connection_id', connectionId)
@@ -551,7 +551,7 @@ export const googleCalendarApi = {
       if (syncedError) {throw syncedError;}
 
       // Get pending syncs count
-      const { count: pendingCount, error: pendingError } = await supabaseUntyped
+      const { count: pendingCount, error: pendingError } = await supabase
         .from('calendar_sync_queue')
         .select('*', { count: 'exact', head: true })
         .eq('connection_id', connectionId)
@@ -560,7 +560,7 @@ export const googleCalendarApi = {
       if (pendingError) {throw pendingError;}
 
       // Get failed syncs count
-      const { count: failedCount, error: failedError } = await supabaseUntyped
+      const { count: failedCount, error: failedError } = await supabase
         .from('calendar_event_mappings')
         .select('*', { count: 'exact', head: true })
         .eq('connection_id', connectionId)
@@ -569,7 +569,7 @@ export const googleCalendarApi = {
       if (failedError) {throw failedError;}
 
       // Get last sync time
-      const { data: lastLog, error: logError } = await supabaseUntyped
+      const { data: lastLog, error: logError } = await supabase
         .from('calendar_sync_logs')
         .select('created_at, direction')
         .eq('connection_id', connectionId)
@@ -581,7 +581,7 @@ export const googleCalendarApi = {
       if (logError) {throw logError;}
 
       // Get syncs by direction
-      const { data: directionCounts, error: dirError } = await supabaseUntyped
+      const { data: directionCounts, error: dirError } = await supabase
         .from('calendar_sync_logs')
         .select('direction')
         .eq('connection_id', connectionId)

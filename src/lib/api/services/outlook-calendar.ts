@@ -5,7 +5,7 @@
  */
 
 import { ApiErrorClass } from '../errors'
-import { supabase, supabaseUntyped } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import {
   outlookConnectionNeedsRefresh,
   outlookConnectionNeedsReauth,
@@ -36,7 +36,7 @@ export const outlookCalendarApi = {
    */
   async getConnectionStatus(userId: string): Promise<OutlookConnectionStatus> {
     try {
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('outlook_calendar_connections')
         .select('*')
         .eq('user_id', userId)
@@ -106,7 +106,7 @@ export const outlookCalendarApi = {
    */
   async getConnection(userId: string): Promise<OutlookCalendarConnection | null> {
     try {
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('outlook_calendar_connections')
         .select('*')
         .eq('user_id', userId)
@@ -201,7 +201,7 @@ export const outlookCalendarApi = {
     updates: UpdateOutlookConnectionDTO
   ): Promise<OutlookCalendarConnection> {
     try {
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('outlook_calendar_connections')
         .update({
           ...updates,
@@ -229,7 +229,7 @@ export const outlookCalendarApi = {
   async disconnect(connectionId: string): Promise<void> {
     try {
       // Soft delete - mark as inactive
-      const { error } = await supabaseUntyped
+      const { error } = await supabase
         .from('outlook_calendar_connections')
         .update({
           is_active: false,
@@ -263,7 +263,7 @@ export const outlookCalendarApi = {
     localEntityId: string
   ): Promise<OutlookEventMapping | null> {
     try {
-      const { data, error } = await supabaseUntyped
+      const { data, error } = await supabase
         .from('outlook_event_mappings')
         .select('*')
         .eq('user_id', userId)
@@ -296,7 +296,7 @@ export const outlookCalendarApi = {
     }
   ): Promise<OutlookEventMapping[]> {
     try {
-      let query = supabaseUntyped
+      let query = supabase
         .from('outlook_event_mappings')
         .select('*')
         .eq('user_id', userId)
@@ -380,7 +380,7 @@ export const outlookCalendarApi = {
           schedule_activity: 'schedule_activities',
         }
 
-        const { data: entities } = await supabaseUntyped
+        const { data: entities } = await supabase
           .from(tableMap[dto.entityType])
           .select('id')
           .eq('project_id', dto.projectId)
@@ -437,7 +437,7 @@ export const outlookCalendarApi = {
         })
       } else {
         // Just remove the mapping
-        await supabaseUntyped
+        await supabase
           .from('outlook_event_mappings')
           .delete()
           .eq('connection_id', connectionId)
@@ -471,7 +471,7 @@ export const outlookCalendarApi = {
     }
   ): Promise<OutlookSyncLog[]> {
     try {
-      let query = supabaseUntyped
+      let query = supabase
         .from('outlook_sync_logs')
         .select('*')
         .eq('user_id', userId)
@@ -516,7 +516,7 @@ export const outlookCalendarApi = {
   async getSyncStats(userId: string): Promise<OutlookSyncStats> {
     try {
       // Get total mapped events count
-      const { count: totalMapped, error: mappedError } = await supabaseUntyped
+      const { count: totalMapped, error: mappedError } = await supabase
         .from('outlook_event_mappings')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', userId)
@@ -524,7 +524,7 @@ export const outlookCalendarApi = {
       if (mappedError) {throw mappedError}
 
       // Get pending syncs count
-      const { count: pendingCount, error: pendingError } = await supabaseUntyped
+      const { count: pendingCount, error: pendingError } = await supabase
         .from('outlook_event_mappings')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', userId)
@@ -533,7 +533,7 @@ export const outlookCalendarApi = {
       if (pendingError) {throw pendingError}
 
       // Get failed syncs count
-      const { count: failedCount, error: failedError } = await supabaseUntyped
+      const { count: failedCount, error: failedError } = await supabase
         .from('outlook_event_mappings')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', userId)
@@ -542,7 +542,7 @@ export const outlookCalendarApi = {
       if (failedError) {throw failedError}
 
       // Get last sync time
-      const { data: lastLog, error: logError } = await supabaseUntyped
+      const { data: lastLog, error: logError } = await supabase
         .from('outlook_sync_logs')
         .select('completed_at')
         .eq('user_id', userId)
@@ -554,7 +554,7 @@ export const outlookCalendarApi = {
       if (logError) {throw logError}
 
       // Get counts by entity type
-      const { data: entityCounts, error: entityError } = await supabaseUntyped
+      const { data: entityCounts, error: entityError } = await supabase
         .from('outlook_event_mappings')
         .select('local_entity_type, sync_status')
         .eq('user_id', userId)

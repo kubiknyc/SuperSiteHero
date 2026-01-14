@@ -238,13 +238,12 @@ export function LoginPageV2() {
         )}>
           {/* Logo & Tagline */}
           <div>
-            <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-500/25">
-                <HardHat className="w-7 h-7 text-white" />
-              </div>
-              <span className="text-2xl font-bold text-white tracking-tight">
-                Job<span className="text-blue-400">Sight</span>
-              </span>
+            <div className="mb-8">
+              <img
+                src="/jobsight-logo.png"
+                alt="JobSight"
+                className="h-14 object-contain drop-shadow-lg"
+              />
             </div>
 
             <h1 className="text-4xl xl:text-5xl font-bold text-white leading-tight mb-6">
@@ -309,13 +308,12 @@ export function LoginPageV2() {
           mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         )}>
           {/* Mobile Logo */}
-          <div className="flex items-center gap-3 mb-8 lg:hidden">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
-              <HardHat className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold text-white tracking-tight">
-              Job<span className="text-blue-400">Sight</span>
-            </span>
+          <div className="mb-8 lg:hidden">
+            <img
+              src="/jobsight-logo.png"
+              alt="JobSight"
+              className="h-10 object-contain"
+            />
           </div>
 
           {/* Form Header */}

@@ -36,7 +36,7 @@ const mockSupabase = {
 
 vi.mock('@/lib/supabase', () => ({
   supabase: mockSupabase,
-  supabaseUntyped: mockSupabase,
+  supabase: mockSupabase,
 }));
 
 describe('Authentication Bypass Prevention', () => {

@@ -1,14 +1,14 @@
 import { vi } from 'vitest'
 
 // Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
-import { supabase, supabaseUntyped } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { googleCalendarApi } from '../google-calendar'
 
 vi.mock('@/lib/supabase', () => ({
   supabase: {
     functions: { invoke: vi.fn() },
   },
-  supabaseUntyped: {
+  supabase: {
     from: vi.fn(),
   },
 }))
@@ -34,7 +34,7 @@ describe('Google Calendar API', () => {
         maybeSingle: vi.fn().mockResolvedValue({ data: mockConnection, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await googleCalendarApi.getConnectionStatus('user123')
 
@@ -49,7 +49,7 @@ describe('Google Calendar API', () => {
         maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await googleCalendarApi.getConnectionStatus('user123')
 
@@ -69,7 +69,7 @@ describe('Google Calendar API', () => {
         maybeSingle: vi.fn().mockResolvedValue({ data: mockConnection, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await googleCalendarApi.getConnectionStatus('user123')
 
@@ -155,7 +155,7 @@ describe('Google Calendar API', () => {
         }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await googleCalendarApi.updateConnection('conn1', {
         sync_enabled: false,
@@ -172,7 +172,7 @@ describe('Google Calendar API', () => {
         eq: vi.fn().mockResolvedValue({ error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       await googleCalendarApi.disconnect('conn1')
 
@@ -235,7 +235,7 @@ describe('Google Calendar API', () => {
         maybeSingle: vi.fn().mockResolvedValue({ data: mockMapping, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await googleCalendarApi.getMeetingMapping('meet1')
 
@@ -267,7 +267,7 @@ describe('Google Calendar API', () => {
         }),
       }
 
-      vi.mocked(supabaseUntyped.from)
+      vi.mocked(supabase.from)
         .mockReturnValueOnce(mockCountQuery as any)
         .mockReturnValueOnce(mockCountQuery as any)
         .mockReturnValueOnce(mockCountQuery as any)

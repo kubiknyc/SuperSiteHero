@@ -3,7 +3,7 @@
  * CRUD operations for 3-week rolling schedule
  */
 
-import { supabaseUntyped } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import type {
   LookAheadActivity,
   LookAheadActivityWithDetails,
@@ -72,7 +72,7 @@ export async function getLookAheadActivities(
   projectId: string,
   filters?: LookAheadActivityFilters
 ): Promise<LookAheadActivityWithDetails[]> {
-  let query = supabaseUntyped
+  let query = supabase
     .from('look_ahead_activities')
     .select(`
       *,
@@ -109,7 +109,7 @@ export async function getLookAheadActivities(
 
   // Get constraint counts
   const activityIds = (data || []).map((a: { id: string }) => a.id)
-  const { data: constraints } = await supabaseUntyped
+  const { data: constraints } = await supabase
     .from('look_ahead_constraints')
     .select('activity_id, status')
     .in('activity_id', activityIds)
@@ -143,7 +143,7 @@ export async function getActivitiesForWeek(
   projectId: string,
   weekStartDate: string
 ): Promise<LookAheadActivityWithDetails[]> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('look_ahead_activities')
     .select(`
       *,
@@ -162,7 +162,7 @@ export async function getActivitiesForWeek(
 
   // Get constraint counts
   const activityIds = (data || []).map((a: { id: string }) => a.id)
-  const { data: constraints } = await supabaseUntyped
+  const { data: constraints } = await supabase
     .from('look_ahead_constraints')
     .select('activity_id, status')
     .in('activity_id', activityIds)
@@ -203,7 +203,7 @@ export async function getActivitiesByWeek(
 
   const weekStartDates = weeks.map((w) => w.weekStart.toISOString().split('T')[0])
 
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('look_ahead_activities')
     .select(`
       *,
@@ -225,7 +225,7 @@ export async function getActivitiesByWeek(
   let constraintCounts: Record<string, { total: number; open: number }> = {}
 
   if (activityIds.length > 0) {
-    const { data: constraints } = await supabaseUntyped
+    const { data: constraints } = await supabase
       .from('look_ahead_constraints')
       .select('activity_id, status')
       .in('activity_id', activityIds)
@@ -273,7 +273,7 @@ export async function getActivitiesByWeek(
 export async function getLookAheadActivity(
   activityId: string
 ): Promise<LookAheadActivityWithDetails | null> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('look_ahead_activities')
     .select(`
       *,
@@ -292,7 +292,7 @@ export async function getLookAheadActivity(
   }
 
   // Get constraints
-  const { data: constraints } = await supabaseUntyped
+  const { data: constraints } = await supabase
     .from('look_ahead_constraints')
     .select('*')
     .eq('activity_id', activityId)
@@ -328,7 +328,7 @@ export async function createLookAheadActivity(
     }
   }
 
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('look_ahead_activities')
     .insert({
       ...dto,
@@ -370,7 +370,7 @@ export async function updateLookAheadActivity(
     }
   }
 
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('look_ahead_activities')
     .update({
       ...dto,
@@ -395,7 +395,7 @@ export async function moveActivityToWeek(
   weekStartDate: string,
   userId: string
 ): Promise<LookAheadActivity> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('look_ahead_activities')
     .update({
       week_number: weekNumber,
@@ -441,7 +441,7 @@ export async function updateActivityStatus(
     updates.percent_complete = 100
   }
 
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('look_ahead_activities')
     .update(updates)
     .eq('id', activityId)
@@ -456,7 +456,7 @@ export async function updateActivityStatus(
  * Delete (soft delete) an activity
  */
 export async function deleteLookAheadActivity(activityId: string): Promise<void> {
-  const { error } = await supabaseUntyped
+  const { error } = await supabase
     .from('look_ahead_activities')
     .update({
       deleted_at: new Date().toISOString(),
@@ -477,7 +477,7 @@ export async function deleteLookAheadActivity(activityId: string): Promise<void>
 export async function getActivityConstraints(
   activityId: string
 ): Promise<LookAheadConstraintWithDetails[]> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('look_ahead_constraints')
     .select(`
       *,
@@ -522,7 +522,7 @@ export async function getActivityConstraints(
 export async function getProjectOpenConstraints(
   projectId: string
 ): Promise<LookAheadConstraintWithDetails[]> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('look_ahead_constraints')
     .select(`
       *,
@@ -567,7 +567,7 @@ export async function createLookAheadConstraint(
   companyId: string,
   userId: string
 ): Promise<LookAheadConstraint> {
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('look_ahead_constraints')
     .insert({
       ...dto,
@@ -581,7 +581,7 @@ export async function createLookAheadConstraint(
   if (error) {throw error}
 
   // Update activity status if it has open constraints
-  await supabaseUntyped
+  await supabase
     .from('look_ahead_activities')
     .update({
       status: 'blocked',
@@ -613,7 +613,7 @@ export async function updateLookAheadConstraint(
     }
   }
 
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('look_ahead_constraints')
     .update(updates)
     .eq('id', constraintId)
@@ -624,21 +624,21 @@ export async function updateLookAheadConstraint(
 
   // Check if activity should be unblocked
   if (dto.status === 'resolved' || dto.status === 'waived') {
-    const { data: activity } = await supabaseUntyped
+    const { data: activity } = await supabase
       .from('look_ahead_constraints')
       .select('activity_id')
       .eq('id', constraintId)
       .single()
 
     if (activity) {
-      const { data: openConstraints } = await supabaseUntyped
+      const { data: openConstraints } = await supabase
         .from('look_ahead_constraints')
         .select('id')
         .eq('activity_id', activity.activity_id)
         .eq('status', 'open')
 
       if (!openConstraints?.length) {
-        await supabaseUntyped
+        await supabase
           .from('look_ahead_activities')
           .update({
             status: 'planned',
@@ -658,26 +658,26 @@ export async function updateLookAheadConstraint(
  */
 export async function deleteLookAheadConstraint(constraintId: string): Promise<void> {
   // Get activity ID first
-  const { data: constraint } = await supabaseUntyped
+  const { data: constraint } = await supabase
     .from('look_ahead_constraints')
     .select('activity_id')
     .eq('id', constraintId)
     .single()
 
-  const { error } = await supabaseUntyped.from('look_ahead_constraints').delete().eq('id', constraintId)
+  const { error } = await supabase.from('look_ahead_constraints').delete().eq('id', constraintId)
 
   if (error) {throw error}
 
   // Check if activity should be unblocked
   if (constraint) {
-    const { data: openConstraints } = await supabaseUntyped
+    const { data: openConstraints } = await supabase
       .from('look_ahead_constraints')
       .select('id')
       .eq('activity_id', constraint.activity_id)
       .eq('status', 'open')
 
     if (!openConstraints?.length) {
-      await supabaseUntyped
+      await supabase
         .from('look_ahead_activities')
         .update({
           status: 'planned',
@@ -700,7 +700,7 @@ export async function getLookAheadSnapshots(
   projectId: string,
   limit?: number
 ): Promise<LookAheadSnapshot[]> {
-  let query = supabaseUntyped
+  let query = supabase
     .from('look_ahead_snapshots')
     .select('*')
     .eq('project_id', projectId)
@@ -728,7 +728,7 @@ export async function createLookAheadSnapshot(
   weekEnd.setDate(weekEnd.getDate() + 6)
 
   // Get activity counts
-  const { data: activities } = await supabaseUntyped
+  const { data: activities } = await supabase
     .from('look_ahead_activities')
     .select('status')
     .eq('project_id', dto.project_id)
@@ -755,14 +755,14 @@ export async function createLookAheadSnapshot(
 
   // Get constraint counts
   const _activityIds = (activities || []).map(() => null) // We need actual IDs
-  const { data: activityData } = await supabaseUntyped
+  const { data: activityData } = await supabase
     .from('look_ahead_activities')
     .select('id')
     .eq('project_id', dto.project_id)
     .eq('week_start_date', dto.week_start_date)
     .is('deleted_at', null)
 
-  const { data: constraints } = await supabaseUntyped
+  const { data: constraints } = await supabase
     .from('look_ahead_constraints')
     .select('status')
     .in(
@@ -776,7 +776,7 @@ export async function createLookAheadSnapshot(
     open: constraints?.filter((c: { status: string }) => c.status === 'open').length || 0,
   }
 
-  const { data, error } = await supabaseUntyped
+  const { data, error } = await supabase
     .from('look_ahead_snapshots')
     .upsert(
       {
@@ -812,7 +812,7 @@ export async function createLookAheadSnapshot(
  * Get PPC metrics for a project
  */
 export async function getPPCMetrics(projectId: string): Promise<PPCMetrics> {
-  const { data: snapshots } = await supabaseUntyped
+  const { data: snapshots } = await supabase
     .from('look_ahead_snapshots')
     .select('*')
     .eq('project_id', projectId)
@@ -861,7 +861,7 @@ export async function getLookAheadTemplates(
   companyId: string,
   trade?: string
 ): Promise<LookAheadTemplate[]> {
-  let query = supabaseUntyped
+  let query = supabase
     .from('look_ahead_templates')
     .select('*')
     .eq('company_id', companyId)
@@ -889,7 +889,7 @@ export async function createActivityFromTemplate(
   userId: string,
   overrides?: Partial<CreateLookAheadActivityDTO>
 ): Promise<LookAheadActivity> {
-  const { data: template, error: templateError } = await supabaseUntyped
+  const { data: template, error: templateError } = await supabase
     .from('look_ahead_templates')
     .select('*')
     .eq('id', templateId)
@@ -938,7 +938,7 @@ export async function getLookAheadDashboardStats(projectId: string): Promise<{
   upcomingDeadlines: LookAheadActivityWithDetails[]
 }> {
   // Get all activities
-  const { data: activities } = await supabaseUntyped
+  const { data: activities } = await supabase
     .from('look_ahead_activities')
     .select('*')
     .eq('project_id', projectId)
@@ -956,7 +956,7 @@ export async function getLookAheadDashboardStats(projectId: string): Promise<{
   }
 
   // Get open constraints
-  const { count: openConstraints } = await supabaseUntyped
+  const { count: openConstraints } = await supabase
     .from('look_ahead_constraints')
     .select('id', { count: 'exact', head: true })
     .eq('project_id', projectId)
@@ -969,7 +969,7 @@ export async function getLookAheadDashboardStats(projectId: string): Promise<{
   const today = new Date()
   const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000)
 
-  const { data: upcomingActivities } = await supabaseUntyped
+  const { data: upcomingActivities } = await supabase
     .from('look_ahead_activities')
     .select(`
       *,

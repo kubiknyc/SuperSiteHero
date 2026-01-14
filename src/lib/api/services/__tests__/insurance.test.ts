@@ -1,7 +1,7 @@
 import { vi } from 'vitest'
 
 // Note: describe, it, expect, beforeEach, afterEach are available as globals (vitest config has globals: true)
-import { supabase, supabaseUntyped } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { insuranceApi } from '../insurance'
 
 vi.mock('@/lib/supabase', () => ({
@@ -11,7 +11,7 @@ vi.mock('@/lib/supabase', () => ({
       from: vi.fn(),
     },
   },
-  supabaseUntyped: {
+  supabase: {
     from: vi.fn(),
     rpc: vi.fn(),
   },
@@ -36,7 +36,7 @@ describe('insuranceApi', () => {
         order: vi.fn().mockResolvedValue({ data: mockData, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await insuranceApi.getCertificates('company-1')
 
@@ -52,7 +52,7 @@ describe('insuranceApi', () => {
         order: vi.fn().mockResolvedValue({ data: [], error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       await insuranceApi.getCertificates('company-1', {
         projectId: 'proj-1',
@@ -73,7 +73,7 @@ describe('insuranceApi', () => {
         order: vi.fn().mockResolvedValue({ data: null, error: new Error('Fetch failed') }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       await expect(insuranceApi.getCertificates('company-1')).rejects.toThrow()
     })
@@ -99,7 +99,7 @@ describe('insuranceApi', () => {
         single: vi.fn().mockResolvedValue({ data: mockData, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await insuranceApi.createCertificate(mockInput)
 
@@ -113,7 +113,7 @@ describe('insuranceApi', () => {
         single: vi.fn().mockResolvedValue({ data: null, error: new Error('Create failed') }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       await expect(insuranceApi.createCertificate({} as any)).rejects.toThrow()
     })
@@ -130,7 +130,7 @@ describe('insuranceApi', () => {
         single: vi.fn().mockResolvedValue({ data: mockData, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await insuranceApi.voidCertificate('1', 'Policy cancelled')
 
@@ -162,7 +162,7 @@ describe('insuranceApi', () => {
         order: vi.fn().mockResolvedValue({ data: mockData, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockQuery as any)
+      vi.mocked(supabase.from).mockReturnValue(mockQuery as any)
 
       const result = await insuranceApi.getExpiringCertificates('company-1', 30)
 
@@ -178,19 +178,19 @@ describe('insuranceApi', () => {
         { requirement_type: 'workers_comp', is_compliant: false },
       ]
 
-      vi.mocked(supabaseUntyped.rpc).mockResolvedValue({ data: mockData, error: null })
+      vi.mocked(supabase.rpc).mockResolvedValue({ data: mockData, error: null })
 
       const result = await insuranceApi.checkCompliance('sub-1')
 
       expect(result).toEqual(mockData)
-      expect(supabaseUntyped.rpc).toHaveBeenCalledWith('check_insurance_compliance', {
+      expect(supabase.rpc).toHaveBeenCalledWith('check_insurance_compliance', {
         p_subcontractor_id: 'sub-1',
         p_project_id: null,
       })
     })
 
     it('should handle compliance check errors', async () => {
-      vi.mocked(supabaseUntyped.rpc).mockResolvedValue({
+      vi.mocked(supabase.rpc).mockResolvedValue({
         data: null,
         error: new Error('RPC failed'),
       })
@@ -214,7 +214,7 @@ describe('insuranceApi', () => {
         is: vi.fn().mockResolvedValue({ data: mockCertificates, error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from)
+      vi.mocked(supabase.from)
         .mockReturnValueOnce(mockQuery as any)
         .mockReturnValueOnce({
           select: vi.fn().mockReturnThis(),
@@ -248,7 +248,7 @@ describe('insuranceApi', () => {
         eq: vi.fn().mockResolvedValue({ error: null }),
       }
 
-      vi.mocked(supabaseUntyped.from).mockReturnValue(mockUpdate as any)
+      vi.mocked(supabase.from).mockReturnValue(mockUpdate as any)
 
       const result = await insuranceApi.uploadCertificateDocument('cert-1', mockFile, 'company-1')
 
