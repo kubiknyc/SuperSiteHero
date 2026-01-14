@@ -9,8 +9,9 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/lib/notifications/ToastContext'
-import { HardHat, Eye, EyeOff, CheckCircle, Loader2, ArrowLeft, AlertCircle, Check, X } from 'lucide-react'
+import { Eye, EyeOff, CheckCircle, Loader2, ArrowLeft, AlertCircle, Check, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { AuthLogo } from '@/components/brand/Logo'
 
 interface PasswordRequirement {
   label: string
@@ -51,6 +52,19 @@ export function ResetPasswordPage() {
       try {
         // Check URL hash for recovery token FIRST (before Supabase processes it)
         const hashParams = new URLSearchParams(window.location.hash.substring(1))
+
+        // Check if Supabase returned an error (e.g., expired link)
+        const errorCode = hashParams.get('error_code')
+        const errorDescription = hashParams.get('error_description')
+        if (errorCode || hashParams.get('error')) {
+          const message = errorDescription
+            ? decodeURIComponent(errorDescription.replace(/\+/g, ' '))
+            : 'This password reset link has expired or is invalid.'
+          setSessionError(message + ' Please request a new one.')
+          setIsCheckingSession(false)
+          return
+        }
+
         const accessToken = hashParams.get('access_token')
         const type = hashParams.get('type')
         const hasRecoveryToken = type === 'recovery' && accessToken
@@ -257,11 +271,7 @@ export function ResetPasswordPage() {
     <div className="min-h-screen flex items-center justify-center bg-surface dark:bg-background px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-4">
-          <div className="flex justify-center">
-            <div className="rounded-full bg-primary-100 dark:bg-primary-950 p-3">
-              <HardHat className="h-8 w-8 text-primary dark:text-primary-400" />
-            </div>
-          </div>
+          <AuthLogo />
           <CardTitle className="text-2xl text-center">Set New Password</CardTitle>
           <CardDescription className="text-center">
             Enter your new password below. Make sure it meets all the requirements.

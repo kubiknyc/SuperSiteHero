@@ -9,7 +9,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { useToast } from '@/lib/notifications/ToastContext'
-import { HardHat, ArrowLeft } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
+import { AuthLogo } from '@/components/brand/Logo'
 
 export function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
@@ -42,11 +43,7 @@ export function ForgotPasswordPage() {
     <div className="min-h-screen flex items-center justify-center bg-surface dark:bg-background px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-4">
-          <div className="flex justify-center">
-            <div className="rounded-full bg-primary-100 dark:bg-primary-950 p-3">
-              <HardHat className="h-8 w-8 text-primary dark:text-primary-400" />
-            </div>
-          </div>
+          <AuthLogo />
           <CardTitle className="text-2xl text-center">Reset your password</CardTitle>
           <CardDescription className="text-center">
             {submitted
