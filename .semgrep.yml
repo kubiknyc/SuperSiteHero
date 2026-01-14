@@ -100,7 +100,7 @@ rules:
         - '*.test.tsx'
         - '__tests__/**'
     message: Potential XSS vulnerability. Ensure content is properly sanitized before using dangerouslySetInnerHTML.
-    languages: [typescript, tsx]
+    languages: [typescript]
     severity: WARNING
 
   # Detect weak crypto usage
@@ -123,7 +123,7 @@ rules:
   - id: react-missing-key
     pattern-regex: '\.map\s*\(\s*\([^)]*\)\s*=>\s*<[A-Z][a-zA-Z]*(?![^>]*\bkey\b)[^>]*>'
     message: Missing 'key' prop in list items. This can cause performance issues and bugs.
-    languages: [tsx, typescript]
+    languages: [typescript]
     severity: WARNING
     paths:
       exclude:
@@ -137,7 +137,7 @@ rules:
             ...
           })
     message: useEffect is missing a dependency array. Add [] for mount-only effects or specify dependencies.
-    languages: [typescript, tsx]
+    languages: [typescript]
     severity: WARNING
     paths:
       exclude:
@@ -179,7 +179,7 @@ rules:
     patterns:
       - pattern-regex: '@ts-ignore|@ts-nocheck'
     message: TypeScript check is disabled. Fix the type error instead of suppressing it.
-    languages: [typescript, tsx]
+    languages: [typescript]
     severity: INFO
     paths:
       exclude:
@@ -191,7 +191,7 @@ rules:
     patterns:
       - pattern-regex: \w+!\.
     message: Non-null assertion operator (!) can cause runtime errors. Add proper null checks instead.
-    languages: [typescript, tsx]
+    languages: [typescript]
     severity: INFO
     paths:
       exclude:
@@ -224,5 +224,5 @@ rules:
         - '*.test.tsx'
         - 'src/lib/**'
     message: Avoid direct DOM manipulation in React components. Use refs or state instead.
-    languages: [typescript, tsx]
+    languages: [typescript]
     severity: INFO
