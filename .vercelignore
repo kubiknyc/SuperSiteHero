@@ -79,3 +79,4 @@ welcome-to-docker/
 migrations/
 supabase/
 scripts/
+!scripts/fix-ide-config.js
