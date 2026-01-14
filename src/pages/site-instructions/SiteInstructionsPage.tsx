@@ -59,7 +59,7 @@ import { useSiteInstructions, type SiteInstructionFilters, type SiteInstructionW
 import { SiteInstructionFilters as Filters } from '@/features/site-instructions/components'
 import { useProjects } from '@/features/projects/hooks/useProjects'
 import { useContacts } from '@/features/contacts/hooks/useContacts'
-import type { SiteInstructionStatus, SiteInstructionPriority } from '@/types/database'
+import type { SiteInstructionStatus, SiteInstructionPriority } from '@/types/database-extensions'
 import { format, isPast, isToday } from 'date-fns'
 import { cn } from '@/lib/utils'
 

@@ -42,7 +42,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import type { WorkflowItem } from '@/types/database'
+import type { WorkflowItem } from '@/types/database-extensions'
 
 type RFIStatusFilter = 'all' | 'draft' | 'submitted' | 'answered' | 'approved' | 'rejected' | 'closed' | 'overdue'
 type RFIPriorityFilter = 'all' | 'low' | 'normal' | 'high'

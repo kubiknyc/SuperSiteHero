@@ -62,7 +62,7 @@ import {
 } from '@/features/submittals/hooks/useDedicatedSubmittals'
 import { downloadSubmittalPDF } from '@/features/submittals/utils/pdfExport'
 import { useCreateConversation } from '@/features/messaging/hooks'
-import type { SubmittalReviewStatus, BallInCourtEntity } from '@/types/database'
+import type { SubmittalReviewStatus, BallInCourtEntity } from '@/types/database-extensions'
 import { logger } from '../../lib/utils/logger';
 
 

@@ -33,7 +33,7 @@ import { useCreateConversation } from '@/features/messaging/hooks'
 import { useQueryClient } from '@tanstack/react-query'
 import { logger } from '../../lib/utils/logger';
 import { UserName } from '@/components/shared'
-import type { WorkflowItem } from '@/types/database'
+import type { WorkflowItem } from '@/types/database-extensions'
 
 
 export function RFIDetailPage() {

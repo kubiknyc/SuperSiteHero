@@ -24,7 +24,7 @@ import {
   Calendar,
 } from 'lucide-react'
 import { format, isPast } from 'date-fns'
-import type { Task } from '@/types/database'
+import type { Task } from '@/types/database-extensions'
 
 export function TasksPage() {
   const { selectedProjectId, setSelectedProjectId, projects } = useSelectedProject()

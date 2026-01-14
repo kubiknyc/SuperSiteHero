@@ -18,7 +18,7 @@ import type {
   SubmittalReviewStatus,
   SubmittalType,
   BallInCourtEntity,
-} from '@/types/database'
+} from '@/types/database-extensions'
 
 // =============================================
 // Constants and Types

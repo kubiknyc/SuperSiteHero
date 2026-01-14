@@ -25,7 +25,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import type { WorkflowItem } from '@/types/database'
+import type { WorkflowItem } from '@/types/database-extensions'
 import type { SubmittalWithDetails } from '@/types/submittal'
 
 interface SubmittalsPageState {

@@ -37,7 +37,7 @@ import {
 } from 'lucide-react'
 import { downloadSubmittalLog } from '@/features/submittals/utils/submittalExport'
 import { format } from 'date-fns'
-import type { SubmittalReviewStatus, BallInCourtEntity } from '@/types/database'
+import type { SubmittalReviewStatus, BallInCourtEntity } from '@/types/database-extensions'
 
 // Status badge component
 function SubmittalReviewStatusBadge({ status }: { status: string }) {

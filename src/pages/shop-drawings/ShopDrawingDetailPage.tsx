@@ -30,7 +30,7 @@ import {
   ShopDrawingRevisionHistory,
 } from '@/features/shop-drawings/components'
 import { useShopDrawing, isShopDrawingLocked } from '@/features/shop-drawings/hooks'
-import type { SubmittalReviewStatus } from '@/types/database'
+import type { SubmittalReviewStatus } from '@/types/database-extensions'
 
 export function ShopDrawingDetailPage() {
   const { projectId, shopDrawingId } = useParams<{ projectId: string; shopDrawingId: string }>()
