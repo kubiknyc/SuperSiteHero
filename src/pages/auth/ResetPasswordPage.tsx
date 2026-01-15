@@ -52,11 +52,14 @@ export function ResetPasswordPage() {
       try {
         // Check URL hash for recovery token FIRST (before Supabase processes it)
         const hashParams = new URLSearchParams(window.location.hash.substring(1))
+        // Also check query parameters as some flows use those
+        const queryParams = new URLSearchParams(window.location.search)
 
-        // Check if Supabase returned an error (e.g., expired link)
-        const errorCode = hashParams.get('error_code')
-        const errorDescription = hashParams.get('error_description')
-        if (errorCode || hashParams.get('error')) {
+        // Check if Supabase returned an error (e.g., expired link) - check both hash and query
+        const errorCode = hashParams.get('error_code') || queryParams.get('error_code')
+        const errorDescription = hashParams.get('error_description') || queryParams.get('error_description')
+        const urlError = hashParams.get('error') || queryParams.get('error')
+        if (errorCode || urlError) {
           const message = errorDescription
             ? decodeURIComponent(errorDescription.replace(/\+/g, ' '))
             : 'This password reset link has expired or is invalid.'
@@ -65,9 +68,12 @@ export function ResetPasswordPage() {
           return
         }
 
-        const accessToken = hashParams.get('access_token')
-        const type = hashParams.get('type')
-        const hasRecoveryToken = type === 'recovery' && accessToken
+        // Check for tokens in hash or query params
+        const accessToken = hashParams.get('access_token') || queryParams.get('access_token')
+        const type = hashParams.get('type') || queryParams.get('type')
+        // Also check for code parameter (PKCE flow)
+        const code = queryParams.get('code')
+        const hasRecoveryToken = (type === 'recovery' && accessToken) || code
 
         // Set up auth state listener BEFORE checking session
         const { data } = supabase.auth.onAuthStateChange((event, session) => {
@@ -98,12 +104,29 @@ export function ResetPasswordPage() {
         // If we detected a recovery token in the URL, wait for Supabase to process it
         if (hasRecoveryToken) {
           // Give Supabase time to process the token and emit the event
-          timeoutId = setTimeout(() => {
+          // Use 10 seconds to account for slow networks and token exchange
+          timeoutId = setTimeout(async () => {
             if (!isSubscribed) {return}
-            // If we still haven't gotten a valid session after 5 seconds, show error
+
+            // Before showing error, try one more check for existing session
+            // In case the auth event didn't fire but session was established
+            try {
+              const { data: { session: finalSession } } = await supabase.auth.getSession()
+              if (finalSession && !isSubscribed) {return}
+
+              if (finalSession) {
+                setIsValidSession(true)
+                setIsCheckingSession(false)
+                return
+              }
+            } catch {
+              // Ignore errors, fall through to show error message
+            }
+
+            // If we still haven't gotten a valid session after 10 seconds, show error
             setSessionError('This password reset link has expired or is invalid. Please request a new one.')
             setIsCheckingSession(false)
-          }, 5000)
+          }, 10000)
           return
         }
 
