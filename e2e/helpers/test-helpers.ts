@@ -336,3 +336,38 @@ export async function waitAndClick(
     timeout: options.timeout ?? 3000
   })
 }
+
+/**
+ * Standard skip reasons for consistent documentation
+ * Use these when calling test.skip() to make it clear why tests are skipped
+ */
+export const SKIP_REASONS = {
+  NO_PROJECTS: 'No projects available - run npm run seed:test',
+  NO_RFIS: 'No RFIs available - run npm run seed:test',
+  NO_SUBMITTALS: 'No submittals available - run npm run seed:test',
+  NO_TASKS: 'No tasks available - run npm run seed:test',
+  NO_PUNCH_ITEMS: 'No punch items available - run npm run seed:test',
+  NO_DAILY_REPORTS: 'No daily reports available - run npm run seed:test',
+  NO_BID_PACKAGES: 'No bid packages available - run npm run seed:test',
+  NO_CONTACTS: 'No contacts available - run npm run seed:test',
+  NO_SUBCONTRACTORS: 'No subcontractors available - run npm run seed:test',
+  NO_MEETINGS: 'No meetings available - run npm run seed:test',
+  FEATURE_NOT_IMPLEMENTED: 'Feature UI not yet implemented',
+  FEATURE_FLAG_DISABLED: 'Feature requires feature flag to be enabled',
+  UI_NOT_VISIBLE: 'Expected UI element not visible',
+  DATA_DEPENDENT: 'Test requires specific data that was not found',
+} as const;
+
+/**
+ * Helper to skip test with a standard reason
+ * Usage: skipWithReason(test, visible, SKIP_REASONS.NO_PROJECTS)
+ */
+export function skipWithReason(
+  test: { skip: (condition?: boolean, reason?: string) => void },
+  condition: boolean,
+  reason: string
+): void {
+  if (condition) {
+    test.skip(true, reason);
+  }
+}

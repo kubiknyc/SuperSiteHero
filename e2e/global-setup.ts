@@ -157,6 +157,32 @@ async function globalSetup(config: FullConfig) {
     }
   }
 
+  // ============================================
+  // TEST DATA VERIFICATION (Optional)
+  // ============================================
+  // Check if test data exists. If not, warn the user.
+  // Enable by setting VERIFY_TEST_DATA=true in .env.test
+
+  if (process.env.VERIFY_TEST_DATA === 'true' && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    console.log('\n📊 Verifying test data availability...\n');
+
+    try {
+      const { verifyTestData, printTestDataSummary } = await import('./utils/test-data-verification.js');
+      const status = await verifyTestData({ verbose: true });
+      printTestDataSummary(status);
+
+      if (status.overall === 'empty') {
+        console.log('⚠️  No test data found. Many tests will be skipped.');
+        console.log('   Run "npm run seed:test" to seed test data.\n');
+      } else if (status.overall === 'partial') {
+        console.log('⚠️  Some test data is missing. Some tests may be skipped.\n');
+      }
+    } catch (error) {
+      console.log('⚠️  Could not verify test data (service role key may be missing)');
+      console.log('   Set SUPABASE_SERVICE_ROLE_KEY in .env.test for data verification.\n');
+    }
+  }
+
   console.log('\n✅ Global setup complete!\n');
 }
 

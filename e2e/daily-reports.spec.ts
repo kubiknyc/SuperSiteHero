@@ -10,7 +10,7 @@
  */
 
 import { test, expect } from '@playwright/test'
-import { waitForContentLoad, waitForFormResponse } from './helpers/test-helpers'
+import { waitForContentLoad, waitForFormResponse, SKIP_REASONS } from './helpers/test-helpers'
 
 // Use pre-authenticated session
 test.use({ storageState: 'playwright/.auth/user.json' });;
@@ -174,7 +174,7 @@ test.describe('Daily Reports', () => {
       await reportRow.click();
     } else {
       // If no reports exist, skip this test gracefully
-      test.skip();
+      test.skip(true, SKIP_REASONS.NO_DAILY_REPORTS);
       return;
     }
 

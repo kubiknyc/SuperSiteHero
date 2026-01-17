@@ -10,7 +10,7 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { waitForContentLoad } from './helpers/test-helpers';
+import { waitForContentLoad, SKIP_REASONS } from './helpers/test-helpers';
 
 // Use pre-authenticated session to skip login
 test.use({ storageState: 'playwright/.auth/user.json' });
@@ -28,7 +28,7 @@ test.describe('RFIs', () => {
     const projectLink = page.locator('a[href*="/projects/"]').first();
     const projectVisible = await projectLink.isVisible({ timeout: 5000 }).catch(() => false);
     if (!projectVisible) {
-      test.skip(true, 'No projects found to navigate from');
+      test.skip(true, SKIP_REASONS.NO_PROJECTS);
       return;
     }
     await projectLink.click();
@@ -37,7 +37,7 @@ test.describe('RFIs', () => {
     const rfisLink = page.locator('a:has-text("RFIs"), a[href*="rfis"]');
     const rfisVisible = await rfisLink.first().isVisible({ timeout: 5000 }).catch(() => false);
     if (!rfisVisible) {
-      test.skip(true, 'RFIs link not found in project');
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
       return;
     }
     await rfisLink.first().click();
@@ -52,7 +52,7 @@ test.describe('RFIs', () => {
     const projectLink = page.locator('a[href*="/projects/"]').first();
     const projectVisible = await projectLink.isVisible({ timeout: 5000 }).catch(() => false);
     if (!projectVisible) {
-      test.skip(true, 'No projects found');
+      test.skip(true, SKIP_REASONS.NO_PROJECTS);
       return;
     }
     await projectLink.click();
@@ -61,7 +61,7 @@ test.describe('RFIs', () => {
     const rfisLink = page.locator('a:has-text("RFIs"), a[href*="rfis"]');
     const rfisVisible = await rfisLink.first().isVisible({ timeout: 5000 }).catch(() => false);
     if (!rfisVisible) {
-      test.skip(true, 'RFIs link not found');
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
       return;
     }
     await rfisLink.first().click();
@@ -79,7 +79,7 @@ test.describe('RFIs', () => {
     const projectLink = page.locator('a[href*="/projects/"]').first();
     const projectVisible = await projectLink.isVisible({ timeout: 5000 }).catch(() => false);
     if (!projectVisible) {
-      test.skip(true, 'No projects found');
+      test.skip(true, SKIP_REASONS.NO_PROJECTS);
       return;
     }
     await projectLink.click();
@@ -88,7 +88,7 @@ test.describe('RFIs', () => {
     const rfisLink = page.locator('a:has-text("RFIs"), a[href*="rfis"]');
     const rfisVisible = await rfisLink.first().isVisible({ timeout: 5000 }).catch(() => false);
     if (!rfisVisible) {
-      test.skip(true, 'RFIs link not found');
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
       return;
     }
     await rfisLink.first().click();
@@ -98,7 +98,7 @@ test.describe('RFIs', () => {
     const createButton = page.locator('button:has-text("New"), button:has-text("Create"), button:has-text("Add")');
     const buttonVisible = await createButton.first().isVisible({ timeout: 5000 }).catch(() => false);
     if (!buttonVisible) {
-      test.skip(true, 'Create RFI button not found');
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
       return;
     }
 
@@ -113,7 +113,7 @@ test.describe('RFIs', () => {
 
     // If neither works, skip - create workflow may differ
     if (!formVisible && !urlChanged) {
-      test.skip(true, 'Create RFI workflow not detected - may use different UI pattern');
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
       return;
     }
 
@@ -127,7 +127,7 @@ test.describe('RFIs', () => {
     const projectLink = page.locator('a[href*="/projects/"]').first();
     const projectVisible = await projectLink.isVisible({ timeout: 5000 }).catch(() => false);
     if (!projectVisible) {
-      test.skip(true, 'No projects found');
+      test.skip(true, SKIP_REASONS.NO_PROJECTS);
       return;
     }
     await projectLink.click();
@@ -136,7 +136,7 @@ test.describe('RFIs', () => {
     const rfisLink = page.locator('a:has-text("RFIs"), a[href*="rfis"]');
     const rfisVisible = await rfisLink.first().isVisible({ timeout: 5000 }).catch(() => false);
     if (!rfisVisible) {
-      test.skip(true, 'RFIs link not found');
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
       return;
     }
     await rfisLink.first().click();
@@ -146,7 +146,7 @@ test.describe('RFIs', () => {
     const rfiLink = page.locator('a[href*="rfis/"]').first();
     const rfiVisible = await rfiLink.isVisible({ timeout: 5000 }).catch(() => false);
     if (!rfiVisible) {
-      test.skip(true, 'No RFIs found to view');
+      test.skip(true, SKIP_REASONS.NO_RFIS);
       return;
     }
     await rfiLink.click();

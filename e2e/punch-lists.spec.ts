@@ -15,6 +15,7 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { SKIP_REASONS } from './helpers/test-helpers';
 
 // Use pre-authenticated session to skip login
 test.use({ storageState: 'playwright/.auth/user.json' });
@@ -177,7 +178,7 @@ test.describe('Punch Lists Management', () => {
       // Verify filter interaction worked
       expect(typeof filteredItems).toBe('number');
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -193,7 +194,7 @@ test.describe('Punch Lists Management', () => {
       // Verify filter was applied
       expect(await locationFilter.inputValue()).toBeTruthy();
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -209,7 +210,7 @@ test.describe('Punch Lists Management', () => {
       // Verify filter was applied
       expect(await tradeFilter.inputValue()).toBeTruthy();
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -225,7 +226,7 @@ test.describe('Punch Lists Management', () => {
       // Verify filter was applied
       expect(await assigneeFilter.inputValue()).toBeTruthy();
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -246,7 +247,7 @@ test.describe('Punch Lists Management', () => {
       const detailContent = page.locator('[data-testid="punch-detail"], .punch-detail, main');
       await expect(detailContent).toBeVisible();
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -267,7 +268,7 @@ test.describe('Punch Lists Management', () => {
 
       expect(hasContent).toBe(true);
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -295,10 +296,10 @@ test.describe('Punch Lists Management', () => {
         const form = page.locator('form');
         await expect(form).toBeVisible();
       } else {
-        test.skip();
+        test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
       }
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -346,10 +347,10 @@ test.describe('Punch Lists Management', () => {
         const successIndicator = page.locator('[role="alert"]').filter({ hasText: /updated|success|saved/i });
         await expect(successIndicator).toBeVisible({ timeout: 5000 });
       } else {
-        test.skip();
+        test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
       }
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -383,10 +384,10 @@ test.describe('Punch Lists Management', () => {
         // Verify status change
         expect(await statusControl.isVisible()).toBe(true);
       } else {
-        test.skip();
+        test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
       }
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -418,10 +419,10 @@ test.describe('Punch Lists Management', () => {
         // Verify interaction worked
         expect(await statusControl.isVisible()).toBe(true);
       } else {
-        test.skip();
+        test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
       }
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -454,10 +455,10 @@ test.describe('Punch Lists Management', () => {
         const verifiedIndicator = page.locator('text=/verified/i, [data-status="verified"]');
         expect(await verifiedIndicator.count()).toBeGreaterThanOrEqual(0);
       } else {
-        test.skip();
+        test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
       }
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -491,10 +492,10 @@ test.describe('Punch Lists Management', () => {
           expect(await fileInput.count()).toBeGreaterThan(0);
         }
       } else {
-        test.skip();
+        test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
       }
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -516,7 +517,7 @@ test.describe('Punch Lists Management', () => {
       const photoCount = await photoElements.count();
       expect(photoCount).toBeGreaterThanOrEqual(0);
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -532,7 +533,7 @@ test.describe('Punch Lists Management', () => {
       // Verify search was applied
       await expect(searchInput).toHaveValue('paint');
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -549,7 +550,7 @@ test.describe('Punch Lists Management', () => {
       const heading = page.locator('h1, h2').filter({ hasText: /punch list|punch item/i });
       await expect(heading.first()).toBeVisible();
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -611,7 +612,7 @@ test.describe('Punch Lists Management', () => {
         expect(await emptyState.count()).toBeGreaterThanOrEqual(0);
       }
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -640,7 +641,7 @@ test.describe('Punch Lists Management', () => {
       const exportDialog = page.locator('[role="dialog"], .modal, [data-state="open"]');
       expect(await exportDialog.count()).toBeGreaterThanOrEqual(0);
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -662,7 +663,7 @@ test.describe('Punch Lists Management', () => {
       const count = await activityLog.count();
       expect(count).toBeGreaterThanOrEqual(0);
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -681,10 +682,10 @@ test.describe('Punch Lists Management', () => {
       if (await bulkActionsMenu.isVisible()) {
         expect(await bulkActionsMenu.isVisible()).toBe(true);
       } else {
-        test.skip();
+        test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
       }
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -705,7 +706,7 @@ test.describe('Punch Lists Management', () => {
       const count = await responsibleParty.count();
       expect(count).toBeGreaterThan(0);
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 

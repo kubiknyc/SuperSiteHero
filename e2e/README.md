@@ -196,15 +196,19 @@ if (await element.isVisible({ timeout: 2000 }).catch(() => false)) {
 }
 ```
 
-### DO: Skip Tests Gracefully
+### DO: Skip Tests Gracefully with Standard Reasons
+
+Use the `SKIP_REASONS` constants for consistent skip messages:
 
 ```typescript
+import { SKIP_REASONS } from './helpers/test-helpers';
+
 test('should view project details', async ({ page }) => {
   const projectLink = page.locator('a[href*="/projects/"]').first();
   const visible = await projectLink.isVisible({ timeout: 5000 }).catch(() => false);
 
   if (!visible) {
-    test.skip(true, 'No projects available');
+    test.skip(true, SKIP_REASONS.NO_PROJECTS);
     return;
   }
 
@@ -212,6 +216,19 @@ test('should view project details', async ({ page }) => {
   // Continue test...
 });
 ```
+
+**Available skip reasons:**
+- `SKIP_REASONS.NO_PROJECTS` - No projects available
+- `SKIP_REASONS.NO_RFIS` - No RFIs available
+- `SKIP_REASONS.NO_SUBMITTALS` - No submittals available
+- `SKIP_REASONS.NO_TASKS` - No tasks available
+- `SKIP_REASONS.NO_PUNCH_ITEMS` - No punch items available
+- `SKIP_REASONS.NO_DAILY_REPORTS` - No daily reports available
+- `SKIP_REASONS.UI_NOT_VISIBLE` - Expected UI element not visible
+- `SKIP_REASONS.FEATURE_NOT_IMPLEMENTED` - Feature UI not yet implemented
+- `SKIP_REASONS.FEATURE_FLAG_DISABLED` - Feature requires feature flag
+
+See [SKIP_AUDIT.md](./SKIP_AUDIT.md) for current skip statistics.
 
 ### DO: Use Timestamped Test Data
 

@@ -12,6 +12,7 @@
  */
 
 import { test, expect } from '@playwright/test';
+import { SKIP_REASONS } from './helpers/test-helpers';
 
 // Use pre-authenticated session to skip login
 test.use({ storageState: 'playwright/.auth/user.json' });
@@ -66,7 +67,7 @@ test.describe('Tasks Management', () => {
     const createButton = page.locator('button, a').filter({ hasText: /new task|create task|add task/i }).first();
 
     if (!(await createButton.isVisible({ timeout: 5000 }).catch(() => false))) {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
       return;
     }
 
@@ -86,7 +87,7 @@ test.describe('Tasks Management', () => {
     const createButton = page.locator('button, a').filter({ hasText: /new task|create task|add task/i }).first();
 
     if (!(await createButton.isVisible({ timeout: 5000 }).catch(() => false))) {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
       return;
     }
 
@@ -99,7 +100,7 @@ test.describe('Tasks Management', () => {
     const titleInput = page.locator('input[name="title"], input[placeholder*="title" i]').first();
 
     if (!(await titleInput.isVisible({ timeout: 5000 }).catch(() => false))) {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
       return;
     }
 
@@ -188,7 +189,7 @@ test.describe('Tasks Management', () => {
       expect(typeof filteredTasks).toBe('number');
     } else {
       // Skip if no status filter present
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -268,10 +269,10 @@ test.describe('Tasks Management', () => {
         const hasForm = await titleInput.isVisible({ timeout: 5000 }).catch(() => false);
         expect(hasEditUrl || hasForm).toBeTruthy();
       } else {
-        test.skip();
+        test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
       }
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -301,10 +302,10 @@ test.describe('Tasks Management', () => {
         // Just verify the interaction worked
         expect(await statusControl.isVisible()).toBe(true);
       } else {
-        test.skip();
+        test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
       }
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -321,7 +322,7 @@ test.describe('Tasks Management', () => {
       await expect(searchInput).toHaveValue('test');
     } else {
       // Skip if no search available
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 
@@ -343,7 +344,7 @@ test.describe('Tasks Management', () => {
         expect(await emptyState.count()).toBeGreaterThanOrEqual(0);
       }
     } else {
-      test.skip();
+      test.skip(true, SKIP_REASONS.UI_NOT_VISIBLE);
     }
   });
 });
