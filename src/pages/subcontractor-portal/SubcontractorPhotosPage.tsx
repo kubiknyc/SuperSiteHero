@@ -381,7 +381,7 @@ export default function SubcontractorPhotosPage() {
                 <Badge variant="secondary" className="ml-2">
                   {photosByDate[date].length} photos
                 </Badge>
-              </h3>
+              </h2>
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
                 {photosByDate[date].map((photo) => {
                   const globalIndex = photos.findIndex((p) => p.id === photo.id)
