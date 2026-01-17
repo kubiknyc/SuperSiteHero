@@ -70,7 +70,7 @@ export function InviteSubcontractorDialog({
         .is('deleted_at', null)
         .order('company_name')
 
-      if (error) {throw error}
+      if (error) { throw error }
       return (data || []) as Subcontractor[]
     },
     enabled: !!projectId && open,
@@ -130,7 +130,7 @@ export function InviteSubcontractorDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 heading-card">
             <Building2 className="h-5 w-5" />
             Invite Subcontractor to Portal
           </DialogTitle>
@@ -201,8 +201,8 @@ export function InviteSubcontractorDialog({
 
           {/* Info Box */}
           {selectedSubcontractorId && (
-            <div className="rounded-lg bg-blue-50 p-3 text-sm text-blue-800">
-              <p className="font-medium">What happens next?</p>
+            <div className="rounded-lg bg-primary/10 p-3 text-sm text-primary-800">
+              <p className="heading-subsection">What happens next?</p>
               <ul className="mt-1 list-disc list-inside text-xs space-y-0.5">
                 <li>An invitation email will be sent to the specified address</li>
                 <li>The recipient can create an account or sign in</li>

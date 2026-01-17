@@ -1,0 +1,140 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img "JobSight" [ref=e9]
+          - generic:
+            - heading "JobSight" [level=1]
+            - paragraph: Field Management
+        - generic:
+          - button:
+            - img
+      - navigation [ref=e10]:
+        - generic [ref=e11]:
+          - link [ref=e13] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e14]
+          - link [ref=e20] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e21]
+        - generic [ref=e25]:
+          - link [ref=e26] [cursor=pointer]:
+            - /url: /rfis
+            - img [ref=e27]
+          - link [ref=e30] [cursor=pointer]:
+            - /url: /daily-reports
+            - img [ref=e31]
+          - link [ref=e36] [cursor=pointer]:
+            - /url: /team
+            - img [ref=e37]
+    - generic [ref=e42]:
+      - banner [ref=e43]:
+        - generic [ref=e46]:
+          - heading "Permits" [level=1] [ref=e47]
+          - paragraph [ref=e48]: Building permits
+        - generic [ref=e49]:
+          - button "Search Ctrl+K" [ref=e51] [cursor=pointer]:
+            - img [ref=e52]
+            - generic [ref=e55]: Search
+            - generic [ref=e57]: Ctrl+K
+          - button [ref=e58] [cursor=pointer]:
+            - img [ref=e59]
+          - button [ref=e65] [cursor=pointer]:
+            - link [ref=e66]:
+              - /url: /settings
+              - img [ref=e67]
+          - link "TU" [ref=e70] [cursor=pointer]:
+            - /url: /settings/profile
+            - text: TU
+      - main [ref=e71]:
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - heading "Permits" [level=1] [ref=e76]:
+                - img [ref=e77]
+                - text: Permits
+              - paragraph [ref=e81]: Track building permits, approvals, and renewals
+            - button "Add Permit" [ref=e82] [cursor=pointer]:
+              - img [ref=e83]
+              - text: Add Permit
+          - generic [ref=e84]:
+            - generic [ref=e87]:
+              - img [ref=e89]
+              - generic [ref=e93]:
+                - paragraph [ref=e94]: Total Permits
+                - paragraph [ref=e95]: "0"
+            - generic [ref=e98]:
+              - img [ref=e100]
+              - generic [ref=e103]:
+                - paragraph [ref=e104]: Active/Issued
+                - paragraph [ref=e105]: "0"
+            - generic [ref=e108]:
+              - img [ref=e110]
+              - generic [ref=e113]:
+                - paragraph [ref=e114]: Expiring Soon
+                - paragraph [ref=e115]: "0"
+            - generic [ref=e118]:
+              - img [ref=e120]
+              - generic [ref=e122]:
+                - paragraph [ref=e123]: Critical Pending
+                - paragraph [ref=e124]: "0"
+          - generic [ref=e125]:
+            - generic [ref=e126]:
+              - img [ref=e127]
+              - textbox "Search permits..." [ref=e130]
+            - combobox [ref=e131]:
+              - option "All Status" [selected]
+              - option "Pending"
+              - option "Applied"
+              - option "Under Review"
+              - option "Approved"
+              - option "Issued"
+              - option "Active"
+              - option "Expired"
+              - option "Renewed"
+              - option "Revoked"
+              - option "Closed"
+            - combobox [ref=e132]:
+              - option "All Types" [selected]
+              - option "Building"
+              - option "Demolition"
+              - option "Electrical"
+              - option "Plumbing"
+              - option "Mechanical"
+              - option "Fire"
+              - option "Grading"
+              - option "Excavation"
+              - option "Encroachment"
+              - option "Signage"
+              - option "Environmental"
+              - option "Stormwater"
+              - option "Temporary"
+              - option "Certificate of Occupancy"
+              - option "Other"
+          - generic [ref=e133]:
+            - heading "Permits List" [level=3] [ref=e135]
+            - generic [ref=e137]:
+              - img [ref=e138]
+              - paragraph [ref=e142]: No permits found
+              - paragraph [ref=e143]: Add permits to get started
+    - complementary [ref=e144]:
+      - generic [ref=e145]:
+        - generic [ref=e146]:
+          - img [ref=e148]
+          - heading "Action Required" [level=2] [ref=e152]
+        - button [ref=e153] [cursor=pointer]:
+          - img [ref=e154]
+      - generic [ref=e158]:
+        - img [ref=e160]
+        - heading "All caught up!" [level=3] [ref=e162]
+        - paragraph [ref=e163]: No items need your attention right now
+      - button "View All Approvals" [ref=e165] [cursor=pointer]:
+        - link "View All Approvals" [ref=e166]:
+          - /url: /approvals
+  - region "Notifications alt+T"
+  - button "Open JobSight AI Assistant" [ref=e169] [cursor=pointer]
+```

@@ -106,7 +106,7 @@ export function SubcontractorDashboardPage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold heading-page">
+        <h1 className="heading-page">
           Welcome, {data.subcontractor.company_name}
         </h1>
         <p className="text-muted-foreground">
@@ -123,7 +123,7 @@ export function SubcontractorDashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
-              <CardTitle className="text-lg flex items-center gap-2">
+              <CardTitle className="heading-card flex items-center gap-2">
                 <FileText className="h-5 w-5" />
                 Pending Bids
               </CardTitle>
@@ -154,7 +154,7 @@ export function SubcontractorDashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
-              <CardTitle className="text-lg flex items-center gap-2">
+              <CardTitle className="heading-card flex items-center gap-2">
                 <ClipboardList className="h-5 w-5" />
                 Active Punch Items
               </CardTitle>
@@ -179,7 +179,7 @@ export function SubcontractorDashboardPage() {
                     className="flex items-center justify-between p-3 rounded-lg border bg-card"
                   >
                     <div className="min-w-0">
-                      <p className="font-medium truncate">{item.title}</p>
+                      <p className="truncate heading-subsection">{item.title}</p>
                       <p className="text-sm text-muted-foreground truncate">
                         {[item.building, item.floor, item.room].filter(Boolean).join(' > ') || 'No location'}
                       </p>
@@ -196,7 +196,7 @@ export function SubcontractorDashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
-              <CardTitle className="text-lg flex items-center gap-2">
+              <CardTitle className="heading-card flex items-center gap-2">
                 <CheckSquare className="h-5 w-5" />
                 Active Tasks
               </CardTitle>
@@ -221,7 +221,7 @@ export function SubcontractorDashboardPage() {
                     className="flex items-center justify-between p-3 rounded-lg border bg-card"
                   >
                     <div className="min-w-0">
-                      <p className="font-medium truncate">{task.title}</p>
+                      <p className="truncate heading-subsection">{task.title}</p>
                       {task.due_date && (
                         <p className="text-sm text-muted-foreground flex items-center gap-1">
                           <Calendar className="h-3 w-3" />
@@ -241,7 +241,7 @@ export function SubcontractorDashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
-              <CardTitle className="text-lg flex items-center gap-2">
+              <CardTitle className="heading-card flex items-center gap-2">
                 <AlertTriangle className="h-5 w-5 text-warning" />
                 Expiring Documents
               </CardTitle>
@@ -266,7 +266,7 @@ export function SubcontractorDashboardPage() {
                     className="flex items-center justify-between p-3 rounded-lg border bg-card"
                   >
                     <div className="min-w-0">
-                      <p className="font-medium truncate">{doc.document_name}</p>
+                      <p className="truncate heading-subsection">{doc.document_name}</p>
                       <p className="text-sm text-muted-foreground capitalize">
                         {doc.document_type.replace('_', ' ')}
                       </p>
@@ -275,8 +275,8 @@ export function SubcontractorDashboardPage() {
                       variant="outline"
                       className={
                         doc.days_until_expiration <= 7
-                          ? 'bg-error-light text-error-dark border-red-200'
-                          : 'bg-warning-light text-amber-700 border-amber-200'
+                          ? 'bg-destructive/10 text-destructive border-destructive/20'
+                          : 'bg-warning/10 text-warning-800 border-warning/20'
                       }
                     >
                       {doc.days_until_expiration} days left
@@ -293,7 +293,7 @@ export function SubcontractorDashboardPage() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <div>
-            <CardTitle className="text-lg flex items-center gap-2">
+            <CardTitle className="heading-card flex items-center gap-2">
               <Building2 className="h-5 w-5" />
               Your Projects
             </CardTitle>
@@ -343,7 +343,7 @@ export function SubcontractorDashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
-              <CardTitle className="text-lg flex items-center gap-2">
+              <CardTitle className="heading-card flex items-center gap-2">
                 <CalendarClock className="h-5 w-5 text-primary" />
                 Schedule
               </CardTitle>
@@ -386,7 +386,7 @@ export function SubcontractorDashboardPage() {
         <Card className={safetySummary && safetySummary.compliance_score < 80 ? 'border-warning' : ''}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
-              <CardTitle className="text-lg flex items-center gap-2">
+              <CardTitle className="heading-card flex items-center gap-2">
                 <Shield className="h-5 w-5 text-primary" />
                 Safety
               </CardTitle>
@@ -405,8 +405,8 @@ export function SubcontractorDashboardPage() {
                   <span className="text-sm text-muted-foreground">Compliance Score</span>
                   <span className={cn(
                     'font-bold',
-                    safetySummary.compliance_score >= 90 ? 'text-green-600' :
-                    safetySummary.compliance_score >= 70 ? 'text-yellow-600' : 'text-red-600'
+                    safetySummary.compliance_score >= 90 ? 'text-success' :
+                      safetySummary.compliance_score >= 70 ? 'text-warning' : 'text-destructive'
                   )}>
                     {safetySummary.compliance_score}%
                   </span>
@@ -430,7 +430,7 @@ export function SubcontractorDashboardPage() {
         <Card className={meetingSummary && meetingSummary.overdue_action_items > 0 ? 'border-destructive' : ''}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
-              <CardTitle className="text-lg flex items-center gap-2">
+              <CardTitle className="heading-card flex items-center gap-2">
                 <Users className="h-5 w-5 text-primary" />
                 Meetings
               </CardTitle>
@@ -476,7 +476,7 @@ export function SubcontractorDashboardPage() {
         <Card className={certificationSummary && (certificationSummary.expired_count > 0 || certificationSummary.expiring_soon_count > 0) ? 'border-warning' : ''}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
-              <CardTitle className="text-lg flex items-center gap-2">
+              <CardTitle className="heading-card flex items-center gap-2">
                 <Award className="h-5 w-5 text-primary" />
                 Certifications
               </CardTitle>
@@ -492,20 +492,20 @@ export function SubcontractorDashboardPage() {
             {certificationSummary ? (
               <div className="space-y-3">
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-1 text-green-600">
+                  <div className="flex items-center gap-1 text-success">
                     <CheckCircle2 className="h-4 w-4" />
                     <span className="font-medium">{certificationSummary.valid_count}</span>
                     <span className="text-xs text-muted-foreground">Valid</span>
                   </div>
                   {certificationSummary.expiring_soon_count > 0 && (
-                    <div className="flex items-center gap-1 text-yellow-600">
+                    <div className="flex items-center gap-1 text-warning">
                       <Clock className="h-4 w-4" />
                       <span className="font-medium">{certificationSummary.expiring_soon_count}</span>
                       <span className="text-xs text-muted-foreground">Expiring</span>
                     </div>
                   )}
                   {certificationSummary.expired_count > 0 && (
-                    <div className="flex items-center gap-1 text-red-600">
+                    <div className="flex items-center gap-1 text-destructive">
                       <XCircle className="h-4 w-4" />
                       <span className="font-medium">{certificationSummary.expired_count}</span>
                       <span className="text-xs text-muted-foreground">Expired</span>
@@ -526,7 +526,7 @@ export function SubcontractorDashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
-              <CardTitle className="text-lg flex items-center gap-2">
+              <CardTitle className="heading-card flex items-center gap-2">
                 <FileSignature className="h-5 w-5 text-primary" />
                 Lien Waivers
               </CardTitle>
@@ -543,20 +543,20 @@ export function SubcontractorDashboardPage() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Pending Signature</span>
-                  <Badge variant={lienWaiverSummary.pending_signature > 0 ? 'secondary' : 'outline'}>
-                    {lienWaiverSummary.pending_signature}
+                  <Badge variant={lienWaiverSummary.awaiting_signature_count > 0 ? 'secondary' : 'outline'}>
+                    {lienWaiverSummary.awaiting_signature_count}
                   </Badge>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Awaiting Approval</span>
-                  <Badge variant="outline">{lienWaiverSummary.pending_approval}</Badge>
+                  <Badge variant="outline">{lienWaiverSummary.signed_count}</Badge>
                 </div>
-                <div className="flex justify-between items-center text-green-600">
+                <div className="flex justify-between items-center text-success">
                   <span className="text-sm flex items-center gap-1">
                     <CheckCircle2 className="h-3 w-3" />
                     Approved
                   </span>
-                  <span className="font-medium">{lienWaiverSummary.approved}</span>
+                  <span className="font-medium">{lienWaiverSummary.approved_count}</span>
                 </div>
               </div>
             ) : (
@@ -569,7 +569,7 @@ export function SubcontractorDashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
-              <CardTitle className="text-lg flex items-center gap-2">
+              <CardTitle className="heading-card flex items-center gap-2">
                 <Banknote className="h-5 w-5 text-primary" />
                 Retainage
               </CardTitle>
@@ -586,23 +586,23 @@ export function SubcontractorDashboardPage() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Total Held</span>
-                  <span className="font-bold text-lg">
-                    ${(retainageSummary.total_retained / 1000).toFixed(1)}k
+                  <span className="heading-subsection">
+                    ${(retainageSummary.total_retention_held / 1000).toFixed(1)}k
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Eligible for Release</span>
-                  <span className="font-medium text-green-600">
+                  <span className="font-medium text-success">
                     ${(retainageSummary.eligible_for_release / 1000).toFixed(1)}k
                   </span>
                 </div>
-                {retainageSummary.pending_release > 0 && (
+                {retainageSummary.pending_releases > 0 && (
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-muted-foreground flex items-center gap-1">
                       <TrendingUp className="h-3 w-3" />
                       Pending Release
                     </span>
-                    <Badge variant="secondary">{retainageSummary.pending_release}</Badge>
+                    <Badge variant="secondary">{retainageSummary.pending_releases}</Badge>
                   </div>
                 )}
               </div>

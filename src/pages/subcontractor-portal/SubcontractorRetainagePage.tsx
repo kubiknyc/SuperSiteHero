@@ -86,7 +86,7 @@ export function SubcontractorRetainagePage() {
 
   // Calculate health status
   const healthStatus = useMemo(() => {
-    if (!summary) {return null}
+    if (!summary) { return null }
     return getRetainageHealth(summary)
   }, [summary])
 
@@ -99,7 +99,7 @@ export function SubcontractorRetainagePage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
+        <h1 className="flex items-center gap-2 heading-page">
           <Banknote className="h-6 w-6" />
           Retainage Tracking
         </h1>
@@ -129,9 +129,9 @@ export function SubcontractorRetainagePage() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <Building2 className="h-5 w-5 text-blue-500" />
+                <Building2 className="h-5 w-5 text-primary" />
                 <div>
-                  <p className="text-2xl font-bold">{summary.total_contracts}</p>
+                  <p className="heading-section">{summary.total_contracts}</p>
                   <p className="text-sm text-muted-foreground">Active Contracts</p>
                 </div>
               </div>
@@ -140,9 +140,9 @@ export function SubcontractorRetainagePage() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <DollarSign className="h-5 w-5 text-yellow-500" />
+                <DollarSign className="h-5 w-5 text-warning" />
                 <div>
-                  <p className="text-2xl font-bold">{formatRetainageAmount(summary.total_retention_held)}</p>
+                  <p className="heading-section">{formatRetainageAmount(summary.total_retention_held)}</p>
                   <p className="text-sm text-muted-foreground">Total Held</p>
                 </div>
               </div>
@@ -151,9 +151,9 @@ export function SubcontractorRetainagePage() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-green-500" />
+                <CheckCircle className="h-5 w-5 text-success" />
                 <div>
-                  <p className="text-2xl font-bold">{formatRetainageAmount(summary.total_retention_released)}</p>
+                  <p className="heading-section">{formatRetainageAmount(summary.total_retention_released)}</p>
                   <p className="text-sm text-muted-foreground">Total Released</p>
                 </div>
               </div>
@@ -162,9 +162,9 @@ export function SubcontractorRetainagePage() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-purple-500" />
+                <TrendingUp className="h-5 w-5 text-primary" />
                 <div>
-                  <p className="text-2xl font-bold">{formatRetainageAmount(summary.total_retention_balance)}</p>
+                  <p className="heading-section">{formatRetainageAmount(summary.total_retention_balance)}</p>
                   <p className="text-sm text-muted-foreground">Balance Due</p>
                 </div>
               </div>
@@ -188,7 +188,7 @@ export function SubcontractorRetainagePage() {
         <Card>
           <CardContent className="p-12 text-center">
             <Banknote className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No Contracts</h3>
+            <h3 className="mb-2 heading-subsection">No Contracts</h3>
             <p className="text-muted-foreground">
               You have no contracts with retainage tracking at this time.
             </p>
@@ -211,7 +211,7 @@ export function SubcontractorRetainagePage() {
         <Dialog open={historyDialogOpen} onOpenChange={setHistoryDialogOpen}>
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
+              <DialogTitle className="flex items-center gap-2 heading-card">
                 <History className="h-5 w-5" />
                 Release History
               </DialogTitle>
@@ -293,7 +293,7 @@ function ContractCard({ contract, onViewHistory }: ContractCardProps) {
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <div>
-            <CardTitle className="text-lg">{contract.contract_number}</CardTitle>
+            <CardTitle className="heading-card">{contract.contract_number}</CardTitle>
             <CardDescription className="flex items-center gap-1">
               <Building2 className="h-3 w-3" />
               {contract.project_name}
@@ -330,21 +330,21 @@ function ContractCard({ contract, onViewHistory }: ContractCardProps) {
         <div className="rounded-lg border bg-muted/50 p-3 space-y-2">
           <div className="flex justify-between text-sm">
             <span>Retention Held</span>
-            <span className="font-semibold text-yellow-600">{formatRetainageAmount(contract.retention_held)}</span>
+            <span className="font-semibold text-warning">{formatRetainageAmount(contract.retention_held)}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span>Released</span>
-            <span className="font-semibold text-green-600">{formatRetainageAmount(contract.retention_released)}</span>
+            <span className="font-semibold text-success">{formatRetainageAmount(contract.retention_released)}</span>
           </div>
           <div className="flex justify-between text-sm border-t pt-2">
             <span className="font-medium">Balance Due</span>
-            <span className="font-bold">{formatRetainageAmount(contract.retention_balance)}</span>
+            <span className="heading-subsection">{formatRetainageAmount(contract.retention_balance)}</span>
           </div>
         </div>
 
         {/* Milestones */}
         <div className="space-y-2">
-          <p className="text-sm font-medium">Release Milestones</p>
+          <p className="heading-subsection">Release Milestones</p>
           <div className="flex flex-wrap gap-2">
             <MilestoneBadge
               label="Substantial"
@@ -377,16 +377,16 @@ function ContractCard({ contract, onViewHistory }: ContractCardProps) {
 
         {/* Eligibility Notices */}
         {eligibleForSubstantial && (
-          <Alert className="py-2 border-green-500">
-            <CheckCircle className="h-4 w-4 text-green-500" />
+          <Alert className="py-2 border-success">
+            <CheckCircle className="h-4 w-4 text-success" />
             <AlertDescription className="text-sm">
               Contract is eligible for substantial completion release (typically 50% of retainage).
             </AlertDescription>
           </Alert>
         )}
         {eligibleForFinal && (
-          <Alert className="py-2 border-green-500">
-            <CheckCircle className="h-4 w-4 text-green-500" />
+          <Alert className="py-2 border-success">
+            <CheckCircle className="h-4 w-4 text-success" />
             <AlertDescription className="text-sm">
               Contract is eligible for final retainage release.
             </AlertDescription>

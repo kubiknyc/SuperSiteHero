@@ -44,11 +44,11 @@ export function StatusBadge({ status, type: _type }: StatusBadgeProps) {
   const statusColors: Record<string, string> = {
     open: 'bg-muted text-foreground border-border',
     pending: 'bg-muted text-foreground border-border',
-    in_progress: 'bg-info-light text-blue-800 border-blue-200',
-    ready_for_review: 'bg-amber-100 text-amber-800 border-amber-200',
-    completed: 'bg-success-light text-green-800 border-green-200',
-    verified: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-    rejected: 'bg-error-light text-red-800 border-red-200',
+    in_progress: 'bg-info/10 text-info border-info/20',
+    ready_for_review: 'bg-warning/10 text-warning border-warning/20',
+    completed: 'bg-success/10 text-success border-success/20',
+    verified: 'bg-success/10 text-success border-success/20',
+    rejected: 'bg-destructive/10 text-destructive border-destructive/20',
     cancelled: 'bg-muted text-foreground border-border',
   }
 

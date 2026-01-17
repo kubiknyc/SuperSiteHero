@@ -1,0 +1,125 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img "JobSight" [ref=e9]
+          - generic:
+            - heading "JobSight" [level=1]
+            - paragraph: Field Management
+        - generic:
+          - button:
+            - img
+      - navigation [ref=e10]:
+        - generic [ref=e11]:
+          - link [ref=e13] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e14]
+          - link [ref=e20] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e21]
+        - generic [ref=e25]:
+          - link [ref=e26] [cursor=pointer]:
+            - /url: /rfis
+            - img [ref=e27]
+          - link [ref=e30] [cursor=pointer]:
+            - /url: /daily-reports
+            - img [ref=e31]
+          - link [ref=e36] [cursor=pointer]:
+            - /url: /team
+            - img [ref=e37]
+    - generic [ref=e42]:
+      - banner [ref=e43]:
+        - generic [ref=e46]:
+          - heading "Calendar Integrations" [level=1] [ref=e47]
+          - paragraph [ref=e48]: Sync calendars
+        - generic [ref=e49]:
+          - button "Search Ctrl+K" [ref=e51] [cursor=pointer]:
+            - img [ref=e52]
+            - generic [ref=e55]: Search
+            - generic [ref=e57]: Ctrl+K
+          - button [ref=e58] [cursor=pointer]:
+            - img [ref=e59]
+          - button [ref=e65] [cursor=pointer]:
+            - link [ref=e66]:
+              - /url: /settings
+              - img [ref=e67]
+          - link "TU" [ref=e70] [cursor=pointer]:
+            - /url: /settings/profile
+            - text: TU
+      - main [ref=e71]:
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - button [ref=e75] [cursor=pointer]:
+              - img [ref=e76]
+            - generic [ref=e78]:
+              - heading "Calendar Integrations" [level=1] [ref=e79]
+              - paragraph [ref=e80]: Connect your calendars to sync meetings and events automatically
+          - generic [ref=e83]:
+            - img [ref=e84]
+            - generic [ref=e86]:
+              - heading "About Calendar Integration" [level=3] [ref=e87]
+              - list [ref=e88]:
+                - listitem [ref=e89]: "- Automatically sync meetings to your calendar"
+                - listitem [ref=e90]: "- Import calendar events as project meetings"
+                - listitem [ref=e91]: "- Send calendar invites to meeting attendees"
+                - listitem [ref=e92]: "- Real-time sync with push notifications"
+                - listitem [ref=e93]: "- Bidirectional sync keeps both calendars up to date"
+          - generic [ref=e94]:
+            - generic [ref=e95]:
+              - tab "Google Calendar" [selected] [ref=e96] [cursor=pointer]:
+                - img [ref=e97]
+                - text: Google Calendar
+              - tab "Outlook Calendar" [ref=e99] [cursor=pointer]:
+                - img [ref=e100]
+                - text: Outlook Calendar
+            - tabpanel [ref=e102]:
+              - generic [ref=e103]:
+                - generic [ref=e104]:
+                  - heading "Google Calendar" [level=3] [ref=e105]:
+                    - img [ref=e106]
+                    - text: Google Calendar
+                  - paragraph [ref=e108]: Connect your Google Calendar to sync meetings automatically.
+                - generic [ref=e109]:
+                  - generic [ref=e110]:
+                    - heading "Features" [level=4] [ref=e111]
+                    - list [ref=e112]:
+                      - listitem [ref=e113]: "- Sync meetings to Google Calendar automatically"
+                      - listitem [ref=e114]: "- Import calendar events as meetings"
+                      - listitem [ref=e115]: "- Real-time updates with push notifications"
+                      - listitem [ref=e116]: "- Send calendar invites to attendees"
+                  - button "Connect to Google Calendar" [ref=e117] [cursor=pointer]:
+                    - img [ref=e118]
+                    - text: Connect to Google Calendar
+          - generic [ref=e121]:
+            - heading "Sync Configuration Tips" [level=3] [ref=e123]
+            - generic [ref=e125]:
+              - generic [ref=e126]:
+                - heading "Two-way Sync" [level=4] [ref=e127]
+                - paragraph [ref=e128]: Changes in either system automatically update the other. Best for keeping both calendars in sync.
+              - generic [ref=e129]:
+                - heading "App to Calendar" [level=4] [ref=e130]
+                - paragraph [ref=e131]: Meetings created here appear in your calendar. Calendar changes do not sync back.
+              - generic [ref=e132]:
+                - heading "Calendar to App" [level=4] [ref=e133]
+                - paragraph [ref=e134]: Import events from your calendar. Changes made here do not sync to your calendar.
+    - complementary [ref=e135]:
+      - generic [ref=e136]:
+        - generic [ref=e137]:
+          - img [ref=e139]
+          - heading "Action Required" [level=2] [ref=e143]
+        - button [ref=e144] [cursor=pointer]:
+          - img [ref=e145]
+      - generic [ref=e149]:
+        - img [ref=e151]
+        - heading "All caught up!" [level=3] [ref=e153]
+        - paragraph [ref=e154]: No items need your attention right now
+      - button "View All Approvals" [ref=e156] [cursor=pointer]:
+        - link "View All Approvals" [ref=e157]:
+          - /url: /approvals
+  - region "Notifications alt+T"
+  - button "Open JobSight AI Assistant" [ref=e160] [cursor=pointer]
+```

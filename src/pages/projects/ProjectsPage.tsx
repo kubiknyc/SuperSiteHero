@@ -25,7 +25,7 @@ export function ProjectsPage() {
 
   // Filter projects based on search query
   const filteredProjects = useMemo(() => {
-    if (!projects) {return undefined}
+    if (!projects) { return undefined }
     const query = searchQuery.toLowerCase()
     return projects.filter((project) =>
       project.name.toLowerCase().includes(query) ||
@@ -61,7 +61,7 @@ export function ProjectsPage() {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-foreground heading-page">Projects</h1>
+            <h1 className="heading-page">Projects</h1>
             <p className="text-secondary mt-1">
               Manage and track your construction projects
             </p>

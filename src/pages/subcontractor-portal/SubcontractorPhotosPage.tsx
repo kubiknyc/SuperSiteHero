@@ -148,7 +148,7 @@ export default function SubcontractorPhotosPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="flex items-center gap-2 heading-page">
             <Camera className="h-6 w-6 text-primary" />
             Project Photos
           </h1>
@@ -167,7 +167,7 @@ export default function SubcontractorPhotosPage() {
                 <ImageIcon className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Total Photos</span>
               </div>
-              <p className="text-2xl font-bold mt-1">{summary.total_photos}</p>
+              <p className="heading-section mt-1">{summary.total_photos}</p>
             </CardContent>
           </Card>
           <Card>
@@ -176,7 +176,7 @@ export default function SubcontractorPhotosPage() {
                 <Calendar className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">This Week</span>
               </div>
-              <p className="text-2xl font-bold mt-1">{summary.photos_this_week}</p>
+              <p className="heading-section mt-1">{summary.photos_this_week}</p>
             </CardContent>
           </Card>
           <Card>
@@ -185,7 +185,7 @@ export default function SubcontractorPhotosPage() {
                 <Calendar className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">This Month</span>
               </div>
-              <p className="text-2xl font-bold mt-1">{summary.photos_this_month}</p>
+              <p className="heading-section mt-1">{summary.photos_this_month}</p>
             </CardContent>
           </Card>
           <Card>
@@ -194,7 +194,7 @@ export default function SubcontractorPhotosPage() {
                 <Building2 className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Projects</span>
               </div>
-              <p className="text-2xl font-bold mt-1">{summary.photos_by_project.length}</p>
+              <p className="heading-section mt-1">{summary.photos_by_project.length}</p>
             </CardContent>
           </Card>
         </div>
@@ -333,7 +333,7 @@ export default function SubcontractorPhotosPage() {
           <CardContent className="py-12">
             <div className="text-center">
               <Camera className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-medium mb-2">No Photos Found</h3>
+              <h3 className="mb-2 heading-subsection">No Photos Found</h3>
               <p className="text-muted-foreground">
                 {searchQuery || selectedCategory !== 'all' || selectedProject !== 'all'
                   ? 'Try adjusting your filters to see more photos.'
@@ -375,7 +375,7 @@ export default function SubcontractorPhotosPage() {
         <div className="space-y-8">
           {sortedDates.map((date) => (
             <div key={date}>
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <h2 className="mb-4 flex items-center gap-2 heading-section">
                 <Calendar className="h-5 w-5 text-muted-foreground" />
                 {formatDateHeader(date)}
                 <Badge variant="secondary" className="ml-2">

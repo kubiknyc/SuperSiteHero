@@ -10,7 +10,7 @@
  * - Sync progress bar during active sync
  */
 
-import { useState, useMemo, memo } from 'react'
+import { useState, useMemo } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import {
   Cloud,

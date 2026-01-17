@@ -70,8 +70,8 @@ test.describe('Offline Mode', () => {
     await page.goto('/projects');
     await page.waitForTimeout(3000); // Wait for data to cache
 
-    // Store current content
-    const projectListBefore = await page.locator('main').textContent();
+    // Store current content (use first() to avoid strict mode with multiple main elements)
+    const projectListBefore = await page.locator('main').first().textContent();
 
     // Go offline
     await context.setOffline(true);
@@ -87,7 +87,7 @@ test.describe('Offline Mode', () => {
     }
 
     // Page should still show content (from cache)
-    const projectListAfter = await page.locator('main').textContent();
+    const projectListAfter = await page.locator('main').first().textContent();
 
     // Content should be present (cached)
     expect(projectListAfter).toBeTruthy();

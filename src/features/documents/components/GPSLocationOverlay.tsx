@@ -119,7 +119,7 @@ function gpsToPixel(
   containerWidth: number,
   containerHeight: number
 ): { x: number; y: number } | null {
-  if (referencePoints.length < 2) {return null}
+  if (referencePoints.length < 2) { return null }
 
   // Use simple linear interpolation with 2 points
   const p1 = referencePoints[0]
@@ -172,13 +172,13 @@ function getAccuracyLevel(accuracy: number): {
   label: string
 } {
   if (accuracy <= 5) {
-    return { level: 'high', icon: SignalHigh, color: 'text-green-500', label: 'Excellent' }
+    return { level: 'high', icon: SignalHigh, color: 'text-success', label: 'Excellent' }
   } else if (accuracy <= 15) {
-    return { level: 'medium', icon: SignalMedium, color: 'text-yellow-500', label: 'Good' }
+    return { level: 'medium', icon: SignalMedium, color: 'text-warning', label: 'Good' }
   } else if (accuracy <= 30) {
-    return { level: 'low', icon: SignalLow, color: 'text-orange-500', label: 'Fair' }
+    return { level: 'low', icon: SignalLow, color: 'text-warning-600', label: 'Fair' }
   } else {
-    return { level: 'poor', icon: Signal, color: 'text-red-500', label: 'Poor' }
+    return { level: 'poor', icon: Signal, color: 'text-destructive', label: 'Poor' }
   }
 }
 
@@ -228,7 +228,7 @@ function PositionMarker({
       <div
         className={cn(
           'absolute rounded-full opacity-20',
-          isTracking ? 'bg-blue-500' : 'bg-gray-500'
+          isTracking ? 'bg-primary' : 'bg-gray-500'
         )}
         style={{
           width: accuracyRadius * 2,
@@ -249,7 +249,7 @@ function PositionMarker({
             transformOrigin: 'center 20px',
             borderLeft: '8px solid transparent',
             borderRight: '8px solid transparent',
-            borderBottom: '16px solid #3B82F6',
+            borderBottom: '16px solid #1a3a99',
           }}
         />
       )}
@@ -259,7 +259,7 @@ function PositionMarker({
         className={cn(
           'relative w-6 h-6 rounded-full flex items-center justify-center',
           'shadow-lg border-2 border-white',
-          isTracking ? 'bg-blue-500' : 'bg-gray-500'
+          isTracking ? 'bg-primary' : 'bg-gray-500'
         )}
       >
         <div className="w-2 h-2 rounded-full bg-white" />
@@ -268,7 +268,7 @@ function PositionMarker({
       {/* Pulsing animation when tracking */}
       {isTracking && (
         <div
-          className="absolute inset-0 w-6 h-6 rounded-full bg-blue-500 animate-ping opacity-75"
+          className="absolute inset-0 w-6 h-6 rounded-full bg-primary animate-ping opacity-75"
           style={{ animationDuration: '2s' }}
         />
       )}
@@ -568,12 +568,12 @@ function CalibrationDialog({
 
           {step === 'confirm' && (
             <div className="space-y-4">
-              <div className="bg-green-50 dark:bg-green-950 rounded-lg p-4">
-                <div className="flex items-center gap-2 text-green-700 dark:text-green-300 mb-2">
+              <div className="bg-success-50 dark:bg-success-950/30 rounded-lg p-4">
+                <div className="flex items-center gap-2 text-success-700 dark:text-success-300 mb-2">
                   <Check className="w-5 h-5" />
                   <span className="font-medium">Calibration Ready</span>
                 </div>
-                <p className="text-sm text-green-600 dark:text-green-400">
+                <p className="text-sm text-success dark:text-success-400">
                   {points.length} reference points set. GPS tracking is now available.
                 </p>
               </div>
@@ -687,12 +687,12 @@ export function GPSLocationOverlay({
         // Convert GPS to pixel position
         const pixelPos = geoReference
           ? gpsToPixel(
-              latitude,
-              longitude,
-              geoReference.referencePoints,
-              containerWidth,
-              containerHeight
-            )
+            latitude,
+            longitude,
+            geoReference.referencePoints,
+            containerWidth,
+            containerHeight
+          )
           : null
 
         const newState: GPSOverlayState = {
@@ -728,9 +728,9 @@ export function GPSLocationOverlay({
       },
       (error) => {
         let errorMessage = 'Failed to get location'
-        if (error.code === 1) {errorMessage = 'Location permission denied'}
-        if (error.code === 2) {errorMessage = 'Location unavailable'}
-        if (error.code === 3) {errorMessage = 'Location request timed out'}
+        if (error.code === 1) { errorMessage = 'Location permission denied' }
+        if (error.code === 2) { errorMessage = 'Location unavailable' }
+        if (error.code === 3) { errorMessage = 'Location request timed out' }
 
         setState((prev) => ({ ...prev, error: errorMessage }))
       },
@@ -775,7 +775,7 @@ export function GPSLocationOverlay({
   )
 
   const accuracyInfo = useMemo(() => {
-    if (!state.currentPosition?.accuracy) {return null}
+    if (!state.currentPosition?.accuracy) { return null }
     return getAccuracyLevel(state.currentPosition.accuracy)
   }, [state.currentPosition?.accuracy])
 

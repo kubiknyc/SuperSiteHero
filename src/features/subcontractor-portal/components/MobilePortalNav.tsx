@@ -33,13 +33,13 @@ function NavItem({ to, icon, label, badge, isActive }: NavItemProps) {
         'transition-colors duration-200',
         isActive
           ? 'text-primary'
-          : 'text-muted active:text-secondary'
+          : 'text-muted-foreground active:text-foreground'
       )}
     >
       <div className="relative">
         <div className={cn(
           'p-1.5 rounded-lg transition-colors',
-          isActive && 'bg-blue-50'
+          isActive && 'bg-primary/10'
         )}>
           {icon}
         </div>
@@ -47,8 +47,8 @@ function NavItem({ to, icon, label, badge, isActive }: NavItemProps) {
           <span className={cn(
             'absolute -top-1 -right-1 min-w-[18px] h-[18px]',
             'flex items-center justify-center',
-            'text-[10px] font-medium text-white',
-            'bg-red-500 rounded-full px-1'
+            'text-[10px] font-medium text-destructive-foreground',
+            'bg-destructive rounded-full px-1'
           )}>
             {badge > 99 ? '99+' : badge}
           </span>

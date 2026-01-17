@@ -1,0 +1,101 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img "JobSight" [ref=e9]
+          - generic:
+            - heading "JobSight" [level=1]
+            - paragraph: Field Management
+        - generic:
+          - button:
+            - img
+      - navigation [ref=e10]:
+        - generic [ref=e11]:
+          - link [ref=e13] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e14]
+          - link [ref=e20] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e21]
+        - generic [ref=e25]:
+          - link [ref=e26] [cursor=pointer]:
+            - /url: /rfis
+            - img [ref=e27]
+          - link [ref=e30] [cursor=pointer]:
+            - /url: /daily-reports
+            - img [ref=e31]
+          - link [ref=e36] [cursor=pointer]:
+            - /url: /team
+            - img [ref=e37]
+    - generic [ref=e42]:
+      - banner [ref=e43]:
+        - generic [ref=e46]:
+          - heading "Messages" [level=1] [ref=e47]
+          - paragraph [ref=e48]: Welcome back, Test
+        - generic [ref=e49]:
+          - button "Search Ctrl+K" [ref=e51] [cursor=pointer]:
+            - img [ref=e52]
+            - generic [ref=e55]: Search
+            - generic [ref=e57]: Ctrl+K
+          - button [ref=e58] [cursor=pointer]:
+            - img [ref=e59]
+          - button [ref=e65] [cursor=pointer]:
+            - link [ref=e66]:
+              - /url: /settings
+              - img [ref=e67]
+          - link "TU" [ref=e70] [cursor=pointer]:
+            - /url: /settings/profile
+            - text: TU
+      - main [ref=e71]:
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - combobox [ref=e76] [cursor=pointer]:
+              - generic: E2E Test Project
+              - img [ref=e77]
+            - generic [ref=e79]:
+              - generic [ref=e80]:
+                - generic [ref=e81]:
+                  - heading "Messages" [level=3] [ref=e82]:
+                    - img [ref=e83]
+                    - text: Messages
+                  - button "New" [ref=e85] [cursor=pointer]:
+                    - img [ref=e86]
+                    - text: New
+                - generic [ref=e87]:
+                  - img [ref=e88]
+                  - textbox "Search conversations..." [ref=e91]
+                - generic [ref=e92]:
+                  - button "All" [ref=e93] [cursor=pointer]
+                  - button "Direct" [ref=e94] [cursor=pointer]
+                  - button "Groups" [ref=e95] [cursor=pointer]
+                  - button "Projects" [ref=e96] [cursor=pointer]
+              - generic [ref=e98]:
+                - img [ref=e99]
+                - paragraph [ref=e101]: No conversations found
+          - generic [ref=e103]:
+            - img [ref=e104]
+            - heading "Your Messages" [level=2] [ref=e106]
+            - paragraph [ref=e107]: Select a conversation from the list or start a new one to begin messaging.
+            - button "Start a new conversation" [ref=e108] [cursor=pointer]
+    - complementary [ref=e109]:
+      - generic [ref=e110]:
+        - generic [ref=e111]:
+          - img [ref=e113]
+          - heading "Action Required" [level=2] [ref=e117]
+        - button [ref=e118] [cursor=pointer]:
+          - img [ref=e119]
+      - generic [ref=e123]:
+        - generic [ref=e124]:
+          - img [ref=e125]
+          - img [ref=e127]
+        - paragraph [ref=e129]: Loading items...
+      - button "View All Approvals" [ref=e131] [cursor=pointer]:
+        - link "View All Approvals" [ref=e132]:
+          - /url: /approvals
+  - region "Notifications alt+T"
+  - button "Open JobSight AI Assistant" [ref=e135] [cursor=pointer]
+```

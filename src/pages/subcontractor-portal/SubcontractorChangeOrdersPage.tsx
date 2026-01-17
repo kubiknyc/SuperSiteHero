@@ -90,7 +90,7 @@ export function SubcontractorChangeOrdersPage() {
 
   // Get unique projects for filter
   const projects = useMemo(() => {
-    if (!changeOrders) {return []}
+    if (!changeOrders) { return [] }
     const uniqueProjects = new Map<string, string>()
     changeOrders.forEach((co) => {
       if (!uniqueProjects.has(co.project_id)) {
@@ -102,7 +102,7 @@ export function SubcontractorChangeOrdersPage() {
 
   // Filter change orders
   const filteredChangeOrders = useMemo(() => {
-    if (!changeOrders) {return []}
+    if (!changeOrders) { return [] }
 
     let filtered = changeOrders
 
@@ -129,7 +129,7 @@ export function SubcontractorChangeOrdersPage() {
 
   // Calculate tab counts
   const counts = useMemo(() => {
-    if (!changeOrders) {return { all: 0, pending: 0, approved: 0, rejected: 0 }}
+    if (!changeOrders) { return { all: 0, pending: 0, approved: 0, rejected: 0 } }
 
     return {
       all: changeOrders.length,
@@ -148,7 +148,7 @@ export function SubcontractorChangeOrdersPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
+          <h1 className="flex items-center gap-2 heading-page">
             <FileEdit className="h-6 w-6" />
             Change Orders
           </h1>
@@ -166,7 +166,7 @@ export function SubcontractorChangeOrdersPage() {
               <div className="flex items-center gap-2">
                 <FileText className="h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-2xl font-bold">{summary.total_count}</p>
+                  <p className="heading-section">{summary.total_count}</p>
                   <p className="text-xs text-muted-foreground">Total COs</p>
                 </div>
               </div>
@@ -177,7 +177,7 @@ export function SubcontractorChangeOrdersPage() {
               <div className="flex items-center gap-2">
                 <Clock className="h-5 w-5 text-warning" />
                 <div>
-                  <p className="text-2xl font-bold text-warning">{summary.pending_count}</p>
+                  <p className="text-warning heading-section">{summary.pending_count}</p>
                   <p className="text-xs text-muted-foreground">Pending</p>
                 </div>
               </div>
@@ -189,12 +189,12 @@ export function SubcontractorChangeOrdersPage() {
                 {summary.net_contract_impact >= 0 ? (
                   <TrendingUp className="h-5 w-5 text-success" />
                 ) : (
-                  <TrendingDown className="h-5 w-5 text-error" />
+                  <TrendingDown className="h-5 w-5 text-destructive" />
                 )}
                 <div>
                   <p className={cn(
-                    "text-2xl font-bold",
-                    summary.net_contract_impact >= 0 ? "text-success" : "text-error"
+                    "heading-section",
+                    summary.net_contract_impact >= 0 ? "text-success" : "text-destructive"
                   )}>
                     {formatAmount(summary.net_contract_impact)}
                   </p>
@@ -208,7 +208,7 @@ export function SubcontractorChangeOrdersPage() {
               <div className="flex items-center gap-2">
                 <Calendar className="h-5 w-5 text-primary" />
                 <div>
-                  <p className="text-2xl font-bold">
+                  <p className="heading-section">
                     {formatDaysImpact(summary.total_days_impact)}
                   </p>
                   <p className="text-xs text-muted-foreground">Schedule Impact</p>
@@ -294,14 +294,14 @@ export function SubcontractorChangeOrdersPage() {
             <Card>
               <CardContent className="p-12 text-center">
                 <FileEdit className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-medium mb-2 heading-subsection">
+                <h3 className="mb-2 heading-subsection">
                   {activeTab === 'all'
                     ? 'No Change Orders'
                     : activeTab === 'pending'
-                    ? 'No Pending Change Orders'
-                    : activeTab === 'approved'
-                    ? 'No Approved Change Orders'
-                    : 'No Rejected Change Orders'}
+                      ? 'No Pending Change Orders'
+                      : activeTab === 'approved'
+                        ? 'No Approved Change Orders'
+                        : 'No Rejected Change Orders'}
                 </h3>
                 <p className="text-muted-foreground">
                   {activeTab === 'all'
@@ -350,7 +350,7 @@ function ChangeOrderCard({ changeOrder, isExpanded, onToggle }: ChangeOrderCardP
             <div className="flex items-start justify-between">
               <div className="space-y-1">
                 <div className="flex items-center gap-3">
-                  <CardTitle className="text-lg">
+                  <CardTitle className="heading-card">
                     {getDisplayNumber(co)}
                   </CardTitle>
                   <Badge variant={getChangeOrderStatusVariant(co.status)}>
@@ -382,7 +382,7 @@ function ChangeOrderCard({ changeOrder, isExpanded, onToggle }: ChangeOrderCardP
                 <div className="text-right">
                   <p className={cn(
                     "text-lg font-semibold",
-                    amount >= 0 ? "text-success" : "text-error"
+                    amount >= 0 ? "text-success" : "text-destructive"
                   )}>
                     {formatAmount(amount)}
                   </p>
@@ -479,7 +479,7 @@ function ChangeOrderCard({ changeOrder, isExpanded, onToggle }: ChangeOrderCardP
                     </div>
                   )}
                   {co.internally_approved_at && (
-                    <div className="flex items-center gap-1 text-blue-600">
+                    <div className="flex items-center gap-1 text-primary">
                       <CheckCircle className="h-4 w-4" />
                       Internal: {format(new Date(co.internally_approved_at), 'MMM d, yyyy')}
                     </div>
@@ -518,7 +518,7 @@ function ChangeOrderCard({ changeOrder, isExpanded, onToggle }: ChangeOrderCardP
               <>
                 <Separator />
                 <div>
-                  <h4 className="font-medium mb-3 flex items-center gap-2">
+                  <h4 className="mb-3 flex items-center gap-2 heading-subsection">
                     <FileText className="h-4 w-4" />
                     Cost Breakdown ({items.length} items)
                   </h4>

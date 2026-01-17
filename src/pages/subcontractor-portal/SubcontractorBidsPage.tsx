@@ -29,8 +29,8 @@ export function SubcontractorBidsPage() {
     activeTab === 'pending'
       ? ['pending']
       : activeTab === 'submitted'
-      ? ['submitted', 'awarded', 'rejected', 'declined']
-      : undefined
+        ? ['submitted', 'awarded', 'rejected', 'declined']
+        : undefined
 
   const { data: bids, isLoading, isError } = useSubcontractorBids(
     statusFilter ? { status: statusFilter } : undefined
@@ -45,7 +45,7 @@ export function SubcontractorBidsPage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
+        <h1 className="flex items-center gap-2 heading-page">
           <FileText className="h-6 w-6" />
           Change Order Bids
         </h1>
@@ -83,8 +83,8 @@ export function SubcontractorBidsPage() {
                 {activeTab === 'pending'
                   ? 'No pending bid requests'
                   : activeTab === 'submitted'
-                  ? 'No submitted bids'
-                  : 'No bids found'}
+                    ? 'No submitted bids'
+                    : 'No bids found'}
               </CardContent>
             </Card>
           ) : (

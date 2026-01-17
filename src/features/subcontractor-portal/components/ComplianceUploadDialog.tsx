@@ -80,13 +80,13 @@ export function ComplianceUploadDialog({
       file_url: formData.file_url,
     }
 
-    if (formData.description) {payload.description = formData.description}
-    if (formData.project_id) {payload.project_id = formData.project_id}
-    if (formData.issue_date) {payload.issue_date = formData.issue_date}
-    if (formData.expiration_date) {payload.expiration_date = formData.expiration_date}
-    if (formData.coverage_amount) {payload.coverage_amount = parseFloat(formData.coverage_amount)}
-    if (formData.policy_number) {payload.policy_number = formData.policy_number}
-    if (formData.provider_name) {payload.provider_name = formData.provider_name}
+    if (formData.description) { payload.description = formData.description }
+    if (formData.project_id) { payload.project_id = formData.project_id }
+    if (formData.issue_date) { payload.issue_date = formData.issue_date }
+    if (formData.expiration_date) { payload.expiration_date = formData.expiration_date }
+    if (formData.coverage_amount) { payload.coverage_amount = parseFloat(formData.coverage_amount) }
+    if (formData.policy_number) { payload.policy_number = formData.policy_number }
+    if (formData.provider_name) { payload.provider_name = formData.provider_name }
 
     await uploadMutation.mutateAsync(payload)
 
@@ -122,7 +122,7 @@ export function ComplianceUploadDialog({
 
       <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Upload Compliance Document</DialogTitle>
+          <DialogTitle className="heading-card">Upload Compliance Document</DialogTitle>
           <DialogDescription>
             Upload a new compliance document. It will be reviewed by the project administrator.
           </DialogDescription>

@@ -20,8 +20,6 @@ import {
   ListChecks,
   DollarSign,
   Building2,
-  Users,
-  Calendar,
   Settings,
   Plus,
   ChevronRight,
@@ -29,7 +27,6 @@ import {
   ArrowRight,
   Loader2,
   Shield,
-  FolderOpen,
   Clock,
   X,
 } from 'lucide-react'

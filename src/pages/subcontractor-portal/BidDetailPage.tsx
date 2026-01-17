@@ -66,7 +66,7 @@ export function BidDetailPage() {
           </Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-bold heading-page">
+          <h1 className="heading-page">
             {bid.workflow_item?.title || 'Change Order Bid'}
           </h1>
           <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
@@ -88,7 +88,7 @@ export function BidDetailPage() {
           {bid.workflow_item && (
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 heading-card">
                   <FileText className="h-5 w-5" />
                   Scope of Work
                 </CardTitle>
@@ -114,7 +114,7 @@ export function BidDetailPage() {
           {/* Bid Info */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Bid Information</CardTitle>
+              <CardTitle className="heading-card">Bid Information</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
@@ -123,12 +123,12 @@ export function BidDetailPage() {
                   variant="outline"
                   className={
                     bid.bid_status === 'pending'
-                      ? 'bg-warning-light text-amber-700 border-amber-200'
+                      ? 'bg-warning/10 text-warning border-warning/20'
                       : bid.bid_status === 'submitted'
-                      ? 'bg-blue-50 text-primary-hover border-blue-200'
-                      : bid.bid_status === 'awarded'
-                      ? 'bg-success-light text-success-dark border-green-200'
-                      : 'bg-surface text-secondary border-border'
+                        ? 'bg-primary/10 text-primary border-primary/20'
+                        : bid.bid_status === 'awarded'
+                          ? 'bg-success/10 text-success border-success/20'
+                          : 'bg-muted text-secondary border-border'
                   }
                 >
                   {bid.bid_status.charAt(0).toUpperCase() + bid.bid_status.slice(1)}
@@ -168,7 +168,7 @@ export function BidDetailPage() {
           {/* Project Info */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Project Details</CardTitle>
+              <CardTitle className="heading-card">Project Details</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>

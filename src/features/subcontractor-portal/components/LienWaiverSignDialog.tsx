@@ -73,7 +73,7 @@ export function LienWaiverSignDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!canSubmit) {return}
+    if (!canSubmit) { return }
 
     await signMutation.mutateAsync({
       waiverId: waiver.id,
@@ -104,7 +104,7 @@ export function LienWaiverSignDialog({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 heading-card">
             <Pen className="h-5 w-5" />
             Sign Lien Waiver
           </DialogTitle>

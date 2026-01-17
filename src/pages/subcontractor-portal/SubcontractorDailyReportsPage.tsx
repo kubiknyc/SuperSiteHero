@@ -48,15 +48,15 @@ function ReportsSkeleton() {
 }
 
 function WeatherBadge({ weather }: { weather: string | null }) {
-  if (!weather) {return null}
+  if (!weather) { return null }
 
   const weatherColors: Record<string, string> = {
-    sunny: 'bg-warning-light text-yellow-700',
-    cloudy: 'bg-muted text-secondary',
-    rainy: 'bg-info-light text-primary-hover',
-    stormy: 'bg-purple-100 text-purple-700',
-    snowy: 'bg-slate-100 text-slate-600',
-    foggy: 'bg-muted text-secondary',
+    sunny: 'bg-warning/10 text-warning-800 border-warning/20',
+    cloudy: 'bg-muted text-secondary-foreground border-transparent',
+    rainy: 'bg-info/10 text-info-800 border-info/20',
+    stormy: 'bg-info/20 text-info-900 border-info/30',
+    snowy: 'bg-secondary text-secondary-foreground border-transparent',
+    foggy: 'bg-muted text-secondary-foreground border-transparent',
   }
 
   return (
@@ -91,7 +91,7 @@ export function SubcontractorDailyReportsPage() {
 
   // Filter by search client-side
   const filteredReports = reports?.filter((report) => {
-    if (!search) {return true}
+    if (!search) { return true }
     const searchLower = search.toLowerCase()
     return (
       report.project_name.toLowerCase().includes(searchLower) ||
@@ -106,7 +106,7 @@ export function SubcontractorDailyReportsPage() {
         <Card>
           <CardContent className="p-12 text-center">
             <Lock className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-            <h2 className="text-xl font-semibold mb-2 heading-section">Access Restricted</h2>
+            <h2 className="mb-2 heading-section">Access Restricted</h2>
             <p className="text-muted-foreground max-w-md mx-auto">
               You don't have permission to view daily reports. Contact the project manager to
               request access.
@@ -121,7 +121,7 @@ export function SubcontractorDailyReportsPage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
+        <h1 className="flex items-center gap-2 heading-page">
           <FileText className="h-6 w-6" />
           Daily Reports
         </h1>
@@ -173,7 +173,7 @@ export function SubcontractorDailyReportsPage() {
       ) : isError ? (
         <Card>
           <CardContent className="p-6 text-center">
-            <AlertCircle className="h-8 w-8 mx-auto mb-2 text-error" />
+            <AlertCircle className="h-8 w-8 mx-auto mb-2 text-destructive" />
             <p className="text-muted-foreground">Failed to load daily reports</p>
           </CardContent>
         </Card>
@@ -202,7 +202,7 @@ export function SubcontractorDailyReportsPage() {
                       </span>
                       <WeatherBadge weather={report.weather_condition} />
                       {report.submitted_at && (
-                        <Badge variant="outline" className="text-success border-green-200">
+                        <Badge variant="outline" className="text-success border-success/20">
                           Submitted
                         </Badge>
                       )}

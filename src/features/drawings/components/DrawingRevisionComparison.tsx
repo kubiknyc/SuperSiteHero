@@ -174,14 +174,14 @@ export function DrawingRevisionComparison({
 
   // Pan handling
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (e.button !== 0) {return;}
+    if (e.button !== 0) { return; }
     setIsPanning(true);
     lastPanPosition.current = { x: e.clientX, y: e.clientY };
   }, []);
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent) => {
-      if (!isPanning) {return;}
+      if (!isPanning) { return; }
       const dx = e.clientX - lastPanPosition.current.x;
       const dy = e.clientY - lastPanPosition.current.y;
       setPosition((prev) => ({ x: prev.x + dx, y: prev.y + dy }));
@@ -204,7 +204,7 @@ export function DrawingRevisionComparison({
     }
   };
 
-  if (!open) {return null;}
+  if (!open) { return null; }
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onClose()}>
@@ -353,13 +353,13 @@ export function DrawingRevisionComparison({
               ) : comparisonResult ? (
                 <>
                   <div className="flex items-center gap-2">
-                    <Badge variant="default" className="bg-green-600">
+                    <Badge variant="default" className="bg-success hover:bg-success/90">
                       {changeStats.added} Added
                     </Badge>
-                    <Badge variant="default" className="bg-red-600">
+                    <Badge variant="default" className="bg-destructive hover:bg-destructive/90">
                       {changeStats.removed} Removed
                     </Badge>
-                    <Badge variant="default" className="bg-yellow-600">
+                    <Badge variant="default" className="bg-warning hover:bg-warning/90 text-warning-foreground">
                       {changeStats.modified} Modified
                     </Badge>
                   </div>
@@ -497,12 +497,12 @@ export function DrawingRevisionComparison({
                 <RevisionFooter
                   revision={olderRevision}
                   label="Older"
-                  className="bg-blue-50 dark:bg-blue-950"
+                  className="bg-primary-50 dark:bg-primary-950/50"
                 />
                 <RevisionFooter
                   revision={newerRevision}
                   label="Newer"
-                  className="bg-purple-50 dark:bg-purple-950"
+                  className="bg-purple-50 dark:bg-purple-950/50"
                 />
               </div>
             </div>
@@ -578,7 +578,7 @@ function SideBySideView({
         zoom={zoom}
         position={position}
         label={`Rev ${olderRevision.revision} (Older)`}
-        labelClassName="bg-blue-600"
+        labelClassName="bg-primary"
       />
       <DocumentView
         revision={newerRevision}
@@ -661,9 +661,9 @@ function DocumentView({
       {/* Change Region Highlights */}
       {changeRegions.map((region) => {
         const colorClasses = {
-          added: 'border-green-500 bg-green-500/20',
-          removed: 'border-red-500 bg-red-500/20',
-          modified: 'border-yellow-400 bg-yellow-400/20',
+          added: 'border-success bg-success/20',
+          removed: 'border-destructive bg-destructive/20',
+          modified: 'border-warning bg-warning/20',
         };
         const isSelected = region.id === selectedChangeId;
         const colorClass =
@@ -995,7 +995,7 @@ function ChangeCard({ region, isSelected, onClick }: ChangeCardProps) {
               region.changeType === 'added' && 'border-green-500 text-green-600',
               region.changeType === 'removed' && 'border-red-500 text-red-600',
               region.changeType === 'modified' &&
-                'border-yellow-500 text-yellow-600'
+              'border-yellow-500 text-yellow-600'
             )}
           >
             {region.changeType}

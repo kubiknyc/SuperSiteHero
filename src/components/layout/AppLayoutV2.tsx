@@ -11,19 +11,15 @@ import { MobileBottomNav } from '@/components/layout/MobileBottomNav'
 import { MobileOfflineBanner } from '@/components/mobile/MobileOfflineIndicator'
 import { useTabletMode, useTabletSidebar } from '@/hooks/useTabletMode'
 import { initOfflineListeners } from '@/stores/offline-store'
-import { Menu, X } from 'lucide-react'
+import { Menu } from 'lucide-react'
 
 import {
   CollapsibleSidebar,
   SIDEBAR_COLLAPSED_WIDTH,
   SIDEBAR_EXPANDED_WIDTH,
-  useSidebarState,
 } from './CollapsibleSidebar'
 import { StickyHeader } from './StickyHeader'
 import { ActionPanel } from './ActionPanel'
-
-// Premium easing
-const SPRING_EASING = 'cubic-bezier(0.32, 0.72, 0, 1)'
 
 // Page title map for auto-detection
 const pageTitles: Record<string, { title: string; subtitle?: string }> = {
@@ -78,7 +74,7 @@ export function AppLayoutV2({
   const [actionPanelOpen, setActionPanelOpen] = useState(false)
 
   // Sidebar pinned state (shared with CollapsibleSidebar)
-  const [isPinned, setIsPinned] = useState(() => {
+  const [isPinned, _setIsPinned] = useState(() => {
     const saved = localStorage.getItem('sidebar-pinned')
     return saved === 'true'
   })

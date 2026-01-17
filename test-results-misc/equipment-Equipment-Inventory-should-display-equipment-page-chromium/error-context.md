@@ -1,0 +1,175 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img "JobSight" [ref=e9]
+          - generic:
+            - heading "JobSight" [level=1]
+            - paragraph: Field Management
+        - generic:
+          - button:
+            - img
+      - navigation [ref=e10]:
+        - generic [ref=e11]:
+          - link [ref=e13] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e14]
+          - link [ref=e20] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e21]
+        - generic [ref=e25]:
+          - link [ref=e26] [cursor=pointer]:
+            - /url: /rfis
+            - img [ref=e27]
+          - link [ref=e30] [cursor=pointer]:
+            - /url: /daily-reports
+            - img [ref=e31]
+          - link [ref=e36] [cursor=pointer]:
+            - /url: /team
+            - img [ref=e37]
+    - generic [ref=e42]:
+      - banner [ref=e43]:
+        - generic [ref=e46]:
+          - heading "Equipment" [level=1] [ref=e47]
+          - paragraph [ref=e48]: Equipment management
+        - generic [ref=e49]:
+          - button "Search Ctrl+K" [ref=e51] [cursor=pointer]:
+            - img [ref=e52]
+            - generic [ref=e55]: Search
+            - generic [ref=e57]: Ctrl+K
+          - button [ref=e58] [cursor=pointer]:
+            - img [ref=e59]
+          - button [ref=e65] [cursor=pointer]:
+            - link [ref=e66]:
+              - /url: /settings
+              - img [ref=e67]
+          - link "TU" [ref=e70] [cursor=pointer]:
+            - /url: /settings/profile
+            - text: TU
+      - main [ref=e71]:
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - heading "Equipment" [level=1] [ref=e76]:
+                - img [ref=e77]
+                - text: Equipment
+              - paragraph [ref=e82]: Manage equipment, assignments, and maintenance schedules
+            - button "Add Equipment" [ref=e83] [cursor=pointer]:
+              - img [ref=e84]
+              - text: Add Equipment
+          - generic [ref=e85]:
+            - generic [ref=e88]:
+              - img [ref=e90]
+              - generic [ref=e95]:
+                - paragraph [ref=e96]: Total Equipment
+                - paragraph [ref=e97]: "0"
+            - generic [ref=e100]:
+              - img [ref=e102]
+              - generic [ref=e105]:
+                - paragraph [ref=e106]: Available
+                - paragraph [ref=e107]: "0"
+            - generic [ref=e110]:
+              - img [ref=e112]
+              - generic [ref=e115]:
+                - paragraph [ref=e116]: In Use
+                - paragraph [ref=e117]: "0"
+            - generic [ref=e120]:
+              - img [ref=e122]
+              - generic [ref=e124]:
+                - paragraph [ref=e125]: Maintenance
+                - paragraph [ref=e126]: "0"
+            - generic [ref=e129]:
+              - img [ref=e131]
+              - generic [ref=e134]:
+                - paragraph [ref=e135]: Utilization
+                - paragraph [ref=e136]: 0%
+            - generic [ref=e139]:
+              - img [ref=e141]
+              - generic [ref=e143]:
+                - paragraph [ref=e144]: Due Inspection
+                - paragraph [ref=e145]: "0"
+          - generic [ref=e146]:
+            - generic [ref=e147]:
+              - generic [ref=e150]:
+                - generic [ref=e151]:
+                  - img [ref=e152]
+                  - textbox "Search equipment..." [ref=e155]
+                - combobox [ref=e156] [cursor=pointer]:
+                  - generic: All Status
+                  - img [ref=e157]
+                - combobox [ref=e159] [cursor=pointer]:
+                  - generic: All Types
+                  - img [ref=e160]
+                - button "Due for Inspection" [ref=e162] [cursor=pointer]:
+                  - img [ref=e163]
+                  - text: Due for Inspection
+              - generic [ref=e165]:
+                - generic [ref=e166]:
+                  - tab "All (0)" [selected] [ref=e167] [cursor=pointer]
+                  - tab "Available (0)" [ref=e168] [cursor=pointer]
+                  - tab "In Use (0)" [ref=e169] [cursor=pointer]
+                  - tab "Maintenance (0)" [ref=e170] [cursor=pointer]
+                - tabpanel [ref=e171]:
+                  - generic [ref=e173]:
+                    - img [ref=e174]
+                    - paragraph [ref=e179]: No equipment found
+                    - paragraph [ref=e180]: Add equipment to get started
+            - generic [ref=e181]:
+              - generic [ref=e182]:
+                - generic [ref=e183]:
+                  - generic [ref=e184]:
+                    - generic [ref=e185]:
+                      - img [ref=e186]
+                      - heading "Upcoming Maintenance" [level=3] [ref=e188]
+                    - link "View All" [ref=e189] [cursor=pointer]:
+                      - /url: /equipment/maintenance
+                      - button "View All" [ref=e190]
+                  - paragraph [ref=e191]: Scheduled maintenance and service tasks
+                - generic [ref=e193]:
+                  - img [ref=e194]
+                  - paragraph [ref=e198]: No upcoming maintenance
+                  - paragraph [ref=e199]: Schedule maintenance for your equipment
+              - generic [ref=e200]:
+                - generic [ref=e201]:
+                  - generic [ref=e202]:
+                    - img [ref=e203]
+                    - heading "Depreciation Alerts" [level=3] [ref=e205]
+                  - paragraph [ref=e206]: Equipment nearing end of useful life
+                - generic [ref=e209]:
+                  - img [ref=e210]
+                  - paragraph [ref=e213]: No depreciation alerts
+              - generic [ref=e214]:
+                - generic [ref=e216]:
+                  - img [ref=e217]
+                  - heading "Utilization Metrics" [level=3] [ref=e219]
+                - generic [ref=e221]:
+                  - generic [ref=e222]:
+                    - generic [ref=e223]: Total Hours This Month
+                    - generic [ref=e224]: 0 hrs
+                  - generic [ref=e225]:
+                    - generic [ref=e226]: Avg Hours/Equipment
+                    - generic [ref=e227]: 0 hrs
+                  - generic [ref=e228]:
+                    - generic [ref=e229]: Fleet Value
+                    - generic [ref=e230]: $0
+    - complementary [ref=e231]:
+      - generic [ref=e232]:
+        - generic [ref=e233]:
+          - img [ref=e235]
+          - heading "Action Required" [level=2] [ref=e239]
+        - button [ref=e240] [cursor=pointer]:
+          - img [ref=e241]
+      - generic [ref=e245]:
+        - img [ref=e247]
+        - heading "All caught up!" [level=3] [ref=e249]
+        - paragraph [ref=e250]: No items need your attention right now
+      - button "View All Approvals" [ref=e252] [cursor=pointer]:
+        - link "View All Approvals" [ref=e253]:
+          - /url: /approvals
+  - region "Notifications alt+T"
+  - button "Open JobSight AI Assistant" [ref=e256] [cursor=pointer]
+```

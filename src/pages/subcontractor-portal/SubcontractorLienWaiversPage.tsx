@@ -66,7 +66,7 @@ export function SubcontractorLienWaiversPage() {
 
   // Calculate counts
   const counts = useMemo(() => {
-    if (!allWaivers) {return { all: 0, pending: 0, signed: 0, approved: 0 }}
+    if (!allWaivers) { return { all: 0, pending: 0, signed: 0, approved: 0 } }
 
     return {
       all: allWaivers.length,
@@ -78,7 +78,7 @@ export function SubcontractorLienWaiversPage() {
 
   // Filter waivers based on active tab
   const filteredWaivers = useMemo(() => {
-    if (!allWaivers) {return []}
+    if (!allWaivers) { return [] }
 
     switch (activeTab) {
       case 'pending':
@@ -112,7 +112,7 @@ export function SubcontractorLienWaiversPage() {
     <div className="p-6 space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
+        <h1 className="flex items-center gap-2 heading-page">
           <FileSignature className="h-6 w-6" />
           Lien Waivers
         </h1>
@@ -139,9 +139,9 @@ export function SubcontractorLienWaiversPage() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <Clock className="h-5 w-5 text-yellow-500" />
+                <Clock className="h-5 w-5 text-warning" />
                 <div>
-                  <p className="text-2xl font-bold">{summary.awaiting_signature_count}</p>
+                  <p className="heading-section">{summary.awaiting_signature_count}</p>
                   <p className="text-sm text-muted-foreground">Awaiting Signature</p>
                 </div>
               </div>
@@ -150,9 +150,9 @@ export function SubcontractorLienWaiversPage() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <Pen className="h-5 w-5 text-blue-500" />
+                <Pen className="h-5 w-5 text-primary" />
                 <div>
-                  <p className="text-2xl font-bold">{summary.signed_count}</p>
+                  <p className="heading-section">{summary.signed_count}</p>
                   <p className="text-sm text-muted-foreground">Signed</p>
                 </div>
               </div>
@@ -161,9 +161,9 @@ export function SubcontractorLienWaiversPage() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-green-500" />
+                <CheckCircle className="h-5 w-5 text-success" />
                 <div>
-                  <p className="text-2xl font-bold">{summary.approved_count}</p>
+                  <p className="heading-section">{summary.approved_count}</p>
                   <p className="text-sm text-muted-foreground">Approved</p>
                 </div>
               </div>
@@ -172,9 +172,9 @@ export function SubcontractorLienWaiversPage() {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center gap-2">
-                <DollarSign className="h-5 w-5 text-green-500" />
+                <DollarSign className="h-5 w-5 text-success" />
                 <div>
-                  <p className="text-2xl font-bold">{formatWaiverAmount(summary.total_waived_amount)}</p>
+                  <p className="heading-section">{formatWaiverAmount(summary.total_waived_amount)}</p>
                   <p className="text-sm text-muted-foreground">Total Waived</p>
                 </div>
               </div>
@@ -224,7 +224,7 @@ export function SubcontractorLienWaiversPage() {
             <Card>
               <CardContent className="p-12 text-center">
                 <FileSignature className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No Lien Waivers</h3>
+                <h3 className="mb-2 heading-subsection">No Lien Waivers</h3>
                 <p className="text-muted-foreground">
                   {activeTab === 'all'
                     ? 'You have no lien waivers at this time.'
@@ -275,11 +275,11 @@ function WaiverCard({ waiver, onSign, onViewDocument }: WaiverCardProps) {
   const needsAction = waiverNeedsAction(waiver.status)
 
   return (
-    <Card className={isOverdue ? 'border-destructive' : needsAction ? 'border-yellow-500' : ''}>
+    <Card className={isOverdue ? 'border-destructive' : needsAction ? 'border-warning' : ''}>
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <div>
-            <CardTitle className="text-lg flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 heading-card">
               {waiver.waiver_number}
               {isOverdue && <AlertTriangle className="h-4 w-4 text-destructive" />}
             </CardTitle>

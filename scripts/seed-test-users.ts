@@ -218,17 +218,29 @@ async function createAuthUser(
   email: string,
   password: string
 ): Promise<{ id: string; isNew: boolean } | null> {
-  // Try to get user by email first using admin API
+  // First, list all users and check if this email exists
+  // Note: listUsers filter parameter doesn't work as expected, so we filter manually
   try {
-    const { data: existingUsers, error: listError } = await supabaseAdmin.auth.admin.listUsers({
-      filter: `email.eq.${email}`,
+    const { data: allUsers, error: listError } = await supabaseAdmin.auth.admin.listUsers({
+      perPage: 1000, // Get all users to search
     })
 
-    if (!listError && existingUsers?.users?.length > 0) {
-      return { id: existingUsers.users[0].id, isNew: false }
+    if (!listError && allUsers?.users) {
+      const existingUser = allUsers.users.find((u) => u.email === email)
+      if (existingUser) {
+        // User exists - update their password to ensure it matches
+        const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(
+          existingUser.id,
+          { password }
+        )
+        if (updateError) {
+          console.log(`   Warning: Could not update password for existing user: ${updateError.message}`)
+        }
+        return { id: existingUser.id, isNew: false }
+      }
     }
-  } catch {
-    // If listUsers fails, try to create and handle "already exists" error
+  } catch (err) {
+    console.log(`   Warning: Could not list users: ${err}`)
   }
 
   // Create new auth user

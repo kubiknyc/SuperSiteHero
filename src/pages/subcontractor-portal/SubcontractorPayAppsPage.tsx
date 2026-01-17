@@ -87,7 +87,7 @@ export function SubcontractorPayAppsPage() {
 
   // Get unique projects for filter
   const projects = useMemo(() => {
-    if (!applications) {return []}
+    if (!applications) { return [] }
     const uniqueProjects = new Map<string, string>()
     applications.forEach((app) => {
       if (!uniqueProjects.has(app.project_id)) {
@@ -99,7 +99,7 @@ export function SubcontractorPayAppsPage() {
 
   // Filter applications
   const filteredApplications = useMemo(() => {
-    if (!applications) {return []}
+    if (!applications) { return [] }
 
     let filtered = applications
 
@@ -126,7 +126,7 @@ export function SubcontractorPayAppsPage() {
 
   // Calculate tab counts
   const counts = useMemo(() => {
-    if (!applications) {return { all: 0, pending: 0, approved: 0, paid: 0 }}
+    if (!applications) { return { all: 0, pending: 0, approved: 0, paid: 0 } }
 
     return {
       all: applications.length,
@@ -145,7 +145,7 @@ export function SubcontractorPayAppsPage() {
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
+          <h1 className="flex items-center gap-2 heading-page">
             <Receipt className="h-6 w-6" />
             Pay Applications
           </h1>
@@ -163,7 +163,7 @@ export function SubcontractorPayAppsPage() {
               <div className="flex items-center gap-2">
                 <DollarSign className="h-5 w-5 text-muted-foreground" />
                 <div>
-                  <p className="text-2xl font-bold">{formatCurrency(summary.total_billed)}</p>
+                  <p className="heading-section">{formatCurrency(summary.total_billed)}</p>
                   <p className="text-xs text-muted-foreground">Total Billed</p>
                 </div>
               </div>
@@ -174,7 +174,7 @@ export function SubcontractorPayAppsPage() {
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-success" />
                 <div>
-                  <p className="text-2xl font-bold text-success">
+                  <p className="text-success heading-section">
                     {formatCurrency(summary.total_received)}
                   </p>
                   <p className="text-xs text-muted-foreground">Received</p>
@@ -187,7 +187,7 @@ export function SubcontractorPayAppsPage() {
               <div className="flex items-center gap-2">
                 <Clock className="h-5 w-5 text-warning" />
                 <div>
-                  <p className="text-2xl font-bold text-warning">
+                  <p className="text-warning heading-section">
                     {formatCurrency(summary.pending_approval_amount)}
                   </p>
                   <p className="text-xs text-muted-foreground">
@@ -202,7 +202,7 @@ export function SubcontractorPayAppsPage() {
               <div className="flex items-center gap-2">
                 <Banknote className="h-5 w-5 text-primary" />
                 <div>
-                  <p className="text-2xl font-bold">{formatCurrency(summary.total_retainage_held)}</p>
+                  <p className="heading-section">{formatCurrency(summary.total_retainage_held)}</p>
                   <p className="text-xs text-muted-foreground">Retainage Held</p>
                 </div>
               </div>
@@ -266,14 +266,14 @@ export function SubcontractorPayAppsPage() {
             <Card>
               <CardContent className="p-12 text-center">
                 <Receipt className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-medium mb-2 heading-subsection">
+                <h3 className="mb-2 heading-subsection">
                   {activeTab === 'all'
                     ? 'No Pay Applications'
                     : activeTab === 'pending'
-                    ? 'No Pending Applications'
-                    : activeTab === 'approved'
-                    ? 'No Approved Applications'
-                    : 'No Paid Applications'}
+                      ? 'No Pending Applications'
+                      : activeTab === 'approved'
+                        ? 'No Approved Applications'
+                        : 'No Paid Applications'}
                 </h3>
                 <p className="text-muted-foreground">
                   {activeTab === 'all'
@@ -317,7 +317,7 @@ function PayApplicationCard({ application, isExpanded, onToggle }: PayApplicatio
             <div className="flex items-start justify-between">
               <div className="space-y-1">
                 <div className="flex items-center gap-3">
-                  <CardTitle className="text-lg">
+                  <CardTitle className="heading-card">
                     Pay App #{app.application_number}
                   </CardTitle>
                   <Badge variant={getPayAppStatusVariant(app.status)}>
@@ -408,7 +408,7 @@ function PayApplicationCard({ application, isExpanded, onToggle }: PayApplicatio
                     </div>
                   )}
                   {app.paid_at && (
-                    <div className="flex items-center gap-1 text-emerald-600">
+                    <div className="flex items-center gap-1 text-success">
                       <DollarSign className="h-4 w-4" />
                       Paid: {format(new Date(app.paid_at), 'MMM d, yyyy')}
                       {app.payment_reference && (
@@ -436,7 +436,7 @@ function PayApplicationCard({ application, isExpanded, onToggle }: PayApplicatio
               <>
                 <Separator />
                 <div>
-                  <h4 className="font-medium mb-3 flex items-center gap-2">
+                  <h4 className="mb-3 flex items-center gap-2 heading-subsection">
                     <FileText className="h-4 w-4" />
                     Schedule of Values ({app.line_items.length} items)
                   </h4>

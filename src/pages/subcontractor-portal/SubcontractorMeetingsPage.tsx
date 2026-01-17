@@ -104,7 +104,7 @@ export default function SubcontractorMeetingsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="flex items-center gap-2 heading-page">
             <Users className="h-6 w-6 text-primary" />
             Meetings & Action Items
           </h1>
@@ -123,7 +123,7 @@ export default function SubcontractorMeetingsPage() {
                 <Calendar className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Total Meetings</span>
               </div>
-              <p className="text-2xl font-bold mt-1">{summary.total_meetings}</p>
+              <p className="mt-1 heading-section">{summary.total_meetings}</p>
             </CardContent>
           </Card>
           <Card>
@@ -132,7 +132,7 @@ export default function SubcontractorMeetingsPage() {
                 <CalendarClock className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Upcoming</span>
               </div>
-              <p className="text-2xl font-bold mt-1">{summary.upcoming_meetings}</p>
+              <p className="mt-1 heading-section">{summary.upcoming_meetings}</p>
             </CardContent>
           </Card>
           <Card>
@@ -141,7 +141,7 @@ export default function SubcontractorMeetingsPage() {
                 <ListTodo className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Open Items</span>
               </div>
-              <p className="text-2xl font-bold mt-1">{summary.open_action_items}</p>
+              <p className="mt-1 heading-section">{summary.open_action_items}</p>
             </CardContent>
           </Card>
           <Card className={summary.overdue_action_items > 0 ? 'border-destructive' : ''}>
@@ -157,7 +157,7 @@ export default function SubcontractorMeetingsPage() {
                 )}>Overdue</span>
               </div>
               <p className={cn(
-                'text-2xl font-bold mt-1',
+                'mt-1 heading-section',
                 summary.overdue_action_items > 0 ? 'text-destructive' : ''
               )}>{summary.overdue_action_items}</p>
             </CardContent>
@@ -212,7 +212,7 @@ export default function SubcontractorMeetingsPage() {
               <CardContent className="py-12">
                 <div className="text-center">
                   <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-medium mb-2">No Meetings Found</h3>
+                  <h3 className="mb-2 heading-subsection">No Meetings Found</h3>
                   <p className="text-muted-foreground">
                     {meetingFilter !== 'all'
                       ? 'Try changing your filter to see more meetings.'
@@ -273,7 +273,7 @@ export default function SubcontractorMeetingsPage() {
               <CardContent className="py-12">
                 <div className="text-center">
                   <CheckSquare className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-medium mb-2">No Action Items Found</h3>
+                  <h3 className="mb-2 heading-subsection">No Action Items Found</h3>
                   <p className="text-muted-foreground">
                     {actionItemFilter !== 'all'
                       ? 'Try changing your filter to see more action items.'
@@ -326,7 +326,7 @@ function MeetingCard({ meeting, isExpanded, onToggle }: MeetingCardProps) {
                   )}
                 </div>
                 <div>
-                  <CardTitle className="text-base">{meeting.title}</CardTitle>
+                  <CardTitle className="heading-card">{meeting.title}</CardTitle>
                   <CardDescription className="mt-1 flex flex-wrap gap-x-4 gap-y-1">
                     <span className="flex items-center gap-1">
                       <Building2 className="h-3 w-3" />
@@ -413,7 +413,7 @@ function MeetingCard({ meeting, isExpanded, onToggle }: MeetingCardProps) {
                   <div>
                     <h4 className="text-sm font-medium text-muted-foreground mb-2">Agenda</h4>
                     <ul className="text-sm space-y-1">
-                      {meeting.agenda.map((item, i) => (
+                      {meeting.agenda.split('\n').filter(line => line.trim().length > 0).map((item, i) => (
                         <li key={i} className="flex items-start gap-2">
                           <span className="text-muted-foreground">{i + 1}.</span>
                           <span>{item}</span>
@@ -458,20 +458,20 @@ function ActionItemCard({ item, onMarkComplete, isLoading }: ActionItemCardProps
             <div className="flex items-start gap-3">
               <div className={cn(
                 'mt-0.5 p-1.5 rounded-full',
-                item.status === 'completed' ? 'bg-green-100' :
-                isOverdue ? 'bg-red-100' : 'bg-muted'
+                item.status === 'completed' ? 'bg-success/10' :
+                  isOverdue ? 'bg-destructive/10' : 'bg-muted'
               )}>
                 {item.status === 'completed' ? (
-                  <CheckCircle2 className="h-4 w-4 text-green-600" />
+                  <CheckCircle2 className="h-4 w-4 text-success" />
                 ) : isOverdue ? (
-                  <AlertCircle className="h-4 w-4 text-red-600" />
+                  <AlertCircle className="h-4 w-4 text-destructive" />
                 ) : (
                   <ListTodo className="h-4 w-4 text-muted-foreground" />
                 )}
               </div>
               <div className="flex-1">
                 <p className={cn(
-                  'font-medium',
+                  'heading-subsection',
                   item.status === 'completed' && 'line-through text-muted-foreground'
                 )}>
                   {item.description}

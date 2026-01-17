@@ -1,0 +1,180 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img "JobSight" [ref=e9]
+          - generic:
+            - heading "JobSight" [level=1]
+            - paragraph: Field Management
+        - generic:
+          - button:
+            - img
+      - navigation [ref=e10]:
+        - generic [ref=e11]:
+          - link [ref=e13] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e14]
+          - link [ref=e20] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e21]
+        - generic [ref=e25]:
+          - link [ref=e26] [cursor=pointer]:
+            - /url: /rfis
+            - img [ref=e27]
+          - link [ref=e30] [cursor=pointer]:
+            - /url: /daily-reports
+            - img [ref=e31]
+          - link [ref=e36] [cursor=pointer]:
+            - /url: /team
+            - img [ref=e37]
+    - generic [ref=e42]:
+      - banner [ref=e43]:
+        - generic [ref=e46]:
+          - heading "Meeting" [level=1] [ref=e47]
+          - paragraph [ref=e48]: Welcome back, Test
+        - generic [ref=e49]:
+          - button "Search Ctrl+K" [ref=e51] [cursor=pointer]:
+            - img [ref=e52]
+            - generic [ref=e55]: Search
+            - generic [ref=e57]: Ctrl+K
+          - button [ref=e58] [cursor=pointer]:
+            - img [ref=e59]
+          - button [ref=e65] [cursor=pointer]:
+            - link [ref=e66]:
+              - /url: /settings
+              - img [ref=e67]
+          - link "TU" [ref=e70] [cursor=pointer]:
+            - /url: /settings/profile
+            - text: TU
+      - main [ref=e71]:
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - button "Back to Meetings" [ref=e76] [cursor=pointer]:
+                - img [ref=e77]
+                - text: Back to Meetings
+              - heading "New Meeting" [level=1] [ref=e79]
+            - button "Save Meeting" [ref=e80] [cursor=pointer]:
+              - img [ref=e81]
+              - text: Save Meeting
+          - generic [ref=e85]:
+            - generic [ref=e86]:
+              - generic [ref=e87]:
+                - heading "Meeting Details" [level=3] [ref=e89]:
+                  - img [ref=e90]
+                  - text: Meeting Details
+                - generic [ref=e92]:
+                  - generic [ref=e93]:
+                    - generic [ref=e94]:
+                      - text: Project *
+                      - combobox "Project * Project *" [ref=e95]:
+                        - option "Select project..."
+                        - option "E2E Test Project" [selected]
+                    - generic [ref=e96]:
+                      - text: Meeting Type *
+                      - combobox "Meeting Type * Meeting Type *" [ref=e97]:
+                        - option "OAC Meeting (Owner-Architect-Contractor)" [selected]
+                        - option "Progress Meeting"
+                        - option "Coordination Meeting"
+                        - option "Schedule / Look-Ahead Meeting"
+                        - option "Toolbox Talk / Safety Briefing"
+                        - option "Safety Meeting"
+                        - option "Kickoff Meeting"
+                        - option "Pre-Construction Meeting"
+                        - option "Pre-Installation Meeting"
+                        - option "Closeout Meeting"
+                        - option "Substantial Completion Walkthrough"
+                        - option "Commissioning Meeting"
+                        - option "Owner Meeting"
+                        - option "Subcontractor Meeting"
+                        - option "Design Review"
+                        - option "Submittal Review Meeting"
+                        - option "Quality Control Meeting"
+                        - option "Budget Review Meeting"
+                        - option "Other"
+                  - generic [ref=e98]:
+                    - generic [ref=e99]:
+                      - text: Meeting Name (optional)
+                      - textbox "Meeting Name (optional) Meeting Name (optional)" [ref=e100]:
+                        - /placeholder: e.g., Weekly Progress Meeting
+                    - generic [ref=e101]:
+                      - text: Meeting Number
+                      - textbox "Meeting Number Meeting Number" [ref=e102]:
+                        - /placeholder: e.g., OAC-023, TTK-045
+                  - generic [ref=e103]:
+                    - generic [ref=e104]:
+                      - text: Date *
+                      - textbox "Date * Date *" [ref=e105]: 2026-01-16
+                    - generic [ref=e106]:
+                      - text: Time
+                      - textbox "Time Time" [ref=e107]: 09:00
+                    - generic [ref=e108]:
+                      - text: Duration (min)
+                      - spinbutton "Duration (min) Duration (min)" [ref=e109]: "60"
+                    - generic [ref=e110]:
+                      - text: Status
+                      - combobox "Status Status" [ref=e111]:
+                        - option "Scheduled" [selected]
+                        - option "In Progress"
+                        - option "Completed"
+                        - option "Cancelled"
+                        - option "Postponed"
+                  - generic [ref=e112]:
+                    - text: Location
+                    - textbox "Location Location" [ref=e113]:
+                      - /placeholder: e.g., Site trailer, Conference Room A, Zoom
+              - generic [ref=e114]:
+                - heading "Agenda & Minutes" [level=3] [ref=e116]
+                - generic [ref=e117]:
+                  - generic [ref=e118]:
+                    - text: Agenda
+                    - textbox "Agenda Agenda" [ref=e119]:
+                      - /placeholder: Meeting agenda items...
+                  - generic [ref=e120]:
+                    - text: Meeting Minutes / Discussion Notes
+                    - textbox "Meeting Minutes / Discussion Notes Meeting Minutes / Discussion Notes" [ref=e121]:
+                      - /placeholder: Record meeting discussions and notes...
+                  - generic [ref=e122]:
+                    - text: Key Decisions
+                    - textbox "Key Decisions Key Decisions" [ref=e123]:
+                      - /placeholder: Document key decisions made...
+              - generic [ref=e124]:
+                - generic [ref=e125]:
+                  - heading "Action Items" [level=3] [ref=e126]:
+                    - img [ref=e127]
+                    - text: Action Items
+                  - paragraph [ref=e130]: Track follow-up tasks from this meeting
+                - button "Add Action Item" [ref=e132] [cursor=pointer]:
+                  - img [ref=e133]
+                  - text: Add Action Item
+            - generic [ref=e135]:
+              - generic [ref=e136]:
+                - heading "Attendees" [level=3] [ref=e137]:
+                  - img [ref=e138]
+                  - text: Attendees
+                - paragraph [ref=e143]: 0 attendees
+              - button "Add Attendee" [ref=e145] [cursor=pointer]:
+                - img [ref=e146]
+                - text: Add Attendee
+    - complementary [ref=e147]:
+      - generic [ref=e148]:
+        - generic [ref=e149]:
+          - img [ref=e151]
+          - heading "Action Required" [level=2] [ref=e155]
+        - button [ref=e156] [cursor=pointer]:
+          - img [ref=e157]
+      - generic [ref=e161]:
+        - generic [ref=e162]:
+          - img [ref=e163]
+          - img [ref=e165]
+        - paragraph [ref=e167]: Loading items...
+      - button "View All Approvals" [ref=e169] [cursor=pointer]:
+        - link "View All Approvals" [ref=e170]:
+          - /url: /approvals
+  - region "Notifications alt+T"
+  - button "Open JobSight AI Assistant" [ref=e173] [cursor=pointer]
+```

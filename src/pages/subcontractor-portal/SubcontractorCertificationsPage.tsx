@@ -136,7 +136,7 @@ export default function SubcontractorCertificationsPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="flex items-center gap-2 heading-page">
             <Award className="h-6 w-6 text-primary" />
             Certifications
           </h1>
@@ -155,34 +155,34 @@ export default function SubcontractorCertificationsPage() {
                 <Award className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Total</span>
               </div>
-              <p className="text-2xl font-bold mt-1">{summary.total_certifications}</p>
+              <p className="mt-1 heading-section">{summary.total_certifications}</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-4">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <CheckCircle2 className="h-4 w-4 text-success" />
                 <span className="text-sm text-muted-foreground">Valid</span>
               </div>
-              <p className="text-2xl font-bold mt-1 text-green-600">{summary.valid_count}</p>
+              <p className="mt-1 text-success heading-section">{summary.valid_count}</p>
             </CardContent>
           </Card>
-          <Card className={summary.expiring_soon_count > 0 ? 'border-yellow-500' : ''}>
+          <Card className={cn(summary.expiring_soon_count > 0 && 'border-warning/50 bg-warning/5')}>
             <CardContent className="pt-4">
               <div className="flex items-center gap-2">
                 <Clock className={cn(
                   'h-4 w-4',
-                  summary.expiring_soon_count > 0 ? 'text-yellow-600' : 'text-muted-foreground'
+                  summary.expiring_soon_count > 0 ? 'text-warning' : 'text-muted-foreground'
                 )} />
                 <span className="text-sm text-muted-foreground">Expiring Soon</span>
               </div>
               <p className={cn(
-                'text-2xl font-bold mt-1',
-                summary.expiring_soon_count > 0 && 'text-yellow-600'
+                'mt-1 heading-section',
+                summary.expiring_soon_count > 0 && 'text-warning'
               )}>{summary.expiring_soon_count}</p>
             </CardContent>
           </Card>
-          <Card className={summary.expired_count > 0 ? 'border-destructive' : ''}>
+          <Card className={cn(summary.expired_count > 0 && 'border-destructive/50 bg-destructive/5')}>
             <CardContent className="pt-4">
               <div className="flex items-center gap-2">
                 <XCircle className={cn(
@@ -192,7 +192,7 @@ export default function SubcontractorCertificationsPage() {
                 <span className="text-sm text-muted-foreground">Expired</span>
               </div>
               <p className={cn(
-                'text-2xl font-bold mt-1',
+                'mt-1 heading-section',
                 summary.expired_count > 0 && 'text-destructive'
               )}>{summary.expired_count}</p>
             </CardContent>
@@ -302,7 +302,7 @@ export default function SubcontractorCertificationsPage() {
           <CardContent className="py-12">
             <div className="text-center">
               <Award className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-medium mb-2">No Certifications Found</h3>
+              <h3 className="mb-2 heading-subsection">No Certifications Found</h3>
               <p className="text-muted-foreground">
                 {statusFilter !== 'all' || typeFilter !== 'all'
                   ? 'Try adjusting your filters to see more certifications.'
@@ -327,7 +327,7 @@ export default function SubcontractorCertificationsPage() {
         <div className="space-y-6">
           {Object.entries(certsByType).map(([type, certs]) => (
             <div key={type}>
-              <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+              <h3 className="mb-3 flex items-center gap-2 heading-subsection">
                 {getCertificationIcon(type as CertificationType)}
                 {getCertificationTypeLabel(type as CertificationType)}
                 <Badge variant="secondary">{certs.length}</Badge>
@@ -348,7 +348,7 @@ export default function SubcontractorCertificationsPage() {
           {Object.entries(certsByHolder).map(([holder, certs]) => (
             <Card key={holder}>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+                <CardTitle className="flex items-center gap-2 heading-card">
                   <User className="h-5 w-5 text-muted-foreground" />
                   {holder}
                 </CardTitle>
@@ -383,22 +383,22 @@ function CertificationCard({ certification: cert, compact = false }: Certificati
 
   return (
     <Card className={cn(
-      cert.status === 'expired' && 'border-destructive',
-      cert.status === 'expiring_soon' && 'border-yellow-500'
+      cert.status === 'expired' && 'border-destructive/50 bg-destructive/5',
+      cert.status === 'expiring_soon' && 'border-warning/50 bg-warning/5'
     )}>
       <CardContent className={cn('pt-4', compact && 'p-3')}>
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className={cn(
               'p-2 rounded-lg',
-              cert.status === 'valid' ? 'bg-green-100' :
-              cert.status === 'expiring_soon' ? 'bg-yellow-100' :
-              cert.status === 'expired' ? 'bg-red-100' : 'bg-muted'
+              cert.status === 'valid' ? 'bg-success/10' :
+                cert.status === 'expiring_soon' ? 'bg-warning/10' :
+                  cert.status === 'expired' ? 'bg-destructive/10' : 'bg-muted'
             )}>
               {getCertificationIcon(cert.certification_type)}
             </div>
             <div>
-              <h4 className={cn('font-medium', compact && 'text-sm')}>
+              <h4 className={cn('heading-subsection', compact && 'text-sm')}>
                 {cert.certification_name}
               </h4>
               <div className={cn(
@@ -433,7 +433,7 @@ function CertificationCard({ certification: cert, compact = false }: Certificati
                 <p className={cn(
                   'flex items-center gap-1',
                   cert.status === 'expired' && 'text-destructive',
-                  cert.status === 'expiring_soon' && 'text-yellow-600'
+                  cert.status === 'expiring_soon' && 'text-warning'
                 )}>
                   <Calendar className="h-3 w-3" />
                   {expirationText}
@@ -462,7 +462,7 @@ function CertificationCard({ certification: cert, compact = false }: Certificati
         </div>
         {!compact && cert.verified_at && cert.verified_by_name && (
           <div className="mt-3 pt-3 border-t text-xs text-muted-foreground flex items-center gap-1">
-            <CheckCircle2 className="h-3 w-3 text-green-600" />
+            <CheckCircle2 className="h-3 w-3 text-success" />
             Verified by {cert.verified_by_name} on {formatCertificationDate(cert.verified_at)}
           </div>
         )}

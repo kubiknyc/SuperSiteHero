@@ -129,14 +129,14 @@ export function LoginPageV2() {
       await Promise.race([signIn(email, password), timeoutPromise])
 
       // Only update state if still mounted
-      if (!mountedRef.current) {return}
+      if (!mountedRef.current) { return }
 
       rateLimit.reset()
       success('Welcome back', 'You have been signed in successfully.')
       navigate('/')
     } catch (err) {
       // Only update state if still mounted
-      if (!mountedRef.current) {return}
+      if (!mountedRef.current) { return }
 
       const state = rateLimit.recordAttempt()
       if (state.isLocked) {
@@ -224,10 +224,10 @@ export function LoginPageV2() {
         </div>
 
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-transparent to-blue-950/50" />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-transparent to-primary-950/50" />
 
         {/* Animated glow orbs */}
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse" />
         <div className="absolute bottom-1/4 right-0 w-80 h-80 bg-indigo-600/15 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
 
         {/* Content */}
@@ -249,7 +249,7 @@ export function LoginPageV2() {
             <h1 className="text-4xl xl:text-5xl font-bold text-white leading-tight mb-6">
               Build Smarter.
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-info-400">
                 Manage Better.
               </span>
             </h1>
@@ -273,7 +273,7 @@ export function LoginPageV2() {
                 )}
                 style={{ transitionDelay: `${300 + index * 100}ms` }}
               >
-                <stat.icon className="w-5 h-5 text-blue-400 mb-3 transition-transform group-hover:scale-110" />
+                <stat.icon className="w-5 h-5 text-primary-400 mb-3 transition-transform group-hover:scale-110" />
                 <div className="text-2xl font-bold text-white mb-1 font-mono tracking-tight">
                   {stat.value}
                 </div>
@@ -286,7 +286,7 @@ export function LoginPageV2() {
 
           {/* Blueprint corner accent */}
           <div className="absolute bottom-0 right-0 w-64 h-64 opacity-10">
-            <svg viewBox="0 0 100 100" className="w-full h-full text-blue-400">
+            <svg viewBox="0 0 100 100" className="w-full h-full text-primary-400">
               <defs>
                 <pattern id="corner-grid" width="10" height="10" patternUnits="userSpaceOnUse">
                   <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" strokeWidth="0.5" />
@@ -397,7 +397,7 @@ export function LoginPageV2() {
                 className={cn(
                   "h-12 px-4 text-base",
                   "bg-white/[0.03] border-white/10 text-white placeholder:text-slate-600",
-                  "focus:bg-white/[0.05] focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20",
+                  "focus:bg-white/[0.05] focus:border-primary-500/50 focus:ring-2 focus:ring-primary-500/20",
                   "transition-all duration-200"
                 )}
               />
@@ -414,7 +414,7 @@ export function LoginPageV2() {
                 </Label>
                 <Link
                   to="/forgot-password"
-                  className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+                  className="text-sm text-primary-400 hover:text-primary-300 transition-colors"
                 >
                   Forgot password?
                 </Link>
@@ -433,7 +433,7 @@ export function LoginPageV2() {
                   className={cn(
                     "h-12 px-4 pr-12 text-base",
                     "bg-white/[0.03] border-white/10 text-white placeholder:text-slate-600",
-                    "focus:bg-white/[0.05] focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20",
+                    "focus:bg-white/[0.05] focus:border-primary-500/50 focus:ring-2 focus:ring-primary-500/20",
                     "transition-all duration-200"
                   )}
                 />
@@ -467,10 +467,10 @@ export function LoginPageV2() {
               disabled={isDisabled}
               className={cn(
                 "w-full h-12 text-base font-semibold",
-                "bg-gradient-to-r from-blue-600 to-blue-700",
-                "hover:from-blue-500 hover:to-blue-600",
-                "shadow-lg shadow-blue-600/25 hover:shadow-blue-500/30",
-                "border border-blue-500/20",
+                "bg-gradient-to-r from-primary to-primary-700",
+                "hover:from-primary-500 hover:to-primary-600",
+                "shadow-lg shadow-primary/25 hover:shadow-primary/30",
+                "border border-primary/20",
                 "transition-all duration-200",
                 "group"
               )}
@@ -494,7 +494,7 @@ export function LoginPageV2() {
             Don't have an account?{' '}
             <Link
               to="/signup"
-              className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+              className="text-primary-400 hover:text-primary-300 font-medium transition-colors"
             >
               Create account
             </Link>

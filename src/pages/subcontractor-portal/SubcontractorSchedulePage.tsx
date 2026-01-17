@@ -63,7 +63,7 @@ function ScheduleSummaryCards() {
           <Calendar className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{summary?.total_activities || 0}</div>
+          <div className="heading-section">{summary?.total_activities || 0}</div>
           <p className="text-xs text-muted-foreground">
             {summary?.in_progress_count || 0} in progress
           </p>
@@ -73,10 +73,10 @@ function ScheduleSummaryCards() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Upcoming</CardTitle>
-          <Clock className="h-4 w-4 text-blue-600" />
+          <Clock className="h-4 w-4 text-primary" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-blue-600">{summary?.upcoming_count || 0}</div>
+          <div className="heading-section text-primary">{summary?.upcoming_count || 0}</div>
           <p className="text-xs text-muted-foreground">
             Starting within 7 days
           </p>
@@ -86,10 +86,10 @@ function ScheduleSummaryCards() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Overdue</CardTitle>
-          <AlertTriangle className="h-4 w-4 text-red-600" />
+          <AlertTriangle className="h-4 w-4 text-destructive" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-red-600">{summary?.overdue_count || 0}</div>
+          <div className="heading-section text-destructive">{summary?.overdue_count || 0}</div>
           <p className="text-xs text-muted-foreground">
             Need attention
           </p>
@@ -99,10 +99,10 @@ function ScheduleSummaryCards() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Completed</CardTitle>
-          <CheckCircle2 className="h-4 w-4 text-green-600" />
+          <CheckCircle2 className="h-4 w-4 text-success" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-green-600">{summary?.completed_count || 0}</div>
+          <div className="heading-section text-success">{summary?.completed_count || 0}</div>
           <p className="text-xs text-muted-foreground">
             On time: {summary?.on_time_percent || 0}%
           </p>
@@ -121,8 +121,8 @@ function NotificationItem({
 }) {
   return (
     <div className={cn(
-      "p-3 rounded-lg border",
-      notification.is_read ? "bg-background" : "bg-blue-50 border-blue-200"
+      "p-3 rounded-lg border transition-colors",
+      notification.is_read ? "bg-background border-border" : "bg-primary/10 border-primary/20"
     )}>
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
@@ -131,7 +131,7 @@ function NotificationItem({
               {getChangeTypeLabel(notification.change_type)}
             </span>
             {!notification.is_read && (
-              <span className="h-2 w-2 rounded-full bg-blue-600" />
+              <span className="h-2 w-2 rounded-full bg-primary" />
             )}
           </div>
           <p className="text-sm text-muted-foreground line-clamp-2">
@@ -173,7 +173,7 @@ function NotificationsPanel() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="heading-card flex items-center gap-2">
             <Bell className="h-5 w-5" />
             Notifications
           </CardTitle>
@@ -196,7 +196,7 @@ function NotificationsPanel() {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="heading-card flex items-center gap-2">
             <Bell className="h-5 w-5" />
             Notifications
             {unreadCount > 0 && (
@@ -239,15 +239,16 @@ function ActivityCard({ activity }: { activity: SubcontractorScheduleActivity })
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <Card className={cn(
-        activity.is_on_critical_path && "border-red-300 bg-red-50/50",
-        activity.is_overdue && "border-orange-300 bg-orange-50/50"
+        "transition-colors",
+        activity.is_on_critical_path && "border-destructive/30 bg-destructive/5",
+        activity.is_overdue && "border-warning/30 bg-warning/5"
       )}>
         <CollapsibleTrigger asChild>
           <CardHeader className="cursor-pointer hover:bg-muted/50 transition-colors">
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <CardTitle className="text-base">{activity.activity_name}</CardTitle>
+                  <CardTitle className="heading-card">{activity.activity_name}</CardTitle>
                   {activity.is_on_critical_path && (
                     <Badge variant="destructive" className="text-xs">Critical Path</Badge>
                   )}
@@ -284,7 +285,7 @@ function ActivityCard({ activity }: { activity: SubcontractorScheduleActivity })
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-4">
               {/* Schedule Dates */}
               <div className="space-y-3">
-                <h4 className="text-sm font-medium flex items-center gap-2">
+                <h4 className="flex items-center gap-2 heading-subsection">
                   <Calendar className="h-4 w-4" />
                   Schedule Dates
                 </h4>
@@ -314,7 +315,7 @@ function ActivityCard({ activity }: { activity: SubcontractorScheduleActivity })
 
               {/* Duration & Progress */}
               <div className="space-y-3">
-                <h4 className="text-sm font-medium flex items-center gap-2">
+                <h4 className="flex items-center gap-2 heading-subsection">
                   <Activity className="h-4 w-4" />
                   Progress
                 </h4>
@@ -345,7 +346,7 @@ function ActivityCard({ activity }: { activity: SubcontractorScheduleActivity })
 
               {/* Status Info */}
               <div className="space-y-3">
-                <h4 className="text-sm font-medium flex items-center gap-2">
+                <h4 className="flex items-center gap-2 heading-subsection">
                   <Clock className="h-4 w-4" />
                   Status
                 </h4>
@@ -353,24 +354,24 @@ function ActivityCard({ activity }: { activity: SubcontractorScheduleActivity })
                   {daysUntilStart !== null && daysUntilStart > 0 && activity.status === 'not_started' && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Starts in:</span>
-                      <span className="text-blue-600">{daysUntilStart} days</span>
+                      <span className="text-primary">{daysUntilStart} days</span>
                     </div>
                   )}
                   {daysUntilEnd !== null && activity.status === 'in_progress' && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Due in:</span>
-                      <span className={daysUntilEnd < 0 ? 'text-red-600' : daysUntilEnd <= 3 ? 'text-yellow-600' : ''}>
+                      <span className={daysUntilEnd < 0 ? 'text-destructive' : daysUntilEnd <= 3 ? 'text-warning' : ''}>
                         {daysUntilEnd < 0 ? `${Math.abs(daysUntilEnd)} days overdue` : `${daysUntilEnd} days`}
                       </span>
                     </div>
                   )}
                   {activity.is_upcoming && (
-                    <Badge variant="outline" className="text-blue-600 border-blue-300">
+                    <Badge variant="outline" className="text-primary border-primary">
                       Upcoming
                     </Badge>
                   )}
                   {activity.is_overdue && (
-                    <Badge variant="outline" className="text-red-600 border-red-300">
+                    <Badge variant="outline" className="text-destructive border-destructive">
                       Overdue
                     </Badge>
                   )}
@@ -411,8 +412,8 @@ function ActivitiesList({ filter }: { filter: 'all' | 'upcoming' | 'overdue' | '
 
   // Sort by planned start date
   const sortedActivities = [...filteredActivities].sort((a, b) => {
-    if (!a.planned_start) {return 1}
-    if (!b.planned_start) {return -1}
+    if (!a.planned_start) { return 1 }
+    if (!b.planned_start) { return -1 }
     return new Date(a.planned_start).getTime() - new Date(b.planned_start).getTime()
   })
 
@@ -464,7 +465,7 @@ export default function SubcontractorSchedulePage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Schedule</h1>
+        <h1 className="heading-page">Schedule</h1>
         <p className="text-muted-foreground">
           View your assigned schedule activities and notifications
         </p>

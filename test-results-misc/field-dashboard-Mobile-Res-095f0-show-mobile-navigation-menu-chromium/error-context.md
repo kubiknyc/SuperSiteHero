@@ -1,0 +1,47 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e5]:
+    - img "JobSight" [ref=e7]
+    - generic [ref=e8]:
+      - heading "Welcome back" [level=2] [ref=e9]
+      - paragraph [ref=e10]: Sign in to continue to your dashboard
+    - generic [ref=e11]:
+      - button "Sign in with Biometrics" [ref=e12] [cursor=pointer]:
+        - img [ref=e13]
+        - text: Sign in with Biometrics
+      - generic [ref=e26]: or continue with email
+    - generic [ref=e27]:
+      - generic [ref=e28]:
+        - text: Email address
+        - textbox "Email address" [ref=e29]:
+          - /placeholder: you@company.com
+          - text: test@supersitehero.local
+      - generic [ref=e30]:
+        - generic [ref=e31]:
+          - generic [ref=e32]: Password
+          - link "Forgot password?" [ref=e33] [cursor=pointer]:
+            - /url: /forgot-password
+        - generic [ref=e34]:
+          - textbox "Password" [ref=e35]:
+            - /placeholder: Enter your password
+            - text: TestPassword123!
+          - button [ref=e36] [cursor=pointer]:
+            - img [ref=e37]
+      - button "Sign in" [ref=e40] [cursor=pointer]:
+        - text: Sign in
+        - img [ref=e41]
+    - paragraph [ref=e43]:
+      - text: Don't have an account?
+      - link "Create account" [ref=e44] [cursor=pointer]:
+        - /url: /signup
+    - generic [ref=e46]:
+      - link "Privacy Policy" [ref=e47] [cursor=pointer]:
+        - /url: /privacy
+      - generic [ref=e48]: •
+      - link "Terms of Service" [ref=e49] [cursor=pointer]:
+        - /url: /terms
+  - region "Notifications alt+T"
+  - button "Open JobSight AI Assistant" [ref=e52] [cursor=pointer]
+```

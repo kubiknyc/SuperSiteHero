@@ -119,17 +119,17 @@ export function getPayAppStatusColor(status: PayApplicationStatus): string {
     case 'draft':
       return 'text-muted-foreground'
     case 'submitted':
-      return 'text-blue-600'
+      return 'text-primary'
     case 'under_review':
-      return 'text-yellow-600'
+      return 'text-warning'
     case 'approved':
-      return 'text-green-600'
+      return 'text-success'
     case 'paid':
-      return 'text-emerald-600'
+      return 'text-success'
     case 'rejected':
-      return 'text-red-600'
+      return 'text-destructive'
     case 'void':
-      return 'text-gray-500'
+      return 'text-muted-foreground'
     default:
       return 'text-muted-foreground'
   }
@@ -139,7 +139,7 @@ export function getPayAppStatusColor(status: PayApplicationStatus): string {
  * Format currency amount
  */
 export function formatCurrency(amount: number | null | undefined): string {
-  if (amount == null) {return '$0.00'}
+  if (amount == null) { return '$0.00' }
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -152,7 +152,7 @@ export function formatCurrency(amount: number | null | undefined): string {
  * Format percentage
  */
 export function formatPercent(value: number | null | undefined): string {
-  if (value == null) {return '0%'}
+  if (value == null) { return '0%' }
   return `${value.toFixed(1)}%`
 }
 

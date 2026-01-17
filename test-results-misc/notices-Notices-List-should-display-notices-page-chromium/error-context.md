@@ -1,0 +1,138 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img "JobSight" [ref=e9]
+          - generic:
+            - heading "JobSight" [level=1]
+            - paragraph: Field Management
+        - generic:
+          - button:
+            - img
+      - navigation [ref=e10]:
+        - generic [ref=e11]:
+          - link [ref=e13] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e14]
+          - link [ref=e20] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e21]
+        - generic [ref=e25]:
+          - link [ref=e26] [cursor=pointer]:
+            - /url: /rfis
+            - img [ref=e27]
+          - link [ref=e30] [cursor=pointer]:
+            - /url: /daily-reports
+            - img [ref=e31]
+          - link [ref=e36] [cursor=pointer]:
+            - /url: /team
+            - img [ref=e37]
+    - generic [ref=e42]:
+      - banner [ref=e43]:
+        - generic [ref=e46]:
+          - heading "Notices" [level=1] [ref=e47]
+          - paragraph [ref=e48]: Project notices
+        - generic [ref=e49]:
+          - button "Search Ctrl+K" [ref=e51] [cursor=pointer]:
+            - img [ref=e52]
+            - generic [ref=e55]: Search
+            - generic [ref=e57]: Ctrl+K
+          - button [ref=e58] [cursor=pointer]:
+            - img [ref=e59]
+          - button [ref=e65] [cursor=pointer]:
+            - link [ref=e66]:
+              - /url: /settings
+              - img [ref=e67]
+          - link "TU" [ref=e70] [cursor=pointer]:
+            - /url: /settings/profile
+            - text: TU
+      - main [ref=e71]:
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - heading "Notices" [level=1] [ref=e76]
+              - paragraph [ref=e77]: Track formal notices, correspondence, and response deadlines
+            - button "New Notice" [ref=e78] [cursor=pointer]:
+              - img [ref=e79]
+              - text: New Notice
+          - generic [ref=e80]:
+            - generic [ref=e83] [cursor=pointer]:
+              - generic [ref=e84]:
+                - paragraph [ref=e85]: Total Active
+                - paragraph [ref=e86]: "0"
+              - img [ref=e88]
+            - generic [ref=e93] [cursor=pointer]:
+              - generic [ref=e94]:
+                - paragraph [ref=e95]: Awaiting Response
+                - paragraph [ref=e96]: "0"
+              - img [ref=e98]
+            - generic [ref=e103] [cursor=pointer]:
+              - generic [ref=e104]:
+                - paragraph [ref=e105]: Critical
+                - paragraph [ref=e106]: "0"
+              - img [ref=e108]
+            - generic [ref=e112] [cursor=pointer]:
+              - generic [ref=e113]:
+                - paragraph [ref=e114]: Sent This Month
+                - paragraph [ref=e115]: "0"
+              - img [ref=e117]
+          - generic [ref=e122]:
+            - generic [ref=e123]:
+              - img [ref=e124]
+              - textbox "Search by reference, subject, or party..." [ref=e127]
+            - generic [ref=e128]:
+              - button "All" [ref=e129] [cursor=pointer]
+              - button "Critical" [ref=e130] [cursor=pointer]
+              - button "Overdue" [ref=e131] [cursor=pointer]
+              - button "Awaiting Response" [ref=e132] [cursor=pointer]
+              - button "Sent" [ref=e133] [cursor=pointer]
+              - button "Received" [ref=e134] [cursor=pointer]
+            - generic [ref=e135]:
+              - combobox [ref=e136]:
+                - option "All Types" [selected]
+                - option "Claim Notice"
+                - option "Delay Notice"
+                - option "Change Directive"
+                - option "Notice to Cure"
+                - option "Notice of Completion"
+                - option "Termination Notice"
+                - option "Insurance Notice"
+                - option "Payment Notice"
+                - option "Deficiency Notice"
+                - option "Stop Work Notice"
+                - option "General Correspondence"
+              - combobox [ref=e137]:
+                - option "All Statuses" [selected]
+                - option "Draft"
+                - option "Sent"
+                - option "Received"
+                - option "Acknowledged"
+                - option "Pending Response"
+                - option "Responded"
+                - option "Closed"
+          - generic [ref=e138]:
+            - heading "0 Notices" [level=2] [ref=e140]
+            - generic [ref=e141]:
+              - img [ref=e142]
+              - paragraph [ref=e145]: No notices yet. Create your first notice to get started.
+    - complementary [ref=e146]:
+      - generic [ref=e147]:
+        - generic [ref=e148]:
+          - img [ref=e150]
+          - heading "Action Required" [level=2] [ref=e154]
+        - button [ref=e155] [cursor=pointer]:
+          - img [ref=e156]
+      - generic [ref=e160]:
+        - img [ref=e162]
+        - heading "All caught up!" [level=3] [ref=e164]
+        - paragraph [ref=e165]: No items need your attention right now
+      - button "View All Approvals" [ref=e167] [cursor=pointer]:
+        - link "View All Approvals" [ref=e168]:
+          - /url: /approvals
+  - region "Notifications alt+T"
+  - button "Open JobSight AI Assistant" [ref=e171] [cursor=pointer]
+```

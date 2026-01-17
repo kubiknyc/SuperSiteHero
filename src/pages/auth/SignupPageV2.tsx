@@ -134,7 +134,7 @@ export function SignupPageV2() {
         },
       })
 
-      if (authError) {throw authError}
+      if (authError) { throw authError }
 
       rateLimit.reset()
       success('Account Created', 'Please check your email to verify your account.')
@@ -182,10 +182,10 @@ export function SignupPageV2() {
         </div>
 
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-transparent to-blue-950/50" />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-transparent to-primary-950/50" />
 
         {/* Animated glow orbs */}
-        <div className="absolute top-1/3 -right-20 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute top-1/3 -right-20 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse" />
         <div className="absolute bottom-1/3 -left-20 w-80 h-80 bg-indigo-600/15 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1.5s' }} />
 
         {/* Content */}
@@ -197,18 +197,18 @@ export function SignupPageV2() {
           {/* Logo & Tagline */}
           <div>
             <div className="flex items-center gap-3 mb-8">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-500/25">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg shadow-primary/25">
                 <HardHat className="w-7 h-7 text-white" />
               </div>
               <span className="text-2xl font-bold text-white tracking-tight">
-                Job<span className="text-blue-400">Sight</span>
+                Job<span className="text-primary-400">Sight</span>
               </span>
             </div>
 
             <h1 className="text-4xl xl:text-5xl font-bold text-white leading-tight mb-6">
               Start Building
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-info-400">
                 Your Success.
               </span>
             </h1>
@@ -232,7 +232,7 @@ export function SignupPageV2() {
                 )}
                 style={{ transitionDelay: `${300 + index * 100}ms` }}
               >
-                <feature.icon className="w-6 h-6 text-blue-400 mb-3 transition-transform group-hover:scale-110" />
+                <feature.icon className="w-6 h-6 text-primary-400 mb-3 transition-transform group-hover:scale-110" />
                 <div className="text-sm font-semibold text-white mb-1">
                   {feature.title}
                 </div>
@@ -272,11 +272,11 @@ export function SignupPageV2() {
         )}>
           {/* Mobile Logo */}
           <div className="flex items-center gap-3 mb-8 lg:hidden">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center">
               <HardHat className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold text-white tracking-tight">
-              Job<span className="text-blue-400">Sight</span>
+              Job<span className="text-primary-400">Sight</span>
             </span>
           </div>
 
@@ -317,7 +317,7 @@ export function SignupPageV2() {
                   className={cn(
                     "h-11 px-4",
                     "bg-white/[0.03] border-white/10 text-white placeholder:text-slate-600",
-                    "focus:bg-white/[0.05] focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20",
+                    "focus:bg-white/[0.05] focus:border-primary-500/50 focus:ring-2 focus:ring-primary-500/20",
                     "transition-all duration-200"
                   )}
                 />
@@ -338,7 +338,7 @@ export function SignupPageV2() {
                   className={cn(
                     "h-11 px-4",
                     "bg-white/[0.03] border-white/10 text-white placeholder:text-slate-600",
-                    "focus:bg-white/[0.05] focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20",
+                    "focus:bg-white/[0.05] focus:border-primary-500/50 focus:ring-2 focus:ring-primary-500/20",
                     "transition-all duration-200"
                   )}
                 />
@@ -362,7 +362,7 @@ export function SignupPageV2() {
                 className={cn(
                   "h-11 px-4",
                   "bg-white/[0.03] border-white/10 text-white placeholder:text-slate-600",
-                  "focus:bg-white/[0.05] focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20",
+                  "focus:bg-white/[0.05] focus:border-primary-500/50 focus:ring-2 focus:ring-primary-500/20",
                   "transition-all duration-200"
                 )}
               />
@@ -385,7 +385,7 @@ export function SignupPageV2() {
                 className={cn(
                   "h-11 px-4",
                   "bg-white/[0.03] border-white/10 text-white placeholder:text-slate-600",
-                  "focus:bg-white/[0.05] focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20",
+                  "focus:bg-white/[0.05] focus:border-primary-500/50 focus:ring-2 focus:ring-primary-500/20",
                   "transition-all duration-200"
                 )}
               />
@@ -409,7 +409,7 @@ export function SignupPageV2() {
                   className={cn(
                     "h-11 px-4 pr-12",
                     "bg-white/[0.03] border-white/10 text-white placeholder:text-slate-600",
-                    "focus:bg-white/[0.05] focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20",
+                    "focus:bg-white/[0.05] focus:border-primary-500/50 focus:ring-2 focus:ring-primary-500/20",
                     "transition-all duration-200"
                   )}
                 />
@@ -479,7 +479,7 @@ export function SignupPageV2() {
                   className={cn(
                     "h-11 px-4 pr-12",
                     "bg-white/[0.03] border-white/10 text-white placeholder:text-slate-600",
-                    "focus:bg-white/[0.05] focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/20",
+                    "focus:bg-white/[0.05] focus:border-primary-500/50 focus:ring-2 focus:ring-primary-500/20",
                     "transition-all duration-200",
                     formData.confirmPassword && (
                       passwordsMatch
@@ -508,10 +508,10 @@ export function SignupPageV2() {
               disabled={isDisabled}
               className={cn(
                 "w-full h-12 text-base font-semibold mt-6",
-                "bg-gradient-to-r from-blue-600 to-blue-700",
-                "hover:from-blue-500 hover:to-blue-600",
-                "shadow-lg shadow-blue-600/25 hover:shadow-blue-500/30",
-                "border border-blue-500/20",
+                "bg-gradient-to-r from-primary to-primary-700",
+                "hover:from-primary-500 hover:to-primary-600",
+                "shadow-lg shadow-primary/25 hover:shadow-primary/30",
+                "border border-primary/20",
                 "transition-all duration-200",
                 "group"
               )}
@@ -532,11 +532,11 @@ export function SignupPageV2() {
             {/* Terms */}
             <p className="text-xs text-slate-500 text-center">
               By creating an account, you agree to our{' '}
-              <Link to="/terms" className="text-blue-400 hover:text-blue-300">
+              <Link to="/terms" className="text-primary-400 hover:text-primary-300">
                 Terms of Service
               </Link>{' '}
               and{' '}
-              <Link to="/privacy" className="text-blue-400 hover:text-blue-300">
+              <Link to="/privacy" className="text-primary-400 hover:text-primary-300">
                 Privacy Policy
               </Link>
             </p>
@@ -547,7 +547,7 @@ export function SignupPageV2() {
             Already have an account?{' '}
             <Link
               to="/login"
-              className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+              className="text-primary-400 hover:text-primary-300 font-medium transition-colors"
             >
               Sign in
             </Link>

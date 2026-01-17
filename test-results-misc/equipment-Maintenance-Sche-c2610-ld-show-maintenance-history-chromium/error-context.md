@@ -1,0 +1,68 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - img "JobSight" [ref=e15]
+        - heading "Build Smarter. Manage Better." [level=1] [ref=e16]:
+          - text: Build Smarter.
+          - text: Manage Better.
+        - paragraph [ref=e17]: The field management platform trusted by construction professionals to streamline daily reports, RFIs, and project workflows.
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - img [ref=e20]
+          - generic [ref=e24]: 2,400+
+          - generic [ref=e25]: Projects Managed
+        - generic [ref=e26]:
+          - img [ref=e27]
+          - generic [ref=e32]: 50K+
+          - generic [ref=e33]: Daily Reports
+        - generic [ref=e34]:
+          - img [ref=e35]
+          - generic [ref=e37]: 99.9%
+          - generic [ref=e38]: Enterprise Ready
+      - img [ref=e40]
+    - generic [ref=e46]:
+      - generic [ref=e47]:
+        - heading "Welcome back" [level=2] [ref=e48]
+        - paragraph [ref=e49]: Sign in to continue to your dashboard
+      - generic [ref=e50]:
+        - button "Sign in with Biometrics" [disabled]:
+          - img
+          - text: Sign in with Biometrics
+        - generic [ref=e55]: or continue with email
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - text: Email address
+          - textbox "Email address" [disabled] [ref=e58]:
+            - /placeholder: you@company.com
+            - text: test@supersitehero.local
+        - generic [ref=e59]:
+          - generic [ref=e60]:
+            - generic [ref=e61]: Password
+            - link "Forgot password?" [ref=e62] [cursor=pointer]:
+              - /url: /forgot-password
+          - generic [ref=e63]:
+            - textbox "Password" [disabled] [ref=e64]:
+              - /placeholder: Enter your password
+              - text: TestPassword123!
+            - button [ref=e65] [cursor=pointer]:
+              - img [ref=e66]
+        - button "Signing in..." [disabled]:
+          - img
+          - text: Signing in...
+      - paragraph [ref=e69]:
+        - text: Don't have an account?
+        - link "Create account" [ref=e70] [cursor=pointer]:
+          - /url: /signup
+      - generic [ref=e72]:
+        - link "Privacy Policy" [ref=e73] [cursor=pointer]:
+          - /url: /privacy
+        - generic [ref=e74]: •
+        - link "Terms of Service" [ref=e75] [cursor=pointer]:
+          - /url: /terms
+  - region "Notifications alt+T"
+  - button "Open JobSight AI Assistant" [ref=e78] [cursor=pointer]
+```

@@ -19,15 +19,15 @@ interface BidCardProps {
 function getBidStatusBadge(status: string) {
   switch (status) {
     case 'pending':
-      return <Badge variant="outline" className="bg-warning-light text-amber-700 border-amber-200">Pending Response</Badge>
+      return <Badge variant="outline" className="bg-warning/10 text-warning border-warning/20">Pending Response</Badge>
     case 'submitted':
-      return <Badge variant="outline" className="bg-blue-50 text-primary-hover border-blue-200">Submitted</Badge>
+      return <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">Submitted</Badge>
     case 'awarded':
-      return <Badge variant="outline" className="bg-success-light text-success-dark border-green-200">Awarded</Badge>
+      return <Badge variant="outline" className="bg-success/10 text-success border-success/20">Awarded</Badge>
     case 'rejected':
-      return <Badge variant="outline" className="bg-error-light text-error-dark border-red-200">Not Selected</Badge>
+      return <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20">Not Selected</Badge>
     case 'declined':
-      return <Badge variant="outline" className="bg-surface text-secondary border-border">Declined</Badge>
+      return <Badge variant="outline" className="bg-muted text-muted-foreground border-border">Declined</Badge>
     default:
       return <Badge variant="outline">{status}</Badge>
   }
@@ -47,7 +47,7 @@ export function BidCard({ bid, compact = false }: BidCardProps) {
                   <FileText className="h-4 w-4 text-primary" />
                 </div>
                 <div className="min-w-0">
-                  <p className="font-medium truncate">
+                  <p className="truncate heading-subsection">
                     {bid.workflow_item?.title || 'Change Order Bid'}
                   </p>
                   <p className="text-sm text-muted-foreground truncate">
@@ -71,7 +71,7 @@ export function BidCard({ bid, compact = false }: BidCardProps) {
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <CardTitle className="text-lg">
+            <CardTitle className="heading-card">
               {bid.workflow_item?.title || 'Change Order Bid Request'}
             </CardTitle>
             <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
@@ -94,13 +94,13 @@ export function BidCard({ bid, compact = false }: BidCardProps) {
             <div className="grid grid-cols-2 gap-4 p-4 bg-muted/50 rounded-lg">
               <div>
                 <p className="text-sm text-muted-foreground">Your Bid Amount</p>
-                <p className="text-xl font-semibold">
+                <p className="heading-section">
                   ${bid.lump_sum_cost.toLocaleString()}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Duration</p>
-                <p className="text-xl font-semibold">
+                <p className="heading-section">
                   {bid.duration_days} days
                 </p>
               </div>

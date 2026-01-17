@@ -88,7 +88,7 @@ export function BidSubmissionForm({ bid }: BidSubmissionFormProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Bid Already Submitted</CardTitle>
+          <CardTitle className="heading-card">Bid Already Submitted</CardTitle>
           <CardDescription>
             This bid has already been {bid.bid_status}. You cannot modify it.
           </CardDescription>
@@ -97,13 +97,13 @@ export function BidSubmissionForm({ bid }: BidSubmissionFormProps) {
           <div className="grid grid-cols-2 gap-4 p-4 bg-muted/50 rounded-lg">
             <div>
               <p className="text-sm text-muted-foreground">Bid Amount</p>
-              <p className="text-xl font-semibold">
+              <p className="heading-subsection">
                 ${bid.lump_sum_cost?.toLocaleString() || 'N/A'}
               </p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Duration</p>
-              <p className="text-xl font-semibold">
+              <p className="heading-subsection">
                 {bid.duration_days || 'N/A'} days
               </p>
             </div>
@@ -117,7 +117,7 @@ export function BidSubmissionForm({ bid }: BidSubmissionFormProps) {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Submit Your Bid</CardTitle>
+          <CardTitle className="heading-card">Submit Your Bid</CardTitle>
           <CardDescription>
             Provide your pricing and timeline for this change order work.
           </CardDescription>

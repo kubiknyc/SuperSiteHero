@@ -1,0 +1,98 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img "JobSight" [ref=e9]
+          - generic:
+            - heading "JobSight" [level=1]
+            - paragraph: Field Management
+        - generic:
+          - button:
+            - img
+      - navigation [ref=e10]:
+        - generic [ref=e11]:
+          - link [ref=e13] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e14]
+          - link [ref=e20] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e21]
+        - generic [ref=e25]:
+          - link [ref=e26] [cursor=pointer]:
+            - /url: /rfis
+            - img [ref=e27]
+          - link [ref=e30] [cursor=pointer]:
+            - /url: /daily-reports
+            - img [ref=e31]
+          - link [ref=e36] [cursor=pointer]:
+            - /url: /team
+            - img [ref=e37]
+    - generic [ref=e42]:
+      - banner [ref=e43]:
+        - generic [ref=e46]:
+          - heading "Meetings" [level=1] [ref=e47]
+          - paragraph [ref=e48]: Project meetings
+        - generic [ref=e49]:
+          - button "Search Ctrl+K" [ref=e51] [cursor=pointer]:
+            - img [ref=e52]
+            - generic [ref=e55]: Search
+            - generic [ref=e57]: Ctrl+K
+          - button [ref=e58] [cursor=pointer]:
+            - img [ref=e59]
+          - button [ref=e65] [cursor=pointer]:
+            - link [ref=e66]:
+              - /url: /settings
+              - img [ref=e67]
+          - link "TU" [ref=e70] [cursor=pointer]:
+            - /url: /settings/profile
+            - text: TU
+      - main [ref=e71]:
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - heading "Meetings" [level=1] [ref=e76]
+              - paragraph [ref=e77]: Schedule and document project meetings and minutes
+            - link "New Meeting" [ref=e78] [cursor=pointer]:
+              - /url: /meetings/new
+              - button "New Meeting" [ref=e79]:
+                - img [ref=e80]
+                - text: New Meeting
+          - generic [ref=e82]:
+            - generic [ref=e83]:
+              - img [ref=e84]
+              - textbox "Search meetings by name, agenda, location..." [ref=e87]
+            - generic [ref=e88]:
+              - generic [ref=e89]:
+                - button "All" [ref=e90] [cursor=pointer]
+                - button "Today" [ref=e91] [cursor=pointer]
+                - button "Upcoming" [ref=e92] [cursor=pointer]
+                - button "Past" [ref=e93] [cursor=pointer]
+              - button "Type" [ref=e95] [cursor=pointer]:
+                - text: Type
+                - img [ref=e96]
+              - button "Show Advanced" [ref=e98] [cursor=pointer]:
+                - img [ref=e99]
+                - text: Show Advanced
+          - paragraph [ref=e101]: Loading meetings...
+    - complementary [ref=e102]:
+      - generic [ref=e103]:
+        - generic [ref=e104]:
+          - img [ref=e106]
+          - heading "Action Required" [level=2] [ref=e110]
+        - button [ref=e111] [cursor=pointer]:
+          - img [ref=e112]
+      - generic [ref=e116]:
+        - generic [ref=e117]:
+          - img [ref=e118]
+          - img [ref=e120]
+        - paragraph [ref=e122]: Loading items...
+      - button "View All Approvals" [ref=e124] [cursor=pointer]:
+        - link "View All Approvals" [ref=e125]:
+          - /url: /approvals
+  - region "Notifications alt+T"
+  - button "Open JobSight AI Assistant" [ref=e128] [cursor=pointer]
+```

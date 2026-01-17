@@ -139,15 +139,15 @@ export function getActivityStatusColor(status: ScheduleActivityStatus): string {
     case 'not_started':
       return 'text-muted-foreground'
     case 'in_progress':
-      return 'text-blue-600'
+      return 'text-primary'
     case 'completed':
-      return 'text-green-600'
+      return 'text-success'
     case 'on_hold':
-      return 'text-yellow-600'
+      return 'text-warning'
     case 'delayed':
-      return 'text-red-600'
+      return 'text-destructive'
     case 'cancelled':
-      return 'text-gray-500'
+      return 'text-muted-foreground'
     default:
       return 'text-muted-foreground'
   }
@@ -157,8 +157,8 @@ export function getActivityStatusColor(status: ScheduleActivityStatus): string {
  * Format variance in days
  */
 export function formatVariance(days: number | null): string {
-  if (days == null) {return '-'}
-  if (days === 0) {return 'On schedule'}
+  if (days == null) { return '-' }
+  if (days === 0) { return 'On schedule' }
   const sign = days > 0 ? '+' : ''
   return `${sign}${days} day${Math.abs(days) !== 1 ? 's' : ''}`
 }
@@ -167,10 +167,10 @@ export function formatVariance(days: number | null): string {
  * Get variance color
  */
 export function getVarianceColor(days: number | null): string {
-  if (days == null || days === 0) {return 'text-muted-foreground'}
-  if (days < 0) {return 'text-green-600'} // Ahead of schedule
-  if (days <= 3) {return 'text-yellow-600'} // Slightly behind
-  return 'text-red-600' // Significantly behind
+  if (days == null || days === 0) { return 'text-muted-foreground' }
+  if (days < 0) { return 'text-success' } // Ahead of schedule
+  if (days <= 3) { return 'text-warning' } // Slightly behind
+  return 'text-destructive' // Significantly behind
 }
 
 /**
@@ -193,15 +193,15 @@ export function getChangeTypeLabel(type: string): string {
 export function getChangeTypeColor(type: string): string {
   switch (type) {
     case 'date_change':
-      return 'text-blue-600'
+      return 'text-primary'
     case 'status_change':
-      return 'text-purple-600'
+      return 'text-info'
     case 'delay':
-      return 'text-red-600'
+      return 'text-destructive'
     case 'assignment':
-      return 'text-orange-600'
+      return 'text-warning'
     case 'completion':
-      return 'text-green-600'
+      return 'text-success'
     default:
       return 'text-muted-foreground'
   }
@@ -248,7 +248,7 @@ export function filterActivitiesByStatus(
  * Format date for display
  */
 export function formatScheduleDate(dateString: string | null): string {
-  if (!dateString) {return '-'}
+  if (!dateString) { return '-' }
   return new Date(dateString).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -260,7 +260,7 @@ export function formatScheduleDate(dateString: string | null): string {
  * Get days until a date
  */
 export function getDaysUntil(dateString: string | null): number | null {
-  if (!dateString) {return null}
+  if (!dateString) { return null }
   const date = new Date(dateString)
   const today = new Date()
   today.setHours(0, 0, 0, 0)

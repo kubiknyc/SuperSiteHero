@@ -31,7 +31,7 @@ export function AdminDashboard() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="heading-page">
               Admin Dashboard
             </h1>
             <p className="text-gray-500 dark:text-gray-400 mt-1">
@@ -195,7 +195,7 @@ function StatCard({ title, value, icon: Icon, link, alert }: StatCardProps) {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
+            <p className="heading-section">
               {value}
             </p>
           </div>

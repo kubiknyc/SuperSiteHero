@@ -33,7 +33,7 @@ export function useSubcontractorLienWaivers(filter?: SubcontractorLienWaiverFilt
   return useQuery<SubcontractorLienWaiver[]>({
     queryKey: lienWaiverKeys.list(filter),
     queryFn: () => {
-      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!userProfile?.id) { throw new Error('User not authenticated') }
       return subcontractorPortalApi.getLienWaivers(userProfile.id, filter)
     },
     enabled: !!userProfile?.id && userProfile.role === 'subcontractor',
@@ -50,7 +50,7 @@ export function usePendingLienWaivers() {
   return useQuery<SubcontractorLienWaiver[]>({
     queryKey: lienWaiverKeys.pending(),
     queryFn: () => {
-      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!userProfile?.id) { throw new Error('User not authenticated') }
       return subcontractorPortalApi.getPendingLienWaivers(userProfile.id)
     },
     enabled: !!userProfile?.id && userProfile.role === 'subcontractor',
@@ -67,7 +67,7 @@ export function useLienWaiverSummary() {
   return useQuery<LienWaiverSummary>({
     queryKey: lienWaiverKeys.summary(),
     queryFn: () => {
-      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!userProfile?.id) { throw new Error('User not authenticated') }
       return subcontractorPortalApi.getLienWaiverSummary(userProfile.id)
     },
     enabled: !!userProfile?.id && userProfile.role === 'subcontractor',
@@ -85,7 +85,7 @@ export function useSignLienWaiver() {
 
   return useMutation({
     mutationFn: ({ waiverId, data }: { waiverId: string; data: SignLienWaiverDTO }) => {
-      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!userProfile?.id) { throw new Error('User not authenticated') }
       return subcontractorPortalApi.signLienWaiver(waiverId, userProfile.id, data)
     },
     onSuccess: () => {
@@ -190,12 +190,12 @@ export function getWaiverStatusBadgeVariant(
  */
 export function getWaiverStatusColor(status: string): string {
   const colors: Record<string, string> = {
-    pending: 'gray',
-    sent: 'blue',
-    received: 'yellow',
-    under_review: 'yellow',
-    approved: 'green',
-    rejected: 'red',
+    pending: 'muted-foreground',
+    sent: 'primary',
+    received: 'warning',
+    under_review: 'warning',
+    approved: 'success',
+    rejected: 'destructive',
   }
   return colors[status] || 'gray'
 }
@@ -211,8 +211,8 @@ export function waiverNeedsAction(status: string): boolean {
  * Check if waiver is overdue
  */
 export function isWaiverOverdue(waiver: SubcontractorLienWaiver): boolean {
-  if (!waiver.due_date) {return false}
-  if (['approved', 'rejected'].includes(waiver.status)) {return false}
+  if (!waiver.due_date) { return false }
+  if (['approved', 'rejected'].includes(waiver.status)) { return false }
   return new Date(waiver.due_date) < new Date()
 }
 
@@ -220,7 +220,7 @@ export function isWaiverOverdue(waiver: SubcontractorLienWaiver): boolean {
  * Calculate days until due
  */
 export function getDaysUntilDue(dueDate: string | null): number | null {
-  if (!dueDate) {return null}
+  if (!dueDate) { return null }
 
   const due = new Date(dueDate)
   const today = new Date()

@@ -57,7 +57,7 @@ const SearchTrigger = memo(function SearchTrigger({
         'flex items-center gap-2 rounded-lg',
         'text-slate-400 hover:text-slate-300',
         'transition-colors duration-150',
-        'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50',
+        'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
         isExpanded
           ? 'w-full px-3 py-2 bg-white/5 hover:bg-white/8'
           : 'p-2.5 hover:bg-white/5'
@@ -111,9 +111,9 @@ const QuickCreate = memo(function QuickCreate({ isExpanded }: QuickCreateProps) 
         whileTap={{ scale: 0.95 }}
         className={cn(
           'flex items-center justify-center rounded-lg',
-          'bg-blue-600 hover:bg-blue-500 text-white',
+          'bg-primary hover:bg-primary/90 text-white',
           'transition-colors duration-150',
-          'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50',
+          'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
           isExpanded ? 'p-2' : 'p-2.5'
         )}
       >
@@ -190,7 +190,7 @@ const NotificationBell = memo(function NotificationBell({
         'relative flex items-center justify-center rounded-lg',
         'text-slate-400 hover:text-slate-300 hover:bg-white/5',
         'transition-colors duration-150',
-        'focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50',
+        'focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
         isExpanded ? 'p-2' : 'p-2.5'
       )}
     >

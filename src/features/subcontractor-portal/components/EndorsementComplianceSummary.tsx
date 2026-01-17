@@ -42,22 +42,22 @@ export function EndorsementComplianceSummary() {
   return (
     <Card className={cn(
       'border-2',
-      summary.is_fully_compliant ? 'border-green-500' :
-      summary.compliance_score >= 70 ? 'border-yellow-500' :
-      'border-destructive'
+      summary.is_fully_compliant ? 'border-success' :
+        summary.compliance_score >= 70 ? 'border-warning' :
+          'border-destructive'
     )}>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             {summary.is_fully_compliant ? (
-              <ShieldCheck className="h-6 w-6 text-green-500" />
+              <ShieldCheck className="h-6 w-6 text-success" />
             ) : summary.compliance_score >= 70 ? (
-              <ShieldAlert className="h-6 w-6 text-yellow-500" />
+              <ShieldAlert className="h-6 w-6 text-warning" />
             ) : (
               <ShieldX className="h-6 w-6 text-destructive" />
             )}
             <div>
-              <CardTitle>Insurance Compliance</CardTitle>
+              <CardTitle className="heading-card">Insurance Compliance</CardTitle>
               <CardDescription>
                 Endorsement verification status across all certificates
               </CardDescription>
@@ -67,7 +67,7 @@ export function EndorsementComplianceSummary() {
             'text-center px-4 py-2 rounded-lg',
             getComplianceScoreBgColor(summary.compliance_score)
           )}>
-            <p className={cn('text-2xl font-bold', getComplianceScoreColor(summary.compliance_score))}>
+            <p className={cn('heading-section', getComplianceScoreColor(summary.compliance_score))}>
               {summary.compliance_score}%
             </p>
             <p className="text-xs text-muted-foreground">Compliant</p>
@@ -90,26 +90,26 @@ export function EndorsementComplianceSummary() {
         {/* Certificate Stats */}
         <div className="grid grid-cols-4 gap-4 text-center">
           <div>
-            <p className="text-2xl font-bold">{summary.active_certificates}</p>
+            <p className="heading-section">{summary.active_certificates}</p>
             <p className="text-xs text-muted-foreground">Active</p>
           </div>
           <div>
-            <p className="text-2xl font-bold text-yellow-600">{summary.expiring_soon_count}</p>
+            <p className="heading-section text-warning-600">{summary.expiring_soon_count}</p>
             <p className="text-xs text-muted-foreground">Expiring Soon</p>
           </div>
           <div>
-            <p className="text-2xl font-bold text-destructive">{summary.expired_count}</p>
+            <p className="heading-section text-destructive">{summary.expired_count}</p>
             <p className="text-xs text-muted-foreground">Expired</p>
           </div>
           <div>
-            <p className="text-2xl font-bold">{summary.total_certificates}</p>
+            <p className="heading-section">{summary.total_certificates}</p>
             <p className="text-xs text-muted-foreground">Total</p>
           </div>
         </div>
 
         {/* Endorsement Summary */}
         <div className="space-y-3">
-          <p className="text-sm font-medium">Endorsement Status</p>
+          <p className="heading-subsection">Endorsement Status</p>
 
           <EndorsementRow
             label="Additional Insured"
@@ -139,7 +139,7 @@ export function EndorsementComplianceSummary() {
         {/* Issues List */}
         {hasIssues && (
           <div className="space-y-2">
-            <p className="text-sm font-medium text-destructive">Action Required</p>
+            <p className="heading-subsection text-destructive">Action Required</p>
 
             {summary.missing_insurance_types.length > 0 && (
               <div className="flex items-start gap-2 text-sm">
@@ -161,7 +161,7 @@ export function EndorsementComplianceSummary() {
 
             {summary.insufficient_coverage.length > 0 && (
               <div className="flex items-start gap-2 text-sm">
-                <AlertTriangle className="h-4 w-4 text-yellow-500 mt-0.5" />
+                <AlertTriangle className="h-4 w-4 text-warning mt-0.5" />
                 <span>
                   {summary.insufficient_coverage.length} certificate(s) with insufficient coverage
                 </span>
@@ -181,9 +181,9 @@ export function EndorsementComplianceSummary() {
 
         {/* Success State */}
         {summary.is_fully_compliant && (
-          <Alert className="border-green-500">
-            <CheckCircle className="h-4 w-4 text-green-500" />
-            <AlertDescription className="text-green-700">
+          <Alert className="border-success">
+            <CheckCircle className="h-4 w-4 text-success" />
+            <AlertDescription className="text-success-800">
               All insurance requirements and endorsements are verified and compliant.
             </AlertDescription>
           </Alert>

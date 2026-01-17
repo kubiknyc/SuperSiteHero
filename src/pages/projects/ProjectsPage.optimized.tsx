@@ -49,9 +49,9 @@ export function ProjectsPage() {
 
   // Memoize filtered projects - only recalculate when projects or searchQuery changes
   const filteredProjects = useMemo(() => {
-    if (!projects) {return []}
+    if (!projects) { return [] }
 
-    if (!searchQuery) {return projects}
+    if (!searchQuery) { return projects }
 
     const query = searchQuery.toLowerCase()
     return projects.filter((project) =>
@@ -91,7 +91,7 @@ export function ProjectsPage() {
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-foreground heading-page">Projects</h1>
+            <h1 className="heading-page">Projects</h1>
             <p className="text-secondary mt-1">
               Manage and track your construction projects
             </p>

@@ -1,0 +1,184 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img "JobSight" [ref=e9]
+          - generic:
+            - heading "JobSight" [level=1]
+            - paragraph: Field Management
+        - generic:
+          - button:
+            - img
+      - navigation [ref=e10]:
+        - generic [ref=e11]:
+          - link [ref=e13] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e15]
+          - link [ref=e21] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e22]
+        - generic [ref=e26]:
+          - link [ref=e27] [cursor=pointer]:
+            - /url: /rfis
+            - img [ref=e28]
+          - link [ref=e31] [cursor=pointer]:
+            - /url: /daily-reports
+            - img [ref=e32]
+          - link [ref=e37] [cursor=pointer]:
+            - /url: /team
+            - img [ref=e38]
+    - generic [ref=e43]:
+      - banner [ref=e44]:
+        - generic [ref=e47]:
+          - heading "JobSight" [level=1] [ref=e48]
+          - paragraph [ref=e49]: Welcome back, Test
+        - generic [ref=e50]:
+          - button "Search Ctrl+K" [ref=e52] [cursor=pointer]:
+            - img [ref=e53]
+            - generic [ref=e56]: Search
+            - generic [ref=e58]: Ctrl+K
+          - button [ref=e59] [cursor=pointer]:
+            - img [ref=e60]
+          - button [ref=e66] [cursor=pointer]:
+            - link [ref=e67]:
+              - /url: /settings
+              - img [ref=e68]
+          - link "TU" [ref=e71] [cursor=pointer]:
+            - /url: /settings/profile
+            - text: TU
+      - main [ref=e72]:
+        - generic [ref=e75]:
+          - generic [ref=e76]:
+            - generic [ref=e77]:
+              - heading "Good evening, Test" [level=1] [ref=e78]
+              - paragraph [ref=e79]: Thursday, January 15, 2026
+            - generic [ref=e80]: E2E Test Project
+          - generic [ref=e82]:
+            - link "Daily Report" [ref=e83] [cursor=pointer]:
+              - /url: /daily-reports/new
+              - img [ref=e85]
+              - generic [ref=e89]: Daily Report
+              - img [ref=e91]
+            - link "Take Photo" [ref=e92] [cursor=pointer]:
+              - /url: /photo-progress/capture
+              - img [ref=e94]
+              - generic [ref=e98]: Take Photo
+              - img [ref=e100]
+            - link "Add Punch Item" [ref=e101] [cursor=pointer]:
+              - /url: /punch-lists/new
+              - img [ref=e103]
+              - generic [ref=e107]: Add Punch Item
+              - img [ref=e109]
+            - link "Safety Report" [ref=e110] [cursor=pointer]:
+              - /url: /safety/new
+              - img [ref=e112]
+              - generic [ref=e115]: Safety Report
+              - img [ref=e117]
+          - generic [ref=e120]:
+            - generic [ref=e121]:
+              - img [ref=e123]
+              - generic [ref=e126]:
+                - paragraph [ref=e127]: Today's Daily Report
+                - paragraph [ref=e128]: Not yet submitted
+            - button "Create Report" [ref=e129] [cursor=pointer]:
+              - link "Create Report" [ref=e130]:
+                - /url: /daily-reports/new
+                - img [ref=e131]
+                - text: Create Report
+          - generic [ref=e132]:
+            - link "Open Punch Items 0" [ref=e133] [cursor=pointer]:
+              - /url: /punch-lists
+              - generic [ref=e136]:
+                - generic [ref=e137]:
+                  - paragraph [ref=e138]: Open Punch Items
+                  - paragraph [ref=e139]: "0"
+                - img [ref=e141]
+            - link "Safety Incidents 0" [ref=e144] [cursor=pointer]:
+              - /url: /safety
+              - generic [ref=e147]:
+                - generic [ref=e148]:
+                  - paragraph [ref=e149]: Safety Incidents
+                  - paragraph [ref=e150]: "0"
+                - img [ref=e152]
+            - link "Crew On-Site 0" [ref=e154] [cursor=pointer]:
+              - /url: /workforce
+              - generic [ref=e157]:
+                - generic [ref=e158]:
+                  - paragraph [ref=e159]: Crew On-Site
+                  - paragraph [ref=e160]: "0"
+                - img [ref=e162]
+            - link "Photos Today 0" [ref=e167] [cursor=pointer]:
+              - /url: /photo-progress
+              - generic [ref=e170]:
+                - generic [ref=e171]:
+                  - paragraph [ref=e172]: Photos Today
+                  - paragraph [ref=e173]: "0"
+                - img [ref=e175]
+          - generic [ref=e178]:
+            - generic [ref=e179]:
+              - heading "Weather" [level=3] [ref=e181]:
+                - img [ref=e182]
+                - text: Weather
+              - generic [ref=e185]:
+                - paragraph [ref=e186]: 72°F
+                - paragraph [ref=e187]: Partly Cloudy
+                - generic [ref=e188]:
+                  - generic [ref=e189]:
+                    - generic [ref=e190]: High
+                    - generic [ref=e191]: 78°F
+                  - generic [ref=e192]:
+                    - generic [ref=e193]: Low
+                    - generic [ref=e194]: 65°F
+                  - generic [ref=e195]:
+                    - generic [ref=e196]: Wind
+                    - generic [ref=e197]: 8 mph
+            - generic [ref=e198]:
+              - heading "Punch List Summary" [level=3] [ref=e200]:
+                - img [ref=e201]
+                - text: Punch List Summary
+              - generic [ref=e204]:
+                - generic [ref=e205]:
+                  - generic [ref=e206]:
+                    - generic [ref=e207]: Critical
+                    - generic [ref=e208]: "0"
+                  - generic [ref=e209]:
+                    - generic [ref=e210]: High Priority
+                    - generic [ref=e211]: "0"
+                  - generic [ref=e212]:
+                    - generic [ref=e213]: Normal
+                    - generic [ref=e214]: "0"
+                - button "View All Punch Items" [ref=e215] [cursor=pointer]:
+                  - link "View All Punch Items" [ref=e216]:
+                    - /url: /punch-lists
+            - generic [ref=e217]:
+              - heading "Safety Alerts" [level=3] [ref=e219]:
+                - img [ref=e220]
+                - text: Safety Alerts
+              - generic [ref=e222]:
+                - generic [ref=e224]:
+                  - img [ref=e225]
+                  - paragraph [ref=e228]: No active safety alerts
+                - button "Safety Dashboard" [ref=e229] [cursor=pointer]:
+                  - link "Safety Dashboard" [ref=e230]:
+                    - /url: /safety
+    - complementary [ref=e231]:
+      - generic [ref=e232]:
+        - generic [ref=e233]:
+          - img [ref=e235]
+          - heading "Action Required" [level=2] [ref=e239]
+        - button [ref=e240] [cursor=pointer]:
+          - img [ref=e241]
+      - generic [ref=e245]:
+        - img [ref=e247]
+        - heading "All caught up!" [level=3] [ref=e249]
+        - paragraph [ref=e250]: No items need your attention right now
+      - button "View All Approvals" [ref=e252] [cursor=pointer]:
+        - link "View All Approvals" [ref=e253]:
+          - /url: /approvals
+  - region "Notifications alt+T"
+  - button "Open JobSight AI Assistant" [ref=e256] [cursor=pointer]
+```

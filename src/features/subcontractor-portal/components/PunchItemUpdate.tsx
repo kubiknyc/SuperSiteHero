@@ -55,35 +55,35 @@ const statusConfig: Record<string, { label: string; icon: React.ReactNode; color
   open: {
     label: 'Open',
     icon: <AlertCircle className="h-4 w-4" />,
-    color: 'bg-error-light text-error-dark border-red-200',
+    color: 'bg-destructive/10 text-destructive border-destructive/20',
   },
   in_progress: {
     label: 'In Progress',
     icon: <Clock className="h-4 w-4" />,
-    color: 'bg-warning-light text-yellow-700 border-yellow-200',
+    color: 'bg-warning/10 text-warning border-warning/20',
   },
   ready_for_review: {
     label: 'Ready for Review',
     icon: <Clock className="h-4 w-4" />,
-    color: 'bg-info-light text-primary-hover border-blue-200',
+    color: 'bg-info/10 text-info border-info/20',
   },
   completed: {
     label: 'Completed',
     icon: <Check className="h-4 w-4" />,
-    color: 'bg-success-light text-success-dark border-green-200',
+    color: 'bg-success/10 text-success border-success/20',
   },
   verified: {
     label: 'Verified',
     icon: <CheckCircle2 className="h-4 w-4" />,
-    color: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+    color: 'bg-success/20 text-success-800 border-success/30',
   },
 }
 
 const priorityConfig: Record<string, { label: string; color: string }> = {
-  critical: { label: 'Critical', color: 'bg-red-500 text-white' },
-  high: { label: 'High', color: 'bg-orange-500 text-white' },
-  medium: { label: 'Medium', color: 'bg-warning text-white' },
-  low: { label: 'Low', color: 'bg-gray-400 text-white' },
+  critical: { label: 'Critical', color: 'bg-destructive text-destructive-foreground' },
+  high: { label: 'High', color: 'bg-warning/30 text-warning-800' },
+  medium: { label: 'Medium', color: 'bg-warning/10 text-warning-600' },
+  low: { label: 'Low', color: 'bg-muted text-muted-foreground' },
 }
 
 export function PunchItemUpdate() {
@@ -116,7 +116,7 @@ export function PunchItemUpdate() {
   // Handle photo selection
   const handlePhotoSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
-    if (files.length === 0) {return}
+    if (files.length === 0) { return }
 
     const newPhotos: PhotoPreview[] = []
 
@@ -167,7 +167,7 @@ export function PunchItemUpdate() {
 
   // Handle notes save
   const handleSaveNotes = async () => {
-    if (!id || !notes.trim()) {return}
+    if (!id || !notes.trim()) { return }
 
     try {
       await addNotes(id, notes.trim())
@@ -179,7 +179,7 @@ export function PunchItemUpdate() {
 
   // Handle completion request
   const handleRequestCompletion = async () => {
-    if (!id) {return}
+    if (!id) { return }
 
     // Require at least one photo
     if (photos.length === 0 && (!proofPhotos || proofPhotos.length === 0)) {
@@ -229,7 +229,7 @@ export function PunchItemUpdate() {
   if (error || !punchItem) {
     return (
       <div className="flex flex-col items-center justify-center h-64 p-4 text-center">
-        <AlertCircle className="h-12 w-12 text-error mb-4" />
+        <AlertCircle className="h-12 w-12 text-destructive mb-4" />
         <h2 className="text-lg font-semibold text-foreground mb-2 heading-section">Punch Item Not Found</h2>
         <p className="text-sm text-muted mb-4">
           The punch item you're looking for doesn't exist or you don't have access.
@@ -241,8 +241,8 @@ export function PunchItemUpdate() {
     )
   }
 
-  const status = statusConfig[punchItem.status] || statusConfig.open
-  const priority = priorityConfig[punchItem.priority] || priorityConfig.medium
+  const status = statusConfig[punchItem.status || 'open'] || statusConfig.open
+  const priority = priorityConfig[punchItem.priority || 'medium'] || priorityConfig.medium
   const hasStatusRequest = !!punchItem.status_change_request
   const gcVerificationPending = punchItem.gc_verification_required && !punchItem.gc_verified_at && hasStatusRequest
   const totalProofPhotos = (proofPhotos?.length || 0) + photos.length
@@ -261,15 +261,15 @@ export function PunchItemUpdate() {
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1 min-w-0">
-            <h1 className="text-base font-semibold text-foreground truncate heading-page">
+            <h1 className="text-base truncate heading-page">
               {punchItem.title}
             </h1>
             <p className="text-xs text-muted">
-              #{punchItem.item_number || punchItem.id.slice(0, 8)}
+              #{(punchItem as any).item_number || punchItem.number?.toString() || punchItem.id.slice(0, 8)}
             </p>
           </div>
           {!isOnline && (
-            <Badge variant="outline" className="text-warning border-yellow-300 bg-warning-light">
+            <Badge variant="outline" className="text-warning border-warning/30 bg-warning/10">
               Offline
             </Badge>
           )}
@@ -288,7 +288,7 @@ export function PunchItemUpdate() {
             {priority.label}
           </Badge>
           {gcVerificationPending && (
-            <Badge variant="outline" className="bg-blue-50 text-primary-hover border-blue-200">
+            <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20">
               GC Review Pending
             </Badge>
           )}
@@ -296,9 +296,9 @@ export function PunchItemUpdate() {
 
         {/* Pending Updates Banner */}
         {pendingUpdates > 0 && (
-          <div className="flex items-center gap-2 p-3 bg-warning-light border border-yellow-200 rounded-lg">
+          <div className="flex items-center gap-2 p-3 bg-warning/10 border border-warning/20 rounded-lg">
             <Clock className="h-4 w-4 text-warning" />
-            <span className="text-sm text-yellow-800">
+            <span className="text-sm text-warning-800">
               {pendingUpdates} update(s) pending sync
             </span>
           </div>
@@ -306,12 +306,12 @@ export function PunchItemUpdate() {
 
         {/* Status Change Request Banner */}
         {hasStatusRequest && punchItem.status_change_request && (
-          <Card className="border-blue-200 bg-blue-50">
+          <Card className="border-primary/20 bg-primary/5">
             <CardContent className="p-3">
               <div className="flex items-start gap-2">
                 <Clock className="h-4 w-4 text-primary mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-blue-800">
+                  <p className="text-sm font-medium text-primary-800">
                     Completion Request Pending
                   </p>
                   <p className="text-xs text-primary mt-1">
@@ -329,7 +329,7 @@ export function PunchItemUpdate() {
         {/* Details Card */}
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Details</CardTitle>
+            <CardTitle className="heading-subsection">Details</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             {punchItem.description && (
@@ -355,7 +355,7 @@ export function PunchItemUpdate() {
                 <Calendar className="h-4 w-4 text-disabled" />
                 <span className={cn(
                   'text-sm',
-                  new Date(punchItem.due_date) < new Date() ? 'text-error font-medium' : 'text-secondary'
+                  new Date(punchItem.due_date) < new Date() ? 'text-destructive font-medium' : 'text-secondary'
                 )}>
                   Due: {format(new Date(punchItem.due_date), 'MMM d, yyyy')}
                 </span>
@@ -363,11 +363,11 @@ export function PunchItemUpdate() {
             )}
 
             {/* Assigned By */}
-            {punchItem.created_by_name && (
+            {(punchItem as any).created_by_name && (
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4 text-disabled" />
                 <span className="text-sm text-secondary">
-                  Assigned by: {punchItem.created_by_name}
+                  Assigned by: {(punchItem as any).created_by_name}
                 </span>
               </div>
             )}
@@ -378,7 +378,7 @@ export function PunchItemUpdate() {
         <Card>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm">Proof of Completion Photos</CardTitle>
+              <CardTitle className="heading-subsection">Proof of Completion Photos</CardTitle>
               <Badge variant="secondary" className="text-xs">
                 {totalProofPhotos} photo(s)
               </Badge>
@@ -401,7 +401,7 @@ export function PunchItemUpdate() {
                         alt="Proof"
                         className="w-full h-full object-cover"
                       />
-                      <div className="absolute bottom-0 left-0 right-0 bg-green-500/80 px-1 py-0.5">
+                      <div className="absolute bottom-0 left-0 right-0 bg-success/80 px-1 py-0.5">
                         <Check className="h-3 w-3 text-white mx-auto" />
                       </div>
                     </button>
@@ -427,9 +427,9 @@ export function PunchItemUpdate() {
                       />
                       <button
                         onClick={() => handleRemovePhoto(photo.id)}
-                        className="absolute top-0.5 right-0.5 p-0.5 bg-red-500 rounded-full"
+                        className="absolute top-0.5 right-0.5 p-0.5 bg-destructive rounded-full"
                       >
-                        <X className="h-3 w-3 text-white" />
+                        <X className="h-3 w-3 text-destructive-foreground" />
                       </button>
                     </div>
                   ))}
@@ -481,7 +481,7 @@ export function PunchItemUpdate() {
         {/* Notes Section */}
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm">Add Notes</CardTitle>
+            <CardTitle className="heading-subsection">Add Notes</CardTitle>
           </CardHeader>
           <CardContent>
             <Textarea
@@ -563,9 +563,9 @@ export function PunchItemUpdate() {
               />
             </div>
 
-            <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg">
+            <div className="flex items-center gap-2 p-3 bg-primary/10 rounded-lg">
               <Image className="h-4 w-4 text-primary" />
-              <span className="text-sm text-blue-800">
+              <span className="text-sm text-primary-800">
                 {totalProofPhotos} proof photo(s) attached
               </span>
             </div>

@@ -104,14 +104,14 @@ async function getSubcontractorIdsForUser(userId: string): Promise<string[]> {
     .eq('id', userId)
     .single()
 
-  if (!user?.email) {return []}
+  if (!user?.email) { return [] }
 
   const { data: contacts } = await supabase
     .from('contacts')
     .select('id')
     .eq('email', user.email)
 
-  if (!contacts || contacts.length === 0) {return []}
+  if (!contacts || contacts.length === 0) { return [] }
 
   const contactIds = contacts.map((c) => c.id)
 
@@ -134,7 +134,7 @@ async function getSubcontractorForUser(userId: string): Promise<SubcontractorBas
     .eq('id', userId)
     .single()
 
-  if (!user?.email) {return null}
+  if (!user?.email) { return null }
 
   const { data } = await supabase
     .from('subcontractors')
@@ -150,7 +150,7 @@ async function getSubcontractorForUser(userId: string): Promise<SubcontractorBas
     .limit(1)
     .single()
 
-  if (!data) {return null}
+  if (!data) { return null }
 
   return {
     id: data.id,
@@ -203,9 +203,9 @@ export const subcontractorPortalApi = {
       throw error instanceof ApiErrorClass
         ? error
         : new ApiErrorClass({
-            code: 'DASHBOARD_ERROR',
-            message: 'Failed to fetch dashboard data',
-          })
+          code: 'DASHBOARD_ERROR',
+          message: 'Failed to fetch dashboard data',
+        })
     }
   },
 
@@ -279,7 +279,7 @@ export const subcontractorPortalApi = {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
 
-      if (subcontractorIds.length === 0) {return []}
+      if (subcontractorIds.length === 0) { return [] }
 
       // Get project IDs for this subcontractor
       const { data: subcontractorProjects } = await supabase
@@ -290,7 +290,7 @@ export const subcontractorPortalApi = {
 
       const projectIds = subcontractorProjects?.map(s => s.project_id) || []
 
-      if (projectIds.length === 0) {return []}
+      if (projectIds.length === 0) { return [] }
 
       const { data, error } = await supabase
         .from('rfis')
@@ -302,10 +302,14 @@ export const subcontractorPortalApi = {
           status,
           priority,
           ball_in_court_role,
+          ball_in_court_user_id,
+          assigned_to_user_id,
+          question,
           due_date,
           date_initiated,
           project_id,
           created_at,
+          updated_at,
           project:projects(id, name)
         `)
         .in('project_id', projectIds)
@@ -314,7 +318,7 @@ export const subcontractorPortalApi = {
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       return (data || []).map((rfi: any) => ({
         id: rfi.id,
@@ -324,11 +328,15 @@ export const subcontractorPortalApi = {
         status: rfi.status,
         priority: rfi.priority,
         ball_in_court_role: rfi.ball_in_court_role,
+        ball_in_court_user_id: rfi.ball_in_court_user_id,
+        assigned_to_user_id: rfi.assigned_to_user_id,
+        question: rfi.question,
         due_date: rfi.due_date,
         date_initiated: rfi.date_initiated,
         project_id: rfi.project_id,
         project_name: rfi.project?.name || 'Unknown Project',
         created_at: rfi.created_at,
+        updated_at: rfi.updated_at || rfi.created_at,
       }))
     } catch (error) {
       logger.error('[SubcontractorPortal] Failed to fetch RFIs:', error)
@@ -368,7 +376,7 @@ export const subcontractorPortalApi = {
         .eq('recipient_user_id', userId)
         .order('shared_at', { ascending: false })
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       return (data || [])
         .filter((share: any) => share.document)
@@ -404,7 +412,7 @@ export const subcontractorPortalApi = {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
 
-      if (subcontractorIds.length === 0) {return []}
+      if (subcontractorIds.length === 0) { return [] }
 
       // Get project IDs for this subcontractor
       const { data: subcontractorProjects } = await supabase
@@ -415,7 +423,7 @@ export const subcontractorPortalApi = {
 
       const projectIds = subcontractorProjects?.map(s => s.project_id) || []
 
-      if (projectIds.length === 0) {return []}
+      if (projectIds.length === 0) { return [] }
 
       const { data, error } = await db
         .from('payment_applications')
@@ -440,7 +448,7 @@ export const subcontractorPortalApi = {
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       return (data || []).map((payment: any) => ({
         id: payment.id,
@@ -571,7 +579,7 @@ export const subcontractorPortalApi = {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
 
-      if (subcontractorIds.length === 0) {return []}
+      if (subcontractorIds.length === 0) { return [] }
 
       const { data, error } = await supabase
         .from('subcontractors')
@@ -592,7 +600,7 @@ export const subcontractorPortalApi = {
         .in('id', subcontractorIds)
         .is('deleted_at', null)
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       // Transform and add counts
       const projects: SubcontractorProject[] = await Promise.all(
@@ -675,7 +683,7 @@ export const subcontractorPortalApi = {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
 
-      if (subcontractorIds.length === 0) {return []}
+      if (subcontractorIds.length === 0) { return [] }
 
       let query = db
         .from('change_order_bids')
@@ -700,7 +708,7 @@ export const subcontractorPortalApi = {
 
       const { data, error } = await query.order('created_at', { ascending: false })
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       return data || []
     } catch (_error) {
@@ -727,7 +735,7 @@ export const subcontractorPortalApi = {
         .eq('id', bidId)
         .single()
 
-      if (error) {throw error}
+      if (error) { throw error }
       if (!data) {
         throw new ApiErrorClass({
           code: 'BID_NOT_FOUND',
@@ -740,9 +748,9 @@ export const subcontractorPortalApi = {
       throw error instanceof ApiErrorClass
         ? error
         : new ApiErrorClass({
-            code: 'BID_ERROR',
-            message: 'Failed to fetch bid',
-          })
+          code: 'BID_ERROR',
+          message: 'Failed to fetch bid',
+        })
     }
   },
 
@@ -767,7 +775,7 @@ export const subcontractorPortalApi = {
         .select()
         .single()
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       // Notify GC/Project Managers that bid was submitted
       try {
@@ -852,7 +860,7 @@ export const subcontractorPortalApi = {
         .select()
         .single()
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       return data
     } catch (_error) {
@@ -877,7 +885,7 @@ export const subcontractorPortalApi = {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
 
-      if (subcontractorIds.length === 0) {return []}
+      if (subcontractorIds.length === 0) { return [] }
 
       let query = supabase
         .from('punch_items')
@@ -913,7 +921,7 @@ export const subcontractorPortalApi = {
 
       const { data, error } = await query.order('created_at', { ascending: false })
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       // Get photo counts for each punch item
       const punchItemIds = (data || []).map((item: any) => item.id)
@@ -928,7 +936,7 @@ export const subcontractorPortalApi = {
 
         // Count photos per punch item
         if (photoCounts) {
-          photoCounts.forEach((photo: { punch_item_id: string }) => {
+          photoCounts.forEach((photo: { punch_item_id: string | null }) => {
             if (photo.punch_item_id) {
               photoCountsMap[photo.punch_item_id] = (photoCountsMap[photo.punch_item_id] || 0) + 1
             }
@@ -975,7 +983,7 @@ export const subcontractorPortalApi = {
         .select()
         .single()
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       return item as any
     } catch (_error) {
@@ -997,7 +1005,7 @@ export const subcontractorPortalApi = {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
 
-      if (subcontractorIds.length === 0) {return []}
+      if (subcontractorIds.length === 0) { return [] }
 
       let query = supabase
         .from('tasks')
@@ -1033,7 +1041,7 @@ export const subcontractorPortalApi = {
 
       const { data, error } = await query.order('created_at', { ascending: false })
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       return (data || []) as any[]
     } catch (_error) {
@@ -1069,7 +1077,7 @@ export const subcontractorPortalApi = {
         .select()
         .single()
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       return task as any
     } catch (_error) {
@@ -1094,7 +1102,7 @@ export const subcontractorPortalApi = {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
 
-      if (subcontractorIds.length === 0) {return []}
+      if (subcontractorIds.length === 0) { return [] }
 
       let query = db
         .from('subcontractor_compliance_documents')
@@ -1124,7 +1132,7 @@ export const subcontractorPortalApi = {
 
       const { data, error } = await query.order('expiration_date', { ascending: true })
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       return data || []
     } catch (_error) {
@@ -1153,7 +1161,7 @@ export const subcontractorPortalApi = {
         .select()
         .single()
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       return doc
     } catch (_error) {
@@ -1169,11 +1177,11 @@ export const subcontractorPortalApi = {
    */
   async getExpiringDocuments(subcontractorIds: string[]): Promise<ExpiringDocument[]> {
     try {
-      if (subcontractorIds.length === 0) {return []}
+      if (subcontractorIds.length === 0) { return [] }
 
       const { data, error } = await db.rpc('check_expiring_compliance_documents')
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       // Filter to only this subcontractor's documents
       return (data || []).filter((doc: ExpiringDocument) =>
@@ -1206,7 +1214,7 @@ export const subcontractorPortalApi = {
         .select()
         .single()
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       // Send invitation email
       try {
@@ -1320,7 +1328,7 @@ export const subcontractorPortalApi = {
         })
         .eq('id', invitation.id)
 
-      if (updateError) {throw updateError}
+      if (updateError) { throw updateError }
 
       // Create portal access
       const { error: accessError } = await db.from('subcontractor_portal_access').insert({
@@ -1331,14 +1339,14 @@ export const subcontractorPortalApi = {
         accepted_at: new Date().toISOString(),
       })
 
-      if (accessError) {throw accessError}
+      if (accessError) { throw accessError }
     } catch (error) {
       throw error instanceof ApiErrorClass
         ? error
         : new ApiErrorClass({
-            code: 'ACCEPT_INVITATION_ERROR',
-            message: 'Failed to accept invitation',
-          })
+          code: 'ACCEPT_INVITATION_ERROR',
+          message: 'Failed to accept invitation',
+        })
     }
   },
 
@@ -1363,7 +1371,7 @@ export const subcontractorPortalApi = {
         .eq('project_id', projectId)
         .order('created_at', { ascending: false })
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       return data || []
     } catch (_error) {
@@ -1389,7 +1397,7 @@ export const subcontractorPortalApi = {
         .select()
         .single()
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       return access
     } catch (_error) {
@@ -1410,7 +1418,7 @@ export const subcontractorPortalApi = {
         .update({ is_active: false })
         .eq('id', accessId)
 
-      if (error) {throw error}
+      if (error) { throw error }
     } catch (_error) {
       throw new ApiErrorClass({
         code: 'REVOKE_ACCESS_ERROR',
@@ -1436,7 +1444,7 @@ export const subcontractorPortalApi = {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
 
-      if (subcontractorIds.length === 0) {return null}
+      if (subcontractorIds.length === 0) { return null }
 
       const { data, error } = await supabase
         .from('subcontractors')
@@ -1446,7 +1454,7 @@ export const subcontractorPortalApi = {
         .is('deleted_at', null)
         .single()
 
-      if (error) {return null}
+      if (error) { return null }
 
       return data
     } catch (_error) {
@@ -1491,8 +1499,8 @@ export const subcontractorPortalApi = {
       }
 
       return data || []
-    } catch (error) {
-      if (error instanceof ApiErrorClass) {throw error}
+    } catch (error: any) {
+      if (error instanceof ApiErrorClass) { throw error }
       throw new ApiErrorClass({ code: '500', message: 'Failed to fetch daily reports', status: 500, details: error })
     }
   },
@@ -1533,8 +1541,8 @@ export const subcontractorPortalApi = {
         equipment,
         photos,
       }
-    } catch (error) {
-      if (error instanceof ApiErrorClass) {throw error}
+    } catch (error: any) {
+      if (error instanceof ApiErrorClass) { throw error }
       throw new ApiErrorClass({ code: '500', message: 'Failed to fetch daily report detail', status: 500, details: error })
     }
   },
@@ -1559,8 +1567,8 @@ export const subcontractorPortalApi = {
       }
 
       return data || []
-    } catch (error) {
-      if (error instanceof ApiErrorClass) {throw error}
+    } catch (error: any) {
+      if (error instanceof ApiErrorClass) { throw error }
       throw new ApiErrorClass({ code: '500', message: 'Failed to fetch workforce data', status: 500, details: error })
     }
   },
@@ -1585,8 +1593,8 @@ export const subcontractorPortalApi = {
       }
 
       return data || []
-    } catch (error) {
-      if (error instanceof ApiErrorClass) {throw error}
+    } catch (error: any) {
+      if (error instanceof ApiErrorClass) { throw error }
       throw new ApiErrorClass({ code: '500', message: 'Failed to fetch equipment data', status: 500, details: error })
     }
   },
@@ -1611,8 +1619,8 @@ export const subcontractorPortalApi = {
       }
 
       return data || []
-    } catch (error) {
-      if (error instanceof ApiErrorClass) {throw error}
+    } catch (error: any) {
+      if (error instanceof ApiErrorClass) { throw error }
       throw new ApiErrorClass({ code: '500', message: 'Failed to fetch photos', status: 500, details: error })
     }
   },
@@ -1651,7 +1659,7 @@ export const subcontractorPortalApi = {
   async getRFIs(userId: string): Promise<SubcontractorRFI[]> {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
-      if (subcontractorIds.length === 0) {return []}
+      if (subcontractorIds.length === 0) { return [] }
 
       // Get projects for these subcontractors
       const { data: subs } = await supabase
@@ -1660,7 +1668,7 @@ export const subcontractorPortalApi = {
         .in('id', subcontractorIds)
         .is('deleted_at', null)
 
-      if (!subs || subs.length === 0) {return []}
+      if (!subs || subs.length === 0) { return [] }
 
       const projectIds = [...new Set(subs.map(s => s.project_id))]
 
@@ -1690,7 +1698,7 @@ export const subcontractorPortalApi = {
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       return (data || []).map((rfi: any) => ({
         ...rfi,
@@ -1741,7 +1749,7 @@ export const subcontractorPortalApi = {
         .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`)
         .order('created_at', { ascending: false })
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       return (data || []).map((share: any) => ({
         id: share.id,
@@ -1778,7 +1786,7 @@ export const subcontractorPortalApi = {
   async getPayments(userId: string): Promise<SubcontractorPayment[]> {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
-      if (subcontractorIds.length === 0) {return []}
+      if (subcontractorIds.length === 0) { return [] }
 
       // Get projects for these subcontractors
       const { data: subs } = await supabase
@@ -1787,7 +1795,7 @@ export const subcontractorPortalApi = {
         .in('id', subcontractorIds)
         .is('deleted_at', null)
 
-      if (!subs || subs.length === 0) {return []}
+      if (!subs || subs.length === 0) { return [] }
 
       const projectIds = [...new Set(subs.map(s => s.project_id))]
 
@@ -1817,7 +1825,7 @@ export const subcontractorPortalApi = {
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       return (data || []).map((payment: any) => ({
         ...payment,
@@ -1845,7 +1853,7 @@ export const subcontractorPortalApi = {
   ): Promise<SubcontractorLienWaiver[]> {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
-      if (subcontractorIds.length === 0) {return []}
+      if (subcontractorIds.length === 0) { return [] }
 
       let query = db
         .from('lien_waivers')
@@ -1895,7 +1903,7 @@ export const subcontractorPortalApi = {
 
       const { data, error } = await query
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       return (data || []).map((waiver: any) => ({
         id: waiver.id,
@@ -1961,7 +1969,7 @@ export const subcontractorPortalApi = {
         .in('subcontractor_id', subcontractorIds)
         .is('deleted_at', null)
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       const today = new Date().toISOString().split('T')[0]
 
@@ -1989,7 +1997,7 @@ export const subcontractorPortalApi = {
           summary.total_waived_amount += waiver.payment_amount || 0
         }
         if (waiver.due_date && waiver.due_date < today &&
-            ['pending', 'sent'].includes(waiver.status)) {
+          ['pending', 'sent'].includes(waiver.status)) {
           summary.overdue_count++
         }
       }
@@ -2068,7 +2076,7 @@ export const subcontractorPortalApi = {
         `)
         .single()
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       // Log to history
       await db.from('lien_waiver_history').insert({
@@ -2104,7 +2112,7 @@ export const subcontractorPortalApi = {
         updated_at: waiver.updated_at,
       }
     } catch (error) {
-      if (error instanceof ApiErrorClass) {throw error}
+      if (error instanceof ApiErrorClass) { throw error }
       logger.error('[SubcontractorPortal] Failed to sign lien waiver:', error)
       throw new ApiErrorClass({
         code: 'SIGN_WAIVER_ERROR',
@@ -2123,7 +2131,7 @@ export const subcontractorPortalApi = {
   async getRetainageInfo(userId: string): Promise<SubcontractorRetainageInfo[]> {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
-      if (subcontractorIds.length === 0) {return []}
+      if (subcontractorIds.length === 0) { return [] }
 
       // Query subcontracts with retainage info
       const { data, error } = await db
@@ -2152,7 +2160,7 @@ export const subcontractorPortalApi = {
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       // Get pending lien waiver counts for each subcontract
       const subcontractIds = (data || []).map((s: any) => s.id)
@@ -2220,7 +2228,7 @@ export const subcontractorPortalApi = {
   ): Promise<RetainageRelease[]> {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
-      if (subcontractorIds.length === 0) {return []}
+      if (subcontractorIds.length === 0) { return [] }
 
       // Verify the subcontract belongs to this subcontractor
       const { data: contract, error: contractError } = await db
@@ -2263,7 +2271,7 @@ export const subcontractorPortalApi = {
         .eq('subcontract_id', subcontractId)
         .order('release_date', { ascending: false })
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       return (data || []).map((release: any) => ({
         id: release.id,
@@ -2281,7 +2289,7 @@ export const subcontractorPortalApi = {
         created_at: release.created_at,
       }))
     } catch (error) {
-      if (error instanceof ApiErrorClass) {throw error}
+      if (error instanceof ApiErrorClass) { throw error }
       logger.error('[SubcontractorPortal] Failed to fetch retainage releases:', error)
       throw new ApiErrorClass({
         code: 'RELEASES_ERROR',
@@ -2303,6 +2311,7 @@ export const subcontractorPortalApi = {
         total_retention_released: 0,
         total_retention_balance: 0,
         pending_releases: 0,
+        eligible_for_release: 0,
         contracts_at_substantial: 0,
         contracts_at_final: 0,
       }
@@ -2314,9 +2323,12 @@ export const subcontractorPortalApi = {
 
         if (contract.status === 'substantial_completion') {
           summary.contracts_at_substantial++
+          // For simplicity, consider substantial completion as eligible for release
+          summary.eligible_for_release += contract.retention_balance
         }
         if (contract.status === 'final_completion') {
           summary.contracts_at_final++
+          summary.eligible_for_release += contract.retention_balance
         }
         if (contract.pending_lien_waivers > 0) {
           summary.pending_releases++
@@ -2332,6 +2344,7 @@ export const subcontractorPortalApi = {
         total_retention_released: 0,
         total_retention_balance: 0,
         pending_releases: 0,
+        eligible_for_release: 0,
         contracts_at_substantial: 0,
         contracts_at_final: 0,
       }
@@ -2350,7 +2363,7 @@ export const subcontractorPortalApi = {
   ): Promise<SubcontractorInsuranceCertificate[]> {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
-      if (subcontractorIds.length === 0) {return []}
+      if (subcontractorIds.length === 0) { return [] }
 
       const { data, error } = await db
         .from('insurance_certificates')
@@ -2388,7 +2401,7 @@ export const subcontractorPortalApi = {
         .neq('status', 'void')
         .order('expiration_date', { ascending: true })
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       return (data || []).map((cert: any) => {
         const endorsements: EndorsementRequirement[] = [
@@ -2458,7 +2471,7 @@ export const subcontractorPortalApi = {
   async getInsuranceRequirements(userId: string): Promise<SubcontractorInsuranceRequirement[]> {
     try {
       const subcontractorIds = await getSubcontractorIdsForUser(userId)
-      if (subcontractorIds.length === 0) {return []}
+      if (subcontractorIds.length === 0) { return [] }
 
       // Get projects the subcontractor has access to
       const { data: accessData } = await db
@@ -2468,7 +2481,7 @@ export const subcontractorPortalApi = {
         .eq('is_active', true)
 
       const projectIds = (accessData || []).map((a: any) => a.project_id)
-      if (projectIds.length === 0) {return []}
+      if (projectIds.length === 0) { return [] }
 
       // Get project insurance requirements
       const { data, error } = await db
@@ -2490,7 +2503,7 @@ export const subcontractorPortalApi = {
         .in('project_id', projectIds)
         .eq('is_required', true)
 
-      if (error) {throw error}
+      if (error) { throw error }
 
       // Get subcontractor's certificates to check compliance
       const certificates = await this.getInsuranceCertificates(userId)
@@ -2520,15 +2533,15 @@ export const subcontractorPortalApi = {
             const missingEndorsements: string[] = []
             if (req.additional_insured_required) {
               const aiEndorsement = matchingCert.endorsements.find((e) => e.type === 'additional_insured')
-              if (!aiEndorsement?.verified) {missingEndorsements.push('Additional Insured')}
+              if (!aiEndorsement?.verified) { missingEndorsements.push('Additional Insured') }
             }
             if (req.waiver_of_subrogation_required) {
               const wosEndorsement = matchingCert.endorsements.find((e) => e.type === 'waiver_of_subrogation')
-              if (!wosEndorsement?.verified) {missingEndorsements.push('Waiver of Subrogation')}
+              if (!wosEndorsement?.verified) { missingEndorsements.push('Waiver of Subrogation') }
             }
             if (req.primary_noncontributory_required) {
               const pncEndorsement = matchingCert.endorsements.find((e) => e.type === 'primary_noncontributory')
-              if (!pncEndorsement?.verified) {missingEndorsements.push('Primary & Non-Contributory')}
+              if (!pncEndorsement?.verified) { missingEndorsements.push('Primary & Non-Contributory') }
             }
 
             if (missingEndorsements.length > 0) {
@@ -2752,7 +2765,7 @@ export const subcontractorPortalApi = {
 
       if (error) {
         logger.error('[SubcontractorPortal] Failed to fetch pay applications:', error)
-        throw new ApiErrorClass('Failed to fetch pay applications', 500)
+        throw new ApiErrorClass({ code: 'PAY_APP_ERROR', message: 'Failed to fetch pay applications', status: 500 })
       }
 
       // Fetch line items for all applications
@@ -3035,7 +3048,7 @@ export const subcontractorPortalApi = {
 
       if (error) {
         logger.error('[SubcontractorPortal] Failed to fetch pay app summary:', error)
-        throw new ApiErrorClass('Failed to fetch pay application summary', 500)
+        throw new ApiErrorClass({ code: 'PAY_APP_SUMMARY_ERROR', message: 'Failed to fetch pay application summary', status: 500 })
       }
 
       const apps = applications || []
@@ -3131,7 +3144,7 @@ export const subcontractorPortalApi = {
 
       if (error) {
         logger.error('[SubcontractorPortal] Failed to fetch change orders:', error)
-        throw new ApiErrorClass('Failed to fetch change orders', 500)
+        throw new ApiErrorClass({ code: 'CHANGE_ORDER_ERROR', message: 'Failed to fetch change orders', status: 500 })
       }
 
       // Get line item counts
@@ -3324,7 +3337,7 @@ export const subcontractorPortalApi = {
 
       if (error) {
         logger.error('[SubcontractorPortal] Failed to fetch change order summary:', error)
-        throw new ApiErrorClass('Failed to fetch change order summary', 500)
+        throw new ApiErrorClass({ code: 'CHANGE_ORDER_SUMMARY_ERROR', message: 'Failed to fetch change order summary', status: 500 })
       }
 
       const orders = changeOrders || []
@@ -3407,6 +3420,11 @@ export const subcontractorPortalApi = {
           is_on_critical_path,
           responsible_party,
           notes,
+          area_location,
+          duration_days,
+          variance_days,
+          predecessor_ids,
+          successor_ids,
           created_at,
           updated_at,
           projects:project_id (
@@ -3419,7 +3437,7 @@ export const subcontractorPortalApi = {
 
       if (error) {
         logger.error('[SubcontractorPortal] Failed to fetch schedule activities:', error)
-        throw new ApiErrorClass('Failed to fetch schedule activities', 500)
+        throw new ApiErrorClass({ code: 'SCHEDULE_ERROR', message: 'Failed to fetch schedule activities', status: 500 })
       }
 
       return (activities || []).map((activity: any) => {
@@ -3467,6 +3485,11 @@ export const subcontractorPortalApi = {
           is_upcoming: isUpcoming,
           responsible_party: activity.responsible_party,
           notes: activity.notes,
+          area_location: activity.area_location,
+          duration_days: Number(activity.duration_days) || 0,
+          variance_days: activity.variance_days != null ? Number(activity.variance_days) : null,
+          predecessor_ids: activity.predecessor_ids || [],
+          successor_ids: activity.successor_ids || [],
           created_at: activity.created_at,
           updated_at: activity.updated_at,
         }
@@ -3538,10 +3561,10 @@ export const subcontractorPortalApi = {
 
         // Parse change type from notification type or message
         let changeType: 'date_change' | 'status_change' | 'delay' | 'assignment' | 'completion' = 'date_change'
-        if (n.type === 'schedule_delay') {changeType = 'delay'}
-        else if (n.message?.toLowerCase().includes('status')) {changeType = 'status_change'}
-        else if (n.message?.toLowerCase().includes('complete')) {changeType = 'completion'}
-        else if (n.message?.toLowerCase().includes('assign')) {changeType = 'assignment'}
+        if (n.type === 'schedule_delay') { changeType = 'delay' }
+        else if (n.message?.toLowerCase().includes('status')) { changeType = 'status_change' }
+        else if (n.message?.toLowerCase().includes('complete')) { changeType = 'completion' }
+        else if (n.message?.toLowerCase().includes('assign')) { changeType = 'assignment' }
 
         return {
           id: n.id,
@@ -3554,9 +3577,11 @@ export const subcontractorPortalApi = {
           old_value: null,
           new_value: null,
           description: n.message || n.title || '',
+          message: n.message || n.title || '',
           days_impact: null,
           is_critical_path_impact: activity.is_on_critical_path || false,
           changed_at: n.created_at,
+          created_at: n.created_at,
           changed_by_name: n.users ? `${n.users.first_name || ''} ${n.users.last_name || ''}`.trim() : null,
           is_read: n.is_read || false,
         }
@@ -3577,12 +3602,16 @@ export const subcontractorPortalApi = {
         return {
           total_activities: 0,
           activities_this_week: 0,
+          in_progress_count: 0,
           overdue_count: 0,
           delayed_count: 0,
           on_critical_path_count: 0,
           upcoming_milestones: 0,
           percent_complete_avg: 0,
           unread_changes: 0,
+          upcoming_count: 0,
+          completed_count: 0,
+          on_time_percent: 0,
         }
       }
 
@@ -3601,14 +3630,15 @@ export const subcontractorPortalApi = {
           planned_start,
           planned_finish,
           is_milestone,
-          is_on_critical_path
+          is_on_critical_path,
+          actual_finish
         `)
         .in('subcontractor_id', subcontractorIds)
         .is('deleted_at', null)
 
       if (error) {
         logger.error('[SubcontractorPortal] Failed to fetch schedule summary:', error)
-        throw new ApiErrorClass('Failed to fetch schedule summary', 500)
+        throw new ApiErrorClass({ code: 'SCHEDULE_SUMMARY_ERROR', message: 'Failed to fetch schedule summary', status: 500 })
       }
 
       // Get unread notification count
@@ -3623,7 +3653,7 @@ export const subcontractorPortalApi = {
 
       // Calculate summary
       const overdueActs = acts.filter((a: any) => {
-        if (a.status === 'completed') {return false}
+        if (a.status === 'completed') { return false }
         const plannedFinish = a.planned_finish ? new Date(a.planned_finish) : null
         return plannedFinish && plannedFinish < today
       })
@@ -3635,10 +3665,12 @@ export const subcontractorPortalApi = {
         return plannedStart && plannedStart >= today && plannedStart <= weekFromNow
       })
 
+      const inProgressActs = acts.filter((a: any) => a.status === 'in_progress')
+
       const criticalPathActs = acts.filter((a: any) => a.is_on_critical_path)
 
       const upcomingMilestones = acts.filter((a: any) => {
-        if (!a.is_milestone || a.status === 'completed') {return false}
+        if (!a.is_milestone || a.status === 'completed') { return false }
         const plannedFinish = a.planned_finish ? new Date(a.planned_finish) : null
         return plannedFinish && plannedFinish >= today && plannedFinish <= weekFromNow
       })
@@ -3646,21 +3678,34 @@ export const subcontractorPortalApi = {
       const totalPercent = acts.reduce((sum: number, a: any) => sum + (Number(a.percent_complete) || 0), 0)
       const avgPercent = acts.length > 0 ? totalPercent / acts.length : 0
 
+      const completedActs = acts.filter((a: any) => a.status === 'completed')
+      const onTimeCompleted = completedActs.filter((a: any) => {
+        const plannedFinish = a.planned_finish ? new Date(a.planned_finish) : null
+        const actualFinish = a.actual_finish ? new Date(a.actual_finish) : null
+        return plannedFinish && actualFinish && actualFinish <= plannedFinish
+      })
+      const onTimePercent = completedActs.length > 0 ? Math.round((onTimeCompleted.length / completedActs.length) * 100) : 0
+
       return {
         total_activities: acts.length,
         activities_this_week: thisWeekActs.length,
+        in_progress_count: inProgressActs.length,
         overdue_count: overdueActs.length,
         delayed_count: delayedActs.length,
         on_critical_path_count: criticalPathActs.length,
         upcoming_milestones: upcomingMilestones.length,
         percent_complete_avg: Math.round(avgPercent),
         unread_changes: unreadCount || 0,
+        upcoming_count: thisWeekActs.length,
+        completed_count: completedActs.length,
+        on_time_percent: onTimePercent,
       }
     } catch (error) {
       logger.error('[SubcontractorPortal] Failed to fetch schedule summary:', error)
       return {
         total_activities: 0,
         activities_this_week: 0,
+        in_progress_count: 0,
         overdue_count: 0,
         delayed_count: 0,
         on_critical_path_count: 0,
@@ -4172,9 +4217,9 @@ export const subcontractorPortalApi = {
 
       // Bonus for days since incident (up to 15 points)
       if (daysSinceLast !== null) {
-        if (daysSinceLast >= 365) {score = Math.min(100, score + 15)}
-        else if (daysSinceLast >= 180) {score = Math.min(100, score + 10)}
-        else if (daysSinceLast >= 90) {score = Math.min(100, score + 5)}
+        if (daysSinceLast >= 365) { score = Math.min(100, score + 15) }
+        else if (daysSinceLast >= 180) { score = Math.min(100, score + 10) }
+        else if (daysSinceLast >= 90) { score = Math.min(100, score + 5) }
       }
 
       score = Math.max(0, score)
@@ -4378,9 +4423,9 @@ export const subcontractorPortalApi = {
         .in('id', projectIds)
 
       const projectMap: Record<string, string> = {}
-      ;(projects || []).forEach((p: any) => {
-        projectMap[p.id] = p.name
-      })
+        ; (projects || []).forEach((p: any) => {
+          projectMap[p.id] = p.name
+        })
 
       const projectCounts: Record<string, number> = {}
       photos.forEach((p: any) => {
@@ -4489,18 +4534,18 @@ export const subcontractorPortalApi = {
 
       // Build attendee and attachment counts
       const attendeeCounts: Record<string, { total: number; attended: number }> = {}
-      ;(attendees || []).forEach((a: any) => {
-        if (!attendeeCounts[a.meeting_id]) {
-          attendeeCounts[a.meeting_id] = { total: 0, attended: 0 }
-        }
-        attendeeCounts[a.meeting_id].total++
-        if (a.attended) {attendeeCounts[a.meeting_id].attended++}
-      })
+        ; (attendees || []).forEach((a: any) => {
+          if (!attendeeCounts[a.meeting_id]) {
+            attendeeCounts[a.meeting_id] = { total: 0, attended: 0 }
+          }
+          attendeeCounts[a.meeting_id].total++
+          if (a.attended) { attendeeCounts[a.meeting_id].attended++ }
+        })
 
       const attachmentCounts: Record<string, number> = {}
-      ;(attachments || []).forEach((a: any) => {
-        attachmentCounts[a.meeting_id] = (attachmentCounts[a.meeting_id] || 0) + 1
-      })
+        ; (attachments || []).forEach((a: any) => {
+          attachmentCounts[a.meeting_id] = (attachmentCounts[a.meeting_id] || 0) + 1
+        })
 
       return (meetings || []).map((m: any) => ({
         id: m.id,
@@ -4900,7 +4945,7 @@ export const subcontractorPortalApi = {
       const today = new Date()
       const thirtyDaysFromNow = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000)
       const expiringWithin30 = certifications.filter(c => {
-        if (!c.expiration_date) {return false}
+        if (!c.expiration_date) { return false }
         const expDate = new Date(c.expiration_date)
         return expDate >= today && expDate <= thirtyDaysFromNow
       })
@@ -4995,8 +5040,8 @@ export const subcontractorPortalApi = {
 // =============================================
 
 function getEndorsementStatus(required: boolean, verified: boolean): EndorsementStatus {
-  if (!required) {return 'not_required'}
-  if (verified) {return 'verified'}
+  if (!required) { return 'not_required' }
+  if (verified) { return 'verified' }
   return 'missing'
 }
 

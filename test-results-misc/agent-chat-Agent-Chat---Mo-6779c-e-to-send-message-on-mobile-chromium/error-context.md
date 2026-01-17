@@ -1,0 +1,100 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - img "JobSight" [ref=e7]
+    - heading "404" [level=1] [ref=e8]
+    - heading "Page Not Found" [level=2] [ref=e9]
+    - paragraph [ref=e10]: The page you're looking for doesn't exist in JobSight. It may have been moved, deleted, or the URL might be incorrect.
+    - generic [ref=e11]:
+      - button "Go Back" [ref=e12] [cursor=pointer]:
+        - img [ref=e13]
+        - text: Go Back
+      - button "Return to Dashboard" [ref=e15] [cursor=pointer]:
+        - img [ref=e16]
+        - text: Return to Dashboard
+    - generic [ref=e20]:
+      - img [ref=e21]
+      - generic [ref=e24]:
+        - paragraph [ref=e25]: Looking for something specific?
+        - paragraph [ref=e26]: Try using the search feature or navigation menu to find what you need.
+    - generic [ref=e27]:
+      - paragraph [ref=e28]: "Quick links:"
+      - generic [ref=e29]:
+        - button "Projects" [ref=e30] [cursor=pointer]
+        - button "Daily Reports" [ref=e31] [cursor=pointer]
+        - button "Settings" [ref=e32] [cursor=pointer]
+        - button "Help Center" [ref=e33] [cursor=pointer]
+    - paragraph [ref=e35]: JobSight - Construction Field Management
+  - region "Notifications alt+T"
+  - generic [ref=e36]:
+    - generic [ref=e37]:
+      - generic [ref=e38]:
+        - img [ref=e40]
+        - generic [ref=e43]:
+          - heading "JobSight AI" [level=3] [ref=e44]
+          - paragraph [ref=e45]: Ready to help
+      - generic [ref=e46]:
+        - button [ref=e47] [cursor=pointer]:
+          - img [ref=e48]
+        - button [ref=e52] [cursor=pointer]:
+          - img [ref=e53]
+        - button [ref=e55] [cursor=pointer]:
+          - img [ref=e56]
+        - button [ref=e59] [cursor=pointer]:
+          - img [ref=e60]
+        - button [ref=e61] [cursor=pointer]:
+          - img [ref=e62]
+    - generic [ref=e65]:
+      - img [ref=e66]
+      - generic [ref=e68]: Failed to create chat session
+      - button "Dismiss" [ref=e69] [cursor=pointer]
+    - generic [ref=e74]:
+      - img [ref=e76]
+      - heading "Welcome to JobSight AI" [level=4] [ref=e79]
+      - paragraph [ref=e80]: I can help you with documents, daily reports, RFIs, and more. Try asking me something!
+      - generic [ref=e81]:
+        - button "Summarize today Get a summary of today's activities and progress" [ref=e82] [cursor=pointer]:
+          - generic [ref=e83]:
+            - img [ref=e85]
+            - generic [ref=e88]: Summarize today
+          - generic [ref=e89]: Get a summary of today's activities and progress
+        - button "Weekly status Generate comprehensive weekly report" [ref=e90] [cursor=pointer]:
+          - generic [ref=e91]:
+            - img [ref=e93]
+            - generic [ref=e95]: Weekly status
+          - generic [ref=e96]: Generate comprehensive weekly report
+        - button "Extract actions Find action items from recent reports" [ref=e97] [cursor=pointer]:
+          - generic [ref=e98]:
+            - img [ref=e100]
+            - generic [ref=e103]: Extract actions
+          - generic [ref=e104]: Find action items from recent reports
+        - button "Progress metrics New View project progress and KPIs" [ref=e105] [cursor=pointer]:
+          - generic [ref=e106]:
+            - img [ref=e108]
+            - generic [ref=e111]: Progress metrics
+            - generic [ref=e112]: New
+          - generic [ref=e113]: View project progress and KPIs
+    - generic [ref=e115]:
+      - generic [ref=e116]:
+        - textbox "Ask me anything..." [ref=e118]
+        - generic [ref=e119]:
+          - button [ref=e120] [cursor=pointer]:
+            - img [ref=e121]
+          - button [ref=e123] [cursor=pointer]:
+            - img [ref=e124]
+          - button "Send message" [disabled]:
+            - img
+            - generic: Send message
+      - generic [ref=e128]:
+        - generic [ref=e129]:
+          - img [ref=e130]
+          - generic [ref=e132]: Enter to send
+        - generic [ref=e133]:
+          - img [ref=e134]
+          - generic [ref=e137]: "@ to mention"
+        - generic [ref=e138]:
+          - img [ref=e139]
+          - generic [ref=e142]: / for commands
+```

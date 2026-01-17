@@ -19,7 +19,7 @@ import {
 import { cn } from '@/lib/utils'
 
 function formatCurrency(value: number | null): string {
-  if (value === null || value === undefined) {return '-'}
+  if (value === null || value === undefined) { return '-' }
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -29,7 +29,7 @@ function formatCurrency(value: number | null): string {
 }
 
 function formatDate(dateString: string | null): string {
-  if (!dateString) {return '-'}
+  if (!dateString) { return '-' }
   return new Date(dateString).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -63,15 +63,15 @@ function DocumentTypeIcon({ type }: { type: string }) {
     case 'insurance_certificate':
       return <Shield className="h-5 w-5 text-primary" />
     case 'license':
-      return <FileText className="h-5 w-5 text-purple-500" />
+      return <FileText className="h-5 w-5 text-info" />
     case 'w9':
       return <FileText className="h-5 w-5 text-success" />
     case 'bond':
       return <DollarSign className="h-5 w-5 text-warning" />
     case 'safety_cert':
-      return <Shield className="h-5 w-5 text-orange-500" />
+      return <Shield className="h-5 w-5 text-warning" />
     default:
-      return <FileText className="h-5 w-5 text-muted" />
+      return <FileText className="h-5 w-5 text-muted-foreground" />
   }
 }
 
@@ -85,7 +85,7 @@ export function ComplianceDocumentCard({ document, className }: ComplianceDocume
           <div className="flex items-center gap-3 min-w-0">
             <DocumentTypeIcon type={document.document_type} />
             <div className="min-w-0">
-              <CardTitle className="text-base truncate">{document.document_name}</CardTitle>
+              <CardTitle className="heading-card truncate">{document.document_name}</CardTitle>
               <p className="text-sm text-muted-foreground">
                 {getDocumentTypeLabel(document.document_type)}
               </p>
@@ -151,8 +151,8 @@ export function ComplianceDocumentCard({ document, className }: ComplianceDocume
 
         {/* Rejection Notes */}
         {document.status === 'rejected' && document.rejection_notes && (
-          <div className="p-3 bg-error-light border border-red-200 rounded-md">
-            <p className="text-sm text-red-800">
+          <div className="p-3 bg-destructive/5 border border-destructive/20 rounded-md">
+            <p className="text-sm text-destructive">
               <strong>Rejection Reason:</strong> {document.rejection_notes}
             </p>
           </div>

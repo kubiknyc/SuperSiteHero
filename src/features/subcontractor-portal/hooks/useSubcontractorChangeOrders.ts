@@ -126,16 +126,16 @@ export function getChangeOrderStatusColor(status: ChangeOrderStatus): string {
       return 'text-muted-foreground'
     case 'pending_estimate':
     case 'estimate_complete':
-      return 'text-blue-600'
+      return 'text-primary'
     case 'pending_internal_approval':
     case 'internally_approved':
     case 'pending_owner_review':
-      return 'text-yellow-600'
+      return 'text-warning'
     case 'approved':
-      return 'text-green-600'
+      return 'text-success'
     case 'rejected':
     case 'void':
-      return 'text-red-600'
+      return 'text-destructive'
     default:
       return 'text-muted-foreground'
   }
@@ -162,17 +162,17 @@ export function getChangeOrderTypeLabel(type: ChangeOrderType): string {
 export function getChangeOrderTypeColor(type: ChangeOrderType): string {
   switch (type) {
     case 'scope_change':
-      return 'text-blue-600'
+      return 'text-primary'
     case 'design_clarification':
-      return 'text-purple-600'
+      return 'text-info'
     case 'unforeseen_condition':
-      return 'text-orange-600'
+      return 'text-warning'
     case 'owner_request':
-      return 'text-green-600'
+      return 'text-success'
     case 'value_engineering':
-      return 'text-teal-600'
+      return 'text-success'
     case 'error_omission':
-      return 'text-red-600'
+      return 'text-destructive'
     default:
       return 'text-muted-foreground'
   }
@@ -212,7 +212,7 @@ export function getDisplayNumber(co: SubcontractorChangeOrder): string {
  * Format amount as currency
  */
 export function formatAmount(amount: number | null | undefined): string {
-  if (amount == null) {return '$0.00'}
+  if (amount == null) { return '$0.00' }
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -225,7 +225,7 @@ export function formatAmount(amount: number | null | undefined): string {
  * Format days impact
  */
 export function formatDaysImpact(days: number | null | undefined): string {
-  if (days == null || days === 0) {return 'No impact'}
+  if (days == null || days === 0) { return 'No impact' }
   const sign = days > 0 ? '+' : ''
   return `${sign}${days} day${Math.abs(days) !== 1 ? 's' : ''}`
 }

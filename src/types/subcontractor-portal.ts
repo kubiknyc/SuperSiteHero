@@ -670,6 +670,7 @@ export interface RetainageSummary {
   total_retention_released: number;
   total_retention_balance: number;
   pending_releases: number;
+  eligible_for_release: number;
   contracts_at_substantial: number;
   contracts_at_final: number;
 }
@@ -1169,6 +1170,19 @@ export interface SubcontractorScheduleActivity {
   // Notes
   notes: string | null;
 
+  // Location
+  area_location: string | null;
+
+  // Duration
+  duration_days: number;
+
+  // Variances
+  variance_days: number | null;
+
+  // Relationships
+  predecessor_ids: string[];
+  successor_ids: string[];
+
   created_at: string;
   updated_at: string;
 }
@@ -1200,6 +1214,10 @@ export interface ScheduleChangeNotification {
 
   // Read status
   is_read: boolean;
+
+  // Notification content
+  message: string;
+  created_at: string;
 }
 
 /**
@@ -1208,12 +1226,16 @@ export interface ScheduleChangeNotification {
 export interface ScheduleSummary {
   total_activities: number;
   activities_this_week: number;
+  in_progress_count: number;
   overdue_count: number;
   delayed_count: number;
   on_critical_path_count: number;
   upcoming_milestones: number;
   percent_complete_avg: number;
   unread_changes: number;
+  upcoming_count: number;
+  completed_count: number;
+  on_time_percent: number;
 }
 
 // =============================================

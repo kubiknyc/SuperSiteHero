@@ -88,7 +88,13 @@
     @apply text-xl font-semibold leading-snug text-gray-900 dark:text-gray-50;
   }
 
-  /* Subheadings */
+  /* Sub-section headings */
+  .heading-subsection {
+    font-family: var(--font-display);
+    @apply text-lg font-semibold leading-snug text-gray-900 dark:text-gray-50;
+  }
+
+  /* Subheadings (lighter weight) */
   .heading-sub {
     font-family: var(--font-display);
     @apply text-lg font-medium leading-normal text-gray-700 dark:text-gray-200;

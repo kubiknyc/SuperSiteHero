@@ -1,0 +1,96 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img "JobSight" [ref=e9]
+          - generic:
+            - heading "JobSight" [level=1]
+            - paragraph: Field Management
+        - generic:
+          - button:
+            - img
+      - navigation [ref=e10]:
+        - generic [ref=e11]:
+          - link [ref=e13] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e14]
+          - link [ref=e20] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e22]
+        - generic [ref=e26]:
+          - link [ref=e27] [cursor=pointer]:
+            - /url: /rfis
+            - img [ref=e28]
+          - link [ref=e31] [cursor=pointer]:
+            - /url: /daily-reports
+            - img [ref=e32]
+          - link [ref=e37] [cursor=pointer]:
+            - /url: /team
+            - img [ref=e38]
+    - generic [ref=e43]:
+      - banner [ref=e44]:
+        - generic [ref=e47]:
+          - heading "Projects" [level=1] [ref=e48]
+          - paragraph [ref=e49]: Manage your construction projects
+        - generic [ref=e50]:
+          - button "Search Ctrl+K" [ref=e52] [cursor=pointer]:
+            - img [ref=e53]
+            - generic [ref=e56]: Search
+            - generic [ref=e58]: Ctrl+K
+          - button [ref=e59] [cursor=pointer]:
+            - img [ref=e60]
+          - button [ref=e66] [cursor=pointer]:
+            - link [ref=e67]:
+              - /url: /settings
+              - img [ref=e68]
+          - link "TU" [ref=e71] [cursor=pointer]:
+            - /url: /settings/profile
+            - text: TU
+      - main [ref=e72]:
+        - generic [ref=e74]:
+          - generic [ref=e75]:
+            - generic [ref=e76]:
+              - heading "Projects" [level=1] [ref=e77]
+              - paragraph [ref=e78]: Manage and track your construction projects
+            - button "New Project" [ref=e79] [cursor=pointer]:
+              - img [ref=e80]
+              - text: New Project
+          - generic [ref=e81]:
+            - img [ref=e82]
+            - textbox "Search projects by name or address..." [ref=e85]
+          - generic [ref=e87]:
+            - generic [ref=e89]:
+              - link "E2E Test Project" [ref=e91] [cursor=pointer]:
+                - /url: /projects/c02241fb-3523-4114-9ea3-4a4a51ef18b4
+                - heading "E2E Test Project" [level=3] [ref=e92]
+              - generic [ref=e93]: Active
+            - generic [ref=e96]:
+              - img [ref=e97]
+              - generic [ref=e99]: Started Jan 14, 2026
+            - generic [ref=e100]:
+              - button "Edit" [ref=e101] [cursor=pointer]:
+                - img [ref=e102]
+                - text: Edit
+              - button "Delete project" [ref=e105] [cursor=pointer]:
+                - img [ref=e106]
+    - complementary [ref=e109]:
+      - generic [ref=e110]:
+        - generic [ref=e111]:
+          - img [ref=e113]
+          - heading "Action Required" [level=2] [ref=e117]
+        - button [ref=e118] [cursor=pointer]:
+          - img [ref=e119]
+      - generic [ref=e123]:
+        - img [ref=e125]
+        - heading "All caught up!" [level=3] [ref=e127]
+        - paragraph [ref=e128]: No items need your attention right now
+      - button "View All Approvals" [ref=e130] [cursor=pointer]:
+        - link "View All Approvals" [ref=e131]:
+          - /url: /approvals
+  - region "Notifications alt+T"
+  - button "Open JobSight AI Assistant" [ref=e134] [cursor=pointer]
+```

@@ -146,15 +146,15 @@ export function getSeverityLabel(severity: SafetyIncidentSeverity): string {
 export function getSeverityColor(severity: SafetyIncidentSeverity): string {
   switch (severity) {
     case 'near_miss':
-      return 'text-blue-600'
+      return 'text-info'
     case 'first_aid':
-      return 'text-yellow-600'
+      return 'text-warning'
     case 'medical_treatment':
-      return 'text-orange-600'
+      return 'text-warning'
     case 'lost_time':
-      return 'text-red-600'
+      return 'text-destructive'
     case 'fatality':
-      return 'text-red-800'
+      return 'text-destructive'
     default:
       return 'text-muted-foreground'
   }
@@ -257,29 +257,29 @@ export function getPriorityLabel(priority: string): string {
  * Get compliance score color
  */
 export function getComplianceScoreColor(score: number): string {
-  if (score >= 90) {return 'text-green-600'}
-  if (score >= 70) {return 'text-yellow-600'}
-  if (score >= 50) {return 'text-orange-600'}
-  return 'text-red-600'
+  if (score >= 90) { return 'text-success' }
+  if (score >= 70) { return 'text-warning' }
+  if (score >= 50) { return 'text-warning' }
+  return 'text-destructive'
 }
 
 /**
  * Get compliance score background color
  */
 export function getComplianceScoreBgColor(score: number): string {
-  if (score >= 90) {return 'bg-green-100'}
-  if (score >= 70) {return 'bg-yellow-100'}
-  if (score >= 50) {return 'bg-orange-100'}
-  return 'bg-red-100'
+  if (score >= 90) { return 'bg-success/10 text-success' }
+  if (score >= 70) { return 'bg-warning/10 text-warning' }
+  if (score >= 50) { return 'bg-warning/10 text-warning' }
+  return 'bg-destructive/10 text-destructive'
 }
 
 /**
  * Get compliance score label
  */
 export function getComplianceScoreLabel(score: number): string {
-  if (score >= 90) {return 'Excellent'}
-  if (score >= 70) {return 'Good'}
-  if (score >= 50) {return 'Fair'}
+  if (score >= 90) { return 'Excellent' }
+  if (score >= 70) { return 'Good' }
+  if (score >= 50) { return 'Fair' }
   return 'Needs Improvement'
 }
 
@@ -287,7 +287,7 @@ export function getComplianceScoreLabel(score: number): string {
  * Format date for display
  */
 export function formatSafetyDate(dateString: string | null): string {
-  if (!dateString) {return '-'}
+  if (!dateString) { return '-' }
   return new Date(dateString).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -299,9 +299,9 @@ export function formatSafetyDate(dateString: string | null): string {
  * Format days count for display
  */
 export function formatDaysSince(days: number | null): string {
-  if (days === null) {return '-'}
-  if (days === 0) {return 'Today'}
-  if (days === 1) {return '1 day'}
+  if (days === null) { return '-' }
+  if (days === 0) { return 'Today' }
+  if (days === 1) { return '1 day' }
   return `${days} days`
 }
 

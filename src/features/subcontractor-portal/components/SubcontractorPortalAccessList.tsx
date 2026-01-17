@@ -64,7 +64,7 @@ function AccessSkeleton() {
 }
 
 function getUserDisplayName(user?: { first_name?: string | null; last_name?: string | null; email?: string }): string {
-  if (!user) {return 'Unknown'}
+  if (!user) { return 'Unknown' }
   if (user.first_name || user.last_name) {
     return [user.first_name, user.last_name].filter(Boolean).join(' ')
   }
@@ -102,7 +102,7 @@ export function SubcontractorPortalAccessList({ projectId }: SubcontractorPortal
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <div>
-          <CardTitle className="text-lg flex items-center gap-2">
+          <CardTitle className="heading-card flex items-center gap-2">
             <Building2 className="h-5 w-5" />
             Subcontractor Portal Access
           </CardTitle>
@@ -150,7 +150,7 @@ export function SubcontractorPortalAccessList({ projectId }: SubcontractorPortal
                 <TableRow key={access.id}>
                   <TableCell>
                     <div>
-                      <p className="font-medium">{access.subcontractor?.company_name}</p>
+                      <p className="heading-subsection">{access.subcontractor?.company_name}</p>
                       <p className="text-xs text-muted-foreground">
                         {access.subcontractor?.trade}
                       </p>
@@ -165,12 +165,12 @@ export function SubcontractorPortalAccessList({ projectId }: SubcontractorPortal
                   <TableCell>
                     {access.is_active ? (
                       access.accepted_at ? (
-                        <Badge variant="default" className="bg-success-light text-green-800 hover:bg-success-light">
+                        <Badge variant="default" className="bg-success/10 text-success-800 hover:bg-success/20">
                           <UserCheck className="mr-1 h-3 w-3" />
                           Active
                         </Badge>
                       ) : (
-                        <Badge variant="secondary" className="bg-amber-100 text-amber-800 hover:bg-amber-100">
+                        <Badge variant="secondary" className="bg-warning/10 text-warning-800 hover:bg-warning/20">
                           <Clock className="mr-1 h-3 w-3" />
                           Pending
                         </Badge>

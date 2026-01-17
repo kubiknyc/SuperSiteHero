@@ -29,12 +29,12 @@ function StatCard({ title, value, icon, variant = 'default', description }: Stat
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-muted-foreground">{title}</p>
+            <p className="text-muted-foreground heading-subsection">{title}</p>
             <p
               className={cn(
-                'text-3xl font-bold mt-1',
+                'mt-1 heading-page',
                 variant === 'warning' && 'text-warning',
-                variant === 'danger' && 'text-error'
+                variant === 'danger' && 'text-destructive'
               )}
             >
               {value}
@@ -47,8 +47,8 @@ function StatCard({ title, value, icon, variant = 'default', description }: Stat
             className={cn(
               'p-3 rounded-full',
               variant === 'default' && 'bg-primary/10 text-primary',
-              variant === 'warning' && 'bg-amber-100 text-warning',
-              variant === 'danger' && 'bg-error-light text-error'
+              variant === 'warning' && 'bg-warning/10 text-warning',
+              variant === 'danger' && 'bg-destructive/10 text-destructive'
             )}
           >
             {icon}

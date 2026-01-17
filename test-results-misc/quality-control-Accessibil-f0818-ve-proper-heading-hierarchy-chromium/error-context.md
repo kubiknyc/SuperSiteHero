@@ -1,0 +1,115 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img "JobSight" [ref=e9]
+          - generic:
+            - heading "JobSight" [level=1]
+            - paragraph: Field Management
+        - generic:
+          - button:
+            - img
+      - navigation [ref=e10]:
+        - generic [ref=e11]:
+          - link [ref=e13] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e14]
+          - link [ref=e20] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e21]
+        - generic [ref=e25]:
+          - link [ref=e26] [cursor=pointer]:
+            - /url: /rfis
+            - img [ref=e27]
+          - link [ref=e30] [cursor=pointer]:
+            - /url: /daily-reports
+            - img [ref=e31]
+          - link [ref=e36] [cursor=pointer]:
+            - /url: /team
+            - img [ref=e37]
+    - generic [ref=e42]:
+      - banner [ref=e43]:
+        - generic [ref=e46]:
+          - heading "Quality Control" [level=1] [ref=e47]
+          - paragraph [ref=e48]: QC management
+        - generic [ref=e49]:
+          - button "Search Ctrl+K" [ref=e51] [cursor=pointer]:
+            - img [ref=e52]
+            - generic [ref=e55]: Search
+            - generic [ref=e57]: Ctrl+K
+          - button [ref=e58] [cursor=pointer]:
+            - img [ref=e59]
+          - button [ref=e65] [cursor=pointer]:
+            - link [ref=e66]:
+              - /url: /settings
+              - img [ref=e67]
+          - link "TU" [ref=e70] [cursor=pointer]:
+            - /url: /settings/profile
+            - text: TU
+      - main [ref=e71]:
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - generic [ref=e75]:
+              - heading "Quality Control" [level=1] [ref=e76]
+              - paragraph [ref=e77]: Manage NCRs and QC inspections for your projects
+            - generic [ref=e78]:
+              - button "New NCR" [ref=e79] [cursor=pointer]:
+                - img [ref=e80]
+                - text: New NCR
+              - button "New Inspection" [ref=e82] [cursor=pointer]:
+                - img [ref=e83]
+                - text: New Inspection
+          - generic [ref=e87]:
+            - generic [ref=e88]: Select Project
+            - combobox [ref=e89] [cursor=pointer]:
+              - generic: E2E Test Project
+              - img [ref=e90]
+          - generic [ref=e92]:
+            - generic [ref=e93]:
+              - tab "NCRs" [selected] [ref=e94] [cursor=pointer]:
+                - img [ref=e95]
+                - text: NCRs
+              - tab "Inspections" [ref=e97] [cursor=pointer]:
+                - img [ref=e98]
+                - text: Inspections
+            - tabpanel [ref=e102]:
+              - generic [ref=e103]:
+                - generic [ref=e105]:
+                  - img [ref=e106]
+                  - textbox "Search NCRs..." [ref=e109]
+                - combobox [ref=e110] [cursor=pointer]:
+                  - img [ref=e111]
+                  - generic: All Statuses
+                  - img [ref=e113]
+                - combobox [ref=e115] [cursor=pointer]:
+                  - img [ref=e116]
+                  - generic: All Severities
+                  - img [ref=e118]
+              - generic [ref=e120]:
+                - img [ref=e121]
+                - heading "No NCRs Found" [level=3] [ref=e123]
+                - paragraph [ref=e124]: Create your first NCR to get started
+                - button "Create NCR" [ref=e125] [cursor=pointer]:
+                  - img [ref=e126]
+                  - text: Create NCR
+    - complementary [ref=e127]:
+      - generic [ref=e128]:
+        - generic [ref=e129]:
+          - img [ref=e131]
+          - heading "Action Required" [level=2] [ref=e135]
+        - button [ref=e136] [cursor=pointer]:
+          - img [ref=e137]
+      - generic [ref=e141]:
+        - img [ref=e143]
+        - heading "All caught up!" [level=3] [ref=e145]
+        - paragraph [ref=e146]: No items need your attention right now
+      - button "View All Approvals" [ref=e148] [cursor=pointer]:
+        - link "View All Approvals" [ref=e149]:
+          - /url: /approvals
+  - region "Notifications alt+T"
+  - button "Open JobSight AI Assistant" [ref=e152] [cursor=pointer]
+```

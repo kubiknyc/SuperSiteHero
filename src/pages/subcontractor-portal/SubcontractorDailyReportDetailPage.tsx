@@ -52,7 +52,7 @@ function WeatherDisplay({
   conditions: string | null
   temperature: number | null
 }) {
-  if (!conditions && !temperature) {return null}
+  if (!conditions && !temperature) { return null }
 
   return (
     <div className="flex flex-wrap items-center gap-4 text-sm">
@@ -90,7 +90,7 @@ export function SubcontractorDailyReportDetailPage() {
       <div className="p-6">
         <Card>
           <CardContent className="p-12 text-center">
-            <AlertCircle className="h-12 w-12 mx-auto mb-4 text-error" />
+            <AlertCircle className="h-12 w-12 mx-auto mb-4 text-destructive" />
             <h2 className="text-xl font-semibold mb-2 heading-section">Report Not Found</h2>
             <p className="text-muted-foreground mb-4">
               This report doesn't exist or you don't have permission to view it.
@@ -118,7 +118,7 @@ export function SubcontractorDailyReportDetailPage() {
               Back to Reports
             </Link>
           </Button>
-          <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
+          <h1 className="flex items-center gap-2 heading-page">
             <FileText className="h-6 w-6" />
             Daily Report
           </h1>
@@ -135,8 +135,8 @@ export function SubcontractorDailyReportDetailPage() {
         </div>
 
         <Badge
-          variant={report.submitted_at ? 'default' : 'secondary'}
-          className={report.submitted_at ? 'bg-success-light text-success-dark' : ''}
+          variant={report.submitted_at ? 'outline' : 'secondary'}
+          className={report.submitted_at ? 'bg-success/10 text-success border-success/20' : ''}
         >
           {report.submitted_at ? (
             <>
@@ -155,7 +155,7 @@ export function SubcontractorDailyReportDetailPage() {
       {/* Weather & General Info */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">General Information</CardTitle>
+          <CardTitle className="heading-card">General Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <WeatherDisplay
@@ -168,7 +168,7 @@ export function SubcontractorDailyReportDetailPage() {
       {/* Work Summary */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 heading-card">
             <ClipboardList className="h-4 w-4" />
             Work Summary
           </CardTitle>
@@ -192,7 +192,7 @@ export function SubcontractorDailyReportDetailPage() {
           )}
           {report.issues && (
             <div>
-              <h4 className="text-sm font-medium mb-1 text-orange-600 heading-card">Issues/Delays</h4>
+              <h4 className="text-sm font-medium mb-1 text-destructive heading-card">Issues/Delays</h4>
               <p className="text-sm text-muted-foreground whitespace-pre-wrap">{report.issues}</p>
             </div>
           )}
@@ -213,7 +213,7 @@ export function SubcontractorDailyReportDetailPage() {
       {/* Workforce */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 heading-card">
             <Users className="h-4 w-4" />
             Workforce
           </CardTitle>
@@ -257,7 +257,7 @@ export function SubcontractorDailyReportDetailPage() {
       {/* Equipment */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 heading-card">
             <Truck className="h-4 w-4" />
             Equipment
           </CardTitle>
@@ -299,7 +299,7 @@ export function SubcontractorDailyReportDetailPage() {
       {/* Photos */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 heading-card">
             <Camera className="h-4 w-4" />
             Photos
           </CardTitle>

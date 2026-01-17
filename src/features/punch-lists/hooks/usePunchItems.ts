@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { punchListsApi } from '@/lib/api'
 import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/lib/auth/AuthContext'
-import type { PunchItem, PunchItemStatus } from '@/types/database'
+import type { PunchItem, PunchItemStatus } from '@/types/database-extensions'
 import type { StatusChangeRequest } from '../store/offlinePunchStore'
 
 // Extended punch item type with subcontractor fields
@@ -14,6 +14,8 @@ export interface EnhancedPunchItem extends PunchItem {
   subcontractor_updated_at?: string
   status_change_requested_at?: string
   status_change_request?: StatusChangeRequest
+  item_number?: string
+  created_by_name?: string
 }
 
 // Fetch all punch items for a project
@@ -21,7 +23,7 @@ export function usePunchItems(projectId: string | undefined) {
   return useQuery({
     queryKey: ['punch-items', projectId],
     queryFn: async () => {
-      if (!projectId) {throw new Error('Project ID required')}
+      if (!projectId) { throw new Error('Project ID required') }
 
       return punchListsApi.getPunchItemsByProject(projectId)
     },
@@ -34,7 +36,7 @@ export function usePunchItem(punchItemId: string | undefined) {
   return useQuery({
     queryKey: ['punch-items', punchItemId],
     queryFn: async () => {
-      if (!punchItemId) {throw new Error('Punch item ID required')}
+      if (!punchItemId) { throw new Error('Punch item ID required') }
 
       // Use direct Supabase query to get all fields including subcontractor fields
       const { data, error } = await supabase
@@ -43,7 +45,7 @@ export function usePunchItem(punchItemId: string | undefined) {
         .eq('id', punchItemId)
         .single()
 
-      if (error) {throw error}
+      if (error) { throw error }
       return data as EnhancedPunchItem
     },
     enabled: !!punchItemId,
@@ -55,7 +57,7 @@ export function usePunchItemsWithStatusRequests(projectId: string | undefined) {
   return useQuery({
     queryKey: ['punch-items', 'status-requests', projectId],
     queryFn: async () => {
-      if (!projectId) {throw new Error('Project ID required')}
+      if (!projectId) { throw new Error('Project ID required') }
 
       const { data, error } = await supabase
         .from('punch_items')
@@ -65,7 +67,7 @@ export function usePunchItemsWithStatusRequests(projectId: string | undefined) {
         .is('deleted_at', null)
         .order('status_change_requested_at', { ascending: false })
 
-      if (error) {throw error}
+      if (error) { throw error }
       return data as EnhancedPunchItem[]
     },
     enabled: !!projectId,
@@ -92,7 +94,7 @@ export function usePunchItemsBySubcontractor(
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) {throw error}
+      if (error) { throw error }
       return data as EnhancedPunchItem[]
     },
     enabled: !!projectId && !!subcontractorId,
@@ -104,7 +106,7 @@ export function useProofOfCompletionPhotos(punchItemId: string | undefined) {
   return useQuery({
     queryKey: ['photos', 'proof-of-completion', punchItemId],
     queryFn: async () => {
-      if (!punchItemId) {throw new Error('Punch item ID required')}
+      if (!punchItemId) { throw new Error('Punch item ID required') }
 
       const { data, error } = await supabase
         .from('photos')
@@ -114,7 +116,7 @@ export function useProofOfCompletionPhotos(punchItemId: string | undefined) {
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (error) {throw error}
+      if (error) { throw error }
       return data
     },
     enabled: !!punchItemId,
@@ -128,7 +130,7 @@ export function useCreatePunchItem() {
 
   return useMutation({
     mutationFn: async (punchItem: Omit<PunchItem, 'id' | 'created_at' | 'updated_at'>) => {
-      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!userProfile?.id) { throw new Error('User not authenticated') }
 
       return punchListsApi.createPunchItem(punchItem)
     },
@@ -207,7 +209,7 @@ export function useResolveStatusChangeRequest() {
       approve: boolean
       rejectionReason?: string
     }) => {
-      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!userProfile?.id) { throw new Error('User not authenticated') }
 
       // Get current punch item to check the requested status
       const { data: punchItem, error: fetchError } = await supabase
@@ -216,7 +218,7 @@ export function useResolveStatusChangeRequest() {
         .eq('id', punchItemId)
         .single()
 
-      if (fetchError) {throw fetchError}
+      if (fetchError) { throw fetchError }
 
       const statusRequest = punchItem.status_change_request as StatusChangeRequest | null
 
@@ -242,7 +244,7 @@ export function useResolveStatusChangeRequest() {
           .select()
           .single()
 
-        if (error) {throw error}
+        if (error) { throw error }
         return data
       } else {
         // Reject: Clear request and add rejection notes
@@ -257,7 +259,7 @@ export function useResolveStatusChangeRequest() {
           .select()
           .single()
 
-        if (error) {throw error}
+        if (error) { throw error }
         return data
       }
     },
@@ -283,7 +285,7 @@ export function useBulkUpdatePunchItemStatus() {
       punchItemIds: string[]
       status: PunchItemStatus
     }) => {
-      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!userProfile?.id) { throw new Error('User not authenticated') }
 
       const updates: Partial<PunchItem> = {
         status,
@@ -303,7 +305,7 @@ export function useBulkUpdatePunchItemStatus() {
         .in('id', punchItemIds)
         .select()
 
-      if (error) {throw error}
+      if (error) { throw error }
       return data
     },
     onSuccess: () => {
@@ -323,7 +325,7 @@ export function usePunchItemsAwaitingVerification(projectId: string | undefined)
   return useQuery({
     queryKey: ['punch-items', 'awaiting-verification', projectId],
     queryFn: async () => {
-      if (!projectId) {throw new Error('Project ID required')}
+      if (!projectId) { throw new Error('Project ID required') }
 
       // Use the RPC function from migration
       const { data, error } = await supabase
@@ -331,7 +333,7 @@ export function usePunchItemsAwaitingVerification(projectId: string | undefined)
           p_project_id: projectId,
         })
 
-      if (error) {throw error}
+      if (error) { throw error }
       return data as Array<{
         id: string
         title: string
@@ -368,7 +370,7 @@ export function useVerifySubcontractorCompletion() {
       approve: boolean
       rejectionReason?: string
     }) => {
-      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!userProfile?.id) { throw new Error('User not authenticated') }
 
       // Use the RPC function from migration
       const { data, error } = await supabase
@@ -379,7 +381,7 @@ export function useVerifySubcontractorCompletion() {
           p_rejection_reason: rejectionReason || null,
         })
 
-      if (error) {throw error}
+      if (error) { throw error }
       return data
     },
     onSuccess: (data) => {
@@ -397,7 +399,7 @@ export function useSubcontractorCompletionHistory(punchItemId: string | undefine
   return useQuery({
     queryKey: ['punch-items', 'completion-history', punchItemId],
     queryFn: async () => {
-      if (!punchItemId) {throw new Error('Punch item ID required')}
+      if (!punchItemId) { throw new Error('Punch item ID required') }
 
       // Get the punch item with all status-related fields
       const { data: punchItem, error: punchError } = await supabase
@@ -419,7 +421,7 @@ export function useSubcontractorCompletionHistory(punchItemId: string | undefine
         .eq('id', punchItemId)
         .single()
 
-      if (punchError) {throw punchError}
+      if (punchError) { throw punchError }
 
       // Get proof of completion photos
       const { data: proofPhotos, error: photoError } = await supabase
@@ -430,7 +432,7 @@ export function useSubcontractorCompletionHistory(punchItemId: string | undefine
         .is('deleted_at', null)
         .order('created_at', { ascending: false })
 
-      if (photoError) {throw photoError}
+      if (photoError) { throw photoError }
 
       // Get GC verifier profile if available
       let verifierProfile = null
@@ -471,8 +473,8 @@ export function useBatchVerifySubcontractorCompletions() {
       approve: boolean
       rejectionReason?: string
     }) => {
-      if (!userProfile?.id) {throw new Error('User not authenticated')}
-      if (punchItemIds.length === 0) {throw new Error('No punch items selected')}
+      if (!userProfile?.id) { throw new Error('User not authenticated') }
+      if (punchItemIds.length === 0) { throw new Error('No punch items selected') }
 
       const results = await Promise.allSettled(
         punchItemIds.map(async (punchItemId) => {
@@ -484,7 +486,7 @@ export function useBatchVerifySubcontractorCompletions() {
               p_rejection_reason: rejectionReason || null,
             })
 
-          if (error) {throw error}
+          if (error) { throw error }
           return data
         })
       )

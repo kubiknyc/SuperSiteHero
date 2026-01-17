@@ -160,7 +160,7 @@ export function ProjectSettingsPage() {
             </Link>
           </Button>
           <div>
-            <h1 className="text-2xl font-bold heading-page flex items-center gap-2">
+            <h1 className="heading-page flex items-center gap-2">
               <Settings className="h-6 w-6" />
               Project Settings
             </h1>

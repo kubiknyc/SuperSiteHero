@@ -62,7 +62,7 @@ function ComplianceScoreCard() {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 heading-subsection">
           <Award className="h-4 w-4" />
           Compliance Score
         </CardTitle>
@@ -70,7 +70,7 @@ function ComplianceScoreCard() {
       <CardContent>
         <div className="flex flex-col items-center">
           <div className={cn(
-            "text-4xl font-bold",
+            "heading-page text-4xl",
             getComplianceScoreColor(score)
           )}>
             {score}
@@ -108,11 +108,11 @@ function SafetySummaryCards() {
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Days Without Incident</CardTitle>
-          <Shield className="h-4 w-4 text-green-600" />
+          <CardTitle className="heading-subsection">Days Without Incident</CardTitle>
+          <Shield className="h-4 w-4 text-success" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold text-green-600">
+          <div className="heading-section text-success">
             {formatDaysSince(summary?.days_since_last_incident ?? null)}
           </div>
           <p className="text-xs text-muted-foreground">
@@ -123,11 +123,11 @@ function SafetySummaryCards() {
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Incidents YTD</CardTitle>
-          <AlertTriangle className="h-4 w-4 text-yellow-600" />
+          <CardTitle className="heading-subsection">Incidents YTD</CardTitle>
+          <AlertTriangle className="h-4 w-4 text-warning" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{summary?.incidents_ytd || 0}</div>
+          <div className="heading-section">{summary?.incidents_ytd || 0}</div>
           <p className="text-xs text-muted-foreground">
             {summary?.recordable_incidents_ytd || 0} OSHA recordable
           </p>
@@ -136,11 +136,11 @@ function SafetySummaryCards() {
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Open Actions</CardTitle>
-          <Clock className="h-4 w-4 text-blue-600" />
+          <CardTitle className="heading-subsection">Open Actions</CardTitle>
+          <Clock className="h-4 w-4 text-primary" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{summary?.open_corrective_actions || 0}</div>
+          <div className="heading-section">{summary?.open_corrective_actions || 0}</div>
           <p className="text-xs text-muted-foreground">
             {summary?.overdue_corrective_actions || 0} overdue
           </p>
@@ -149,11 +149,11 @@ function SafetySummaryCards() {
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Toolbox Talks</CardTitle>
-          <BookOpen className="h-4 w-4 text-purple-600" />
+          <CardTitle className="heading-subsection">Toolbox Talks</CardTitle>
+          <BookOpen className="h-4 w-4 text-primary" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{summary?.toolbox_talks_this_month || 0}</div>
+          <div className="heading-section">{summary?.toolbox_talks_this_month || 0}</div>
           <p className="text-xs text-muted-foreground">
             This month
           </p>
@@ -185,20 +185,20 @@ function CertificateStatusCard() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-sm font-medium">Safety Certifications</CardTitle>
+        <CardTitle className="heading-subsection">Safety Certifications</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Valid</span>
-          <span className="text-green-600 font-medium">{summary?.safety_certs_valid || 0}</span>
+          <span className="text-success font-medium">{summary?.safety_certs_valid || 0}</span>
         </div>
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Expiring Soon</span>
-          <span className="text-yellow-600 font-medium">{summary?.safety_certs_expiring || 0}</span>
+          <span className="text-warning font-medium">{summary?.safety_certs_expiring || 0}</span>
         </div>
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Expired</span>
-          <span className="text-red-600 font-medium">{summary?.safety_certs_expired || 0}</span>
+          <span className="text-destructive font-medium">{summary?.safety_certs_expired || 0}</span>
         </div>
         <Progress value={validPercent} className="h-2" />
         <p className="text-xs text-muted-foreground text-center">
@@ -215,14 +215,14 @@ function IncidentCard({ incident }: { incident: SubcontractorSafetyIncident }) {
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <Card className={cn(
-        incident.is_osha_recordable && "border-red-300 bg-red-50/50"
+        incident.is_osha_recordable && "border-destructive/30 bg-destructive/5"
       )}>
         <CollapsibleTrigger asChild>
           <CardHeader className="cursor-pointer hover:bg-muted/50 transition-colors">
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <CardTitle className="text-base">{incident.incident_number}</CardTitle>
+                  <CardTitle className="heading-card">{incident.incident_number}</CardTitle>
                   {incident.is_osha_recordable && (
                     <Badge variant="destructive" className="text-xs">OSHA Recordable</Badge>
                   )}
@@ -275,13 +275,13 @@ function IncidentCard({ incident }: { incident: SubcontractorSafetyIncident }) {
                 {incident.days_away > 0 && (
                   <div>
                     <h4 className="text-sm font-medium mb-1">Days Away</h4>
-                    <p className="text-sm text-red-600">{incident.days_away}</p>
+                    <p className="text-sm text-destructive">{incident.days_away}</p>
                   </div>
                 )}
                 {incident.days_restricted > 0 && (
                   <div>
                     <h4 className="text-sm font-medium mb-1">Days Restricted</h4>
-                    <p className="text-sm text-orange-600">{incident.days_restricted}</p>
+                    <p className="text-sm text-warning">{incident.days_restricted}</p>
                   </div>
                 )}
               </div>
@@ -317,7 +317,7 @@ function IncidentsList({ filter }: { filter: 'all' | 'open' | 'closed' | 'record
     return (
       <Card>
         <CardContent className="py-8 text-center">
-          <Shield className="h-12 w-12 text-green-600 mx-auto mb-4" />
+          <Shield className="h-12 w-12 text-success mx-auto mb-4" />
           <p className="text-muted-foreground">
             {filter === 'all'
               ? "No safety incidents recorded"
@@ -340,13 +340,13 @@ function IncidentsList({ filter }: { filter: 'all' | 'open' | 'closed' | 'record
 function CorrectiveActionCard({ action }: { action: SubcontractorCorrectiveAction }) {
   return (
     <Card className={cn(
-      action.is_overdue && "border-red-300 bg-red-50/50"
+      action.is_overdue && "border-destructive/30 bg-destructive/5"
     )}>
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <CardTitle className="text-base">From {action.incident_number}</CardTitle>
+              <CardTitle className="heading-card">From {action.incident_number}</CardTitle>
               {action.is_overdue && (
                 <Badge variant="destructive" className="text-xs">Overdue</Badge>
               )}
@@ -375,7 +375,7 @@ function CorrectiveActionCard({ action }: { action: SubcontractorCorrectiveActio
             <span>Assigned: {action.assigned_to_name}</span>
           )}
           {action.due_date && (
-            <span className={cn(action.is_overdue && "text-red-600")}>
+            <span className={cn(action.is_overdue && "text-destructive")}>
               Due: {formatSafetyDate(action.due_date)}
             </span>
           )}
@@ -409,7 +409,7 @@ function CorrectiveActionsList({ filter }: { filter: 'all' | 'open' | 'overdue' 
     return (
       <Card>
         <CardContent className="py-8 text-center">
-          <CheckCircle2 className="h-12 w-12 text-green-600 mx-auto mb-4" />
+          <CheckCircle2 className="h-12 w-12 text-success mx-auto mb-4" />
           <p className="text-muted-foreground">
             {filter === 'all'
               ? "No corrective actions"
@@ -435,7 +435,7 @@ function ToolboxTalkCard({ talk }: { talk: SubcontractorToolboxTalk }) {
       <CardHeader>
         <div className="flex items-start justify-between">
           <div>
-            <CardTitle className="text-base">{talk.topic}</CardTitle>
+            <CardTitle className="heading-card">{talk.topic}</CardTitle>
             <CardDescription className="flex items-center gap-4 mt-1">
               <span className="flex items-center gap-1">
                 <Building2 className="h-3 w-3" />
@@ -505,7 +505,7 @@ export default function SubcontractorSafetyPage() {
     <div className="space-y-6 p-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Safety Compliance</h1>
+        <h1 className="heading-page">Safety Compliance</h1>
         <p className="text-muted-foreground">
           View safety metrics, incidents, and compliance status
         </p>
@@ -526,7 +526,7 @@ export default function SubcontractorSafetyPage() {
           {/* Incidents */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="heading-card flex items-center gap-2">
                 <AlertTriangle className="h-5 w-5" />
                 Safety Incidents
               </CardTitle>
@@ -562,7 +562,7 @@ export default function SubcontractorSafetyPage() {
           {/* Corrective Actions */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="heading-card flex items-center gap-2">
                 <AlertCircle className="h-5 w-5" />
                 Corrective Actions
               </CardTitle>
@@ -604,7 +604,7 @@ export default function SubcontractorSafetyPage() {
           {/* Toolbox Talks */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
+              <CardTitle className="heading-card flex items-center gap-2">
                 <BookOpen className="h-5 w-5" />
                 Recent Toolbox Talks
               </CardTitle>

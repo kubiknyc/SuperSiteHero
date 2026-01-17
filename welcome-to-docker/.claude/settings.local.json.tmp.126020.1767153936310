@@ -1,9 +1,0 @@
-{
-  "enabledMcpjsonServers": [
-    "filesystem",
-    "github",
-    "puppeteer",
-    "supabase"
-  ],
-  "enableAllProjectMcpServers": true
-}

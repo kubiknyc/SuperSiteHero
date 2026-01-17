@@ -54,7 +54,7 @@ export function InsuranceEndorsementCard({
 }: InsuranceEndorsementCardProps) {
   const isExpired = isCertificateExpired(certificate.expiration_date)
   const daysUntilExpiry = getDaysUntilExpiration(certificate.expiration_date)
-  const isExpiringSoon = !isExpired && daysUntilExpiry <= 30
+  const isExpiringSoon = !isExpired && daysUntilExpiry !== null && daysUntilExpiry <= 30
 
   // Calculate endorsement compliance
   const requiredEndorsements = certificate.endorsements.filter((e) => e.required)
@@ -65,23 +65,23 @@ export function InsuranceEndorsementCard({
       : 100
 
   const getStatusIcon = () => {
-    if (isExpired) {return <ShieldX className="h-5 w-5 text-destructive" />}
-    if (!certificate.has_all_required_endorsements) {return <ShieldAlert className="h-5 w-5 text-yellow-500" />}
-    return <ShieldCheck className="h-5 w-5 text-green-500" />
+    if (isExpired) { return <ShieldX className="h-5 w-5 text-destructive" /> }
+    if (!certificate.has_all_required_endorsements) { return <ShieldAlert className="h-5 w-5 text-warning" /> }
+    return <ShieldCheck className="h-5 w-5 text-success" />
   }
 
   return (
     <Card className={
       isExpired ? 'border-destructive' :
-      !certificate.has_all_required_endorsements ? 'border-yellow-500' :
-      ''
+        !certificate.has_all_required_endorsements ? 'border-warning' :
+          ''
     }>
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-2">
             {getStatusIcon()}
             <div>
-              <CardTitle className="text-lg">
+              <CardTitle className="heading-card">
                 {getInsuranceTypeLabel(certificate.insurance_type)}
               </CardTitle>
               <CardDescription>
@@ -102,8 +102,8 @@ export function InsuranceEndorsementCard({
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription className="text-sm">
               {isExpired
-                ? `Certificate expired ${Math.abs(daysUntilExpiry)} days ago`
-                : `Certificate expires in ${daysUntilExpiry} days`}
+                ? `Certificate expired ${Math.abs(daysUntilExpiry || 0)} days ago`
+                : `Certificate expires in ${daysUntilExpiry || 0} days`}
             </AlertDescription>
           </Alert>
         )}
@@ -121,7 +121,7 @@ export function InsuranceEndorsementCard({
             <Calendar className="h-4 w-4 text-muted-foreground" />
             <div>
               <p className="text-muted-foreground">Expires</p>
-              <p className={isExpired ? 'text-destructive font-semibold' : isExpiringSoon ? 'text-yellow-600 font-semibold' : ''}>
+              <p className={isExpired ? 'text-destructive font-semibold' : isExpiringSoon ? 'text-warning-600 font-semibold' : ''}>
                 {format(new Date(certificate.expiration_date), 'MMM d, yyyy')}
               </p>
             </div>
@@ -153,7 +153,7 @@ export function InsuranceEndorsementCard({
         {/* Endorsement Section */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <p className="text-sm font-medium">Required Endorsements</p>
+            <p className="heading-subsection">Required Endorsements</p>
             {requiredEndorsements.length > 0 && (
               <span className="text-xs text-muted-foreground">
                 {verifiedEndorsements.length}/{requiredEndorsements.length} verified

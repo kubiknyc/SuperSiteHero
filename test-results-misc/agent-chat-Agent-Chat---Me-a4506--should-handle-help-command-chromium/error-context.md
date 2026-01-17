@@ -1,0 +1,130 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - img "JobSight" [ref=e15]
+        - heading "Build Smarter. Manage Better." [level=1] [ref=e16]:
+          - text: Build Smarter.
+          - text: Manage Better.
+        - paragraph [ref=e17]: The field management platform trusted by construction professionals to streamline daily reports, RFIs, and project workflows.
+      - generic [ref=e18]:
+        - generic [ref=e19]:
+          - img [ref=e20]
+          - generic [ref=e24]: 2,400+
+          - generic [ref=e25]: Projects Managed
+        - generic [ref=e26]:
+          - img [ref=e27]
+          - generic [ref=e32]: 50K+
+          - generic [ref=e33]: Daily Reports
+        - generic [ref=e34]:
+          - img [ref=e35]
+          - generic [ref=e37]: 99.9%
+          - generic [ref=e38]: Enterprise Ready
+      - img [ref=e40]
+    - generic [ref=e46]:
+      - generic [ref=e47]:
+        - heading "Welcome back" [level=2] [ref=e48]
+        - paragraph [ref=e49]: Sign in to continue to your dashboard
+      - generic [ref=e50]:
+        - button "Sign in with Biometrics" [ref=e51] [cursor=pointer]:
+          - img [ref=e52]
+          - text: Sign in with Biometrics
+        - generic [ref=e65]: or continue with email
+      - generic [ref=e66]:
+        - generic [ref=e67]:
+          - text: Email address
+          - textbox "Email address" [ref=e68]:
+            - /placeholder: you@company.com
+        - generic [ref=e69]:
+          - generic [ref=e70]:
+            - generic [ref=e71]: Password
+            - link "Forgot password?" [ref=e72] [cursor=pointer]:
+              - /url: /forgot-password
+          - generic [ref=e73]:
+            - textbox "Password" [ref=e74]:
+              - /placeholder: Enter your password
+            - button [ref=e75] [cursor=pointer]:
+              - img [ref=e76]
+        - button "Sign in" [ref=e79] [cursor=pointer]:
+          - text: Sign in
+          - img [ref=e80]
+      - paragraph [ref=e82]:
+        - text: Don't have an account?
+        - link "Create account" [ref=e83] [cursor=pointer]:
+          - /url: /signup
+      - generic [ref=e85]:
+        - link "Privacy Policy" [ref=e86] [cursor=pointer]:
+          - /url: /privacy
+        - generic [ref=e87]: •
+        - link "Terms of Service" [ref=e88] [cursor=pointer]:
+          - /url: /terms
+  - region "Notifications alt+T"
+  - generic [ref=e89]:
+    - generic [ref=e90]:
+      - generic [ref=e91]:
+        - img [ref=e93]
+        - generic [ref=e96]:
+          - heading "JobSight AI" [level=3] [ref=e97]
+          - paragraph [ref=e98]: Ready to help
+      - generic [ref=e99]:
+        - button [ref=e100] [cursor=pointer]:
+          - img [ref=e101]
+        - button [ref=e105] [cursor=pointer]:
+          - img [ref=e106]
+        - button [ref=e108] [cursor=pointer]:
+          - img [ref=e109]
+        - button [ref=e112] [cursor=pointer]:
+          - img [ref=e113]
+        - button [ref=e114] [cursor=pointer]:
+          - img [ref=e115]
+    - generic [ref=e122]:
+      - img [ref=e124]
+      - heading "Welcome to JobSight AI" [level=4] [ref=e127]
+      - paragraph [ref=e128]: I can help you with documents, daily reports, RFIs, and more. Try asking me something!
+      - generic [ref=e129]:
+        - button "Summarize today Get a summary of today's activities and progress" [ref=e130] [cursor=pointer]:
+          - generic [ref=e131]:
+            - img [ref=e133]
+            - generic [ref=e136]: Summarize today
+          - generic: Get a summary of today's activities and progress
+        - button "Weekly status Generate comprehensive weekly report" [ref=e137] [cursor=pointer]:
+          - generic [ref=e138]:
+            - img [ref=e140]
+            - generic [ref=e142]: Weekly status
+          - generic: Generate comprehensive weekly report
+        - button "Extract actions Find action items from recent reports" [ref=e143] [cursor=pointer]:
+          - generic [ref=e144]:
+            - img [ref=e146]
+            - generic [ref=e149]: Extract actions
+          - generic: Find action items from recent reports
+        - button "Progress metrics New View project progress and KPIs" [ref=e150] [cursor=pointer]:
+          - generic [ref=e151]:
+            - img [ref=e153]
+            - generic [ref=e156]: Progress metrics
+            - generic [ref=e157]: New
+          - generic: View project progress and KPIs
+    - generic [ref=e159]:
+      - generic [ref=e160]:
+        - textbox "Ask me anything..." [ref=e162]
+        - generic [ref=e163]:
+          - button [ref=e164] [cursor=pointer]:
+            - img [ref=e165]
+          - button [ref=e167] [cursor=pointer]:
+            - img [ref=e168]
+          - button "Send message" [disabled]:
+            - img
+            - generic: Send message
+      - generic [ref=e172]:
+        - generic [ref=e173]:
+          - img [ref=e174]
+          - generic [ref=e176]: Enter to send
+        - generic [ref=e177]:
+          - img [ref=e178]
+          - generic [ref=e181]: "@ to mention"
+        - generic [ref=e182]:
+          - img [ref=e183]
+          - generic [ref=e186]: / for commands
+```

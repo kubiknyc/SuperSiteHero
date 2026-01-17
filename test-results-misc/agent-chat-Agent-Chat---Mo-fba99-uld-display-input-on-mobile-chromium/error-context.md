@@ -1,0 +1,96 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - img "JobSight" [ref=e7]
+    - heading "404" [level=1] [ref=e8]
+    - heading "Page Not Found" [level=2] [ref=e9]
+    - paragraph [ref=e10]: The page you're looking for doesn't exist in JobSight. It may have been moved, deleted, or the URL might be incorrect.
+    - generic [ref=e11]:
+      - button "Go Back" [ref=e12] [cursor=pointer]:
+        - img [ref=e13]
+        - text: Go Back
+      - button "Return to Dashboard" [ref=e15] [cursor=pointer]:
+        - img [ref=e16]
+        - text: Return to Dashboard
+    - generic [ref=e20]:
+      - img [ref=e21]
+      - generic [ref=e24]:
+        - paragraph [ref=e25]: Looking for something specific?
+        - paragraph [ref=e26]: Try using the search feature or navigation menu to find what you need.
+    - generic [ref=e27]:
+      - paragraph [ref=e28]: "Quick links:"
+      - generic [ref=e29]:
+        - button "Projects" [ref=e30] [cursor=pointer]
+        - button "Daily Reports" [ref=e31] [cursor=pointer]
+        - button "Settings" [ref=e32] [cursor=pointer]
+        - button "Help Center" [ref=e33] [cursor=pointer]
+    - paragraph [ref=e35]: JobSight - Construction Field Management
+  - region "Notifications alt+T"
+  - generic [ref=e36]:
+    - generic [ref=e37]:
+      - generic [ref=e38]:
+        - img [ref=e40]
+        - generic [ref=e43]:
+          - heading "JobSight AI" [level=3] [ref=e44]
+          - paragraph [ref=e45]: Ready to help
+      - generic [ref=e46]:
+        - button [ref=e47] [cursor=pointer]:
+          - img [ref=e48]
+        - button [ref=e52] [cursor=pointer]:
+          - img [ref=e53]
+        - button [ref=e55] [cursor=pointer]:
+          - img [ref=e56]
+        - button [ref=e59] [cursor=pointer]:
+          - img [ref=e60]
+        - button [ref=e61] [cursor=pointer]:
+          - img [ref=e62]
+    - generic [ref=e69]:
+      - img [ref=e71]
+      - heading "Welcome to JobSight AI" [level=4] [ref=e74]
+      - paragraph [ref=e75]: I can help you with documents, daily reports, RFIs, and more. Try asking me something!
+      - generic [ref=e76]:
+        - button "Summarize today Get a summary of today's activities and progress" [ref=e77] [cursor=pointer]:
+          - generic [ref=e78]:
+            - img [ref=e80]
+            - generic [ref=e83]: Summarize today
+          - generic [ref=e84]: Get a summary of today's activities and progress
+        - button "Weekly status Generate comprehensive weekly report" [ref=e85] [cursor=pointer]:
+          - generic [ref=e86]:
+            - img [ref=e88]
+            - generic [ref=e90]: Weekly status
+          - generic [ref=e91]: Generate comprehensive weekly report
+        - button "Extract actions Find action items from recent reports" [ref=e92] [cursor=pointer]:
+          - generic [ref=e93]:
+            - img [ref=e95]
+            - generic [ref=e98]: Extract actions
+          - generic [ref=e99]: Find action items from recent reports
+        - button "Progress metrics New View project progress and KPIs" [ref=e100] [cursor=pointer]:
+          - generic [ref=e101]:
+            - img [ref=e103]
+            - generic [ref=e106]: Progress metrics
+            - generic [ref=e107]: New
+          - generic [ref=e108]: View project progress and KPIs
+    - generic [ref=e110]:
+      - generic [ref=e111]:
+        - textbox "Ask me anything..." [ref=e113]
+        - generic [ref=e114]:
+          - button [ref=e115] [cursor=pointer]:
+            - img [ref=e116]
+          - button [ref=e118] [cursor=pointer]:
+            - img [ref=e119]
+          - button "Send message" [disabled]:
+            - img
+            - generic: Send message
+      - generic [ref=e123]:
+        - generic [ref=e124]:
+          - img [ref=e125]
+          - generic [ref=e127]: Enter to send
+        - generic [ref=e128]:
+          - img [ref=e129]
+          - generic [ref=e132]: "@ to mention"
+        - generic [ref=e133]:
+          - img [ref=e134]
+          - generic [ref=e137]: / for commands
+```

@@ -102,7 +102,7 @@ export function InsuranceUploadWidget({
   const createCertificate = useCreateInsuranceCertificate()
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    if (acceptedFiles.length === 0) {return}
+    if (acceptedFiles.length === 0) { return }
 
     const file = acceptedFiles[0]
     setError(null)
@@ -124,7 +124,7 @@ export function InsuranceUploadWidget({
           upsert: false,
         })
 
-      if (uploadError) {throw uploadError}
+      if (uploadError) { throw uploadError }
 
       setUploadProgress(40)
 
@@ -259,7 +259,7 @@ export function InsuranceUploadWidget({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Shield className="h-5 w-5 text-primary" />
-            <CardTitle className="text-lg">Insurance Certificates</CardTitle>
+            <CardTitle className="heading-card">Insurance Certificates</CardTitle>
           </div>
           {complianceStatus && (
             <Badge
@@ -333,7 +333,7 @@ export function InsuranceUploadWidget({
             'border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors',
             isDragActive ? 'border-primary bg-primary/5' : 'border-muted-foreground/25',
             (uploadStatus !== 'idle' && uploadStatus !== 'error' && uploadStatus !== 'complete')
-              && 'cursor-not-allowed opacity-50'
+            && 'cursor-not-allowed opacity-50'
           )}
         >
           <input {...getInputProps()} />
@@ -399,7 +399,7 @@ export function InsuranceUploadWidget({
       <Dialog open={showReviewDialog} onOpenChange={setShowReviewDialog}>
         <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
+            <DialogTitle className="flex items-center gap-2 heading-card">
               <FileText className="h-5 w-5" />
               Review Extracted Data
             </DialogTitle>

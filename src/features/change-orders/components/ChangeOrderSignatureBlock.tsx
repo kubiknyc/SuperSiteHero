@@ -139,13 +139,13 @@ function SignatureDialog({
 
   // Initialize canvas
   useEffect(() => {
-    if (!open) {return}
+    if (!open) { return }
 
     const canvas = canvasRef.current
-    if (!canvas) {return}
+    if (!canvas) { return }
 
     const ctx = canvas.getContext('2d')
-    if (!ctx) {return}
+    if (!ctx) { return }
 
     const initCanvas = () => {
       const rect = canvas.getBoundingClientRect()
@@ -169,7 +169,7 @@ function SignatureDialog({
   // Get coordinates from mouse/touch event
   const getCoordinates = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     const canvas = canvasRef.current
-    if (!canvas) {return null}
+    if (!canvas) { return null }
 
     const rect = canvas.getBoundingClientRect()
 
@@ -189,11 +189,11 @@ function SignatureDialog({
 
   const startDrawing = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     const coords = getCoordinates(e)
-    if (!coords) {return}
+    if (!coords) { return }
 
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
-    if (!ctx) {return}
+    if (!ctx) { return }
 
     setIsDrawing(true)
     ctx.beginPath()
@@ -201,14 +201,14 @@ function SignatureDialog({
   }, [getCoordinates])
 
   const draw = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDrawing) {return}
+    if (!isDrawing) { return }
 
     const coords = getCoordinates(e)
-    if (!coords) {return}
+    if (!coords) { return }
 
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
-    if (!ctx) {return}
+    if (!ctx) { return }
 
     ctx.lineTo(coords.x, coords.y)
     ctx.stroke()
@@ -222,7 +222,7 @@ function SignatureDialog({
   const clearSignature = useCallback(() => {
     const canvas = canvasRef.current
     const ctx = canvas?.getContext('2d')
-    if (!ctx || !canvas) {return}
+    if (!ctx || !canvas) { return }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     setHasDrawn(false)
@@ -240,7 +240,7 @@ function SignatureDialog({
         upsert: true,
       })
 
-    if (error) {throw error}
+    if (error) { throw error }
 
     const { data: urlData } = supabase.storage
       .from('documents')
@@ -289,7 +289,7 @@ function SignatureDialog({
   // Prevent scrolling while drawing on touch devices
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) {return}
+    if (!canvas) { return }
 
     const preventScroll = (e: TouchEvent) => {
       if (isDrawing) {
@@ -312,7 +312,7 @@ function SignatureDialog({
           <DialogTitle className="flex items-center gap-2">
             <FileSignature className={cn(
               'h-5 w-5',
-              isContractor ? 'text-blue-600' : 'text-purple-600'
+              isContractor ? 'text-primary' : 'text-purple-600'
             )} />
             {isContractor ? 'Contractor Signature' : 'Owner Signature'}
           </DialogTitle>
@@ -404,9 +404,9 @@ function SignatureDialog({
           </div>
 
           {/* Legal Notice */}
-          <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded text-sm">
-            <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
-            <p className="text-amber-800">
+          <div className="flex items-start gap-2 p-3 bg-warning-50 border border-warning-200 rounded text-sm dark:bg-warning-950/30 dark:border-warning-800">
+            <AlertTriangle className="h-4 w-4 text-warning mt-0.5 flex-shrink-0" />
+            <p className="text-warning-800 dark:text-warning-200">
               By signing, I confirm that I am authorized to sign this change order on behalf of
               the {isContractor ? 'contractor' : 'owner'} and agree to the terms and conditions stated herein.
             </p>
@@ -426,7 +426,7 @@ function SignatureDialog({
             type="button"
             onClick={handleSubmit}
             disabled={!hasDrawn || !signerName.trim() || isLoading}
-            className={isContractor ? 'bg-blue-600 hover:bg-blue-700' : 'bg-purple-600 hover:bg-purple-700'}
+            className={isContractor ? 'bg-primary hover:bg-primary/90' : 'bg-purple-600 hover:bg-purple-700'}
           >
             {isLoading ? (
               <>
@@ -460,19 +460,26 @@ interface SignatureDisplayProps {
 
 function SignatureDisplay({ label, signature, type, canSign, onSign }: SignatureDisplayProps) {
   const isContractor = type === 'contractor'
-  const colorClass = isContractor ? 'blue' : 'purple'
+
+  const borderClass = isContractor
+    ? 'border-primary-200 dark:border-primary-800'
+    : 'border-purple-200 dark:border-purple-800'
+
+  const bgClass = isContractor
+    ? 'bg-primary-50/50 dark:bg-primary-950/20'
+    : 'bg-purple-50/50 dark:bg-purple-950/20'
 
   return (
     <div className={cn(
       'p-4 rounded-lg border-2',
       signature
-        ? `border-${colorClass}-200 bg-${colorClass}-50/50`
-        : 'border-dashed border-gray-300 bg-gray-50'
+        ? `${borderClass} ${bgClass}`
+        : 'border-dashed border-gray-300 bg-gray-50 dark:border-gray-700 dark:bg-gray-900/50'
     )}>
       <div className="flex items-center justify-between mb-3">
         <Label className={cn(
           'text-sm font-semibold uppercase tracking-wide',
-          isContractor ? 'text-blue-700' : 'text-purple-700'
+          isContractor ? 'text-primary' : 'text-purple-700 dark:text-purple-300'
         )}>
           {label}
         </Label>
@@ -480,8 +487,8 @@ function SignatureDisplay({ label, signature, type, canSign, onSign }: Signature
           <Badge variant="outline" className={cn(
             'text-xs',
             isContractor
-              ? 'border-blue-300 bg-blue-100 text-blue-700'
-              : 'border-purple-300 bg-purple-100 text-purple-700'
+              ? 'border-primary-300 bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200'
+              : 'border-purple-300 bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200'
           )}>
             <CheckCircle className="h-3 w-3 mr-1" />
             Signed
@@ -533,8 +540,8 @@ function SignatureDisplay({ label, signature, type, canSign, onSign }: Signature
               className={cn(
                 'border-dashed',
                 isContractor
-                  ? 'border-blue-400 text-blue-600 hover:bg-blue-50'
-                  : 'border-purple-400 text-purple-600 hover:bg-purple-50'
+                  ? 'border-primary-400 text-primary hover:bg-primary-50 dark:hover:bg-primary-900/20'
+                  : 'border-purple-400 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20'
               )}
             >
               <PenTool className="h-4 w-4 mr-2" />
@@ -666,7 +673,7 @@ export function ChangeOrderSignatureBlock({
             <div className="flex items-center gap-1">
               <DollarSign className="h-4 w-4 text-muted-foreground" />
               <span className="text-muted-foreground">Amount:</span>
-              <span className="ml-1 font-medium text-green-600">
+              <span className="ml-1 font-medium text-success">
                 ${(changeOrder.approved_amount || changeOrder.proposed_amount || 0).toLocaleString()}
               </span>
             </div>
@@ -702,19 +709,19 @@ export function ChangeOrderSignatureBlock({
 
         {/* Status Indicator */}
         {signatures.contractor && signatures.owner ? (
-          <div className="flex items-center justify-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg text-green-700">
+          <div className="flex items-center justify-center gap-2 p-3 bg-success-50 border border-success-200 rounded-lg text-success-700 dark:bg-success-950/30 dark:border-success-800 dark:text-success-300">
             <CheckCircle className="h-5 w-5" />
             <span className="font-medium">All signatures collected - Change Order is fully executed</span>
           </div>
         ) : (
-          <div className="flex items-center justify-center gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg text-amber-700">
+          <div className="flex items-center justify-center gap-2 p-3 bg-warning-50 border border-warning-200 rounded-lg text-warning-700 dark:bg-warning-950/30 dark:border-warning-800 dark:text-warning-300">
             <AlertTriangle className="h-5 w-5" />
             <span>
               {!signatures.contractor && !signatures.owner
                 ? 'Awaiting both contractor and owner signatures'
                 : !signatures.contractor
-                ? 'Awaiting contractor signature'
-                : 'Awaiting owner signature'}
+                  ? 'Awaiting contractor signature'
+                  : 'Awaiting owner signature'}
             </span>
           </div>
         )}

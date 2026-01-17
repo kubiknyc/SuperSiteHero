@@ -1,0 +1,81 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]:
+          - img "JobSight" [ref=e9]
+          - generic:
+            - heading "JobSight" [level=1]
+            - paragraph: Field Management
+        - generic:
+          - button:
+            - img
+      - navigation [ref=e10]:
+        - generic [ref=e11]:
+          - link [ref=e13] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e14]
+          - link [ref=e20] [cursor=pointer]:
+            - /url: /projects
+            - img [ref=e21]
+        - generic [ref=e25]:
+          - link [ref=e26] [cursor=pointer]:
+            - /url: /rfis
+            - img [ref=e27]
+          - link [ref=e30] [cursor=pointer]:
+            - /url: /daily-reports
+            - img [ref=e31]
+          - link [ref=e36] [cursor=pointer]:
+            - /url: /team
+            - img [ref=e37]
+    - generic [ref=e42]:
+      - banner [ref=e43]:
+        - generic [ref=e46]:
+          - heading "Analytics" [level=1] [ref=e47]
+          - paragraph [ref=e48]: Project insights
+        - generic [ref=e49]:
+          - button "Search Ctrl+K" [ref=e51] [cursor=pointer]:
+            - img [ref=e52]
+            - generic [ref=e55]: Search
+            - generic [ref=e57]: Ctrl+K
+          - button [ref=e58] [cursor=pointer]:
+            - img [ref=e59]
+          - button [ref=e65] [cursor=pointer]:
+            - link [ref=e66]:
+              - /url: /settings
+              - img [ref=e67]
+          - link "TU" [ref=e70] [cursor=pointer]:
+            - /url: /settings/profile
+            - text: TU
+      - main [ref=e71]:
+        - generic [ref=e73]:
+          - heading "Predictive Analytics" [level=1] [ref=e74]
+          - generic [ref=e77]:
+            - text: 📊
+            - heading "Select a Project" [level=2] [ref=e78]
+            - paragraph [ref=e79]: Choose a project to view its predictive analytics dashboard
+            - link "E2E Test Project No project number" [ref=e81] [cursor=pointer]:
+              - /url: /projects/c02241fb-3523-4114-9ea3-4a4a51ef18b4/analytics
+              - heading "E2E Test Project" [level=3] [ref=e82]
+              - paragraph [ref=e83]: No project number
+    - complementary [ref=e84]:
+      - generic [ref=e85]:
+        - generic [ref=e86]:
+          - img [ref=e88]
+          - heading "Action Required" [level=2] [ref=e92]
+        - button [ref=e93] [cursor=pointer]:
+          - img [ref=e94]
+      - generic [ref=e98]:
+        - generic [ref=e99]:
+          - img [ref=e100]
+          - img [ref=e102]
+        - paragraph [ref=e104]: Loading items...
+      - button "View All Approvals" [ref=e106] [cursor=pointer]:
+        - link "View All Approvals" [ref=e107]:
+          - /url: /approvals
+  - region "Notifications alt+T"
+  - button "Open JobSight AI Assistant" [ref=e110] [cursor=pointer]
+```

@@ -94,20 +94,20 @@ function AssignmentItem({
       case 'ready_for_review':
         return <Clock className="h-4 w-4 text-warning" />
       default:
-        return <Circle className="h-4 w-4 text-disabled" />
+        return <Circle className="h-4 w-4 text-muted-foreground" />
     }
   }
 
   const getPriorityColor = () => {
     switch (priority) {
       case 'critical':
-        return 'bg-error-light text-error-dark border-red-200'
+        return 'bg-destructive/10 text-destructive border-destructive/20'
       case 'high':
-        return 'bg-orange-100 text-orange-700 border-orange-200'
+        return 'bg-warning/20 text-warning-800 border-warning/30'
       case 'medium':
-        return 'bg-warning-light text-yellow-700 border-yellow-200'
+        return 'bg-warning/10 text-warning-700 border-warning/20'
       default:
-        return 'bg-muted text-secondary border-border'
+        return 'bg-muted text-muted-foreground border-border'
     }
   }
 
@@ -124,7 +124,7 @@ function AssignmentItem({
       {/* Content */}
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <h4 className="text-sm font-medium text-foreground truncate heading-card">
+          <h4 className="text-foreground truncate heading-card">
             {title}
           </h4>
           {hasPhotos && (
@@ -145,7 +145,7 @@ function AssignmentItem({
           {dueDate && (
             <span className={cn(
               'text-[10px]',
-              isOverdue ? 'text-error font-medium' : 'text-muted'
+              isOverdue ? 'text-destructive font-medium' : 'text-muted-foreground'
             )}>
               {isOverdue ? 'Overdue: ' : 'Due: '}
               {formatDistanceToNow(new Date(dueDate), { addSuffix: true })}
@@ -197,10 +197,10 @@ function EmptyState({ tab }: { tab: TabType }) {
       <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
         <CheckCircle2 className="h-8 w-8 text-disabled" />
       </div>
-      <h3 className="text-sm font-medium text-foreground mb-1 heading-subsection">
+      <h3 className="text-foreground mb-1 heading-subsection">
         {messages[tab].title}
       </h3>
-      <p className="text-xs text-muted">
+      <p className="text-xs text-muted-foreground">
         {messages[tab].description}
       </p>
     </div>
@@ -266,7 +266,7 @@ export function MyAssignments() {
   // Filter and sort punch items
   const filteredPunchItems = (punchItems || [])
     .filter(item => {
-      if (filterStatus === 'all') {return true}
+      if (filterStatus === 'all') { return true }
       return item.status === filterStatus
     })
     .sort((a, b) => {
@@ -276,11 +276,11 @@ export function MyAssignments() {
         case 'priority': {
           const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 }
           return (priorityOrder[a.priority as keyof typeof priorityOrder] || 3) -
-                 (priorityOrder[b.priority as keyof typeof priorityOrder] || 3)
+            (priorityOrder[b.priority as keyof typeof priorityOrder] || 3)
         }
         case 'due_date':
-          if (!a.due_date) {return 1}
-          if (!b.due_date) {return -1}
+          if (!a.due_date) { return 1 }
+          if (!b.due_date) { return -1 }
           return new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
         default: // newest
           return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
@@ -311,10 +311,10 @@ export function MyAssignments() {
                 key={item.id}
                 id={item.id}
                 title={item.title}
-                subtitle={item.location_notes || item.area || item.room}
+                subtitle={item.location_notes || item.area || item.room || undefined}
                 status={item.status}
-                priority={item.priority}
-                dueDate={item.due_date}
+                priority={item.priority || undefined}
+                dueDate={item.due_date || undefined}
                 hasPhotos={(item.photo_count || 0) > 0}
                 onClick={() => navigate(`/portal/punch-items/${item.id}`)}
                 onComplete={() => handlePunchItemComplete(item.id)}
@@ -372,7 +372,7 @@ export function MyAssignments() {
                   <FileText className="h-4 w-4 text-primary" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="text-sm font-medium text-foreground truncate heading-card">
+                  <h4 className="text-foreground truncate heading-card">
                     {doc.name}
                   </h4>
                   <p className="text-xs text-muted truncate mt-0.5">
@@ -414,11 +414,11 @@ export function MyAssignments() {
           <div className="divide-y divide-gray-100">
             {payments.map(payment => {
               const statusColors: Record<string, string> = {
-                draft: 'bg-muted text-secondary',
-                submitted: 'bg-blue-100 text-blue-700',
-                approved: 'bg-green-100 text-green-700',
-                rejected: 'bg-red-100 text-red-700',
-                paid: 'bg-emerald-100 text-emerald-700',
+                draft: 'bg-muted text-muted-foreground',
+                submitted: 'bg-primary/10 text-primary',
+                approved: 'bg-success/10 text-success',
+                rejected: 'bg-destructive/10 text-destructive',
+                paid: 'bg-success/20 text-success-800',
               }
               return (
                 <div
@@ -430,7 +430,7 @@ export function MyAssignments() {
                     <DollarSign className="h-4 w-4 text-success" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-medium text-foreground truncate heading-card">
+                    <h4 className="text-foreground truncate heading-card">
                       Pay App #{payment.application_number || 'N/A'}
                     </h4>
                     <p className="text-xs text-muted truncate mt-0.5">
@@ -466,7 +466,7 @@ export function MyAssignments() {
       {/* Header */}
       <div className="bg-card border-b border-border px-4 py-3">
         <div className="flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-foreground heading-page">My Assignments</h1>
+          <h1 className="text-foreground heading-page">My Assignments</h1>
           <div className="flex items-center gap-2">
             {/* Sort Button */}
             <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>

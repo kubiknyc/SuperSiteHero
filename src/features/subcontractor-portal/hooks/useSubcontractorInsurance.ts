@@ -31,7 +31,7 @@ export function useSubcontractorInsuranceCertificates() {
   return useQuery<SubcontractorInsuranceCertificate[]>({
     queryKey: insuranceKeys.certificates(),
     queryFn: () => {
-      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!userProfile?.id) { throw new Error('User not authenticated') }
       return subcontractorPortalApi.getInsuranceCertificates(userProfile.id)
     },
     enabled: !!userProfile?.id && userProfile.role === 'subcontractor',
@@ -48,7 +48,7 @@ export function useSubcontractorInsuranceRequirements() {
   return useQuery<SubcontractorInsuranceRequirement[]>({
     queryKey: insuranceKeys.requirements(),
     queryFn: () => {
-      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!userProfile?.id) { throw new Error('User not authenticated') }
       return subcontractorPortalApi.getInsuranceRequirements(userProfile.id)
     },
     enabled: !!userProfile?.id && userProfile.role === 'subcontractor',
@@ -65,7 +65,7 @@ export function useInsuranceComplianceSummary() {
   return useQuery<SubcontractorInsuranceComplianceSummary>({
     queryKey: insuranceKeys.summary(),
     queryFn: () => {
-      if (!userProfile?.id) {throw new Error('User not authenticated')}
+      if (!userProfile?.id) { throw new Error('User not authenticated') }
       return subcontractorPortalApi.getInsuranceComplianceSummary(userProfile.id)
     },
     enabled: !!userProfile?.id && userProfile.role === 'subcontractor',
@@ -203,7 +203,7 @@ export function getCertificateStatusLabel(status: string): string {
  * Format coverage amount
  */
 export function formatCoverageAmount(amount: number | null): string {
-  if (amount === null || amount === undefined) {return 'N/A'}
+  if (amount === null || amount === undefined) { return 'N/A' }
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -246,18 +246,18 @@ export function getDaysUntilExpiration(expirationDate: string): number {
  * Get compliance score color class
  */
 export function getComplianceScoreColor(score: number): string {
-  if (score >= 90) {return 'text-green-600'}
-  if (score >= 70) {return 'text-yellow-600'}
-  if (score >= 50) {return 'text-orange-600'}
-  return 'text-red-600'
+  if (score >= 90) { return 'text-success' }
+  if (score >= 70) { return 'text-warning' }
+  if (score >= 50) { return 'text-warning' }
+  return 'text-destructive'
 }
 
 /**
  * Get compliance score background class
  */
 export function getComplianceScoreBgColor(score: number): string {
-  if (score >= 90) {return 'bg-green-100'}
-  if (score >= 70) {return 'bg-yellow-100'}
-  if (score >= 50) {return 'bg-orange-100'}
-  return 'bg-red-100'
+  if (score >= 90) { return 'bg-success/10 text-success' }
+  if (score >= 70) { return 'bg-warning/10 text-warning' }
+  if (score >= 50) { return 'bg-warning/10 text-warning' }
+  return 'bg-destructive/10 text-destructive'
 }

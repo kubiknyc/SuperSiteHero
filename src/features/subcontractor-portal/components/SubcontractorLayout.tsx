@@ -67,7 +67,7 @@ function NavItem({ to, icon, label, count, warning, onClick }: NavItemProps) {
         <span
           className={cn(
             'px-2 py-0.5 rounded-full text-xs font-medium',
-            warning ? 'bg-amber-100 text-amber-800' : 'bg-muted text-muted-foreground'
+            warning ? 'bg-warning/10 text-warning-800' : 'bg-muted text-muted-foreground'
           )}
         >
           {count}
@@ -133,7 +133,7 @@ export function SubcontractorLayout() {
           <div className="flex items-center gap-2">
             <Building2 className="h-6 w-6 text-primary" />
             <div>
-              <h2 className="font-semibold text-sm heading-section">Subcontractor Portal</h2>
+              <h2 className="heading-subsection">Subcontractor Portal</h2>
               <p className="text-xs text-muted-foreground truncate">
                 {userProfile?.first_name} {userProfile?.last_name}
               </p>
@@ -440,7 +440,7 @@ export function SubcontractorLayout() {
             <div className="absolute bottom-0 left-0 right-0 p-4 border-t bg-card">
               <Button
                 variant="ghost"
-                className="w-full justify-start gap-2 text-error hover:text-error-dark hover:bg-error-light"
+                className="w-full justify-start gap-2 text-destructive hover:text-destructive hover:bg-destructive/10"
                 onClick={() => signOut()}
               >
                 <LogOut className="h-4 w-4" />
