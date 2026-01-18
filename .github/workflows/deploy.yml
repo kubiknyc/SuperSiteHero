@@ -162,11 +162,12 @@ jobs:
           echo "Waiting for production deployment to propagate..."
           sleep 30
           for i in {1..20}; do
-            if curl -s --head "https://jobsightapp.com" | head -n 1 | grep -q "200\|301\|302"; then
+            STATUS=$(curl -sL -o /dev/null -w "%{http_code}" "https://jobsightapp.com")
+            echo "Attempt $i: HTTP $STATUS"
+            if [[ "$STATUS" =~ ^(200|301|302|307|308)$ ]]; then
               echo "Production is ready!"
               exit 0
             fi
-            echo "Attempt $i: Production not ready, waiting 15s..."
             sleep 15
           done
           echo "Production did not become ready in time"
@@ -266,12 +267,15 @@ jobs:
         run: |
           echo "Waiting for deployment to be ready..."
           DEPLOY_URL="${{ needs.deploy-preview.outputs.url }}"
+          echo "Preview URL: $DEPLOY_URL"
+          sleep 30  # Give Vercel time to propagate
           for i in {1..30}; do
-            if curl -s --head "$DEPLOY_URL" | head -n 1 | grep -q "200\|301\|302"; then
+            STATUS=$(curl -sL -o /dev/null -w "%{http_code}" "$DEPLOY_URL")
+            echo "Attempt $i: HTTP $STATUS"
+            if [[ "$STATUS" =~ ^(200|301|302|307|308)$ ]]; then
               echo "Deployment is ready!"
               exit 0
             fi
-            echo "Attempt $i: Deployment not ready, waiting 10s..."
             sleep 10
           done
           echo "Deployment did not become ready in time"
