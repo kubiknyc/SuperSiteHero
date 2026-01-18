@@ -1,6 +1,7 @@
 /**
  * Auto-Populate Weather Tool
  * Automatically fetch and format weather data for daily reports based on project location
+ * Enhanced with OSHA heat/cold stress thresholds and comprehensive trade impact analysis
  */
 
 import { createTool } from '../registry'
@@ -10,6 +11,17 @@ import {
   analyzeWeatherImpact,
   type WeatherData
 } from '@/features/daily-reports/services/weatherApiService'
+import {
+  OSHA_HEAT_THRESHOLDS,
+  COLD_STRESS_THRESHOLDS,
+  TRADE_WEATHER_LIMITS,
+  LIGHTNING_SAFETY,
+  getHeatRiskLevel,
+  getColdRiskLevel,
+  calculateHeatIndex,
+  calculateWindChill,
+  checkTradeWeatherSafety,
+} from '../../domain/construction-constants'
 
 interface AutoPopulateWeatherInput {
   project_id: string
@@ -21,6 +33,15 @@ interface WorkImpact {
   severity: 'none' | 'minor' | 'moderate' | 'severe'
   affected_activities: string[]
   recommendations: string[]
+  osha_compliance: {
+    heat_risk_level: string
+    heat_index?: number
+    cold_risk_level?: string
+    wind_chill?: number
+    required_actions: string[]
+  }
+  lightning_risk: boolean
+  lightning_distance_miles?: number
 }
 
 interface AutoPopulateWeatherOutput {
@@ -46,22 +67,8 @@ interface AutoPopulateWeatherOutput {
   }
 }
 
-// Trade sensitivity to weather conditions
-const WEATHER_SENSITIVE_TRADES: Record<string, {
-  minTemp: number
-  maxTemp: number
-  maxWind: number
-  rainSensitive: boolean
-}> = {
-  'Concrete': { minTemp: 40, maxTemp: 95, maxWind: 20, rainSensitive: true },
-  'Roofing': { minTemp: 45, maxTemp: 100, maxWind: 15, rainSensitive: true },
-  'Painting': { minTemp: 50, maxTemp: 90, maxWind: 15, rainSensitive: true },
-  'Masonry': { minTemp: 40, maxTemp: 100, maxWind: 25, rainSensitive: true },
-  'Steel': { minTemp: 0, maxTemp: 110, maxWind: 25, rainSensitive: false },
-  'Crane Operations': { minTemp: 0, maxTemp: 110, maxWind: 20, rainSensitive: false },
-  'Excavation': { minTemp: 20, maxTemp: 110, maxWind: 35, rainSensitive: true },
-  'Landscaping': { minTemp: 35, maxTemp: 100, maxWind: 25, rainSensitive: true },
-}
+// Use comprehensive trade weather limits from domain constants
+// TRADE_WEATHER_LIMITS is imported from construction-constants.ts
 
 function determineAffectedActivities(weather: WeatherData): string[] {
   const affected: string[] = []
@@ -70,61 +77,153 @@ function determineAffectedActivities(weather: WeatherData): string[] {
   const conditions = weather.conditions.toLowerCase()
   const isRaining = conditions.includes('rain') || conditions.includes('drizzle') || conditions.includes('storm')
 
-  for (const [trade, limits] of Object.entries(WEATHER_SENSITIVE_TRADES)) {
-    const reasons: string[] = []
+  for (const [trade, limits] of Object.entries(TRADE_WEATHER_LIMITS)) {
+    const result = checkTradeWeatherSafety(
+      trade as keyof typeof TRADE_WEATHER_LIMITS,
+      temp,
+      wind,
+      isRaining,
+      weather.humidity
+    )
 
-    if (temp < limits.minTemp) {
-      reasons.push(`temperature below ${limits.minTemp}°F`)
-    }
-    if (temp > limits.maxTemp) {
-      reasons.push(`temperature above ${limits.maxTemp}°F`)
-    }
-    if (wind > limits.maxWind) {
-      reasons.push(`wind speed above ${limits.maxWind} mph`)
-    }
-    if (limits.rainSensitive && isRaining) {
-      reasons.push('precipitation')
-    }
+    if (!result.safe) {
+      // Add trade-specific notes from the constants
+      const notes = limits.notes as Record<string, string>
+      const relevantNotes: string[] = []
 
-    if (reasons.length > 0) {
-      affected.push(`${trade}: ${reasons.join(', ')}`)
+      if (temp < limits.minTemp && notes.coldWeather) {
+        relevantNotes.push(notes.coldWeather)
+      }
+      if (temp > limits.maxTemp && notes.hotWeather) {
+        relevantNotes.push(notes.hotWeather)
+      }
+      if (isRaining && notes.rain) {
+        relevantNotes.push(notes.rain)
+      }
+      if (wind > limits.maxWind && notes.wind) {
+        relevantNotes.push(notes.wind)
+      }
+
+      const noteText = relevantNotes.length > 0 ? ` (${relevantNotes[0]})` : ''
+      affected.push(`${trade}: ${result.warnings.join(', ')}${noteText}`)
     }
   }
 
   return affected
 }
 
-function generateWeatherRecommendations(weather: WeatherData, impact: ReturnType<typeof analyzeWeatherImpact>): string[] {
+interface OSHACompliance {
+  heat_risk_level: string
+  heat_index?: number
+  cold_risk_level?: string
+  wind_chill?: number
+  required_actions: string[]
+}
+
+function generateOSHACompliance(weather: WeatherData): OSHACompliance {
+  const heatIndex = calculateHeatIndex(weather.temperature, weather.humidity)
+  const windChill = calculateWindChill(weather.temperature, weather.windSpeed)
+  const heatRiskLevel = getHeatRiskLevel(heatIndex)
+  const coldRiskLevel = getColdRiskLevel(windChill)
+  const requiredActions: string[] = []
+
+  // Heat stress actions
+  if (heatRiskLevel !== 'low') {
+    const threshold = OSHA_HEAT_THRESHOLDS[heatRiskLevel]
+    requiredActions.push(...threshold.actions)
+  }
+
+  // Cold stress actions
+  if (coldRiskLevel !== 'low') {
+    const threshold = COLD_STRESS_THRESHOLDS[coldRiskLevel]
+    requiredActions.push(...threshold.actions)
+  }
+
+  return {
+    heat_risk_level: heatRiskLevel === 'low' ? 'Low' : OSHA_HEAT_THRESHOLDS[heatRiskLevel].risk,
+    heat_index: heatIndex,
+    cold_risk_level: coldRiskLevel === 'low' ? 'Low' : COLD_STRESS_THRESHOLDS[coldRiskLevel].risk,
+    wind_chill: windChill,
+    required_actions: requiredActions,
+  }
+}
+
+function generateWeatherRecommendations(
+  weather: WeatherData,
+  impact: ReturnType<typeof analyzeWeatherImpact>,
+  oshaCompliance: OSHACompliance
+): string[] {
   const recommendations: string[] = []
+
+  // Add OSHA required actions first (highest priority)
+  if (oshaCompliance.required_actions.length > 0) {
+    recommendations.push(...oshaCompliance.required_actions.slice(0, 3))
+  }
 
   if (impact.severity === 'severe') {
     recommendations.push('Consider postponing weather-sensitive activities')
     recommendations.push('Ensure all safety protocols for adverse weather are in place')
   }
 
+  // Cold weather specific
   if (weather.temperature < 40) {
     recommendations.push('Implement cold weather concrete curing procedures')
     recommendations.push('Provide warming areas for workers')
   }
-
-  if (weather.temperature > 90) {
-    recommendations.push('Schedule frequent hydration breaks')
-    recommendations.push('Consider early start times to avoid peak heat')
+  if (weather.temperature < 32) {
+    recommendations.push('Check for ice on walking/working surfaces')
+    recommendations.push('Protect water lines and wet equipment from freezing')
   }
 
+  // Hot weather specific (expanded OSHA guidance)
+  if (weather.temperature > 85) {
+    recommendations.push('Ensure adequate water (1 quart/hour/worker) is available')
+  }
+  if (weather.temperature > 90) {
+    recommendations.push('Schedule strenuous work for cooler morning hours')
+    recommendations.push('Provide shaded rest areas')
+  }
+  if (weather.temperature > 100) {
+    recommendations.push('Consider early start (5-6 AM) to maximize cooler hours')
+    recommendations.push('Mandatory 15-minute rest breaks in shade every hour')
+  }
+
+  // Wind specific
+  if (weather.windSpeed > 15) {
+    recommendations.push('Use caution with sheet materials (plywood, drywall, panels)')
+  }
   if (weather.windSpeed > 20) {
     recommendations.push('Secure loose materials and equipment')
-    recommendations.push('Suspend crane operations if winds exceed safe limits')
+    recommendations.push('Review crane load charts for wind restrictions')
+  }
+  if (weather.windSpeed > 25) {
+    recommendations.push('Suspend crane operations')
+    recommendations.push('Suspend scaffold work and elevated activities')
   }
 
+  // Rain/precipitation
   if (weather.conditions.toLowerCase().includes('rain')) {
     recommendations.push('Cover exposed materials and excavations')
     recommendations.push('Monitor drainage and dewatering systems')
+    recommendations.push('No exterior painting, roofing, or waterproofing')
   }
 
-  if (weather.conditions.toLowerCase().includes('thunderstorm')) {
-    recommendations.push('Immediately evacuate all personnel from elevated positions')
-    recommendations.push('Move all personnel to designated shelter areas')
+  // Thunderstorm/lightning (OSHA critical)
+  if (weather.conditions.toLowerCase().includes('thunderstorm') ||
+      weather.conditions.toLowerCase().includes('lightning')) {
+    recommendations.push('CRITICAL: Implement lightning safety protocol immediately')
+    recommendations.push(`Evacuate: ${LIGHTNING_SAFETY.evacuationPriority.slice(0, 2).join(', ')}`)
+    recommendations.push(`Wait ${LIGHTNING_SAFETY.waitAfterLastThunder} minutes after last thunder before resuming`)
+  }
+
+  // Humidity specific (for painting)
+  if (weather.humidity > 85) {
+    recommendations.push('Suspend exterior painting - humidity too high for proper cure')
+  }
+
+  // UV/sun exposure (summer)
+  if (weather.temperature > 80 && !weather.conditions.toLowerCase().includes('cloud')) {
+    recommendations.push('Ensure workers have access to sunscreen and shade')
   }
 
   // Default recommendation if conditions are good
@@ -132,7 +231,7 @@ function generateWeatherRecommendations(weather: WeatherData, impact: ReturnType
     recommendations.push('Weather conditions favorable for all scheduled activities')
   }
 
-  return recommendations
+  return Array.from(new Set(recommendations)) // Remove duplicates
 }
 
 export const autoPopulateWeatherTool = createTool<AutoPopulateWeatherInput, AutoPopulateWeatherOutput>({
@@ -175,16 +274,24 @@ export const autoPopulateWeatherTool = createTool<AutoPopulateWeatherInput, Auto
       }
     }
 
-    // Analyze weather impact
+    // Analyze weather impact with OSHA compliance
     const impact = analyzeWeatherImpact(weather)
     const affectedActivities = determineAffectedActivities(weather)
-    const recommendations = generateWeatherRecommendations(weather, impact)
+    const oshaCompliance = generateOSHACompliance(weather)
+    const recommendations = generateWeatherRecommendations(weather, impact, oshaCompliance)
 
-    // Build work impact object
+    // Check for lightning risk
+    const hasLightningRisk = weather.conditions.toLowerCase().includes('thunderstorm') ||
+                             weather.conditions.toLowerCase().includes('lightning')
+
+    // Build work impact object with OSHA compliance
     const workImpact: WorkImpact = {
       severity: impact.severity,
       affected_activities: affectedActivities,
-      recommendations
+      recommendations,
+      osha_compliance: oshaCompliance,
+      lightning_risk: hasLightningRisk,
+      lightning_distance_miles: hasLightningRisk ? 6 : undefined, // Default to warning distance
     }
 
     // Build weather data output
@@ -232,25 +339,36 @@ export const autoPopulateWeatherTool = createTool<AutoPopulateWeatherInput, Auto
 
   formatOutput(output) {
     const { weather_data, work_impact } = output
+    const oshaStatus = work_impact.osha_compliance.heat_risk_level !== 'Low' ||
+                       work_impact.osha_compliance.cold_risk_level !== 'Low'
+      ? 'warning' : 'success'
 
     return {
       title: 'Weather Data Retrieved',
-      summary: `${weather_data.conditions}, ${weather_data.temperature_high}°F - Impact: ${work_impact.severity}`,
-      icon: work_impact.severity === 'severe' ? 'cloud-lightning' :
+      summary: `${weather_data.conditions}, ${weather_data.temperature_high}°F - Impact: ${work_impact.severity}${oshaStatus === 'warning' ? ' (OSHA Alert)' : ''}`,
+      icon: work_impact.lightning_risk ? 'zap' :
+        work_impact.severity === 'severe' ? 'cloud-lightning' :
         work_impact.severity === 'moderate' ? 'cloud-rain' :
           work_impact.severity === 'minor' ? 'cloud' : 'sun',
-      status: work_impact.severity === 'severe' ? 'warning' :
+      status: work_impact.lightning_risk ? 'error' :
+        work_impact.severity === 'severe' ? 'warning' :
         work_impact.severity === 'moderate' ? 'warning' : 'success',
       details: [
-        { label: 'Conditions', value: weather_data.conditions, type: 'text' },
-        { label: 'Temperature', value: `${weather_data.temperature_high}°F`, type: 'text' },
-        { label: 'Wind', value: `${weather_data.wind_speed} mph ${weather_data.wind_direction}`, type: 'text' },
-        { label: 'Humidity', value: `${weather_data.humidity}%`, type: 'text' },
-        { label: 'Work Impact', value: work_impact.severity, type: 'badge' }
+        { label: 'Conditions', value: weather_data.conditions, type: 'text' as const },
+        { label: 'Temperature', value: `${weather_data.temperature_high}°F`, type: 'text' as const },
+        { label: 'Heat Index', value: work_impact.osha_compliance.heat_index ? `${work_impact.osha_compliance.heat_index}°F` : 'N/A', type: 'text' as const },
+        { label: 'Wind', value: `${weather_data.wind_speed} mph ${weather_data.wind_direction}`, type: 'text' as const },
+        { label: 'Wind Chill', value: work_impact.osha_compliance.wind_chill ? `${work_impact.osha_compliance.wind_chill}°F` : 'N/A', type: 'text' as const },
+        { label: 'Humidity', value: `${weather_data.humidity}%`, type: 'text' as const },
+        { label: 'Work Impact', value: work_impact.severity, type: 'badge' as const },
+        { label: 'Heat Risk', value: work_impact.osha_compliance.heat_risk_level, type: 'badge' as const },
+        { label: 'Cold Risk', value: work_impact.osha_compliance.cold_risk_level || 'Low', type: 'badge' as const },
+        ...(work_impact.lightning_risk ? [{ label: 'Lightning', value: 'ACTIVE RISK', type: 'badge' as const }] : [])
       ],
       expandedContent: {
         affected_activities: work_impact.affected_activities,
-        recommendations: work_impact.recommendations
+        recommendations: work_impact.recommendations,
+        osha_required_actions: work_impact.osha_compliance.required_actions
       }
     }
   }

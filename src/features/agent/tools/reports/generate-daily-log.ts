@@ -1,11 +1,22 @@
 /**
  * Daily Log Generator Tool
  * Generates structured daily logs from field notes and observations
+ * Enhanced with CSI division recognition, improved location extraction, and quantity parsing
  */
 
 import { createTool } from '../registry'
 import { supabase } from '@/lib/supabase'
 import type { AgentContext } from '../../types'
+import {
+  TRADE_ALIASES,
+  LOCATION_PATTERNS,
+  QUANTITY_PATTERNS,
+  extractLocations,
+  extractQuantities,
+  translateSlang,
+  normalizeTradeName,
+} from '../../domain/construction-terminology'
+import { CSI_DIVISIONS, TRADE_PRODUCTIVITY_BENCHMARKS } from '../../domain/construction-constants'
 
 interface GenerateDailyLogInput {
   project_id: string
@@ -24,11 +35,24 @@ interface GenerateDailyLogInput {
 
 interface WorkActivity {
   trade: string
+  csi_division?: string
   description: string
   location: string
+  location_details?: {
+    building?: string
+    floor?: string
+    room?: string
+    area?: string
+    grid_line?: string
+  }
   workers: number
   hours: number
   percent_complete?: number
+  quantities?: Array<{
+    value: number
+    unit: string
+    original: string
+  }>
 }
 
 interface ManpowerEntry {
@@ -58,6 +82,7 @@ interface GenerateDailyLogOutput {
     date: string
     project_name: string
     weather_summary: string
+    superintendent_narrative: string
     work_activities: WorkActivity[]
     manpower_summary: {
       total_workers: number
@@ -74,6 +99,12 @@ interface GenerateDailyLogOutput {
   quality_score: number
   missing_info: string[]
   suggestions: string[]
+  productivity_analysis?: {
+    trade: string
+    actual_rate: string
+    benchmark_rate: string
+    variance: string
+  }[]
 }
 
 export const generateDailyLogTool = createTool<GenerateDailyLogInput, GenerateDailyLogOutput>({
@@ -180,11 +211,25 @@ export const generateDailyLogTool = createTool<GenerateDailyLogInput, GenerateDa
       qualityScore
     )
 
+    // Generate superintendent narrative
+    const superintendentNarrative = generateSuperintendentNarrative(
+      weatherSummary,
+      workActivities,
+      manpowerEntries,
+      delaysIssues,
+      safetyObservations,
+      visitors
+    )
+
+    // Analyze productivity against benchmarks
+    const productivityAnalysis = analyzeProductivity(workActivities, manpowerEntries)
+
     return {
       daily_log: {
         date,
         project_name: project?.name || 'Unknown Project',
         weather_summary: weatherSummary,
+        superintendent_narrative: superintendentNarrative,
         work_activities: workActivities,
         manpower_summary: {
           total_workers: totalWorkers,
@@ -200,64 +245,136 @@ export const generateDailyLogTool = createTool<GenerateDailyLogInput, GenerateDa
       },
       quality_score: qualityScore,
       missing_info: missingInfo,
-      suggestions
+      suggestions,
+      productivity_analysis: productivityAnalysis.length > 0 ? productivityAnalysis : undefined,
     }
   }
 })
 
+// Map trades to CSI divisions
+const TRADE_TO_CSI: Record<string, string> = {
+  'Concrete': '03',
+  'Masonry': '04',
+  'Steel': '05',
+  'Framing': '06',
+  'Carpentry': '06',
+  'Roofing': '07',
+  'Insulation': '07',
+  'Waterproofing': '07',
+  'Glazing': '08',
+  'Doors': '08',
+  'Drywall': '09',
+  'Painting': '09',
+  'Flooring': '09',
+  'Tile': '09',
+  'Fire Protection': '21',
+  'Plumbing': '22',
+  'HVAC': '23',
+  'Electrical': '26',
+  'Fire Alarm': '28',
+  'Site Work': '31',
+  'Excavation': '31',
+  'Landscaping': '32',
+  'Elevator': '14',
+  'Demolition': '02',
+}
+
 function extractWorkActivities(notes: string, tradeMap: Map<string, string>): WorkActivity[] {
   const activities: WorkActivity[] = []
-  const lines = notes.split(/[.\n]+/).filter(l => l.trim().length > 10)
+
+  // First, translate any slang terms in the notes
+  const processedNotes = notes.split(/\s+/).map(word => {
+    const translated = translateSlang(word)
+    return translated !== word ? translated : word
+  }).join(' ')
+
+  const lines = processedNotes.split(/[.\n]+/).filter(l => l.trim().length > 10)
 
   const tradePatterns: Array<[RegExp, string]> = [
-    [/concrete|pour|slab|foundation/i, 'Concrete'],
-    [/framing|fram|stud|wood/i, 'Framing'],
-    [/electrical|electric|wire|outlet|panel/i, 'Electrical'],
-    [/plumbing|plumb|pipe|drain/i, 'Plumbing'],
-    [/hvac|duct|mechanical|air/i, 'HVAC'],
-    [/drywall|sheetrock|gypsum/i, 'Drywall'],
-    [/painting|paint|primer/i, 'Painting'],
-    [/roofing|roof|shingle/i, 'Roofing'],
-    [/flooring|floor|tile|carpet/i, 'Flooring'],
-    [/masonry|brick|block|stone/i, 'Masonry'],
-    [/steel|iron|metal/i, 'Steel'],
-    [/insulation|insulate/i, 'Insulation'],
-    [/fire.*protect|sprinkler|fire.*alarm/i, 'Fire Protection'],
-    [/elevator/i, 'Elevator'],
-    [/landscape|landscap/i, 'Landscaping'],
-    [/site.*work|excavat|grad/i, 'Site Work'],
-    [/demolition|demo/i, 'Demolition'],
-    [/glass|glazing|window/i, 'Glazing'],
-  ]
-
-  const locationPatterns = [
-    /(?:in|at|on)\s+(floor\s*\d+|level\s*\d+|room\s*\d+|area\s*[a-z]|building\s*[a-z]|wing\s*[a-z])/i,
-    /(north|south|east|west)\s+(wing|side|end)/i,
-    /(basement|ground|first|second|third|fourth|fifth|roof)\s*(?:floor|level)?/i,
+    [/concrete|pour|slab|foundation|footings?|formwork/i, 'Concrete'],
+    [/framing|fram|stud|wood|sheathing|plywood/i, 'Framing'],
+    [/electrical|electric|wire|outlet|panel|conduit|romex/i, 'Electrical'],
+    [/plumbing|plumb|pipe|drain|fixture|toilet|sink/i, 'Plumbing'],
+    [/hvac|duct|mechanical|air.*handler|diffuser|grille/i, 'HVAC'],
+    [/drywall|sheetrock|gypsum|joint.*compound|taping/i, 'Drywall'],
+    [/painting|paint|primer|coating|stain/i, 'Painting'],
+    [/roofing|roof|shingle|membrane|flashing/i, 'Roofing'],
+    [/flooring|floor|tile|carpet|hardwood|lvp|vinyl/i, 'Flooring'],
+    [/masonry|brick|block|cmu|stone|mortar/i, 'Masonry'],
+    [/steel|iron|metal|weld|erect/i, 'Steel'],
+    [/insulation|insulate|batt|spray.*foam/i, 'Insulation'],
+    [/fire.*protect|sprinkler|fire.*alarm|detection/i, 'Fire Protection'],
+    [/elevator|lift/i, 'Elevator'],
+    [/landscape|landscap|sod|plant|irrigation/i, 'Landscaping'],
+    [/site.*work|excavat|grad|backfill|compact/i, 'Site Work'],
+    [/demolition|demo|abate/i, 'Demolition'],
+    [/glass|glazing|window|storefront|curtain.*wall/i, 'Glazing'],
+    [/waterproof|dampproof|membrane/i, 'Waterproofing'],
+    [/millwork|cabinet|casework|trim/i, 'Millwork'],
+    [/door|hardware|frame/i, 'Doors'],
   ]
 
   for (const line of lines) {
-    // Determine trade
-    let trade = 'General'
-    for (const [pattern, tradeName] of tradePatterns) {
-      if (pattern.test(line)) {
-        trade = tradeName
-        break
+    // Determine trade - also try normalization from terminology module
+    let trade = normalizeTradeName(line) || 'General'
+    if (trade === 'General') {
+      for (const [pattern, tradeName] of tradePatterns) {
+        if (pattern.test(line)) {
+          trade = tradeName
+          break
+        }
       }
     }
 
-    // Extract location
+    // Get CSI division
+    const csiDivision = TRADE_TO_CSI[trade]
+
+    // Extract location using enhanced patterns from terminology module
+    const locations = extractLocations(line)
     let location = 'General Area'
-    for (const pattern of locationPatterns) {
-      const match = line.match(pattern)
-      if (match) {
-        location = match[0]
-        break
+    const locationDetails: WorkActivity['location_details'] = {}
+
+    if (locations.buildings.length > 0) {
+      locationDetails.building = locations.buildings[0]
+      location = locations.buildings[0]
+    }
+    if (locations.floors.length > 0) {
+      locationDetails.floor = locations.floors[0]
+      location = locations.floors[0]
+    }
+    if (locations.rooms.length > 0) {
+      locationDetails.room = locations.rooms[0]
+      if (location === 'General Area') location = locations.rooms[0]
+    }
+    if (locations.areas.length > 0) {
+      locationDetails.area = locations.areas[0]
+      if (location === 'General Area') location = locations.areas[0]
+    }
+    if (locations.gridLines.length > 0) {
+      locationDetails.grid_line = locations.gridLines[0]
+    }
+
+    // Fallback location patterns
+    if (location === 'General Area') {
+      const fallbackPatterns = [
+        /(?:in|at|on)\s+(floor\s*\d+|level\s*\d+|room\s*\d+|area\s*[a-z]|building\s*[a-z]|wing\s*[a-z])/i,
+        /(north|south|east|west)\s+(wing|side|end)/i,
+        /(basement|ground|first|second|third|fourth|fifth|roof)\s*(?:floor|level)?/i,
+      ]
+      for (const pattern of fallbackPatterns) {
+        const match = line.match(pattern)
+        if (match) {
+          location = match[0]
+          break
+        }
       }
     }
+
+    // Extract quantities using enhanced patterns from terminology module
+    const quantities = extractQuantities(line)
 
     // Extract worker count
-    const workerMatch = line.match(/(\d+)\s*(?:workers?|men|guys|people|crew)/i)
+    const workerMatch = line.match(/(\d+)\s*(?:workers?|men|guys|people|crew|journeymen?|apprentices?)/i)
     const workers = workerMatch ? parseInt(workerMatch[1]) : 0
 
     // Extract hours
@@ -269,16 +386,19 @@ function extractWorkActivities(notes: string, tradeMap: Map<string, string>): Wo
     const percentComplete = percentMatch ? parseInt(percentMatch[1]) : undefined
 
     // Only add if it looks like a work activity
-    const hasWorkVerb = /work|install|pour|set|lay|hang|run|pull|connect|finish|complete|start|continue|progress/i.test(line)
+    const hasWorkVerb = /work|install|pour|set|lay|hang|run|pull|connect|finish|complete|start|continue|progress|erect|place|form|strip|cure|rough|trim|test|inspect/i.test(line)
 
     if (hasWorkVerb || trade !== 'General') {
       activities.push({
         trade,
+        csi_division: csiDivision ? `Division ${csiDivision}: ${CSI_DIVISIONS[csiDivision as keyof typeof CSI_DIVISIONS]}` : undefined,
         description: cleanActivityDescription(line),
         location,
+        location_details: Object.keys(locationDetails).length > 0 ? locationDetails : undefined,
         workers,
         hours,
-        percent_complete: percentComplete
+        percent_complete: percentComplete,
+        quantities: quantities.length > 0 ? quantities : undefined,
       })
     }
   }
@@ -442,7 +562,7 @@ function extractDelaysAndIssues(notes: string): string[] {
     }
   }
 
-  return [...new Set(issues)].slice(0, 5)
+  return Array.from(new Set(issues)).slice(0, 5)
 }
 
 function extractSafetyObservations(notes: string): string[] {
@@ -458,7 +578,7 @@ function extractSafetyObservations(notes: string): string[] {
     }
   }
 
-  return [...new Set(observations)].slice(0, 5)
+  return Array.from(new Set(observations)).slice(0, 5)
 }
 
 function extractVisitors(notes: string): string[] {
@@ -473,7 +593,7 @@ function extractVisitors(notes: string): string[] {
     }
   }
 
-  return [...new Set(visitors)].slice(0, 5)
+  return Array.from(new Set(visitors)).slice(0, 5)
 }
 
 function buildWeatherSummary(weather?: {
@@ -587,4 +707,102 @@ function cleanNotes(notes: string): string {
     .replace(/\s+/g, ' ')
     .trim()
     .substring(0, 2000)
+}
+
+/**
+ * Generate a professional superintendent narrative from the extracted data
+ */
+function generateSuperintendentNarrative(
+  weatherSummary: string,
+  activities: WorkActivity[],
+  manpower: ManpowerEntry[],
+  delays: string[],
+  safety: string[],
+  visitors: string[]
+): string {
+  const sections: string[] = []
+
+  // Weather opening
+  sections.push(`Weather conditions: ${weatherSummary}.`)
+
+  // Manpower summary
+  const totalWorkers = manpower.reduce((sum, e) => sum + e.headcount, 0)
+  if (totalWorkers > 0) {
+    const tradeList = manpower.map(m => `${m.headcount} ${m.trade}`).join(', ')
+    sections.push(`Total workforce on site: ${totalWorkers} workers (${tradeList}).`)
+  }
+
+  // Key activities by trade
+  const tradeActivities = new Map<string, string[]>()
+  for (const activity of activities) {
+    const existing = tradeActivities.get(activity.trade) || []
+    existing.push(activity.description)
+    tradeActivities.set(activity.trade, existing)
+  }
+
+  if (tradeActivities.size > 0) {
+    sections.push('Work performed today:')
+    tradeActivities.forEach((descriptions, trade) => {
+      const uniqueDescriptions = Array.from(new Set(descriptions))
+      sections.push(`- ${trade}: ${uniqueDescriptions.slice(0, 2).join('; ')}`)
+    })
+  }
+
+  // Delays/issues
+  if (delays.length > 0) {
+    sections.push(`Issues encountered: ${delays.slice(0, 2).join('. ')}.`)
+  }
+
+  // Safety
+  if (safety.length > 0) {
+    sections.push(`Safety notes: ${safety.slice(0, 2).join('. ')}.`)
+  } else {
+    sections.push('No safety incidents to report. Safety protocols followed.')
+  }
+
+  // Visitors
+  if (visitors.length > 0) {
+    sections.push(`Site visitors: ${visitors.join(', ')}.`)
+  }
+
+  return sections.join(' ')
+}
+
+/**
+ * Analyze productivity against industry benchmarks
+ */
+function analyzeProductivity(
+  activities: WorkActivity[],
+  manpower: ManpowerEntry[]
+): { trade: string; actual_rate: string; benchmark_rate: string; variance: string }[] {
+  const analysis: { trade: string; actual_rate: string; benchmark_rate: string; variance: string }[] = []
+
+  for (const activity of activities) {
+    const benchmark = TRADE_PRODUCTIVITY_BENCHMARKS[activity.trade as keyof typeof TRADE_PRODUCTIVITY_BENCHMARKS]
+    if (!benchmark || !activity.quantities || activity.quantities.length === 0) continue
+
+    // Find matching quantity for benchmark comparison
+    for (const qty of activity.quantities) {
+      // Try to find a matching benchmark metric
+      for (const [metric, data] of Object.entries(benchmark)) {
+        if (data.unit.includes(qty.unit)) {
+          const manpowerForTrade = manpower.find(m => m.trade === activity.trade)
+          if (manpowerForTrade && manpowerForTrade.headcount > 0) {
+            const actualRate = qty.value / (manpowerForTrade.headcount * activity.hours)
+            const benchmarkValue = parseFloat(data.value.toString())
+            const variance = ((actualRate - benchmarkValue) / benchmarkValue * 100).toFixed(0)
+
+            analysis.push({
+              trade: activity.trade,
+              actual_rate: `${actualRate.toFixed(1)} ${data.unit}`,
+              benchmark_rate: `${data.value} ${data.unit}`,
+              variance: `${variance}%`,
+            })
+          }
+        }
+      }
+    }
+  }
+
+  return analysis.slice(0, 5) // Limit to top 5
 }

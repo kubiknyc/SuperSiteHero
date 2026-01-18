@@ -22,14 +22,23 @@ interface SummarizeDailyReportOutput {
   report_id: string
   report_date: string
   summary: string
+  executive_summary: string // Owner-ready brief summary
   highlights: string[]
   concerns: string[]
   recommendations: string[]
+  next_day_actions: string[] // Critical items for tomorrow
   metrics: {
     workers_on_site: number
     hours_worked: number
     safety_incidents: number
     weather_impact: string
+    overall_progress?: string // e.g., "On Schedule", "1 Day Behind"
+    percent_complete_change?: number // Change in % complete today
+  }
+  critical_path_impact?: {
+    affected_activities: string[]
+    impact_description: string
+    mitigation_needed: boolean
   }
 }
 
@@ -141,15 +150,20 @@ async function execute(
         report_id: input.report_id,
         report_date: report.report_date,
         summary: summaryData.summary,
+        executive_summary: summaryData.executive_summary || summaryData.summary.split('.')[0] + '.',
         highlights: summaryData.highlights,
         concerns: summaryData.concerns,
         recommendations: includeRecommendations ? summaryData.recommendations : [],
+        next_day_actions: summaryData.next_day_actions || summaryData.action_items || [],
         metrics: {
           workers_on_site: totalWorkers,
           hours_worked: totalHours,
           safety_incidents: summaryData.safety_incidents_count || 0,
           weather_impact: summaryData.weather_impact || 'none',
+          overall_progress: summaryData.overall_progress,
+          percent_complete_change: summaryData.percent_complete_change,
         },
+        critical_path_impact: summaryData.critical_path_impact,
       },
       metadata: {
         executionTimeMs: Date.now() - startTime,
@@ -175,34 +189,58 @@ async function execute(
 
 interface SummaryResult {
   summary: string
+  executive_summary: string
   highlights: string[]
   concerns: string[]
   recommendations: string[]
   action_items?: string[]
+  next_day_actions: string[]
   safety_incidents_count?: number
   weather_impact?: string
+  overall_progress?: string
+  percent_complete_change?: number
+  critical_path_impact?: {
+    affected_activities: string[]
+    impact_description: string
+    mitigation_needed: boolean
+  }
 }
 
-const SUMMARIZATION_SYSTEM_PROMPT = `You are an expert construction daily report analyst. Your job is to summarize daily field reports for superintendents and project managers.
+const SUMMARIZATION_SYSTEM_PROMPT = `You are an expert construction daily report analyst with deep knowledge of field operations. Your job is to summarize daily field reports for superintendents, project managers, and owners.
 
 You must respond with valid JSON matching this schema:
 {
-  "summary": "string - 2-3 sentence executive summary",
+  "summary": "string - 2-3 sentence detailed summary for the superintendent",
+  "executive_summary": "string - 1 sentence high-level summary suitable for owner reporting",
   "highlights": ["array of key accomplishments and progress"],
   "concerns": ["array of issues, delays, or problems to watch"],
   "recommendations": ["array of suggested next steps or actions"],
   "action_items": ["specific tasks that need follow-up"],
+  "next_day_actions": ["critical items that MUST happen tomorrow"],
   "safety_incidents_count": number,
-  "weather_impact": "none | minor | moderate | significant"
+  "weather_impact": "none | minor | moderate | significant",
+  "overall_progress": "Ahead of Schedule | On Schedule | 1-2 Days Behind | Significantly Behind",
+  "percent_complete_change": number (e.g., 0.5 for 0.5% progress today),
+  "critical_path_impact": {
+    "affected_activities": ["activities on critical path affected"],
+    "impact_description": "brief description of schedule impact",
+    "mitigation_needed": boolean
+  }
 }
 
 Guidelines:
-- Be concise and actionable
-- Focus on what matters to project leadership
-- Highlight progress toward milestones
-- Flag any safety concerns prominently
-- Note weather impacts on schedule
-- Identify coordination issues between trades`
+- **Executive Summary**: Write as if for an owner's monthly report - professional, brief, positive where warranted
+- **Highlights**: Focus on tangible progress (quantities installed, milestones reached)
+- **Concerns**: Prioritize by impact - schedule-affecting issues first, then cost, then quality
+- **Recommendations**: Be specific and actionable - who needs to do what
+- **Next Day Actions**: Only items that are genuinely critical for tomorrow
+- **Weather Impact**: Consider trade-specific impacts (concrete, roofing, painting sensitive)
+- **Critical Path**: Identify if any delays affect the project end date
+- **Safety First**: Any safety incident or near-miss should be flagged prominently
+- **Coordination**: Note any trade stacking issues or coordination problems
+- **Documentation**: Flag if delays need to be documented for potential claims
+- Use construction industry terminology appropriately
+- Reference CSI divisions when relevant for trade work`
 
 function buildSummarizationPrompt(
   report: {
@@ -302,21 +340,40 @@ export const summarizeDailyReportTool = createTool({
   execute,
   formatOutput: (output: SummarizeDailyReportOutput) => ({
     title: `Daily Report Summary - ${new Date(output.report_date).toLocaleDateString()}`,
-    summary: output.summary,
+    summary: output.executive_summary,
     icon: 'FileText',
-    status: output.concerns.length === 0 ? 'success' : output.concerns.length <= 2 ? 'warning' : 'info',
+    status: output.critical_path_impact?.mitigation_needed
+      ? 'error'
+      : output.concerns.length === 0
+        ? 'success'
+        : output.concerns.length <= 2
+          ? 'warning'
+          : 'info',
     details: [
       { label: 'Workers', value: output.metrics.workers_on_site, type: 'text' },
       { label: 'Hours', value: output.metrics.hours_worked, type: 'text' },
       { label: 'Weather Impact', value: output.metrics.weather_impact, type: 'badge' },
+      ...(output.metrics.overall_progress
+        ? [{ label: 'Schedule', value: output.metrics.overall_progress, type: 'badge' as const }]
+        : []),
+      ...(output.metrics.percent_complete_change !== undefined
+        ? [{ label: 'Progress Today', value: `+${output.metrics.percent_complete_change}%`, type: 'text' as const }]
+        : []),
       ...(output.metrics.safety_incidents > 0
         ? [{ label: 'Safety Incidents', value: output.metrics.safety_incidents, type: 'badge' as const }]
         : []),
+      ...(output.critical_path_impact?.mitigation_needed
+        ? [{ label: 'Critical Path', value: 'IMPACTED', type: 'badge' as const }]
+        : []),
     ],
     expandedContent: {
+      executive_summary: output.executive_summary,
+      full_summary: output.summary,
       highlights: output.highlights,
       concerns: output.concerns,
       recommendations: output.recommendations,
+      next_day_actions: output.next_day_actions,
+      critical_path_impact: output.critical_path_impact,
     },
   }),
 })

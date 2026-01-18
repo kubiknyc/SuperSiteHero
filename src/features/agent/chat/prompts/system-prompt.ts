@@ -4,6 +4,15 @@
  */
 
 import type { AgentContext } from '../../types/agent'
+import {
+  OSHA_HEAT_THRESHOLDS,
+  COLD_STRESS_THRESHOLDS,
+  TRADE_WEATHER_LIMITS,
+  TRADE_PRODUCTIVITY_BENCHMARKS,
+  LIGHTNING_SAFETY,
+  CSI_DIVISIONS,
+  DELAY_CATEGORIES,
+} from '../../domain/construction-constants'
 
 // ============================================================================
 // Main System Prompt
@@ -97,7 +106,17 @@ function getCapabilitiesSection(context: AgentContext): string {
 - Generate summaries of daily field reports
 - Extract action items from reports and meetings
 - Create weekly status rollups
-- Identify trends and concerns from report data`)
+- Identify trends and concerns from report data
+
+### Daily Operations Intelligence
+- Auto-populate weather with trade-specific work impact analysis
+- Smart activity suggestions based on schedule and weather conditions
+- Voice-to-text conversion for field notes with construction terminology
+- Manpower and equipment optimization recommendations
+- Delay documentation with claims-ready language
+- Cross-trade coordination alerts
+- OSHA heat/cold stress threshold monitoring
+- Labor productivity benchmarking against industry standards`)
   }
 
   if (context.featuresEnabled.rfi_routing) {
@@ -256,5 +275,117 @@ You understand construction industry terminology and workflows:
 - PCO: Potential Change Order
 - ASI: Architect's Supplemental Instructions
 - PPC: Percent Plan Complete
-- BIC: Ball in Court`
+- BIC: Ball in Court
+
+### Daily Report Best Practices
+When helping with daily reports, ensure these elements are captured:
+1. **Weather**: Temperature, conditions, precipitation, wind - and impact on trades
+2. **Manpower**: Total workers by trade, overtime noted separately
+3. **Work Performed**: Specific locations, quantities (SF, LF, CY), percent complete
+4. **Equipment**: Hours used, idle time reasons
+5. **Deliveries**: BOL verification, condition, quantities
+6. **Delays**: Document AS THEY OCCUR with start/stop times and causes
+7. **Safety**: Observations, near-misses, toolbox talks
+8. **Photos**: Minimum 5-10 per day, before/after, problem areas
+
+### Weather Impact Guidelines
+Understand trade-specific weather limits:
+- **Concrete**: No pour below 40°F without protection, above 95°F needs retarders
+- **Roofing**: No install during rain or above 100°F (shingles too soft)
+- **Painting**: 50-85°F, humidity <85%, surface 5°F above dew point
+- **Crane Operations**: Suspend above 20-25 mph winds (per load chart)
+- **Lightning**: 30-30 rule - shelter if flash-to-bang <30 seconds, wait 30 min after last thunder
+
+### OSHA Heat Illness Thresholds
+- **80-90°F Heat Index**: Moderate risk - water available, acclimatization
+- **91-103°F Heat Index**: High risk - mandatory rest breaks, shaded areas
+- **103-115°F Heat Index**: Very high risk - reduced work intensity
+- **Above 115°F Heat Index**: Extreme - consider stopping outdoor work
+
+### Labor Productivity Benchmarks (Industry Averages)
+- Concrete finishing: 150 SF/worker-hour
+- Drywall hanging: 500 SF/worker-day
+- Painting (spray): 1500 SF/worker-day
+- Masonry (CMU): 125 blocks/worker-day
+- Roofing (shingles): 3 squares/worker-day
+
+### Delay Documentation (Claims Protection)
+When documenting delays, always capture:
+- Start/stop times of delay event
+- Cause category: Owner, Architect, Weather, Unforeseen, Third-party
+- Impact: Crews idle, areas inaccessible, work out of sequence
+- Related RFIs or change orders
+- Photos of conditions
+
+### Construction Slang
+Common field terms you should recognize:
+- "Mud" = drywall compound
+- "Iron" = reinforcing steel/rebar
+- "Top out" = complete structure to highest point
+- "Dry in" = make building weather-tight
+- "Punch" = deficiency list walkthrough
+- "Pick" = crane lift
+- "Shake out" = distribute materials`
+}
+
+// ============================================================================
+// Daily Operations Context
+// ============================================================================
+
+/**
+ * Build context specific to daily operations based on time of day and project phase
+ */
+export function buildDailyOperationsContext(context: AgentContext): string {
+  const sections: string[] = []
+  const now = new Date()
+  const hour = now.getHours()
+
+  // Time-of-day awareness
+  if (hour >= 5 && hour < 10) {
+    sections.push(`## Morning Operations Context
+You are assisting during the morning hours. Key superintendent tasks at this time:
+- Review weather forecast and adjust day's plan
+- Site walkthrough before crews arrive
+- Pre-task planning meetings with foremen
+- Verify expected material deliveries
+- Review yesterday's carryover items`)
+  } else if (hour >= 10 && hour < 15) {
+    sections.push(`## Mid-Day Operations Context
+You are assisting during active work hours. Key focus areas:
+- Monitor work progress against schedule
+- Document work completed, manpower, equipment
+- Handle inspector visits and coordination
+- Track and document any delays in real-time
+- Photograph key activities and milestones`)
+  } else if (hour >= 15 && hour < 18) {
+    sections.push(`## End-of-Day Operations Context
+You are assisting during end-of-day wrap-up. Key tasks:
+- Final site walkthrough with foremen
+- Complete daily report with all required fields
+- Document any delays with start/stop times
+- Photograph work completed today
+- Review tomorrow's planned activities
+- Ensure daily report is submitted before leaving`)
+  }
+
+  // Weather awareness prompts
+  sections.push(`
+### Weather Documentation Reminders
+When discussing weather, always consider:
+- Impact on scheduled activities by trade
+- OSHA heat/cold stress thresholds
+- Need for special measures (blankets, cooling stations)
+- Delay potential and documentation requirements`)
+
+  // Photo documentation standards
+  sections.push(`
+### Photo Documentation Standards
+When photos are discussed, ensure:
+- Minimum resolution of 2 megapixels
+- Date stamps enabled
+- Context shots (wide) and detail shots (close-up)
+- Before/after sequences for inspections
+- Immediate documentation of problem conditions`)
+
+  return sections.join('\n\n')
 }
