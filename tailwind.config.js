@@ -10,6 +10,29 @@ export default {
 		"./index.html",
 		"./src/**/*.{js,ts,jsx,tsx}",
 	],
+	// Safelist ensures critical utilities are always generated regardless of JIT scanning
+	// This fixes production builds where build cache might miss dynamically used classes
+	safelist: [
+		// Layout utilities used in login/auth pages
+		'hidden',
+		'flex',
+		'block',
+		'w-full',
+		'w-1/2',
+		'w-2/5',
+		'w-3/5',
+		// Height utilities
+		'h-10',
+		'h-12',
+		'h-14',
+		// Responsive variants - explicit list for reliable JIT generation
+		'sm:flex', 'sm:hidden', 'sm:block', 'sm:w-1/2',
+		'md:flex', 'md:hidden', 'md:block', 'md:w-1/2',
+		'lg:flex', 'lg:hidden', 'lg:block', 'lg:w-1/2',
+		'xl:flex', 'xl:hidden', 'xl:block', 'xl:w-2/5', 'xl:w-3/5',
+		// Object fit
+		'object-contain',
+	],
 	theme: {
 		// Custom screens with tablet breakpoints
 		screens: {
