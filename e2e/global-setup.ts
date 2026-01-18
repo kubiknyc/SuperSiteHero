@@ -6,6 +6,9 @@
  * 2. Run server health checks to ensure responsiveness
  * 3. Create authenticated user sessions
  * 4. Seed necessary test data (optional)
+ *
+ * Can be skipped by setting PLAYWRIGHT_SKIP_GLOBAL_SETUP=true
+ * (used for deployment smoke tests against remote URLs)
  */
 
 import { chromium, FullConfig } from '@playwright/test';
@@ -42,6 +45,12 @@ const AUTH_FILE = path.join(__dirname, '../playwright/.auth/user.json');
 const ADMIN_AUTH_FILE = path.join(__dirname, '../playwright/.auth/admin.json');
 
 async function globalSetup(config: FullConfig) {
+  // Skip global setup for smoke tests against deployed environments
+  if (process.env.PLAYWRIGHT_SKIP_GLOBAL_SETUP === 'true') {
+    console.log('\n⏭️  Skipping global setup (PLAYWRIGHT_SKIP_GLOBAL_SETUP=true)\n');
+    return;
+  }
+
   console.log('\n🔧 Running Playwright global setup...\n');
 
   // Verify required environment variables
