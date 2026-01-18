@@ -223,45 +223,53 @@ jobs:
   ci-gate:
     name: CI Gate
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     outputs:
       passed: ${{ steps.check.outputs.passed }}
     steps:
-      - name: Wait for CI workflow
-        run: sleep 30  # Give CI workflow time to start
-
-      - name: Check CI status
+      - name: Wait for CI workflow to complete
         id: check
         uses: actions/github-script@v7
         with:
           script: |
-            // Get CI workflow runs for this commit
-            const runs = await github.rest.actions.listWorkflowRunsForRepo({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'ci.yml',
-              head_sha: context.sha
-            });
+            const maxAttempts = 60;  // 10 minutes max (60 * 10s)
+            const pollInterval = 10000;  // 10 seconds
 
-            const ciRun = runs.data.workflow_runs[0];
+            for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+              console.log(`Attempt ${attempt}/${maxAttempts}: Checking CI status...`);
 
-            if (!ciRun) {
-              console.log('No CI run found yet, will proceed with caution');
-              core.setOutput('passed', 'true');
-              return;
+              const runs = await github.rest.actions.listWorkflowRunsForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: 'ci.yml',
+                head_sha: context.sha
+              });
+
+              const ciRun = runs.data.workflow_runs[0];
+
+              if (!ciRun) {
+                console.log('No CI run found yet, waiting...');
+                await new Promise(r => setTimeout(r, pollInterval));
+                continue;
+              }
+
+              console.log(`CI status: ${ciRun.status}, conclusion: ${ciRun.conclusion}`);
+
+              if (ciRun.status === 'completed') {
+                const passed = ciRun.conclusion === 'success';
+                console.log(`CI completed with conclusion: ${ciRun.conclusion}`);
+                core.setOutput('passed', passed ? 'true' : 'false');
+                return;
+              }
+
+              // CI still running, wait and retry
+              await new Promise(r => setTimeout(r, pollInterval));
             }
 
-            // If CI is still running, wait for it
-            if (ciRun.status === 'in_progress' || ciRun.status === 'queued') {
-              console.log('CI is still running, assuming it will pass');
-              core.setOutput('passed', 'true');
-              return;
-            }
-
-            const passed = ciRun.conclusion === 'success';
-            console.log(`CI run conclusion: ${ciRun.conclusion}, passed: ${passed}`);
-            core.setOutput('passed', passed ? 'true' : 'false');
+            // Timeout - fail safe, don't deploy
+            console.log('CI did not complete in time, blocking deployment');
+            core.setOutput('passed', 'false');
 
   # ==================== POST-DEPLOYMENT CHECKS ====================
   smoke-tests:
