@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 JobSight is an offline-first, multi-tenant construction field management platform for superintendents. It consolidates daily reports, RFIs, change orders, punch lists, safety tracking, and other construction workflows into one unified system optimized for field use.
 
+Multi-tenancy is enforced via Supabase Row-Level Security (RLS) policies - all database queries are automatically scoped to the user's company.
+
 **Tech Stack:**
 - Frontend: React 19 + TypeScript + Vite + TailwindCSS
 - State: TanStack Query (react-query) + Zustand
@@ -33,12 +35,25 @@ npm run test:unit          # Single run with verbose output
 npm run test:coverage      # With coverage report
 npm run test:ui            # Vitest UI
 
+# Run single unit test file
+npm run test -- src/path/to/file.test.tsx
+
+# Run specific test by name pattern
+npm run test -- -t "test name pattern"
+
 # E2E Tests (Playwright)
+npm run playwright:install # Install browsers (run once before first E2E)
 npm run test:e2e           # Run all E2E tests
 npm run test:e2e:ui        # Playwright UI mode
 npm run test:e2e:headed    # Headed mode (see browser)
 npm run test:e2e:debug     # Debug mode
 npm run test:e2e:chromium  # Chromium only
+
+# Run single E2E test file
+npx playwright test e2e/specific.spec.ts
+
+# Run E2E tests matching title pattern
+npx playwright test -g "test title pattern"
 
 # Visual Regression
 npm run test:visual        # Run visual regression tests
@@ -53,6 +68,8 @@ npm run cap:sync           # Sync web assets to native projects
 npm run cap:build:ios      # Build and sync iOS
 npm run cap:open:ios       # Open Xcode
 npm run cap:run:ios        # Run on iOS simulator
+npm run cap:build:android  # Build and sync Android
+npm run cap:run:android    # Run on Android emulator
 ```
 
 ## Architecture
@@ -71,11 +88,14 @@ src/
 │   ├── api/            # API services and clients
 │   │   ├── services/   # Typed service layer
 │   │   └── offline-client.ts
-│   └── offline/        # Offline sync infrastructure
-│       ├── sync-manager.ts
-│       ├── conflict-resolver.ts
-│       ├── indexeddb.ts
-│       └── priority-queue.ts
+│   ├── offline/        # Offline sync infrastructure
+│   │   ├── sync-manager.ts
+│   │   ├── conflict-resolver.ts
+│   │   ├── indexeddb.ts
+│   │   └── priority-queue.ts
+│   ├── auth/           # Authentication (MFA, biometric, RBAC)
+│   ├── realtime/       # Supabase Realtime (presence, sync)
+│   └── device/         # Device detection, URL mapping
 ├── types/
 │   ├── database.generated.ts  # Supabase-generated types (source of truth)
 │   └── database-extensions.ts # Extended/custom types
@@ -84,11 +104,49 @@ src/
 └── components/         # Shared UI components
 ```
 
+### Mobile vs Desktop
+
+The app conditionally renders different shells based on device:
+- `src/App.tsx` - Main router with device detection
+- `src/MobileApp.tsx` - Mobile-optimized shell (touch gestures, bottom nav)
+- `src/DesktopApp.tsx` - Desktop shell (sidebar navigation)
+- `src/lib/device/detection.ts` - Device detection utilities
+
 ### Data Flow
 
 1. **React Component** → TanStack Query hook → API service → Supabase client
 2. **Offline**: IndexedDB cache ← sync-manager → Supabase (when online)
 3. **Realtime**: Supabase Realtime channels → React Query cache invalidation
+
+### TanStack Query Patterns
+
+Feature hooks wrap Supabase queries with TanStack Query for caching and automatic refetch:
+```typescript
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
+
+export function useDailyReports(projectId: string | undefined) {
+  return useQuery({
+    queryKey: ['daily-reports', projectId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('daily_reports')
+        .select('*')
+        .eq('project_id', projectId)
+      if (error) throw error
+      return data
+    },
+    enabled: !!projectId,
+  })
+}
+```
+
+### Realtime Integration
+
+Supabase Realtime is used for live collaboration:
+- `src/lib/realtime/client.ts` - Channel management
+- `src/lib/realtime/presence.ts` - Who's viewing what
+- `src/lib/realtime/markup-sync.ts` - Document markup collaboration
 
 ### Supabase Client Usage
 
@@ -126,7 +184,8 @@ import { Button } from '@/components/ui/button'
 2. Run migration in Supabase SQL Editor
 3. Update `src/types/database.generated.ts` (or regenerate)
 4. Update API service in `src/lib/api/services/`
-5. Add tests
+5. Add RLS policies if needed (all tables should have RLS enabled)
+6. Add tests
 
 ## Testing Patterns
 
@@ -202,9 +261,19 @@ GitHub Actions runs on PRs and pushes to main/develop:
 
 - **App entry**: `src/main.tsx`
 - **Routing**: `src/App.tsx`
+- **Mobile shell**: `src/MobileApp.tsx`
+- **Desktop shell**: `src/DesktopApp.tsx`
 - **Supabase client**: `src/lib/supabase.ts`
+- **Auth context**: `src/lib/auth/AuthContext.tsx`
 - **Database types**: `src/types/database.generated.ts`
 - **Vite config**: `vite.config.ts` (includes PWA, chunking)
 - **Vitest config**: `vitest.config.ts`
 - **Playwright config**: `playwright.config.ts`
 - **Migrations**: `migrations/` directory
+
+## Guidelines for AI Agents
+
+- Never change database migrations without an accompanying test
+- If touching offline sync or API contracts, add integration or E2E tests
+- Prefer small, focused changes that include tests and update types
+- Always run `npm run type-check` after modifying TypeScript
