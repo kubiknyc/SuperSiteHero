@@ -181,9 +181,16 @@ export function LoginPageV2() {
   const isDisabled = isLoading || !rateLimit.isAllowed
 
   return (
-    <div className="min-h-screen flex bg-slate-950 overflow-hidden">
+    <div className="login-container min-h-screen flex bg-slate-950 overflow-hidden">
       {/* Inline CSS fallback for responsive layout - ensures layout works even if Tailwind responsive classes are missing from build */}
       <style>{`
+        .login-container {
+          display: flex !important;
+          flex-direction: row !important;
+          min-height: 100vh;
+          background-color: rgb(2 6 23);
+          overflow: hidden;
+        }
         .login-hero-panel {
           display: none;
           position: relative;
