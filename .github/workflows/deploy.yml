@@ -264,6 +264,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Wait for deployment to be ready
+        id: wait-deploy
         run: |
           echo "Waiting for deployment to be ready..."
           DEPLOY_URL="${{ needs.deploy-preview.outputs.url }}"
@@ -272,8 +273,14 @@ jobs:
           for i in {1..30}; do
             STATUS=$(curl -sL -o /dev/null -w "%{http_code}" "$DEPLOY_URL")
             echo "Attempt $i: HTTP $STATUS"
+            if [[ "$STATUS" == "401" ]]; then
+              echo "Deployment is up but password-protected (HTTP 401)"
+              echo "protected=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
             if [[ "$STATUS" =~ ^(200|301|302|307|308)$ ]]; then
-              echo "Deployment is ready!"
+              echo "Deployment is ready! (HTTP $STATUS)"
+              echo "protected=false" >> $GITHUB_OUTPUT
               exit 0
             fi
             sleep 10
@@ -282,12 +289,20 @@ jobs:
           exit 1
 
       - name: Run smoke tests against preview
+        if: steps.wait-deploy.outputs.protected != 'true'
         run: npx playwright test e2e/smoke.spec.ts --project=chromium --reporter=html --global-timeout=300000
         env:
           BASE_URL: ${{ needs.deploy-preview.outputs.url }}
           PLAYWRIGHT_SKIP_GLOBAL_SETUP: true
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+
+      - name: Skip smoke tests (password protected)
+        if: steps.wait-deploy.outputs.protected == 'true'
+        run: |
+          echo "::warning::Skipping smoke tests - Vercel preview is password protected"
+          echo "## Smoke Tests Skipped" >> $GITHUB_STEP_SUMMARY
+          echo "Preview deployment is password-protected. Smoke tests require public access." >> $GITHUB_STEP_SUMMARY
 
       - name: Upload smoke test report
         uses: actions/upload-artifact@v4
