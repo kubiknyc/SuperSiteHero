@@ -219,6 +219,18 @@ const TakeoffPage = lazy(() => import('./pages/takeoffs/TakeoffPage'));
 const TakeoffsListPage = lazy(() => import('./pages/takeoffs/TakeoffsListPage'));
 const ContactFormPage = lazy(() => import('./pages/contacts/ContactFormPage').then(m => ({ default: m.ContactFormPage })));
 
+// Drawing Sheets feature (AI-powered)
+const DrawingSheetsPage = lazy(() => import('./pages/drawing-sheets/DrawingSheetsPage').then(m => ({ default: m.DrawingSheetsPage })));
+const DrawingSheetDetailPage = lazy(() => import('./pages/drawing-sheets/DrawingSheetDetailPage').then(m => ({ default: m.DrawingSheetDetailPage })));
+
+// Material Lists feature (from takeoffs)
+const MaterialListsPage = lazy(() => import('./pages/material-lists/MaterialListsPage').then(m => ({ default: m.MaterialListsPage })));
+const MaterialListDetailPage = lazy(() => import('./pages/material-lists/MaterialListDetailPage').then(m => ({ default: m.MaterialListDetailPage })));
+
+// Visual Search feature (AI pattern matching)
+const VisualSearchPage = lazy(() => import('./pages/visual-search/VisualSearchPage').then(m => ({ default: m.VisualSearchPage })));
+const PatternLibraryPage = lazy(() => import('./pages/visual-search/PatternLibraryPage').then(m => ({ default: m.PatternLibraryPage })));
+
 // Weather Logs feature
 const WeatherLogsPage = lazy(() => import('./pages/weather-logs/WeatherLogsPage').then(m => ({ default: m.WeatherLogsPage })));
 const WeatherLogDetailPage = lazy(() => import('./pages/weather-logs/WeatherLogDetailPage').then(m => ({ default: m.WeatherLogDetailPage })));
@@ -443,6 +455,18 @@ export function DesktopApp() {
         {/* Takeoffs feature */}
         <Route path="/projects/:projectId/takeoffs" element={<ProtectedRoute><TakeoffsListPage /></ProtectedRoute>} />
         <Route path="/projects/:projectId/documents/:documentId/takeoff" element={<ProtectedRoute><TakeoffPage /></ProtectedRoute>} />
+
+        {/* Drawing Sheets feature (AI-powered) */}
+        <Route path="/projects/:projectId/drawing-sheets" element={<ProtectedRoute><DrawingSheetsPage /></ProtectedRoute>} />
+        <Route path="/projects/:projectId/drawing-sheets/:sheetId" element={<ProtectedRoute><DrawingSheetDetailPage /></ProtectedRoute>} />
+
+        {/* Material Lists feature (from takeoffs) */}
+        <Route path="/projects/:projectId/material-lists" element={<ProtectedRoute><MaterialListsPage /></ProtectedRoute>} />
+        <Route path="/projects/:projectId/material-lists/:listId" element={<ProtectedRoute><MaterialListDetailPage /></ProtectedRoute>} />
+
+        {/* Visual Search feature (AI pattern matching) */}
+        <Route path="/projects/:projectId/visual-search" element={<ProtectedRoute><VisualSearchPage /></ProtectedRoute>} />
+        <Route path="/projects/:projectId/visual-search/patterns" element={<ProtectedRoute><PatternLibraryPage /></ProtectedRoute>} />
 
         {/* RFIs feature */}
         <Route path="/rfis" element={<ProtectedRoute><RFIsPage /></ProtectedRoute>} />

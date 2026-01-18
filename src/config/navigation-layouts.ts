@@ -29,6 +29,9 @@ import {
   BarChart3,
   Settings,
   LucideIcon,
+  FileImage,
+  ListOrdered,
+  ScanSearch,
 } from 'lucide-react'
 
 // ============================================================================
@@ -81,6 +84,9 @@ const WORKFLOW_TYPE_LAYOUT: NavigationLayout = {
         { path: '/rfis', label: 'RFIs', icon: FileQuestion, badge: 5 },
         { path: '/submittals', label: 'Submittals', icon: FileText },
         { path: '/change-orders', label: 'Change Orders', icon: Receipt },
+        { path: '/drawing-sheets', label: 'Drawing Sheets', icon: FileImage, description: 'AI-extracted drawing pages' },
+        { path: '/material-lists', label: 'Material Lists', icon: ListOrdered, description: 'Procurement from takeoffs' },
+        { path: '/visual-search', label: 'Visual Search', icon: ScanSearch, description: 'AI pattern matching in drawings' },
       ],
     },
     {
@@ -189,6 +195,9 @@ const PROJECT_PHASE_LAYOUT: NavigationLayout = {
         { path: '/rfis', label: 'RFIs', icon: FileQuestion, badge: 5 },
         { path: '/schedules', label: 'Schedules', icon: Calendar },
         { path: '/takeoffs', label: 'Takeoffs', icon: Ruler },
+        { path: '/drawing-sheets', label: 'Drawing Sheets', icon: FileImage, description: 'AI-extracted drawing pages' },
+        { path: '/material-lists', label: 'Material Lists', icon: ListOrdered, description: 'Procurement from takeoffs' },
+        { path: '/visual-search', label: 'Visual Search', icon: ScanSearch, description: 'AI pattern matching in drawings' },
       ],
     },
     {
@@ -267,6 +276,7 @@ const FAVORITES_LAYOUT: NavigationLayout = {
         { path: '/subcontractors', label: 'Subcontractors', icon: Truck },
         { path: '/equipment', label: 'Equipment', icon: Hammer },
         { path: '/reports', label: 'Reports', icon: BarChart3 },
+        { path: '/visual-search', label: 'Visual Search', icon: ScanSearch, description: 'AI pattern matching in drawings' },
       ],
     },
   ],
@@ -308,6 +318,9 @@ const RESPONSIBILITY_LAYOUT: NavigationLayout = {
         { path: '/change-orders', label: 'Change Orders', icon: Receipt },
         { path: '/schedules', label: 'Schedules', icon: Calendar },
         { path: '/meetings', label: 'Meetings', icon: Users },
+        { path: '/drawing-sheets', label: 'Drawing Sheets', icon: FileImage, description: 'AI-extracted drawing pages' },
+        { path: '/material-lists', label: 'Material Lists', icon: ListOrdered, description: 'Procurement from takeoffs' },
+        { path: '/visual-search', label: 'Visual Search', icon: ScanSearch, description: 'AI pattern matching in drawings' },
       ],
     },
     {

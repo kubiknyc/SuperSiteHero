@@ -48,7 +48,8 @@
       "mcp__claude-in-chrome__resize_window",
       "mcp__claude-in-chrome__update_plan",
       "mcp__claude-in-chrome__shortcuts_list",
-      "mcp__claude-in-chrome__shortcuts_execute"
+      "mcp__claude-in-chrome__shortcuts_execute",
+      "mcp__plugin_superpowers-chrome_chrome__use_browser"
     ],
     "deny": [],
     "ask": [],

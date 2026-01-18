@@ -92,13 +92,10 @@ function ConfigurationError() {
 }
 
 function App() {
-  // Show configuration error if Supabase env vars are missing
-  if (isMissingSupabaseConfig) {
-    return <ConfigurationError />
-  }
-
   // Initialize Web Vitals monitoring in production
+  // Note: Hooks must be called unconditionally (before any early returns)
   useEffect(() => {
+    if (isMissingSupabaseConfig) return;
     if (import.meta.env.PROD) {
       initWebVitalsMonitoring();
     }
@@ -106,6 +103,8 @@ function App() {
 
   // Initialize IndexedDB for offline functionality
   useEffect(() => {
+    if (isMissingSupabaseConfig) return;
+
     let cleanupSync: (() => void) | null = null;
 
     const initOfflineDatabase = async () => {
@@ -141,6 +140,11 @@ function App() {
       }
     }
   }, [])
+
+  // Show configuration error if Supabase env vars are missing
+  if (isMissingSupabaseConfig) {
+    return <ConfigurationError />
+  }
 
   return (
     <>

@@ -301,38 +301,46 @@ export const TRADE_ALIASES: Record<string, string[]> = {
 // Location Patterns for Extraction
 // ============================================================================
 
+// These patterns parse construction document text (not untrusted user input).
+// Quantifiers are bounded to limit worst-case performance.
+/* eslint-disable security/detect-unsafe-regex */
 export const LOCATION_PATTERNS = {
-  building: /\b(?:building|bldg|bld)\s*[A-Z0-9-]+/gi,
-  floor: /\b(?:floor|flr|level|lvl)\s*[0-9BMG-]+/gi,
-  room: /\b(?:room|rm)\s*[A-Z0-9.-]+/gi,
-  area: /\b(?:area|zone)\s*[A-Z0-9-]+/gi,
-  gridLine: /\b(?:grid|gridline|gl)\s*[A-Z0-9]+(?:\s*[-/]\s*[A-Z0-9]+)?/gi,
-  elevation: /\b(?:el|elev|elevation)\s*[0-9.+-]+/gi,
-  wing: /\b(?:wing|tower)\s*[A-Z0-9-]+/gi,
-  unit: /\b(?:unit|apt|suite)\s*[A-Z0-9-]+/gi,
-  parking: /\b(?:parking|garage)\s*(?:level|floor)?\s*[A-Z0-9-]*/gi,
+  building: /\b(?:building|bldg|bld)\s{0,3}[A-Z0-9-]{1,20}/gi,
+  floor: /\b(?:floor|flr|level|lvl)\s{0,3}[0-9BMG-]{1,10}/gi,
+  room: /\b(?:room|rm)\s{0,3}[A-Z0-9.-]{1,20}/gi,
+  area: /\b(?:area|zone)\s{0,3}[A-Z0-9-]{1,20}/gi,
+  gridLine: /\b(?:grid|gridline|gl)\s{0,3}[A-Z0-9]{1,10}(?:\s{0,3}[-/]\s{0,3}[A-Z0-9]{1,10})?/gi,
+  elevation: /\b(?:el|elev|elevation)\s{0,3}[0-9.+-]{1,15}/gi,
+  wing: /\b(?:wing|tower)\s{0,3}[A-Z0-9-]{1,20}/gi,
+  unit: /\b(?:unit|apt|suite)\s{0,3}[A-Z0-9-]{1,20}/gi,
+  parking: /\b(?:parking|garage)\s{0,3}(?:level|floor)?\s{0,3}[A-Z0-9-]{0,20}/gi,
 }
+/* eslint-enable security/detect-unsafe-regex */
 
 // ============================================================================
 // Quantity Patterns for Extraction
 // ============================================================================
 
+// These patterns extract quantities from construction documents (not untrusted user input).
+// All quantifiers are bounded (e.g., {0,4} instead of *) to limit backtracking.
+/* eslint-disable security/detect-unsafe-regex */
 export const QUANTITY_PATTERNS = {
-  squareFeet: /\b(\d+(?:,\d{3})*(?:\.\d+)?)\s*(?:sf|sq\.?\s*ft\.?|square\s*feet)/gi,
-  squareYards: /\b(\d+(?:,\d{3})*(?:\.\d+)?)\s*(?:sy|sq\.?\s*yd\.?|square\s*yards)/gi,
-  linearFeet: /\b(\d+(?:,\d{3})*(?:\.\d+)?)\s*(?:lf|lin\.?\s*ft\.?|linear\s*feet)/gi,
-  cubicYards: /\b(\d+(?:,\d{3})*(?:\.\d+)?)\s*(?:cy|cu\.?\s*yd\.?|cubic\s*yards)/gi,
-  cubicFeet: /\b(\d+(?:,\d{3})*(?:\.\d+)?)\s*(?:cf|cu\.?\s*ft\.?|cubic\s*feet)/gi,
-  each: /\b(\d+(?:,\d{3})*)\s*(?:ea|each|pcs?|pieces?)/gi,
-  pounds: /\b(\d+(?:,\d{3})*(?:\.\d+)?)\s*(?:lbs?|pounds?)/gi,
-  tons: /\b(\d+(?:,\d{3})*(?:\.\d+)?)\s*(?:tons?)/gi,
-  gallons: /\b(\d+(?:,\d{3})*(?:\.\d+)?)\s*(?:gal(?:lons?)?)/gi,
-  sheets: /\b(\d+(?:,\d{3})*)\s*(?:sheets?|shts?)/gi,
-  rolls: /\b(\d+(?:,\d{3})*)\s*(?:rolls?)/gi,
-  bundles: /\b(\d+(?:,\d{3})*)\s*(?:bundles?|bdls?)/gi,
-  pallets: /\b(\d+(?:,\d{3})*)\s*(?:pallets?)/gi,
-  loads: /\b(\d+(?:,\d{3})*)\s*(?:loads?|truckloads?)/gi,
+  squareFeet: /\b(\d{1,3}(?:,\d{3}){0,4}(?:\.\d{1,4})?)\s{0,3}(?:sf|sq\.?\s{0,2}ft\.?|square\s{1,3}feet)/gi,
+  squareYards: /\b(\d{1,3}(?:,\d{3}){0,4}(?:\.\d{1,4})?)\s{0,3}(?:sy|sq\.?\s{0,2}yd\.?|square\s{1,3}yards)/gi,
+  linearFeet: /\b(\d{1,3}(?:,\d{3}){0,4}(?:\.\d{1,4})?)\s{0,3}(?:lf|lin\.?\s{0,2}ft\.?|linear\s{1,3}feet)/gi,
+  cubicYards: /\b(\d{1,3}(?:,\d{3}){0,4}(?:\.\d{1,4})?)\s{0,3}(?:cy|cu\.?\s{0,2}yd\.?|cubic\s{1,3}yards)/gi,
+  cubicFeet: /\b(\d{1,3}(?:,\d{3}){0,4}(?:\.\d{1,4})?)\s{0,3}(?:cf|cu\.?\s{0,2}ft\.?|cubic\s{1,3}feet)/gi,
+  each: /\b(\d{1,3}(?:,\d{3}){0,4})\s{0,3}(?:ea|each|pcs?|pieces?)/gi,
+  pounds: /\b(\d{1,3}(?:,\d{3}){0,4}(?:\.\d{1,4})?)\s{0,3}(?:lbs?|pounds?)/gi,
+  tons: /\b(\d{1,3}(?:,\d{3}){0,4}(?:\.\d{1,4})?)\s{0,3}(?:tons?)/gi,
+  gallons: /\b(\d{1,3}(?:,\d{3}){0,4}(?:\.\d{1,4})?)\s{0,3}(?:gal(?:lons?)?)/gi,
+  sheets: /\b(\d{1,3}(?:,\d{3}){0,4})\s{0,3}(?:sheets?|shts?)/gi,
+  rolls: /\b(\d{1,3}(?:,\d{3}){0,4})\s{0,3}(?:rolls?)/gi,
+  bundles: /\b(\d{1,3}(?:,\d{3}){0,4})\s{0,3}(?:bundles?|bdls?)/gi,
+  pallets: /\b(\d{1,3}(?:,\d{3}){0,4})\s{0,3}(?:pallets?)/gi,
+  loads: /\b(\d{1,3}(?:,\d{3}){0,4})\s{0,3}(?:loads?|truckloads?)/gi,
 }
+/* eslint-enable security/detect-unsafe-regex */
 
 // ============================================================================
 // Helper Functions
