@@ -20,6 +20,7 @@ import { logger } from './lib/utils/logger'
 import { initWebVitalsMonitoring } from './lib/monitoring/web-vitals'
 import { DeviceProvider, useDevice } from './lib/device'
 import { LayoutVersionProvider } from './hooks/useLayoutVersion'
+import { isMissingSupabaseConfig } from './lib/supabase'
 
 // Import industrial theme CSS
 import './styles/industrial-theme.css'
@@ -45,7 +46,57 @@ function AppShell() {
   )
 }
 
+/**
+ * Configuration error display component
+ * Shows when Supabase environment variables are missing
+ */
+function ConfigurationError() {
+  return (
+    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+      <div className="max-w-md w-full bg-slate-900 border border-red-500/30 rounded-lg p-6 shadow-xl">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
+            <svg className="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h1 className="text-xl font-semibold text-white">Configuration Error</h1>
+        </div>
+
+        <p className="text-slate-300 mb-4">
+          Missing Supabase environment variables. The app cannot start without database configuration.
+        </p>
+
+        <div className="bg-slate-800 rounded-md p-4 mb-4">
+          <p className="text-sm text-slate-400 mb-2">Required variables in <code className="text-cyan-400">.env</code> or <code className="text-cyan-400">.env.local</code>:</p>
+          <code className="block text-sm text-green-400 font-mono">
+            VITE_SUPABASE_URL=https://your-project.supabase.co<br/>
+            VITE_SUPABASE_ANON_KEY=your-anon-key
+          </code>
+        </div>
+
+        <div className="text-sm text-slate-400">
+          <p className="mb-2">To fix this:</p>
+          <ol className="list-decimal list-inside space-y-1">
+            <li>Copy <code className="text-cyan-400">.env.example</code> to <code className="text-cyan-400">.env</code></li>
+            <li>Fill in your Supabase project credentials</li>
+            <li>Restart the dev server</li>
+          </ol>
+          <p className="mt-3">
+            Or run: <code className="text-cyan-400">vercel env pull .env.local</code>
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function App() {
+  // Show configuration error if Supabase env vars are missing
+  if (isMissingSupabaseConfig) {
+    return <ConfigurationError />
+  }
+
   // Initialize Web Vitals monitoring in production
   useEffect(() => {
     if (import.meta.env.PROD) {

@@ -1,18 +1,32 @@
 // File: /src/lib/supabase.ts
 // Supabase client configuration and initialization with offline support
 
-import { createClient, type RealtimeChannel } from '@supabase/supabase-js'
+import { createClient, type RealtimeChannel, type SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/database-extensions'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL!
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY!
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables')
+/**
+ * Flag indicating if Supabase configuration is missing.
+ * When true, the app should show a configuration error instead of trying to use the client.
+ */
+export const isMissingSupabaseConfig = !supabaseUrl || !supabaseAnonKey
+
+if (isMissingSupabaseConfig) {
+  console.error(
+    '[Supabase] Missing environment variables!\n' +
+    'Please ensure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set in your .env file.\n' +
+    'You can copy .env.example to .env and fill in your Supabase project credentials.\n' +
+    'Or run: vercel env pull .env.local'
+  )
 }
 
 // Create typed Supabase client with offline-friendly configuration
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+// Only create if config is present, otherwise export a null placeholder
+export const supabase: SupabaseClient<Database> = isMissingSupabaseConfig
+  ? (null as unknown as SupabaseClient<Database>)
+  : createClient<Database>(supabaseUrl!, supabaseAnonKey!, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
