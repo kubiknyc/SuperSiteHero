@@ -37,17 +37,18 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      - name: Audit npm dependencies
+      - name: Audit npm dependencies (HIGH/CRITICAL blocking)
+        id: audit-critical
         run: |
-          echo "Scanning npm dependencies for vulnerabilities..."
-          npm audit --audit-level=moderate 2>&1 || true
-        continue-on-error: true
+          echo "Scanning npm dependencies for HIGH/CRITICAL vulnerabilities..."
+          npm audit --audit-level=high 2>&1 || exit 1
+        # Critical vulnerabilities will fail the job
 
       - name: Check for outdated packages
         run: |
           echo "Checking for outdated packages..."
           npm outdated || echo "All packages up to date"
-        continue-on-error: true
+        continue-on-error: true  # Informational only
 
   # ==================== SAST SCANNING ====================
   sast-scan:
@@ -75,13 +76,13 @@ jobs:
             p/owasp-top-ten
             p/react
             p/typescript
-        continue-on-error: true
+        # Removed continue-on-error - SAST issues now block
 
       - name: ESLint security scan
         run: |
           echo "Running ESLint security rules..."
           npx eslint . --plugin security --rule 'security/*: warn' --quiet || true
-        continue-on-error: true
+        continue-on-error: true  # Informational - many false positives
 
   # ==================== CODE QUALITY ====================
   code-quality:
@@ -129,7 +130,7 @@ jobs:
           base: ${{ github.event.repository.default_branch }}
           head: HEAD
           extra_args: --debug --only-verified
-        continue-on-error: true
+        # Removed continue-on-error - secrets MUST block merge
 
   # ==================== VULNERABILITY DATABASE ====================
   vulnerability-db:
@@ -240,12 +241,60 @@ jobs:
           category: 'trivy'
         continue-on-error: true
 
+  # ==================== SECURITY GATE (REQUIRED) ====================
+  security-gate:
+    name: Security Gate (Required)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [secret-detection, dependency-scan, sast-scan]
+    if: always()
+    steps:
+      - name: Check security gate status
+        run: |
+          echo "## Security Gate Check" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          FAILED=false
+
+          if [[ "${{ needs.secret-detection.result }}" != "success" ]]; then
+            echo "::error::Secret detection failed - potential secrets exposed!"
+            echo "- Secret Detection: FAILED" >> $GITHUB_STEP_SUMMARY
+            FAILED=true
+          else
+            echo "- Secret Detection: PASSED" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [[ "${{ needs.dependency-scan.result }}" != "success" ]]; then
+            echo "::error::Dependency scan failed - critical vulnerabilities detected!"
+            echo "- Dependency Scan: FAILED" >> $GITHUB_STEP_SUMMARY
+            FAILED=true
+          else
+            echo "- Dependency Scan: PASSED" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [[ "${{ needs.sast-scan.result }}" != "success" ]]; then
+            echo "::error::SAST scan failed - security issues in code!"
+            echo "- SAST Scan: FAILED" >> $GITHUB_STEP_SUMMARY
+            FAILED=true
+          else
+            echo "- SAST Scan: PASSED" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [[ "$FAILED" == "true" ]]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Security gate FAILED - merge blocked**" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**All critical security checks passed**" >> $GITHUB_STEP_SUMMARY
+
   # ==================== SECURITY SUMMARY ====================
   security-summary:
     name: Security Scan Summary
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs: [dependency-scan, sast-scan, code-quality, secret-detection, vulnerability-db, license-scan, supply-chain, container-scan]
+    needs: [dependency-scan, sast-scan, code-quality, secret-detection, vulnerability-db, license-scan, supply-chain, container-scan, security-gate]
     if: always()
     steps:
       - name: Generate Security Report
@@ -263,6 +312,7 @@ jobs:
           echo "| License Check | ${{ needs.license-scan.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Supply Chain | ${{ needs.supply-chain.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| Container Scan | ${{ needs.container-scan.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Security Gate** | **${{ needs.security-gate.result }}** |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Recommendations" >> $GITHUB_STEP_SUMMARY
           echo "- Review any high-severity vulnerabilities immediately" >> $GITHUB_STEP_SUMMARY

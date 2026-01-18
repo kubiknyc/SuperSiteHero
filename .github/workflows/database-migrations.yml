@@ -171,11 +171,46 @@ jobs:
 
       - name: Create pre-migration backup
         run: |
-          echo "Creating backup before migration..."
-          echo "Staging database backup initiated"
-        continue-on-error: true
+          echo "Creating staging database backup before migration..."
+
+          # Install PostgreSQL client
+          sudo apt-get update && sudo apt-get install -y postgresql-client
+
+          # Create backup directory
+          mkdir -p backups
+          BACKUP_FILE="backups/staging-$(date +%Y%m%d-%H%M%S).sql"
+
+          # Create logical backup using pg_dump
+          if [ -n "${{ secrets.SUPABASE_DB_URL_STAGING }}" ]; then
+            pg_dump "${{ secrets.SUPABASE_DB_URL_STAGING }}" \
+              --no-owner \
+              --no-privileges \
+              --format=custom \
+              --file="$BACKUP_FILE"
+
+            # Verify backup was created
+            if [ -f "$BACKUP_FILE" ]; then
+              BACKUP_SIZE=$(ls -lh "$BACKUP_FILE" | awk '{print $5}')
+              echo "Backup created successfully: $BACKUP_FILE ($BACKUP_SIZE)"
+              echo "BACKUP_FILE=$BACKUP_FILE" >> $GITHUB_ENV
+            else
+              echo "::error::Backup file was not created!"
+              exit 1
+            fi
+          else
+            echo "::warning::SUPABASE_DB_URL_STAGING secret not configured, skipping backup"
+            echo "To enable backups, add the PostgreSQL connection string as a secret"
+          fi
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Upload staging backup artifact
+        uses: actions/upload-artifact@v4
+        if: env.BACKUP_FILE != ''
+        with:
+          name: backup-staging-${{ github.sha }}
+          path: backups/
+          retention-days: 30
 
       - name: Apply migrations to staging
         run: |
@@ -222,12 +257,47 @@ jobs:
 
       - name: Create pre-migration backup
         run: |
-          echo "Creating production database backup..."
-          echo "This backup will be available for 7 days"
-          echo "Production backup initiated"
-        continue-on-error: true
+          echo "Creating production database backup before migration..."
+
+          # Install PostgreSQL client
+          sudo apt-get update && sudo apt-get install -y postgresql-client
+
+          # Create backup directory
+          mkdir -p backups
+          BACKUP_FILE="backups/production-$(date +%Y%m%d-%H%M%S).sql"
+
+          # Create logical backup using pg_dump
+          if [ -n "${{ secrets.SUPABASE_DB_URL_PRODUCTION }}" ]; then
+            pg_dump "${{ secrets.SUPABASE_DB_URL_PRODUCTION }}" \
+              --no-owner \
+              --no-privileges \
+              --format=custom \
+              --file="$BACKUP_FILE"
+
+            # Verify backup was created
+            if [ -f "$BACKUP_FILE" ]; then
+              BACKUP_SIZE=$(ls -lh "$BACKUP_FILE" | awk '{print $5}')
+              echo "Production backup created successfully: $BACKUP_FILE ($BACKUP_SIZE)"
+              echo "BACKUP_FILE=$BACKUP_FILE" >> $GITHUB_ENV
+            else
+              echo "::error::Production backup file was not created!"
+              exit 1
+            fi
+          else
+            echo "::error::SUPABASE_DB_URL_PRODUCTION secret not configured!"
+            echo "Production migrations require a backup. Add the PostgreSQL connection string as a secret."
+            exit 1
+          fi
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Upload production backup artifact
+        uses: actions/upload-artifact@v4
+        if: env.BACKUP_FILE != ''
+        with:
+          name: backup-production-${{ github.sha }}
+          path: backups/
+          retention-days: 90
 
       - name: Verify migration safety
         run: |
