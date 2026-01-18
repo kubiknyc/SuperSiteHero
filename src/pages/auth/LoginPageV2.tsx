@@ -182,8 +182,57 @@ export function LoginPageV2() {
 
   return (
     <div className="min-h-screen flex bg-slate-950 overflow-hidden">
+      {/* Inline CSS fallback for responsive layout - ensures layout works even if Tailwind responsive classes are missing from build */}
+      <style>{`
+        .login-hero-panel {
+          display: none;
+          position: relative;
+          overflow: hidden;
+        }
+        @media (min-width: 1024px) {
+          .login-hero-panel {
+            display: flex !important;
+            width: 50% !important;
+          }
+        }
+        @media (min-width: 1280px) {
+          .login-hero-panel {
+            width: 60% !important;
+          }
+        }
+        .login-form-panel {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        @media (min-width: 1024px) {
+          .login-form-panel {
+            width: 50% !important;
+          }
+        }
+        @media (min-width: 1280px) {
+          .login-form-panel {
+            width: 40% !important;
+          }
+        }
+        .login-logo {
+          height: 3.5rem !important;
+          object-fit: contain;
+        }
+        .login-mobile-logo {
+          height: 2.5rem !important;
+          object-fit: contain;
+        }
+        @media (min-width: 1024px) {
+          .login-mobile-logo-container {
+            display: none !important;
+          }
+        }
+      `}</style>
+
       {/* Left Panel - Hero/Branding */}
-      <div className="hidden lg:flex lg:w-1/2 xl:w-3/5 relative overflow-hidden">
+      <div className="login-hero-panel hidden lg:flex lg:w-1/2 xl:w-3/5 relative overflow-hidden">
         {/* Blueprint Grid Background */}
         <div className="absolute inset-0 bg-slate-900">
           {/* Primary grid */}
@@ -242,7 +291,7 @@ export function LoginPageV2() {
               <img
                 src="/jobsight-logo.png"
                 alt="JobSight"
-                className="h-14 object-contain drop-shadow-lg"
+                className="login-logo h-14 object-contain drop-shadow-lg"
               />
             </div>
 
@@ -302,17 +351,17 @@ export function LoginPageV2() {
       </div>
 
       {/* Right Panel - Login Form */}
-      <div className="w-full lg:w-1/2 xl:w-2/5 flex items-center justify-center p-6 sm:p-8 lg:p-12">
+      <div className="login-form-panel w-full lg:w-1/2 xl:w-2/5 flex items-center justify-center p-6 sm:p-8 lg:p-12">
         <div className={cn(
           "w-full max-w-md transition-all duration-700 ease-out",
           mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         )}>
           {/* Mobile Logo */}
-          <div className="mb-8 lg:hidden">
+          <div className="login-mobile-logo-container mb-8 lg:hidden">
             <img
               src="/jobsight-logo.png"
               alt="JobSight"
-              className="h-10 object-contain"
+              className="login-mobile-logo h-10 object-contain"
             />
           </div>
 
