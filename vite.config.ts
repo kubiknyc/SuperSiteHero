@@ -218,6 +218,16 @@ export default defineConfig(({ mode }) => {
   build: {
     // Code splitting and chunk optimization
     rollupOptions: {
+      // Suppress circular dependency warnings from recharts (known library issue)
+      onwarn(warning, warn) {
+        if (warning.code === 'CIRCULAR_DEPENDENCY' && warning.ids?.some((id: string) => id.includes('recharts'))) {
+          return;
+        }
+        if (warning.message?.includes('recharts') && warning.message?.includes('circular')) {
+          return;
+        }
+        warn(warning);
+      },
       output: {
         manualChunks: (id: string) => {
           // DISABLED: Let Vite handle all chunking naturally
