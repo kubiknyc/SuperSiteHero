@@ -69,7 +69,7 @@ jobs:
         id: deploy
         run: |
           npm install -g netlify-cli
-          output=$(netlify deploy --dir=dist --site=${{ secrets.NETLIFY_SITE_ID }} --auth=${{ secrets.NETLIFY_AUTH_TOKEN }} --json)
+          output=$(netlify deploy --no-build --dir=dist --site=${{ secrets.NETLIFY_SITE_ID }} --auth=${{ secrets.NETLIFY_AUTH_TOKEN }} --json)
           url=$(echo "$output" | jq -r '.deploy_url')
           echo "url=$url" >> $GITHUB_OUTPUT
           echo "Deployed to: $url"
@@ -131,7 +131,7 @@ jobs:
       - name: Deploy to Netlify Production
         run: |
           npm install -g netlify-cli
-          netlify deploy --prod --dir=dist --site=${{ secrets.NETLIFY_SITE_ID }} --auth=${{ secrets.NETLIFY_AUTH_TOKEN }}
+          netlify deploy --no-build --prod --dir=dist --site=${{ secrets.NETLIFY_SITE_ID }} --auth=${{ secrets.NETLIFY_AUTH_TOKEN }}
 
       - name: Notify deployment success
         run: echo "🎉 Production deployment complete!"

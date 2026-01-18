@@ -1,6 +1,5 @@
-[build]
-  # Build handled by GitHub Actions - don't run again during deploy
-  publish = "dist"
+# Note: Build is handled by GitHub Actions, not Netlify
+# The deploy command specifies --dir=dist directly
 
 [[redirects]]
   from = "/*"
