@@ -32,7 +32,7 @@ const mockUseEscalatedActionItems = vi.fn();
 const mockUseUpdateActionItemStatus = vi.fn();
 const mockUseConvertToTask = vi.fn();
 
-vi.mock('../hooks/useActionItems', () => ({
+vi.mock('../../hooks/useActionItems', () => ({
   useProjectActionItems: () => mockUseProjectActionItems(),
   useActionItemSummary: () => mockUseActionItemSummary(),
   useActionItemsByAssignee: () => mockUseActionItemsByAssignee(),
@@ -43,11 +43,8 @@ vi.mock('../hooks/useActionItems', () => ({
   useConvertToTask: () => mockUseConvertToTask(),
 }));
 
-// SKIPPED: These tests cause Vitest worker crashes due to importing ActionItemsDashboard.
-// See ActionItemRow.test.tsx for full investigation notes.
-// The crash occurs during module loading before any tests can run.
-// Likely cause: memory exhaustion or infinite import loop in one of the UI dependencies.
-describe.skip('ActionItemsDashboard', () => {
+// Sub-components extracted to separate files to reduce import burden
+describe('ActionItemsDashboard', () => {
   const mockProjectId = 'project-123';
 
   const defaultSummary = createMockActionItemProjectSummary({

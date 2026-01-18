@@ -5,7 +5,7 @@
  * urgency alerts, and pipeline management.
  */
 
-import { useState, useMemo, useCallback, memo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import {
   useProjectActionItems,
   useActionItemSummary,
@@ -13,22 +13,15 @@ import {
   useOverdueActionItems,
   useActionItemsDueSoon,
   useEscalatedActionItems,
-  useUpdateActionItemStatus,
-  useConvertToTask,
 } from '../hooks/useActionItems'
+import { ActionItemRow } from './ActionItemRow'
+import { SummaryCard } from './SummaryCard'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Progress } from '@/components/ui/progress'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import {
   RadixSelect as Select,
   SelectContent,
@@ -42,24 +35,15 @@ import {
   Clock,
   AlertTriangle,
   Search,
-  MoreVertical,
-  ArrowRight,
   ListTodo,
   Users,
   TrendingUp,
-  Calendar,
-  Link2,
-  Play,
-  Check,
   Loader2,
 } from 'lucide-react'
 import { cn, formatDate } from '@/lib/utils'
 import {
   ACTION_ITEM_STATUSES,
   ACTION_ITEM_CATEGORIES,
-  getUrgencyStatusConfig,
-  getActionItemPriorityConfig,
-  type ActionItemWithContext,
   type ActionItemStatus,
   type ActionItemCategory,
 } from '@/types/action-items'
@@ -351,210 +335,6 @@ export function ActionItemsDashboard({ projectId }: ActionItemsDashboardProps) {
   )
 }
 
-// ============================================================================
-// Sub-components (memoized for performance)
-// ============================================================================
-
-const SummaryCard = memo(function SummaryCard({
-  title,
-  value,
-  subtitle,
-  icon,
-  color,
-  highlight = false,
-}: {
-  title: string
-  value: number | string
-  subtitle: string
-  icon: React.ReactNode
-  color: 'blue' | 'green' | 'red' | 'orange'
-  highlight?: boolean
-}) {
-  const colorClasses = {
-    blue: 'text-primary bg-blue-50',
-    green: 'text-success bg-success-light',
-    red: 'text-error bg-error-light',
-    orange: 'text-orange-600 bg-orange-50',
-  }
-
-  return (
-    <Card className={cn(highlight && 'border-red-300 bg-error-light/50')}>
-      <CardContent className="pt-6">
-        <div className="flex items-center justify-between">
-          <div className={cn('p-2 rounded-lg', colorClasses[color])}>
-            {icon}
-          </div>
-        </div>
-        <div className="mt-4">
-          <p className="text-2xl font-bold">{value}</p>
-          <p className="text-xs text-muted">{title}</p>
-          <p className="text-xs text-disabled mt-1">{subtitle}</p>
-        </div>
-      </CardContent>
-    </Card>
-  )
-})
-
-const ActionItemRow = memo(function ActionItemRow({ item }: { item: ActionItemWithContext }) {
-  const updateStatus = useUpdateActionItemStatus()
-  const convertToTask = useConvertToTask()
-
-  const urgencyConfig = getUrgencyStatusConfig(item.urgency_status)
-  const priorityConfig = item.priority ? getActionItemPriorityConfig(item.priority) : null
-
-  const handleComplete = () => {
-    updateStatus.mutate({ id: item.id, status: 'completed' })
-  }
-
-  const handleStartProgress = () => {
-    updateStatus.mutate({ id: item.id, status: 'in_progress' })
-  }
-
-  const handleConvertToTask = () => {
-    convertToTask.mutate(item.id)
-  }
-
-  return (
-    <Card className={cn(
-      item.urgency_status === 'overdue' && 'border-red-200 bg-error-light/30',
-      item.escalation_level > 0 && 'border-orange-200'
-    )}>
-      <CardContent className="py-4">
-        <div className="flex items-start gap-4">
-          {/* Status indicator */}
-          <div className="mt-1">
-            {item.status === 'completed' ? (
-              <CheckCircle className="h-5 w-5 text-success" />
-            ) : item.status === 'in_progress' ? (
-              <div className="h-5 w-5 rounded-full border-2 border-blue-500 flex items-center justify-center">
-                <div className="h-2.5 w-2.5 rounded-full bg-blue-500" />
-              </div>
-            ) : (
-              <Circle className="h-5 w-5 text-gray-300" />
-            )}
-          </div>
-
-          {/* Content */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <p className={cn(
-                  'font-medium',
-                  item.status === 'completed' && 'line-through text-muted'
-                )}>
-                  {item.title}
-                </p>
-                <div className="flex flex-wrap items-center gap-2 mt-1 text-sm text-muted">
-                  {item.meeting_title && (
-                    <span className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      {item.meeting_title}
-                    </span>
-                  )}
-                  {item.assigned_to && (
-                    <span>• {item.assigned_to}</span>
-                  )}
-                  {item.task_id && (
-                    <span className="flex items-center gap-1 text-primary">
-                      <Link2 className="h-3 w-3" />
-                      Task linked
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Actions */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm">
-                    <MoreVertical className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  {item.status === 'open' && (
-                    <DropdownMenuItem onClick={handleStartProgress}>
-                      <Play className="h-4 w-4 mr-2" />
-                      Start Progress
-                    </DropdownMenuItem>
-                  )}
-                  {item.status !== 'completed' && (
-                    <DropdownMenuItem onClick={handleComplete}>
-                      <Check className="h-4 w-4 mr-2" />
-                      Mark Complete
-                    </DropdownMenuItem>
-                  )}
-                  <DropdownMenuSeparator />
-                  {!item.task_id && (
-                    <DropdownMenuItem onClick={handleConvertToTask}>
-                      <ArrowRight className="h-4 w-4 mr-2" />
-                      Convert to Task
-                    </DropdownMenuItem>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-
-            {/* Tags row */}
-            <div className="flex flex-wrap items-center gap-2 mt-2">
-              {/* Urgency */}
-              {item.urgency_status !== 'completed' && item.urgency_status !== 'no_date' && (
-                <Badge
-                  variant={item.urgency_status === 'overdue' ? 'destructive' : 'secondary'}
-                  className={cn(
-                    'text-xs',
-                    item.urgency_status === 'due_today' && 'bg-orange-100 text-orange-800',
-                    item.urgency_status === 'due_soon' && 'bg-warning-light text-yellow-800',
-                    item.urgency_status === 'on_track' && 'bg-success-light text-green-800'
-                  )}
-                >
-                  {urgencyConfig.label}
-                  {item.days_until_due !== null && item.days_until_due < 0 && (
-                    <span className="ml-1">({Math.abs(item.days_until_due)}d)</span>
-                  )}
-                </Badge>
-              )}
-
-              {/* Priority */}
-              {priorityConfig && item.priority !== 'normal' && (
-                <Badge variant="outline" className="text-xs">
-                  {priorityConfig.label}
-                </Badge>
-              )}
-
-              {/* Category */}
-              {item.category && (
-                <Badge variant="outline" className="text-xs">
-                  {item.category}
-                </Badge>
-              )}
-
-              {/* Escalation */}
-              {item.escalation_level > 0 && (
-                <Badge variant="secondary" className="text-xs bg-orange-100 text-orange-800">
-                  Escalated L{item.escalation_level}
-                </Badge>
-              )}
-
-              {/* Carryover */}
-              {item.carryover_count > 0 && (
-                <Badge variant="secondary" className="text-xs">
-                  Carried {item.carryover_count}x
-                </Badge>
-              )}
-
-              {/* Due date */}
-              {item.due_date && (
-                <span className="text-xs text-muted">
-                  Due: {formatDate(item.due_date)}
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  )
-})
-
-export { ActionItemRow }
+// Re-export for backward compatibility
+export { ActionItemRow } from './ActionItemRow'
 export default ActionItemsDashboard

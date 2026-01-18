@@ -9,22 +9,14 @@
  * - Accessibility
  */
 
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { Circle, CheckCircle, AlertTriangle, Clock, TrendingUp } from 'lucide-react'
 
-// Import component
-let SummaryCard: any
+// Import component from dedicated file to avoid loading entire dashboard
+import { SummaryCard } from '../SummaryCard'
 
-// SKIPPED: These tests cause Vitest worker crashes due to importing ActionItemsDashboard.
-// See ActionItemRow.test.tsx for full investigation notes.
-// Even dynamic imports crash because the module loading itself causes the issue.
-describe.skip('SummaryCard', () => {
-  beforeEach(async () => {
-    // Dynamic import after setup
-    const module = await import('../ActionItemsDashboard')
-    SummaryCard = (module as any).SummaryCard || module.default
-  })
+describe('SummaryCard', () => {
 
   describe('Basic Rendering', () => {
     it('should render card with title', () => {
