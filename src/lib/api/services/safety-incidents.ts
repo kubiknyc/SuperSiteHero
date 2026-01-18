@@ -52,7 +52,7 @@ export const safetyIncidentsApi = {
         .from('safety_incidents')
         .select(`
           *,
-          reporter:users!safety_incidents_reported_by_fkey(
+          reporter:users!safety_incidents_created_by_fkey(
             id,
             full_name,
             email,
