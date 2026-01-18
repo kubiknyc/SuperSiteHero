@@ -1,7 +1,7 @@
 // File: /src/pages/rfis/RFIsPage.tsx
 // RFIs list page with filtering, sorting, and project selection
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { format, isPast, differenceInDays } from 'date-fns'
 import { SmartLayout } from '@/components/layout/SmartLayout'
@@ -47,16 +47,28 @@ import type { WorkflowItem } from '@/types/database-extensions'
 type RFIStatusFilter = 'all' | 'draft' | 'submitted' | 'answered' | 'approved' | 'rejected' | 'closed' | 'overdue'
 type RFIPriorityFilter = 'all' | 'low' | 'normal' | 'high'
 
-export function RFIsPage() {
+interface RFIsPageProps {
+  /** If true, auto-opens the create RFI dialog on mount */
+  createNew?: boolean
+}
+
+export function RFIsPage({ createNew = false }: RFIsPageProps) {
   const navigate = useNavigate()
   const { user } = useAuth()
   const { selectedProjectId, setSelectedProjectId, projects, isLoading: projectsLoading } = useSelectedProject()
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<RFIStatusFilter>('all')
   const [priorityFilter, setPriorityFilter] = useState<RFIPriorityFilter>('all')
-  const [createDialogOpen, setCreateDialogOpen] = useState(false)
+  const [createDialogOpen, setCreateDialogOpen] = useState(createNew)
 
   const [isExporting, setIsExporting] = useState(false)
+
+  // Auto-open create dialog when createNew prop is true
+  useEffect(() => {
+    if (createNew) {
+      setCreateDialogOpen(true)
+    }
+  }, [createNew])
 
   // Fetch RFI workflow type
   const { data: workflowType } = useRFIWorkflowType()

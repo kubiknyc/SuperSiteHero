@@ -1,7 +1,7 @@
 // File: /src/pages/projects/ProjectsPage.tsx
 // Projects list and management page
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { SmartLayout } from '@/components/layout/SmartLayout'
 import { useMyProjects } from '@/features/projects/hooks/useProjects'
@@ -16,12 +16,24 @@ import { EditProjectDialog } from '@/features/projects/components/EditProjectDia
 import { DeleteProjectConfirmation } from '@/features/projects/components/DeleteProjectConfirmation'
 import type { Project } from '@/types/database'
 
-export function ProjectsPage() {
+interface ProjectsPageProps {
+  /** If true, auto-opens the create project dialog on mount */
+  createNew?: boolean
+}
+
+export function ProjectsPage({ createNew = false }: ProjectsPageProps) {
   const { data: projects, isLoading, error, refetch } = useMyProjects()
   const [searchQuery, setSearchQuery] = useState('')
-  const [createDialogOpen, setCreateDialogOpen] = useState(false)
+  const [createDialogOpen, setCreateDialogOpen] = useState(createNew)
   const [editingProject, setEditingProject] = useState<Project | null>(null)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
+
+  // Auto-open create dialog when createNew prop is true
+  useEffect(() => {
+    if (createNew) {
+      setCreateDialogOpen(true)
+    }
+  }, [createNew])
 
   // Filter projects based on search query
   const filteredProjects = useMemo(() => {

@@ -417,6 +417,8 @@ export function DesktopApp() {
 
         {/* Projects feature */}
         <Route path="/projects" element={<ProtectedRoute><ProjectsPage /></ProtectedRoute>} />
+        {/* /projects/new redirects to list page with create modal trigger */}
+        <Route path="/projects/new" element={<ProtectedRoute><ProjectsPage createNew /></ProtectedRoute>} />
         <Route path="/projects/:projectId" element={<ProtectedRoute><ProjectDetailPage /></ProtectedRoute>} />
         <Route path="/projects/:projectId/settings" element={<ProtectedRoute><ProjectSettingsPage /></ProtectedRoute>} />
 
@@ -470,6 +472,8 @@ export function DesktopApp() {
 
         {/* RFIs feature */}
         <Route path="/rfis" element={<ProtectedRoute><RFIsPage /></ProtectedRoute>} />
+        {/* /rfis/new redirects to list page with create modal trigger */}
+        <Route path="/rfis/new" element={<ProtectedRoute><RFIsPage createNew /></ProtectedRoute>} />
         <Route path="/rfis/:rfiId" element={<ProtectedRoute><RFIDetailPage /></ProtectedRoute>} />
         <Route path="/rfis-v2" element={<ProtectedRoute><DedicatedRFIsPage /></ProtectedRoute>} />
         <Route path="/rfis-v2/:rfiId" element={<ProtectedRoute><DedicatedRFIDetailPage /></ProtectedRoute>} />
@@ -523,6 +527,8 @@ export function DesktopApp() {
         <Route path="/settings/quickbooks" element={<ProtectedRoute><QuickBooksPage /></ProtectedRoute>} />
         <Route path="/settings/quickbooks/callback" element={<ProtectedRoute><QuickBooksCallbackPage /></ProtectedRoute>} />
         <Route path="/settings/calendar" element={<ProtectedRoute><CalendarIntegrationsPage /></ProtectedRoute>} />
+        {/* /settings/integrations as alias for calendar integrations */}
+        <Route path="/settings/integrations" element={<ProtectedRoute><CalendarIntegrationsPage /></ProtectedRoute>} />
         <Route path="/settings/ai" element={<ProtectedRoute><AISettingsPage /></ProtectedRoute>} />
         <Route path="/settings/audit-logs" element={<ProtectedRoute><AuditLogsPage /></ProtectedRoute>} />
         <Route path="/settings/cost-codes" element={<ProtectedRoute><CostCodesPage /></ProtectedRoute>} />

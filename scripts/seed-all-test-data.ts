@@ -29,6 +29,8 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+// Load env files in order of priority
+dotenv.config({ path: path.resolve(__dirname, '..', '.env.local') })
 dotenv.config({ path: path.resolve(__dirname, '..', '.env') })
 
 const supabaseUrl = process.env.VITE_SUPABASE_URL
@@ -139,7 +141,15 @@ interface SeedContext {
 }
 
 async function getContext(): Promise<SeedContext> {
-  const companyId = '3c146527-62a9-4f4d-97db-c7546da9dfed'
+  // First try to find the test company (used by E2E tests)
+  const { data: testCompany } = await supabase
+    .from('companies')
+    .select('id')
+    .eq('slug', 'test-company')
+    .maybeSingle()
+
+  const companyId = testCompany?.id || '4522c688-1d47-4d10-b4ce-9b1b0d0d0810'
+  console.log(`  Using company: ${companyId}`)
 
   // Use explicit select to bypass any RLS issues with service role
   const { data: projects, error: pErr } = await supabase
@@ -521,7 +531,7 @@ async function seedTasks(ctx: SeedContext) {
         status: randomItem(['pending', 'in_progress', 'completed', 'on_hold']),
         priority: randomItem(['low', 'normal', 'high', 'urgent']),
         due_date: randomDate(-7, 21),
-        assigned_to: randomItem(ctx.userIds),
+        assigned_to_user_id: randomItem(ctx.userIds),
         created_by: randomItem(ctx.userIds),
       })
     }
