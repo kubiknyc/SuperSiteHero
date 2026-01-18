@@ -22,8 +22,8 @@ concurrency:
 env:
   NODE_VERSION: '22'
   CACHE_VERSION: 'v3'
-  NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-  NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 jobs:
   # ==================== DEPLOY TO STAGING ====================
@@ -33,10 +33,10 @@ jobs:
     timeout-minutes: 30
     if: github.event_name == 'push' || github.event.inputs.environment == 'preview'
     outputs:
-      url: ${{ steps.deploy.outputs.deploy-url }}
+      url: ${{ steps.deploy.outputs.preview-url }}
     environment:
       name: preview
-      url: ${{ steps.deploy.outputs.deploy-url }}
+      url: ${{ steps.deploy.outputs.preview-url }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -54,28 +54,24 @@ jobs:
           restore-keys: |
             npm-${{ env.CACHE_VERSION }}-
 
-      - name: Install dependencies
-        run: |
-          npm ci --legacy-peer-deps
-          npx vite --version
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Build Project
-        run: npm run build
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
-      - name: Deploy to Netlify Preview
+      - name: Deploy to Vercel Preview
         id: deploy
-        uses: nwtgck/actions-netlify@v3
-        with:
-          publish-dir: './dist'
-          production-deploy: false
-          deploy-message: 'Deploy preview from ${{ github.sha }}'
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        timeout-minutes: 30
+        run: |
+          url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          echo "preview-url=$url" >> $GITHUB_OUTPUT
+          echo "Deployed to: $url"
 
       - name: Comment PR with preview URL
         if: github.event_name == 'pull_request'
@@ -86,7 +82,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '🚀 Preview deployed to: ${{ steps.deploy.outputs.deploy-url }}'
+              body: '🚀 Preview deployed to: ${{ steps.deploy.outputs.preview-url }}'
             })
 
   # ==================== DEPLOY TO PRODUCTION ====================
@@ -120,27 +116,20 @@ jobs:
           restore-keys: |
             npm-${{ env.CACHE_VERSION }}-
 
-      - name: Install dependencies
-        run: |
-          npm ci --legacy-peer-deps
-          npx vite --version
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Build Project
-        run: npm run build
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
-      - name: Deploy to Netlify Production
-        uses: nwtgck/actions-netlify@v3
-        with:
-          publish-dir: './dist'
-          production-deploy: true
-          deploy-message: 'Production deploy from ${{ github.sha }}'
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        timeout-minutes: 30
+      - name: Deploy to Vercel Production
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Notify deployment success
         run: echo "🎉 Production deployment complete!"
