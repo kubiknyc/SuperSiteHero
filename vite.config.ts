@@ -218,12 +218,21 @@ export default defineConfig(({ mode }) => {
   build: {
     // Code splitting and chunk optimization
     rollupOptions: {
-      // Suppress circular dependency warnings from recharts (known library issue)
+      // Suppress non-critical warnings that don't affect runtime
       onwarn(warning, warn) {
+        // Suppress circular dependency warnings from recharts (known library issue)
         if (warning.code === 'CIRCULAR_DEPENDENCY' && warning.ids?.some((id: string) => id.includes('recharts'))) {
           return;
         }
         if (warning.message?.includes('recharts') && warning.message?.includes('circular')) {
+          return;
+        }
+        // Suppress mixed dynamic/static import warnings (common in large codebases)
+        if (warning.message?.includes('dynamically imported') && warning.message?.includes('statically imported')) {
+          return;
+        }
+        // Suppress chunk size warnings during build (informational only)
+        if (warning.code === 'CHUNK_SIZE_WARNING') {
           return;
         }
         warn(warning);
