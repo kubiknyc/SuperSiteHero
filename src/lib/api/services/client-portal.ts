@@ -30,8 +30,7 @@ export const clientPortalApi = {
   async getClientProjects(): Promise<ClientProjectView[]> {
     try {
       // Use .rpc() or raw query for views that aren't in the generated types
-      const { data, error } = await supabase
-        fromExtended('client_project_summary')
+      const { data, error } = await fromExtended('client_project_summary')
         .select('*')
         .order('name')
 
@@ -52,8 +51,7 @@ export const clientPortalApi = {
    */
   async getClientProject(projectId: string): Promise<ClientProjectView | null> {
     try {
-      const { data, error } = await supabase
-        fromExtended('client_project_summary')
+      const { data, error } = await fromExtended('client_project_summary')
         .select('*')
         .eq('id', projectId)
         .single()
@@ -79,8 +77,7 @@ export const clientPortalApi = {
   async getClientDashboardStats(): Promise<ClientDashboardStats> {
     try {
       // Get project counts
-      const { data: projects, error: projectsError } = await supabase
-        fromExtended('client_project_summary')
+      const { data: projects, error: projectsError } = await fromExtended('client_project_summary')
         .select('id, status')
 
       if (projectsError) {throw projectsError}
@@ -147,8 +144,7 @@ export const clientPortalApi = {
    */
   async getPortalSettings(projectId: string): Promise<ClientPortalSettings | null> {
     try {
-      const { data, error } = await supabase
-        fromExtended('client_portal_settings')
+      const { data, error } = await fromExtended('client_portal_settings')
         .select('*')
         .eq('project_id', projectId)
         .single()

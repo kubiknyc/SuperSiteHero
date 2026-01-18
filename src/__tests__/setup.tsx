@@ -5,20 +5,72 @@ import { vi } from 'vitest';
 // with the jsdom environment. Manual afterEach cleanup can cause runner
 // initialization issues in Vitest 4.0.x with globals: true
 
-// Mock window.matchMedia
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: vi.fn().mockImplementation((query) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  })),
-});
+// Check if we're in a browser-like environment (jsdom) or node
+const isBrowserEnvironment = typeof window !== 'undefined';
+
+// Mock localStorage for Zustand persist middleware
+class LocalStorageMock implements Storage {
+  private store: Record<string, string> = {}
+
+  get length(): number {
+    return Object.keys(this.store).length
+  }
+
+  key(index: number): string | null {
+    const keys = Object.keys(this.store)
+    return keys[index] || null
+  }
+
+  getItem(key: string): string | null {
+    return this.store[key] || null
+  }
+
+  setItem(key: string, value: string): void {
+    this.store[key] = value.toString()
+  }
+
+  removeItem(key: string): void {
+    delete this.store[key]
+  }
+
+  clear(): void {
+    this.store = {}
+  }
+}
+
+global.localStorage = new LocalStorageMock()
+
+// Browser-only mocks (only set up in jsdom environment)
+if (isBrowserEnvironment) {
+  // Mock window.matchMedia
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: vi.fn().mockImplementation((query) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })),
+  });
+
+  // Mock window.screen.orientation
+  Object.defineProperty(window.screen, 'orientation', {
+    writable: true,
+    configurable: true,
+    value: {
+      angle: 0,
+      type: 'landscape-primary',
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      lock: vi.fn().mockResolvedValue(undefined),
+      unlock: vi.fn(),
+    },
+  });
+}
 
 // Mock IntersectionObserver
 global.IntersectionObserver = class IntersectionObserver {
@@ -38,20 +90,6 @@ global.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
 } as any;
-
-// Mock window.screen.orientation
-Object.defineProperty(window.screen, 'orientation', {
-  writable: true,
-  configurable: true,
-  value: {
-    angle: 0,
-    type: 'landscape-primary',
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    lock: vi.fn().mockResolvedValue(undefined),
-    unlock: vi.fn(),
-  },
-});
 
 // Mock react-hot-toast
 vi.mock('react-hot-toast', () => ({

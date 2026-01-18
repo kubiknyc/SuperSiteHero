@@ -293,8 +293,7 @@ export async function refreshToken(connectionId: string): Promise<void> {
  * Disconnect DocuSign
  */
 export async function disconnect(connectionId: string): Promise<void> {
-  const { error } = await supabase
-    fromExtended('docusign_connections')
+  const { error } = await fromExtended('docusign_connections')
     .update({
       is_active: false,
       access_token: null,
@@ -324,8 +323,7 @@ export async function getEnvelopes(
     offset?: number
   }
 ): Promise<DSEnvelope[]> {
-  let query = supabase
-    fromExtended('docusign_envelopes')
+  let query = fromExtended('docusign_envelopes')
     .select('*, recipients:docusign_envelope_recipients(*)')
     .eq('company_id', companyId)
     .order('created_at', { ascending: false })
@@ -359,8 +357,7 @@ export async function getEnvelopes(
  * Get single envelope by ID
  */
 export async function getEnvelope(envelopeDbId: string): Promise<DSEnvelope | null> {
-  const { data, error } = await supabase
-    fromExtended('docusign_envelopes')
+  const { data, error } = await fromExtended('docusign_envelopes')
     .select(`
       *,
       recipients:docusign_envelope_recipients(*),
@@ -384,8 +381,7 @@ export async function getEnvelopeByDocument(
   documentType: DSDocumentType,
   localDocumentId: string
 ): Promise<DSEnvelope | null> {
-  const { data, error } = await supabase
-    fromExtended('docusign_envelopes')
+  const { data, error } = await fromExtended('docusign_envelopes')
     .select(`
       *,
       recipients:docusign_envelope_recipients(*),
@@ -684,8 +680,7 @@ export async function createEnvelope(
   }
 
   // Store envelope in database
-  const { data: envelope, error: insertError } = await supabase
-    fromExtended('docusign_envelopes')
+  const { data: envelope, error: insertError } = await fromExtended('docusign_envelopes')
     .insert({
       company_id: companyId,
       connection_id: connection.id,
@@ -759,8 +754,7 @@ export async function sendEnvelope(envelopeDbId: string): Promise<DSEnvelope> {
   }
 
   // Get connection
-  const { data: connectionData, error: connError } = await supabase
-    fromExtended('docusign_connections')
+  const { data: connectionData, error: connError } = await fromExtended('docusign_connections')
     .select('*')
     .eq('id', envelope.connection_id)
     .single()
@@ -790,8 +784,7 @@ export async function sendEnvelope(envelopeDbId: string): Promise<DSEnvelope> {
   }
 
   // Update local database
-  const { data, error } = await supabase
-    fromExtended('docusign_envelopes')
+  const { data, error } = await fromExtended('docusign_envelopes')
     .update({
       status: 'sent',
       sent_at: new Date().toISOString(),
@@ -805,8 +798,7 @@ export async function sendEnvelope(envelopeDbId: string): Promise<DSEnvelope> {
   }
 
   // Update recipient statuses
-  await supabase
-    fromExtended('docusign_envelope_recipients')
+  await fromExtended('docusign_envelope_recipients')
     .update({ status: 'sent' })
     .eq('envelope_db_id', envelopeDbId)
 
@@ -817,8 +809,7 @@ export async function sendEnvelope(envelopeDbId: string): Promise<DSEnvelope> {
  * Get embedded signing URL
  */
 export async function getSigningUrl(dto: RequestSigningUrlDTO): Promise<string> {
-  const { data: envelopeData, error: envError } = await supabase
-    fromExtended('docusign_envelopes')
+  const { data: envelopeData, error: envError } = await fromExtended('docusign_envelopes')
     .select('*, connection:docusign_connections(*), recipients:docusign_envelope_recipients(*)')
     .eq('envelope_id', dto.envelope_id)
     .single()
@@ -887,8 +878,7 @@ export async function getSigningUrl(dto: RequestSigningUrlDTO): Promise<string> 
  */
 export async function voidEnvelope(dto: VoidEnvelopeDTO): Promise<void> {
   // Get envelope with connection
-  const { data: envelopeData, error: envError } = await supabase
-    fromExtended('docusign_envelopes')
+  const { data: envelopeData, error: envError } = await fromExtended('docusign_envelopes')
     .select('*, connection:docusign_connections(*)')
     .eq('envelope_id', dto.envelope_id)
     .single()
@@ -925,8 +915,7 @@ export async function voidEnvelope(dto: VoidEnvelopeDTO): Promise<void> {
   }
 
   // Update local database
-  const { error } = await supabase
-    fromExtended('docusign_envelopes')
+  const { error } = await fromExtended('docusign_envelopes')
     .update({
       status: 'voided',
       voided_at: new Date().toISOString(),
@@ -939,8 +928,7 @@ export async function voidEnvelope(dto: VoidEnvelopeDTO): Promise<void> {
   }
 
   // Update recipient statuses
-  await supabase
-    fromExtended('docusign_envelope_recipients')
+  await fromExtended('docusign_envelope_recipients')
     .update({ status: 'voided' as any })
     .eq('envelope_db_id', envelope.id)
 }
@@ -950,8 +938,7 @@ export async function voidEnvelope(dto: VoidEnvelopeDTO): Promise<void> {
  */
 export async function resendEnvelope(dto: ResendEnvelopeDTO): Promise<void> {
   // Get envelope with connection
-  const { data: envelopeData, error: envError } = await supabase
-    fromExtended('docusign_envelopes')
+  const { data: envelopeData, error: envError } = await fromExtended('docusign_envelopes')
     .select('*, connection:docusign_connections(*)')
     .eq('envelope_id', dto.envelope_id)
     .single()
@@ -975,8 +962,7 @@ export async function resendEnvelope(dto: ResendEnvelopeDTO): Promise<void> {
 
       if (dto.recipient_emails && dto.recipient_emails.length > 0) {
         // Get recipient IDs for specified emails
-        const { data: recipients } = await supabase
-          fromExtended('docusign_envelope_recipients')
+        const { data: recipients } = await fromExtended('docusign_envelope_recipients')
           .select('recipient_id, email')
           .eq('envelope_db_id', envelope.id)
           .in('email', dto.recipient_emails)
@@ -1140,8 +1126,7 @@ export async function createLienWaiverEnvelope(
  * Get envelope statistics
  */
 export async function getEnvelopeStats(companyId: string): Promise<DSEnvelopeStats> {
-  const { data: envelopesData, error } = await supabase
-    fromExtended('docusign_envelopes')
+  const { data: envelopesData, error } = await fromExtended('docusign_envelopes')
     .select('status, document_type')
     .eq('company_id', companyId)
 

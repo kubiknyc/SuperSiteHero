@@ -61,6 +61,11 @@ vi.mock('@/lib/supabase', () => ({
   },
 }))
 
+// Mock supabase-typed to use the same mock for fromExtended
+vi.mock('@/lib/supabase-typed', () => ({
+  fromExtended: mockFrom,
+}))
+
 import * as actionItemsApi from './action-items'
 
 describe('actionItemsApi - CRUD Operations', () => {
