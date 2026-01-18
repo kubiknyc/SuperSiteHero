@@ -54,7 +54,8 @@ jobs:
               # - NNNx_description.sql (suffixed, e.g., 027b_seed_templates.sql)
               # - YYYYMMDD_description.sql (timestamp, e.g., 20241214_milestone.sql)
               # - YYYYMMDDNNNNNN_description.sql (full timestamp, e.g., 20250101000001_budget.sql)
-              if [[ $filename =~ ^_?[0-9]{3}[a-z]?_[a-z0-9_]+\.sql$ ]] || [[ $filename =~ ^[0-9]{8}[0-9]*_[a-z0-9_]+\.sql$ ]]; then
+              # - test_NNN_description.sql (test migrations, e.g., test_022_chat_system.sql)
+              if [[ $filename =~ ^(_|test_)?[0-9]{3}[a-z]?_[a-z0-9_]+\.sql$ ]] || [[ $filename =~ ^[0-9]{8}[0-9]*_[a-z0-9_]+\.sql$ ]]; then
                 echo "✓ Valid: $filename"
                 migration_count=$((migration_count + 1))
               else
