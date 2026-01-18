@@ -33,10 +33,10 @@ jobs:
     timeout-minutes: 30
     if: github.event_name == 'push' || github.event.inputs.environment == 'preview'
     outputs:
-      url: ${{ steps.deploy.outputs.url }}
+      url: ${{ steps.deploy.outputs.deploy-url }}
     environment:
       name: preview
-      url: ${{ steps.deploy.outputs.url }}
+      url: ${{ steps.deploy.outputs.deploy-url }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -67,12 +67,15 @@ jobs:
 
       - name: Deploy to Netlify Preview
         id: deploy
-        run: |
-          npm install -g netlify-cli
-          output=$(netlify deploy --no-build --dir=dist --timeout 1200 --site=${{ secrets.NETLIFY_SITE_ID }} --auth=${{ secrets.NETLIFY_AUTH_TOKEN }} --json)
-          url=$(echo "$output" | jq -r '.deploy_url')
-          echo "url=$url" >> $GITHUB_OUTPUT
-          echo "Deployed to: $url"
+        uses: nwtgck/actions-netlify@v3
+        with:
+          publish-dir: './dist'
+          production-deploy: false
+          deploy-message: 'Deploy preview from ${{ github.sha }}'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 30
 
       - name: Comment PR with preview URL
         if: github.event_name == 'pull_request'
@@ -83,7 +86,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: '🚀 Preview deployed to: ${{ steps.deploy.outputs.url }}'
+              body: '🚀 Preview deployed to: ${{ steps.deploy.outputs.deploy-url }}'
             })
 
   # ==================== DEPLOY TO PRODUCTION ====================
@@ -129,9 +132,15 @@ jobs:
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
       - name: Deploy to Netlify Production
-        run: |
-          npm install -g netlify-cli
-          netlify deploy --no-build --prod --dir=dist --timeout 1200 --site=${{ secrets.NETLIFY_SITE_ID }} --auth=${{ secrets.NETLIFY_AUTH_TOKEN }}
+        uses: nwtgck/actions-netlify@v3
+        with:
+          publish-dir: './dist'
+          production-deploy: true
+          deploy-message: 'Production deploy from ${{ github.sha }}'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        timeout-minutes: 30
 
       - name: Notify deployment success
         run: echo "🎉 Production deployment complete!"
