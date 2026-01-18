@@ -1,5 +1,5 @@
 [build]
-  command = "npm run build"
+  # Build handled by GitHub Actions - don't run again during deploy
   publish = "dist"
 
 [[redirects]]
