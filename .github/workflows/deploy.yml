@@ -175,9 +175,10 @@ jobs:
           exit 1
 
       - name: Run smoke tests against production
-        run: npx playwright test e2e/smoke.spec.ts --project=chromium --reporter=html
+        run: npx playwright test e2e/smoke.spec.ts --project=chromium --reporter=html --global-timeout=300000
         env:
           BASE_URL: https://jobsightapp.com
+          PLAYWRIGHT_SKIP_GLOBAL_SETUP: true
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
@@ -279,9 +280,10 @@ jobs:
           exit 1
 
       - name: Run smoke tests against preview
-        run: npx playwright test e2e/smoke.spec.ts --project=chromium --reporter=html
+        run: npx playwright test e2e/smoke.spec.ts --project=chromium --reporter=html --global-timeout=300000
         env:
           BASE_URL: ${{ needs.deploy-preview.outputs.url }}
+          PLAYWRIGHT_SKIP_GLOBAL_SETUP: true
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
