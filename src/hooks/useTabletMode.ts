@@ -80,12 +80,26 @@ function detectTouchCapability(): boolean {
 
 /**
  * Get tablet type based on screen dimensions
+ *
+ * IMPORTANT: We need to check BOTH dimensions to avoid false positives.
+ * A desktop window of 1520x966 was incorrectly detected as tablet because
+ * the shorter side (966px) fell within the tablet range.
+ *
+ * True tablets have:
+ * - Standard: shorter side 768-1024px AND longer side <= 1366px
+ * - Pro: shorter side up to 1024px AND longer side 1024-1366px
  */
 function getTabletType(width: number, height: number, isTouch: boolean): TabletType {
   const longerSide = Math.max(width, height);
   const shorterSide = Math.min(width, height);
 
-  // Standard tablet range: 768-1024px shorter side
+  // Desktop screens are wider than tablet max - not a tablet
+  // This prevents false positives on desktop with one dimension in tablet range
+  if (longerSide > TABLET_BREAKPOINTS.proMax) {
+    return 'none';
+  }
+
+  // Standard tablet range: 768-1024px shorter side, longer side within tablet max
   if (shorterSide >= TABLET_BREAKPOINTS.min && shorterSide <= TABLET_BREAKPOINTS.max) {
     // Check if it's a large tablet (iPad Pro territory)
     if (longerSide > TABLET_BREAKPOINTS.max && longerSide <= TABLET_BREAKPOINTS.proMax) {

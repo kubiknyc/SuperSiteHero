@@ -219,6 +219,7 @@ export function SheetSelector({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-9"
+              aria-label="Search drawing sheets"
             />
           </div>
 
@@ -228,6 +229,7 @@ export function SheetSelector({
               value={disciplineFilter}
               onChange={(e) => setDisciplineFilter(e.target.value as DrawingDiscipline | '')}
               className="w-40"
+              aria-label="Filter by discipline"
             >
               {DISCIPLINE_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>
@@ -305,13 +307,23 @@ export function SheetSelector({
               ))}
             </div>
           ) : filteredSheets.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-8 text-center">
+            <div className="flex flex-col items-center justify-center py-8 text-center px-4">
               <FileImage className="h-10 w-10 text-muted-foreground mb-3" />
-              <p className="text-sm text-muted-foreground">
-                {searchTerm || disciplineFilter
-                  ? 'No sheets match your filters'
-                  : 'No processed sheets available'}
-              </p>
+              {searchTerm || disciplineFilter ? (
+                <>
+                  <p className="text-sm font-medium mb-1">No sheets match your filters</p>
+                  <p className="text-xs text-muted-foreground">
+                    Try adjusting your search or discipline filter.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm font-medium mb-1">No processed sheets available</p>
+                  <p className="text-xs text-muted-foreground max-w-xs">
+                    Upload drawing sheets and wait for processing to complete before using visual search.
+                  </p>
+                </>
+              )}
             </div>
           ) : (
             <div className="space-y-1">

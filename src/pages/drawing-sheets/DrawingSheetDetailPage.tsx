@@ -3,18 +3,13 @@
 
 import { useParams, useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
-import { SheetViewer, CalloutOverlay } from '@/features/drawing-sheets'
-import { useDrawingSheet, useSheetCallouts } from '@/features/drawing-sheets/hooks'
+import { SheetViewer } from '@/features/drawing-sheets'
+import { useDrawingSheet } from '@/features/drawing-sheets/hooks'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   ChevronLeft,
-  ChevronRight,
-  ZoomIn,
-  ZoomOut,
-  Maximize2,
-  Link2,
   FileText,
   RefreshCw,
   ScanSearch,
@@ -25,13 +20,6 @@ export function DrawingSheetDetailPage() {
   const navigate = useNavigate()
 
   const { data: sheet, isLoading: sheetLoading, refetch } = useDrawingSheet(sheetId)
-  const { data: callouts, isLoading: calloutsLoading } = useSheetCallouts(sheetId)
-
-  const handleCalloutClick = (callout: any) => {
-    if (callout.target_sheet_id) {
-      navigate(`/projects/${projectId}/drawing-sheets/${callout.target_sheet_id}`)
-    }
-  }
 
   const handleBackToGrid = () => {
     navigate(`/projects/${projectId}/drawing-sheets`)
@@ -136,26 +124,20 @@ export function DrawingSheetDetailPage() {
 
         {/* Sheet Viewer with Callout Overlay */}
         <div className="flex-1 relative overflow-hidden">
-          <SheetViewer sheet={sheet}>
-            {!calloutsLoading && callouts && (
-              <CalloutOverlay
-                callouts={callouts}
-                onCalloutClick={handleCalloutClick}
-              />
-            )}
-          </SheetViewer>
+          <SheetViewer
+            sheetId={sheet.id}
+            onNavigateToSheet={(targetSheetId) =>
+              navigate(`/projects/${projectId}/drawing-sheets/${targetSheetId}`)
+            }
+            showCallouts={true}
+            className="h-full"
+          />
         </div>
 
         {/* Footer - Metadata Panel */}
         <div className="flex-none border-t border-border bg-muted/30 p-3">
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-4">
-              {callouts && callouts.length > 0 && (
-                <div className="flex items-center gap-1 text-muted-foreground">
-                  <Link2 className="h-4 w-4" />
-                  <span>{callouts.length} callout{callouts.length !== 1 ? 's' : ''}</span>
-                </div>
-              )}
               {sheet.ai_confidence_score !== null && (
                 <div className="flex items-center gap-1 text-muted-foreground">
                   <FileText className="h-4 w-4" />
@@ -163,17 +145,8 @@ export function DrawingSheetDetailPage() {
                 </div>
               )}
             </div>
-
-            <div className="flex items-center gap-2">
-              <Button variant="ghost" size="sm">
-                <ZoomOut className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm">
-                <ZoomIn className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm">
-                <Maximize2 className="h-4 w-4" />
-              </Button>
+            <div className="text-xs text-muted-foreground">
+              Use controls in viewer to zoom and pan
             </div>
           </div>
         </div>

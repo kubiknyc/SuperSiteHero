@@ -43,23 +43,61 @@ import type {
   MaterialListItem,
   MaterialListStatus,
 } from '@/types/drawing-sheets'
+import type { Database } from '@/types/database'
 
-// Mock takeoff item type - would come from takeoffs feature
-interface TakeoffItem {
-  id: string
-  name: string
-  quantity: number
-  unit: string
-  category: string | null
-  assemblyId: string | null
-  sheetId: string | null
+// Real TakeoffItem type from database
+type TakeoffItemRow = Database['public']['Tables']['takeoff_items']['Row']
+
+// Assembly type for category lookup
+type Assembly = Database['public']['Tables']['assemblies']['Row']
+
+// Extended takeoff item with resolved category from assembly
+export interface TakeoffItemWithCategory extends TakeoffItemRow {
+  // Category resolved from assembly relationship
+  category?: string | null
+  // Optional assembly data for display
+  assembly?: Assembly | null
+}
+
+// Helper to extract category from takeoff item or its assembly
+function getCategoryFromItem(item: TakeoffItemWithCategory): string | null {
+  // First check if category was resolved from assembly
+  if (item.category) return item.category
+  // Then check the assembly object if it was joined
+  if (item.assembly?.category) return item.assembly.category
+  // Fallback to measurement type as a category hint
+  if (item.measurement_type) {
+    // Map measurement types to categories
+    const typeToCategory: Record<string, string> = {
+      count: 'Equipment',
+      length: 'Structural',
+      area: 'Finishes',
+      volume: 'Structural',
+    }
+    return typeToCategory[item.measurement_type.toLowerCase()] || null
+  }
+  return null
+}
+
+// Helper to get the final quantity, using pre-calculated or computing it
+function getFinalQuantity(item: TakeoffItemWithCategory): number {
+  // If final_quantity is calculated in DB, use it
+  if (item.final_quantity !== null && item.final_quantity !== undefined) {
+    return Number(item.final_quantity)
+  }
+  // Otherwise calculate from quantity, multiplier, and waste_factor
+  const qty = Number(item.quantity) || 0
+  const multiplier = Number(item.multiplier) || 1
+  const waste = Number(item.waste_factor) || 0
+  return qty * multiplier * (1 + waste)
 }
 
 interface MaterialListGeneratorProps {
   projectId: string
   companyId: string
   takeoffId?: string
-  takeoffItems?: TakeoffItem[]
+  /** Takeoff items to include - can be enriched with assembly data for categories */
+  takeoffItems?: TakeoffItemWithCategory[]
   onGenerate: (materialList: MaterialListInsert) => Promise<void>
   onCancel?: () => void
   className?: string
@@ -120,19 +158,20 @@ export function MaterialListGenerator({
   const [error, setError] = useState<string | null>(null)
   const [generatedList, setGeneratedList] = useState<MaterialListInsert | null>(null)
 
-  // Get unique categories from takeoff items
+  // Get unique categories from takeoff items (resolved from assembly or measurement type)
   const categories = useMemo(() => {
     const cats = new Set<string>()
     takeoffItems.forEach((item) => {
-      if (item.category) {cats.add(item.category)}
+      const category = getCategoryFromItem(item)
+      if (category) cats.add(category)
     })
     return Array.from(cats).sort()
   }, [takeoffItems])
 
-  // Filter takeoff items
+  // Filter takeoff items by category
   const filteredItems = useMemo(() => {
-    if (!filterCategory) {return takeoffItems}
-    return takeoffItems.filter((item) => item.category === filterCategory)
+    if (!filterCategory) return takeoffItems
+    return takeoffItems.filter((item) => getCategoryFromItem(item) === filterCategory)
   }, [takeoffItems, filterCategory])
 
   // Get selected items
@@ -182,29 +221,38 @@ export function MaterialListGenerator({
     const aggregated = new Map<string, MaterialListItem>()
 
     for (const item of selectedItems) {
-      const key = `${item.name}|${item.unit}`
+      const key = `${item.name}|${item.unit || 'EA'}`
       const existing = aggregated.get(key)
 
+      // Get category from item (resolved from assembly or measurement type)
+      const itemCategory = getCategoryFromItem(item) || 'Other'
+
+      // Use global waste factor or category-specific factor
       const wasteFactor = useGlobalWaste
         ? globalWasteFactor
-        : wasteFactors[item.category || 'Other'] || 0.1
+        : wasteFactors[itemCategory] || 0.1
+
+      // Get quantity (use final_quantity if available, or calculate)
+      const baseQuantity = Number(item.quantity) || 0
+      const multiplier = Number(item.multiplier) || 1
+      const effectiveQuantity = baseQuantity * multiplier
 
       if (existing) {
         // Aggregate quantities
-        existing.quantity += item.quantity
+        existing.quantity += effectiveQuantity
         existing.order_quantity = Math.ceil(existing.quantity * (1 + wasteFactor))
         existing.source_takeoff_items.push(item.id)
       } else {
-        const orderQty = Math.ceil(item.quantity * (1 + wasteFactor))
+        const orderQty = Math.ceil(effectiveQuantity * (1 + wasteFactor))
 
         aggregated.set(key, {
           id: `ml-item-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
           name: item.name,
-          quantity: item.quantity,
-          unit: item.unit,
+          quantity: effectiveQuantity,
+          unit: item.unit || 'EA',
           waste_factor: wasteFactor,
           order_quantity: orderQty,
-          category: item.category,
+          category: itemCategory,
           source_takeoff_items: [item.id],
         })
       }
@@ -403,28 +451,40 @@ export function MaterialListGenerator({
                 </div>
               ) : (
                 <div className="divide-y">
-                  {filteredItems.map((item) => (
-                    <label
-                      key={item.id}
-                      className="flex items-center gap-3 p-3 hover:bg-muted/50 cursor-pointer"
-                    >
-                      <Checkbox
-                        checked={selectedItemIds.has(item.id)}
-                        onCheckedChange={() => toggleItem(item.id)}
-                      />
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium truncate">{item.name}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {item.quantity} {item.unit}
-                          {item.category && (
-                            <Badge variant="outline" className="ml-2 text-xs">
-                              {item.category}
-                            </Badge>
-                          )}
+                  {filteredItems.map((item) => {
+                    const category = getCategoryFromItem(item)
+                    const qty = Number(item.quantity) || 0
+                    const multiplier = Number(item.multiplier) || 1
+                    const effectiveQty = qty * multiplier
+
+                    return (
+                      <label
+                        key={item.id}
+                        className="flex items-center gap-3 p-3 hover:bg-muted/50 cursor-pointer"
+                      >
+                        <Checkbox
+                          checked={selectedItemIds.has(item.id)}
+                          onCheckedChange={() => toggleItem(item.id)}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium truncate">{item.name}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {effectiveQty.toLocaleString()} {item.unit || 'EA'}
+                            {multiplier !== 1 && (
+                              <span className="text-xs ml-1">
+                                ({qty} × {multiplier})
+                              </span>
+                            )}
+                            {category && (
+                              <Badge variant="outline" className="ml-2 text-xs">
+                                {category}
+                              </Badge>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </label>
-                  ))}
+                      </label>
+                    )
+                  })}
                 </div>
               )}
             </div>

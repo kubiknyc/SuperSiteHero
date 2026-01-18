@@ -23,6 +23,7 @@ export default {
 		'w-3/5',
 		// Height utilities
 		'h-10',
+		'h-11',
 		'h-12',
 		'h-14',
 		// Responsive variants - explicit list for reliable JIT generation
@@ -32,6 +33,226 @@ export default {
 		'xl:flex', 'xl:hidden', 'xl:block', 'xl:w-2/5', 'xl:w-3/5',
 		// Object fit
 		'object-contain',
+
+		// Grid utilities for LoginPageV2 and SignupPageV2
+		'grid',
+		'grid-cols-2',
+		'grid-cols-3',
+		'gap-3',
+		'gap-4',
+		'gap-5',
+		'gap-6',
+
+		// Border radius utilities
+		'rounded-xl',
+		'rounded-2xl',
+
+		// Padding utilities
+		'p-4',
+		'p-5',
+		'p-6',
+		'px-4',
+		'pr-12',
+
+		// Background utilities with opacity
+		'bg-white/[0.03]',
+		'bg-white/[0.05]',
+		'bg-white/[0.06]',
+
+		// Border utilities with opacity
+		'border',
+		'border-white/10',
+		'border-white/20',
+		'border-white/[0.06]',
+		'border-white/[0.1]',
+		'border-emerald-500/50',
+		'border-red-500/50',
+		'border-primary/20',
+		'border-primary-500/50',
+
+		// Gradient text utilities
+		'bg-gradient-to-r',
+		'bg-gradient-to-br',
+		'from-primary',
+		'from-primary-400',
+		'from-primary-500',
+		'to-primary-600',
+		'to-primary-700',
+		'to-info-400',
+		'text-transparent',
+		'bg-clip-text',
+
+		// Blur and backdrop utilities
+		'backdrop-blur-sm',
+		'blur-[100px]',
+		'blur-[120px]',
+
+		// Shadow utilities
+		'shadow-lg',
+		'shadow-primary/25',
+		'shadow-primary/30',
+		'shadow-blue-500/5',
+
+		// Ring utilities
+		'ring-2',
+		'ring-primary-500/20',
+
+		// Transition utilities
+		'transition-all',
+		'transition-colors',
+		'transition-transform',
+		'duration-200',
+		'duration-300',
+		'duration-500',
+		'duration-700',
+		'duration-1000',
+		'ease-out',
+
+		// Transform utilities
+		'translate-x-0',
+		'translate-x-1',
+		'translate-y-0',
+		'translate-y-4',
+		'translate-y-8',
+		'-translate-x-8',
+		'-translate-y-1/2',
+		'scale-110',
+
+		// Opacity utilities
+		'opacity-0',
+		'opacity-5',
+		'opacity-10',
+		'opacity-20',
+		'opacity-100',
+
+		// Animation utilities
+		'animate-pulse',
+		'animate-spin',
+
+		// Text colors
+		'text-white',
+		'text-slate-300',
+		'text-slate-400',
+		'text-slate-500',
+		'text-slate-600',
+		'text-primary-400',
+		'text-primary-300',
+		'text-emerald-400',
+		'text-red-400',
+		'text-yellow-400',
+
+		// Background colors
+		'bg-slate-800',
+		'bg-slate-900',
+		'bg-slate-950',
+		'bg-red-500',
+		'bg-yellow-500',
+		'bg-emerald-500',
+		'bg-yellow-500/10',
+		'bg-yellow-500/20',
+
+		// Spacing utilities
+		'mt-auto',
+		'mt-3',
+		'mt-6',
+		'mt-8',
+		'mt-12',
+		'mb-1',
+		'mb-2',
+		'mb-3',
+		'mb-6',
+		'mb-8',
+		'space-y-1.5',
+		'space-y-2',
+		'space-y-4',
+		'space-y-5',
+		'-space-x-2',
+
+		// Position utilities
+		'relative',
+		'absolute',
+		'inset-0',
+		'z-10',
+
+		// Size utilities
+		'w-3',
+		'w-5',
+		'w-6',
+		'w-7',
+		'w-8',
+		'w-10',
+		'w-12',
+		'w-64',
+		'w-80',
+		'w-96',
+		'h-1',
+		'h-1.5',
+		'h-3',
+		'h-5',
+		'h-6',
+		'h-7',
+		'h-8',
+		'h-64',
+		'h-80',
+		'h-96',
+
+		// Max width utilities
+		'max-w-md',
+
+		// Overflow utilities
+		'overflow-hidden',
+		'overflow-y-auto',
+
+		// Font utilities
+		'font-medium',
+		'font-semibold',
+		'font-bold',
+		'font-mono',
+		'text-xs',
+		'text-sm',
+		'text-base',
+		'text-lg',
+		'text-xl',
+		'text-2xl',
+		'text-3xl',
+		'text-4xl',
+		'text-5xl',
+		'tracking-tight',
+		'tracking-wider',
+		'uppercase',
+		'leading-tight',
+		'leading-relaxed',
+
+		// Flexbox utilities
+		'items-center',
+		'justify-center',
+		'justify-between',
+		'flex-col',
+
+		// Hover states
+		'hover:bg-white/[0.06]',
+		'hover:border-white/[0.1]',
+		'hover:border-white/20',
+		'hover:shadow-lg',
+		'hover:shadow-primary/30',
+		'hover:text-slate-300',
+		'hover:text-slate-400',
+		'hover:text-primary-300',
+		'hover:from-primary-500',
+		'hover:to-primary-600',
+		'hover:scale-110',
+		'hover:translate-x-1',
+
+		// Focus states
+		'focus:bg-white/[0.05]',
+		'focus:border-primary-500/50',
+		'focus:ring-2',
+		'focus:ring-primary-500/20',
+
+		// Group utilities
+		'group',
+		'group-hover:scale-110',
+		'group-hover:translate-x-1',
 	],
 	theme: {
 		// Custom screens with tablet breakpoints

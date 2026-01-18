@@ -16,13 +16,20 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
   ChevronLeft,
-  Save,
   FileDown,
   Mail,
   Check,
-  MoreVertical,
-  Settings,
 } from 'lucide-react'
 
 const STATUS_COLORS: Record<string, string> = {
@@ -35,7 +42,8 @@ const STATUS_COLORS: Record<string, string> = {
 export function MaterialListDetailPage() {
   const { projectId, listId } = useParams<{ projectId: string; listId: string }>()
   const navigate = useNavigate()
-  const [showWasteEditor, setShowWasteEditor] = useState(false)
+  const [showEmailDialog, setShowEmailDialog] = useState(false)
+  const [recipientEmail, setRecipientEmail] = useState('')
 
   const { data: list, isLoading, refetch } = useMaterialList(listId)
   const updateList = useUpdateMaterialList()
@@ -66,14 +74,20 @@ export function MaterialListDetailPage() {
     refetch()
   }
 
-  const handleEmail = async () => {
-    const email = prompt('Enter recipient email:')
-    if (!email || !listId) return
+  const handleEmail = () => {
+    setRecipientEmail('')
+    setShowEmailDialog(true)
+  }
+
+  const sendEmail = async () => {
+    if (!recipientEmail || !listId) return
     await exportList.mutateAsync({
       material_list_id: listId,
       format: 'email',
-      recipient_email: email,
+      recipient_email: recipientEmail,
     })
+    setShowEmailDialog(false)
+    setRecipientEmail('')
     refetch()
   }
 
@@ -160,21 +174,13 @@ export function MaterialListDetailPage() {
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setShowWasteEditor(!showWasteEditor)}
-              >
-                <Settings className="h-4 w-4" />
-              </Button>
             </div>
           </div>
         </div>
 
         {/* Summary Stats */}
         <div className="flex-none border-b border-border bg-muted/30 p-4">
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             <div className="bg-background rounded-lg p-3 border">
               <div className="text-sm text-muted-foreground">Line Items</div>
               <div className="text-2xl font-bold">{list.totals.total_line_items}</div>
@@ -199,10 +205,9 @@ export function MaterialListDetailPage() {
         {/* Content */}
         <div className="flex-1 overflow-auto p-4">
           <MaterialListTable
-            items={list.items}
-            wasteFactors={list.waste_factors}
-            editable={list.status === 'draft'}
-            showWasteEditor={showWasteEditor}
+            materialList={list}
+            readOnly={list.status !== 'draft'}
+            onExport={handleExport}
           />
         </div>
 
@@ -225,6 +230,42 @@ export function MaterialListDetailPage() {
           </div>
         )}
       </div>
+
+      {/* Email Dialog */}
+      <Dialog open={showEmailDialog} onOpenChange={setShowEmailDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Send Material List via Email</DialogTitle>
+            <DialogDescription>
+              Enter the recipient's email address to send this material list.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email Address</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="recipient@example.com"
+                value={recipientEmail}
+                onChange={(e) => setRecipientEmail(e.target.value)}
+                aria-label="Recipient email address"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowEmailDialog(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={sendEmail}
+              disabled={!recipientEmail || !recipientEmail.includes('@')}
+            >
+              Send Email
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AppLayout>
   )
 }
