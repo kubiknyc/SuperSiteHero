@@ -93,6 +93,7 @@ export function SignupPage() {
         email: formData.email,
         password: formData.password,
         options: {
+          emailRedirectTo: `${window.location.origin}/login`,
           data: {
             first_name: formData.firstName,
             last_name: formData.lastName,

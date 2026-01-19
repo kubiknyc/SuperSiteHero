@@ -67,6 +67,7 @@ export function CompanyRegistration() {
         email: userData.email,
         password: userData.password,
         options: {
+          emailRedirectTo: `${window.location.origin}/login`,
           data: {
             first_name: userData.firstName,
             last_name: userData.lastName,
