@@ -119,7 +119,9 @@ export function SheetGrid({
   }
 
   // Get discipline badge variant
-  const getDisciplineBadgeVariant = (discipline: DrawingDiscipline | null) => {
+  const getDisciplineBadgeVariant = (
+    discipline: DrawingDiscipline | null
+  ): 'default' | 'secondary' | 'outline' | 'destructive' => {
     switch (discipline) {
       case 'architectural':
         return 'default'
@@ -279,7 +281,7 @@ interface SheetCardProps {
   isSelected: boolean
   onClick?: () => void
   getStatusIcon: (status: ProcessingStatus) => React.ReactNode
-  getDisciplineBadgeVariant: (discipline: DrawingDiscipline | null) => string
+  getDisciplineBadgeVariant: (discipline: DrawingDiscipline | null) => 'default' | 'secondary' | 'outline' | 'destructive'
 }
 
 function SheetCard({
@@ -328,7 +330,7 @@ function SheetCard({
 
           {/* Discipline Badge */}
           {sheet.discipline && (
-            <Badge variant={getDisciplineBadgeVariant(sheet.discipline) as any}>
+            <Badge variant={getDisciplineBadgeVariant(sheet.discipline)}>
               {DISCIPLINE_LABELS[sheet.discipline]}
             </Badge>
           )}
@@ -366,7 +368,7 @@ function SheetCard({
         {sheet.discipline && (
           <div className="absolute bottom-2 left-2">
             <Badge
-              variant={getDisciplineBadgeVariant(sheet.discipline) as any}
+              variant={getDisciplineBadgeVariant(sheet.discipline)}
               className="text-xs"
             >
               {sheet.discipline.charAt(0).toUpperCase()}

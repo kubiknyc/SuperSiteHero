@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { Button, Badge } from '@/components/ui'
 import { cn } from '@/lib/utils'
+import { logger } from '@/lib/utils/logger'
 
 export type SelectionMode = 'rectangle' | 'lasso'
 
@@ -368,7 +369,7 @@ export function LassoSelectTool({
 
       onSelectionComplete(region, base64)
     } catch (error) {
-      console.error('Failed to capture selection:', error)
+      logger.error('Failed to capture selection:', error)
     }
   }, [selectionRect, image, imageSize, mode, lassoPoints, minSelectionSize, onSelectionComplete])
 

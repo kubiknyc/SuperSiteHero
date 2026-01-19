@@ -190,14 +190,18 @@ export function MaterialListTable({
         const updated = { ...item }
         const field = editingState.field!
 
-        if (field === 'quantity' || field === 'waste_factor') {
-          const numValue = parseFloat(editValue) || 0
-          ;(updated as any)[field] = numValue
-
-          // Recalculate order quantity
+        if (field === 'quantity') {
+          updated.quantity = parseFloat(editValue) || 0
           updated.order_quantity = Math.ceil(updated.quantity * (1 + updated.waste_factor))
-        } else if (field === 'name' || field === 'unit' || field === 'category') {
-          ;(updated as any)[field] = editValue
+        } else if (field === 'waste_factor') {
+          updated.waste_factor = parseFloat(editValue) || 0
+          updated.order_quantity = Math.ceil(updated.quantity * (1 + updated.waste_factor))
+        } else if (field === 'name') {
+          updated.name = editValue
+        } else if (field === 'unit') {
+          updated.unit = editValue
+        } else if (field === 'category') {
+          updated.category = editValue || null
         }
 
         return updated

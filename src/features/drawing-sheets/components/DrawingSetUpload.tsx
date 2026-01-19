@@ -13,6 +13,7 @@ import {
   Badge,
 } from '@/components/ui'
 import { cn } from '@/lib/utils'
+import { logger } from '@/lib/utils/logger'
 import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
 import { useAuth } from '@/lib/auth/AuthContext'
@@ -260,7 +261,7 @@ export function DrawingSetUpload({
       // Call callback
       onUploadComplete?.(document.id, processResult.sheets_created)
     } catch (error) {
-      console.error('Upload error:', error)
+      logger.error('Upload error:', error)
       const errorMessage = error instanceof Error ? error.message : 'Upload failed'
 
       setUploadState({
