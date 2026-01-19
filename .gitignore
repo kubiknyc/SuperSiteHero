@@ -157,3 +157,9 @@ tmpclaude-*
 
 # Backup type files
 *.ts.backup
+
+# Playwright MCP screenshots
+.playwright-mcp/
+
+# Temp lint output
+eslint-output-temp.json

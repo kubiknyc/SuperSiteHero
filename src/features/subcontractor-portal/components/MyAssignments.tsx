@@ -332,7 +332,7 @@ export function MyAssignments() {
     const { sortBy, filterStatus } = tabFilters.punch
     return (punchItems || [])
       .filter(item => {
-        if (filterStatus === 'all') return true
+        if (filterStatus === 'all') {return true}
         return item.status === filterStatus
       })
       .sort((a, b) => {
@@ -345,8 +345,8 @@ export function MyAssignments() {
               (priorityOrder[b.priority as keyof typeof priorityOrder] || 3)
           }
           case 'due_date':
-            if (!a.due_date) return 1
-            if (!b.due_date) return -1
+            if (!a.due_date) {return 1}
+            if (!b.due_date) {return -1}
             return new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
           default: // newest
             return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
@@ -359,7 +359,7 @@ export function MyAssignments() {
     const { sortBy, filterStatus } = tabFilters.rfis
     return (rfis || [])
       .filter(rfi => {
-        if (filterStatus === 'all') return true
+        if (filterStatus === 'all') {return true}
         return rfi.status === filterStatus
       })
       .sort((a, b) => {
@@ -372,8 +372,8 @@ export function MyAssignments() {
               (priorityOrder[b.priority as keyof typeof priorityOrder] || 3)
           }
           case 'due_date':
-            if (!a.due_date) return 1
-            if (!b.due_date) return -1
+            if (!a.due_date) {return 1}
+            if (!b.due_date) {return -1}
             return new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
           case 'rfi_number':
             return (a.rfi_number || '').localeCompare(b.rfi_number || '')
@@ -388,7 +388,7 @@ export function MyAssignments() {
     const { sortBy, filterCategory } = tabFilters.documents
     return (documents || [])
       .filter(doc => {
-        if (filterCategory === 'all') return true
+        if (filterCategory === 'all') {return true}
         return (doc.category?.toLowerCase() || 'other') === filterCategory
       })
       .sort((a, b) => {
@@ -410,7 +410,7 @@ export function MyAssignments() {
     const { sortBy, filterStatus } = tabFilters.payments
     return (payments || [])
       .filter(payment => {
-        if (filterStatus === 'all') return true
+        if (filterStatus === 'all') {return true}
         return payment.status === filterStatus
       })
       .sort((a, b) => {

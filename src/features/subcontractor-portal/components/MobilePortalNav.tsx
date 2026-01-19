@@ -94,7 +94,7 @@ export function MobilePortalNav() {
 
     // Check if path segments match location segments (proper prefix match)
     const isMatch = pathSegments.every((seg, i) => locationSegments[i] === seg)
-    if (isMatch && locationSegments.length >= pathSegments.length) return true
+    if (isMatch && locationSegments.length >= pathSegments.length) {return true}
 
     // Check additional paths for grouped nav items
     return additionalPaths?.some(p => {
