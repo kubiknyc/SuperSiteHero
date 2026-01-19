@@ -573,7 +573,7 @@ export function NotificationCenter({
           className="flex-1 text-xs"
           onClick={() => {
             setIsOpen(false)
-            navigate('/portal/notifications')
+            navigate('/sub/notifications')
           }}
         >
           View All
@@ -584,7 +584,7 @@ export function NotificationCenter({
           className="flex-1 text-xs"
           onClick={() => {
             setIsOpen(false)
-            navigate('/portal/notification-settings')
+            navigate('/sub/notification-settings')
           }}
         >
           <Settings className="h-3 w-3 mr-1" />

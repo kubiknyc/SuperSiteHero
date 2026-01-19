@@ -44,7 +44,7 @@ export function BidDetailPage() {
               <p>Failed to load bid details</p>
               <p className="text-sm">{error?.message || 'Bid not found'}</p>
               <Button asChild variant="outline" className="mt-4">
-                <Link to="/portal/bids">
+                <Link to="/sub/bids">
                   <ArrowLeft className="mr-2 h-4 w-4" />
                   Back to Bids
                 </Link>
@@ -61,7 +61,7 @@ export function BidDetailPage() {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" asChild>
-          <Link to="/portal/bids">
+          <Link to="/sub/bids">
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>

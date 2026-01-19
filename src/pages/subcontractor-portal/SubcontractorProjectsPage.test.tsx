@@ -478,7 +478,7 @@ describe('SubcontractorProjectsPage', () => {
       renderPage()
 
       const link = screen.getByRole('link', { name: /view items/i })
-      expect(link).toHaveAttribute('href', '/portal/punch-items?project=proj-123')
+      expect(link).toHaveAttribute('href', '/sub/punch-items?project=proj-123')
     })
   })
 })

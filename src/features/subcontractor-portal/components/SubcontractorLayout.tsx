@@ -4,7 +4,7 @@
  * Milestone 4.1: Mobile-Optimized Portal UI - Desktop sidebar, mobile bottom nav
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Outlet, NavLink, useLocation } from 'react-router-dom'
 import { useSubcontractorStats, useCanViewDailyReports } from '../hooks'
 import {
@@ -35,6 +35,7 @@ import { useAuth } from '@/lib/auth/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { MobilePortalNav } from './MobilePortalNav'
+import { PortalErrorBoundary } from './PortalErrorBoundary'
 import { PWAInstallBanner } from '@/components/PWAInstallPrompt'
 import { useUnreadNotificationCount } from '@/features/notifications/hooks/useNotifications'
 
@@ -86,12 +87,17 @@ export function SubcontractorLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [headerCollapsed, setHeaderCollapsed] = useState(false)
   const [lastScrollY, setLastScrollY] = useState(0)
+  const mainRef = useRef<HTMLElement>(null)
 
-  // Close mobile menu on route change
+  // Close mobile menu and reset scroll on route change
   useEffect(() => {
     setTimeout(() => {
       setMobileMenuOpen(false)
     }, 0)
+    // Reset scroll position when navigating to a new page
+    if (mainRef.current) {
+      mainRef.current.scrollTo({ top: 0, behavior: 'instant' })
+    }
   }, [location.pathname])
 
   // Collapse header on scroll down (mobile only)
@@ -144,101 +150,101 @@ export function SubcontractorLayout() {
         {/* Navigation */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
           <NavItem
-            to="/portal"
+            to="/sub"
             icon={<LayoutDashboard className="h-4 w-4" />}
             label="Dashboard"
           />
           <NavItem
-            to="/portal/projects"
+            to="/sub/projects"
             icon={<FolderOpen className="h-4 w-4" />}
             label="My Projects"
           />
           <NavItem
-            to="/portal/assignments"
+            to="/sub/assignments"
             icon={<ClipboardList className="h-4 w-4" />}
             label="My Assignments"
             count={(stats?.open_punch_items || 0) + (stats?.open_tasks || 0)}
           />
           <NavItem
-            to="/portal/bids"
+            to="/sub/bids"
             icon={<FileText className="h-4 w-4" />}
             label="Pending Bids"
             count={stats?.pending_bids}
           />
           <NavItem
-            to="/portal/punch-items"
+            to="/sub/punch-items"
             icon={<ClipboardList className="h-4 w-4" />}
             label="Punch Items"
             count={stats?.open_punch_items}
           />
           <NavItem
-            to="/portal/tasks"
+            to="/sub/tasks"
             icon={<CheckSquare className="h-4 w-4" />}
             label="Tasks"
             count={stats?.open_tasks}
           />
           {canViewDailyReports && (
             <NavItem
-              to="/portal/daily-reports"
+              to="/sub/daily-reports"
               icon={<CalendarDays className="h-4 w-4" />}
               label="Daily Reports"
             />
           )}
           <NavItem
-            to="/portal/notifications"
+            to="/sub/notifications"
             icon={<Bell className="h-4 w-4" />}
             label="Notifications"
             count={unreadCount}
           />
           <NavItem
-            to="/portal/compliance"
+            to="/sub/compliance"
             icon={<AlertTriangle className="h-4 w-4" />}
             label="Compliance"
             count={stats?.expiring_documents}
             warning={stats?.expiring_documents ? stats.expiring_documents > 0 : false}
           />
           <NavItem
-            to="/portal/lien-waivers"
+            to="/sub/lien-waivers"
             icon={<FileSignature className="h-4 w-4" />}
             label="Lien Waivers"
           />
           <NavItem
-            to="/portal/retainage"
+            to="/sub/retainage"
             icon={<Banknote className="h-4 w-4" />}
             label="Retainage"
           />
           <NavItem
-            to="/portal/pay-apps"
+            to="/sub/pay-apps"
             icon={<Receipt className="h-4 w-4" />}
             label="Pay Applications"
           />
           <NavItem
-            to="/portal/change-orders"
+            to="/sub/change-orders"
             icon={<FileEdit className="h-4 w-4" />}
             label="Change Orders"
           />
           <NavItem
-            to="/portal/schedule"
+            to="/sub/schedule"
             icon={<CalendarClock className="h-4 w-4" />}
             label="Schedule"
           />
           <NavItem
-            to="/portal/safety"
+            to="/sub/safety"
             icon={<Shield className="h-4 w-4" />}
             label="Safety"
           />
           <NavItem
-            to="/portal/photos"
+            to="/sub/photos"
             icon={<Camera className="h-4 w-4" />}
             label="Photos"
           />
           <NavItem
-            to="/portal/meetings"
+            to="/sub/meetings"
             icon={<Users className="h-4 w-4" />}
             label="Meetings"
           />
           <NavItem
-            to="/portal/certifications"
+            to="/sub/certifications"
             icon={<Award className="h-4 w-4" />}
             label="Certifications"
           />
@@ -270,7 +276,7 @@ export function SubcontractorLayout() {
           </div>
           <div className="flex items-center gap-2">
             {/* Notification Button */}
-            <NavLink to="/portal/notifications" className="relative p-2">
+            <NavLink to="/sub/notifications" className="relative p-2">
               <Bell className="h-5 w-5 text-secondary" />
               {unreadCount !== undefined && unreadCount > 0 && (
                 <Badge
@@ -319,40 +325,40 @@ export function SubcontractorLayout() {
             {/* Menu Navigation */}
             <nav className="p-4 space-y-1 overflow-y-auto max-h-[calc(100vh-180px)]">
               <NavItem
-                to="/portal"
+                to="/sub"
                 icon={<LayoutDashboard className="h-4 w-4" />}
                 label="Dashboard"
                 onClick={() => setMobileMenuOpen(false)}
               />
               <NavItem
-                to="/portal/projects"
+                to="/sub/projects"
                 icon={<FolderOpen className="h-4 w-4" />}
                 label="My Projects"
                 onClick={() => setMobileMenuOpen(false)}
               />
               <NavItem
-                to="/portal/assignments"
+                to="/sub/assignments"
                 icon={<ClipboardList className="h-4 w-4" />}
                 label="My Assignments"
                 count={(stats?.open_punch_items || 0) + (stats?.open_tasks || 0)}
                 onClick={() => setMobileMenuOpen(false)}
               />
               <NavItem
-                to="/portal/bids"
+                to="/sub/bids"
                 icon={<FileText className="h-4 w-4" />}
                 label="Pending Bids"
                 count={stats?.pending_bids}
                 onClick={() => setMobileMenuOpen(false)}
               />
               <NavItem
-                to="/portal/punch-items"
+                to="/sub/punch-items"
                 icon={<ClipboardList className="h-4 w-4" />}
                 label="Punch Items"
                 count={stats?.open_punch_items}
                 onClick={() => setMobileMenuOpen(false)}
               />
               <NavItem
-                to="/portal/tasks"
+                to="/sub/tasks"
                 icon={<CheckSquare className="h-4 w-4" />}
                 label="Tasks"
                 count={stats?.open_tasks}
@@ -360,14 +366,14 @@ export function SubcontractorLayout() {
               />
               {canViewDailyReports && (
                 <NavItem
-                  to="/portal/daily-reports"
+                  to="/sub/daily-reports"
                   icon={<CalendarDays className="h-4 w-4" />}
                   label="Daily Reports"
                   onClick={() => setMobileMenuOpen(false)}
                 />
               )}
               <NavItem
-                to="/portal/compliance"
+                to="/sub/compliance"
                 icon={<AlertTriangle className="h-4 w-4" />}
                 label="Compliance"
                 count={stats?.expiring_documents}
@@ -375,61 +381,61 @@ export function SubcontractorLayout() {
                 onClick={() => setMobileMenuOpen(false)}
               />
               <NavItem
-                to="/portal/lien-waivers"
+                to="/sub/lien-waivers"
                 icon={<FileSignature className="h-4 w-4" />}
                 label="Lien Waivers"
                 onClick={() => setMobileMenuOpen(false)}
               />
               <NavItem
-                to="/portal/retainage"
+                to="/sub/retainage"
                 icon={<Banknote className="h-4 w-4" />}
                 label="Retainage"
                 onClick={() => setMobileMenuOpen(false)}
               />
               <NavItem
-                to="/portal/pay-apps"
+                to="/sub/pay-apps"
                 icon={<Receipt className="h-4 w-4" />}
                 label="Pay Applications"
                 onClick={() => setMobileMenuOpen(false)}
               />
               <NavItem
-                to="/portal/change-orders"
+                to="/sub/change-orders"
                 icon={<FileEdit className="h-4 w-4" />}
                 label="Change Orders"
                 onClick={() => setMobileMenuOpen(false)}
               />
               <NavItem
-                to="/portal/schedule"
+                to="/sub/schedule"
                 icon={<CalendarClock className="h-4 w-4" />}
                 label="Schedule"
                 onClick={() => setMobileMenuOpen(false)}
               />
               <NavItem
-                to="/portal/safety"
+                to="/sub/safety"
                 icon={<Shield className="h-4 w-4" />}
                 label="Safety"
                 onClick={() => setMobileMenuOpen(false)}
               />
               <NavItem
-                to="/portal/photos"
+                to="/sub/photos"
                 icon={<Camera className="h-4 w-4" />}
                 label="Photos"
                 onClick={() => setMobileMenuOpen(false)}
               />
               <NavItem
-                to="/portal/meetings"
+                to="/sub/meetings"
                 icon={<Users className="h-4 w-4" />}
                 label="Meetings"
                 onClick={() => setMobileMenuOpen(false)}
               />
               <NavItem
-                to="/portal/certifications"
+                to="/sub/certifications"
                 icon={<Award className="h-4 w-4" />}
                 label="Certifications"
                 onClick={() => setMobileMenuOpen(false)}
               />
               <NavItem
-                to="/portal/profile"
+                to="/sub/profile"
                 icon={<Building2 className="h-4 w-4" />}
                 label="Profile"
                 onClick={() => setMobileMenuOpen(false)}
@@ -452,12 +458,17 @@ export function SubcontractorLayout() {
       )}
 
       {/* Main Content */}
-      <main className={cn(
-        'flex-1 overflow-auto',
-        'md:pt-0 pt-14', // Add top padding on mobile for header
-        'pb-16 md:pb-0' // Add bottom padding on mobile for nav
-      )}>
-        <Outlet />
+      <main
+        ref={mainRef}
+        className={cn(
+          'flex-1 overflow-auto',
+          'md:pt-0 pt-14', // Add top padding on mobile for header
+          'pb-16 md:pb-0' // Add bottom padding on mobile for nav
+        )}
+      >
+        <PortalErrorBoundary>
+          <Outlet />
+        </PortalErrorBoundary>
       </main>
 
       {/* Mobile Bottom Navigation */}

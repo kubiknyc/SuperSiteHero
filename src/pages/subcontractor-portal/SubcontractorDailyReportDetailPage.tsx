@@ -96,7 +96,7 @@ export function SubcontractorDailyReportDetailPage() {
               This report doesn't exist or you don't have permission to view it.
             </p>
             <Button asChild>
-              <Link to="/portal/daily-reports">
+              <Link to="/sub/daily-reports">
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Reports
               </Link>
@@ -113,7 +113,7 @@ export function SubcontractorDailyReportDetailPage() {
       <div className="flex items-start justify-between">
         <div>
           <Button variant="ghost" size="sm" asChild className="mb-2">
-            <Link to="/portal/daily-reports">
+            <Link to="/sub/daily-reports">
               <ArrowLeft className="h-4 w-4 mr-1" />
               Back to Reports
             </Link>

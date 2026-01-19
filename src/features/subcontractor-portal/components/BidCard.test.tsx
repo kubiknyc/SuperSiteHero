@@ -100,7 +100,7 @@ describe('BidCard', () => {
       const bid = createMockBid()
       render(<BidCard bid={bid} compact />, { wrapper: RouterWrapper })
       const link = screen.getByRole('link')
-      expect(link).toHaveAttribute('href', '/portal/bids/bid-123')
+      expect(link).toHaveAttribute('href', '/sub/bids/bid-123')
     })
   })
 

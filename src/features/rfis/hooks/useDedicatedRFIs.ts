@@ -145,9 +145,10 @@ export function useRFI(rfiId: string | undefined) {
         `)
         .eq('id', rfiId)
         .is('deleted_at', null)
-        .single()
+        .maybeSingle()
 
       if (error) {throw error}
+      if (!data) {throw new Error('RFI not found')}
       return data as RFIWithDetails
     },
     enabled: !!rfiId,

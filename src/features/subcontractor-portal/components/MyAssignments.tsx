@@ -4,7 +4,7 @@
  * Milestone 4.1: Mobile-Optimized Portal UI
  */
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import {
@@ -50,8 +50,33 @@ import { useSubcontractorPunchActions } from '@/features/punch-lists/hooks/useSu
 import { formatDistanceToNow, format } from 'date-fns'
 
 type TabType = 'punch' | 'rfis' | 'documents' | 'payments'
-type SortOption = 'newest' | 'oldest' | 'priority' | 'due_date'
-type FilterStatus = 'all' | 'open' | 'in_progress' | 'completed'
+
+// Punch Items filter/sort types
+type PunchSortOption = 'newest' | 'oldest' | 'priority' | 'due_date'
+type PunchFilterStatus = 'all' | 'open' | 'in_progress' | 'completed'
+
+// RFI filter/sort types
+type RFISortOption = 'newest' | 'oldest' | 'priority' | 'due_date' | 'rfi_number'
+type RFIFilterStatus = 'all' | 'draft' | 'open' | 'responded' | 'closed'
+
+// Document filter/sort types
+type DocumentSortOption = 'newest' | 'oldest' | 'name' | 'category'
+type DocumentFilterCategory = 'all' | 'contract' | 'specification' | 'drawing' | 'submittal' | 'other'
+
+// Payment filter/sort types
+type PaymentSortOption = 'newest' | 'oldest' | 'amount' | 'status'
+type PaymentFilterStatus = 'all' | 'draft' | 'submitted' | 'approved' | 'rejected' | 'paid'
+
+// Union types for generic sort selector
+type SortOption = PunchSortOption | RFISortOption | DocumentSortOption | PaymentSortOption
+
+// Tab filter state interface
+interface TabFilters {
+  punch: { sortBy: PunchSortOption; filterStatus: PunchFilterStatus }
+  rfis: { sortBy: RFISortOption; filterStatus: RFIFilterStatus }
+  documents: { sortBy: DocumentSortOption; filterCategory: DocumentFilterCategory }
+  payments: { sortBy: PaymentSortOption; filterStatus: PaymentFilterStatus }
+}
 
 interface TabConfig {
   id: TabType
@@ -210,9 +235,48 @@ function EmptyState({ tab }: { tab: TabType }) {
 export function MyAssignments() {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState<TabType>('punch')
-  const [sortBy, setSortBy] = useState<SortOption>('newest')
-  const [filterStatus, setFilterStatus] = useState<FilterStatus>('all')
   const [showFilters, setShowFilters] = useState(false)
+
+  // Tab-specific filter states
+  const [tabFilters, setTabFilters] = useState<TabFilters>({
+    punch: { sortBy: 'newest', filterStatus: 'all' },
+    rfis: { sortBy: 'newest', filterStatus: 'all' },
+    documents: { sortBy: 'newest', filterCategory: 'all' },
+    payments: { sortBy: 'newest', filterStatus: 'all' },
+  })
+
+  // Helper to update tab-specific filter
+  const updateTabFilter = <T extends TabType>(
+    tab: T,
+    updates: Partial<TabFilters[T]>
+  ) => {
+    setTabFilters(prev => ({
+      ...prev,
+      [tab]: { ...prev[tab], ...updates },
+    }))
+  }
+
+  // Get current tab's sort option for display
+  const getCurrentSort = (): SortOption => {
+    switch (activeTab) {
+      case 'punch': return tabFilters.punch.sortBy
+      case 'rfis': return tabFilters.rfis.sortBy
+      case 'documents': return tabFilters.documents.sortBy
+      case 'payments': return tabFilters.payments.sortBy
+      default: return 'newest'
+    }
+  }
+
+  // Check if current tab has active filters
+  const hasActiveFilters = (): boolean => {
+    switch (activeTab) {
+      case 'punch': return tabFilters.punch.filterStatus !== 'all'
+      case 'rfis': return tabFilters.rfis.filterStatus !== 'all'
+      case 'documents': return tabFilters.documents.filterCategory !== 'all'
+      case 'payments': return tabFilters.payments.filterStatus !== 'all'
+      default: return false
+    }
+  }
 
   // Fetch data
   const { data: punchItems, isLoading: loadingPunch, refetch: refetchPunch } = useSubcontractorPunchItems()
@@ -264,28 +328,104 @@ export function MyAssignments() {
   }, [refetchPunch, refetchTasks, refetchCounts, refetchRFIs, refetchDocuments, refetchPayments])
 
   // Filter and sort punch items
-  const filteredPunchItems = (punchItems || [])
-    .filter(item => {
-      if (filterStatus === 'all') { return true }
-      return item.status === filterStatus
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case 'oldest':
-          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-        case 'priority': {
-          const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 }
-          return (priorityOrder[a.priority as keyof typeof priorityOrder] || 3) -
-            (priorityOrder[b.priority as keyof typeof priorityOrder] || 3)
+  const filteredPunchItems = useMemo(() => {
+    const { sortBy, filterStatus } = tabFilters.punch
+    return (punchItems || [])
+      .filter(item => {
+        if (filterStatus === 'all') return true
+        return item.status === filterStatus
+      })
+      .sort((a, b) => {
+        switch (sortBy) {
+          case 'oldest':
+            return new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          case 'priority': {
+            const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 }
+            return (priorityOrder[a.priority as keyof typeof priorityOrder] || 3) -
+              (priorityOrder[b.priority as keyof typeof priorityOrder] || 3)
+          }
+          case 'due_date':
+            if (!a.due_date) return 1
+            if (!b.due_date) return -1
+            return new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
+          default: // newest
+            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
         }
-        case 'due_date':
-          if (!a.due_date) { return 1 }
-          if (!b.due_date) { return -1 }
-          return new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
-        default: // newest
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      }
-    })
+      })
+  }, [punchItems, tabFilters.punch])
+
+  // Filter and sort RFIs
+  const filteredRFIs = useMemo(() => {
+    const { sortBy, filterStatus } = tabFilters.rfis
+    return (rfis || [])
+      .filter(rfi => {
+        if (filterStatus === 'all') return true
+        return rfi.status === filterStatus
+      })
+      .sort((a, b) => {
+        switch (sortBy) {
+          case 'oldest':
+            return new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          case 'priority': {
+            const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 }
+            return (priorityOrder[a.priority as keyof typeof priorityOrder] || 3) -
+              (priorityOrder[b.priority as keyof typeof priorityOrder] || 3)
+          }
+          case 'due_date':
+            if (!a.due_date) return 1
+            if (!b.due_date) return -1
+            return new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
+          case 'rfi_number':
+            return (a.rfi_number || '').localeCompare(b.rfi_number || '')
+          default: // newest
+            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        }
+      })
+  }, [rfis, tabFilters.rfis])
+
+  // Filter and sort Documents
+  const filteredDocuments = useMemo(() => {
+    const { sortBy, filterCategory } = tabFilters.documents
+    return (documents || [])
+      .filter(doc => {
+        if (filterCategory === 'all') return true
+        return (doc.category?.toLowerCase() || 'other') === filterCategory
+      })
+      .sort((a, b) => {
+        switch (sortBy) {
+          case 'oldest':
+            return new Date(a.shared_at).getTime() - new Date(b.shared_at).getTime()
+          case 'name':
+            return a.name.localeCompare(b.name)
+          case 'category':
+            return (a.category || '').localeCompare(b.category || '')
+          default: // newest
+            return new Date(b.shared_at).getTime() - new Date(a.shared_at).getTime()
+        }
+      })
+  }, [documents, tabFilters.documents])
+
+  // Filter and sort Payments
+  const filteredPayments = useMemo(() => {
+    const { sortBy, filterStatus } = tabFilters.payments
+    return (payments || [])
+      .filter(payment => {
+        if (filterStatus === 'all') return true
+        return payment.status === filterStatus
+      })
+      .sort((a, b) => {
+        switch (sortBy) {
+          case 'oldest':
+            return new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          case 'amount':
+            return (b.current_payment_due || 0) - (a.current_payment_due || 0)
+          case 'status':
+            return a.status.localeCompare(b.status)
+          default: // newest
+            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        }
+      })
+  }, [payments, tabFilters.payments])
 
   const handlePunchItemComplete = async (punchItemId: string) => {
     await requestStatusChange(punchItemId, 'completed', 'Marked as complete from mobile')
@@ -306,19 +446,23 @@ export function MyAssignments() {
         }
         return (
           <div className="divide-y divide-gray-100">
-            {filteredPunchItems.map(item => (
-              <AssignmentItem
+            {filteredPunchItems.map((item, index) => (
+              <div
                 key={item.id}
-                id={item.id}
-                title={item.title}
-                subtitle={item.location_notes || item.area || item.room || undefined}
-                status={item.status}
-                priority={item.priority || undefined}
-                dueDate={item.due_date || undefined}
-                hasPhotos={(item.photo_count || 0) > 0}
-                onClick={() => navigate(`/portal/punch-items/${item.id}`)}
-                onComplete={() => handlePunchItemComplete(item.id)}
-              />
+                className={cn('animate-fade-in-up', index < 4 && `stagger-${index + 1}`)}
+              >
+                <AssignmentItem
+                  id={item.id}
+                  title={item.title}
+                  subtitle={item.location_notes || item.area || item.room || undefined}
+                  status={item.status}
+                  priority={item.priority || undefined}
+                  dueDate={item.due_date || undefined}
+                  hasPhotos={(item.photo_count || 0) > 0}
+                  onClick={() => navigate(`/sub/punch-items/${item.id}`)}
+                  onComplete={() => handlePunchItemComplete(item.id)}
+                />
+              </div>
             ))}
           </div>
         )
@@ -330,22 +474,26 @@ export function MyAssignments() {
             </div>
           )
         }
-        if (!rfis?.length) {
+        if (!filteredRFIs.length) {
           return <EmptyState tab="rfis" />
         }
         return (
           <div className="divide-y divide-gray-100">
-            {rfis.map(rfi => (
-              <AssignmentItem
+            {filteredRFIs.map((rfi, index) => (
+              <div
                 key={rfi.id}
-                id={rfi.id}
-                title={`RFI #${rfi.rfi_number || 'N/A'}: ${rfi.title}`}
-                subtitle={rfi.project_name}
-                status={rfi.status}
-                priority={rfi.priority || undefined}
-                dueDate={rfi.due_date || undefined}
-                onClick={() => navigate(`/portal/rfis/${rfi.id}`)}
-              />
+                className={cn('animate-fade-in-up', index < 4 && `stagger-${index + 1}`)}
+              >
+                <AssignmentItem
+                  id={rfi.id}
+                  title={`RFI #${rfi.rfi_number || 'N/A'}: ${rfi.title}`}
+                  subtitle={rfi.project_name}
+                  status={rfi.status}
+                  priority={rfi.priority || undefined}
+                  dueDate={rfi.due_date || undefined}
+                  onClick={() => navigate(`/sub/rfis/${rfi.id}`)}
+                />
+              </div>
             ))}
           </div>
         )
@@ -357,15 +505,19 @@ export function MyAssignments() {
             </div>
           )
         }
-        if (!documents?.length) {
+        if (!filteredDocuments.length) {
           return <EmptyState tab="documents" />
         }
         return (
           <div className="divide-y divide-gray-100">
-            {documents.map(doc => (
+            {filteredDocuments.map((doc, index) => (
               <div
                 key={doc.id}
-                className="flex items-center gap-3 p-4 bg-card border-b border-border active:bg-surface cursor-pointer"
+                className={cn(
+                  'flex items-center gap-3 p-4 bg-card border-b border-border active:bg-surface cursor-pointer',
+                  'animate-fade-in-up',
+                  index < 4 && `stagger-${index + 1}`
+                )}
                 onClick={() => window.open(doc.file_url, '_blank')}
               >
                 <div className="flex-shrink-0">
@@ -407,12 +559,12 @@ export function MyAssignments() {
             </div>
           )
         }
-        if (!payments?.length) {
+        if (!filteredPayments.length) {
           return <EmptyState tab="payments" />
         }
         return (
           <div className="divide-y divide-gray-100">
-            {payments.map(payment => {
+            {filteredPayments.map((payment, index) => {
               const statusColors: Record<string, string> = {
                 draft: 'bg-muted text-muted-foreground',
                 submitted: 'bg-primary/10 text-primary',
@@ -423,8 +575,12 @@ export function MyAssignments() {
               return (
                 <div
                   key={payment.id}
-                  className="flex items-center gap-3 p-4 bg-card border-b border-border active:bg-surface cursor-pointer"
-                  onClick={() => navigate(`/portal/payments/${payment.id}`)}
+                  className={cn(
+                    'flex items-center gap-3 p-4 bg-card border-b border-border active:bg-surface cursor-pointer',
+                    'animate-fade-in-up',
+                    index < 4 && `stagger-${index + 1}`
+                  )}
+                  onClick={() => navigate(`/sub/payments/${payment.id}`)}
                 >
                   <div className="flex-shrink-0">
                     <DollarSign className="h-4 w-4 text-success" />
@@ -468,8 +624,26 @@ export function MyAssignments() {
         <div className="flex items-center justify-between">
           <h1 className="text-foreground heading-page">My Assignments</h1>
           <div className="flex items-center gap-2">
-            {/* Sort Button */}
-            <Select value={sortBy} onValueChange={(v) => setSortBy(v as SortOption)}>
+            {/* Sort Button - Tab-specific options */}
+            <Select
+              value={getCurrentSort()}
+              onValueChange={(v) => {
+                switch (activeTab) {
+                  case 'punch':
+                    updateTabFilter('punch', { sortBy: v as PunchSortOption })
+                    break
+                  case 'rfis':
+                    updateTabFilter('rfis', { sortBy: v as RFISortOption })
+                    break
+                  case 'documents':
+                    updateTabFilter('documents', { sortBy: v as DocumentSortOption })
+                    break
+                  case 'payments':
+                    updateTabFilter('payments', { sortBy: v as PaymentSortOption })
+                    break
+                }
+              }}
+            >
               <SelectTrigger className="w-auto h-8 text-xs">
                 <ArrowUpDown className="h-3.5 w-3.5 mr-1" />
                 <SelectValue />
@@ -477,53 +651,155 @@ export function MyAssignments() {
               <SelectContent>
                 <SelectItem value="newest">Newest</SelectItem>
                 <SelectItem value="oldest">Oldest</SelectItem>
-                <SelectItem value="priority">Priority</SelectItem>
-                <SelectItem value="due_date">Due Date</SelectItem>
+                {(activeTab === 'punch' || activeTab === 'rfis') && (
+                  <>
+                    <SelectItem value="priority">Priority</SelectItem>
+                    <SelectItem value="due_date">Due Date</SelectItem>
+                  </>
+                )}
+                {activeTab === 'rfis' && (
+                  <SelectItem value="rfi_number">RFI Number</SelectItem>
+                )}
+                {activeTab === 'documents' && (
+                  <>
+                    <SelectItem value="name">Name</SelectItem>
+                    <SelectItem value="category">Category</SelectItem>
+                  </>
+                )}
+                {activeTab === 'payments' && (
+                  <>
+                    <SelectItem value="amount">Amount</SelectItem>
+                    <SelectItem value="status">Status</SelectItem>
+                  </>
+                )}
               </SelectContent>
             </Select>
 
-            {/* Filter Sheet */}
+            {/* Filter Sheet - Tab-specific options */}
             <Sheet open={showFilters} onOpenChange={setShowFilters}>
               <SheetTrigger asChild>
                 <Button variant="outline" size="sm" className="h-8">
                   <Filter className="h-3.5 w-3.5 mr-1" />
                   Filter
-                  {filterStatus !== 'all' && (
+                  {hasActiveFilters() && (
                     <Badge variant="secondary" className="ml-1 h-4 px-1 text-[10px]">
                       1
                     </Badge>
                   )}
                 </Button>
               </SheetTrigger>
-              <SheetContent side="bottom" className="h-[300px]">
+              <SheetContent side="bottom" className="h-[340px]">
                 <SheetHeader>
-                  <SheetTitle>Filter Assignments</SheetTitle>
+                  <SheetTitle>Filter {activeTab === 'punch' ? 'Punch Items' : activeTab === 'rfis' ? 'RFIs' : activeTab === 'documents' ? 'Documents' : 'Payments'}</SheetTitle>
                 </SheetHeader>
                 <div className="mt-4 space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-secondary mb-2 block">
-                      Status
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {(['all', 'open', 'in_progress', 'completed'] as FilterStatus[]).map(status => (
-                        <Button
-                          key={status}
-                          variant={filterStatus === status ? 'default' : 'outline'}
-                          size="sm"
-                          onClick={() => setFilterStatus(status)}
-                          className="justify-start"
-                        >
-                          {status === 'all' ? 'All' : status.replace('_', ' ')}
-                        </Button>
-                      ))}
+                  {/* Punch Items Filters */}
+                  {activeTab === 'punch' && (
+                    <div>
+                      <label className="text-sm font-medium text-secondary mb-2 block">
+                        Status
+                      </label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {(['all', 'open', 'in_progress', 'completed'] as PunchFilterStatus[]).map(status => (
+                          <Button
+                            key={status}
+                            variant={tabFilters.punch.filterStatus === status ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => updateTabFilter('punch', { filterStatus: status })}
+                            className="justify-start capitalize"
+                          >
+                            {status === 'all' ? 'All' : status.replace('_', ' ')}
+                          </Button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
+
+                  {/* RFI Filters */}
+                  {activeTab === 'rfis' && (
+                    <div>
+                      <label className="text-sm font-medium text-secondary mb-2 block">
+                        Status
+                      </label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {(['all', 'draft', 'open', 'responded', 'closed'] as RFIFilterStatus[]).map(status => (
+                          <Button
+                            key={status}
+                            variant={tabFilters.rfis.filterStatus === status ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => updateTabFilter('rfis', { filterStatus: status })}
+                            className="justify-start capitalize"
+                          >
+                            {status === 'all' ? 'All' : status}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Document Filters */}
+                  {activeTab === 'documents' && (
+                    <div>
+                      <label className="text-sm font-medium text-secondary mb-2 block">
+                        Category
+                      </label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {(['all', 'contract', 'specification', 'drawing', 'submittal', 'other'] as DocumentFilterCategory[]).map(cat => (
+                          <Button
+                            key={cat}
+                            variant={tabFilters.documents.filterCategory === cat ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => updateTabFilter('documents', { filterCategory: cat })}
+                            className="justify-start capitalize"
+                          >
+                            {cat === 'all' ? 'All' : cat}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Payment Filters */}
+                  {activeTab === 'payments' && (
+                    <div>
+                      <label className="text-sm font-medium text-secondary mb-2 block">
+                        Status
+                      </label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {(['all', 'draft', 'submitted', 'approved', 'rejected', 'paid'] as PaymentFilterStatus[]).map(status => (
+                          <Button
+                            key={status}
+                            variant={tabFilters.payments.filterStatus === status ? 'default' : 'outline'}
+                            size="sm"
+                            onClick={() => updateTabFilter('payments', { filterStatus: status })}
+                            className="justify-start capitalize"
+                          >
+                            {status === 'all' ? 'All' : status}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="flex gap-2 pt-4">
                     <Button
                       variant="outline"
                       className="flex-1"
                       onClick={() => {
-                        setFilterStatus('all')
+                        switch (activeTab) {
+                          case 'punch':
+                            updateTabFilter('punch', { filterStatus: 'all' })
+                            break
+                          case 'rfis':
+                            updateTabFilter('rfis', { filterStatus: 'all' })
+                            break
+                          case 'documents':
+                            updateTabFilter('documents', { filterCategory: 'all' })
+                            break
+                          case 'payments':
+                            updateTabFilter('payments', { filterStatus: 'all' })
+                            break
+                        }
                         setShowFilters(false)
                       }}
                     >

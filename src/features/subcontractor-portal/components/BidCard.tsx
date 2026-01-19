@@ -38,7 +38,7 @@ export function BidCard({ bid, compact = false }: BidCardProps) {
 
   if (compact) {
     return (
-      <Link to={`/portal/bids/${bid.id}`}>
+      <Link to={`/sub/bids/${bid.id}`}>
         <Card className="hover:bg-muted/50 transition-colors cursor-pointer">
           <CardContent className="p-4">
             <div className="flex items-center justify-between gap-4">
@@ -121,7 +121,7 @@ export function BidCard({ bid, compact = false }: BidCardProps) {
           {isPending && (
             <div className="flex gap-2 pt-2">
               <Button asChild className="flex-1">
-                <Link to={`/portal/bids/${bid.id}`}>
+                <Link to={`/sub/bids/${bid.id}`}>
                   Review & Submit Bid
                 </Link>
               </Button>
@@ -130,7 +130,7 @@ export function BidCard({ bid, compact = false }: BidCardProps) {
 
           {!isPending && (
             <Button variant="outline" asChild className="w-full">
-              <Link to={`/portal/bids/${bid.id}`}>
+              <Link to={`/sub/bids/${bid.id}`}>
                 View Details
               </Link>
             </Button>

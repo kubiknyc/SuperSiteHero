@@ -14,6 +14,14 @@ import {
   useRetainageSummary,
 } from '@/features/subcontractor-portal/hooks'
 import { DashboardStats, BidCard, StatusBadge } from '@/features/subcontractor-portal/components'
+import {
+  ScheduleWidgetSkeleton,
+  SafetyWidgetSkeleton,
+  MeetingWidgetSkeleton,
+  CertificationWidgetSkeleton,
+  LienWaiverWidgetSkeleton,
+  RetainageWidgetSkeleton,
+} from '@/features/subcontractor-portal/components/DashboardSkeletons'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -104,14 +112,17 @@ export function SubcontractorDashboardPage() {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="heading-page">
-          Welcome, {data.subcontractor.company_name}
-        </h1>
-        <p className="text-muted-foreground">
-          Here's an overview of your current work across all projects.
-        </p>
+      {/* Hero Header with gradient */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-primary/10 p-6 md:p-8 border border-primary/10">
+        <div className="absolute inset-0 bg-blueprint-grid-fine opacity-20" />
+        <div className="relative">
+          <h1 className="heading-page mb-2">
+            Welcome, {data.subcontractor.company_name}
+          </h1>
+          <p className="text-muted-foreground text-lg">
+            Here's an overview of your current work across all projects.
+          </p>
+        </div>
       </div>
 
       {/* Stats */}
@@ -120,7 +131,7 @@ export function SubcontractorDashboardPage() {
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Pending Bids */}
-        <Card>
+        <Card className="hover-lift transition-all duration-200">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
               <CardTitle className="heading-card flex items-center gap-2">
@@ -130,7 +141,7 @@ export function SubcontractorDashboardPage() {
               <CardDescription>Bid requests awaiting your response</CardDescription>
             </div>
             <Button variant="ghost" size="sm" asChild>
-              <Link to="/portal/bids">
+              <Link to="/sub/bids">
                 View All <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
             </Button>
@@ -161,7 +172,7 @@ export function SubcontractorDashboardPage() {
               <CardDescription>Items assigned to you</CardDescription>
             </div>
             <Button variant="ghost" size="sm" asChild>
-              <Link to="/portal/punch-items">
+              <Link to="/sub/punch-items">
                 View All <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
             </Button>
@@ -203,7 +214,7 @@ export function SubcontractorDashboardPage() {
               <CardDescription>Tasks assigned to you</CardDescription>
             </div>
             <Button variant="ghost" size="sm" asChild>
-              <Link to="/portal/tasks">
+              <Link to="/sub/tasks">
                 View All <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
             </Button>
@@ -248,7 +259,7 @@ export function SubcontractorDashboardPage() {
               <CardDescription>Documents expiring within 30 days</CardDescription>
             </div>
             <Button variant="ghost" size="sm" asChild>
-              <Link to="/portal/compliance">
+              <Link to="/sub/compliance">
                 View All <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
             </Button>
@@ -300,7 +311,7 @@ export function SubcontractorDashboardPage() {
             <CardDescription>All projects you're working on</CardDescription>
           </div>
           <Button variant="ghost" size="sm" asChild>
-            <Link to="/portal/projects">
+            <Link to="/sub/projects">
               View All <ArrowRight className="ml-1 h-4 w-4" />
             </Link>
           </Button>
@@ -315,7 +326,7 @@ export function SubcontractorDashboardPage() {
               {data.projects.slice(0, 6).map((project) => (
                 <Link
                   key={project.id}
-                  to={`/portal/projects/${project.id}`}
+                  to={`/sub/projects/${project.id}`}
                   className="block"
                 >
                   <Card className="hover:bg-muted/50 transition-colors h-full">
@@ -340,27 +351,27 @@ export function SubcontractorDashboardPage() {
       {/* New Features Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Schedule Widget */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div>
-              <CardTitle className="heading-card flex items-center gap-2">
-                <CalendarClock className="h-5 w-5 text-primary" />
-                Schedule
-              </CardTitle>
-              <CardDescription>Your upcoming activities</CardDescription>
-            </div>
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/portal/schedule">
-                View <ArrowRight className="ml-1 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardHeader>
-          <CardContent>
-            {scheduleSummary ? (
+        {scheduleSummary ? (
+          <Card className="hover-lift transition-all duration-200">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <div>
+                <CardTitle className="heading-card flex items-center gap-2">
+                  <CalendarClock className="h-5 w-5 text-primary" />
+                  Schedule
+                </CardTitle>
+                <CardDescription>Your upcoming activities</CardDescription>
+              </div>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/sub/schedule">
+                  View <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
+            </CardHeader>
+            <CardContent>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">This Week</span>
-                  <span className="font-medium">{scheduleSummary.activities_this_week}</span>
+                  <span className="font-medium stat-number">{scheduleSummary.activities_this_week}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">In Progress</span>
@@ -376,35 +387,38 @@ export function SubcontractorDashboardPage() {
                   </div>
                 )}
               </div>
-            ) : (
-              <p className="text-sm text-muted-foreground py-2 text-center">Loading...</p>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ) : (
+          <ScheduleWidgetSkeleton />
+        )}
 
         {/* Safety Widget */}
-        <Card className={safetySummary && safetySummary.compliance_score < 80 ? 'border-warning' : ''}>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div>
-              <CardTitle className="heading-card flex items-center gap-2">
-                <Shield className="h-5 w-5 text-primary" />
-                Safety
-              </CardTitle>
-              <CardDescription>Compliance status</CardDescription>
-            </div>
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/portal/safety">
-                View <ArrowRight className="ml-1 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardHeader>
-          <CardContent>
-            {safetySummary ? (
+        {safetySummary ? (
+          <Card className={cn(
+            'hover-lift transition-all duration-200',
+            safetySummary.compliance_score < 80 && 'border-warning'
+          )}>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <div>
+                <CardTitle className="heading-card flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-primary" />
+                  Safety
+                </CardTitle>
+                <CardDescription>Compliance status</CardDescription>
+              </div>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/sub/safety">
+                  View <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
+            </CardHeader>
+            <CardContent>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Compliance Score</span>
                   <span className={cn(
-                    'font-bold',
+                    'stat-number text-lg',
                     safetySummary.compliance_score >= 90 ? 'text-success' :
                       safetySummary.compliance_score >= 70 ? 'text-warning' : 'text-destructive'
                   )}>
@@ -420,30 +434,33 @@ export function SubcontractorDashboardPage() {
                   <span>{safetySummary.open_corrective_actions} open actions</span>
                 </div>
               </div>
-            ) : (
-              <p className="text-sm text-muted-foreground py-2 text-center">Loading...</p>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ) : (
+          <SafetyWidgetSkeleton />
+        )}
 
         {/* Meetings Widget */}
-        <Card className={meetingSummary && meetingSummary.overdue_action_items > 0 ? 'border-destructive' : ''}>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div>
-              <CardTitle className="heading-card flex items-center gap-2">
-                <Users className="h-5 w-5 text-primary" />
-                Meetings
-              </CardTitle>
-              <CardDescription>Action items status</CardDescription>
-            </div>
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/portal/meetings">
-                View <ArrowRight className="ml-1 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardHeader>
-          <CardContent>
-            {meetingSummary ? (
+        {meetingSummary ? (
+          <Card className={cn(
+            'hover-lift transition-all duration-200',
+            meetingSummary.overdue_action_items > 0 && 'border-destructive'
+          )}>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <div>
+                <CardTitle className="heading-card flex items-center gap-2">
+                  <Users className="h-5 w-5 text-primary" />
+                  Meetings
+                </CardTitle>
+                <CardDescription>Action items status</CardDescription>
+              </div>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/sub/meetings">
+                  View <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
+            </CardHeader>
+            <CardContent>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Upcoming</span>
@@ -463,51 +480,54 @@ export function SubcontractorDashboardPage() {
                   </div>
                 )}
               </div>
-            ) : (
-              <p className="text-sm text-muted-foreground py-2 text-center">Loading...</p>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ) : (
+          <MeetingWidgetSkeleton />
+        )}
       </div>
 
       {/* Certifications & Financial Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Certifications Widget */}
-        <Card className={certificationSummary && (certificationSummary.expired_count > 0 || certificationSummary.expiring_soon_count > 0) ? 'border-warning' : ''}>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div>
-              <CardTitle className="heading-card flex items-center gap-2">
-                <Award className="h-5 w-5 text-primary" />
-                Certifications
-              </CardTitle>
-              <CardDescription>Team credentials</CardDescription>
-            </div>
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/portal/certifications">
-                View <ArrowRight className="ml-1 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardHeader>
-          <CardContent>
-            {certificationSummary ? (
+        {certificationSummary ? (
+          <Card className={cn(
+            'hover-lift transition-all duration-200',
+            (certificationSummary.expired_count > 0 || certificationSummary.expiring_soon_count > 0) && 'border-warning'
+          )}>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <div>
+                <CardTitle className="heading-card flex items-center gap-2">
+                  <Award className="h-5 w-5 text-primary" />
+                  Certifications
+                </CardTitle>
+                <CardDescription>Team credentials</CardDescription>
+              </div>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/sub/certifications">
+                  View <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
+            </CardHeader>
+            <CardContent>
               <div className="space-y-3">
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-1 text-success">
                     <CheckCircle2 className="h-4 w-4" />
-                    <span className="font-medium">{certificationSummary.valid_count}</span>
+                    <span className="font-medium stat-number">{certificationSummary.valid_count}</span>
                     <span className="text-xs text-muted-foreground">Valid</span>
                   </div>
                   {certificationSummary.expiring_soon_count > 0 && (
                     <div className="flex items-center gap-1 text-warning">
                       <Clock className="h-4 w-4" />
-                      <span className="font-medium">{certificationSummary.expiring_soon_count}</span>
+                      <span className="font-medium stat-number">{certificationSummary.expiring_soon_count}</span>
                       <span className="text-xs text-muted-foreground">Expiring</span>
                     </div>
                   )}
                   {certificationSummary.expired_count > 0 && (
                     <div className="flex items-center gap-1 text-destructive">
                       <XCircle className="h-4 w-4" />
-                      <span className="font-medium">{certificationSummary.expired_count}</span>
+                      <span className="font-medium stat-number">{certificationSummary.expired_count}</span>
                       <span className="text-xs text-muted-foreground">Expired</span>
                     </div>
                   )}
@@ -516,30 +536,30 @@ export function SubcontractorDashboardPage() {
                   {certificationSummary.total_certifications} total certifications tracked
                 </div>
               </div>
-            ) : (
-              <p className="text-sm text-muted-foreground py-2 text-center">Loading...</p>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ) : (
+          <CertificationWidgetSkeleton />
+        )}
 
         {/* Lien Waivers Widget */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div>
-              <CardTitle className="heading-card flex items-center gap-2">
-                <FileSignature className="h-5 w-5 text-primary" />
-                Lien Waivers
-              </CardTitle>
-              <CardDescription>Waiver status</CardDescription>
-            </div>
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/portal/lien-waivers">
-                View <ArrowRight className="ml-1 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardHeader>
-          <CardContent>
-            {lienWaiverSummary ? (
+        {lienWaiverSummary ? (
+          <Card className="hover-lift transition-all duration-200">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <div>
+                <CardTitle className="heading-card flex items-center gap-2">
+                  <FileSignature className="h-5 w-5 text-primary" />
+                  Lien Waivers
+                </CardTitle>
+                <CardDescription>Waiver status</CardDescription>
+              </div>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/sub/lien-waivers">
+                  View <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
+            </CardHeader>
+            <CardContent>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Pending Signature</span>
@@ -556,43 +576,43 @@ export function SubcontractorDashboardPage() {
                     <CheckCircle2 className="h-3 w-3" />
                     Approved
                   </span>
-                  <span className="font-medium">{lienWaiverSummary.approved_count}</span>
+                  <span className="font-medium stat-number">{lienWaiverSummary.approved_count}</span>
                 </div>
               </div>
-            ) : (
-              <p className="text-sm text-muted-foreground py-2 text-center">Loading...</p>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ) : (
+          <LienWaiverWidgetSkeleton />
+        )}
 
         {/* Retainage Widget */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div>
-              <CardTitle className="heading-card flex items-center gap-2">
-                <Banknote className="h-5 w-5 text-primary" />
-                Retainage
-              </CardTitle>
-              <CardDescription>Financial summary</CardDescription>
-            </div>
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/portal/retainage">
-                View <ArrowRight className="ml-1 h-4 w-4" />
-              </Link>
-            </Button>
-          </CardHeader>
-          <CardContent>
-            {retainageSummary ? (
+        {retainageSummary ? (
+          <Card className="hover-lift transition-all duration-200">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <div>
+                <CardTitle className="heading-card flex items-center gap-2">
+                  <Banknote className="h-5 w-5 text-primary" />
+                  Retainage
+                </CardTitle>
+                <CardDescription>Financial summary</CardDescription>
+              </div>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/sub/retainage">
+                  View <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
+              </Button>
+            </CardHeader>
+            <CardContent>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Total Held</span>
-                  <span className="heading-subsection">
+                  <span className="stat-number text-lg">
                     ${(retainageSummary.total_retention_held / 1000).toFixed(1)}k
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Eligible for Release</span>
-                  <span className="font-medium text-success">
+                  <span className="font-medium text-success stat-number">
                     ${(retainageSummary.eligible_for_release / 1000).toFixed(1)}k
                   </span>
                 </div>
@@ -606,11 +626,11 @@ export function SubcontractorDashboardPage() {
                   </div>
                 )}
               </div>
-            ) : (
-              <p className="text-sm text-muted-foreground py-2 text-center">Loading...</p>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        ) : (
+          <RetainageWidgetSkeleton />
+        )}
       </div>
     </div>
   )

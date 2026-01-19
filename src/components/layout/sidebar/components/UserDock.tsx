@@ -116,13 +116,13 @@ const PortalLinks = memo(function PortalLinks({ isExpanded }: PortalLinksProps) 
     {
       id: 'subcontractor-portal',
       label: 'Subcontractor Portal',
-      path: '/portal/subcontractor',
+      path: '/sub',
       icon: HardHat,
     },
     {
       id: 'client-portal',
       label: 'Client Portal',
-      path: '/portal/client',
+      path: '/client',
       icon: Briefcase,
     },
   ]

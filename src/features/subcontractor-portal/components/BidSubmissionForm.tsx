@@ -70,7 +70,7 @@ export function BidSubmissionForm({ bid }: BidSubmissionFormProps) {
         exclusions: data.exclusions,
       },
     })
-    navigate('/portal/bids')
+    navigate('/sub/bids')
   }
 
   const handleDecline = async () => {
@@ -79,7 +79,7 @@ export function BidSubmissionForm({ bid }: BidSubmissionFormProps) {
       reason: declineReason || undefined,
     })
     setShowDeclineDialog(false)
-    navigate('/portal/bids')
+    navigate('/sub/bids')
   }
 
   const isPending = bid.bid_status === 'pending' || bid.bid_status === 'draft'

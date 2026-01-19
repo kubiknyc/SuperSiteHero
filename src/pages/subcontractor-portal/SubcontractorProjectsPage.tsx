@@ -181,13 +181,13 @@ function ProjectCard({ project }: { project: SubcontractorProject }) {
         <div className="flex gap-2 pt-2">
           {project.permissions.can_view_scope && (
             <Button variant="outline" size="sm" asChild className="flex-1">
-              <Link to={`/portal/projects/${project.id}/scope`}>
+              <Link to={`/sub/projects/${project.id}/scope`}>
                 View Scope
               </Link>
             </Button>
           )}
           <Button size="sm" asChild className="flex-1">
-            <Link to={`/portal/punch-items?project=${project.id}`}>
+            <Link to={`/sub/punch-items?project=${project.id}`}>
               View Items
               <ArrowRight className="h-4 w-4 ml-1" />
             </Link>

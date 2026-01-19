@@ -245,7 +245,7 @@ export function SubcontractorDailyReportsPage() {
                   </div>
 
                   <Button variant="outline" size="sm" asChild>
-                    <Link to={`/portal/daily-reports/${report.id}`}>
+                    <Link to={`/sub/daily-reports/${report.id}`}>
                       <Eye className="h-4 w-4 mr-1" />
                       View
                     </Link>
