@@ -66,6 +66,7 @@ export function usePhotoUploadManager(): UsePhotoUploadManagerReturn {
     (photoId: string, update: Partial<UploadProgress>) => {
       setUploadProgress((prev) => ({
         ...prev,
+        // eslint-disable-next-line security/detect-object-injection
         [photoId]: {
           ...prev[photoId],
           photoId,
@@ -136,11 +137,13 @@ export function usePhotoUploadManager(): UsePhotoUploadManagerReturn {
         updateProgress(photoId, { status: 'pending', progress: 100 });
 
         return processedPhoto;
-      } catch (error: any) {
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Failed to process photo';
+
         updateProgress(photoId, {
           status: 'failed',
           progress: 0,
-          error: error.message || 'Failed to process photo',
+          error: errorMessage,
         });
         throw error;
       }
@@ -185,11 +188,13 @@ export function usePhotoUploadManager(): UsePhotoUploadManagerReturn {
         updateProgress(id, { status: 'uploaded', progress: 100 });
 
         return publicUrl;
-      } catch (error: any) {
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Upload failed';
+
         updateProgress(id, {
           status: 'failed',
           progress: 0,
-          error: error.message || 'Upload failed',
+          error: errorMessage,
         });
         throw error;
       }
@@ -229,8 +234,9 @@ export function usePhotoUploadManager(): UsePhotoUploadManagerReturn {
           };
 
           uploaded.push(photoEntry);
-        } catch (error: any) {
-          logger.error('Failed to upload photo:', { photoId: photo.id, error: error.message });
+        } catch (error: unknown) {
+          const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+          logger.error('Failed to upload photo:', { photoId: photo.id, error: errorMessage });
           failed.push(photo.id);
         }
       }

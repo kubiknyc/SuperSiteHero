@@ -25,6 +25,16 @@ export { SubcontractorPortalAccessList } from './SubcontractorPortalAccessList'
 // Mobile Portal UI (Milestone 4.1)
 export { MobilePortalNav } from './MobilePortalNav'
 export { MyAssignments } from './MyAssignments'
+export { PortalErrorBoundary, PortalErrorFallback } from './PortalErrorBoundary'
+export {
+  ScheduleWidgetSkeleton,
+  SafetyWidgetSkeleton,
+  MeetingWidgetSkeleton,
+  CertificationWidgetSkeleton,
+  LienWaiverWidgetSkeleton,
+  RetainageWidgetSkeleton,
+  AssignmentListSkeleton,
+} from './DashboardSkeletons'
 
 // Punch Item Updates (Milestone 4.2)
 export { PunchItemUpdate } from './PunchItemUpdate'

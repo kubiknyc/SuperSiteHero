@@ -167,7 +167,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
 
   const handleFileSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    if (!files || files.length === 0) {return;}
+    if (!files || files.length === 0) { return; }
 
     setIsProcessing(true);
 
@@ -343,7 +343,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
   }, [LONG_PRESS_DURATION]);
 
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    if (!touchStartPos) {return;}
+    if (!touchStartPos) { return; }
 
     const touch = e.touches[0];
     const dx = Math.abs(touch.clientX - touchStartPos.x);
@@ -392,7 +392,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
   }, []);
 
   const handleLightboxTouchEnd = useCallback((e: React.TouchEvent) => {
-    if (swipeStartX === null) {return;}
+    if (swipeStartX === null) { return; }
 
     const endX = e.changedTouches[0].clientX;
     const diff = swipeStartX - endX;
@@ -463,13 +463,14 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                         checked={autoGpsEnabled}
                         onCheckedChange={setAutoGpsEnabled}
                         className="data-[state=checked]:bg-green-500"
+                        aria-label="Toggle auto GPS"
                       />
                       <Label htmlFor="auto-gps" className="text-sm text-secondary cursor-pointer">
                         Auto GPS
                       </Label>
                     </div>
                     {autoGpsEnabled && (
-                      <div className="flex items-center gap-1 text-xs">
+                      <div className="flex items-center gap-1 text-xs" role="status" aria-live="polite">
                         {isGpsLoading ? (
                           <span className="text-primary flex items-center gap-1">
                             <Loader2 className="h-3 w-3 animate-spin" />
@@ -500,6 +501,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                       size="sm"
                       onClick={() => getCurrentPosition()}
                       className="h-7 text-xs"
+                      aria-label="Get current location"
                     >
                       <Navigation className="h-3 w-3 mr-1" />
                       Get Location
@@ -509,12 +511,19 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
               )}
 
               <div
-                className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
-                  isProcessing || isUploading
+                className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${isProcessing || isUploading
                     ? 'border-blue-300 bg-blue-50 cursor-wait'
                     : 'border-input hover:border-blue-400 hover:bg-blue-50 cursor-pointer'
-                }`}
+                  }`}
                 onClick={() => !isProcessing && !isUploading && fileInputRef.current?.click()}
+                role="button"
+                tabIndex={0}
+                aria-label="Upload photos"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    !isProcessing && !isUploading && fileInputRef.current?.click();
+                  }
+                }}
               >
                 {isProcessing ? (
                   <>

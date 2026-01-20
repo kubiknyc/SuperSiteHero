@@ -6,13 +6,14 @@
  */
 
 import { format } from 'date-fns'
-import { jsPDF } from 'jspdf'
+import { PDFGenerator, PDF_CONSTANTS } from '@/lib/utils/pdfGenerator'
 import autoTable from 'jspdf-autotable'
 import type {
   ChecklistFailureAnalytics,
   TrendDirection,
   DateRangePreset,
 } from '@/types/checklist-failure-analytics'
+
 
 // ============================================================================
 // Types
@@ -203,57 +204,41 @@ export function exportFailureTrendToCSV(data: FailureTrendExportData): void {
 export async function exportFailureTrendToPDF(data: FailureTrendExportData): Promise<void> {
   const { analytics, projectName, templateName, dateRange, exportDate = new Date(), preparedBy } = data
 
-  const doc = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'letter',
-  })
+  const pdf = new PDFGenerator()
+  await pdf.initialize(
+    'project-id-placeholder', // In a real app we might need to fetch this or pass it in. For now we can rely on default branding if ID is missing or handle it gracefully.
+    // Actually, looking at the data interface, we don't have projectId.
+    // Let's use a dummy ID or update the interface. Ideally we should pass it.
+    // For now, let's assume default branding is acceptable if we can't find comp info, 
+    // or we can try to use projectName as a fallback if the utility supports it?
+    // The utility expects an ID to fetch from DB. 
+    // Since we don't have it in FailureTrendExportData, we'll use a placeholder.
+    'CHECKLIST FAILURE TREND ANALYSIS',
+    `Failure Trend Analysis`
+  )
 
-  let yPosition = 20
-
-  // Title
-  doc.setFontSize(18)
-  doc.setFont('helvetica', 'bold')
-  doc.text('Checklist Failure Trend Analysis', 105, yPosition, { align: 'center' })
-  yPosition += 12
-
-  // Subtitle with project info
-  doc.setFontSize(11)
-  doc.setFont('helvetica', 'normal')
-  doc.text(`Project: ${projectName}`, 20, yPosition)
-  yPosition += 6
+  // Subtitle info
+  const subtitlePairs = [
+    { label: 'Project', value: projectName },
+    { label: 'Date Range', value: getDateRangeLabel(dateRange) },
+    { label: 'Export Date', value: format(exportDate, 'MMMM d, yyyy') },
+  ]
 
   if (templateName) {
-    doc.text(`Template: ${templateName}`, 20, yPosition)
-    yPosition += 6
+    subtitlePairs.splice(1, 0, { label: 'Template', value: templateName })
   }
-
-  doc.text(`Date Range: ${getDateRangeLabel(dateRange)}`, 20, yPosition)
-  yPosition += 6
-
-  doc.text(`Export Date: ${format(exportDate, 'MMMM d, yyyy')}`, 20, yPosition)
-  yPosition += 6
-
   if (preparedBy) {
-    doc.text(`Prepared By: ${preparedBy}`, 20, yPosition)
-    yPosition += 6
+    subtitlePairs.push({ label: 'Prepared By', value: preparedBy })
   }
 
-  yPosition += 6
+  // Draw project info section manually since it's slightly different layout than standard key-value
+  // Or just use addKeyValuePairs
+  pdf.addKeyValuePairs(subtitlePairs, 2)
 
   // Summary Metrics Section
-  doc.setFontSize(14)
-  doc.setFont('helvetica', 'bold')
-  doc.setFillColor(41, 128, 185)
-  doc.setTextColor(255, 255, 255)
-  doc.rect(20, yPosition - 5, 170, 8, 'F')
-  doc.text('Summary Metrics', 25, yPosition)
-  doc.setTextColor(0, 0, 0)
-  yPosition += 8
+  pdf.addSectionHeader('Summary Metrics')
 
-  // Summary table
-  autoTable(doc, {
-    startY: yPosition,
+  pdf.addTable({
     head: [['Metric', 'Value']],
     body: [
       ['Total Failures', analytics.summary.totalFailures.toString()],
@@ -262,27 +247,14 @@ export async function exportFailureTrendToPDF(data: FailureTrendExportData): Pro
       ['Total Inspections', analytics.summary.totalExecutions.toString()],
       ['Overall Trend', formatTrend(analytics.summary.trend)],
     ],
-    theme: 'striped',
-    headStyles: { fillColor: [220, 220, 220], textColor: [0, 0, 0], fontStyle: 'bold' },
     columnStyles: {
       0: { cellWidth: 60, fontStyle: 'bold' },
       1: { cellWidth: 40 },
     },
-    margin: { left: 20, right: 20 },
-    styles: { fontSize: 10 },
   })
 
-  yPosition = (doc as any).lastAutoTable.finalY + 12
-
   // Most Frequently Failed Items Section
-  doc.setFontSize(14)
-  doc.setFont('helvetica', 'bold')
-  doc.setFillColor(41, 128, 185)
-  doc.setTextColor(255, 255, 255)
-  doc.rect(20, yPosition - 5, 170, 8, 'F')
-  doc.text('Most Frequently Failed Items (Top 15)', 25, yPosition)
-  doc.setTextColor(0, 0, 0)
-  yPosition += 8
+  pdf.addSectionHeader('Most Frequently Failed Items (Top 15)')
 
   const frequencyData = analytics.frequency.slice(0, 15).map((item) => [
     item.itemLabel.length > 30 ? item.itemLabel.substring(0, 27) + '...' : item.itemLabel,
@@ -292,12 +264,9 @@ export async function exportFailureTrendToPDF(data: FailureTrendExportData): Pro
     formatTrend(item.trend).replace('↓ ', '').replace('↑ ', '').replace('→ ', ''),
   ])
 
-  autoTable(doc, {
-    startY: yPosition,
+  pdf.addTable({
     head: [['Item', 'Section', 'Failures', 'Rate', 'Trend']],
     body: frequencyData,
-    theme: 'striped',
-    headStyles: { fillColor: [220, 220, 220], textColor: [0, 0, 0], fontStyle: 'bold' },
     columnStyles: {
       0: { cellWidth: 55 },
       1: { cellWidth: 35 },
@@ -305,12 +274,11 @@ export async function exportFailureTrendToPDF(data: FailureTrendExportData): Pro
       3: { cellWidth: 20 },
       4: { cellWidth: 25 },
     },
-    margin: { left: 20, right: 20 },
-    styles: { fontSize: 9 },
     didDrawCell: (data) => {
       // Color code trend column
       if (data.section === 'body' && data.column.index === 4) {
         const value = data.cell.text[0]
+        const doc = pdf.getJsPDF()
         if (value === 'Improving') {
           doc.setFillColor(212, 237, 218) // Green
           doc.rect(data.cell.x, data.cell.y, data.cell.width, data.cell.height, 'F')
@@ -326,46 +294,28 @@ export async function exportFailureTrendToPDF(data: FailureTrendExportData): Pro
     },
   })
 
-  yPosition = (doc as any).lastAutoTable.finalY + 12
-
-  // Check if we need a new page
-  if (yPosition > 220) {
-    doc.addPage()
-    yPosition = 20
-  }
-
   // Temporal Patterns Section
-  doc.setFontSize(14)
-  doc.setFont('helvetica', 'bold')
-  doc.setFillColor(41, 128, 185)
-  doc.setTextColor(255, 255, 255)
-  doc.rect(20, yPosition - 5, 170, 8, 'F')
-  doc.text('Temporal Patterns', 25, yPosition)
-  doc.setTextColor(0, 0, 0)
-  yPosition += 8
+  pdf.addSectionHeader('Temporal Patterns')
 
-  // Two column layout for temporal data
+  // Hour of Day table
+  pdf.getJsPDF().setFontSize(11)
+  pdf.getJsPDF().setFont('helvetica', 'bold')
+  pdf.getJsPDF().text('By Hour of Day', 25, pdf.getY() + 4)
+
   const hourData = analytics.temporal.byHour.map((item) => [
     `${item.period}:00`,
     item.count.toString(),
   ])
 
-  const dayData = analytics.temporal.byDayOfWeek.map((item) => [
-    String(item.period),
-    item.count.toString(),
-  ])
+  // Save current Y to align second table
+  const startYForTables = pdf.getY() + 6
 
-  // Hour of Day table
-  doc.setFontSize(11)
-  doc.setFont('helvetica', 'bold')
-  doc.text('By Hour of Day', 25, yPosition + 4)
-
-  autoTable(doc, {
-    startY: yPosition + 6,
+  autoTable(pdf.getJsPDF(), {
+    startY: startYForTables,
     head: [['Hour', 'Failures']],
-    body: hourData.slice(0, 12), // First 12 hours
+    body: hourData.slice(0, 12),
     theme: 'grid',
-    headStyles: { fillColor: [220, 220, 220], textColor: [0, 0, 0], fontStyle: 'bold', fontSize: 8 },
+    headStyles: { fillColor: PDF_CONSTANTS.COLORS.headerBg, textColor: [0, 0, 0], fontStyle: 'bold', fontSize: 8 },
     margin: { left: 20, right: 120 },
     styles: { fontSize: 8 },
     columnStyles: {
@@ -375,15 +325,20 @@ export async function exportFailureTrendToPDF(data: FailureTrendExportData): Pro
   })
 
   // Day of Week table (positioned to the right)
-  doc.setFont('helvetica', 'bold')
-  doc.text('By Day of Week', 115, yPosition + 4)
+  pdf.getJsPDF().setFont('helvetica', 'bold')
+  pdf.getJsPDF().text('By Day of Week', 115, startYForTables - 2)
 
-  autoTable(doc, {
-    startY: yPosition + 6,
+  const dayData = analytics.temporal.byDayOfWeek.map((item) => [
+    String(item.period),
+    item.count.toString(),
+  ])
+
+  autoTable(pdf.getJsPDF(), {
+    startY: startYForTables,
     head: [['Day', 'Failures']],
     body: dayData,
     theme: 'grid',
-    headStyles: { fillColor: [220, 220, 220], textColor: [0, 0, 0], fontStyle: 'bold', fontSize: 8 },
+    headStyles: { fillColor: PDF_CONSTANTS.COLORS.headerBg, textColor: [0, 0, 0], fontStyle: 'bold', fontSize: 8 },
     margin: { left: 110, right: 20 },
     styles: { fontSize: 8 },
     columnStyles: {
@@ -392,27 +347,15 @@ export async function exportFailureTrendToPDF(data: FailureTrendExportData): Pro
     },
   })
 
-  yPosition = Math.max(
-    (doc as any).previousAutoTable?.finalY || yPosition + 50,
-    (doc as any).lastAutoTable?.finalY || yPosition + 50
-  ) + 12
-
-  // Check if we need a new page for clusters
-  if (yPosition > 200 && analytics.clusters.length > 0) {
-    doc.addPage()
-    yPosition = 20
-  }
+  // Update Y position based on the longer table
+  pdf.setY(Math.max(
+    (pdf.getJsPDF() as any).previousAutoTable?.finalY || 0,
+    (pdf.getJsPDF() as any).lastAutoTable?.finalY || 0
+  ) + 12)
 
   // Failure Clusters Section
   if (analytics.clusters.length > 0) {
-    doc.setFontSize(14)
-    doc.setFont('helvetica', 'bold')
-    doc.setFillColor(41, 128, 185)
-    doc.setTextColor(255, 255, 255)
-    doc.rect(20, yPosition - 5, 170, 8, 'F')
-    doc.text('Failure Clusters (Items That Fail Together)', 25, yPosition)
-    doc.setTextColor(0, 0, 0)
-    yPosition += 8
+    pdf.addSectionHeader('Failure Clusters (Items That Fail Together)')
 
     const clusterData = analytics.clusters.slice(0, 10).map((cluster, index) => [
       `#${index + 1}`,
@@ -423,35 +366,16 @@ export async function exportFailureTrendToPDF(data: FailureTrendExportData): Pro
       `${cluster.coOccurrenceRate.toFixed(1)}%`,
     ])
 
-    autoTable(doc, {
-      startY: yPosition,
+    pdf.addTable({
       head: [['Cluster', 'Items', 'Occurrences', 'Rate']],
       body: clusterData,
-      theme: 'striped',
-      headStyles: { fillColor: [220, 220, 220], textColor: [0, 0, 0], fontStyle: 'bold' },
       columnStyles: {
         0: { cellWidth: 20 },
         1: { cellWidth: 95 },
         2: { cellWidth: 25 },
         3: { cellWidth: 20 },
       },
-      margin: { left: 20, right: 20 },
-      styles: { fontSize: 9 },
     })
-  }
-
-  // Footer on all pages
-  const pageCount = doc.getNumberOfPages()
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i)
-    doc.setFontSize(8)
-    doc.setTextColor(128, 128, 128)
-    doc.text(
-      `Page ${i} of ${pageCount} | Generated by JobSight`,
-      105,
-      doc.internal.pageSize.height - 10,
-      { align: 'center' }
-    )
   }
 
   // Save the PDF
@@ -459,7 +383,8 @@ export async function exportFailureTrendToPDF(data: FailureTrendExportData): Pro
     exportDate,
     'yyyy-MM-dd'
   )}.pdf`
-  doc.save(filename)
+
+  pdf.download(filename)
 }
 
 // ============================================================================

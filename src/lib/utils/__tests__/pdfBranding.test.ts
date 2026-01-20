@@ -126,7 +126,9 @@ describe('pdfBranding', () => {
 
       const result = await getCompanyInfo('invalid-project')
 
-      expect(result).toEqual({ name: 'General Contractor' })
+      // Default fallback uses JobSight branding with logo
+      expect(result.name).toBe('JobSight')
+      expect(result.logoBase64).toContain('data:image/svg+xml;base64,')
     })
 
     it('should return default company info when company data is missing', async () => {
@@ -153,7 +155,9 @@ describe('pdfBranding', () => {
 
       const result = await getCompanyInfo('project-123')
 
-      expect(result).toEqual({ name: 'General Contractor' })
+      // Default fallback uses JobSight branding with logo
+      expect(result.name).toBe('JobSight')
+      expect(result.logoBase64).toContain('data:image/svg+xml;base64,')
     })
   })
 

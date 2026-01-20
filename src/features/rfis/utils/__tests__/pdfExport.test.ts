@@ -498,7 +498,7 @@ describe('RFI PDF Export', () => {
     it('should skip comments when includeComments is false', async () => {
       const rfiWithComments = {
         ...mockRFI,
-        comments: [{ id: 'comment-1', comment: 'Test' }],
+        comments: [{ id: 'comment-1', comment: 'This is a unique comment that should not appear' }],
       }
 
       vi.clearAllMocks()
@@ -508,9 +508,9 @@ describe('RFI PDF Export', () => {
         includeComments: false,
       })
 
-      // Comments should not be rendered
+      // Comments should not be rendered - use unique string to avoid false matches
       expect(mockSplitTextToSize).not.toHaveBeenCalledWith(
-        expect.stringContaining('Test'),
+        expect.stringContaining('unique comment that should not'),
         expect.any(Number)
       )
     })
@@ -632,7 +632,8 @@ describe('RFI PDF Export', () => {
 
       await generateRFILogPDF(mockRFIs, 'Test Project')
 
-      expect(mockSetPage).toHaveBeenCalledTimes(3)
+      // addFootersToAllPages is called by pdf.finalize() and handles page iteration internally
+      expect(addFootersToAllPages).toHaveBeenCalled()
     })
   })
 

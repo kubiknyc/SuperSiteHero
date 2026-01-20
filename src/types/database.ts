@@ -845,8 +845,8 @@ export type Database = {
           created_at: string | null
           current_month_usage_cents: number | null
           default_provider:
-            | Database["public"]["Enums"]["ai_provider_type"]
-            | null
+          | Database["public"]["Enums"]["ai_provider_type"]
+          | null
           enable_action_item_extraction: boolean | null
           enable_document_enhancement: boolean | null
           enable_rfi_routing: boolean | null
@@ -874,8 +874,8 @@ export type Database = {
           created_at?: string | null
           current_month_usage_cents?: number | null
           default_provider?:
-            | Database["public"]["Enums"]["ai_provider_type"]
-            | null
+          | Database["public"]["Enums"]["ai_provider_type"]
+          | null
           enable_action_item_extraction?: boolean | null
           enable_document_enhancement?: boolean | null
           enable_rfi_routing?: boolean | null
@@ -903,8 +903,8 @@ export type Database = {
           created_at?: string | null
           current_month_usage_cents?: number | null
           default_provider?:
-            | Database["public"]["Enums"]["ai_provider_type"]
-            | null
+          | Database["public"]["Enums"]["ai_provider_type"]
+          | null
           enable_action_item_extraction?: boolean | null
           enable_document_enhancement?: boolean | null
           enable_rfi_routing?: boolean | null
@@ -939,8 +939,8 @@ export type Database = {
           created_at: string | null
           description: string
           feedback:
-            | Database["public"]["Enums"]["suggestion_feedback_status"]
-            | null
+          | Database["public"]["Enums"]["suggestion_feedback_status"]
+          | null
           feedback_at: string | null
           feedback_by: string | null
           id: string
@@ -959,8 +959,8 @@ export type Database = {
           created_at?: string | null
           description: string
           feedback?:
-            | Database["public"]["Enums"]["suggestion_feedback_status"]
-            | null
+          | Database["public"]["Enums"]["suggestion_feedback_status"]
+          | null
           feedback_at?: string | null
           feedback_by?: string | null
           id?: string
@@ -979,8 +979,8 @@ export type Database = {
           created_at?: string | null
           description?: string
           feedback?:
-            | Database["public"]["Enums"]["suggestion_feedback_status"]
-            | null
+          | Database["public"]["Enums"]["suggestion_feedback_status"]
+          | null
           feedback_at?: string | null
           feedback_by?: string | null
           id?: string
@@ -9162,8 +9162,8 @@ export type Database = {
           processing_duration_ms: number | null
           processing_started_at: string | null
           processor_type:
-            | Database["public"]["Enums"]["ai_processor_type"]
-            | null
+          | Database["public"]["Enums"]["ai_processor_type"]
+          | null
           project_id: string
           raw_response: Json | null
           retry_count: number | null
@@ -9188,8 +9188,8 @@ export type Database = {
           processing_duration_ms?: number | null
           processing_started_at?: string | null
           processor_type?:
-            | Database["public"]["Enums"]["ai_processor_type"]
-            | null
+          | Database["public"]["Enums"]["ai_processor_type"]
+          | null
           project_id: string
           raw_response?: Json | null
           retry_count?: number | null
@@ -9214,8 +9214,8 @@ export type Database = {
           processing_duration_ms?: number | null
           processing_started_at?: string | null
           processor_type?:
-            | Database["public"]["Enums"]["ai_processor_type"]
-            | null
+          | Database["public"]["Enums"]["ai_processor_type"]
+          | null
           project_id?: string
           raw_response?: Json | null
           retry_count?: number | null
@@ -9604,8 +9604,8 @@ export type Database = {
           similar_document_id: string
           similarity_details?: Json | null
           similarity_type?:
-            | Database["public"]["Enums"]["similarity_type"]
-            | null
+          | Database["public"]["Enums"]["similarity_type"]
+          | null
           text_similarity_score?: number | null
           updated_at?: string | null
           visual_similarity_score?: number | null
@@ -9620,8 +9620,8 @@ export type Database = {
           similar_document_id?: string
           similarity_details?: Json | null
           similarity_type?:
-            | Database["public"]["Enums"]["similarity_type"]
-            | null
+          | Database["public"]["Enums"]["similarity_type"]
+          | null
           text_similarity_score?: number | null
           updated_at?: string | null
           visual_similarity_score?: number | null
@@ -15645,15 +15645,15 @@ export type Database = {
           schedule_item_id: string | null
           sort_order: number | null
           status:
-            | Database["public"]["Enums"]["look_ahead_activity_status"]
-            | null
+          | Database["public"]["Enums"]["look_ahead_activity_status"]
+          | null
           subcontractor_id: string | null
           trade: string | null
           updated_at: string | null
           updated_by: string | null
           variance_category:
-            | Database["public"]["Enums"]["variance_category"]
-            | null
+          | Database["public"]["Enums"]["variance_category"]
+          | null
           variance_notes: string | null
           week_number: number | null
           week_start_date: string | null
@@ -15686,15 +15686,15 @@ export type Database = {
           schedule_item_id?: string | null
           sort_order?: number | null
           status?:
-            | Database["public"]["Enums"]["look_ahead_activity_status"]
-            | null
+          | Database["public"]["Enums"]["look_ahead_activity_status"]
+          | null
           subcontractor_id?: string | null
           trade?: string | null
           updated_at?: string | null
           updated_by?: string | null
           variance_category?:
-            | Database["public"]["Enums"]["variance_category"]
-            | null
+          | Database["public"]["Enums"]["variance_category"]
+          | null
           variance_notes?: string | null
           week_number?: number | null
           week_start_date?: string | null
@@ -15727,15 +15727,15 @@ export type Database = {
           schedule_item_id?: string | null
           sort_order?: number | null
           status?:
-            | Database["public"]["Enums"]["look_ahead_activity_status"]
-            | null
+          | Database["public"]["Enums"]["look_ahead_activity_status"]
+          | null
           subcontractor_id?: string | null
           trade?: string | null
           updated_at?: string | null
           updated_by?: string | null
           variance_category?:
-            | Database["public"]["Enums"]["variance_category"]
-            | null
+          | Database["public"]["Enums"]["variance_category"]
+          | null
           variance_notes?: string | null
           week_number?: number | null
           week_start_date?: string | null
@@ -23175,8 +23175,8 @@ export type Database = {
       report_template_fields: {
         Row: {
           aggregation:
-            | Database["public"]["Enums"]["report_aggregation_type"]
-            | null
+          | Database["public"]["Enums"]["report_aggregation_type"]
+          | null
           column_width: number | null
           created_at: string | null
           display_name: string
@@ -23190,8 +23190,8 @@ export type Database = {
         }
         Insert: {
           aggregation?:
-            | Database["public"]["Enums"]["report_aggregation_type"]
-            | null
+          | Database["public"]["Enums"]["report_aggregation_type"]
+          | null
           column_width?: number | null
           created_at?: string | null
           display_name: string
@@ -23205,8 +23205,8 @@ export type Database = {
         }
         Update: {
           aggregation?:
-            | Database["public"]["Enums"]["report_aggregation_type"]
-            | null
+          | Database["public"]["Enums"]["report_aggregation_type"]
+          | null
           column_width?: number | null
           created_at?: string | null
           display_name?: string
@@ -23325,8 +23325,8 @@ export type Database = {
         Insert: {
           created_at?: string | null
           direction?:
-            | Database["public"]["Enums"]["report_sort_direction"]
-            | null
+          | Database["public"]["Enums"]["report_sort_direction"]
+          | null
           field_name: string
           id?: string
           sort_order?: number
@@ -23335,8 +23335,8 @@ export type Database = {
         Update: {
           created_at?: string | null
           direction?:
-            | Database["public"]["Enums"]["report_sort_direction"]
-            | null
+          | Database["public"]["Enums"]["report_sort_direction"]
+          | null
           field_name?: string
           id?: string
           sort_order?: number
@@ -23360,8 +23360,8 @@ export type Database = {
           created_by: string | null
           data_source: Database["public"]["Enums"]["report_data_source"]
           default_format:
-            | Database["public"]["Enums"]["report_output_format"]
-            | null
+          | Database["public"]["Enums"]["report_output_format"]
+          | null
           deleted_at: string | null
           description: string | null
           id: string
@@ -23380,8 +23380,8 @@ export type Database = {
           created_by?: string | null
           data_source: Database["public"]["Enums"]["report_data_source"]
           default_format?:
-            | Database["public"]["Enums"]["report_output_format"]
-            | null
+          | Database["public"]["Enums"]["report_output_format"]
+          | null
           deleted_at?: string | null
           description?: string | null
           id?: string
@@ -23400,8 +23400,8 @@ export type Database = {
           created_by?: string | null
           data_source?: Database["public"]["Enums"]["report_data_source"]
           default_format?:
-            | Database["public"]["Enums"]["report_output_format"]
-            | null
+          | Database["public"]["Enums"]["report_output_format"]
+          | null
           deleted_at?: string | null
           description?: string | null
           id?: string
@@ -23831,8 +23831,8 @@ export type Database = {
           discipline_confidence: number | null
           extracted_keywords: string[] | null
           feedback:
-            | Database["public"]["Enums"]["suggestion_feedback_status"]
-            | null
+          | Database["public"]["Enums"]["suggestion_feedback_status"]
+          | null
           feedback_at: string | null
           feedback_by: string | null
           feedback_notes: string | null
@@ -23869,8 +23869,8 @@ export type Database = {
           discipline_confidence?: number | null
           extracted_keywords?: string[] | null
           feedback?:
-            | Database["public"]["Enums"]["suggestion_feedback_status"]
-            | null
+          | Database["public"]["Enums"]["suggestion_feedback_status"]
+          | null
           feedback_at?: string | null
           feedback_by?: string | null
           feedback_notes?: string | null
@@ -23907,8 +23907,8 @@ export type Database = {
           discipline_confidence?: number | null
           extracted_keywords?: string[] | null
           feedback?:
-            | Database["public"]["Enums"]["suggestion_feedback_status"]
-            | null
+          | Database["public"]["Enums"]["suggestion_feedback_status"]
+          | null
           feedback_at?: string | null
           feedback_by?: string | null
           feedback_notes?: string | null
@@ -24119,8 +24119,8 @@ export type Database = {
           response_due_date?: string | null
           response_on_time?: boolean | null
           response_type?:
-            | Database["public"]["Enums"]["rfi_response_type"]
-            | null
+          | Database["public"]["Enums"]["rfi_response_type"]
+          | null
           rfi_number: number
           schedule_impact_days?: number | null
           spec_section?: string | null
@@ -24165,8 +24165,8 @@ export type Database = {
           response_due_date?: string | null
           response_on_time?: boolean | null
           response_type?:
-            | Database["public"]["Enums"]["rfi_response_type"]
-            | null
+          | Database["public"]["Enums"]["rfi_response_type"]
+          | null
           rfi_number?: number
           schedule_impact_days?: number | null
           spec_section?: string | null
@@ -24768,8 +24768,8 @@ export type Database = {
           resulted_in_restriction: boolean | null
           root_cause: string | null
           root_cause_category:
-            | Database["public"]["Enums"]["root_cause_category"]
-            | null
+          | Database["public"]["Enums"]["root_cause_category"]
+          | null
           serious_incident: boolean | null
           severity: string | null
           status: string | null
@@ -24829,8 +24829,8 @@ export type Database = {
           resulted_in_restriction?: boolean | null
           root_cause?: string | null
           root_cause_category?:
-            | Database["public"]["Enums"]["root_cause_category"]
-            | null
+          | Database["public"]["Enums"]["root_cause_category"]
+          | null
           serious_incident?: boolean | null
           severity?: string | null
           status?: string | null
@@ -24890,8 +24890,8 @@ export type Database = {
           resulted_in_restriction?: boolean | null
           root_cause?: string | null
           root_cause_category?:
-            | Database["public"]["Enums"]["root_cause_category"]
-            | null
+          | Database["public"]["Enums"]["root_cause_category"]
+          | null
           serious_incident?: boolean | null
           severity?: string | null
           status?: string | null
@@ -27154,8 +27154,8 @@ export type Database = {
           name: string
           next_run_at: string | null
           output_format:
-            | Database["public"]["Enums"]["report_output_format"]
-            | null
+          | Database["public"]["Enums"]["report_output_format"]
+          | null
           project_id: string | null
           recipients: Json
           template_id: string
@@ -27179,8 +27179,8 @@ export type Database = {
           name: string
           next_run_at?: string | null
           output_format?:
-            | Database["public"]["Enums"]["report_output_format"]
-            | null
+          | Database["public"]["Enums"]["report_output_format"]
+          | null
           project_id?: string | null
           recipients?: Json
           template_id: string
@@ -27204,8 +27204,8 @@ export type Database = {
           name?: string
           next_run_at?: string | null
           output_format?:
-            | Database["public"]["Enums"]["report_output_format"]
-            | null
+          | Database["public"]["Enums"]["report_output_format"]
+          | null
           project_id?: string | null
           recipients?: Json
           template_id?: string
@@ -32414,8 +32414,8 @@ export type Database = {
           is_production?: boolean | null
           mae?: number | null
           model_type?:
-            | Database["public"]["Enums"]["analytics_model_type"]
-            | null
+          | Database["public"]["Enums"]["analytics_model_type"]
+          | null
           model_version?: string | null
           r_squared?: number | null
           rmse?: number | null
@@ -32428,8 +32428,8 @@ export type Database = {
           is_production?: boolean | null
           mae?: number | null
           model_type?:
-            | Database["public"]["Enums"]["analytics_model_type"]
-            | null
+          | Database["public"]["Enums"]["analytics_model_type"]
+          | null
           model_version?: string | null
           r_squared?: number | null
           rmse?: number | null
@@ -32443,8 +32443,8 @@ export type Database = {
           acknowledged_at: string | null
           acknowledged_by: string | null
           category:
-            | Database["public"]["Enums"]["recommendation_category"]
-            | null
+          | Database["public"]["Enums"]["recommendation_category"]
+          | null
           created_at: string | null
           description: string | null
           dismissal_reason: string | null
@@ -32458,8 +32458,8 @@ export type Database = {
           potential_impact: string | null
           prediction_id: string | null
           priority:
-            | Database["public"]["Enums"]["recommendation_priority"]
-            | null
+          | Database["public"]["Enums"]["recommendation_priority"]
+          | null
           project_id: string | null
           project_name: string | null
           related_entity_data: Json | null
@@ -33549,8 +33549,8 @@ export type Database = {
           ocr_confidence: number | null
           ocr_status: Database["public"]["Enums"]["ocr_status"] | null
           primary_category:
-            | Database["public"]["Enums"]["document_category_type"]
-            | null
+          | Database["public"]["Enums"]["document_category_type"]
+          | null
           project_id: string | null
           queue_priority: number | null
           queue_status: string | null
@@ -34142,8 +34142,8 @@ export type Database = {
           is_current: boolean | null
           toolbox_talk_id: string | null
           topic_category:
-            | Database["public"]["Enums"]["toolbox_topic_category"]
-            | null
+          | Database["public"]["Enums"]["toolbox_topic_category"]
+          | null
           topic_id: string | null
           topic_title: string | null
           user_id: string | null
@@ -34382,8 +34382,8 @@ export type Database = {
           project_id: string | null
           project_name: string | null
           status:
-            | Database["public"]["Enums"]["look_ahead_activity_status"]
-            | null
+          | Database["public"]["Enums"]["look_ahead_activity_status"]
+          | null
           subcontractor_id: string | null
           total_constraints: number | null
           trade: string | null
@@ -34436,8 +34436,8 @@ export type Database = {
           percentage: number | null
           project_id: string | null
           variance_category:
-            | Database["public"]["Enums"]["variance_category"]
-            | null
+          | Database["public"]["Enums"]["variance_category"]
+          | null
           week_start_date: string | null
         }
         Relationships: [
@@ -36350,14 +36350,14 @@ export type Database = {
         Row: {
           avg_severity: number | null
           category:
-            | Database["public"]["Enums"]["safety_observation_category"]
-            | null
+          | Database["public"]["Enums"]["safety_observation_category"]
+          | null
           company_id: string | null
           month: string | null
           observation_count: number | null
           observation_type:
-            | Database["public"]["Enums"]["safety_observation_type"]
-            | null
+          | Database["public"]["Enums"]["safety_observation_type"]
+          | null
           project_id: string | null
           week: string | null
         }
@@ -39129,11 +39129,11 @@ export type Database = {
         Returns: number
       }
       get_unread_notification_count:
-        | { Args: never; Returns: number }
-        | { Args: { p_user_id: string }; Returns: number }
+      | { Args: never; Returns: number }
+      | { Args: { p_user_id: string }; Returns: number }
       get_user_company_id:
-        | { Args: never; Returns: string }
-        | { Args: { user_uuid: string }; Returns: string }
+      | { Args: never; Returns: string }
+      | { Args: { user_uuid: string }; Returns: string }
       get_user_completion_time_stats: {
         Args: { p_date_from?: string; p_date_to?: string; p_user_id: string }
         Returns: {
@@ -39603,8 +39603,8 @@ export type Database = {
         Returns: boolean
       }
       user_has_project_access:
-        | { Args: { project_uuid: string }; Returns: boolean }
-        | { Args: { proj_id: string; user_uuid: string }; Returns: boolean }
+      | { Args: { project_uuid: string }; Returns: boolean }
+      | { Args: { proj_id: string; user_uuid: string }; Returns: boolean }
       validate_checklist_item_conditions: {
         Args: { conditions: Json }
         Returns: boolean
@@ -39685,393 +39685,393 @@ export type Database = {
     }
     Enums: {
       action_item_status:
-        | "open"
-        | "in_progress"
-        | "completed"
-        | "deferred"
-        | "cancelled"
+      | "open"
+      | "in_progress"
+      | "completed"
+      | "deferred"
+      | "cancelled"
       ai_processor_type: "cloud_vision" | "tesseract" | "textract" | "manual"
       ai_provider_type: "openai" | "anthropic" | "local" | "azure_openai"
       ai_summary_type:
-        | "daily_report"
-        | "meeting_action_items"
-        | "change_order_impact"
-        | "weekly_status"
-        | "rfi_summary"
-        | "submittal_summary"
+      | "daily_report"
+      | "meeting_action_items"
+      | "change_order_impact"
+      | "weekly_status"
+      | "rfi_summary"
+      | "submittal_summary"
       analytics_model_type:
-        | "budget_overrun"
-        | "schedule_delay"
-        | "risk_score"
-        | "resource_forecast"
+      | "budget_overrun"
+      | "schedule_delay"
+      | "risk_score"
+      | "resource_forecast"
       approval_status: "pending" | "approved" | "rejected"
       certificate_status:
-        | "active"
-        | "expiring_soon"
-        | "expired"
-        | "pending_renewal"
-        | "void"
+      | "active"
+      | "expiring_soon"
+      | "expired"
+      | "pending_renewal"
+      | "void"
       closeout_document_type:
-        | "om_manual"
-        | "warranty"
-        | "warranty_letter"
-        | "as_built"
-        | "as_built_markup"
-        | "training_cert"
-        | "training_video"
-        | "attic_stock"
-        | "spare_parts"
-        | "final_lien_waiver"
-        | "consent_surety"
-        | "certificate_occupancy"
-        | "certificate_completion"
-        | "final_inspection"
-        | "punchlist_completion"
-        | "test_report"
-        | "commissioning_report"
-        | "air_balance_report"
-        | "keying_schedule"
-        | "door_hardware_schedule"
-        | "paint_schedule"
-        | "equipment_list"
-        | "maintenance_agreement"
-        | "permit_closeout"
-        | "utility_transfer"
-        | "software_license"
-        | "access_credentials"
-        | "other"
+      | "om_manual"
+      | "warranty"
+      | "warranty_letter"
+      | "as_built"
+      | "as_built_markup"
+      | "training_cert"
+      | "training_video"
+      | "attic_stock"
+      | "spare_parts"
+      | "final_lien_waiver"
+      | "consent_surety"
+      | "certificate_occupancy"
+      | "certificate_completion"
+      | "final_inspection"
+      | "punchlist_completion"
+      | "test_report"
+      | "commissioning_report"
+      | "air_balance_report"
+      | "keying_schedule"
+      | "door_hardware_schedule"
+      | "paint_schedule"
+      | "equipment_list"
+      | "maintenance_agreement"
+      | "permit_closeout"
+      | "utility_transfer"
+      | "software_license"
+      | "access_credentials"
+      | "other"
       closeout_status:
-        | "not_required"
-        | "pending"
-        | "submitted"
-        | "under_review"
-        | "approved"
-        | "rejected"
-        | "waived"
-        | "na"
+      | "not_required"
+      | "pending"
+      | "submitted"
+      | "under_review"
+      | "approved"
+      | "rejected"
+      | "waived"
+      | "na"
       constraint_status: "open" | "resolved" | "waived" | "escalated"
       constraint_type:
-        | "rfi_pending"
-        | "submittal_pending"
-        | "material_delivery"
-        | "predecessor_activity"
-        | "inspection_required"
-        | "permit_required"
-        | "weather_dependent"
-        | "resource_availability"
-        | "owner_decision"
-        | "design_clarification"
-        | "other"
+      | "rfi_pending"
+      | "submittal_pending"
+      | "material_delivery"
+      | "predecessor_activity"
+      | "inspection_required"
+      | "permit_required"
+      | "weather_dependent"
+      | "resource_availability"
+      | "owner_decision"
+      | "design_clarification"
+      | "other"
       conversation_type: "direct" | "group" | "project" | "general"
       corrective_action_status:
-        | "pending"
-        | "in_progress"
-        | "completed"
-        | "overdue"
+      | "pending"
+      | "in_progress"
+      | "completed"
+      | "overdue"
       document_category_type:
-        | "drawing"
-        | "specification"
-        | "submittal"
-        | "contract"
-        | "rfi"
-        | "change_order"
-        | "meeting_minutes"
-        | "schedule"
-        | "safety_report"
-        | "permit"
-        | "inspection"
-        | "correspondence"
-        | "photo"
-        | "report"
-        | "invoice"
-        | "insurance"
-        | "other"
+      | "drawing"
+      | "specification"
+      | "submittal"
+      | "contract"
+      | "rfi"
+      | "change_order"
+      | "meeting_minutes"
+      | "schedule"
+      | "safety_report"
+      | "permit"
+      | "inspection"
+      | "correspondence"
+      | "photo"
+      | "report"
+      | "invoice"
+      | "insurance"
+      | "other"
       drawing_package_status:
-        | "draft"
-        | "pending_review"
-        | "approved"
-        | "distributed"
-        | "superseded"
-        | "archived"
+      | "draft"
+      | "pending_review"
+      | "approved"
+      | "distributed"
+      | "superseded"
+      | "archived"
       drawing_package_type: "bid" | "submittal" | "construction" | "as_built"
       incident_person_type:
-        | "injured_party"
-        | "witness"
-        | "first_responder"
-        | "supervisor"
+      | "injured_party"
+      | "witness"
+      | "first_responder"
+      | "supervisor"
       incident_severity:
-        | "near_miss"
-        | "first_aid"
-        | "medical_treatment"
-        | "lost_time"
-        | "fatality"
+      | "near_miss"
+      | "first_aid"
+      | "medical_treatment"
+      | "lost_time"
+      | "fatality"
       incident_status:
-        | "reported"
-        | "under_investigation"
-        | "corrective_actions"
-        | "closed"
+      | "reported"
+      | "under_investigation"
+      | "corrective_actions"
+      | "closed"
       incident_type:
-        | "injury"
-        | "illness"
-        | "property_damage"
-        | "environmental"
-        | "near_miss"
-        | "other"
+      | "injury"
+      | "illness"
+      | "property_damage"
+      | "environmental"
+      | "near_miss"
+      | "other"
       insurance_type:
-        | "general_liability"
-        | "auto_liability"
-        | "workers_compensation"
-        | "umbrella"
-        | "professional_liability"
-        | "builders_risk"
-        | "pollution"
-        | "cyber"
-        | "other"
+      | "general_liability"
+      | "auto_liability"
+      | "workers_compensation"
+      | "umbrella"
+      | "professional_liability"
+      | "builders_risk"
+      | "pollution"
+      | "cyber"
+      | "other"
       lien_waiver_status:
-        | "pending"
-        | "draft"
-        | "sent"
-        | "received"
-        | "under_review"
-        | "approved"
-        | "rejected"
-        | "expired"
-        | "void"
+      | "pending"
+      | "draft"
+      | "sent"
+      | "received"
+      | "under_review"
+      | "approved"
+      | "rejected"
+      | "expired"
+      | "void"
       lien_waiver_type:
-        | "conditional_progress"
-        | "unconditional_progress"
-        | "conditional_final"
-        | "unconditional_final"
+      | "conditional_progress"
+      | "unconditional_progress"
+      | "conditional_final"
+      | "unconditional_final"
       look_ahead_activity_status:
-        | "planned"
-        | "in_progress"
-        | "completed"
-        | "delayed"
-        | "blocked"
-        | "cancelled"
+      | "planned"
+      | "in_progress"
+      | "completed"
+      | "delayed"
+      | "blocked"
+      | "cancelled"
       meeting_status:
-        | "scheduled"
-        | "in_progress"
-        | "completed"
-        | "minutes_draft"
-        | "minutes_distributed"
-        | "cancelled"
+      | "scheduled"
+      | "in_progress"
+      | "completed"
+      | "minutes_draft"
+      | "minutes_distributed"
+      | "cancelled"
       meeting_type:
-        | "oac"
-        | "subcontractor"
-        | "safety"
-        | "progress"
-        | "preconstruction"
-        | "kickoff"
-        | "closeout"
-        | "weekly"
-        | "schedule"
-        | "budget"
-        | "quality"
-        | "design"
-        | "other"
+      | "oac"
+      | "subcontractor"
+      | "safety"
+      | "progress"
+      | "preconstruction"
+      | "kickoff"
+      | "closeout"
+      | "weekly"
+      | "schedule"
+      | "budget"
+      | "quality"
+      | "design"
+      | "other"
       message_type: "text" | "file" | "system"
       observation_severity: "low" | "medium" | "high" | "critical"
       ocr_status: "pending" | "processing" | "completed" | "failed" | "skipped"
       qb_entity_type:
-        | "vendor"
-        | "customer"
-        | "invoice"
-        | "bill"
-        | "payment"
-        | "expense"
-        | "account"
-        | "journal_entry"
+      | "vendor"
+      | "customer"
+      | "invoice"
+      | "bill"
+      | "payment"
+      | "expense"
+      | "account"
+      | "journal_entry"
       qb_sync_direction: "to_quickbooks" | "from_quickbooks" | "bidirectional"
       qb_sync_status: "pending" | "syncing" | "synced" | "failed" | "skipped"
       recommendation_category:
-        | "budget"
-        | "schedule"
-        | "risk"
-        | "operational"
-        | "resource"
+      | "budget"
+      | "schedule"
+      | "risk"
+      | "operational"
+      | "resource"
       recommendation_priority: "critical" | "high" | "medium" | "low"
       recommendation_status:
-        | "pending"
-        | "acknowledged"
-        | "implemented"
-        | "dismissed"
+      | "pending"
+      | "acknowledged"
+      | "implemented"
+      | "dismissed"
       report_aggregation_type:
-        | "none"
-        | "sum"
-        | "average"
-        | "count"
-        | "min"
-        | "max"
+      | "none"
+      | "sum"
+      | "average"
+      | "count"
+      | "min"
+      | "max"
       report_data_source:
-        | "rfis"
-        | "submittals"
-        | "daily_reports"
-        | "change_orders"
-        | "payment_applications"
-        | "safety_incidents"
-        | "inspections"
-        | "punch_list"
-        | "tasks"
-        | "meetings"
-        | "documents"
-        | "equipment"
-        | "lien_waivers"
-        | "insurance_certificates"
-        | "toolbox_talks"
+      | "rfis"
+      | "submittals"
+      | "daily_reports"
+      | "change_orders"
+      | "payment_applications"
+      | "safety_incidents"
+      | "inspections"
+      | "punch_list"
+      | "tasks"
+      | "meetings"
+      | "documents"
+      | "equipment"
+      | "lien_waivers"
+      | "insurance_certificates"
+      | "toolbox_talks"
       report_field_type:
-        | "text"
-        | "number"
-        | "currency"
-        | "date"
-        | "datetime"
-        | "boolean"
-        | "status"
-        | "user"
-        | "project"
-        | "company"
+      | "text"
+      | "number"
+      | "currency"
+      | "date"
+      | "datetime"
+      | "boolean"
+      | "status"
+      | "user"
+      | "project"
+      | "company"
       report_filter_operator:
-        | "equals"
-        | "not_equals"
-        | "contains"
-        | "not_contains"
-        | "starts_with"
-        | "ends_with"
-        | "greater_than"
-        | "less_than"
-        | "greater_or_equal"
-        | "less_or_equal"
-        | "between"
-        | "in"
-        | "not_in"
-        | "is_null"
-        | "is_not_null"
+      | "equals"
+      | "not_equals"
+      | "contains"
+      | "not_contains"
+      | "starts_with"
+      | "ends_with"
+      | "greater_than"
+      | "less_than"
+      | "greater_or_equal"
+      | "less_or_equal"
+      | "between"
+      | "in"
+      | "not_in"
+      | "is_null"
+      | "is_not_null"
       report_output_format: "pdf" | "excel" | "csv"
       report_schedule_frequency:
-        | "daily"
-        | "weekly"
-        | "biweekly"
-        | "monthly"
-        | "quarterly"
+      | "daily"
+      | "weekly"
+      | "biweekly"
+      | "monthly"
+      | "quarterly"
       report_sort_direction: "asc" | "desc"
       rfi_response_type:
-        | "answered"
-        | "see_drawings"
-        | "see_specs"
-        | "deferred"
-        | "partial_response"
-        | "request_clarification"
-        | "no_change_required"
-        | "see_submittal"
-        | "see_change_order"
-        | "verbal_direction"
+      | "answered"
+      | "see_drawings"
+      | "see_specs"
+      | "deferred"
+      | "partial_response"
+      | "request_clarification"
+      | "no_change_required"
+      | "see_submittal"
+      | "see_change_order"
+      | "verbal_direction"
       risk_alert_type:
-        | "activity_high_risk"
-        | "critical_path_threat"
-        | "constraint_overdue"
-        | "weather_impact_forecast"
-        | "resource_conflict"
-        | "ppc_declining"
-        | "cost_overrun_likely"
-        | "schedule_delay_likely"
+      | "activity_high_risk"
+      | "critical_path_threat"
+      | "constraint_overdue"
+      | "weather_impact_forecast"
+      | "resource_conflict"
+      | "ppc_declining"
+      | "cost_overrun_likely"
+      | "schedule_delay_likely"
       root_cause_category:
-        | "human_error"
-        | "equipment_failure"
-        | "process_failure"
-        | "environmental"
-        | "training"
-        | "communication"
-        | "ppe"
-        | "supervision"
-        | "other"
+      | "human_error"
+      | "equipment_failure"
+      | "process_failure"
+      | "environmental"
+      | "training"
+      | "communication"
+      | "ppe"
+      | "supervision"
+      | "other"
       safety_observation_category:
-        | "ppe"
-        | "housekeeping"
-        | "equipment"
-        | "procedures"
-        | "ergonomics"
-        | "fall_protection"
-        | "electrical"
-        | "excavation"
-        | "confined_space"
-        | "fire_prevention"
-        | "traffic_control"
-        | "chemical_handling"
-        | "communication"
-        | "training"
-        | "leadership"
-        | "other"
+      | "ppe"
+      | "housekeeping"
+      | "equipment"
+      | "procedures"
+      | "ergonomics"
+      | "fall_protection"
+      | "electrical"
+      | "excavation"
+      | "confined_space"
+      | "fire_prevention"
+      | "traffic_control"
+      | "chemical_handling"
+      | "communication"
+      | "training"
+      | "leadership"
+      | "other"
       safety_observation_status:
-        | "submitted"
-        | "acknowledged"
-        | "action_required"
-        | "in_progress"
-        | "resolved"
-        | "closed"
+      | "submitted"
+      | "acknowledged"
+      | "action_required"
+      | "in_progress"
+      | "resolved"
+      | "closed"
       safety_observation_type:
-        | "safe_behavior"
-        | "unsafe_condition"
-        | "near_miss"
-        | "best_practice"
+      | "safe_behavior"
+      | "unsafe_condition"
+      | "near_miss"
+      | "best_practice"
       schedule_recommendation_type:
-        | "resequence_task"
-        | "add_float"
-        | "resource_level"
-        | "constraint_priority"
-        | "critical_path_reduce"
-        | "parallel_execution"
+      | "resequence_task"
+      | "add_float"
+      | "resource_level"
+      | "constraint_priority"
+      | "critical_path_reduce"
+      | "parallel_execution"
       similarity_type: "duplicate" | "revision" | "related" | "superseded"
       suggestion_feedback_status:
-        | "pending"
-        | "accepted"
-        | "rejected"
-        | "modified"
+      | "pending"
+      | "accepted"
+      | "rejected"
+      | "modified"
       toolbox_attendance_status: "expected" | "present" | "absent" | "excused"
       toolbox_talk_status:
-        | "draft"
-        | "scheduled"
-        | "in_progress"
-        | "completed"
-        | "cancelled"
+      | "draft"
+      | "scheduled"
+      | "in_progress"
+      | "completed"
+      | "cancelled"
       toolbox_topic_category:
-        | "fall_protection"
-        | "ppe"
-        | "electrical_safety"
-        | "excavation"
-        | "scaffolding"
-        | "ladder_safety"
-        | "fire_prevention"
-        | "hazmat"
-        | "confined_space"
-        | "lockout_tagout"
-        | "hand_tools"
-        | "power_tools"
-        | "heavy_equipment"
-        | "crane_rigging"
-        | "housekeeping"
-        | "heat_illness"
-        | "cold_stress"
-        | "silica_dust"
-        | "noise_exposure"
-        | "ergonomics"
-        | "first_aid"
-        | "emergency_response"
-        | "site_specific"
-        | "other"
+      | "fall_protection"
+      | "ppe"
+      | "electrical_safety"
+      | "excavation"
+      | "scaffolding"
+      | "ladder_safety"
+      | "fire_prevention"
+      | "hazmat"
+      | "confined_space"
+      | "lockout_tagout"
+      | "hand_tools"
+      | "power_tools"
+      | "heavy_equipment"
+      | "crane_rigging"
+      | "housekeeping"
+      | "heat_illness"
+      | "cold_stress"
+      | "silica_dust"
+      | "noise_exposure"
+      | "ergonomics"
+      | "first_aid"
+      | "emergency_response"
+      | "site_specific"
+      | "other"
       variance_category:
-        | "prereq_incomplete"
-        | "labor_shortage"
-        | "material_delay"
-        | "equipment_unavailable"
-        | "weather"
-        | "design_change"
-        | "inspection_delay"
-        | "rework_required"
-        | "owner_decision"
-        | "permit_delay"
-        | "coordination_issue"
-        | "safety_stop"
-        | "other"
+      | "prereq_incomplete"
+      | "labor_shortage"
+      | "material_delay"
+      | "equipment_unavailable"
+      | "weather"
+      | "design_change"
+      | "inspection_delay"
+      | "rework_required"
+      | "owner_decision"
+      | "permit_delay"
+      | "coordination_issue"
+      | "safety_stop"
+      | "other"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -40085,116 +40085,116 @@ type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+  | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
-    : never = never,
+  ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+    DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+  : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+    DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
-    ? R
-    : never
+  ? R
+  : never
   : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
-      }
-      ? R
-      : never
-    : never
+    DefaultSchema["Views"])
+  ? (DefaultSchema["Tables"] &
+    DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+      Row: infer R
+    }
+  ? R
+  : never
+  : never
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema["Tables"]
+  | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+  ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+  : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
-    }
-    ? I
-    : never
+    Insert: infer I
+  }
+  ? I
+  : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
-      }
-      ? I
-      : never
-    : never
+  ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+    Insert: infer I
+  }
+  ? I
+  : never
+  : never
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema["Tables"]
+  | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
-    : never = never,
+  ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+  : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
-    }
-    ? U
-    : never
+    Update: infer U
+  }
+  ? U
+  : never
   : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
-      }
-      ? U
-      : never
-    : never
+  ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+    Update: infer U
+  }
+  ? U
+  : never
+  : never
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema["Enums"]
+  | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
-    : never = never,
+  ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+  : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
+  ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+  : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema["CompositeTypes"]
+  | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
+  ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+  : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
   ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
-    : never
+  ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  : never
 
 export const Constants = {
   public: {
@@ -40629,3 +40629,7 @@ export const Constants = {
     },
   },
 } as const
+
+export type DailyReport = Database['public']['Tables']['daily_reports']['Row']
+export type DailyReportInsert = Database['public']['Tables']['daily_reports']['Insert']
+export type DailyReportUpdate = Database['public']['Tables']['daily_reports']['Update']

@@ -3,8 +3,6 @@
  * Generates professional PDF documents from daily report data with JobSight branding
  */
 
-import jsPDF from 'jspdf'
-import autoTable from 'jspdf-autotable'
 import { format } from 'date-fns'
 import type { DailyReport } from '@/types/database'
 import type {
@@ -14,95 +12,16 @@ import type {
   DailyReportVisitor,
   DailyReportPhoto,
 } from '../hooks/useDailyReportRelatedData'
-import {
-  addDocumentHeader,
-  addFootersToAllPages,
-  getCompanyInfo,
-  type CompanyInfo,
-} from '@/lib/utils/pdfBranding'
+import { PDFGenerator, PDF_CONSTANTS } from '@/lib/utils/pdfGenerator'
+import { getCompanyInfo, CompanyInfo } from '@/lib/utils/pdfBranding'
 
-// =====================================================
-// CONSTANTS
-// =====================================================
-
-const PAGE_WIDTH = 210 // A4 width in mm
-const PAGE_HEIGHT = 297 // A4 height in mm
-const MARGIN = 15
+const { MARGIN, PAGE_WIDTH, COLORS } = PDF_CONSTANTS
 const CONTENT_WIDTH = PAGE_WIDTH - 2 * MARGIN
 
-const COLORS = {
-  primary: [41, 128, 185] as [number, number, number], // Blue
-  secondary: [52, 73, 94] as [number, number, number], // Dark gray
-  accent: [46, 204, 113] as [number, number, number], // Green
-  warning: [241, 196, 15] as [number, number, number], // Yellow
-  danger: [231, 76, 60] as [number, number, number], // Red
-  lightGray: [245, 245, 245] as [number, number, number],
-  mediumGray: [189, 195, 199] as [number, number, number],
-  text: [44, 62, 80] as [number, number, number],
-}
-
-// =====================================================
-// HELPER FUNCTIONS
-// =====================================================
-
-/**
- * Check if we need a page break and add one if necessary
- */
-function checkPageBreak(doc: jsPDF, yPos: number, neededSpace: number): number {
-  if (yPos + neededSpace > PAGE_HEIGHT - MARGIN - 15) {
-    doc.addPage()
-    return MARGIN + 10
-  }
-  return yPos
-}
-
-/**
- * Add a section header
- */
-function addSectionHeader(doc: jsPDF, title: string, yPos: number): number {
-  yPos = checkPageBreak(doc, yPos, 15)
-
-  doc.setFillColor(...COLORS.primary)
-  doc.rect(MARGIN, yPos, CONTENT_WIDTH, 8, 'F')
-
-  doc.setTextColor(255, 255, 255)
-  doc.setFontSize(11)
-  doc.setFont('helvetica', 'bold')
-  doc.text(title, MARGIN + 3, yPos + 5.5)
-
-  doc.setTextColor(...COLORS.text)
-  doc.setFont('helvetica', 'normal')
-
-  return yPos + 12
-}
-
-/**
- * Add a text block with word wrapping
- */
-function addTextBlock(doc: jsPDF, label: string, text: string | null | undefined, yPos: number): number {
-  if (!text) {return yPos}
-
-  yPos = checkPageBreak(doc, yPos, 20)
-
-  doc.setFontSize(9)
-  doc.setFont('helvetica', 'bold')
-  doc.setTextColor(...COLORS.secondary)
-  doc.text(label, MARGIN, yPos)
-
-  doc.setFont('helvetica', 'normal')
-  doc.setTextColor(...COLORS.text)
-
-  const lines = doc.splitTextToSize(text, CONTENT_WIDTH - 5)
-  doc.text(lines, MARGIN, yPos + 5)
-
-  return yPos + 5 + lines.length * 4 + 3
-}
-
-/**
- * Format time string for display
- */
+// Helper functions removed as they are largely replaced by inline PDFGenerator calls or moved to the main function
+// formatTime is still useful
 function formatTime(time: string | null | undefined): string {
-  if (!time) {return '-'}
+  if (!time) { return '-' }
   // Handle HH:MM:SS format
   const parts = time.split(':')
   if (parts.length >= 2) {
@@ -115,62 +34,79 @@ function formatTime(time: string | null | undefined): string {
   return time
 }
 
-/**
- * Get status badge color
- */
-function getStatusColor(status: string | null | undefined): [number, number, number] {
-  switch (status) {
-    case 'approved':
-      return COLORS.accent
-    case 'submitted':
-    case 'in_review':
-      return COLORS.primary
-    case 'rejected':
-      return COLORS.danger
-    default:
-      return COLORS.mediumGray
-  }
+// =====================================================
+// MAIN EXPORT FUNCTION
+// =====================================================
+
+export interface GeneratePDFOptions {
+  report: DailyReport
+  workforce: DailyReportWorkforce[]
+  equipment: DailyReportEquipment[]
+  deliveries: DailyReportDelivery[]
+  visitors: DailyReportVisitor[]
+  photos: DailyReportPhoto[]
+  projectName: string
+  projectId: string
+  gcCompany?: CompanyInfo
 }
 
-// =====================================================
-// SECTION RENDERERS
-// =====================================================
-
 /**
- * Add report info section (replaces old header)
+ * Generate a PDF for a daily report with JobSight branding
+ * Returns a Blob that can be downloaded
  */
-function addReportInfo(
-  doc: jsPDF,
-  report: DailyReport,
-  projectName: string,
-  startY: number
-): number {
-  let yPos = startY
+/**
+ * Generate a PDF for a daily report with JobSight branding
+ * Returns a Blob that can be downloaded
+ */
+export async function generateDailyReportPDF(options: GeneratePDFOptions): Promise<Blob> {
+  const { report, workforce, equipment, deliveries, visitors, projectName, projectId, gcCompany } = options
 
-  // Project name
-  doc.setFontSize(12)
-  doc.setFont('helvetica', 'bold')
-  doc.setTextColor(...COLORS.secondary)
-  doc.text(projectName, MARGIN, yPos)
+  // Fetch company info for branding
+  const companyInfo = gcCompany || await getCompanyInfo(projectId)
 
-  yPos += 6
-
-  // Report details line
-  doc.setFontSize(10)
-  doc.setFont('helvetica', 'normal')
-  doc.setTextColor(...COLORS.text)
+  // Create PDF document
+  const pdf = new PDFGenerator({ format: 'a4' })
 
   const reportDate = report.report_date
     ? format(new Date(report.report_date), 'MMMM d, yyyy')
     : 'N/A'
-  const reportNumber = report.report_number || 'N/A'
 
+  await pdf.initialize(
+    projectId,
+    'DAILY REPORT',
+    `Daily Report - ${reportDate}`,
+    companyInfo
+  )
+
+  // Report Info Section
+  // Custom manual drawing for badge
+  const doc = pdf.getJsPDF()
+  let yPos = pdf.getY()
+
+  doc.setFontSize(12)
+  doc.setFont('helvetica', 'bold')
+  doc.setTextColor(...COLORS.darkGray)
+  doc.text(projectName, MARGIN, yPos)
+  yPos += 6
+
+  doc.setFontSize(10)
+  doc.setFont('helvetica', 'normal')
+  doc.setTextColor(0, 0, 0)
+
+  const reportNumber = report.report_number || 'N/A'
   doc.text(`Date: ${reportDate}`, MARGIN, yPos)
   doc.text(`Report #: ${reportNumber}`, MARGIN + 80, yPos)
 
   // Status badge
   const status = report.status || 'draft'
-  const statusColor = getStatusColor(status)
+  const statusColorMap: Record<string, [number, number, number]> = {
+    'approved': COLORS.successGreen,
+    'submitted': COLORS.primary,
+    'in_review': COLORS.primary,
+    'rejected': COLORS.urgentRed,
+  }
+  const statusColor = statusColorMap[status] || COLORS.lightGray
+
   const statusText = status.replace('_', ' ').toUpperCase()
   const statusWidth = doc.getTextWidth(statusText) + 8
 
@@ -180,28 +116,20 @@ function addReportInfo(
   doc.setTextColor(255, 255, 255)
   doc.text(statusText, PAGE_WIDTH - MARGIN - statusWidth + 4, yPos + 1)
 
-  doc.setTextColor(...COLORS.text)
-  yPos += 5
+  pdf.setY(yPos + 8)
 
-  // Divider line
-  doc.setDrawColor(...COLORS.mediumGray)
-  doc.setLineWidth(0.5)
-  doc.line(MARGIN, yPos, PAGE_WIDTH - MARGIN, yPos)
+  // Weather Section
+  pdf.addSectionHeader('WEATHER CONDITIONS')
+  // We can use KeyValuePairs but need 3 columns mostly
+  // Or stick to manual drawing using PDFGenerator currentY
 
-  return yPos + 8
-}
-
-/**
- * Add weather section
- */
-function addWeatherSection(doc: jsPDF, report: DailyReport, yPos: number): number {
-  yPos = addSectionHeader(doc, 'WEATHER CONDITIONS', yPos)
-
+  yPos = pdf.getY()
   const col1X = MARGIN
   const col2X = MARGIN + 60
   const col3X = MARGIN + 120
 
   doc.setFontSize(9)
+  doc.setTextColor(0, 0, 0)
 
   // Row 1
   doc.setFont('helvetica', 'bold')
@@ -226,337 +154,163 @@ function addWeatherSection(doc: jsPDF, report: DailyReport, yPos: number): numbe
   doc.text(report.precipitation ? `${report.precipitation}"` : '-', col1X + 28, yPos)
   doc.text(report.wind_speed ? `${report.wind_speed} mph` : '-', col2X + 28, yPos)
 
-  // Weather delays with color
-  const hasDelays = report.weather_delays
-  if (hasDelays) {
-    doc.setTextColor(...COLORS.danger)
+  if (report.weather_delays) {
+    doc.setTextColor(...COLORS.urgentRed)
     doc.text('Yes', col3X + 35, yPos)
-    doc.setTextColor(...COLORS.text)
+    doc.setTextColor(0, 0, 0)
   } else {
     doc.text('No', col3X + 35, yPos)
   }
 
   yPos += 6
+  pdf.setY(yPos)
 
-  // Weather delay notes
   if (report.weather_delay_notes) {
-    doc.setFont('helvetica', 'italic')
-    doc.setFontSize(8)
-    const notes = doc.splitTextToSize(`Delay Notes: ${report.weather_delay_notes}`, CONTENT_WIDTH)
-    doc.text(notes, col1X, yPos)
-    yPos += notes.length * 3.5
+    pdf.addParagraph(`Delay Notes: ${report.weather_delay_notes}`)
   }
 
-  return yPos + 5
-}
+  pdf.setY(pdf.getY() + 4)
 
-/**
- * Add workforce section
- */
-function addWorkforceSection(
-  doc: jsPDF,
-  workforce: DailyReportWorkforce[],
-  yPos: number
-): number {
-  if (workforce.length === 0) {return yPos}
+  // Workforce Section
+  if (workforce.length > 0) {
+    const totalWorkers = workforce.reduce((sum, w) => sum + (w.worker_count || 1), 0)
+    pdf.addSectionHeader('WORKFORCE')
+    doc.setFontSize(9)
+    doc.setFont('helvetica', 'bold')
+    doc.text(`Total Workers: ${totalWorkers}`, MARGIN, pdf.getY())
+    pdf.setY(pdf.getY() + 5)
 
-  yPos = addSectionHeader(doc, 'WORKFORCE', yPos)
+    const tableData = workforce.map((w) => [
+      w.trade || w.team_name || 'General',
+      w.worker_count?.toString() || '1',
+      w.hours_worked?.toString() || '-',
+      w.activity || '-',
+    ])
 
-  // Calculate total workers
-  const totalWorkers = workforce.reduce((sum, w) => sum + (w.worker_count || 1), 0)
-  doc.setFontSize(9)
-  doc.setFont('helvetica', 'bold')
-  doc.text(`Total Workers: ${totalWorkers}`, MARGIN, yPos)
-  yPos += 5
-
-  // Table
-  const tableData = workforce.map((w) => [
-    w.trade || w.team_name || 'General',
-    w.worker_count?.toString() || '1',
-    w.hours_worked?.toString() || '-',
-    w.activity || '-',
-  ])
-
-  autoTable(doc, {
-    startY: yPos,
-    head: [['Trade/Team', 'Workers', 'Hours', 'Activity']],
-    body: tableData,
-    margin: { left: MARGIN, right: MARGIN },
-    styles: {
-      fontSize: 8,
-      cellPadding: 2,
-    },
-    headStyles: {
-      fillColor: COLORS.secondary,
-      textColor: [255, 255, 255],
-      fontStyle: 'bold',
-    },
-    alternateRowStyles: {
-      fillColor: COLORS.lightGray,
-    },
-    columnStyles: {
-      0: { cellWidth: 40 },
-      1: { cellWidth: 20, halign: 'center' },
-      2: { cellWidth: 20, halign: 'center' },
-      3: { cellWidth: 'auto' },
-    },
-  })
-
-  return (doc as any).lastAutoTable.finalY + 8
-}
-
-/**
- * Add equipment section
- */
-function addEquipmentSection(
-  doc: jsPDF,
-  equipment: DailyReportEquipment[],
-  yPos: number
-): number {
-  if (equipment.length === 0) {return yPos}
-
-  yPos = addSectionHeader(doc, 'EQUIPMENT ON SITE', yPos)
-
-  const tableData = equipment.map((e) => [
-    e.equipment_type,
-    e.quantity?.toString() || '1',
-    e.owner || '-',
-    e.hours_used?.toString() || '-',
-    e.notes || '-',
-  ])
-
-  autoTable(doc, {
-    startY: yPos,
-    head: [['Equipment Type', 'Qty', 'Owner', 'Hours', 'Notes']],
-    body: tableData,
-    margin: { left: MARGIN, right: MARGIN },
-    styles: {
-      fontSize: 8,
-      cellPadding: 2,
-    },
-    headStyles: {
-      fillColor: COLORS.secondary,
-      textColor: [255, 255, 255],
-      fontStyle: 'bold',
-    },
-    alternateRowStyles: {
-      fillColor: COLORS.lightGray,
-    },
-    columnStyles: {
-      0: { cellWidth: 45 },
-      1: { cellWidth: 15, halign: 'center' },
-      2: { cellWidth: 30 },
-      3: { cellWidth: 20, halign: 'center' },
-      4: { cellWidth: 'auto' },
-    },
-  })
-
-  return (doc as any).lastAutoTable.finalY + 8
-}
-
-/**
- * Add deliveries section
- */
-function addDeliveriesSection(
-  doc: jsPDF,
-  deliveries: DailyReportDelivery[],
-  yPos: number
-): number {
-  if (deliveries.length === 0) {return yPos}
-
-  yPos = addSectionHeader(doc, 'MATERIAL DELIVERIES', yPos)
-
-  const tableData = deliveries.map((d) => [
-    d.material_description,
-    d.quantity || '-',
-    d.vendor || '-',
-    d.delivery_ticket_number || '-',
-    formatTime(d.delivery_time),
-  ])
-
-  autoTable(doc, {
-    startY: yPos,
-    head: [['Material', 'Quantity', 'Vendor', 'Ticket #', 'Time']],
-    body: tableData,
-    margin: { left: MARGIN, right: MARGIN },
-    styles: {
-      fontSize: 8,
-      cellPadding: 2,
-    },
-    headStyles: {
-      fillColor: COLORS.secondary,
-      textColor: [255, 255, 255],
-      fontStyle: 'bold',
-    },
-    alternateRowStyles: {
-      fillColor: COLORS.lightGray,
-    },
-    columnStyles: {
-      0: { cellWidth: 50 },
-      1: { cellWidth: 25 },
-      2: { cellWidth: 40 },
-      3: { cellWidth: 30 },
-      4: { cellWidth: 25, halign: 'center' },
-    },
-  })
-
-  return (doc as any).lastAutoTable.finalY + 8
-}
-
-/**
- * Add visitors section
- */
-function addVisitorsSection(
-  doc: jsPDF,
-  visitors: DailyReportVisitor[],
-  yPos: number
-): number {
-  if (visitors.length === 0) {return yPos}
-
-  yPos = addSectionHeader(doc, 'SITE VISITORS', yPos)
-
-  const tableData = visitors.map((v) => [
-    v.visitor_name,
-    v.company || '-',
-    v.purpose || '-',
-    formatTime(v.arrival_time),
-    formatTime(v.departure_time),
-  ])
-
-  autoTable(doc, {
-    startY: yPos,
-    head: [['Visitor Name', 'Company', 'Purpose', 'Arrival', 'Departure']],
-    body: tableData,
-    margin: { left: MARGIN, right: MARGIN },
-    styles: {
-      fontSize: 8,
-      cellPadding: 2,
-    },
-    headStyles: {
-      fillColor: COLORS.secondary,
-      textColor: [255, 255, 255],
-      fontStyle: 'bold',
-    },
-    alternateRowStyles: {
-      fillColor: COLORS.lightGray,
-    },
-    columnStyles: {
-      0: { cellWidth: 40 },
-      1: { cellWidth: 35 },
-      2: { cellWidth: 50 },
-      3: { cellWidth: 25, halign: 'center' },
-      4: { cellWidth: 25, halign: 'center' },
-    },
-  })
-
-  return (doc as any).lastAutoTable.finalY + 8
-}
-
-/**
- * Add work performed section
- */
-function addWorkPerformedSection(doc: jsPDF, report: DailyReport, yPos: number): number {
-  if (!report.work_completed) {return yPos}
-
-  yPos = addSectionHeader(doc, 'WORK PERFORMED', yPos)
-  yPos = addTextBlock(doc, '', report.work_completed, yPos)
-
-  return yPos + 3
-}
-
-/**
- * Add issues section
- */
-function addIssuesSection(doc: jsPDF, report: DailyReport, yPos: number): number {
-  if (!report.issues && !report.observations) {return yPos}
-
-  yPos = addSectionHeader(doc, 'ISSUES & OBSERVATIONS', yPos)
-
-  if (report.issues) {
-    yPos = addTextBlock(doc, 'Issues/Problems:', report.issues, yPos)
+    pdf.addTable({
+      head: [['Trade/Team', 'Workers', 'Hours', 'Activity']],
+      body: tableData,
+      columnStyles: {
+        0: { cellWidth: 40 },
+        1: { cellWidth: 20, halign: 'center' },
+        2: { cellWidth: 20, halign: 'center' },
+        3: { cellWidth: 'auto' },
+      }
+    })
   }
 
-  if (report.observations) {
-    yPos = addTextBlock(doc, 'Observations:', report.observations, yPos)
+  // Equipment Section
+  if (equipment.length > 0) {
+    pdf.addSectionHeader('EQUIPMENT ON SITE')
+
+    const tableData = equipment.map((e) => [
+      e.equipment_type,
+      e.quantity?.toString() || '1',
+      e.owner || '-',
+      e.hours_used?.toString() || '-',
+      e.notes || '-',
+    ])
+
+    pdf.addTable({
+      head: [['Equipment Type', 'Qty', 'Owner', 'Hours', 'Notes']],
+      body: tableData,
+      columnStyles: {
+        0: { cellWidth: 45 },
+        1: { cellWidth: 15, halign: 'center' },
+        2: { cellWidth: 30 },
+        3: { cellWidth: 20, halign: 'center' },
+        4: { cellWidth: 'auto' },
+      }
+    })
   }
 
-  return yPos + 3
-}
+  // Deliveries Section
+  if (deliveries.length > 0) {
+    pdf.addSectionHeader('MATERIAL DELIVERIES')
 
-/**
- * Add comments section
- */
-function addCommentsSection(doc: jsPDF, report: DailyReport, yPos: number): number {
-  if (!report.comments) {return yPos}
+    const tableData = deliveries.map((d) => [
+      d.material_description,
+      d.quantity || '-',
+      d.vendor || '-',
+      d.delivery_ticket_number || '-',
+      formatTime(d.delivery_time),
+    ])
 
-  yPos = addSectionHeader(doc, 'ADDITIONAL COMMENTS', yPos)
-  yPos = addTextBlock(doc, '', report.comments, yPos)
+    pdf.addTable({
+      head: [['Material', 'Quantity', 'Vendor', 'Ticket #', 'Time']],
+      body: tableData,
+      columnStyles: {
+        0: { cellWidth: 50 },
+        1: { cellWidth: 25 },
+        2: { cellWidth: 40 },
+        3: { cellWidth: 30 },
+        4: { cellWidth: 25, halign: 'center' },
+      }
+    })
+  }
 
-  return yPos + 3
-}
+  // Visitors Section
+  if (visitors.length > 0) {
+    pdf.addSectionHeader('SITE VISITORS')
 
-// Footer function removed - now using centralized JobSight branding from pdfBranding.ts
+    const tableData = visitors.map((v) => [
+      v.visitor_name,
+      v.company || '-',
+      v.purpose || '-',
+      formatTime(v.arrival_time),
+      formatTime(v.departure_time),
+    ])
 
-// =====================================================
-// MAIN EXPORT FUNCTION
-// =====================================================
+    pdf.addTable({
+      head: [['Visitor Name', 'Company', 'Purpose', 'Arrival', 'Departure']],
+      body: tableData,
+      columnStyles: {
+        0: { cellWidth: 40 },
+        1: { cellWidth: 35 },
+        2: { cellWidth: 50 },
+        3: { cellWidth: 25, halign: 'center' },
+        4: { cellWidth: 25, halign: 'center' },
+      }
+    })
+  }
 
-export interface GeneratePDFOptions {
-  report: DailyReport
-  workforce: DailyReportWorkforce[]
-  equipment: DailyReportEquipment[]
-  deliveries: DailyReportDelivery[]
-  visitors: DailyReportVisitor[]
-  photos: DailyReportPhoto[]
-  projectName: string
-  projectId: string
-  gcCompany?: CompanyInfo
-}
+  // Work Performed Section
+  if (report.work_completed) {
+    pdf.addSectionHeader('WORK PERFORMED')
+    pdf.addParagraph(report.work_completed)
+  }
 
-/**
- * Generate a PDF for a daily report with JobSight branding
- * Returns a Blob that can be downloaded
- */
-export async function generateDailyReportPDF(options: GeneratePDFOptions): Promise<Blob> {
-  const { report, workforce, equipment, deliveries, visitors, projectName, projectId, gcCompany } = options
+  // Issues Section
+  if (report.issues || report.observations) {
+    pdf.addSectionHeader('ISSUES & OBSERVATIONS')
+    if (report.issues) {
+      doc.setFont('helvetica', 'bold')
+      doc.setTextColor(...COLORS.darkGray)
+      doc.text('Issues/Problems:', MARGIN, pdf.getY())
+      doc.setTextColor(0, 0, 0)
+      pdf.setY(pdf.getY() + 5)
+      pdf.addParagraph(report.issues)
+    }
+    if (report.observations) {
+      doc.setFont('helvetica', 'bold')
+      doc.setTextColor(...COLORS.darkGray)
+      doc.text('Observations:', MARGIN, pdf.getY())
+      doc.setTextColor(0, 0, 0)
+      pdf.setY(pdf.getY() + 5)
+      pdf.addParagraph(report.observations)
+    }
+  }
 
-  // Fetch company info for branding
-  const companyInfo = gcCompany || await getCompanyInfo(projectId)
+  // Comments Section
+  if (report.comments) {
+    pdf.addSectionHeader('ADDITIONAL COMMENTS')
+    pdf.addParagraph(report.comments)
+  }
 
-  // Create PDF document
-  const doc = new jsPDF({
-    orientation: 'portrait',
-    unit: 'mm',
-    format: 'a4',
-  })
-
-  // Add JobSight branded header with GC logo and info
-  const reportDate = report.report_date
-    ? format(new Date(report.report_date), 'MMMM d, yyyy')
-    : 'N/A'
-
-  let yPos = await addDocumentHeader(doc, {
-    gcCompany: companyInfo,
-    documentTitle: `Daily Report - ${reportDate}`,
-    documentType: 'DAILY REPORT',
-  })
-
-  // Add sections
-  yPos = addReportInfo(doc, report, projectName, yPos)
-  yPos = addWeatherSection(doc, report, yPos)
-  yPos = addWorkforceSection(doc, workforce, yPos)
-  yPos = addEquipmentSection(doc, equipment, yPos)
-  yPos = addDeliveriesSection(doc, deliveries, yPos)
-  yPos = addVisitorsSection(doc, visitors, yPos)
-  yPos = addWorkPerformedSection(doc, report, yPos)
-  yPos = addIssuesSection(doc, report, yPos)
-  addCommentsSection(doc, report, yPos)
-
-  // Add JobSight footer to all pages with "Powered by JobSightApp.com"
-  addFootersToAllPages(doc)
+  pdf.finalize()
 
   // Return as blob
-  return doc.output('blob')
+  return pdf.getJsPDF().output('blob')
 }
 
 /**

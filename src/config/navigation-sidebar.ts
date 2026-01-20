@@ -613,7 +613,7 @@ export const SIDEBAR_CONFIG: SidebarConfig = {
     portals: [
       {
         id: 'subcontractor-portal',
-        path: '/portal/subcontractor',
+        path: '/sub',
         label: 'Subcontractor Portal',
         icon: HardHat,
         description: 'Subcontractor access',
@@ -621,7 +621,7 @@ export const SIDEBAR_CONFIG: SidebarConfig = {
       },
       {
         id: 'client-portal',
-        path: '/portal/client',
+        path: '/client',
         label: 'Client Portal',
         icon: Briefcase,
         description: 'Client access',

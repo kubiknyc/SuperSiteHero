@@ -30,7 +30,7 @@ test.describe('Subcontractor Portal - Dashboard', () => {
     await page.click('button[type="submit"]');
     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
-    await page.goto('/portal');
+    await page.goto('/sub');
     await page.waitForLoadState('domcontentloaded');
   });
 
@@ -83,7 +83,7 @@ test.describe('Subcontractor Portal - Projects', () => {
     await page.click('button[type="submit"]');
     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
-    await page.goto('/portal/projects');
+    await page.goto('/sub/projects');
     await page.waitForLoadState('domcontentloaded');
   });
 
@@ -142,7 +142,7 @@ test.describe('Subcontractor Portal - Bids', () => {
     await page.click('button[type="submit"]');
     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
-    await page.goto('/portal/bids');
+    await page.goto('/sub/bids');
     await page.waitForLoadState('domcontentloaded');
   });
 
@@ -189,7 +189,7 @@ test.describe('Subcontractor Portal - Bids', () => {
       await page.waitForTimeout(1000);
 
       // Verify bid detail page or modal
-      const isDetailPage = page.url().includes('/portal/bids/');
+      const isDetailPage = page.url().includes('/sub/bids/');
       const isModal = await page.locator('[role="dialog"], .modal').isVisible({ timeout: 3000 }).catch(() => false);
 
       expect(isDetailPage || isModal).toBeTruthy();
@@ -262,7 +262,7 @@ test.describe('Subcontractor Portal - Punch Items', () => {
     await page.click('button[type="submit"]');
     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
-    await page.goto('/portal/punch-items');
+    await page.goto('/sub/punch-items');
     await page.waitForLoadState('domcontentloaded');
   });
 
@@ -349,7 +349,7 @@ test.describe('Subcontractor Portal - Tasks', () => {
     await page.click('button[type="submit"]');
     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
-    await page.goto('/portal/tasks');
+    await page.goto('/sub/tasks');
     await page.waitForLoadState('domcontentloaded');
   });
 
@@ -414,7 +414,7 @@ test.describe('Subcontractor Portal - Compliance', () => {
     await page.click('button[type="submit"]');
     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
-    await page.goto('/portal/compliance');
+    await page.goto('/sub/compliance');
     await page.waitForLoadState('domcontentloaded');
   });
 
@@ -469,7 +469,7 @@ test.describe('Subcontractor Portal - Daily Reports', () => {
     await page.click('button[type="submit"]');
     await page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 15000 });
 
-    await page.goto('/portal/daily-reports');
+    await page.goto('/sub/daily-reports');
     await page.waitForLoadState('domcontentloaded');
   });
 
@@ -507,7 +507,7 @@ test.describe('Subcontractor Portal - Daily Reports', () => {
       await page.waitForTimeout(1000);
 
       // Verify detail page or modal
-      const isDetailPage = page.url().includes('/portal/daily-reports/');
+      const isDetailPage = page.url().includes('/sub/daily-reports/');
       const isModal = await page.locator('[role="dialog"], .modal').isVisible({ timeout: 3000 }).catch(() => false);
 
       expect(isDetailPage || isModal).toBeTruthy();

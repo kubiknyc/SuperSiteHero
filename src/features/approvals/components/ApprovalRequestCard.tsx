@@ -1,15 +1,63 @@
 /**
  * Approval Request Card Component
  *
- * Displays an approval request with status, progress, and action buttons
+ * A visually distinctive card for approval requests with:
+ * - Entity type color coding and icons
+ * - Progress visualization with step indicators
+ * - Urgency indicators for pending items
+ * - Enhanced action buttons with visual hierarchy
  */
 
-import { useState, memo } from 'react'
+import { useState, memo, useMemo } from 'react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { ApprovalStatusBadge } from './ApprovalStatusBadge'
 import { ApproveWithConditionsDialog } from './ApproveWithConditionsDialog'
-import { WORKFLOW_ENTITY_CONFIG, type ApprovalRequest } from '@/types/approval-workflow'
+import { WORKFLOW_ENTITY_CONFIG, type ApprovalRequest, type WorkflowEntityType } from '@/types/approval-workflow'
+import { formatDistanceToNow, differenceInDays } from 'date-fns'
+import {
+  FileText,
+  FileCheck,
+  MessageSquare,
+  Receipt,
+  Clock,
+  User,
+  ChevronRight,
+  Check,
+  X,
+  AlertTriangle,
+} from 'lucide-react'
+
+// Entity type configuration for visual styling
+const ENTITY_STYLES: Record<
+  WorkflowEntityType,
+  { icon: React.ElementType; color: string; bgColor: string; borderColor: string }
+> = {
+  document: {
+    icon: FileText,
+    color: 'text-blue-600',
+    bgColor: 'bg-blue-500/10',
+    borderColor: 'border-l-blue-500',
+  },
+  submittal: {
+    icon: FileCheck,
+    color: 'text-purple-600',
+    bgColor: 'bg-purple-500/10',
+    borderColor: 'border-l-purple-500',
+  },
+  rfi: {
+    icon: MessageSquare,
+    color: 'text-emerald-600',
+    bgColor: 'bg-emerald-500/10',
+    borderColor: 'border-l-emerald-500',
+  },
+  change_order: {
+    icon: Receipt,
+    color: 'text-amber-600',
+    bgColor: 'bg-amber-500/10',
+    borderColor: 'border-l-amber-500',
+  },
+}
 
 interface ApprovalRequestCardProps {
   request: ApprovalRequest
@@ -39,9 +87,27 @@ export const ApprovalRequestCard = memo(function ApprovalRequestCard({
   const [rejectComment, setRejectComment] = useState('')
 
   const entityConfig = WORKFLOW_ENTITY_CONFIG[request.entity_type]
+  const entityStyle = ENTITY_STYLES[request.entity_type]
+  const EntityIcon = entityStyle.icon
+
   const steps = request.workflow?.steps || []
   const totalSteps = steps.length
   const currentStep = steps.find((s) => s.step_order === request.current_step)
+  const progressPercent = totalSteps > 0 ? Math.round((request.current_step / totalSteps) * 100) : 0
+
+  // Calculate how long the request has been pending
+  const daysPending = useMemo(() => {
+    if (request.status !== 'pending') {return null}
+    return differenceInDays(new Date(), new Date(request.initiated_at))
+  }, [request.initiated_at, request.status])
+
+  // Determine urgency level
+  const urgencyLevel = useMemo(() => {
+    if (daysPending === null) {return 'none'}
+    if (daysPending >= 7) {return 'critical'}
+    if (daysPending >= 3) {return 'warning'}
+    return 'normal'
+  }, [daysPending])
 
   // Check if current user can approve
   const canApprove =
@@ -73,170 +139,257 @@ export const ApprovalRequestCard = memo(function ApprovalRequestCard({
     }
   }
 
-  const formattedDate = new Date(request.initiated_at).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
+  const formattedDate = formatDistanceToNow(new Date(request.initiated_at), { addSuffix: true })
+
+  // Status-based progress bar color
+  const progressColor =
+    request.status === 'approved' || request.status === 'approved_with_conditions'
+      ? 'bg-emerald-500'
+      : request.status === 'rejected'
+        ? 'bg-red-500'
+        : urgencyLevel === 'critical'
+          ? 'bg-red-500'
+          : urgencyLevel === 'warning'
+            ? 'bg-amber-500'
+            : 'bg-primary'
 
   return (
-    <div className={cn('bg-card border rounded-lg shadow-sm p-4', className)}>
-      {/* Header */}
-      <div className="flex items-start justify-between gap-4 mb-3">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-sm font-medium text-muted">
-              {entityConfig.label}
-            </span>
+    <div
+      className={cn(
+        'group bg-card border rounded-xl shadow-sm transition-all duration-200',
+        'hover:shadow-md hover:border-border/80',
+        'border-l-4',
+        entityStyle.borderColor,
+        urgencyLevel === 'critical' && request.status === 'pending' && 'ring-2 ring-red-500/20',
+        className
+      )}
+    >
+      <div className="p-5">
+        {/* Header */}
+        <div className="flex items-start justify-between gap-4 mb-4">
+          <div className="flex items-start gap-3 min-w-0">
+            {/* Entity type icon */}
+            <div className={cn('p-2.5 rounded-lg flex-shrink-0', entityStyle.bgColor)}>
+              <EntityIcon className={cn('h-5 w-5', entityStyle.color)} />
+            </div>
+
+            <div className="min-w-0">
+              {/* Entity type label */}
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                  {entityConfig.label}
+                </span>
+                {urgencyLevel !== 'none' && urgencyLevel !== 'normal' && (
+                  <span
+                    className={cn(
+                      'flex items-center gap-1 text-xs font-medium px-1.5 py-0.5 rounded',
+                      urgencyLevel === 'critical'
+                        ? 'bg-red-100 text-red-700'
+                        : 'bg-amber-100 text-amber-700'
+                    )}
+                  >
+                    <AlertTriangle className="h-3 w-3" />
+                    {daysPending}d pending
+                  </span>
+                )}
+              </div>
+
+              {/* Title */}
+              <h3 className="heading-subsection text-foreground truncate">
+                {request.workflow?.name || 'Approval Request'}
+              </h3>
+            </div>
+          </div>
+
+          {/* Status badge and date */}
+          <div className="flex flex-col items-end gap-2 flex-shrink-0">
             <ApprovalStatusBadge
               status={request.status}
               conditions={request.conditions}
               showConditions
             />
-          </div>
-          <h3 className="font-semibold text-foreground heading-subsection">
-            {request.workflow?.name || 'Approval Request'}
-          </h3>
-        </div>
-        <span className="text-xs text-muted whitespace-nowrap">{formattedDate}</span>
-      </div>
-
-      {/* Progress indicator */}
-      {totalSteps > 0 && (
-        <div className="mb-4">
-          <div className="flex items-center justify-between text-xs text-muted mb-1">
-            <span>
-              Step {request.current_step} of {totalSteps}
-              {currentStep && `: ${currentStep.name}`}
+            <span className="text-xs text-muted-foreground flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              {formattedDate}
             </span>
-            <span>{Math.round((request.current_step / totalSteps) * 100)}%</span>
           </div>
-          <div className="h-2 bg-muted rounded-full overflow-hidden">
-            <div
-              className={cn(
-                'h-full transition-all',
-                request.status === 'approved' || request.status === 'approved_with_conditions'
-                  ? 'bg-green-500'
-                  : request.status === 'rejected'
-                  ? 'bg-red-500'
-                  : 'bg-blue-500'
+        </div>
+
+        {/* Progress indicator */}
+        {totalSteps > 0 && (
+          <div className="mb-4">
+            <div className="flex items-center justify-between text-xs mb-2">
+              <span className="flex items-center gap-1.5 text-muted-foreground">
+                <span className="font-medium text-foreground">Step {request.current_step}</span>
+                <span>of {totalSteps}</span>
+                {currentStep && (
+                  <>
+                    <ChevronRight className="h-3 w-3" />
+                    <span className="text-foreground">{currentStep.name}</span>
+                  </>
+                )}
+              </span>
+              <span className="font-mono text-foreground">{progressPercent}%</span>
+            </div>
+
+            {/* Progress bar with step indicators */}
+            <div className="relative">
+              <div className="h-2 bg-muted rounded-full overflow-hidden">
+                <div
+                  className={cn('h-full transition-all duration-500 ease-out rounded-full', progressColor)}
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
+
+              {/* Step dots */}
+              {totalSteps <= 5 && (
+                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-0.5">
+                  {steps.map((step, i) => (
+                    <div
+                      key={step.id}
+                      className={cn(
+                        'w-1.5 h-1.5 rounded-full transition-colors',
+                        i < request.current_step
+                          ? progressColor
+                          : i === request.current_step - 1
+                            ? 'bg-white ring-2 ring-primary'
+                            : 'bg-muted-foreground/30'
+                      )}
+                      title={step.name}
+                    />
+                  ))}
+                </div>
               )}
-              style={{ width: `${(request.current_step / totalSteps) * 100}%` }}
+            </div>
+          </div>
+        )}
+
+        {/* Conditions display */}
+        {request.status === 'approved_with_conditions' && request.conditions && (
+          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-4">
+            <span className="text-sm font-medium text-blue-800 dark:text-blue-300">Conditions:</span>
+            <p className="text-sm text-blue-700 dark:text-blue-400 mt-1">{request.conditions}</p>
+          </div>
+        )}
+
+        {/* Initiator info */}
+        <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
+          <User className="h-4 w-4" />
+          <span>
+            Submitted by{' '}
+            <span className="font-medium text-foreground">
+              {request.initiator?.full_name || request.initiator?.email || 'Unknown'}
+            </span>
+          </span>
+        </div>
+
+        {/* Reject comment input */}
+        {showRejectInput && (
+          <div className="mb-4 p-4 bg-red-50 dark:bg-red-950/20 rounded-lg border border-red-200 dark:border-red-900">
+            <label className="block text-sm font-medium text-red-800 dark:text-red-300 mb-2">
+              Rejection reason (required)
+            </label>
+            <textarea
+              value={rejectComment}
+              onChange={(e) => setRejectComment(e.target.value)}
+              placeholder="Please provide a reason for rejection..."
+              className={cn(
+                'w-full px-3 py-2 border rounded-md text-sm resize-none',
+                'bg-white dark:bg-gray-900',
+                'border-red-300 dark:border-red-800',
+                'focus:outline-none focus:ring-2 focus:ring-red-500',
+                'placeholder:text-muted-foreground'
+              )}
+              rows={2}
             />
+            <div className="flex gap-2 mt-3">
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={handleReject}
+                disabled={!rejectComment.trim() || isLoading}
+                className="gap-1.5"
+              >
+                <X className="h-3.5 w-3.5" />
+                Confirm Rejection
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => {
+                  setShowRejectInput(false)
+                  setRejectComment('')
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
           </div>
-        </div>
-      )}
-
-      {/* Conditions display */}
-      {request.status === 'approved_with_conditions' && request.conditions && (
-        <div className="bg-blue-50 border border-blue-200 rounded p-3 mb-4">
-          <span className="text-sm font-medium text-blue-800">Conditions:</span>
-          <p className="text-sm text-primary-hover mt-1">{request.conditions}</p>
-        </div>
-      )}
-
-      {/* Initiator info */}
-      <div className="text-sm text-secondary mb-4">
-        Submitted by{' '}
-        <span className="font-medium">
-          {request.initiator?.full_name || request.initiator?.email || 'Unknown'}
-        </span>
-      </div>
-
-      {/* Reject comment input */}
-      {showRejectInput && (
-        <div className="mb-4 p-3 bg-surface rounded-lg">
-          <label className="block text-sm font-medium text-secondary mb-1">
-            Rejection reason (required)
-          </label>
-          <textarea
-            value={rejectComment}
-            onChange={(e) => setRejectComment(e.target.value)}
-            placeholder="Please provide a reason for rejection..."
-            className="w-full px-3 py-2 border border-input rounded-md text-sm resize-none focus:outline-none focus:ring-2 focus:ring-red-500"
-            rows={2}
-          />
-          <div className="flex gap-2 mt-2">
-            <Button
-              size="sm"
-              variant="destructive"
-              onClick={handleReject}
-              disabled={!rejectComment.trim() || isLoading}
-            >
-              Confirm Rejection
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => {
-                setShowRejectInput(false)
-                setRejectComment('')
-              }}
-            >
-              Cancel
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {/* Action buttons */}
-      <div className="flex flex-wrap gap-2">
-        {/* Approver actions */}
-        {canApprove && !showRejectInput && (
-          <>
-            <Button
-              size="sm"
-              onClick={handleApprove}
-              disabled={isLoading}
-              className="bg-success hover:bg-green-700"
-            >
-              Approve
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setShowConditionsDialog(true)}
-              disabled={isLoading}
-              className="border-blue-300 text-primary hover:bg-blue-50"
-            >
-              Approve with Conditions
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setShowRejectInput(true)}
-              disabled={isLoading}
-              className="border-red-300 text-error hover:bg-error-light"
-            >
-              Reject
-            </Button>
-          </>
         )}
 
-        {/* Initiator cancel action */}
-        {isInitiator && request.status === 'pending' && onCancel && (
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => onCancel(request.id)}
-            disabled={isLoading}
-            className="text-secondary"
-          >
-            Cancel Request
-          </Button>
-        )}
+        {/* Action buttons */}
+        <div className="flex flex-wrap gap-2 pt-2 border-t border-border/50">
+          {/* Approver actions */}
+          {canApprove && !showRejectInput && (
+            <>
+              <Button
+                size="sm"
+                onClick={handleApprove}
+                disabled={isLoading}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5"
+              >
+                <Check className="h-3.5 w-3.5" />
+                Approve
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setShowConditionsDialog(true)}
+                disabled={isLoading}
+                className="border-primary/30 text-primary hover:bg-primary/5 gap-1.5"
+              >
+                <Check className="h-3.5 w-3.5" />
+                With Conditions
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setShowRejectInput(true)}
+                disabled={isLoading}
+                className="border-red-300 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 gap-1.5"
+              >
+                <X className="h-3.5 w-3.5" />
+                Reject
+              </Button>
+            </>
+          )}
 
-        {/* View details */}
-        {onViewDetails && (
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => onViewDetails(request.id)}
-            className="ml-auto"
-          >
-            View Details
-          </Button>
-        )}
+          {/* Initiator cancel action */}
+          {isInitiator && request.status === 'pending' && onCancel && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => onCancel(request.id)}
+              disabled={isLoading}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              Cancel Request
+            </Button>
+          )}
+
+          {/* View details */}
+          {onViewDetails && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => onViewDetails(request.id)}
+              className="ml-auto gap-1.5 text-muted-foreground hover:text-foreground"
+            >
+              View Details
+              <ChevronRight className="h-3.5 w-3.5" />
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Conditions dialog */}

@@ -10,3 +10,8 @@ export { PendingApprovalsBadge, ApprovalsNavItem } from './PendingApprovalsBadge
 export { SubmitForApprovalButton } from './SubmitForApprovalButton'
 export { WorkflowBuilder } from './WorkflowBuilder'
 export { WorkflowList } from './WorkflowList'
+export {
+  ApprovalCardSkeleton,
+  StatCardSkeleton,
+  ApprovalsPageSkeleton,
+} from './ApprovalsSkeleton'

@@ -3,7 +3,7 @@
  * Handles status transitions, signatures, and approval history
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -115,7 +115,7 @@ const STATUS_CONFIG: Record<
   },
 };
 
-export function ApprovalWorkflowPanel({
+export const ApprovalWorkflowPanel = React.memo(function ApprovalWorkflowPanel({
   reportId: _reportId,
   currentStatus,
   submittedByName,
@@ -187,7 +187,7 @@ export function ApprovalWorkflowPanel({
   const { canSubmit, canApprove, canRequestChanges, canLock } = permissions;
 
   const handleSubmit = useCallback(async () => {
-    if (!signature || !signerName.trim() || !onSubmit) {return;}
+    if (!signature || !signerName.trim() || !onSubmit) { return; }
 
     setProcessing(true);
     try {
@@ -203,7 +203,7 @@ export function ApprovalWorkflowPanel({
   }, [signature, signerName, onSubmit]);
 
   const handleApprove = useCallback(async () => {
-    if (!signature || !signerName.trim() || !onApprove) {return;}
+    if (!signature || !signerName.trim() || !onApprove) { return; }
 
     setProcessing(true);
     try {
@@ -220,7 +220,7 @@ export function ApprovalWorkflowPanel({
   }, [signature, signerName, approvalComments, onApprove]);
 
   const handleRequestChanges = useCallback(async () => {
-    if (!rejectionReasonInput.trim() || !onRequestChanges) {return;}
+    if (!rejectionReasonInput.trim() || !onRequestChanges) { return; }
 
     setProcessing(true);
     try {
@@ -235,7 +235,7 @@ export function ApprovalWorkflowPanel({
   }, [rejectionReasonInput, onRequestChanges]);
 
   const handleLockConfirm = useCallback(async () => {
-    if (!onLock) {return;}
+    if (!onLock) { return; }
 
     setProcessing(true);
     try {
@@ -523,10 +523,10 @@ export function ApprovalWorkflowPanel({
               <Lock className="h-5 w-5 text-purple-600" />
               Lock Report
             </AlertDialogTitle>
-            <AlertDialogDescription>
+            <DialogDescription>
               Are you sure you want to lock this report? Once locked, the report cannot be edited
               and will be archived for record-keeping. This action cannot be undone.
-            </AlertDialogDescription>
+            </DialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={processing}>Cancel</AlertDialogCancel>
@@ -542,6 +542,6 @@ export function ApprovalWorkflowPanel({
       </AlertDialog>
     </>
   );
-}
+});
 
 export default ApprovalWorkflowPanel;

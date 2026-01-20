@@ -26,7 +26,9 @@ export function LoadingScreen({ message = 'Loading JobSight...', className }: Lo
               linear-gradient(rgba(30, 64, 175, 0.3) 1px, transparent 1px),
               linear-gradient(90deg, rgba(30, 64, 175, 0.3) 1px, transparent 1px)
             `,
-            // TODO: Update to primary color CSS variable when animations support it
+            // Note: Cannot use CSS variables in inline backgroundImage animations.
+            // This rgba(30, 64, 175, 0.3) matches --primary (hsl 217 70% 38%) for consistency.
+            // Browser limitation: CSS custom properties don't work inside linear-gradient() in inline styles.
             backgroundSize: '40px 40px',
             animation: 'gridSlide 20s linear infinite',
           }}

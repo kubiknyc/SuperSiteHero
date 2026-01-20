@@ -252,10 +252,10 @@ export function EnhancedMarkupToolbar({
 }: EnhancedMarkupToolbarProps) {
   return (
     <TooltipProvider delayDuration={300}>
-      <div className={cn('flex items-center gap-2 p-2 bg-card border-b flex-wrap', className)}>
+      <div className={cn('flex items-center gap-2 p-2 bg-card border-b flex-wrap', className)} role="toolbar" aria-label="Enhanced markup tools">
         {/* Tool Groups */}
         {TOOL_GROUPS.map((group, groupIndex) => (
-          <div key={group.name} className="flex items-center gap-1">
+          <div key={group.name} className="flex items-center gap-1" role="group" aria-label={`${group.name} tools`}>
             {group.tools.map((tool) => (
               <Tooltip key={tool.id}>
                 <TooltipTrigger asChild>
@@ -265,8 +265,10 @@ export function EnhancedMarkupToolbar({
                     onClick={() => onToolChange(tool.id)}
                     disabled={disabled}
                     className="relative"
+                    aria-label={`${tool.label} tool (${tool.shortcut})`}
+                    aria-pressed={selectedTool === tool.id}
                   >
-                    <tool.icon className="w-4 h-4" />
+                    <tool.icon className="w-4 h-4" aria-hidden="true" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -275,7 +277,7 @@ export function EnhancedMarkupToolbar({
               </Tooltip>
             ))}
             {groupIndex < TOOL_GROUPS.length - 1 && (
-              <div className="w-px h-6 bg-gray-300 mx-1" />
+              <div className="w-px h-6 bg-gray-300 mx-1" aria-hidden="true" />
             )}
           </div>
         ))}
@@ -293,9 +295,9 @@ export function EnhancedMarkupToolbar({
         />
 
         {/* Line Width */}
-        <div className="flex items-center gap-1">
-          <span className="text-xs text-secondary hidden sm:inline">Width:</span>
-          <div className="flex gap-0.5">
+        <div className="flex items-center gap-1" role="group" aria-label="Line width">
+          <span className="text-xs text-secondary hidden sm:inline" id="enhanced-width-label">Width:</span>
+          <div className="flex gap-0.5" role="radiogroup" aria-labelledby="enhanced-width-label">
             {LINE_WIDTHS.map((width) => (
               <Tooltip key={width}>
                 <TooltipTrigger asChild>
@@ -305,6 +307,9 @@ export function EnhancedMarkupToolbar({
                     onClick={() => onLineWidthChange(width)}
                     disabled={disabled}
                     className="w-7 h-7 p-0"
+                    aria-label={`${width} pixel line width`}
+                    role="radio"
+                    aria-checked={lineWidth === width}
                   >
                     <div
                       className="bg-current rounded-full"
@@ -312,6 +317,7 @@ export function EnhancedMarkupToolbar({
                         width: Math.max(2, width),
                         height: Math.max(2, width),
                       }}
+                      aria-hidden="true"
                     />
                   </Button>
                 </TooltipTrigger>
@@ -430,8 +436,9 @@ export function EnhancedMarkupToolbar({
                 variant="outline"
                 onClick={onOpenShareDialog}
                 disabled={disabled || !selectedMarkupId}
+                aria-label="Share selected markup"
               >
-                <Share2 className="w-4 h-4" />
+                <Share2 className="w-4 h-4" aria-hidden="true" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -444,7 +451,7 @@ export function EnhancedMarkupToolbar({
         <div className="flex-1" />
 
         {/* Zoom Controls */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1" role="group" aria-label="Zoom controls">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -452,8 +459,9 @@ export function EnhancedMarkupToolbar({
                 variant="outline"
                 onClick={onZoomOut}
                 disabled={disabled}
+                aria-label="Zoom out"
               >
-                <ZoomOut className="w-4 h-4" />
+                <ZoomOut className="w-4 h-4" aria-hidden="true" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -461,7 +469,7 @@ export function EnhancedMarkupToolbar({
             </TooltipContent>
           </Tooltip>
 
-          <span className="text-xs font-medium w-12 text-center">{currentZoom}%</span>
+          <span className="text-xs font-medium w-12 text-center" aria-live="polite" aria-atomic="true">{currentZoom}%</span>
 
           <Tooltip>
             <TooltipTrigger asChild>
@@ -470,8 +478,9 @@ export function EnhancedMarkupToolbar({
                 variant="outline"
                 onClick={onZoomIn}
                 disabled={disabled}
+                aria-label="Zoom in"
               >
-                <ZoomIn className="w-4 h-4" />
+                <ZoomIn className="w-4 h-4" aria-hidden="true" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -486,8 +495,9 @@ export function EnhancedMarkupToolbar({
                 variant="outline"
                 onClick={onResetView}
                 disabled={disabled}
+                aria-label="Reset view to original zoom"
               >
-                <RotateCcw className="w-4 h-4" />
+                <RotateCcw className="w-4 h-4" aria-hidden="true" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>

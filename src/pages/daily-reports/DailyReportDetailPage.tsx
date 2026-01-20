@@ -14,8 +14,9 @@ import {
 } from '@/components/ui/alert-dialog'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { SmartLayout } from '@/components/layout/SmartLayout'
-import { useDailyReport, useUpdateDailyReport, useDeleteDailyReport } from '@/features/daily-reports/hooks/useDailyReports'
+import { useDailyReport, useUpdateDailyReport, useDeleteDailyReport, type DailyReportWithProject } from '@/features/daily-reports/hooks/useDailyReports'
 import { useDailyReportFullData } from '@/features/daily-reports/hooks/useDailyReportRelatedData'
+import type { DailyReportPhoto } from '@/features/daily-reports/types/photo'
 import { downloadDailyReportPDF } from '@/features/daily-reports/utils/pdfExport'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -45,7 +46,7 @@ import { logger } from '../../lib/utils/logger';
 
 // Helper component to isolate type issues with issues field
 function IssuesCard({ issuesText }: { issuesText: string | null }) {
-  if (!issuesText || issuesText.trim() === '') {return null}
+  if (!issuesText || issuesText.trim() === '') { return null }
   return (
     <Card>
       <CardHeader>
@@ -59,6 +60,11 @@ function IssuesCard({ issuesText }: { issuesText: string | null }) {
       </CardContent>
     </Card>
   )
+}
+
+// Extended type to handle photos which might exist on the report but aren't in the base type yet
+interface DailyReportWithPhotos extends DailyReportWithProject {
+  photos?: DailyReportPhoto[] | null
 }
 
 export function DailyReportDetailPage() {
@@ -115,15 +121,14 @@ export function DailyReportDetailPage() {
   }
 
   const handleExportPDF = async () => {
-    if (!report) {return}
+    if (!report) { return }
 
     setIsExportingPDF(true)
     try {
       // Use inline photos from report if available, otherwise use relatedData.photos
-      // Cast to any to safely check for photos property without breaking type inference
-      const reportAny = report as Record<string, unknown>
-      const reportPhotos = (reportAny.photos && Array.isArray(reportAny.photos))
-        ? reportAny.photos
+      const reportWithPhotos = report as DailyReportWithPhotos
+      const reportPhotos = (reportWithPhotos.photos && Array.isArray(reportWithPhotos.photos))
+        ? reportWithPhotos.photos
         : relatedData.photos
 
       await downloadDailyReportPDF({
@@ -369,11 +374,11 @@ export function DailyReportDetailPage() {
           </Card>
         )}
 
-        {/* Photos - use type cast to avoid 'in' operator breaking type inference */}
+        {/* Photos */}
         {(() => {
-          const reportAny = report as Record<string, unknown>
-          const photos = reportAny.photos
-          if (!photos || !Array.isArray(photos) || photos.length === 0) {return null}
+          const reportWithPhotos = report as DailyReportWithPhotos
+          const photos = reportWithPhotos.photos
+          if (!photos || !Array.isArray(photos) || photos.length === 0) { return null }
           return (
             <Card>
               <CardHeader>
@@ -384,7 +389,7 @@ export function DailyReportDetailPage() {
                 <CardDescription>Progress documentation with GPS metadata</CardDescription>
               </CardHeader>
               <CardContent>
-                <PhotoGallery photos={photos as any} readOnly />
+                <PhotoGallery photos={photos} readOnly />
               </CardContent>
             </Card>
           )
@@ -421,7 +426,7 @@ export function DailyReportDetailPage() {
                     toast.error('Failed to approve report')
                   }
                 }}
-                onClear={() => {}}
+                onClear={() => { }}
               />
               <div className="flex justify-end">
                 <Button
