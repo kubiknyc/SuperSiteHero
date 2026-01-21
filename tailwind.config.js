@@ -410,9 +410,14 @@ export default {
 				}
 			},
 			borderRadius: {
-				lg: 'var(--radius)',
-				md: 'calc(var(--radius) - 2px)',
-				sm: 'calc(var(--radius) - 4px)'
+				// Consistent radius scale matching CSS variables
+				'2xl': 'var(--radius-2xl)', // 24px - Decorative
+				'xl': 'var(--radius-xl)',   // 16px - Modals, hero sections
+				'lg': 'var(--radius)',      // 12px - Dialogs, panels (default)
+				'md': 'var(--radius-md)',   // 8px - Buttons, cards
+				'sm': 'var(--radius-sm)',   // 6px - Inputs, small buttons
+				'xs': 'var(--radius-xs)',   // 4px - Badges, tags
+				'full': 'var(--radius-full)', // Pills, circles
 			},
 			// Tablet-specific min/max heights
 			minHeight: {

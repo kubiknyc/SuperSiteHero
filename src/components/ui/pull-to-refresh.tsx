@@ -139,6 +139,8 @@ export function PullToRefresh({
         )}
         style={{
           transform: `translateY(${isRefreshing ? 60 : Math.min(80, pullDistance)}px)`,
+          // Optimize rendering during pull gesture
+          willChange: isPulling ? 'transform' : 'auto',
         }}
       >
         {children}

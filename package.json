@@ -75,6 +75,8 @@
     "check:test-user": "tsx scripts/check-test-user.ts",
     "test:e2e:seed": "npm run seed:test && npm run test:e2e",
     "analyze": "vite-bundle-visualizer",
+    "build:analyze": "vite build && vite-bundle-visualizer",
+    "build:size": "vite build && node scripts/report-bundle-size.mjs",
     "lighthouse": "lhci autorun",
     "lighthouse:collect": "lhci collect",
     "lighthouse:assert": "lhci assert",

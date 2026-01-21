@@ -1,10 +1,19 @@
 /**
  * Alert Dialog Component
  * Based on shadcn/ui AlertDialog pattern
+ *
+ * Accessibility features:
+ * - role="alertdialog" for screen readers
+ * - aria-modal="true" to indicate modal behavior
+ * - aria-labelledby/aria-describedby for content association
+ * - Focus trap to keep keyboard users within the dialog
+ * - Escape key to close
+ * - Focus restoration on close
  */
 
 import * as React from 'react'
 import { cn } from '@/lib/utils'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 
 interface AlertDialogProps {
   open?: boolean
@@ -15,15 +24,21 @@ interface AlertDialogProps {
 interface AlertDialogContextValue {
   open: boolean
   onOpenChange: (open: boolean) => void
+  titleId: string
+  descriptionId: string
 }
 
 const AlertDialogContext = React.createContext<AlertDialogContextValue>({
   open: false,
   onOpenChange: () => {},
+  titleId: '',
+  descriptionId: '',
 })
 
 export function AlertDialog({ open = false, onOpenChange = () => {}, children }: AlertDialogProps) {
   const [internalOpen, setInternalOpen] = React.useState(open)
+  const titleId = React.useId()
+  const descriptionId = React.useId()
 
   const handleOpenChange = React.useCallback(
     (newOpen: boolean) => {
@@ -38,7 +53,7 @@ export function AlertDialog({ open = false, onOpenChange = () => {}, children }:
   }, [open])
 
   return (
-    <AlertDialogContext.Provider value={{ open: internalOpen, onOpenChange: handleOpenChange }}>
+    <AlertDialogContext.Provider value={{ open: internalOpen, onOpenChange: handleOpenChange, titleId, descriptionId }}>
       {children}
     </AlertDialogContext.Provider>
   )
@@ -71,16 +86,55 @@ export function AlertDialogContent({
   children: React.ReactNode
   className?: string
 }) {
-  const { open, onOpenChange } = React.useContext(AlertDialogContext)
+  const { open, onOpenChange, titleId, descriptionId } = React.useContext(AlertDialogContext)
+  const focusTrapRef = useFocusTrap<HTMLDivElement>({ enabled: open })
+
+  // Handle Escape key
+  React.useEffect(() => {
+    if (!open) {return}
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        onOpenChange(false)
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [open, onOpenChange])
+
+  // Prevent body scroll when open
+  React.useEffect(() => {
+    if (open) {
+      const originalOverflow = document.body.style.overflow
+      document.body.style.overflow = 'hidden'
+      return () => {
+        document.body.style.overflow = originalOverflow
+      }
+    }
+  }, [open])
 
   if (!open) {return null}
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="fixed inset-0 bg-black/50" onClick={() => onOpenChange(false)} />
+      {/* Backdrop */}
       <div
+        className="fixed inset-0 bg-black/50 animate-in fade-in-0"
+        onClick={() => onOpenChange(false)}
+        aria-hidden="true"
+      />
+      {/* Dialog */}
+      <div
+        ref={focusTrapRef}
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={descriptionId}
         className={cn(
           'relative z-50 w-full max-w-lg rounded-lg bg-card p-6 shadow-lg',
+          'animate-in fade-in-0 zoom-in-95',
           className
         )}
       >
@@ -113,7 +167,7 @@ export function AlertDialogFooter({
 }) {
   return (
     <div
-      className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)}
+      className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-4', className)}
     >
       {children}
     </div>
@@ -127,7 +181,16 @@ export function AlertDialogTitle({
   children: React.ReactNode
   className?: string
 }) {
-  return <h2 className={cn('text-lg font-semibold', className)}>{children}</h2>
+  const { titleId } = React.useContext(AlertDialogContext)
+
+  return (
+    <h2
+      id={titleId}
+      className={cn('text-lg font-semibold', className)}
+    >
+      {children}
+    </h2>
+  )
 }
 
 export function AlertDialogDescription({
@@ -137,7 +200,16 @@ export function AlertDialogDescription({
   children: React.ReactNode
   className?: string
 }) {
-  return <p className={cn('text-sm text-muted-foreground', className)}>{children}</p>
+  const { descriptionId } = React.useContext(AlertDialogContext)
+
+  return (
+    <p
+      id={descriptionId}
+      className={cn('text-sm text-muted-foreground', className)}
+    >
+      {children}
+    </p>
+  )
 }
 
 export function AlertDialogAction({
@@ -161,7 +233,9 @@ export function AlertDialogAction({
   return (
     <button
       className={cn(
-        'inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90',
+        'inline-flex h-10 min-h-[44px] items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground',
+        'transition-colors hover:bg-primary/90',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
         disabled && 'opacity-50 cursor-not-allowed',
         className
       )}
@@ -194,7 +268,9 @@ export function AlertDialogCancel({
   return (
     <button
       className={cn(
-        'inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground',
+        'inline-flex h-10 min-h-[44px] items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium',
+        'transition-colors hover:bg-accent hover:text-accent-foreground',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
         disabled && 'opacity-50 cursor-not-allowed',
         className
       )}

@@ -238,11 +238,61 @@ export default defineConfig(({ mode }) => {
         warn(warning);
       },
       output: {
+        // Optimized manual chunking for better caching and load performance
+        // Strategy: Separate stable vendor code from frequently changing app code
         manualChunks: (id: string) => {
-          // DISABLED: Let Vite handle all chunking naturally
-          // Manual chunking was causing React dependency ordering issues
-          // where chunks would try to use React before it was loaded
-          return undefined;
+          // Skip non-node_modules (app code uses default chunking)
+          if (!id.includes('node_modules')) {
+            return undefined;
+          }
+
+          // React core - must load first, rarely changes
+          if (id.includes('react-dom') || id.includes('/react/')) {
+            return 'react-vendor';
+          }
+
+          // React Router - navigation layer
+          if (id.includes('react-router')) {
+            return 'router-vendor';
+          }
+
+          // Radix UI primitives - UI component library
+          if (id.includes('@radix-ui')) {
+            return 'radix-vendor';
+          }
+
+          // TanStack Query - data fetching layer
+          if (id.includes('@tanstack/react-query') || id.includes('@tanstack/query')) {
+            return 'query-vendor';
+          }
+
+          // Supabase - backend client
+          if (id.includes('@supabase')) {
+            return 'supabase-vendor';
+          }
+
+          // Framer Motion - animations (can be loaded after initial render)
+          if (id.includes('framer-motion')) {
+            return 'animation-vendor';
+          }
+
+          // Date utilities
+          if (id.includes('date-fns') || id.includes('dayjs')) {
+            return 'date-vendor';
+          }
+
+          // Charts (recharts, d3) - heavy, rarely needed on initial load
+          if (id.includes('recharts') || id.includes('d3-')) {
+            return 'charts-vendor';
+          }
+
+          // PDF/document viewers - lazy load these
+          if (id.includes('pdfjs') || id.includes('react-pdf')) {
+            return 'pdf-vendor';
+          }
+
+          // All other vendor code
+          return 'vendor';
         }
       }
     },

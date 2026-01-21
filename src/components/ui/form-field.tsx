@@ -1,9 +1,9 @@
 // Form field wrapper component with label, error, validation states, and required indicator
 import { ReactNode } from 'react'
 import { Label } from '@/components/ui/label'
-import { FormError } from './form-error'
+import { FormError, FormSuccess } from './form-error'
 import { cn } from '@/lib/utils'
-import { CheckCircle2, Loader2 } from 'lucide-react'
+import { CheckCircle2, Loader2, AlertCircle } from 'lucide-react'
 
 // ============================================================================
 // Types
@@ -19,6 +19,8 @@ interface FormFieldProps {
   children: ReactNode
   className?: string
   description?: string
+  /** Hint text shown below the input (not an error) */
+  hint?: string
   characterCount?: {
     current: number
     max: number
@@ -49,12 +51,20 @@ function ValidationIndicator({
   if (state === 'idle') {return null}
 
   return (
-    <span className={cn('ml-2', className)}>
+    <span
+      className={cn(
+        'ml-2 inline-flex animate-in fade-in-0 zoom-in-50 duration-200',
+        className
+      )}
+    >
       {state === 'validating' && (
         <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />
       )}
       {state === 'valid' && (
         <CheckCircle2 className="h-3.5 w-3.5 text-success" />
+      )}
+      {state === 'invalid' && (
+        <AlertCircle className="h-3.5 w-3.5 text-destructive" />
       )}
     </span>
   )
@@ -72,6 +82,7 @@ export function FormField({
   children,
   className,
   description,
+  hint,
   characterCount,
   validationState = 'idle',
   showValidationIndicator = false,
@@ -91,12 +102,12 @@ export function FormField({
           htmlFor={htmlFor}
           className={cn(
             'flex items-center gap-1',
-            showError && 'text-error'
+            showError && 'text-destructive'
           )}
         >
           {label}
           {required && (
-            <span className="text-error" aria-label="required">
+            <span className="text-destructive" aria-label="required">
               *
             </span>
           )}
@@ -109,12 +120,12 @@ export function FormField({
         {characterCount && (
           <span
             className={cn(
-              'text-xs transition-colors',
+              'text-xs transition-colors duration-200',
               characterCount.isOverLimit
-                ? 'text-error font-semibold'
+                ? 'text-destructive font-semibold'
                 : characterCount.isNearLimit
                 ? 'text-warning'
-                : 'text-muted'
+                : 'text-muted-foreground'
             )}
             aria-live="polite"
           >
@@ -125,7 +136,7 @@ export function FormField({
 
       {/* Description */}
       {description && (
-        <p id={descriptionId} className="text-sm text-secondary">
+        <p id={descriptionId} className="text-sm text-muted-foreground">
           {description}
         </p>
       )}
@@ -134,20 +145,20 @@ export function FormField({
       <div
         className={cn(
           'relative',
-          validationState === 'valid' && touched && '[&>input]:border-success [&>textarea]:border-success',
-          showError && '[&>input]:border-error [&>textarea]:border-error'
+          validationState === 'valid' && touched && '[&>input]:border-success [&>textarea]:border-success [&>select]:border-success',
+          showError && '[&>input]:border-destructive [&>textarea]:border-destructive [&>select]:border-destructive'
         )}
       >
         {children}
       </div>
 
-      {/* Success Message */}
-      {showSuccess && (
-        <div className="flex items-center gap-2 text-sm text-success">
-          <CheckCircle2 className="h-4 w-4 flex-shrink-0" />
-          <span>{successMessage}</span>
-        </div>
+      {/* Hint text (shown when no error) */}
+      {hint && !showError && (
+        <p className="text-sm text-muted-foreground">{hint}</p>
       )}
+
+      {/* Success Message */}
+      {showSuccess && <FormSuccess message={successMessage} />}
 
       {/* Error Message */}
       <FormError message={showError ? error : undefined} id={errorId} />
@@ -185,7 +196,7 @@ export function FormSection({
           {title}
         </h3>
         {description && (
-          <p className="text-sm text-secondary mt-1">{description}</p>
+          <p className="text-sm text-muted-foreground mt-1">{description}</p>
         )}
       </div>
 
@@ -230,12 +241,12 @@ export function InlineFormField({
           className={cn(
             'flex items-center gap-1 pt-2 flex-shrink-0',
             labelWidth,
-            showError && 'text-error'
+            showError && 'text-destructive'
           )}
         >
           {label}
           {required && (
-            <span className="text-error" aria-label="required">
+            <span className="text-destructive" aria-label="required">
               *
             </span>
           )}
@@ -248,7 +259,7 @@ export function InlineFormField({
         <div className="flex-1">
           {children}
           {description && (
-            <p className="text-xs text-muted mt-1">{description}</p>
+            <p className="text-xs text-muted-foreground mt-1">{description}</p>
           )}
           <FormError message={showError ? error : undefined} id={errorId} />
         </div>
@@ -283,13 +294,13 @@ export function FormFieldset({
       <legend className="text-sm font-medium text-foreground flex items-center gap-1">
         {legend}
         {required && (
-          <span className="text-error" aria-label="required">
+          <span className="text-destructive" aria-label="required">
             *
           </span>
         )}
       </legend>
       {description && (
-        <p className="text-sm text-secondary -mt-2">{description}</p>
+        <p className="text-sm text-muted-foreground -mt-2">{description}</p>
       )}
       {error && <FormError message={error} />}
       <div className="space-y-3">{children}</div>

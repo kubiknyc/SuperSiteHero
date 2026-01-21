@@ -38,7 +38,7 @@ export interface SwipeableListItemProps {
 }
 
 const colorClasses = {
-  default: 'bg-gray-500 text-white',
+  default: 'bg-muted-foreground text-white',
   primary: 'bg-primary text-white',
   success: 'bg-success text-white',
   warning: 'bg-warning text-white',
@@ -230,7 +230,11 @@ export function SwipeableListItem({
           'relative bg-card z-10',
           isAnimating && 'transition-transform duration-200 ease-out'
         )}
-        style={{ transform: `translateX(${translateX}px)` }}
+        style={{
+          transform: `translateX(${translateX}px)`,
+          // Optimize rendering during swipe gestures
+          willChange: state.isSwiping ? 'transform' : 'auto',
+        }}
         {...handlers}
       >
         {children}

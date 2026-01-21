@@ -10,6 +10,7 @@ import { useCreateChangeOrderV2 } from '@/features/change-orders/hooks/useChange
 import { SmartLayout } from '@/components/layout/SmartLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { LoadingButton } from '@/components/ui/loading-states';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -20,7 +21,6 @@ import {
   AlertTriangle,
   ChevronLeft,
   FileEdit,
-  Loader2,
   Plus,
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -179,11 +179,11 @@ export function ChangeOrderCreatePage() {
 
               {/* No Projects Warning */}
               {!projectsLoading && projects && projects.length === 0 && (
-                <div className="flex gap-3 p-4 bg-warning-light border border-yellow-200 rounded-lg">
+                <div className="flex gap-3 p-4 bg-warning-light border border-warning rounded-lg">
                   <AlertCircle className="h-5 w-5 text-warning flex-shrink-0" />
                   <div>
-                    <p className="font-medium text-yellow-900">No projects available</p>
-                    <p className="text-sm text-yellow-700">
+                    <p className="font-medium text-warning-dark">No projects available</p>
+                    <p className="text-sm text-warning-dark/80">
                       Create a project first before creating change orders.
                     </p>
                   </div>
@@ -300,12 +300,12 @@ export function ChangeOrderCreatePage() {
               </div>
 
               {/* Info banner */}
-              <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+              <div className="p-4 bg-warning-light border border-warning rounded-lg">
                 <div className="flex items-start gap-3">
-                  <AlertTriangle className="h-5 w-5 text-orange-500 mt-0.5" />
+                  <AlertTriangle className="h-5 w-5 text-warning mt-0.5" />
                   <div>
-                    <p className="font-medium text-orange-800">Creating a PCO</p>
-                    <p className="text-sm text-orange-700 mt-1">
+                    <p className="font-medium text-warning-dark">Creating a PCO</p>
+                    <p className="text-sm text-warning-dark/80 mt-1">
                       This will create a Potential Change Order (PCO) in draft status. You can add
                       line items, attachments, and submit for approval from the detail page.
                     </p>
@@ -318,19 +318,14 @@ export function ChangeOrderCreatePage() {
                 <Button type="button" variant="outline" onClick={() => navigate('/change-orders')}>
                   Cancel
                 </Button>
-                <Button type="submit" disabled={createChangeOrder.isPending}>
-                  {createChangeOrder.isPending ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Creating...
-                    </>
-                  ) : (
-                    <>
-                      <Plus className="h-4 w-4 mr-2" />
-                      Create PCO
-                    </>
-                  )}
-                </Button>
+                <LoadingButton
+                  type="submit"
+                  isLoading={createChangeOrder.isPending}
+                  loadingText="Creating..."
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create PCO
+                </LoadingButton>
               </div>
             </CardContent>
           </Card>

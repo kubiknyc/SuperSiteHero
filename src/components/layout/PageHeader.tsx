@@ -4,6 +4,9 @@
 import * as React from 'react'
 import { LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Breadcrumb } from '@/components/ui/breadcrumb'
+import { useBreadcrumb } from '@/hooks/useBreadcrumb'
+import { RecentItemsDropdown } from '@/components/layout/RecentItemsDropdown'
 
 export interface PageHeaderProps {
   /** Page title */
@@ -14,8 +17,14 @@ export interface PageHeaderProps {
   icon?: LucideIcon
   /** Action buttons to display on the right */
   actions?: React.ReactNode
-  /** Optional breadcrumb content */
-  breadcrumb?: React.ReactNode
+  /** Optional breadcrumb content (pass false to disable auto-breadcrumbs) */
+  breadcrumb?: React.ReactNode | false
+  /** Enable auto-generated breadcrumbs from route */
+  autoBreadcrumb?: boolean
+  /** Dynamic labels for breadcrumb IDs */
+  breadcrumbLabels?: Record<string, string>
+  /** Show recent items dropdown in header */
+  showRecentItems?: boolean
   /** Additional content below the title row */
   children?: React.ReactNode
   /** Custom class name */
@@ -30,10 +39,27 @@ export function PageHeader({
   icon: Icon,
   actions,
   breadcrumb,
+  autoBreadcrumb = false,
+  breadcrumbLabels,
+  showRecentItems = false,
   children,
   className,
   sticky = false,
 }: PageHeaderProps) {
+  const { crumbs } = useBreadcrumb({ dynamicLabels: breadcrumbLabels })
+
+  // Determine what to render for breadcrumbs
+  const renderBreadcrumb = () => {
+    if (breadcrumb === false) { return null }
+    if (breadcrumb) { return breadcrumb }
+    if (autoBreadcrumb && crumbs.length > 0) {
+      return <Breadcrumb items={crumbs} showHome />
+    }
+    return null
+  }
+
+  const breadcrumbContent = renderBreadcrumb()
+
   return (
     <header
       className={cn(
@@ -43,10 +69,15 @@ export function PageHeader({
       )}
     >
       <div className="px-4 py-4 md:px-6 lg:px-8">
-        {/* Breadcrumb */}
-        {breadcrumb && (
-          <div className="mb-2 text-sm text-muted-foreground">
-            {breadcrumb}
+        {/* Breadcrumb and Recent Items Row */}
+        {(breadcrumbContent || showRecentItems) && (
+          <div className="mb-2 flex items-center justify-between">
+            <div className="text-sm text-muted-foreground">
+              {breadcrumbContent}
+            </div>
+            {showRecentItems && (
+              <RecentItemsDropdown maxItems={8} />
+            )}
           </div>
         )}
 

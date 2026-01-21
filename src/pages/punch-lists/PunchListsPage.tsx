@@ -20,7 +20,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { NativeSelect as Select } from '@/components/ui/select'
-import { Plus, Edit, Loader2, CheckCircle2, Clock, AlertCircle, ListChecks, Zap, WifiOff, RefreshCw, BarChart3 } from 'lucide-react'
+import { Plus, Edit, CheckCircle2, Clock, AlertCircle, ListChecks, Zap, WifiOff, RefreshCw, BarChart3 } from 'lucide-react'
+import { Spinner } from '@/components/ui/loading-states'
 import { format } from 'date-fns'
 import type { PunchItem } from '@/types/database'
 
@@ -178,7 +179,7 @@ export function PunchListsPage() {
               <QRCodeScanner buttonLabel="Scan QR" buttonVariant="outline" />
               <Button
                 variant="default"
-                className="bg-success hover:bg-green-700"
+                className="bg-success hover:bg-success/90"
                 onClick={() => setQuickPunchOpen(true)}
               >
                 <Zap className="h-4 w-4 mr-2" />
@@ -216,13 +217,13 @@ export function PunchListsPage() {
             </Card>
 
             <Card
-              className={`cursor-pointer transition-all ${statusFilter === 'open' ? 'ring-2 ring-orange-500' : 'hover:bg-surface'}`}
+              className={`cursor-pointer transition-all ${statusFilter === 'open' ? 'ring-2 ring-warning' : 'hover:bg-surface'}`}
               onClick={() => setStatusFilter('open')}
             >
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-orange-100 rounded-lg">
-                    <AlertCircle className="h-5 w-5 text-orange-600" />
+                  <div className="p-2 bg-warning-light rounded-lg">
+                    <AlertCircle className="h-5 w-5 text-warning" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{stats.open}</p>
@@ -270,18 +271,18 @@ export function PunchListsPage() {
 
         {/* Offline Pending Items Banner */}
         {offlinePendingCount > 0 && (
-          <Card className={isOnline ? 'bg-primary-50 border-primary-200 dark:bg-primary-950/20 dark:border-primary-800' : 'bg-warning-light border-amber-200 dark:bg-amber-950/20 dark:border-amber-800'}>
+          <Card className={isOnline ? 'bg-primary-50 border-primary-200 dark:bg-primary-950/20 dark:border-primary-800' : 'bg-warning-light border-warning dark:bg-warning/10 dark:border-warning/30'}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${isOnline ? 'bg-primary-100 dark:bg-primary-950' : 'bg-amber-100 dark:bg-amber-950'}`}>
-                    <WifiOff className={`h-5 w-5 ${isOnline ? 'text-primary dark:text-primary-400' : 'text-warning dark:text-amber-400'}`} />
+                  <div className={`p-2 rounded-lg ${isOnline ? 'bg-primary-100 dark:bg-primary-950' : 'bg-warning-light dark:bg-warning/20'}`}>
+                    <WifiOff className={`h-5 w-5 ${isOnline ? 'text-primary dark:text-primary-400' : 'text-warning dark:text-warning'}`} />
                   </div>
                   <div>
-                    <p className={`font-medium ${isOnline ? 'text-primary-900 dark:text-primary-100' : 'text-amber-900 dark:text-amber-100'}`}>
+                    <p className={`font-medium ${isOnline ? 'text-primary-900 dark:text-primary-100' : 'text-warning-dark dark:text-warning'}`}>
                       {offlinePendingCount} punch item{offlinePendingCount > 1 ? 's' : ''} pending sync
                     </p>
-                    <p className={`text-sm ${isOnline ? 'text-primary-700 dark:text-primary-300' : 'text-amber-700 dark:text-amber-300'}`}>
+                    <p className={`text-sm ${isOnline ? 'text-primary-700 dark:text-primary-300' : 'text-warning-dark/80 dark:text-warning/80'}`}>
                       {isOnline
                         ? 'Syncing automatically...'
                         : 'Will sync when back online'}
@@ -378,7 +379,7 @@ export function PunchListsPage() {
         {/* Loading state */}
         {isLoading && (
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-disabled" />
+            <Spinner size="lg" />
             <p className="ml-2 text-muted">Loading punch items...</p>
           </div>
         )}
