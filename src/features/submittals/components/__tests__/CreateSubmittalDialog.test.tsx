@@ -13,6 +13,17 @@ import { createMockWorkflowType, createMockSubmittal } from '@/__tests__/factori
 vi.mock('../../hooks/useSubmittals');
 vi.mock('../../hooks/useSubmittalMutations');
 
+// Mock the logger
+const mockLoggerError = vi.fn();
+vi.mock('@/lib/utils/logger', () => ({
+  logger: {
+    info: vi.fn(),
+    error: (...args: unknown[]) => mockLoggerError(...args),
+    warn: vi.fn(),
+    debug: vi.fn(),
+  },
+}));
+
 // Mock DistributionListPicker
 vi.mock('@/components/distribution/DistributionListPicker', () => ({
   DistributionListPicker: ({ onChange }: any) => (
@@ -471,7 +482,6 @@ describe('CreateSubmittalDialog', () => {
   describe('Error Handling', () => {
     it('should handle submission error', async () => {
       const user = userEvent.setup();
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
       mockMutateAsync.mockRejectedValue(new Error('Failed to create'));
 
       render(
@@ -489,13 +499,11 @@ describe('CreateSubmittalDialog', () => {
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(consoleErrorSpy).toHaveBeenCalledWith(
+        expect(mockLoggerError).toHaveBeenCalledWith(
           'Failed to create submittal:',
           expect.any(Error)
         );
       });
-
-      consoleErrorSpy.mockRestore();
     });
 
     it('should not close dialog on submission error', async () => {

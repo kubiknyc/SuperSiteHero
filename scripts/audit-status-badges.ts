@@ -43,6 +43,7 @@ interface AuditReport {
 }
 
 const badgeFilePattern = /(Badge|Status)/i;
+// eslint-disable-next-line security/detect-unsafe-regex
 const statusConfigObject = /(?:const|let|var)\s+(\w*(?:status|Status|STATE|state|config|Config)\w*)\s*(?::\s*[^=]+)?\s*=\s*\{/g;
 const inlineBadge = /<Badge[^>]*variant\s*=\s*['"]([^'"]+)['"][^>]*>/g;
 const statusValue = /['"]?(open|closed|pending|in_progress|approved|rejected|completed|draft|submitted|review|active|inactive|cancelled|resolved|on_hold|deferred|overdue|scheduled)['"]?\s*:/gi;
@@ -97,6 +98,7 @@ function findDedicatedBadgeComponents(files: string[]): BadgeComponent[] {
       const content = fs.readFileSync(file, 'utf-8');
       const lines = content.split('\n');
 
+      // eslint-disable-next-line security/detect-unsafe-regex
       const componentMatch = content.match(/(?:export\s+(?:default\s+)?function|const)\s+(\w+)/);
       const componentName = componentMatch ? componentMatch[1] : fileName.replace('.tsx', '');
 

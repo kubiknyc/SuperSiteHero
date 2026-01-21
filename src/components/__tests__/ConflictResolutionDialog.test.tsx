@@ -410,7 +410,7 @@ describe('ConflictResolutionDialog', () => {
       );
 
       const localBoxes = container.querySelectorAll('.bg-warning-light');
-      const serverBoxes = container.querySelectorAll('.bg-blue-50');
+      const serverBoxes = container.querySelectorAll('.bg-info-light');
 
       expect(localBoxes.length).toBeGreaterThan(0);
       expect(serverBoxes.length).toBeGreaterThan(0);
@@ -827,7 +827,7 @@ describe('ConflictResolutionDialog', () => {
         <ConflictResolutionDialog open={true} onOpenChange={mockOnOpenChange} conflict={conflict} />
       );
 
-      const localBoxes = container.querySelectorAll('.dark\\:bg-amber-950\\/20');
+      const localBoxes = container.querySelectorAll('.dark\\:bg-warning\\/10');
       expect(localBoxes.length).toBeGreaterThan(0);
     });
 
@@ -837,7 +837,7 @@ describe('ConflictResolutionDialog', () => {
         <ConflictResolutionDialog open={true} onOpenChange={mockOnOpenChange} conflict={conflict} />
       );
 
-      const serverBoxes = container.querySelectorAll('.dark\\:bg-blue-950\\/20');
+      const serverBoxes = container.querySelectorAll('.dark\\:bg-info\\/10');
       expect(serverBoxes.length).toBeGreaterThan(0);
     });
   });

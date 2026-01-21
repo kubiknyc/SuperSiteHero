@@ -779,7 +779,7 @@ describe('PWAInstallPrompt Components', () => {
         const { container } = render(<PWAInstallButton />);
         const card = container.querySelector('[data-testid="card"]');
 
-        expect(card).toHaveClass('border-green-200', 'dark:border-green-800');
+        expect(card).toHaveClass('border-success/30', 'dark:border-success/40');
       });
     });
 

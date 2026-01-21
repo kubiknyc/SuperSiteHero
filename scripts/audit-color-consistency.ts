@@ -42,6 +42,7 @@ interface AuditReport {
 
 // Patterns to detect color violations
 const colorPatterns = {
+  // eslint-disable-next-line security/detect-unsafe-regex
   hardcodedHex: /#([0-9a-fA-F]{3}){1,2}\b/g,
   inlineStyleColor: /style\s*=\s*\{\{[^}]*(color|backgroundColor|borderColor|fill|stroke)\s*:\s*['"`]?([^'"`},]+)['"`]?/gi,
   nonSemanticTailwind: /(?:text|bg|border|fill|stroke)-(red|blue|green|yellow|orange|purple|pink|indigo|cyan|teal|lime|amber|emerald|violet|fuchsia|rose|sky|slate|gray|zinc|neutral|stone)-\d{2,3}/g,

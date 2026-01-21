@@ -18,11 +18,20 @@ import {
 global.fetch = vi.fn();
 
 // Mock import.meta.env
-vi.stubEnv('VITE_OPENWEATHERMAP_API_KEY', 'test-api-key');
+vi.stubEnv('VITE_SUPABASE_URL', 'https://test.supabase.co');
 
-// Mock supabase
+// Mock supabase with auth.getSession
 vi.mock('@/lib/supabase', () => ({
   supabase: {
+    auth: {
+      getSession: vi.fn().mockResolvedValue({
+        data: {
+          session: {
+            access_token: 'test-access-token',
+          },
+        },
+      }),
+    },
     from: vi.fn(() => ({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
@@ -36,10 +45,11 @@ vi.mock('@/lib/supabase', () => ({
 describe('weatherApiService', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(fetch).mockReset();  // Reset mock implementation queue
     // Clear weather cache before each test
     clearWeatherCache();
-    // Ensure API key is set
-    vi.stubEnv('VITE_OPENWEATHERMAP_API_KEY', 'test-api-key');
+    // Ensure Supabase URL is set
+    vi.stubEnv('VITE_SUPABASE_URL', 'https://test.supabase.co');
   });
 
   afterEach(() => {
@@ -47,24 +57,16 @@ describe('weatherApiService', () => {
   });
 
   describe('getWeather', () => {
-    const mockApiResponse = {
-      main: {
-        temp: 295.15, // ~72°F
-        humidity: 65,
-      },
-      weather: [
-        {
-          main: 'Clear',
-          description: 'clear sky',
-        },
-      ],
-      wind: {
-        speed: 5.5, // m/s
-        deg: 180, // South
-      },
-      rain: {
-        '1h': 0,
-      },
+    // Edge Function returns already-processed WeatherData
+    const mockWeatherResponse: WeatherData = {
+      temperature: 72,
+      conditions: 'clear sky',
+      humidity: 65,
+      windSpeed: 12,
+      windDirection: 'S',
+      precipitation: 0,
+      icon: 'sun',
+      fetchedAt: new Date().toISOString(),
     };
 
     it('should fetch weather data successfully', async () => {
@@ -72,69 +74,60 @@ describe('weatherApiService', () => {
 
       vi.mocked(fetch).mockResolvedValueOnce({
         ok: true,
-        json: async () => mockApiResponse,
+        json: async () => mockWeatherResponse,
       } as Response);
 
       const result = await getWeather(location);
 
       expect(result).toBeDefined();
-      expect(result.temperature).toBeCloseTo(72, 0); // ~72°F
+      expect(result.temperature).toBe(72);
       expect(result.conditions).toBe('clear sky');
       expect(result.humidity).toBe(65);
-      expect(result.windSpeed).toBeGreaterThan(0);
+      expect(result.windSpeed).toBe(12);
       expect(result.windDirection).toBe('S');
       expect(result.fetchedAt).toBeDefined();
     });
 
-    it('should convert Kelvin to Fahrenheit correctly', async () => {
+    it('should return freezing temperature correctly', async () => {
       const location: GeoLocation = { latitude: 41.00, longitude: -74.00 };
-      const freezingPoint = {
-        ...mockApiResponse,
-        main: { ...mockApiResponse.main, temp: 273.15 }, // 0°C = 32°F
+      const freezingWeather: WeatherData = {
+        ...mockWeatherResponse,
+        temperature: 32,
       };
 
       vi.mocked(fetch).mockResolvedValueOnce({
         ok: true,
-        json: async () => freezingPoint,
+        json: async () => freezingWeather,
       } as Response);
 
       const result = await getWeather(location);
       expect(result.temperature).toBe(32);
     });
 
-    it('should convert wind speed from m/s to mph', async () => {
+    it('should return wind speed correctly', async () => {
       const location: GeoLocation = { latitude: 42.00, longitude: -74.00 };
 
       vi.mocked(fetch).mockResolvedValueOnce({
         ok: true,
-        json: async () => mockApiResponse,
+        json: async () => mockWeatherResponse,
       } as Response);
 
       const result = await getWeather(location);
-      expect(result.windSpeed).toBeGreaterThan(10); // ~12 mph
+      expect(result.windSpeed).toBe(12);
     });
 
-    it('should determine wind direction correctly', async () => {
-      const testDirections = [
-        { deg: 0, expected: 'N' },
-        { deg: 90, expected: 'E' },
-        { deg: 180, expected: 'S' },
-        { deg: 270, expected: 'W' },
-        { deg: 45, expected: 'NE' },
-        { deg: 135, expected: 'SE' },
-        { deg: 225, expected: 'SW' },
-        { deg: 315, expected: 'NW' },
-      ];
+    it('should return wind direction correctly', async () => {
+      const testDirections = ['N', 'E', 'S', 'W', 'NE', 'SE', 'SW', 'NW'];
 
       // Use different locations for each direction to avoid cache
       let latOffset = 0;
-      for (const { deg, expected } of testDirections) {
+      for (const direction of testDirections) {
         const location: GeoLocation = { latitude: 50.00 + latOffset, longitude: -80.00 };
         latOffset += 1;
 
-        const response = {
-          ...mockApiResponse,
-          wind: { ...mockApiResponse.wind, deg },
+        const response: WeatherData = {
+          ...mockWeatherResponse,
+          windDirection: direction,
         };
 
         vi.mocked(fetch).mockResolvedValueOnce({
@@ -143,15 +136,16 @@ describe('weatherApiService', () => {
         } as Response);
 
         const result = await getWeather(location);
-        expect(result.windDirection).toBe(expected);
+        expect(result.windDirection).toBe(direction);
       }
     });
 
     it('should handle precipitation data', async () => {
       const location: GeoLocation = { latitude: 43.00, longitude: -74.00 };
-      const rainyResponse = {
-        ...mockApiResponse,
-        rain: { '1h': 5.5 },
+      const rainyResponse: WeatherData = {
+        ...mockWeatherResponse,
+        precipitation: 5.5,
+        conditions: 'light rain',
       };
 
       vi.mocked(fetch).mockResolvedValueOnce({
@@ -165,10 +159,11 @@ describe('weatherApiService', () => {
 
     it('should handle snow as precipitation', async () => {
       const location: GeoLocation = { latitude: 44.00, longitude: -74.00 };
-      const snowyResponse = {
-        ...mockApiResponse,
-        rain: undefined,
-        snow: { '1h': 3.0 },
+      const snowyResponse: WeatherData = {
+        ...mockWeatherResponse,
+        precipitation: 3.0,
+        conditions: 'snow',
+        icon: 'snowflake',
       };
 
       vi.mocked(fetch).mockResolvedValueOnce({
@@ -185,7 +180,7 @@ describe('weatherApiService', () => {
 
       vi.mocked(fetch).mockResolvedValueOnce({
         ok: true,
-        json: async () => mockApiResponse,
+        json: async () => mockWeatherResponse,
       } as Response);
 
       // First call - should fetch
@@ -198,16 +193,19 @@ describe('weatherApiService', () => {
       expect(result).toBeDefined();
     });
 
-    it('should throw error when API key is missing', async () => {
+    it('should throw error when not authenticated', async () => {
       const location: GeoLocation = { latitude: 70.00, longitude: -100.00 };
-      vi.unstubAllEnvs();
+
+      // Mock supabase to return no session
+      const { supabase } = await import('@/lib/supabase');
+      vi.mocked(supabase.auth.getSession).mockResolvedValueOnce({
+        data: { session: null },
+        error: null,
+      });
 
       await expect(getWeather(location)).rejects.toThrow(
-        'Weather API key not configured'
+        'Not authenticated'
       );
-
-      // Restore for other tests
-      vi.stubEnv('VITE_OPENWEATHERMAP_API_KEY', 'test-api-key');
     });
 
     it('should handle API errors', async () => {
@@ -215,8 +213,9 @@ describe('weatherApiService', () => {
 
       vi.mocked(fetch).mockResolvedValueOnce({
         ok: false,
-        status: 401,
-        statusText: 'Unauthorized',
+        status: 500,
+        statusText: 'Internal Server Error',
+        json: async () => ({ error: 'Service unavailable' }),
       } as Response);
 
       await expect(getWeather(location)).rejects.toThrow('Weather API error');

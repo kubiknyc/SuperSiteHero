@@ -127,7 +127,7 @@ describe('LoadingScreen', () => {
     it('renders progress bar', () => {
       const { container } = render(<LoadingScreen />)
 
-      const progressBar = container.querySelector('.w-64.h-1.bg-gray-700')
+      const progressBar = container.querySelector('.w-64.h-1.bg-muted')
       expect(progressBar).toBeInTheDocument()
     })
 
@@ -513,7 +513,7 @@ describe('LoadingOverlay', () => {
     it('has dark mode border color', () => {
       const { container } = render(<LoadingOverlay show={true} />)
 
-      const card = container.querySelector('.dark\\:border-gray-700\\/50')
+      const card = container.querySelector('.dark\\:border-border\\/50')
       expect(card).toBeInTheDocument()
     })
 
@@ -521,7 +521,7 @@ describe('LoadingOverlay', () => {
       render(<LoadingOverlay show={true} message="Test" />)
 
       const message = screen.getByText('Test')
-      expect(message).toHaveClass('dark:text-gray-300')
+      expect(message).toHaveClass('dark:text-muted-foreground')
     })
   })
 

@@ -521,7 +521,9 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                 aria-label="Upload photos"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
-                    !isProcessing && !isUploading && fileInputRef.current?.click();
+                    if (!isProcessing && !isUploading) {
+                      fileInputRef.current?.click();
+                    }
                   }
                 }}
               >

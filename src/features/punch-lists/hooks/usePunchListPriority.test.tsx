@@ -42,11 +42,12 @@ const mockUserProfile = {
   email: 'test@example.com',
 }
 
+// Create mock function for useAuth that can be controlled per-test
+const mockUseAuth = vi.fn()
+
 // Mock useAuth
 vi.mock('@/lib/auth/AuthContext', () => ({
-  useAuth: () => ({
-    userProfile: mockUserProfile,
-  }),
+  useAuth: () => mockUseAuth(),
 }))
 
 // Mock Supabase
@@ -85,6 +86,8 @@ const mockPunchItem = {
 
 beforeEach(() => {
   vi.clearAllMocks()
+  // Set default return value for useAuth mock
+  mockUseAuth.mockReturnValue({ userProfile: mockUserProfile })
 })
 
 // ============================================================================
@@ -451,8 +454,8 @@ describe('Mutation Hooks', () => {
     })
 
     it('should throw error when user not authenticated', async () => {
-      const { useAuth } = await import('@/lib/auth/AuthContext')
-      vi.mocked(useAuth).mockReturnValue({ userProfile: null } as any)
+      // Override the mock for this test to return null userProfile
+      mockUseAuth.mockReturnValue({ userProfile: null })
 
       const { result } = renderHook(() => useUpdatePunchItemPriority(), {
         wrapper: createWrapper(),
@@ -465,8 +468,7 @@ describe('Mutation Hooks', () => {
 
       await waitFor(() => expect(result.current.isError).toBe(true))
 
-      // Restore mock
-      vi.mocked(useAuth).mockReturnValue({ userProfile: mockUserProfile } as any)
+      // Note: No need to restore - beforeEach handles this
     })
   })
 

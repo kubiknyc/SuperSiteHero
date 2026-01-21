@@ -51,6 +51,7 @@ import type {
 describe('AI Provider Service', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockFetch.mockReset()  // Reset mock implementation queue as well
   })
 
   afterEach(() => {
@@ -66,8 +67,8 @@ describe('AI Provider Service', () => {
       expect(MODEL_PRICING).toBeDefined()
       expect(MODEL_PRICING['gpt-4o']).toBeDefined()
       expect(MODEL_PRICING['gpt-4o-mini']).toBeDefined()
-      expect(MODEL_PRICING['claude-3-5-sonnet-latest']).toBeDefined()
-      expect(MODEL_PRICING['claude-3-5-haiku-latest']).toBeDefined()
+      expect(MODEL_PRICING['claude-3-5-sonnet-20241022']).toBeDefined()
+      expect(MODEL_PRICING['claude-3-5-haiku-20241022']).toBeDefined()
     })
 
     it('should have input and output pricing for each model', () => {
@@ -415,7 +416,7 @@ describe('AI Provider Service', () => {
             'anthropic-version': '2023-06-01',
           },
           body: JSON.stringify({
-            model: 'claude-3-5-haiku-latest',
+            model: 'claude-3-5-haiku-20241022',
             max_tokens: 2048,
             messages: [{ role: 'user', content: 'Test' }],
           }),
@@ -437,7 +438,7 @@ describe('AI Provider Service', () => {
         await mockFetch('https://api.anthropic.com/v1/messages', {
           method: 'POST',
           body: JSON.stringify({
-            model: 'claude-3-5-sonnet-latest',
+            model: 'claude-3-5-sonnet-20241022',
             system: 'You are a helpful assistant',
             messages: [{ role: 'user', content: 'Test' }],
           }),
@@ -494,14 +495,14 @@ describe('AI Provider Service', () => {
     })
 
     describe('cost estimation', () => {
-      it('should estimate cost for claude-3-5-haiku-latest', () => {
+      it('should estimate cost for claude-3-5-haiku-20241022', () => {
         const tokens: TokenCount = {
           input: 1000,
           output: 500,
           total: 1500,
         }
 
-        const pricing = MODEL_PRICING['claude-3-5-haiku-latest']
+        const pricing = MODEL_PRICING['claude-3-5-haiku-20241022']
         const expectedCost = Math.ceil(
           (tokens.input * pricing.input + tokens.output * pricing.output) / 1000
         )
@@ -509,14 +510,14 @@ describe('AI Provider Service', () => {
         expect(expectedCost).toBeGreaterThan(0)
       })
 
-      it('should estimate cost for claude-3-5-sonnet-latest', () => {
+      it('should estimate cost for claude-3-5-sonnet-20241022', () => {
         const tokens: TokenCount = {
           input: 1000,
           output: 500,
           total: 1500,
         }
 
-        const pricing = MODEL_PRICING['claude-3-5-sonnet-latest']
+        const pricing = MODEL_PRICING['claude-3-5-sonnet-20241022']
         const expectedCost = Math.ceil(
           (tokens.input * pricing.input + tokens.output * pricing.output) / 1000
         )
@@ -647,9 +648,9 @@ describe('AI Provider Service', () => {
 
     it('should list available Anthropic models', () => {
       const anthropicModels = [
-        'claude-3-5-sonnet-latest',
-        'claude-3-5-haiku-latest',
-        'claude-3-opus-latest',
+        'claude-3-5-sonnet-20241022',
+        'claude-3-5-haiku-20241022',
+        'claude-3-opus-20240229',
       ]
 
       // Not all may have pricing, but some should be defined
