@@ -77,9 +77,9 @@ export const MobileTasksList = memo(function MobileTasksList() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
-        return <CheckCircle2 className="h-5 w-5 text-green-500" />;
+        return <CheckCircle2 className="h-5 w-5 text-success" />;
       case 'in_progress':
-        return <Clock className="h-5 w-5 text-blue-500" />;
+        return <Clock className="h-5 w-5 text-info" />;
       default:
         return <Circle className="h-5 w-5 text-muted-foreground" />;
     }
@@ -88,11 +88,11 @@ export const MobileTasksList = memo(function MobileTasksList() {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'high':
-        return 'text-red-500';
+        return 'text-error';
       case 'medium':
-        return 'text-yellow-500';
+        return 'text-warning';
       default:
-        return 'text-green-500';
+        return 'text-success';
     }
   };
 
@@ -134,7 +134,7 @@ export const MobileTasksList = memo(function MobileTasksList() {
             key={task.id}
             className={cn(
               "cursor-pointer hover:border-primary/50 transition-colors",
-              isOverdue(task.dueDate, task.status) && "border-red-500/50"
+              isOverdue(task.dueDate, task.status) && "border-error/50"
             )}
             onClick={() => navigate(`/tasks/${task.id}`)}
           >
@@ -155,7 +155,7 @@ export const MobileTasksList = memo(function MobileTasksList() {
                   <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
-                      <span className={isOverdue(task.dueDate, task.status) ? 'text-red-500' : ''}>
+                      <span className={isOverdue(task.dueDate, task.status) ? 'text-error' : ''}>
                         {task.dueDate}
                       </span>
                     </span>

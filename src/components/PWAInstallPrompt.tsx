@@ -343,15 +343,15 @@ export function PWAInstallButton({ className, onAnalyticsEvent }: PWAInstallButt
 
   if (isInstalled || isStandalone) {
     return (
-      <Card className={cn('border-green-200 dark:border-green-800', className)}>
+      <Card className={cn('border-success/30 dark:border-success/40', className)}>
         <CardContent className="p-4">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-success-light dark:bg-green-900 rounded-lg">
-              <CheckCircle2 className="h-5 w-5 text-success dark:text-green-400" />
+            <div className="p-2 bg-success-light dark:bg-success/20 rounded-lg">
+              <CheckCircle2 className="h-5 w-5 text-success" />
             </div>
             <div className="flex-1">
-              <p className="font-medium text-green-800 dark:text-green-200">App Installed</p>
-              <p className="text-sm text-success dark:text-green-400">
+              <p className="font-medium text-success-dark dark:text-success">App Installed</p>
+              <p className="text-sm text-success dark:text-success/80">
                 JobSight is installed on your device
               </p>
             </div>

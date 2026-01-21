@@ -177,7 +177,7 @@ export function QCInspectionDetailPage() {
           <Card>
             <CardContent className="p-12 text-center">
               <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-foreground mb-2">
+              <h3 className="heading-card text-foreground mb-2">
                 Error Loading Inspection
               </h3>
               <p className="text-muted-foreground">
@@ -231,7 +231,7 @@ export function QCInspectionDetailPage() {
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-3 mb-2">
-                      <h1 className="text-2xl font-bold text-foreground">
+                      <h1 className="heading-page text-foreground">
                         {inspectionNumber}
                       </h1>
                       <Badge variant="outline" className="capitalize">

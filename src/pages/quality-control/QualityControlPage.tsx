@@ -105,7 +105,7 @@ export function QualityControlPage() {
         <div className="p-6">
           <div className="text-center py-12 bg-card rounded-lg border">
             <FileWarning className="h-12 w-12 text-gray-300 mx-auto" />
-            <h3 className="text-lg font-medium text-foreground mt-4 heading-subsection">
+            <h3 className="heading-card text-foreground mt-4">
               No Projects Found
             </h3>
             <p className="text-muted mt-2">
@@ -123,7 +123,7 @@ export function QualityControlPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-foreground heading-page">Quality Control</h1>
+            <h1 className="heading-page text-foreground">Quality Control</h1>
             <p className="text-muted mt-1">
               Manage NCRs and QC inspections for your projects
             </p>
@@ -256,7 +256,7 @@ export function QualityControlPage() {
                 ) : ncrs.length === 0 ? (
                   <div className="text-center py-12 bg-card rounded-lg border">
                     <FileWarning className="h-12 w-12 text-gray-300 mx-auto" />
-                    <h3 className="text-lg font-medium text-foreground mt-4">No NCRs Found</h3>
+                    <h3 className="heading-card text-foreground mt-4">No NCRs Found</h3>
                     <p className="text-muted mt-2">
                       {ncrSearch || ncrStatus !== 'all' || ncrSeverity !== 'all'
                         ? 'Try adjusting your filters'
@@ -320,7 +320,7 @@ export function QualityControlPage() {
                 ) : inspections.length === 0 ? (
                   <div className="text-center py-12 bg-card rounded-lg border">
                     <ClipboardCheck className="h-12 w-12 text-gray-300 mx-auto" />
-                    <h3 className="text-lg font-medium text-foreground mt-4">No Inspections Found</h3>
+                    <h3 className="heading-card text-foreground mt-4">No Inspections Found</h3>
                     <p className="text-muted mt-2">
                       {inspSearch || inspStatus !== 'all'
                         ? 'Try adjusting your filters'

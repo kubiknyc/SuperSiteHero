@@ -150,7 +150,7 @@ export function MaterialListsPage() {
         <div className="flex-none border-b border-border bg-background p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold">Material Lists</h1>
+              <h1 className="heading-page">Material Lists</h1>
               <p className="text-muted-foreground text-sm">
                 Procurement lists generated from takeoffs with waste factors
               </p>

@@ -1,31 +1,14 @@
 // File: /src/features/documents/components/DocumentStatusBadge.tsx
 // Colored badge component for document status
+// Refactored to use unified StatusBadge component
 
-import { Badge } from '@/components/ui'
+import { StatusBadge } from '@/components/ui/status-badge'
 import { cn } from '@/lib/utils'
 import type { DocumentStatus } from '@/types/database'
 
 interface DocumentStatusBadgeProps {
   status: DocumentStatus
   className?: string
-}
-
-type ValidDocumentStatus = 'current' | 'superseded' | 'archived' | 'void'
-
-// Status display labels (capitalize first letter)
-const STATUS_LABELS: Record<ValidDocumentStatus, string> = {
-  current: 'Current',
-  superseded: 'Superseded',
-  archived: 'Archived',
-  void: 'Void',
-}
-
-// Status color classes using Tailwind
-const STATUS_COLORS: Record<ValidDocumentStatus, string> = {
-  current: 'bg-success-light text-green-800 border-green-200',
-  superseded: 'bg-amber-100 text-amber-800 border-amber-200',
-  archived: 'bg-muted text-foreground border-border',
-  void: 'bg-error-light text-red-800 border-red-200',
 }
 
 /**
@@ -49,25 +32,21 @@ export function DocumentStatusBadge({
   status,
   className,
 }: DocumentStatusBadgeProps) {
-  // Handle null status gracefully
   if (!status) {
     return (
-      <Badge variant="outline" className={cn('bg-muted text-foreground', className)}>
-        Unknown
-      </Badge>
+      <StatusBadge
+        status="unknown"
+        domain="general"
+        className={cn(className)}
+      />
     )
   }
 
   return (
-    <Badge
-      variant="outline"
-      className={cn(
-        STATUS_COLORS[status as ValidDocumentStatus],
-        'font-medium',
-        className
-      )}
-    >
-      {STATUS_LABELS[status as ValidDocumentStatus]}
-    </Badge>
+    <StatusBadge
+      status={status}
+      domain="document"
+      className={cn(className)}
+    />
   )
 }

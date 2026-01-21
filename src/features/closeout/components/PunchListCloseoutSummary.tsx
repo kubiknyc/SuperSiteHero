@@ -96,30 +96,30 @@ export function PunchListCloseoutSummary({ projectId, className }: PunchListClos
           className={cn(
             'p-4 rounded-lg flex items-center gap-3',
             status.isReadyForCloseout
-              ? 'bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800'
-              : 'bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-800'
+              ? 'bg-success-light dark:bg-success/10 border border-success/30 dark:border-success/30'
+              : 'bg-warning-light dark:bg-warning/10 border border-warning/30 dark:border-warning/30'
           )}
         >
           {status.isReadyForCloseout ? (
             <>
-              <CheckCircle2 className="h-6 w-6 text-green-600 dark:text-green-400 flex-shrink-0" />
+              <CheckCircle2 className="h-6 w-6 text-success flex-shrink-0" />
               <div>
-                <p className="font-medium text-green-800 dark:text-green-200">
+                <p className="font-medium text-success-dark dark:text-success">
                   Ready for Closeout
                 </p>
-                <p className="text-sm text-green-600 dark:text-green-400">
+                <p className="text-sm text-success dark:text-success/80">
                   All punch list items have been verified
                 </p>
               </div>
             </>
           ) : (
             <>
-              <AlertTriangle className="h-6 w-6 text-orange-600 dark:text-orange-400 flex-shrink-0" />
+              <AlertTriangle className="h-6 w-6 text-warning flex-shrink-0" />
               <div>
-                <p className="font-medium text-orange-800 dark:text-orange-200">
+                <p className="font-medium text-warning-dark dark:text-warning">
                   Not Ready for Closeout
                 </p>
-                <p className="text-sm text-orange-600 dark:text-orange-400">
+                <p className="text-sm text-warning dark:text-warning/80">
                   {status.open + status.inProgress} item{status.open + status.inProgress !== 1 ? 's' : ''} still outstanding
                 </p>
               </div>
@@ -138,25 +138,25 @@ export function PunchListCloseoutSummary({ projectId, className }: PunchListClos
             <span className="text-muted-foreground">Verification Progress</span>
             <span className="font-medium">{status.verificationPercent}%</span>
           </div>
-          <Progress value={status.verificationPercent} className="h-2 [&>div]:bg-green-500" />
+          <Progress value={status.verificationPercent} className="h-2 [&>div]:bg-success" />
         </div>
 
         {/* Status Counts */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="text-center p-3 bg-muted/50 rounded-lg">
-            <div className="text-2xl font-bold text-orange-600">{status.open}</div>
+            <div className="text-2xl font-bold text-warning">{status.open}</div>
             <div className="text-xs text-muted-foreground">Open</div>
           </div>
           <div className="text-center p-3 bg-muted/50 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600">{status.inProgress}</div>
+            <div className="text-2xl font-bold text-info">{status.inProgress}</div>
             <div className="text-xs text-muted-foreground">In Progress</div>
           </div>
           <div className="text-center p-3 bg-muted/50 rounded-lg">
-            <div className="text-2xl font-bold text-purple-600">{status.completed}</div>
+            <div className="text-2xl font-bold text-primary">{status.completed}</div>
             <div className="text-xs text-muted-foreground">Completed</div>
           </div>
           <div className="text-center p-3 bg-muted/50 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">{status.verified}</div>
+            <div className="text-2xl font-bold text-success">{status.verified}</div>
             <div className="text-xs text-muted-foreground">Verified</div>
           </div>
         </div>
@@ -173,7 +173,7 @@ export function PunchListCloseoutSummary({ projectId, className }: PunchListClos
                 </Badge>
               )}
               {status.highOpen > 0 && (
-                <Badge variant="default" className="gap-1 bg-orange-500">
+                <Badge variant="default" className="gap-1 bg-warning text-warning-foreground">
                   <AlertTriangle className="h-3 w-3" />
                   {status.highOpen} High
                 </Badge>

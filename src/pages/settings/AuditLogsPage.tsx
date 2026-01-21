@@ -99,26 +99,24 @@ interface AuditLogFilters {
 
 const ACTION_LABELS: Record<string, { label: string; icon: React.ElementType; color: string }> = {
   // Authentication
-  login: { label: 'Login', icon: LogIn, color: 'text-green-600 bg-green-100' },
-  logout: { label: 'Logout', icon: LogOut, color: 'text-blue-600 bg-blue-100' },
-  failed_login: { label: 'Failed Login', icon: AlertTriangle, color: 'text-red-600 bg-red-100' },
-  mfa_setup: { label: 'MFA Setup', icon: Shield, color: 'text-purple-600 bg-purple-100' },
-  mfa_verify: { label: 'MFA Verify', icon: Shield, color: 'text-purple-600 bg-purple-100' },
-  password_reset: { label: 'Password Reset', icon: Lock, color: 'text-orange-600 bg-orange-100' },
-  password_change: { label: 'Password Change', icon: Lock, color: 'text-orange-600 bg-orange-100' },
-  session_refresh: { label: 'Session Refresh', icon: RefreshCw, color: 'text-gray-600 bg-gray-100' },
-  session_expired: { label: 'Session Expired', icon: AlertTriangle, color: 'text-yellow-600 bg-yellow-100' },
+  login: { label: 'Login', icon: LogIn, color: 'text-success bg-success-light' },
+  logout: { label: 'Logout', icon: LogOut, color: 'text-info bg-info-light' },
+  failed_login: { label: 'Failed Login', icon: AlertTriangle, color: 'text-error bg-error-light' },
+  password_reset: { label: 'Password Reset', icon: Lock, color: 'text-warning bg-warning-light' },
+  password_change: { label: 'Password Change', icon: Lock, color: 'text-warning bg-warning-light' },
+  session_refresh: { label: 'Session Refresh', icon: RefreshCw, color: 'text-muted-foreground bg-muted' },
+  session_expired: { label: 'Session Expired', icon: AlertTriangle, color: 'text-warning bg-warning-light' },
   // Data operations
-  create: { label: 'Created', icon: Plus, color: 'text-green-600 bg-green-100' },
-  update: { label: 'Updated', icon: Edit, color: 'text-blue-600 bg-blue-100' },
-  delete: { label: 'Deleted', icon: Trash2, color: 'text-red-600 bg-red-100' },
-  view: { label: 'Viewed', icon: Eye, color: 'text-gray-600 bg-gray-100' },
-  download: { label: 'Downloaded', icon: Download, color: 'text-cyan-600 bg-cyan-100' },
-  export: { label: 'Exported', icon: FileText, color: 'text-indigo-600 bg-indigo-100' },
+  create: { label: 'Created', icon: Plus, color: 'text-success bg-success-light' },
+  update: { label: 'Updated', icon: Edit, color: 'text-info bg-info-light' },
+  delete: { label: 'Deleted', icon: Trash2, color: 'text-error bg-error-light' },
+  view: { label: 'Viewed', icon: Eye, color: 'text-muted-foreground bg-muted' },
+  download: { label: 'Downloaded', icon: Download, color: 'text-info bg-info-light' },
+  export: { label: 'Exported', icon: FileText, color: 'text-primary bg-primary-50' },
   // Security
-  security_warning: { label: 'Security Warning', icon: AlertTriangle, color: 'text-yellow-600 bg-yellow-100' },
-  suspicious_activity: { label: 'Suspicious Activity', icon: Shield, color: 'text-red-600 bg-red-100' },
-  rate_limit_exceeded: { label: 'Rate Limited', icon: AlertTriangle, color: 'text-orange-600 bg-orange-100' },
+  security_warning: { label: 'Security Warning', icon: AlertTriangle, color: 'text-warning bg-warning-light' },
+  suspicious_activity: { label: 'Suspicious Activity', icon: Shield, color: 'text-error bg-error-light' },
+  rate_limit_exceeded: { label: 'Rate Limited', icon: AlertTriangle, color: 'text-warning bg-warning-light' },
 }
 
 const RESOURCE_TYPE_LABELS: Record<string, string> = {
@@ -151,7 +149,7 @@ function getActionBadge(action: string) {
   const config = ACTION_LABELS[action] || {
     label: action,
     icon: FileText,
-    color: 'text-gray-600 bg-gray-100',
+    color: 'text-muted-foreground bg-muted',
   }
   const Icon = config.icon
 
@@ -536,7 +534,7 @@ export function AuditLogsPage() {
       <div className="container max-w-7xl py-6 space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Audit Logs</h1>
+            <h1 className="heading-page">Audit Logs</h1>
             <p className="text-muted-foreground">
               Track all security and data access events for compliance
             </p>

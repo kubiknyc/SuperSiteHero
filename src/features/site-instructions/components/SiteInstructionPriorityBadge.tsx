@@ -1,27 +1,22 @@
-import { Badge } from '@/components/ui/badge'
+// File: /src/features/site-instructions/components/SiteInstructionPriorityBadge.tsx
+// Priority badge for site instructions
+// Refactored to use unified PriorityBadge component
+
+import { PriorityBadge } from '@/components/ui/status-badge'
 import type { SiteInstructionPriority } from '@/types/database'
 
 interface SiteInstructionPriorityBadgeProps {
   priority: SiteInstructionPriority | string | null | undefined
 }
 
-const priorityConfig: Record<
-  SiteInstructionPriority,
-  { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' | 'success' | 'warning' }
-> = {
-  low: { label: 'Low', variant: 'secondary' },
-  normal: { label: 'Normal', variant: 'outline' },
-  high: { label: 'High', variant: 'warning' },
-  urgent: { label: 'Urgent', variant: 'destructive' },
-}
-
 export function SiteInstructionPriorityBadge({ priority }: SiteInstructionPriorityBadgeProps) {
-  if (!priority) {return null}
-
-  const config = priorityConfig[priority as SiteInstructionPriority] || {
-    label: priority,
-    variant: 'secondary' as const,
+  if (!priority) {
+    return null
   }
 
-  return <Badge variant={config.variant}>{config.label}</Badge>
+  return (
+    <PriorityBadge
+      priority={priority}
+    />
+  )
 }

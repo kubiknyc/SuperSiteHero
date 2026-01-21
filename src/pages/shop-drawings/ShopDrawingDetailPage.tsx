@@ -73,7 +73,7 @@ export function ShopDrawingDetailPage() {
       <SmartLayout title="Shop Drawing Details">
         <div className="flex flex-col items-center justify-center py-12">
           <AlertCircle className="h-12 w-12 text-destructive mb-4" />
-          <h2 className="text-xl font-semibold">Shop Drawing Not Found</h2>
+          <h2 className="heading-section">Shop Drawing Not Found</h2>
           <p className="text-muted-foreground mt-2">
             {(error as Error)?.message || 'The requested shop drawing could not be found.'}
           </p>
@@ -99,7 +99,7 @@ export function ShopDrawingDetailPage() {
             </Button>
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold">
+                <h1 className="heading-page">
                   {shopDrawing.drawing_number || shopDrawing.submittal_number}
                 </h1>
                 <ShopDrawingStatusBadge status={shopDrawing.review_status} />

@@ -114,7 +114,7 @@ export function JSAListPage() {
             </Button>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold heading-page">Job Safety Analyses</h1>
+                <h1 className="heading-page">Job Safety Analyses</h1>
                 {statsLoading ? (
                   <Skeleton className="h-5 w-12" />
                 ) : stats ? (

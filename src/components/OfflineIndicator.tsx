@@ -114,7 +114,7 @@ export function OfflineIndicator() {
         icon: WifiOff,
         color: 'text-error',
         bgColor: 'bg-error-light',
-        borderColor: 'border-red-200',
+        borderColor: 'border-error/30 dark:border-error/40',
         label: 'Offline',
       };
     }
@@ -124,7 +124,7 @@ export function OfflineIndicator() {
         icon: CloudOff,
         color: 'text-warning',
         bgColor: 'bg-warning-light',
-        borderColor: 'border-amber-200',
+        borderColor: 'border-warning/30 dark:border-warning/40',
         label: 'Syncing',
       };
     }
@@ -132,9 +132,9 @@ export function OfflineIndicator() {
     if (conflictCount > 0) {
       return {
         icon: AlertTriangle,
-        color: 'text-orange-500',
-        bgColor: 'bg-orange-50',
-        borderColor: 'border-orange-200',
+        color: 'text-warning',
+        bgColor: 'bg-warning-light dark:bg-warning/20',
+        borderColor: 'border-warning/30 dark:border-warning/40',
         label: 'Conflicts',
       };
     }
@@ -142,8 +142,8 @@ export function OfflineIndicator() {
     return {
       icon: Cloud,
       color: 'text-success',
-      bgColor: 'bg-success-light',
-      borderColor: 'border-green-200',
+      bgColor: 'bg-success-light dark:bg-success/20',
+      borderColor: 'border-success/30 dark:border-success/40',
       label: 'Online',
     };
   };
@@ -320,10 +320,10 @@ export function OfflineIndicator() {
                   <div
                     className={`h-full rounded-full ${
                       storageQuota.critical
-                        ? 'bg-red-500'
+                        ? 'bg-error'
                         : storageQuota.warning
                         ? 'bg-warning'
-                        : 'bg-green-500'
+                        : 'bg-success'
                     }`}
                     style={{ width: `${Math.min(100, storagePercentage)}%` }}
                   />
@@ -341,8 +341,8 @@ export function OfflineIndicator() {
 
             {/* Offline Mode Info */}
             {!isOnline && (
-              <div className="rounded-md bg-warning-light border border-amber-200 p-3">
-                <p className="text-sm text-amber-800 flex items-center gap-2">
+              <div className="rounded-md bg-warning-light dark:bg-warning/20 border border-warning/30 dark:border-warning/40 p-3">
+                <p className="text-sm text-warning-dark dark:text-warning flex items-center gap-2">
                   <Info className="h-4 w-4" />
                   You're working offline. Changes will be synced when you reconnect.
                 </p>

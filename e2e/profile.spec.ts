@@ -4,7 +4,6 @@
  * Tests the user profile functionality including:
  * - Profile viewing and editing
  * - Avatar upload
- * - MFA setup and verification
  * - Password management
  * - Personal information updates
  */
@@ -197,34 +196,6 @@ test.describe('User Profile Management', () => {
     }
   })
 
-  test('should navigate to MFA setup from profile', async ({ page }) => {
-    await page.goto('/profile')
-    await page.waitForLoadState('domcontentloaded')
-
-    // Look for MFA/security link
-    const mfaLink = page.locator(
-      'a:has-text("MFA"), ' +
-      'a:has-text("Two-Factor"), ' +
-      'a:has-text("Security"), ' +
-      'button:has-text("MFA")'
-    ).first()
-
-    if (await mfaLink.isVisible({ timeout: 5000 })) {
-      await mfaLink.click()
-      await page.waitForTimeout(1000)
-
-      // Should navigate to MFA setup or security page
-      const hasMFAContent = await page.locator('text=/two-factor|authenticator|mfa/i')
-        .first()
-        .isVisible({ timeout: 3000 })
-        .catch(() => false)
-
-      expect(hasMFAContent || page.url().includes('mfa') || page.url().includes('security')).toBeTruthy()
-    } else {
-      test.skip()
-    }
-  })
-
   test('should show email as read-only', async ({ page }) => {
     await page.goto('/profile/edit')
     await page.waitForLoadState('domcontentloaded')
@@ -338,83 +309,6 @@ test.describe('User Profile Management', () => {
 
     if (await dateElement.first().isVisible({ timeout: 5000 })) {
       expect(await dateElement.count()).toBeGreaterThan(0)
-    } else {
-      test.skip()
-    }
-  })
-})
-
-test.describe('MFA Setup', () => {
-  // Pre-authenticated session handles login - no beforeEach login needed
-
-  test('should navigate to MFA setup page', async ({ page }) => {
-    await page.goto('/auth/mfa-setup')
-    await page.waitForLoadState('domcontentloaded')
-
-    // Should be on MFA setup page
-    await expect(page).toHaveURL(/mfa-setup/)
-  })
-
-  test('should display MFA setup instructions', async ({ page }) => {
-    await page.goto('/auth/mfa-setup')
-    await page.waitForLoadState('domcontentloaded')
-
-    // Should have instructions
-    const instructions = page.locator('text=/scan|authenticator|code|app/i')
-
-    if (await instructions.first().isVisible({ timeout: 5000 })) {
-      const count = await instructions.count()
-      expect(count).toBeGreaterThan(0)
-    } else {
-      test.skip()
-    }
-  })
-
-  test('should display QR code for MFA setup', async ({ page }) => {
-    await page.goto('/auth/mfa-setup')
-    await page.waitForLoadState('domcontentloaded')
-
-    // Look for QR code or canvas
-    const qrCode = page.locator('canvas, img[alt*="qr"], [data-testid*="qr"]').first()
-
-    if (await qrCode.isVisible({ timeout: 5000 })) {
-      expect(await qrCode.isVisible()).toBeTruthy()
-    } else {
-      test.skip()
-    }
-  })
-
-  test('should have verification code input', async ({ page }) => {
-    await page.goto('/auth/mfa-setup')
-    await page.waitForLoadState('domcontentloaded')
-
-    // Look for code input
-    const codeInput = page.locator(
-      'input[type="text"][maxlength="6"], ' +
-      'input[placeholder*="code" i], ' +
-      '[data-testid*="code"]'
-    ).first()
-
-    if (await codeInput.isVisible({ timeout: 5000 })) {
-      expect(await codeInput.isVisible()).toBeTruthy()
-    } else {
-      test.skip()
-    }
-  })
-
-  test('should have verify/enable button', async ({ page }) => {
-    await page.goto('/auth/mfa-setup')
-    await page.waitForLoadState('domcontentloaded')
-
-    // Look for verify button
-    const verifyButton = page.locator(
-      'button:has-text("Verify"), ' +
-      'button:has-text("Enable"), ' +
-      'button:has-text("Activate")'
-    ).first()
-
-    if (await verifyButton.isVisible({ timeout: 5000 })) {
-      expect(await verifyButton.isVisible()).toBeTruthy()
     } else {
       test.skip()
     }

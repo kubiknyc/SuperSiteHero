@@ -1,36 +1,15 @@
 // File: /src/features/rfis/components/RFIStatusBadge.tsx
 // Display RFI status as colored badge with proper styling
+// Refactored to use unified StatusBadge component
 
+import { StatusBadge } from '@/components/ui/status-badge'
 import { cn } from '@/lib/utils'
 
-export type RFIStatus = 'pending' | 'submitted' | 'approved' | 'rejected' | 'closed'
+export type RFIStatus = 'pending' | 'submitted' | 'answered' | 'approved' | 'rejected' | 'closed' | 'overdue'
 
 export interface RFIStatusBadgeProps {
-  status: RFIStatus
+  status: RFIStatus | string
   className?: string
-}
-
-const statusConfig: Record<RFIStatus, { label: string; className: string }> = {
-  pending: {
-    label: 'Pending',
-    className: 'bg-muted text-foreground',
-  },
-  submitted: {
-    label: 'Submitted',
-    className: 'bg-info-light text-blue-800',
-  },
-  approved: {
-    label: 'Approved',
-    className: 'bg-success-light text-green-800',
-  },
-  rejected: {
-    label: 'Rejected',
-    className: 'bg-error-light text-red-800',
-  },
-  closed: {
-    label: 'Closed',
-    className: 'bg-slate-100 text-slate-800',
-  },
 }
 
 /**
@@ -50,19 +29,12 @@ const statusConfig: Record<RFIStatus, { label: string; className: string }> = {
  * - High contrast ratios for readability
  */
 export function RFIStatusBadge({ status, className }: RFIStatusBadgeProps) {
-  const config = statusConfig[status]
-
   return (
-    <span
-      className={cn(
-        'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold',
-        config.className,
-        className
-      )}
-      role="status"
-      aria-label={`Status: ${config.label}`}
-    >
-      {config.label}
-    </span>
+    <StatusBadge
+      status={status}
+      domain="rfi"
+      shape="pill"
+      className={cn(className)}
+    />
   )
 }

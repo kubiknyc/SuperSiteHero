@@ -25,14 +25,14 @@ export const SummaryCard = memo(function SummaryCard({
   highlight = false,
 }: SummaryCardProps) {
   const colorClasses = {
-    blue: 'text-primary bg-blue-50',
+    blue: 'text-primary bg-primary/10',
     green: 'text-success bg-success-light',
     red: 'text-error bg-error-light',
-    orange: 'text-orange-600 bg-orange-50',
+    orange: 'text-warning bg-warning-light',
   }
 
   return (
-    <Card className={cn(highlight && 'border-red-300 bg-error-light/50')}>
+    <Card className={cn(highlight && 'border-error bg-error-light/50')}>
       <CardContent className="pt-6">
         <div className="flex items-center justify-between">
           <div className={cn('p-2 rounded-lg', colorClasses[color])}>

@@ -168,7 +168,7 @@ export function NCRDetailPage() {
         <div className="p-6">
           <div className="text-center py-12 bg-card rounded-lg border">
             <FileWarning className="h-12 w-12 text-gray-300 mx-auto" />
-            <h3 className="text-lg font-medium text-foreground mt-4">NCR Not Found</h3>
+            <h3 className="heading-card text-foreground mt-4">NCR Not Found</h3>
             <p className="text-muted mt-2">
               The requested NCR could not be found or you don't have access.
             </p>
@@ -200,7 +200,7 @@ export function NCRDetailPage() {
             </Link>
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold text-foreground">
+                <h1 className="heading-page text-foreground">
                   NCR-{ncr.ncr_number?.toString().padStart(4, '0')}
                 </h1>
                 <NCRStatusBadge status={ncr.status} />

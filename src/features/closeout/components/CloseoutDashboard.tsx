@@ -143,10 +143,10 @@ export function CloseoutDashboard({ projectId, className }: CloseoutDashboardPro
 
   // Get overall status color
   const getProgressColor = (percentage: number) => {
-    if (percentage >= 80) {return 'bg-green-500'}
-    if (percentage >= 50) {return 'bg-yellow-500'}
-    if (percentage >= 25) {return 'bg-orange-500'}
-    return 'bg-red-500'
+    if (percentage >= 80) {return 'bg-success'}
+    if (percentage >= 50) {return 'bg-warning'}
+    if (percentage >= 25) {return 'bg-warning'}
+    return 'bg-destructive'
   }
 
   if (isLoading) {
@@ -171,7 +171,7 @@ export function CloseoutDashboard({ projectId, className }: CloseoutDashboardPro
               Closeout Progress
             </CardTitle>
             {summary?.final_payment_criteria_met && (
-              <Badge className="bg-green-100 text-green-800">
+              <Badge className="bg-success-light text-success-dark dark:bg-success/20 dark:text-success">
                 <CheckCircle2 className="h-3 w-3 mr-1" />
                 Ready for Final Payment
               </Badge>
@@ -282,12 +282,12 @@ export function CloseoutDashboard({ projectId, className }: CloseoutDashboardPro
                     key={milestone.id}
                     className={cn(
                       'flex items-center gap-4 p-3 border rounded-lg transition-colors',
-                      milestone.is_complete ? 'bg-green-50 border-green-200' : 'hover:bg-muted/50'
+                      milestone.is_complete ? 'bg-success-light dark:bg-success/10 border-success/30' : 'hover:bg-muted/50'
                     )}
                   >
                     <div className={cn(
                       'flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center',
-                      milestone.is_complete ? 'bg-green-100 text-green-700' : 'bg-muted text-muted-foreground'
+                      milestone.is_complete ? 'bg-success/20 text-success-dark dark:text-success' : 'bg-muted text-muted-foreground'
                     )}>
                       {getMilestoneIcon(milestone.milestone_type)}
                     </div>
@@ -296,7 +296,7 @@ export function CloseoutDashboard({ projectId, className }: CloseoutDashboardPro
                       <div className="flex items-center gap-2">
                         <span className={cn(
                           'font-medium',
-                          milestone.is_complete && 'text-green-700'
+                          milestone.is_complete && 'text-success-dark dark:text-success'
                         )}>
                           {milestone.title}
                         </span>
@@ -321,12 +321,12 @@ export function CloseoutDashboard({ projectId, className }: CloseoutDashboardPro
                       {milestone.requires_owner_signoff && milestone.is_complete && (
                         <div className="text-sm mt-1">
                           {milestone.owner_signed_off ? (
-                            <span className="text-green-600 flex items-center gap-1">
+                            <span className="text-success flex items-center gap-1">
                               <CheckCircle2 className="h-3 w-3" />
                               Signed off by {milestone.owner_sign_off_by_user?.full_name || 'Owner'}
                             </span>
                           ) : (
-                            <span className="text-orange-600 flex items-center gap-1">
+                            <span className="text-warning flex items-center gap-1">
                               <Clock className="h-3 w-3" />
                               Pending owner sign-off
                             </span>
@@ -374,7 +374,7 @@ export function CloseoutDashboard({ projectId, className }: CloseoutDashboardPro
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-orange-500" />
+              <AlertTriangle className="h-5 w-5 text-warning" />
               Outstanding Items
             </CardTitle>
           </CardHeader>
@@ -383,9 +383,9 @@ export function CloseoutDashboard({ projectId, className }: CloseoutDashboardPro
               {summary.outstanding_items.map((item, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-2 p-2 bg-orange-50 rounded-lg text-sm"
+                  className="flex items-center gap-2 p-2 bg-warning-light dark:bg-warning/10 rounded-lg text-sm"
                 >
-                  <AlertCircle className="h-4 w-4 text-orange-600 flex-shrink-0" />
+                  <AlertCircle className="h-4 w-4 text-warning flex-shrink-0" />
                   <span>{item}</span>
                 </div>
               ))}
@@ -468,7 +468,7 @@ function StatusIndicator({ label, complete }: { label: string; complete: boolean
   return (
     <div className={cn(
       'flex items-center gap-2 p-2 rounded-lg text-sm',
-      complete ? 'bg-green-50 text-green-700' : 'bg-gray-50 text-gray-600'
+      complete ? 'bg-success-light dark:bg-success/10 text-success-dark dark:text-success' : 'bg-muted text-muted-foreground'
     )}>
       {complete ? (
         <CheckCircle2 className="h-4 w-4" />

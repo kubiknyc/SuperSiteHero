@@ -313,7 +313,7 @@ export function SubmittalsPage() {
               </div>
             ) : error ? (
               <div className="text-center py-12">
-                <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
+                <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
                 <p className="text-error">Failed to load submittals</p>
               </div>
             ) : filtered.length === 0 ? (

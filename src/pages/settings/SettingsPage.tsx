@@ -3,13 +3,12 @@ import { SmartLayout } from '@/components/layout/SmartLayout'
 import { Card, CardContent, CardDescription, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
-import { Bell, Workflow, Receipt, ChevronRight, Building2, Users, LayoutTemplate, UsersRound, Shield, Bot, Moon, Calendar, FileSignature, Pencil, ShieldCheck, ClipboardList } from 'lucide-react'
+import { Bell, Workflow, Receipt, ChevronRight, Building2, Users, LayoutTemplate, UsersRound, Shield, Bot, Moon, Calendar, FileSignature, Pencil, ClipboardList } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { ThemeSelector } from '@/components/ThemeToggle'
 import { PWAInstallButton } from '@/components/PWAInstallPrompt'
 import { GloveModeToggle } from '@/components/ui/glove-mode-toggle'
 import { OfflineSyncSettings } from '@/components/settings/OfflineSyncSettings'
-import { MFABackupCodes } from '@/components/settings/MFABackupCodes'
 import { SessionManagement } from '@/components/settings/SessionManagement'
 import { NavigationLayoutSelector } from '@/components/settings/NavigationLayoutSelector'
 
@@ -29,8 +28,8 @@ const settingsSections: SettingsSection[] = [
     description: 'Manage your company information, logo, and branding',
     href: '/settings/company',
     icon: Building2,
-    iconBgColor: 'bg-orange-100',
-    iconColor: 'text-orange-600',
+    iconBgColor: 'bg-warning-light',
+    iconColor: 'text-warning',
     adminOnly: true,
   },
   {
@@ -38,7 +37,7 @@ const settingsSections: SettingsSection[] = [
     description: 'Manage team members, invite users, and control access',
     href: '/settings/users',
     icon: Users,
-    iconBgColor: 'bg-cyan-100',
+    iconBgColor: 'bg-info-light',
     iconColor: 'text-info',
     adminOnly: true,
   },
@@ -55,7 +54,7 @@ const settingsSections: SettingsSection[] = [
     description: 'Connect Google Calendar and Outlook to sync meetings',
     href: '/settings/calendar',
     icon: Calendar,
-    iconBgColor: 'bg-sky-100',
+    iconBgColor: 'bg-info-light',
     iconColor: 'text-info',
   },
   {
@@ -63,16 +62,16 @@ const settingsSections: SettingsSection[] = [
     description: 'Configure approval workflows for documents, submittals, RFIs, and change orders',
     href: '/settings/approval-workflows',
     icon: Workflow,
-    iconBgColor: 'bg-purple-100',
-    iconColor: 'text-purple-600',
+    iconBgColor: 'bg-primary-50',
+    iconColor: 'text-primary',
   },
   {
     title: 'Project Templates',
     description: 'Create reusable templates for standardized project setup',
     href: '/settings/project-templates',
     icon: LayoutTemplate,
-    iconBgColor: 'bg-indigo-100',
-    iconColor: 'text-indigo-600',
+    iconBgColor: 'bg-primary-50',
+    iconColor: 'text-primary',
     adminOnly: true,
   },
   {
@@ -80,16 +79,16 @@ const settingsSections: SettingsSection[] = [
     description: 'Create reusable contact groups for notifications',
     href: '/settings/distribution-lists',
     icon: UsersRound,
-    iconBgColor: 'bg-teal-100',
-    iconColor: 'text-teal-600',
+    iconBgColor: 'bg-success-light',
+    iconColor: 'text-success',
   },
   {
     title: 'Roles & Permissions',
     description: 'Manage custom roles, permissions, and feature flags',
     href: '/settings/roles',
     icon: Shield,
-    iconBgColor: 'bg-rose-100',
-    iconColor: 'text-rose-600',
+    iconBgColor: 'bg-error-light',
+    iconColor: 'text-error',
     adminOnly: true,
   },
   {
@@ -105,16 +104,16 @@ const settingsSections: SettingsSection[] = [
     description: 'Enable electronic signatures for payment applications, change orders, and lien waivers',
     href: '/settings/docusign',
     icon: FileSignature,
-    iconBgColor: 'bg-blue-100',
-    iconColor: 'text-blue-600',
+    iconBgColor: 'bg-info-light',
+    iconColor: 'text-info',
   },
   {
     title: 'AI Settings',
     description: 'Configure AI-powered features, providers, and usage limits',
     href: '/settings/ai',
     icon: Bot,
-    iconBgColor: 'bg-violet-100',
-    iconColor: 'text-violet-600',
+    iconBgColor: 'bg-primary-50',
+    iconColor: 'text-primary',
     adminOnly: true,
   },
   {
@@ -122,8 +121,8 @@ const settingsSections: SettingsSection[] = [
     description: 'View security and compliance audit trail for all sensitive operations',
     href: '/settings/audit-logs',
     icon: ClipboardList,
-    iconBgColor: 'bg-slate-100',
-    iconColor: 'text-slate-600',
+    iconBgColor: 'bg-muted',
+    iconColor: 'text-muted-foreground',
     adminOnly: true,
   },
 ]
@@ -195,8 +194,8 @@ export function SettingsPage() {
           <Card>
             <CardContent className="p-6">
               <div className="flex items-start gap-4">
-                <div className="p-3 rounded-lg bg-purple-100 dark:bg-purple-900">
-                  <Moon className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                <div className="p-3 rounded-lg bg-primary-50 dark:bg-primary-950">
+                  <Moon className="h-6 w-6 text-primary dark:text-primary-400" />
                 </div>
                 <div className="flex-1">
                   <CardTitle className="text-lg mb-1">Theme</CardTitle>
@@ -229,31 +228,6 @@ export function SettingsPage() {
         {/* Security Settings */}
         <div className="space-y-4">
           <h2 className="text-lg font-semibold heading-section">Security</h2>
-
-          {/* MFA Setup */}
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-start gap-4">
-                <div className="p-3 rounded-lg bg-emerald-100 dark:bg-emerald-900">
-                  <ShieldCheck className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
-                </div>
-                <div className="flex-1">
-                  <CardTitle className="text-lg mb-1">Two-Factor Authentication</CardTitle>
-                  <CardDescription className="mb-4">
-                    Add an extra layer of security to your account by enabling two-factor authentication
-                  </CardDescription>
-                  <Button variant="outline" asChild>
-                    <Link to="/auth/mfa-setup">
-                      Configure MFA
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* MFA Backup Codes */}
-          <MFABackupCodes />
 
           {/* Session Management */}
           <SessionManagement />

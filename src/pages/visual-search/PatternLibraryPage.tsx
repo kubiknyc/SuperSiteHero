@@ -213,7 +213,7 @@ export function PatternLibraryPage() {
 
   // Filtered and sorted patterns
   const displayedPatterns = useMemo(() => {
-    if (!patterns) return []
+    if (!patterns) {return []}
 
     let result = [...patterns]
 
@@ -245,7 +245,7 @@ export function PatternLibraryPage() {
 
   // Stats
   const stats = useMemo(() => {
-    if (!patterns) return { total: 0, totalUses: 0, avgTolerance: 0 }
+    if (!patterns) {return { total: 0, totalUses: 0, avgTolerance: 0 }}
     return {
       total: patterns.length,
       totalUses: patterns.reduce((sum, p) => sum + p.usage_count, 0),
@@ -269,7 +269,7 @@ export function PatternLibraryPage() {
   }, [])
 
   const confirmDelete = useCallback(async () => {
-    if (!patternToDelete) return
+    if (!patternToDelete) {return}
     try {
       await deletePattern.mutateAsync(patternToDelete.id)
     } catch (error) {
@@ -301,7 +301,7 @@ export function PatternLibraryPage() {
                     <Library className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <h1 className="text-2xl font-semibold tracking-tight">Pattern Library</h1>
+                    <h1 className="heading-page">Pattern Library</h1>
                     <p className="text-sm text-muted-foreground mt-0.5">
                       Manage your saved visual search patterns
                     </p>

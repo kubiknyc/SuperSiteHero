@@ -266,17 +266,17 @@ export function DistributionListPicker({
             return (
               <div
                 key={listId}
-                className="flex items-center gap-1 bg-purple-100 border border-purple-200 rounded-full pl-2 pr-1 py-1"
+                className="flex items-center gap-1 bg-accent dark:bg-accent/20 border border-accent-foreground/20 dark:border-accent-foreground/30 rounded-full pl-2 pr-1 py-1"
               >
-                <ListPlus className="h-3 w-3 text-purple-600" />
-                <span className="text-sm text-purple-900">{list.name}</span>
-                <Badge variant="outline" className="text-[10px] px-1 py-0 h-4 border-purple-300 text-purple-700">
+                <ListPlus className="h-3 w-3 text-accent-foreground dark:text-accent-foreground" />
+                <span className="text-sm text-accent-foreground dark:text-accent-foreground">{list.name}</span>
+                <Badge variant="outline" className="text-[10px] px-1 py-0 h-4 border-accent-foreground/30 dark:border-accent-foreground/40 text-accent-foreground dark:text-accent-foreground">
                   {list.member_count}
                 </Badge>
                 <button
                   type="button"
                   onClick={() => toggleList(listId)}
-                  className="text-purple-400 hover:text-purple-600 ml-1 p-0.5"
+                  className="text-accent-foreground/60 hover:text-accent-foreground dark:text-accent-foreground/60 dark:hover:text-accent-foreground ml-1 p-0.5"
                   disabled={disabled}
                 >
                   <X className="h-3 w-3" />
@@ -293,7 +293,7 @@ export function DistributionListPicker({
                 'flex items-center gap-1 rounded-full pl-1 pr-2 py-1',
                 recipient.type === 'user'
                   ? 'bg-card border border-primary-200 dark:border-primary-800'
-                  : 'bg-success-light border border-green-200'
+                  : 'bg-success-light dark:bg-success/10 border border-success/20 dark:border-success/30'
               )}
             >
               {recipient.type === 'user' ? (
@@ -314,7 +314,7 @@ export function DistributionListPicker({
               <span
                 className={cn(
                   'text-sm',
-                  recipient.type === 'user' ? 'text-primary-900 dark:text-primary-100' : 'text-green-900'
+                  recipient.type === 'user' ? 'text-primary-900 dark:text-primary-100' : 'text-success dark:text-success'
                 )}
               >
                 {recipient.name}
@@ -326,7 +326,7 @@ export function DistributionListPicker({
                   'ml-1',
                   recipient.type === 'user'
                     ? 'text-primary-400 dark:text-primary-400 hover:text-primary dark:text-primary-400'
-                    : 'text-green-400 hover:text-success'
+                    : 'text-success/60 hover:text-success dark:text-success/60 dark:hover:text-success'
                 )}
                 disabled={disabled}
               >
@@ -459,17 +459,17 @@ export function DistributionListPicker({
                         disabled={disabled}
                         className={cn(
                           'w-full flex items-center gap-3 p-3 text-left hover:bg-muted/50',
-                          isSelected && 'bg-purple-50'
+                          isSelected && 'bg-accent/50 dark:bg-accent/20'
                         )}
                       >
-                        <div className="h-8 w-8 rounded-lg bg-purple-100 flex items-center justify-center">
-                          <ListPlus className="h-4 w-4 text-purple-600" />
+                        <div className="h-8 w-8 rounded-lg bg-accent dark:bg-accent/20 flex items-center justify-center">
+                          <ListPlus className="h-4 w-4 text-accent-foreground dark:text-accent-foreground" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
                             <p className="font-medium text-sm truncate">{list.name}</p>
                             {list.is_default && (
-                              <Star className="h-3 w-3 text-warning fill-yellow-500" />
+                              <Star className="h-3 w-3 text-warning fill-warning" />
                             )}
                           </div>
                           <p className="text-xs text-muted-foreground">
@@ -487,7 +487,7 @@ export function DistributionListPicker({
                           {list.project_id ? 'Project' : 'Company'}
                         </Badge>
                         {isSelected && (
-                          <Check className="h-4 w-4 text-purple-600 flex-shrink-0" />
+                          <Check className="h-4 w-4 text-accent-foreground dark:text-accent-foreground flex-shrink-0" />
                         )}
                       </button>
                     );
@@ -547,7 +547,7 @@ export function DistributionListPicker({
                       <Badge
                         key={`${contact.email}-${index}`}
                         variant="secondary"
-                        className="bg-success-light text-green-800 border-green-200"
+                        className="bg-success-light dark:bg-success/10 text-success dark:text-success border-success/20 dark:border-success/30"
                       >
                         {contact.name || contact.email}
                         <button

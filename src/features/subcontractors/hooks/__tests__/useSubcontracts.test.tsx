@@ -402,8 +402,8 @@ describe('Subcontract Hooks', () => {
       const paymentsBuilder = createMockQueryBuilder(mockPayments)
 
       supabase.from.mockImplementation((table: string) => {
-        if (table === 'subcontracts') return queryBuilder
-        if (table === 'subcontract_payments') return paymentsBuilder
+        if (table === 'subcontracts') {return queryBuilder}
+        if (table === 'subcontract_payments') {return paymentsBuilder}
         return createMockQueryBuilder([])
       })
 
@@ -426,8 +426,8 @@ describe('Subcontract Hooks', () => {
       const paymentsBuilder = createMockQueryBuilder([])
 
       supabase.from.mockImplementation((table: string) => {
-        if (table === 'subcontracts') return queryBuilder
-        if (table === 'subcontract_payments') return paymentsBuilder
+        if (table === 'subcontracts') {return queryBuilder}
+        if (table === 'subcontract_payments') {return paymentsBuilder}
         return createMockQueryBuilder([])
       })
 
@@ -449,8 +449,8 @@ describe('Subcontract Hooks', () => {
       const paymentsBuilder = createMockQueryBuilder([])
 
       supabase.from.mockImplementation((table: string) => {
-        if (table === 'subcontracts') return queryBuilder
-        if (table === 'subcontract_payments') return paymentsBuilder
+        if (table === 'subcontracts') {return queryBuilder}
+        if (table === 'subcontract_payments') {return paymentsBuilder}
         return createMockQueryBuilder([])
       })
 
@@ -472,8 +472,8 @@ describe('Subcontract Hooks', () => {
       const paymentsBuilder = createMockQueryBuilder([])
 
       supabase.from.mockImplementation((table: string) => {
-        if (table === 'subcontracts') return queryBuilder
-        if (table === 'subcontract_payments') return paymentsBuilder
+        if (table === 'subcontracts') {return queryBuilder}
+        if (table === 'subcontract_payments') {return paymentsBuilder}
         return createMockQueryBuilder([])
       })
 
@@ -495,8 +495,8 @@ describe('Subcontract Hooks', () => {
       const paymentsBuilder = createMockQueryBuilder([])
 
       supabase.from.mockImplementation((table: string) => {
-        if (table === 'subcontracts') return queryBuilder
-        if (table === 'subcontract_payments') return paymentsBuilder
+        if (table === 'subcontracts') {return queryBuilder}
+        if (table === 'subcontract_payments') {return paymentsBuilder}
         return createMockQueryBuilder([])
       })
 
@@ -537,7 +537,7 @@ describe('Subcontract Hooks', () => {
       ])
 
       supabase.from.mockImplementation((table: string) => {
-        if (table === 'subcontracts') return queryBuilder
+        if (table === 'subcontracts') {return queryBuilder}
         if (table === 'subcontract_change_orders') {
           return {
             select: vi.fn().mockReturnThis(),

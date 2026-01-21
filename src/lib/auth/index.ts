@@ -1,53 +1,8 @@
 // File: /src/lib/auth/index.ts
-// Auth module exports
+// Simplified auth module exports
 
 // Main auth context and hook
 export { AuthProvider, useAuth } from './AuthContext'
-
-// MFA utilities
-export {
-  checkMFAStatus,
-  enrollMFA,
-  verifyMFACode,
-  verifyMFAEnrollment,
-  unenrollMFA,
-  getMFAChallenge,
-  isRoleMFARequired,
-  getUserMFAPreferences,
-  updateUserMFAPreferences,
-  type MFAFactor,
-  type MFAEnrollmentData,
-} from './mfa'
-
-// MFA middleware
-export {
-  checkMFARequirement,
-  isPathMFAProtected,
-  calculateMFAGracePeriod,
-  enforceMFAForRoute,
-} from './mfaMiddleware'
-
-// Biometric authentication
-export {
-  isWebAuthnSupported,
-  isPlatformAuthenticatorAvailable,
-  isConditionalMediationAvailable,
-  registerBiometricCredential,
-  authenticateWithBiometric,
-  verifyBiometricAuthentication,
-  getUserBiometricCredentials,
-  deleteBiometricCredential,
-  getBiometricSettings,
-  updateBiometricSettings,
-  type BiometricCredential,
-  type BiometricSettings,
-} from './biometric'
-
-// Enhanced auth context with MFA
-export {
-  AuthProviderWithMFA,
-  useAuthWithMFA,
-} from './AuthContextWithMFA'
 
 // Authorization utilities
 export {
@@ -71,3 +26,18 @@ export {
   createAuthGuard,
   createServiceAuthHooks,
 } from './authorization'
+
+// Rate limiting
+export { useRateLimit } from './rate-limiter'
+
+// Auth retry utilities
+export {
+  withAuthRetry,
+  isTransientError,
+  isPermanentError,
+  isOnline,
+  waitForOnline,
+} from './auth-retry'
+
+// Session management
+export { sessionManager } from './session-manager'

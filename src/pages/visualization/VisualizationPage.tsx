@@ -101,13 +101,13 @@ function ModelCard({ model, viewMode, onView, onDelete, onShare }: ModelCardProp
     switch (format) {
       case 'gltf':
       case 'glb':
-        return 'bg-success-light text-green-800';
+        return 'bg-success-light text-success-foreground dark:bg-success/20 dark:text-success';
       case 'ifc':
-        return 'bg-info-light text-blue-800';
+        return 'bg-info-light text-info-foreground dark:bg-info/20 dark:text-info';
       case 'obj':
-        return 'bg-warning-light text-yellow-800';
+        return 'bg-warning-light text-warning-foreground dark:bg-warning/20 dark:text-warning';
       case 'fbx':
-        return 'bg-purple-100 text-purple-800';
+        return 'bg-secondary text-secondary-foreground dark:bg-secondary/50';
       default:
         return 'bg-muted text-foreground';
     }
@@ -472,8 +472,8 @@ export function VisualizationPage() {
           onClick={() => handleTabChange('vr-tours')}
         >
           <CardContent className="p-4 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-purple-100">
-              <Glasses className="h-5 w-5 text-purple-600" />
+            <div className="p-2 rounded-lg bg-secondary dark:bg-secondary/50">
+              <Glasses className="h-5 w-5 text-secondary-foreground" />
             </div>
             <div>
               <p className="font-medium">VR Tours</p>
@@ -487,8 +487,8 @@ export function VisualizationPage() {
           onClick={() => handleTabChange('360-photos')}
         >
           <CardContent className="p-4 flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-orange-100">
-              <Camera className="h-5 w-5 text-orange-600" />
+            <div className="p-2 rounded-lg bg-warning-light dark:bg-warning/20">
+              <Camera className="h-5 w-5 text-warning-dark dark:text-warning" />
             </div>
             <div>
               <p className="font-medium">360 Photos</p>
@@ -686,7 +686,7 @@ export function VisualizationPage() {
                         <Camera className="h-12 w-12 text-disabled" />
                       </div>
                     )}
-                    <Badge className="absolute top-2 left-2 text-xs bg-orange-500">
+                    <Badge className="absolute top-2 left-2 text-xs bg-warning text-warning-foreground dark:bg-warning dark:text-warning-foreground">
                       360
                     </Badge>
                   </div>
@@ -817,7 +817,7 @@ export function VisualizationPage() {
 
             <Card className="cursor-pointer hover:shadow-md transition-shadow">
               <CardContent className="p-6 flex flex-col items-center text-center">
-                <Camera className="h-10 w-10 text-orange-600 mb-3" />
+                <Camera className="h-10 w-10 text-warning-dark dark:text-warning mb-3" />
                 <h3 className="font-medium heading-subsection">360 Photo</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                   Equirectangular JPG, PNG
@@ -827,7 +827,7 @@ export function VisualizationPage() {
 
             <Card className="cursor-pointer hover:shadow-md transition-shadow">
               <CardContent className="p-6 flex flex-col items-center text-center">
-                <FolderOpen className="h-10 w-10 text-purple-600 mb-3" />
+                <FolderOpen className="h-10 w-10 text-secondary-foreground mb-3" />
                 <h3 className="font-medium heading-subsection">Batch Upload</h3>
                 <p className="text-sm text-muted-foreground mt-1">
                   Multiple files at once

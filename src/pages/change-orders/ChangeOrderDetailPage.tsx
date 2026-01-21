@@ -256,10 +256,10 @@ export function ChangeOrderDetailPage() {
     return (
       <SmartLayout title="Change Order Details">
         <div className="p-6">
-          <Card className="border-red-200 bg-error-light">
+          <Card className="border-error bg-error-light">
             <CardContent className="py-8 text-center">
               <AlertCircle className="h-8 w-8 mx-auto text-error mb-4" />
-              <h3 className="text-lg font-medium text-red-800 mb-2 heading-subsection">Error Loading Change Order</h3>
+              <h3 className="text-lg font-medium text-error-dark mb-2 heading-subsection">Error Loading Change Order</h3>
               <p className="text-error mb-6">{error?.message || 'Change order not found'}</p>
               <Link to="/change-orders">
                 <Button>Back to Change Orders</Button>
@@ -298,11 +298,11 @@ export function ChangeOrderDetailPage() {
                   {getChangeOrderStatusLabel(changeOrder.status)}
                 </Badge>
                 {changeOrder.is_pco ? (
-                  <Badge variant="outline" className="border-orange-300 text-orange-700 bg-orange-50">
+                  <Badge variant="outline" className="border-warning text-warning-dark bg-warning-light">
                     PCO
                   </Badge>
                 ) : (
-                  <Badge variant="outline" className="border-green-300 text-success-dark bg-success-light">
+                  <Badge variant="outline" className="border-success text-success-dark bg-success-light">
                     Approved CO
                   </Badge>
                 )}
@@ -331,7 +331,7 @@ export function ChangeOrderDetailPage() {
               </Button>
             )}
             {changeOrder.status !== 'void' && changeOrder.status !== 'approved' && (
-              <Button variant="outline" size="sm" className="text-error border-red-200" onClick={handleVoid}>
+              <Button variant="outline" size="sm" className="text-error border-error" onClick={handleVoid}>
                 <Ban className="w-4 h-4 mr-2" />
                 Void
               </Button>
@@ -346,8 +346,8 @@ export function ChangeOrderDetailPage() {
               <h3 className="font-medium text-secondary heading-subsection">Workflow Progress</h3>
               {changeOrder.ball_in_court_user && (
                 <div className="flex items-center gap-2">
-                  <User className="h-4 w-4 text-orange-500" />
-                  <span className="text-sm text-orange-700 font-medium">
+                  <User className="h-4 w-4 text-warning" />
+                  <span className="text-sm text-warning-dark font-medium">
                     Ball in court: {changeOrder.ball_in_court_user.full_name}
                   </span>
                   {changeOrder.ball_in_court_role && (
@@ -418,7 +418,7 @@ export function ChangeOrderDetailPage() {
                 <>
                   <Button
                     variant="outline"
-                    className="text-error border-red-200"
+                    className="text-error border-error"
                     onClick={() => handleInternalApproval(false)}
                     disabled={processInternalApproval.isPending}
                   >
@@ -426,7 +426,7 @@ export function ChangeOrderDetailPage() {
                     Reject
                   </Button>
                   <Button
-                    className="bg-success hover:bg-green-700"
+                    className="bg-success hover:bg-success/90"
                     onClick={() => handleInternalApproval(true)}
                     disabled={processInternalApproval.isPending}
                   >
@@ -445,7 +445,7 @@ export function ChangeOrderDetailPage() {
                 <>
                   <Button
                     variant="outline"
-                    className="text-error border-red-200"
+                    className="text-error border-error"
                     onClick={() => handleOwnerApproval(false)}
                     disabled={processOwnerApproval.isPending}
                   >
@@ -453,7 +453,7 @@ export function ChangeOrderDetailPage() {
                     Owner Reject
                   </Button>
                   <Button
-                    className="bg-success hover:bg-green-700"
+                    className="bg-success hover:bg-success/90"
                     onClick={() => setShowApprovalDialog(true)}
                     disabled={processOwnerApproval.isPending}
                   >
@@ -468,9 +468,9 @@ export function ChangeOrderDetailPage() {
 
         {/* Owner Approval Dialog */}
         {showApprovalDialog && isPendingOwner && (
-          <Card className="border-green-200 bg-success-light">
+          <Card className="border-success bg-success-light">
             <CardHeader>
-              <CardTitle className="text-green-800">Owner Approval</CardTitle>
+              <CardTitle className="text-success-dark">Owner Approval</CardTitle>
               <CardDescription>Enter approved amounts and sign</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -507,7 +507,7 @@ export function ChangeOrderDetailPage() {
                   Cancel
                 </Button>
                 <Button
-                  className="bg-success hover:bg-green-700"
+                  className="bg-success hover:bg-success/90"
                   onClick={() => handleOwnerApproval(true)}
                   disabled={processOwnerApproval.isPending}
                 >
@@ -605,7 +605,7 @@ export function ChangeOrderDetailPage() {
                       )}
                       <div className="p-4 bg-warning-light rounded-lg">
                         <p className="text-sm text-warning font-medium">Proposed Days</p>
-                        <p className="text-2xl font-bold text-amber-700">{changeOrder.proposed_days}</p>
+                        <p className="text-2xl font-bold text-warning-dark">{changeOrder.proposed_days}</p>
                       </div>
                       {changeOrder.approved_days !== null && (
                         <div className="p-4 bg-success-light rounded-lg">
@@ -659,7 +659,7 @@ export function ChangeOrderDetailPage() {
                     )}
                     {changeOrder.related_submittal && (
                       <div className="flex items-center gap-2 p-2 bg-surface rounded">
-                        <Package className="h-4 w-4 text-purple-600" />
+                        <Package className="h-4 w-4 text-primary" />
                         <div className="flex-1">
                           <p className="text-sm font-medium">{changeOrder.related_submittal.submittal_number}</p>
                           <p className="text-xs text-muted">{changeOrder.related_submittal.title}</p>
@@ -742,7 +742,7 @@ export function ChangeOrderDetailPage() {
                     )}
                     {changeOrder.date_internal_approved && (
                       <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-purple-400" />
+                        <Calendar className="h-4 w-4 text-primary" />
                         <div>
                           <p className="text-xs text-muted">Internal Approved</p>
                           <p className="text-sm">{format(new Date(changeOrder.date_internal_approved), 'MMM d, yyyy')}</p>
@@ -751,7 +751,7 @@ export function ChangeOrderDetailPage() {
                     )}
                     {changeOrder.date_owner_approved && (
                       <div className="flex items-center gap-2">
-                        <Calendar className="h-4 w-4 text-green-400" />
+                        <Calendar className="h-4 w-4 text-success" />
                         <div>
                           <p className="text-xs text-muted">Owner Approved</p>
                           <p className="text-sm">{format(new Date(changeOrder.date_owner_approved), 'MMM d, yyyy')}</p>
@@ -765,7 +765,7 @@ export function ChangeOrderDetailPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <FileSignature className="h-5 w-5 text-indigo-600" />
+                      <FileSignature className="h-5 w-5 text-primary" />
                       Owner Signature
                     </CardTitle>
                   </CardHeader>
@@ -886,7 +886,7 @@ export function ChangeOrderDetailPage() {
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <Package className="h-12 w-12 mx-auto text-gray-300 mb-4" />
+                    <Package className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                     <p className="text-muted">No line items yet</p>
                     {isEditable && (
                       <Button className="mt-4" onClick={() => navigate(`/change-orders/${id}/items/new`)}>
@@ -932,7 +932,7 @@ export function ChangeOrderDetailPage() {
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <Paperclip className="h-12 w-12 mx-auto text-gray-300 mb-4" />
+                    <Paperclip className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                     <p className="text-muted">No attachments yet</p>
                   </div>
                 )}
@@ -982,7 +982,7 @@ export function ChangeOrderDetailPage() {
                   </div>
                 ) : (
                   <div className="text-center py-8">
-                    <History className="h-12 w-12 mx-auto text-gray-300 mb-4" />
+                    <History className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                     <p className="text-muted">No history recorded yet</p>
                   </div>
                 )}

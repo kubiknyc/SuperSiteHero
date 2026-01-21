@@ -335,7 +335,7 @@ export default function SheetIndexPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="heading-page flex items-center gap-2">
             <FileStack className="h-6 w-6" />
             Sheet Index
           </h1>
@@ -437,7 +437,7 @@ export default function SheetIndexPage() {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <FileStack className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium">No sheet indices yet</h3>
+            <h3 className="heading-card">No sheet indices yet</h3>
             <p className="text-muted-foreground mb-4">
               Create your first sheet index to organize drawings
             </p>
@@ -455,7 +455,7 @@ export default function SheetIndexPage() {
           {/* Current Set (if exists) */}
           {currentSet && (
             <div>
-              <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
+              <h2 className="heading-section mb-3 flex items-center gap-2">
                 <Star className="h-5 w-5 text-yellow-500" />
                 Current Set
               </h2>
@@ -473,7 +473,7 @@ export default function SheetIndexPage() {
           {/* Draft Sets */}
           {draftSets.length > 0 && (
             <div>
-              <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
+              <h2 className="heading-section mb-3 flex items-center gap-2">
                 <Clock className="h-5 w-5 text-gray-500" />
                 Draft ({draftSets.length})
               </h2>
@@ -494,7 +494,7 @@ export default function SheetIndexPage() {
           {/* Issued Sets */}
           {issuedSets.length > 0 && (
             <div>
-              <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
+              <h2 className="heading-section mb-3 flex items-center gap-2">
                 <CheckCircle2 className="h-5 w-5 text-green-500" />
                 Issued ({issuedSets.length})
               </h2>
@@ -515,7 +515,7 @@ export default function SheetIndexPage() {
           {/* Superseded Sets */}
           {supersededSets.length > 0 && (
             <div>
-              <h2 className="text-lg font-semibold mb-3 text-muted-foreground">
+              <h2 className="heading-section mb-3 text-muted-foreground">
                 Superseded ({supersededSets.length})
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 opacity-75">

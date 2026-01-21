@@ -121,11 +121,11 @@ export function TasksPage() {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'low':
-        return 'bg-info-light text-blue-800'
+        return 'bg-info-light text-info-dark'
       case 'normal':
         return 'bg-muted text-foreground'
       case 'high':
-        return 'bg-error-light text-red-800'
+        return 'bg-error-light text-error-dark'
       default:
         return 'bg-muted text-foreground'
     }
@@ -190,7 +190,7 @@ export function TasksPage() {
                   <p className="text-sm font-medium text-secondary">Pending</p>
                   <p className="text-2xl font-bold mt-1">{stats.pending}</p>
                 </div>
-                <AlertCircle className="h-8 w-8 text-orange-600" />
+                <AlertCircle className="h-8 w-8 text-warning" />
               </div>
             </CardContent>
           </Card>

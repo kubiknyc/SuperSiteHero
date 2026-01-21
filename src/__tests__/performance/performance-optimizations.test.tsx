@@ -329,14 +329,12 @@ describe('Context Memoization', () => {
       'userProfile',
       'loading',
       'isPending',
-      'securityWarning',
       'signIn',
       'signOut',
       'refreshUserProfile',
-      'dismissSecurityWarning',
     ]
 
-    expect(authContextDeps).toHaveLength(10)
+    expect(authContextDeps).toHaveLength(8)
     expect(authContextDeps).toContain('session')
     expect(authContextDeps).toContain('userProfile')
     expect(authContextDeps).toContain('loading')

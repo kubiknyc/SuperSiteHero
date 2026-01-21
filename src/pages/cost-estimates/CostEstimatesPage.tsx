@@ -128,14 +128,14 @@ export function CostEstimatesPage() {
   const getStatusColor = (status: string | null) => {
     switch (status) {
       case 'approved':
-        return 'bg-green-500'
+        return 'bg-success dark:bg-success'
       case 'invoiced':
-        return 'bg-blue-500'
+        return 'bg-info dark:bg-info'
       case 'archived':
-        return 'bg-gray-500'
+        return 'bg-muted-foreground dark:bg-muted-foreground'
       case 'draft':
       default:
-        return 'bg-warning'
+        return 'bg-warning dark:bg-warning'
     }
   }
 
@@ -255,7 +255,7 @@ export function CostEstimatesPage() {
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() => handleDeleteEstimate(estimate.id)}
-                                  className="bg-red-500 hover:bg-error"
+                                  className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
                                 >
                                   Delete
                                 </AlertDialogAction>

@@ -13,8 +13,6 @@ export type AuditAction =
   | 'login'
   | 'logout'
   | 'failed_login'
-  | 'mfa_setup'
-  | 'mfa_verify'
   | 'password_reset'
   | 'password_change'
   | 'session_refresh'
@@ -243,7 +241,7 @@ export const auditLogger = new AuditLogger()
  * Log an authentication event
  */
 export async function logAuthEvent(
-  action: 'login' | 'logout' | 'failed_login' | 'mfa_setup' | 'mfa_verify' | 'password_reset' | 'password_change',
+  action: 'login' | 'logout' | 'failed_login' | 'password_reset' | 'password_change',
   metadata?: Record<string, unknown>
 ): Promise<AuditLogResult> {
   return auditLogger.log({
@@ -354,7 +352,7 @@ export function useAuditLogger() {
 
   const logAuth = useCallback(
     async (
-      action: 'login' | 'logout' | 'failed_login' | 'mfa_setup' | 'mfa_verify' | 'password_reset' | 'password_change',
+      action: 'login' | 'logout' | 'failed_login' | 'password_reset' | 'password_change',
       metadata?: Record<string, unknown>
     ) => {
       return logAuthEvent(action, metadata)

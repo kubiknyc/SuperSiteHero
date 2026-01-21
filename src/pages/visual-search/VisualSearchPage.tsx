@@ -79,7 +79,7 @@ function SheetSelector({
   const [searchTerm, setSearchTerm] = useState('')
 
   const filteredSheets = useMemo(() => {
-    if (!searchTerm) return sheets
+    if (!searchTerm) {return sheets}
     const term = searchTerm.toLowerCase()
     return sheets.filter(
       (s) =>
@@ -312,7 +312,7 @@ export function VisualSearchPage() {
   }, [patternSource, selectedPattern, searchState.patternImageBase64, selectedSheetIds])
 
   const sheetsToSearch = useMemo(() => {
-    if (!sheets) return []
+    if (!sheets) {return []}
     return sheets.filter((s) => s.full_image_url)
   }, [sheets])
 
@@ -332,7 +332,7 @@ export function VisualSearchPage() {
   )
 
   const handleSearch = useCallback(async () => {
-    if (!canSearch) return
+    if (!canSearch) {return}
 
     searchState.setSearching(true)
 
@@ -493,7 +493,7 @@ export function VisualSearchPage() {
                         {popularPatterns && popularPatterns.length > 0 && (
                           <div className="space-y-2">
                             <div className="flex items-center gap-2">
-                              <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+                              <Sparkles className="h-3.5 w-3.5 text-warning" />
                               <span className="text-xs font-medium text-muted-foreground">
                                 Popular Patterns
                               </span>
@@ -664,8 +664,8 @@ export function VisualSearchPage() {
                     {/* Results header */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-                          <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                        <div className="p-2 rounded-lg bg-success/10 border border-success/20">
+                          <CheckCircle2 className="h-5 w-5 text-success" />
                         </div>
                         <div>
                           <h2 className="text-lg font-medium">Search Complete</h2>

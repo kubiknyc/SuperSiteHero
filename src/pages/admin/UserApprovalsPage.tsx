@@ -14,7 +14,7 @@ export default function UserApprovalsPage() {
     <SmartLayout title="User Approvals" subtitle="Pending user requests">
       <div className="p-6 space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">User Approvals</h1>
+          <h1 className="heading-page">User Approvals</h1>
           <p className="text-muted-foreground mt-2">
             Manage pending user registrations for your company
           </p>

@@ -46,23 +46,23 @@ const ENTITY_CONFIG: Record<
 > = {
   document: {
     icon: FileText,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-500/10',
+    color: 'text-info',
+    bgColor: 'bg-info/10',
   },
   submittal: {
     icon: FileCheck,
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-500/10',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
   },
   rfi: {
     icon: MessageSquare,
-    color: 'text-emerald-600',
-    bgColor: 'bg-emerald-500/10',
+    color: 'text-success',
+    bgColor: 'bg-success/10',
   },
   change_order: {
     icon: Receipt,
-    color: 'text-amber-600',
-    bgColor: 'bg-amber-500/10',
+    color: 'text-warning',
+    bgColor: 'bg-warning/10',
   },
 }
 
@@ -82,14 +82,14 @@ function HeroStatCard({
 }) {
   const variantStyles = {
     default: 'bg-card/80 border-border/50',
-    urgent: 'bg-amber-500/10 border-amber-500/30',
-    success: 'bg-emerald-500/10 border-emerald-500/30',
+    urgent: 'bg-warning/10 border-warning/30',
+    success: 'bg-success/10 border-success/30',
   }
 
   const iconStyles = {
     default: 'text-muted-foreground',
-    urgent: 'text-amber-600',
-    success: 'text-emerald-600',
+    urgent: 'text-warning',
+    success: 'text-success',
   }
 
   return (
@@ -131,17 +131,17 @@ function EmptyState({ tab }: { tab: FilterTab }) {
             'w-20 h-20 rounded-2xl flex items-center justify-center mb-6',
             'bg-gradient-to-br shadow-lg',
             isPending
-              ? 'from-emerald-500/20 to-emerald-500/5 shadow-emerald-500/10'
-              : 'from-blue-500/20 to-blue-500/5 shadow-blue-500/10'
+              ? 'from-success/20 to-success/5 shadow-success/10'
+              : 'from-info/20 to-info/5 shadow-info/10'
           )}
         >
           {isPending ? (
             <div className="relative">
-              <CheckCircle2 className="h-10 w-10 text-emerald-500" />
-              <Sparkles className="h-4 w-4 text-amber-500 absolute -top-1 -right-1 animate-pulse" />
+              <CheckCircle2 className="h-10 w-10 text-success" />
+              <Sparkles className="h-4 w-4 text-warning absolute -top-1 -right-1 animate-pulse" />
             </div>
           ) : (
-            <Inbox className="h-10 w-10 text-blue-500" />
+            <Inbox className="h-10 w-10 text-info" />
           )}
         </div>
 
@@ -338,7 +338,7 @@ export function MyApprovalsPage() {
                   'absolute -top-1 -right-1 min-w-[20px] h-5 px-1.5',
                   'flex items-center justify-center',
                   'text-xs font-semibold text-white',
-                  'bg-red-500 rounded-full',
+                  'bg-destructive rounded-full',
                   'animate-pulse'
                 )}
               >

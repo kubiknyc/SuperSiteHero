@@ -90,12 +90,12 @@ const notificationTypeConfig: Record<string, {
   punch_item_assigned: {
     label: 'Punch Item',
     icon: ClipboardList,
-    color: 'text-orange-600 bg-orange-100',
+    color: 'text-warning bg-warning-light dark:bg-warning/20',
   },
   punch_item_status_changed: {
     label: 'Punch Item',
     icon: ClipboardList,
-    color: 'text-orange-600 bg-orange-100',
+    color: 'text-warning bg-warning-light dark:bg-warning/20',
   },
   rfi_response: {
     label: 'RFI',
@@ -120,7 +120,7 @@ const notificationTypeConfig: Record<string, {
   task_assigned: {
     label: 'Task',
     icon: CheckSquare,
-    color: 'text-purple-600 bg-purple-100',
+    color: 'text-primary bg-primary/10',
   },
   task_due_reminder: {
     label: 'Task Due',
@@ -130,7 +130,7 @@ const notificationTypeConfig: Record<string, {
   payment_updated: {
     label: 'Payment',
     icon: DollarSign,
-    color: 'text-emerald-600 bg-emerald-100',
+    color: 'text-success bg-success-light dark:bg-success/20',
   },
   safety_incident: {
     label: 'Safety',
@@ -150,17 +150,17 @@ const notificationTypeConfig: Record<string, {
   bid_invited: {
     label: 'Bid',
     icon: FileText,
-    color: 'text-indigo-600 bg-indigo-100',
+    color: 'text-primary bg-primary/10',
   },
   compliance_expiring: {
     label: 'Compliance',
     icon: AlertCircle,
-    color: 'text-warning bg-amber-100',
+    color: 'text-warning bg-warning-light dark:bg-warning/20',
   },
   schedule_change: {
     label: 'Schedule',
     icon: Calendar,
-    color: 'text-info bg-cyan-100',
+    color: 'text-info bg-info-light dark:bg-info/20',
   },
   action_item_due: {
     label: 'Action Item Due',
@@ -175,7 +175,7 @@ const notificationTypeConfig: Record<string, {
   action_item_escalated: {
     label: 'Action Item Escalated',
     icon: AlertCircle,
-    color: 'text-error bg-red-100',
+    color: 'text-error bg-error-light dark:bg-error/20',
   },
   meeting_scheduled: {
     label: 'Meeting',
@@ -185,7 +185,7 @@ const notificationTypeConfig: Record<string, {
   meeting_minutes: {
     label: 'Meeting Minutes',
     icon: FileText,
-    color: 'text-indigo-600 bg-indigo-100',
+    color: 'text-primary bg-primary/10',
   },
   default: {
     label: 'Notification',
@@ -216,7 +216,7 @@ function NotificationItem({
 
   const getPriorityIndicator = () => {
     if (notification.priority === 'high') {
-      return <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full" />
+      return <span className="absolute top-2 right-2 w-2 h-2 bg-error rounded-full" />
     }
     return null
   }
@@ -226,7 +226,7 @@ function NotificationItem({
       className={cn(
         'relative flex items-start gap-3 p-4 cursor-pointer transition-colors',
         'border-b border-border last:border-b-0',
-        !notification.read && 'bg-blue-50/50',
+        !notification.read && 'bg-info-light/50 dark:bg-info/10',
         'hover:bg-surface active:bg-muted'
       )}
       onClick={() => onClick(notification)}

@@ -494,7 +494,7 @@ export function GanttChart({
                   onCheckedChange={setShowBaseline}
                 />
                 <Label htmlFor="show-baseline" className="text-sm flex items-center gap-1 cursor-pointer">
-                  <Calendar className="h-4 w-4 text-blue-500" />
+                  <Calendar className="h-4 w-4 text-info" />
                   Baseline
                 </Label>
               </div>
@@ -506,7 +506,7 @@ export function GanttChart({
                       {scheduleHealth.avgVarianceDays}d behind
                     </Badge>
                   ) : scheduleHealth.avgVarianceDays < 0 ? (
-                    <Badge className="gap-1 text-[10px] bg-green-600 hover:bg-green-700">
+                    <Badge className="gap-1 text-[10px] bg-success hover:bg-success/90">
                       <TrendingUp className="h-3 w-3" />
                       {Math.abs(scheduleHealth.avgVarianceDays)}d ahead
                     </Badge>
@@ -545,7 +545,7 @@ export function GanttChart({
               onCheckedChange={setShowCriticalPath}
             />
             <Label htmlFor="critical-path" className="text-sm flex items-center gap-1 cursor-pointer">
-              <Target className="h-4 w-4 text-red-500" />
+              <Target className="h-4 w-4 text-destructive" />
               Critical Path
             </Label>
           </div>
@@ -610,7 +610,7 @@ export function GanttChart({
                   className={cn(
                     'h-10 flex items-center px-3 border-b hover:bg-muted/40 cursor-pointer transition-colors',
                     hoveredTask === task.id && 'bg-muted/40',
-                    isCritical && showCriticalPath && 'border-l-2 border-l-red-500'
+                    isCritical && showCriticalPath && 'border-l-2 border-l-destructive'
                   )}
                   onMouseEnter={() => setHoveredTask(task.id)}
                   onMouseLeave={() => setHoveredTask(null)}
@@ -622,7 +622,7 @@ export function GanttChart({
                   )}
                   <span className="text-sm truncate flex-1">{task.title}</span>
                   {isCritical && showCriticalPath && (
-                    <AlertTriangle className="h-4 w-4 text-red-500 mr-1" />
+                    <AlertTriangle className="h-4 w-4 text-destructive mr-1" />
                   )}
                   {task.status && (
                     <Badge
@@ -808,11 +808,11 @@ export function GanttChart({
                           {showBaseline && variance && (
                             <div className="absolute -top-1 -right-1">
                               {variance.isBehindSchedule ? (
-                                <div className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                                <div className="w-4 h-4 bg-destructive rounded-full flex items-center justify-center">
                                   <TrendingDown className="h-2.5 w-2.5 text-white" />
                                 </div>
                               ) : variance.isAheadOfSchedule ? (
-                                <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                                <div className="w-4 h-4 bg-success rounded-full flex items-center justify-center">
                                   <TrendingUp className="h-2.5 w-2.5 text-white" />
                                 </div>
                               ) : null}
@@ -844,7 +844,7 @@ export function GanttChart({
                           {/* Critical path indicator */}
                           {isCritical && showCriticalPath && parseFloat(style.width) > 40 && (
                             <div className="absolute right-1 top-1/2 -translate-y-1/2">
-                              <Target className="h-3 w-3 text-red-600" />
+                              <Target className="h-3 w-3 text-destructive" />
                             </div>
                           )}
                         </div>
@@ -864,7 +864,7 @@ export function GanttChart({
                                 {variance.endVarianceDays}d late
                               </Badge>
                             ) : variance.isAheadOfSchedule ? (
-                              <Badge className="text-[10px] gap-0.5 bg-green-600">
+                              <Badge className="text-[10px] gap-0.5 bg-success">
                                 <TrendingUp className="h-2.5 w-2.5" />
                                 {Math.abs(variance.endVarianceDays)}d early
                               </Badge>
@@ -929,22 +929,22 @@ export function GanttChart({
           {showBaseline && baselineVariances.size > 0 && (
             <>
               <div className="flex items-center gap-1">
-                <div className="w-6 h-2 rounded-sm bg-gray-400 opacity-40 border border-dashed border-gray-500" />
+                <div className="w-6 h-2 rounded-sm bg-muted-foreground opacity-40 border border-dashed border-muted-foreground" />
                 <span className="text-muted-foreground">Baseline</span>
               </div>
               <div className="flex items-center gap-1">
-                <TrendingUp className="h-3 w-3 text-green-500" />
-                <span className="text-green-600">Ahead</span>
+                <TrendingUp className="h-3 w-3 text-success" />
+                <span className="text-success">Ahead</span>
               </div>
               <div className="flex items-center gap-1">
-                <TrendingDown className="h-3 w-3 text-red-500" />
-                <span className="text-red-600">Behind</span>
+                <TrendingDown className="h-3 w-3 text-destructive" />
+                <span className="text-destructive">Behind</span>
               </div>
             </>
           )}
 
           {showCriticalPath && criticalPath.size > 0 && (
-            <div className="flex items-center gap-1 text-red-600">
+            <div className="flex items-center gap-1 text-destructive">
               <AlertTriangle className="h-3 w-3" />
               <span>{criticalPath.size} tasks on critical path</span>
             </div>
@@ -954,8 +954,8 @@ export function GanttChart({
           {scheduleHealth && (
             <div className="flex items-center gap-2 text-muted-foreground">
               <span>|</span>
-              <span className="text-green-600">{scheduleHealth.aheadCount} ahead</span>
-              <span className="text-red-600">{scheduleHealth.behindCount} behind</span>
+              <span className="text-success">{scheduleHealth.aheadCount} ahead</span>
+              <span className="text-destructive">{scheduleHealth.behindCount} behind</span>
               <span>{scheduleHealth.onTimeCount} on time</span>
             </div>
           )}

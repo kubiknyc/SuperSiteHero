@@ -296,16 +296,16 @@ export function OMManualBuilder({ projectId, className }: OMManualBuilderProps) 
                 <div className="text-2xl font-bold">{statistics.total_sections}</div>
                 <div className="text-xs text-muted-foreground">Total Sections</div>
               </div>
-              <div className="text-center p-3 bg-green-50 rounded-lg">
-                <div className="text-2xl font-bold text-green-700">{statistics.completed_sections}</div>
+              <div className="text-center p-3 bg-success-light dark:bg-success/10 rounded-lg">
+                <div className="text-2xl font-bold text-success-dark dark:text-success">{statistics.completed_sections}</div>
                 <div className="text-xs text-muted-foreground">Completed</div>
               </div>
-              <div className="text-center p-3 bg-blue-50 rounded-lg">
-                <div className="text-2xl font-bold text-blue-700">{statistics.completion_percentage}%</div>
+              <div className="text-center p-3 bg-info-light dark:bg-info/10 rounded-lg">
+                <div className="text-2xl font-bold text-info-dark dark:text-info">{statistics.completion_percentage}%</div>
                 <div className="text-xs text-muted-foreground">Progress</div>
               </div>
-              <div className="text-center p-3 bg-purple-50 rounded-lg">
-                <div className="text-2xl font-bold text-purple-700">{statistics.versions_generated}</div>
+              <div className="text-center p-3 bg-primary/10 rounded-lg">
+                <div className="text-2xl font-bold text-primary">{statistics.versions_generated}</div>
                 <div className="text-xs text-muted-foreground">Versions</div>
               </div>
             </div>
@@ -316,7 +316,7 @@ export function OMManualBuilder({ projectId, className }: OMManualBuilderProps) 
             <div className="mb-4">
               <div className="h-2 bg-muted rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-green-500 transition-all duration-300"
+                  className="h-full bg-success transition-all duration-300"
                   style={{ width: `${statistics?.completion_percentage || 0}%` }}
                 />
               </div>
@@ -376,7 +376,7 @@ export function OMManualBuilder({ projectId, className }: OMManualBuilderProps) 
                     className="flex-shrink-0"
                   >
                     {section.is_complete ? (
-                      <CheckCircle2 className="h-5 w-5 text-green-600" />
+                      <CheckCircle2 className="h-5 w-5 text-success" />
                     ) : (
                       <Circle className="h-5 w-5 text-muted-foreground" />
                     )}
@@ -511,7 +511,7 @@ export function OMManualBuilder({ projectId, className }: OMManualBuilderProps) 
                     {OM_MANUAL_SECTION_TYPES.map((type) => (
                       <SelectItem key={type.value} value={type.value}>
                         {type.label}
-                        {type.required && <span className="text-red-500 ml-1">*</span>}
+                        {type.required && <span className="text-destructive ml-1">*</span>}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -619,7 +619,7 @@ export function OMManualBuilder({ projectId, className }: OMManualBuilderProps) 
             </div>
 
             {sections.some((s) => !s.is_complete) && (
-              <div className="flex items-start gap-2 p-3 bg-yellow-50 rounded-lg text-yellow-800">
+              <div className="flex items-start gap-2 p-3 bg-warning-light dark:bg-warning/10 rounded-lg text-warning-dark dark:text-warning">
                 <AlertCircle className="h-5 w-5 flex-shrink-0 mt-0.5" />
                 <div className="text-sm">
                   <strong>Warning:</strong> Some sections are not marked as complete.

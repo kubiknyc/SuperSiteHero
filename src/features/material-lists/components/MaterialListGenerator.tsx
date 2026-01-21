@@ -62,9 +62,9 @@ export interface TakeoffItemWithCategory extends TakeoffItemRow {
 // Helper to extract category from takeoff item or its assembly
 function getCategoryFromItem(item: TakeoffItemWithCategory): string | null {
   // First check if category was resolved from assembly
-  if (item.category) return item.category
+  if (item.category) {return item.category}
   // Then check the assembly object if it was joined
-  if (item.assembly?.category) return item.assembly.category
+  if (item.assembly?.category) {return item.assembly.category}
   // Fallback to measurement type as a category hint
   if (item.measurement_type) {
     // Map measurement types to categories
@@ -163,14 +163,14 @@ export function MaterialListGenerator({
     const cats = new Set<string>()
     takeoffItems.forEach((item) => {
       const category = getCategoryFromItem(item)
-      if (category) cats.add(category)
+      if (category) {cats.add(category)}
     })
     return Array.from(cats).sort()
   }, [takeoffItems])
 
   // Filter takeoff items by category
   const filteredItems = useMemo(() => {
-    if (!filterCategory) return takeoffItems
+    if (!filterCategory) {return takeoffItems}
     return takeoffItems.filter((item) => getCategoryFromItem(item) === filterCategory)
   }, [takeoffItems, filterCategory])
 
@@ -635,7 +635,7 @@ export function MaterialListGenerator({
         {/* Step 4: Complete */}
         {currentStep === 'complete' && generatedList && (
           <div className="text-center py-8">
-            <CheckCircle2 className="h-16 w-16 text-green-500 mx-auto mb-4" />
+            <CheckCircle2 className="h-16 w-16 text-success mx-auto mb-4" />
             <h3 className="text-xl font-semibold mb-2">Material List Created!</h3>
             <p className="text-muted-foreground mb-6">
               "{generatedList.name}" has been created with {generatedList.items.length} items

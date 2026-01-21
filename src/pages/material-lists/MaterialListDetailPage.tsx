@@ -54,7 +54,7 @@ export function MaterialListDetailPage() {
   }
 
   const handleFinalize = async () => {
-    if (!listId || !list) return
+    if (!listId || !list) {return}
     await updateList.mutateAsync({
       id: listId,
       status: 'finalized',
@@ -63,7 +63,7 @@ export function MaterialListDetailPage() {
   }
 
   const handleExport = async (format: 'pdf' | 'excel' | 'csv') => {
-    if (!listId) return
+    if (!listId) {return}
     const result = await exportList.mutateAsync({
       material_list_id: listId,
       format,
@@ -80,7 +80,7 @@ export function MaterialListDetailPage() {
   }
 
   const sendEmail = async () => {
-    if (!recipientEmail || !listId) return
+    if (!recipientEmail || !listId) {return}
     await exportList.mutateAsync({
       material_list_id: listId,
       format: 'email',
@@ -130,7 +130,7 @@ export function MaterialListDetailPage() {
 
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-xl font-bold">{list.name}</h1>
+                  <h1 className="heading-card">{list.name}</h1>
                   <Badge
                     className={`${STATUS_COLORS[list.status] || 'bg-gray-500'} text-white`}
                   >

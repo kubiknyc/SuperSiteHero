@@ -266,7 +266,7 @@ export function CostTrackingPage() {
         {!projectId ? (
           <Card>
             <CardContent className="py-12 text-center">
-              <DollarSign className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+              <DollarSign className="h-16 w-16 text-muted-foreground/40 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-secondary heading-subsection">Select a Project</h3>
               <p className="text-muted mt-1">
                 Choose a project from the dropdown above to view and manage costs

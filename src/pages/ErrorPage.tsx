@@ -44,7 +44,7 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-b from-background to-card dark:from-background dark:to-muted/30 flex flex-col items-center justify-center px-4">
       <div className="max-w-2xl w-full text-center">
         {/* Logo */}
         <div className="flex justify-center mb-8">
@@ -52,7 +52,7 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
         </div>
 
         {/* Error Code */}
-        <h1 className="heading-error-code text-orange-500 mb-4 heading-page">
+        <h1 className="heading-error-code text-warning mb-4 heading-page">
           500
         </h1>
 
@@ -69,22 +69,22 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
 
         {/* Error Details (Development Only) */}
         {import.meta.env.DEV && error && (
-          <div className="mb-8 p-4 bg-error-light dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg text-left">
+          <div className="mb-8 p-4 bg-error-light dark:bg-error/10 border border-error dark:border-error/30 rounded-lg text-left">
             <div className="flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-error dark:text-red-400 mt-1 flex-shrink-0" />
+              <AlertTriangle className="w-5 h-5 text-error dark:text-error mt-1 flex-shrink-0" />
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-red-900 dark:text-red-100 mb-2">
+                <p className="text-sm font-semibold text-error-dark dark:text-error mb-2">
                   Error Details (Development Mode):
                 </p>
-                <p className="text-sm text-red-800 dark:text-red-200 font-mono mb-2 break-words">
+                <p className="text-sm text-error-dark dark:text-error/80 font-mono mb-2 break-words">
                   {error.message}
                 </p>
                 {error.stack && (
                   <details className="mt-2">
-                    <summary className="text-xs text-error-dark dark:text-red-300 cursor-pointer hover:underline">
+                    <summary className="text-xs text-error-dark dark:text-error/70 cursor-pointer hover:underline">
                       Stack Trace
                     </summary>
-                    <pre className="mt-2 text-xs text-error-dark dark:text-red-300 overflow-x-auto whitespace-pre-wrap break-words">
+                    <pre className="mt-2 text-xs text-error-dark dark:text-error/70 overflow-x-auto whitespace-pre-wrap break-words">
                       {error.stack}
                     </pre>
                   </details>
@@ -117,7 +117,7 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
         </div>
 
         {/* Help Section */}
-        <div className="mt-12 p-6 bg-surface dark:bg-surface/50 border border-border dark:border-gray-700 rounded-lg">
+        <div className="mt-12 p-6 bg-surface dark:bg-surface/50 border border-border dark:border-border rounded-lg">
           <h3 className="heading-sub text-foreground dark:text-white mb-3 heading-subsection">
             Still having issues?
           </h3>
@@ -131,14 +131,14 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
             >
               support@jobsightapp.com
             </a>
-            <span className="hidden sm:inline text-gray-300 dark:text-secondary">•</span>
+            <span className="hidden sm:inline text-muted-foreground">•</span>
             <button
               onClick={() => navigate('/help')}
               className="text-primary dark:text-primary-400 hover:underline font-medium"
             >
               Visit Help Center
             </button>
-            <span className="hidden sm:inline text-gray-300 dark:text-secondary">•</span>
+            <span className="hidden sm:inline text-muted-foreground">•</span>
             <button
               onClick={() => navigate('/settings/feedback')}
               className="text-primary dark:text-primary-400 hover:underline font-medium"
@@ -150,7 +150,7 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
 
         {/* What to Try */}
         <div className="mt-8 text-left">
-          <h4 className="text-label text-secondary dark:text-gray-300 mb-3 heading-card">
+          <h4 className="text-label text-secondary dark:text-muted-foreground mb-3 heading-card">
             What you can try:
           </h4>
           <ul className="space-y-2 body-small text-secondary dark:text-disabled">
@@ -174,7 +174,7 @@ export function ErrorPage({ error: propError, resetError }: ErrorPageProps) {
         </div>
 
         {/* Footer */}
-        <div className="mt-12 pt-8 border-t border-border dark:border-gray-700">
+        <div className="mt-12 pt-8 border-t border-border dark:border-border">
           <p className="text-caption text-disabled dark:text-secondary">
             <span className="font-semibold text-primary dark:text-primary-400">JobSight</span> - Construction Field Management
           </p>

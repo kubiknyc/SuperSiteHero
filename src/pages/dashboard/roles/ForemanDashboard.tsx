@@ -31,14 +31,14 @@ export function ForemanDashboard() {
 
   return (
     <SmartLayout showHeaderStats={false}>
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
+      <div className="min-h-screen bg-gradient-to-b from-background to-muted/50 dark:from-background dark:to-muted/30">
         <div className="max-w-5xl mx-auto px-4 lg:px-6 py-6">
           {/* Header */}
           <div className="mb-6">
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-xl font-bold text-foreground">
               Hey, {userProfile?.first_name || 'Foreman'}
             </h1>
-            <p className="text-gray-500 dark:text-gray-400 text-sm">
+            <p className="text-muted-foreground text-sm">
               {format(today, 'EEEE, MMMM d')}
             </p>
           </div>
@@ -92,8 +92,8 @@ export function ForemanDashboard() {
                   ))
                 ) : (
                   <div className="text-center py-6">
-                    <CheckSquare className="h-8 w-8 text-gray-300 mx-auto mb-2" />
-                    <p className="text-gray-500 text-sm">No tasks for today</p>
+                    <CheckSquare className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                    <p className="text-muted-foreground text-sm">No tasks for today</p>
                     <Button asChild variant="outline" size="sm" className="mt-3">
                       <Link to="/tasks">View All Tasks</Link>
                     </Button>
@@ -111,34 +111,34 @@ export function ForemanDashboard() {
                 className="flex items-center justify-between"
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900">
-                    <Camera className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  <div className="p-2 rounded-lg bg-info-light dark:bg-info/20">
+                    <Camera className="h-5 w-5 text-info dark:text-info" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">
+                    <p className="font-medium text-foreground">
                       Take Progress Photo
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-secondary">
                       {stats?.photosToday || 0} photos today
                     </p>
                   </div>
                 </div>
-                <ChevronRight className="h-5 w-5 text-gray-400" />
+                <ChevronRight className="h-5 w-5 text-muted-foreground" />
               </Link>
             </CardContent>
           </Card>
 
           {/* Safety Reminder */}
           {stats?.safetyReminder && (
-            <Card className="border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950">
+            <Card className="border-warning dark:border-warning/30 bg-warning-light dark:bg-warning/10">
               <CardContent className="py-4">
                 <div className="flex items-start gap-3">
-                  <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <AlertTriangle className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-medium text-amber-800 dark:text-amber-200">
+                    <p className="font-medium text-warning-dark dark:text-warning">
                       Safety Reminder
                     </p>
-                    <p className="text-sm text-amber-700 dark:text-amber-300 mt-1">
+                    <p className="text-sm text-warning-dark dark:text-warning mt-1">
                       {stats.safetyReminder}
                     </p>
                   </div>
@@ -169,12 +169,12 @@ function StatCard({ title, value, subtitle, icon: Icon, link }: StatCardProps) {
             <Icon className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+            <p className="text-2xl font-bold text-foreground">
               {value}
             </p>
-            <p className="text-xs text-gray-500">{title}</p>
+            <p className="text-xs text-muted-foreground">{title}</p>
             {subtitle && (
-              <p className="text-xs text-gray-400">{subtitle}</p>
+              <p className="text-xs text-muted-foreground">{subtitle}</p>
             )}
           </div>
         </div>
@@ -201,24 +201,24 @@ function TaskItem({ task }: TaskItemProps) {
   return (
     <div className={cn(
       'flex items-center justify-between p-3 rounded-lg',
-      'bg-gray-50 dark:bg-gray-800',
+      'bg-muted',
       task.status === 'completed' && 'opacity-60'
     )}>
       <div className="flex items-center gap-3">
         <div className={cn(
           'w-2 h-2 rounded-full',
-          task.priority === 'high' ? 'bg-red-500' :
-          task.priority === 'medium' ? 'bg-amber-500' : 'bg-green-500'
+          task.priority === 'high' ? 'bg-error' :
+          task.priority === 'medium' ? 'bg-warning' : 'bg-success'
         )} />
         <div>
           <p className={cn(
-            'text-sm font-medium text-gray-900 dark:text-white',
+            'text-sm font-medium text-foreground',
             task.status === 'completed' && 'line-through'
           )}>
             {task.title}
           </p>
           {task.dueTime && (
-            <p className="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+            <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
               <Clock className="h-3 w-3" />
               {task.dueTime}
             </p>

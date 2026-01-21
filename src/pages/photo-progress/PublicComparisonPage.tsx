@@ -59,7 +59,7 @@ export function PublicComparisonPage() {
         <Card className="max-w-md w-full mx-4">
           <CardContent className="p-12 text-center">
             <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Comparison Not Found</h2>
+            <h2 className="heading-section mb-2">Comparison Not Found</h2>
             <p className="text-muted-foreground mb-6">
               This comparison may have been removed or the link has expired.
             </p>
@@ -101,7 +101,7 @@ export function PublicComparisonPage() {
       <main className="container max-w-4xl mx-auto px-6 py-8">
         {/* Title Section */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-foreground mb-2">
+          <h1 className="heading-page text-foreground mb-2">
             {comparison.title}
           </h1>
           <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">

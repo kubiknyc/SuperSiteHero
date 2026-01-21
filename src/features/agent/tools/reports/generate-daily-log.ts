@@ -344,11 +344,11 @@ function extractWorkActivities(notes: string, tradeMap: Map<string, string>): Wo
     }
     if (locations.rooms.length > 0) {
       locationDetails.room = locations.rooms[0]
-      if (location === 'General Area') location = locations.rooms[0]
+      if (location === 'General Area') {location = locations.rooms[0]}
     }
     if (locations.areas.length > 0) {
       locationDetails.area = locations.areas[0]
-      if (location === 'General Area') location = locations.areas[0]
+      if (location === 'General Area') {location = locations.areas[0]}
     }
     if (locations.gridLines.length > 0) {
       locationDetails.grid_line = locations.gridLines[0]
@@ -779,7 +779,7 @@ function analyzeProductivity(
 
   for (const activity of activities) {
     const benchmark = TRADE_PRODUCTIVITY_BENCHMARKS[activity.trade as keyof typeof TRADE_PRODUCTIVITY_BENCHMARKS]
-    if (!benchmark || !activity.quantities || activity.quantities.length === 0) continue
+    if (!benchmark || !activity.quantities || activity.quantities.length === 0) {continue}
 
     // Find matching quantity for benchmark comparison
     for (const qty of activity.quantities) {

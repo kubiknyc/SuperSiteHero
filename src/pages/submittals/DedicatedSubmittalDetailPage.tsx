@@ -70,17 +70,17 @@ import { logger } from '../../lib/utils/logger';
 function getReviewStatusStyle(status: string): { bg: string; text: string } {
   switch (status) {
     case 'approved':
-      return { bg: 'bg-success-light', text: 'text-green-800' }
+      return { bg: 'bg-success-light', text: 'text-success-dark' }
     case 'approved_as_noted':
-      return { bg: 'bg-lime-100', text: 'text-lime-800' }
+      return { bg: 'bg-success-light', text: 'text-success-dark' }
     case 'submitted':
-      return { bg: 'bg-info-light', text: 'text-blue-800' }
+      return { bg: 'bg-info-light', text: 'text-info-dark' }
     case 'under_review':
-      return { bg: 'bg-warning-light', text: 'text-yellow-800' }
+      return { bg: 'bg-warning-light', text: 'text-warning-dark' }
     case 'revise_resubmit':
-      return { bg: 'bg-orange-100', text: 'text-orange-800' }
+      return { bg: 'bg-warning-light', text: 'text-warning-dark' }
     case 'rejected':
-      return { bg: 'bg-error-light', text: 'text-red-800' }
+      return { bg: 'bg-error-light', text: 'text-error-dark' }
     case 'void':
       return { bg: 'bg-muted', text: 'text-secondary' }
     default:
@@ -305,10 +305,10 @@ export function DedicatedSubmittalDetailPage() {
 
             {/* Overdue Warning */}
             {isOverdue && (
-              <div className="bg-error-light border border-red-200 rounded-lg p-4 flex items-center gap-3">
+              <div className="bg-error-light border border-error rounded-lg p-4 flex items-center gap-3">
                 <AlertTriangle className="h-5 w-5 text-error" />
                 <div>
-                  <p className="font-medium text-red-800">Submittal Overdue</p>
+                  <p className="font-medium text-error-dark">Submittal Overdue</p>
                   <p className="text-sm text-error">
                     Required by {format(new Date(submittal.date_required!), 'MMM d, yyyy')}
                   </p>
@@ -339,7 +339,7 @@ export function DedicatedSubmittalDetailPage() {
                   <div className="mt-4 pt-4 border-t">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="font-medium text-orange-700">Revision Required</p>
+                        <p className="font-medium text-warning-dark">Revision Required</p>
                         <p className="text-sm text-muted">Create a new revision to address review comments</p>
                       </div>
                       <Button onClick={() => setShowRevisionDialog(true)}>

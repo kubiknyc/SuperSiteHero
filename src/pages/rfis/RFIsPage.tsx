@@ -160,10 +160,10 @@ export function RFIsPage({ createNew = false }: RFIsPageProps) {
   const getStatusBadgeClass = (status: string) => {
     const classes: Record<string, string> = {
       draft: 'bg-muted text-foreground',
-      submitted: 'bg-info-light text-blue-800',
-      answered: 'bg-success-light text-green-800',
+      submitted: 'bg-info-light text-info-dark',
+      answered: 'bg-success-light text-success-dark',
       approved: 'bg-success text-white',
-      rejected: 'bg-error-light text-red-800',
+      rejected: 'bg-error-light text-error-dark',
       closed: 'bg-slate-200 text-slate-800',
     }
     return classes[status] || 'bg-muted text-foreground'
@@ -171,9 +171,9 @@ export function RFIsPage({ createNew = false }: RFIsPageProps) {
 
   const getPriorityBadgeClass = (priority: string) => {
     const classes: Record<string, string> = {
-      low: 'bg-success-light text-green-800',
-      normal: 'bg-amber-100 text-amber-800',
-      high: 'bg-error-light text-red-800',
+      low: 'bg-success-light text-success-dark',
+      normal: 'bg-warning-light text-warning-dark',
+      high: 'bg-error-light text-error-dark',
     }
     return classes[priority] || 'bg-muted text-foreground'
   }
@@ -187,7 +187,7 @@ export function RFIsPage({ createNew = false }: RFIsPageProps) {
     if (daysUntil < 0) {
       return { text: `${Math.abs(daysUntil)} days overdue`, class: 'text-error font-medium', isOverdue: true }
     } else if (daysUntil === 0) {
-      return { text: 'Due today', class: 'text-orange-600 font-medium', isOverdue: false }
+      return { text: 'Due today', class: 'text-warning font-medium', isOverdue: false }
     } else if (daysUntil <= 3) {
       return { text: `Due in ${daysUntil} days`, class: 'text-warning', isOverdue: false }
     }
@@ -314,7 +314,7 @@ export function RFIsPage({ createNew = false }: RFIsPageProps) {
             <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setStatusFilter('submitted')}>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-amber-100">
+                  <div className="p-2 rounded-lg bg-warning-light">
                     <Clock className="h-5 w-5 text-warning" />
                   </div>
                   <div>
@@ -426,7 +426,7 @@ export function RFIsPage({ createNew = false }: RFIsPageProps) {
         ) : rfisError ? (
           <Card>
             <CardContent className="p-12 text-center">
-              <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
+              <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">Error Loading RFIs</h3>
               <p className="text-secondary">{rfisError.message}</p>
             </CardContent>

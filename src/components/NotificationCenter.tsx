@@ -342,7 +342,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
                   key={notification.id}
                   className={cn(
                     'flex items-start gap-3 p-4 cursor-pointer transition-colors',
-                    !notification.read && 'bg-blue-50/50',
+                    !notification.read && 'bg-info-light/50 dark:bg-info/10',
                     getNotificationBgColor(notification)
                   )}
                   onClick={() => handleNotificationClick(notification)}

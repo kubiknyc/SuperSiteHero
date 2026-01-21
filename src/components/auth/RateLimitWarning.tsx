@@ -10,14 +10,13 @@ interface RateLimitWarningProps {
   /** Current rate limit state */
   state: RateLimitState
   /** Action being rate limited (for messaging) */
-  action: 'login' | 'signup' | 'password_reset' | 'mfa_verify'
+  action: 'login' | 'signup' | 'password_reset'
 }
 
 const ACTION_LABELS = {
   login: 'sign in',
   signup: 'sign up',
   password_reset: 'reset password',
-  mfa_verify: 'verify',
 }
 
 /**

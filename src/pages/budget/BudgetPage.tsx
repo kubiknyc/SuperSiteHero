@@ -126,15 +126,15 @@ function BudgetStatusBadge({ variance, budget }: { variance: number; budget: num
 // Get row background class based on variance
 function getRowBackgroundClass(variance: number, budget: number): string {
   if (variance < 0) {
-    // Over budget - red tint
-    return 'bg-red-50 hover:bg-red-100 dark:bg-red-950/30 dark:hover:bg-red-950/50'
+    // Over budget - error tint
+    return 'bg-error-light hover:bg-destructive/15 dark:bg-destructive/10 dark:hover:bg-destructive/20'
   }
 
   const variancePercent = budget > 0 ? (variance / budget) * 100 : 0
 
   if (variancePercent > 10) {
-    // Under budget by more than 10% - green tint
-    return 'bg-green-50 hover:bg-green-100 dark:bg-green-950/30 dark:hover:bg-green-950/50'
+    // Under budget by more than 10% - success tint
+    return 'bg-success-light hover:bg-success/15 dark:bg-success/10 dark:hover:bg-success/20'
   }
 
   // On track - default background
@@ -329,8 +329,8 @@ export function BudgetPage() {
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                    <DollarSign className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                  <div className="p-2 bg-info-light dark:bg-info/20 rounded-lg">
+                    <DollarSign className="h-5 w-5 text-info dark:text-info" />
                   </div>
                   <div>
                     <p className="text-sm text-muted">Total Budget</p>
@@ -343,8 +343,8 @@ export function BudgetPage() {
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
-                    <Receipt className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                  <div className="p-2 bg-warning-light dark:bg-warning/20 rounded-lg">
+                    <Receipt className="h-5 w-5 text-warning-dark dark:text-warning" />
                   </div>
                   <div>
                     <p className="text-sm text-muted">Spent</p>
@@ -360,8 +360,8 @@ export function BudgetPage() {
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                    <TrendingUp className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                  <div className="p-2 bg-secondary dark:bg-secondary/50 rounded-lg">
+                    <TrendingUp className="h-5 w-5 text-secondary-foreground" />
                   </div>
                   <div>
                     <p className="text-sm text-muted">Committed</p>
@@ -377,12 +377,12 @@ export function BudgetPage() {
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
-                    <Wallet className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                  <div className="p-2 bg-success-light dark:bg-success/20 rounded-lg">
+                    <Wallet className="h-5 w-5 text-success dark:text-success" />
                   </div>
                   <div>
                     <p className="text-sm text-muted">Remaining</p>
-                    <p className={`text-xl md:text-2xl font-bold ${remaining < 0 ? 'text-error' : 'text-emerald-600 dark:text-emerald-400'}`}>
+                    <p className={`text-xl md:text-2xl font-bold ${remaining < 0 ? 'text-error' : 'text-success dark:text-success'}`}>
                       {formatCurrency(Math.abs(remaining))}
                     </p>
                     <p className="text-xs text-muted">
@@ -393,10 +393,10 @@ export function BudgetPage() {
               </CardContent>
             </Card>
 
-            <Card className={isOverBudget ? 'border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/30' : 'border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/30'}>
+            <Card className={isOverBudget ? 'border-destructive/30 dark:border-destructive/50 bg-error-light dark:bg-destructive/10' : 'border-success/30 dark:border-success/50 bg-success-light dark:bg-success/10'}>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg ${isOverBudget ? 'bg-red-100 dark:bg-red-900/50' : 'bg-green-100 dark:bg-green-900/50'}`}>
+                  <div className={`p-2 rounded-lg ${isOverBudget ? 'bg-destructive/20 dark:bg-destructive/30' : 'bg-success/20 dark:bg-success/30'}`}>
                     {isOverBudget ? (
                       <ArrowDownRight className="h-5 w-5 text-error" />
                     ) : (
@@ -469,13 +469,13 @@ export function BudgetPage() {
               </div>
             ) : !projectId ? (
               <div className="text-center py-12">
-                <DollarSign className="h-12 w-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+                <DollarSign className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
                 <p className="text-muted font-medium">Select a project to view budgets</p>
                 <p className="text-sm text-disabled mt-1">Choose a project from the dropdown above</p>
               </div>
             ) : filteredBudgets.length === 0 ? (
               <div className="text-center py-12">
-                <DollarSign className="h-12 w-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+                <DollarSign className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
                 <p className="text-muted font-medium">No budget lines found</p>
                 <p className="text-sm text-disabled mt-1">
                   {search ? 'Try adjusting your search' : 'Add budget lines to track costs'}

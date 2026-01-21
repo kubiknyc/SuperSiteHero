@@ -402,9 +402,9 @@ export function DailyReportDetailPage() {
 
         {/* Approval Signature Dialog */}
         {showApprovalSignature && (
-          <Card className="border-2 border-green-200 bg-success-light">
+          <Card className="border-2 border-success bg-success-light">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-green-800">
+              <CardTitle className="flex items-center gap-2 text-success-dark">
                 <PenTool className="h-5 w-5" />
                 Approval Signature
               </CardTitle>

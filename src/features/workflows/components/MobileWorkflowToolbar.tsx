@@ -61,29 +61,29 @@ const APPROVAL_CODES: ApprovalCodeOption[] = [
     code: 'A',
     label: 'Approved',
     description: 'No exceptions taken',
-    color: 'text-green-700',
-    bgColor: 'bg-green-100 hover:bg-green-200',
+    color: 'text-success-dark dark:text-success',
+    bgColor: 'bg-success-light dark:bg-success/20 hover:bg-success/30',
   },
   {
     code: 'B',
     label: 'Approved as Noted',
     description: 'Approved with minor changes',
-    color: 'text-lime-700',
-    bgColor: 'bg-lime-100 hover:bg-lime-200',
+    color: 'text-success-dark dark:text-success',
+    bgColor: 'bg-success-light dark:bg-success/20 hover:bg-success/30',
   },
   {
     code: 'C',
     label: 'Revise & Resubmit',
     description: 'Corrections required',
-    color: 'text-orange-700',
-    bgColor: 'bg-orange-100 hover:bg-orange-200',
+    color: 'text-warning-dark dark:text-warning',
+    bgColor: 'bg-warning-light dark:bg-warning/20 hover:bg-warning/30',
   },
   {
     code: 'D',
     label: 'Rejected',
     description: 'Not approved',
-    color: 'text-red-700',
-    bgColor: 'bg-red-100 hover:bg-red-200',
+    color: 'text-error-dark dark:text-error',
+    bgColor: 'bg-error-light dark:bg-error/20 hover:bg-error/30',
   },
 ]
 
@@ -176,18 +176,18 @@ export const MobileWorkflowToolbar = memo(function MobileWorkflowToolbar({
   const getStatusColor = (status: string) => {
     const statusLower = status.toLowerCase()
     if (statusLower.includes('approved') || statusLower === 'closed') {
-      return 'bg-green-100 text-green-800'
+      return 'bg-success-light dark:bg-success/20 text-success-dark dark:text-success'
     }
     if (statusLower.includes('reject') || statusLower.includes('void')) {
-      return 'bg-red-100 text-red-800'
+      return 'bg-error-light dark:bg-error/20 text-error-dark dark:text-error'
     }
     if (statusLower.includes('revise') || statusLower.includes('pending')) {
-      return 'bg-orange-100 text-orange-800'
+      return 'bg-warning-light dark:bg-warning/20 text-warning-dark dark:text-warning'
     }
     if (statusLower.includes('review') || statusLower.includes('submitted')) {
-      return 'bg-blue-100 text-blue-800'
+      return 'bg-info-light dark:bg-info/20 text-info-dark dark:text-info'
     }
-    return 'bg-gray-100 text-gray-800'
+    return 'bg-muted text-muted-foreground'
   }
 
   return (

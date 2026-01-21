@@ -151,9 +151,9 @@ export async function generateRFIPDF(data: RFIPDFData): Promise<Blob> {
 
   // -- References Section --
   const referencesPairs = []
-  if (rfi.spec_section) referencesPairs.push({ label: 'Spec Section', value: rfi.spec_section })
-  if (rfi.drawing_reference) referencesPairs.push({ label: 'Drawing', value: rfi.drawing_reference })
-  if (rfi.location) referencesPairs.push({ label: 'Location', value: rfi.location })
+  if (rfi.spec_section) {referencesPairs.push({ label: 'Spec Section', value: rfi.spec_section })}
+  if (rfi.drawing_reference) {referencesPairs.push({ label: 'Drawing', value: rfi.drawing_reference })}
+  if (rfi.location) {referencesPairs.push({ label: 'Location', value: rfi.location })}
 
   if (referencesPairs.length > 0) {
     pdf.addSectionHeader('References')
@@ -209,8 +209,8 @@ export async function generateRFIPDF(data: RFIPDFData): Promise<Blob> {
   } else {
     // Response Metadata
     const responsePairs = []
-    if (rfi.response_type) responsePairs.push({ label: 'Response Type', value: getRFIResponseTypeLabel(rfi.response_type) })
-    if (rfi.responded_by_user) responsePairs.push({ label: 'Responded By', value: rfi.responded_by_user.full_name || 'N/A' })
+    if (rfi.response_type) {responsePairs.push({ label: 'Response Type', value: getRFIResponseTypeLabel(rfi.response_type) })}
+    if (rfi.responded_by_user) {responsePairs.push({ label: 'Responded By', value: rfi.responded_by_user.full_name || 'N/A' })}
     pdf.addKeyValuePairs(responsePairs, 2)
 
     // Response Text Box

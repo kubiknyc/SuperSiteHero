@@ -291,7 +291,7 @@ function EquipmentCard({ equipment, onScheduleMaintenance, onViewPhotos }: Equip
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-2">
               <div>
-                <h3 className="font-semibold text-foreground truncate">{equipment.name}</h3>
+                <h3 className="heading-card text-foreground truncate">{equipment.name}</h3>
                 <p className="text-sm text-muted">
                   {equipment.equipment_number && `#${equipment.equipment_number}`}
                   {equipment.equipment_number && equipment.serial_number && ' | '}
@@ -673,7 +673,7 @@ export function EquipmentPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold flex items-center gap-2 heading-page">
+            <h1 className="heading-page flex items-center gap-2">
               <Truck className="h-6 w-6" />
               Equipment
             </h1>

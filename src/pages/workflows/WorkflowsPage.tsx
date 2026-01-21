@@ -24,11 +24,11 @@ export function WorkflowsPage() {
     return (
       <SmartLayout title="Workflows" subtitle="Process management">
         <div className="p-6">
-          <Card className="border-yellow-200 bg-warning-light">
+          <Card className="border-warning bg-warning-light dark:bg-warning/10">
             <CardHeader>
-              <CardTitle className="text-yellow-900">No Projects Available</CardTitle>
+              <CardTitle className="text-warning-dark dark:text-warning">No Projects Available</CardTitle>
             </CardHeader>
-            <CardContent className="text-yellow-800">
+            <CardContent className="text-warning-dark dark:text-warning">
               Please create a project first to view workflows.
             </CardContent>
           </Card>
@@ -89,9 +89,9 @@ export function WorkflowsPage() {
 
           {/* Error State */}
           {typesError && (
-            <Card className="border-red-200 bg-error-light">
+            <Card className="border-error bg-error-light dark:bg-error/10">
               <CardContent className="pt-6">
-                <div className="flex items-center gap-2 text-red-800">
+                <div className="flex items-center gap-2 text-error-dark dark:text-error">
                   <AlertCircle className="h-5 w-5" />
                   <p>Failed to load workflow types. Please try again.</p>
                 </div>
@@ -101,12 +101,12 @@ export function WorkflowsPage() {
 
           {/* Empty State */}
           {!typesLoading && !typesError && activeWorkflowTypes.length === 0 && (
-            <Card className="border-yellow-200 bg-warning-light">
+            <Card className="border-warning bg-warning-light dark:bg-warning/10">
               <CardContent className="pt-6 text-center">
-                <p className="text-yellow-800">
+                <p className="text-warning-dark dark:text-warning">
                   No workflow types configured for your company.
                 </p>
-                <p className="text-sm text-yellow-700 mt-1">
+                <p className="text-sm text-warning dark:text-warning mt-1">
                   Contact your administrator to set up workflow types.
                 </p>
               </CardContent>

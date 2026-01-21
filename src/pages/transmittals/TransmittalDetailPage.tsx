@@ -286,10 +286,10 @@ function RelatedTransmittalCard({ transmittal, projectId, isCurrent }: RelatedTr
           className={cn(
             'text-xs',
             statusColor === 'gray' && 'bg-muted text-foreground border-border',
-            statusColor === 'blue' && 'bg-info-light text-blue-800 border-blue-200',
-            statusColor === 'green' && 'bg-success-light text-green-800 border-green-200',
-            statusColor === 'emerald' && 'bg-emerald-100 text-emerald-800 border-emerald-200',
-            statusColor === 'red' && 'bg-error-light text-red-800 border-red-200'
+            statusColor === 'blue' && 'bg-info-light text-info-dark border-info/30 dark:bg-info/20 dark:text-info dark:border-info/30',
+            statusColor === 'green' && 'bg-success-light text-success-dark border-success/30 dark:bg-success/20 dark:text-success dark:border-success/30',
+            statusColor === 'emerald' && 'bg-success-light text-success-dark border-success/30 dark:bg-success/20 dark:text-success dark:border-success/30',
+            statusColor === 'red' && 'bg-error-light text-error-dark border-error/30 dark:bg-error/20 dark:text-error dark:border-error/30'
           )}
         >
           {getTransmittalStatusLabel(transmittal.status)}
@@ -561,7 +561,7 @@ export function TransmittalDetailPage() {
             </Button>
             <div>
               <div className="flex items-center gap-3 mb-1">
-                <h1 className="text-2xl font-bold">
+                <h1 className="heading-section">
                   {formatTransmittalNumber(
                     transmittal.transmittal_number,
                     transmittal.revision_number
@@ -572,10 +572,10 @@ export function TransmittalDetailPage() {
                   className={cn(
                     'flex items-center gap-1',
                     statusColor === 'gray' && 'bg-muted text-foreground border-border',
-                    statusColor === 'blue' && 'bg-info-light text-blue-800 border-blue-200',
-                    statusColor === 'green' && 'bg-success-light text-green-800 border-green-200',
-                    statusColor === 'emerald' && 'bg-emerald-100 text-emerald-800 border-emerald-200',
-                    statusColor === 'red' && 'bg-error-light text-red-800 border-red-200'
+                    statusColor === 'blue' && 'bg-info-light text-info-dark border-info/30 dark:bg-info/20 dark:text-info dark:border-info/30',
+                    statusColor === 'green' && 'bg-success-light text-success-dark border-success/30 dark:bg-success/20 dark:text-success dark:border-success/30',
+                    statusColor === 'emerald' && 'bg-success-light text-success-dark border-success/30 dark:bg-success/20 dark:text-success dark:border-success/30',
+                    statusColor === 'red' && 'bg-error-light text-error-dark border-error/30 dark:bg-error/20 dark:text-error dark:border-error/30'
                   )}
                 >
                   {icon}
@@ -1148,16 +1148,16 @@ export function TransmittalDetailPage() {
                       className={cn(
                         'p-3 rounded-lg',
                         isResponseOverdue
-                          ? 'bg-error-light'
-                          : 'bg-warning-light dark:bg-amber-950'
+                          ? 'bg-error-light dark:bg-error/20'
+                          : 'bg-warning-light dark:bg-warning/20'
                       )}
                     >
                       <p
                         className={cn(
                           'text-sm font-medium',
                           isResponseOverdue
-                            ? 'text-red-800 dark:text-red-200'
-                            : 'text-amber-800 dark:text-amber-200'
+                            ? 'text-error-dark dark:text-error'
+                            : 'text-warning-dark dark:text-warning'
                         )}
                       >
                         Response Required
@@ -1167,15 +1167,15 @@ export function TransmittalDetailPage() {
                           className={cn(
                             'text-sm',
                             isResponseOverdue
-                              ? 'text-red-700 dark:text-red-300'
-                              : 'text-warning dark:text-amber-400'
+                              ? 'text-error dark:text-error/80'
+                              : 'text-warning dark:text-warning/80'
                           )}
                         >
                           Due: {format(new Date(transmittal.response_due_date), 'MMM d, yyyy')}
                         </p>
                       )}
                       {transmittal.response_received && (
-                        <Badge className="mt-2 bg-success-light text-green-800">
+                        <Badge className="mt-2 bg-success-light text-success-dark dark:bg-success/20 dark:text-success">
                           Response Received
                         </Badge>
                       )}

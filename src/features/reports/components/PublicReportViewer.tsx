@@ -375,9 +375,9 @@ export function PublicReportViewer() {
       <main className="max-w-6xl mx-auto px-4 py-8">
         {/* Custom Message */}
         {sharedReport.customMessage && (
-          <Card className="mb-6 bg-blue-50 border-blue-200">
+          <Card className="mb-6 bg-info-light dark:bg-info/10 border-info/30">
             <CardContent className="py-4">
-              <p className="text-blue-800">{sharedReport.customMessage}</p>
+              <p className="text-info-dark dark:text-info">{sharedReport.customMessage}</p>
             </CardContent>
           </Card>
         )}
@@ -495,68 +495,68 @@ export function PublicReportViewer() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-blue-50 rounded-lg p-4 text-center">
-                  <p className="text-2xl font-bold text-blue-700">{reportData.length}</p>
-                  <p className="text-sm text-blue-600">Total Records</p>
+                <div className="bg-info-light dark:bg-info/10 rounded-lg p-4 text-center">
+                  <p className="text-2xl font-bold text-info-dark dark:text-info">{reportData.length}</p>
+                  <p className="text-sm text-info dark:text-info/80">Total Records</p>
                 </div>
                 {/* Show additional summaries based on data source */}
                 {sharedReport.template.dataSource === 'rfis' && (
                   <>
-                    <div className="bg-green-50 rounded-lg p-4 text-center">
-                      <p className="text-2xl font-bold text-green-700">
+                    <div className="bg-success-light dark:bg-success/10 rounded-lg p-4 text-center">
+                      <p className="text-2xl font-bold text-success-dark dark:text-success">
                         {reportData.filter((r: any) => r.status === 'closed' || r.status === 'answered').length}
                       </p>
-                      <p className="text-sm text-green-600">Closed/Answered</p>
+                      <p className="text-sm text-success dark:text-success/80">Closed/Answered</p>
                     </div>
-                    <div className="bg-yellow-50 rounded-lg p-4 text-center">
-                      <p className="text-2xl font-bold text-yellow-700">
+                    <div className="bg-warning-light dark:bg-warning/10 rounded-lg p-4 text-center">
+                      <p className="text-2xl font-bold text-warning-dark dark:text-warning">
                         {reportData.filter((r: any) => r.status === 'open' || r.status === 'pending').length}
                       </p>
-                      <p className="text-sm text-yellow-600">Open/Pending</p>
+                      <p className="text-sm text-warning dark:text-warning/80">Open/Pending</p>
                     </div>
                   </>
                 )}
                 {sharedReport.template.dataSource === 'submittals' && (
                   <>
-                    <div className="bg-green-50 rounded-lg p-4 text-center">
-                      <p className="text-2xl font-bold text-green-700">
+                    <div className="bg-success-light dark:bg-success/10 rounded-lg p-4 text-center">
+                      <p className="text-2xl font-bold text-success-dark dark:text-success">
                         {reportData.filter((r: any) => r.status === 'approved').length}
                       </p>
-                      <p className="text-sm text-green-600">Approved</p>
+                      <p className="text-sm text-success dark:text-success/80">Approved</p>
                     </div>
-                    <div className="bg-yellow-50 rounded-lg p-4 text-center">
-                      <p className="text-2xl font-bold text-yellow-700">
+                    <div className="bg-warning-light dark:bg-warning/10 rounded-lg p-4 text-center">
+                      <p className="text-2xl font-bold text-warning-dark dark:text-warning">
                         {reportData.filter((r: any) => r.status === 'pending' || r.status === 'submitted').length}
                       </p>
-                      <p className="text-sm text-yellow-600">Pending Review</p>
+                      <p className="text-sm text-warning dark:text-warning/80">Pending Review</p>
                     </div>
-                    <div className="bg-red-50 rounded-lg p-4 text-center">
-                      <p className="text-2xl font-bold text-red-700">
+                    <div className="bg-error-light dark:bg-error/10 rounded-lg p-4 text-center">
+                      <p className="text-2xl font-bold text-error-dark dark:text-error">
                         {reportData.filter((r: any) => r.status === 'rejected' || r.status === 'revise_resubmit').length}
                       </p>
-                      <p className="text-sm text-red-600">Rejected/Revise</p>
+                      <p className="text-sm text-error dark:text-error/80">Rejected/Revise</p>
                     </div>
                   </>
                 )}
                 {sharedReport.template.dataSource === 'tasks' && (
                   <>
-                    <div className="bg-green-50 rounded-lg p-4 text-center">
-                      <p className="text-2xl font-bold text-green-700">
+                    <div className="bg-success-light dark:bg-success/10 rounded-lg p-4 text-center">
+                      <p className="text-2xl font-bold text-success-dark dark:text-success">
                         {reportData.filter((r: any) => r.status === 'completed').length}
                       </p>
-                      <p className="text-sm text-green-600">Completed</p>
+                      <p className="text-sm text-success dark:text-success/80">Completed</p>
                     </div>
-                    <div className="bg-yellow-50 rounded-lg p-4 text-center">
-                      <p className="text-2xl font-bold text-yellow-700">
+                    <div className="bg-warning-light dark:bg-warning/10 rounded-lg p-4 text-center">
+                      <p className="text-2xl font-bold text-warning-dark dark:text-warning">
                         {reportData.filter((r: any) => r.status === 'in_progress').length}
                       </p>
-                      <p className="text-sm text-yellow-600">In Progress</p>
+                      <p className="text-sm text-warning dark:text-warning/80">In Progress</p>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-4 text-center">
-                      <p className="text-2xl font-bold text-gray-700">
+                    <div className="bg-muted rounded-lg p-4 text-center">
+                      <p className="text-2xl font-bold text-foreground">
                         {reportData.filter((r: any) => r.status === 'not_started' || r.status === 'pending').length}
                       </p>
-                      <p className="text-sm text-gray-600">Not Started</p>
+                      <p className="text-sm text-muted-foreground">Not Started</p>
                     </div>
                   </>
                 )}

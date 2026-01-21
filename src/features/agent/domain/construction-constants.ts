@@ -506,10 +506,10 @@ export const SAFETY_CATEGORIES = {
  * Get heat risk level based on heat index
  */
 export function getHeatRiskLevel(heatIndex: number): keyof typeof OSHA_HEAT_THRESHOLDS | 'low' {
-  if (heatIndex >= OSHA_HEAT_THRESHOLDS.extreme.heatIndex) return 'extreme'
-  if (heatIndex >= OSHA_HEAT_THRESHOLDS.veryHigh.heatIndex) return 'veryHigh'
-  if (heatIndex >= OSHA_HEAT_THRESHOLDS.high.heatIndex) return 'high'
-  if (heatIndex >= OSHA_HEAT_THRESHOLDS.moderate.heatIndex) return 'moderate'
+  if (heatIndex >= OSHA_HEAT_THRESHOLDS.extreme.heatIndex) {return 'extreme'}
+  if (heatIndex >= OSHA_HEAT_THRESHOLDS.veryHigh.heatIndex) {return 'veryHigh'}
+  if (heatIndex >= OSHA_HEAT_THRESHOLDS.high.heatIndex) {return 'high'}
+  if (heatIndex >= OSHA_HEAT_THRESHOLDS.moderate.heatIndex) {return 'moderate'}
   return 'low'
 }
 
@@ -517,10 +517,10 @@ export function getHeatRiskLevel(heatIndex: number): keyof typeof OSHA_HEAT_THRE
  * Get cold stress risk level based on wind chill
  */
 export function getColdRiskLevel(windChill: number): keyof typeof COLD_STRESS_THRESHOLDS | 'low' {
-  if (windChill <= COLD_STRESS_THRESHOLDS.extreme.windChill) return 'extreme'
-  if (windChill <= COLD_STRESS_THRESHOLDS.danger.windChill) return 'danger'
-  if (windChill <= COLD_STRESS_THRESHOLDS.warning.windChill) return 'warning'
-  if (windChill <= COLD_STRESS_THRESHOLDS.caution.windChill) return 'caution'
+  if (windChill <= COLD_STRESS_THRESHOLDS.extreme.windChill) {return 'extreme'}
+  if (windChill <= COLD_STRESS_THRESHOLDS.danger.windChill) {return 'danger'}
+  if (windChill <= COLD_STRESS_THRESHOLDS.warning.windChill) {return 'warning'}
+  if (windChill <= COLD_STRESS_THRESHOLDS.caution.windChill) {return 'caution'}
   return 'low'
 }
 
@@ -564,7 +564,7 @@ export function checkTradeWeatherSafety(
  * Uses the NWS heat index equation
  */
 export function calculateHeatIndex(temperature: number, humidity: number): number {
-  if (temperature < 80) return temperature
+  if (temperature < 80) {return temperature}
 
   const T = temperature
   const R = humidity
@@ -595,7 +595,7 @@ export function calculateHeatIndex(temperature: number, humidity: number): numbe
  * Uses the NWS wind chill equation
  */
 export function calculateWindChill(temperature: number, windSpeed: number): number {
-  if (temperature > 50 || windSpeed < 3) return temperature
+  if (temperature > 50 || windSpeed < 3) {return temperature}
 
   const T = temperature
   const V = windSpeed

@@ -438,7 +438,7 @@ export const materialListsApi = {
   calculateTotals(items: MaterialListItem[]) {
     const byCategory: Record<string, number> = {}
     let totalItems = 0
-    let totalLineItems = items.length
+    const totalLineItems = items.length
 
     for (const item of items) {
       totalItems += item.order_quantity

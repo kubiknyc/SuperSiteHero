@@ -264,11 +264,12 @@ export function TrainingRecords({ projectId, className }: TrainingRecordsProps) 
   const getStatusBadge = (status: TrainingSessionStatus) => {
     const config = TRAINING_SESSION_STATUSES.find((s) => s.value === status)
     const colorClasses: Record<string, string> = {
-      blue: 'bg-blue-100 text-blue-800',
-      yellow: 'bg-yellow-100 text-yellow-800',
-      green: 'bg-green-100 text-green-800',
-      red: 'bg-red-100 text-red-800',
-      orange: 'bg-orange-100 text-orange-800',
+      blue: 'bg-info-light text-info-dark dark:bg-info/20 dark:text-info',
+      yellow: 'bg-warning-light text-warning-dark dark:bg-warning/20 dark:text-warning',
+      green: 'bg-success-light text-success-dark dark:bg-success/20 dark:text-success',
+      red: 'bg-error-light text-error-dark dark:bg-error/20 dark:text-error',
+      orange: 'bg-warning-light text-warning-dark dark:bg-warning/20 dark:text-warning',
+      gray: 'bg-muted text-muted-foreground',
     }
     return (
       <Badge className={colorClasses[config?.color || 'gray']}>
@@ -312,20 +313,20 @@ export function TrainingRecords({ projectId, className }: TrainingRecordsProps) 
                 <div className="text-xl font-bold">{statistics.total_sessions}</div>
                 <div className="text-xs text-muted-foreground">Total</div>
               </div>
-              <div className="text-center p-2 bg-green-50 rounded-lg">
-                <div className="text-xl font-bold text-green-700">{statistics.completed_sessions}</div>
+              <div className="text-center p-2 bg-success-light dark:bg-success/10 rounded-lg">
+                <div className="text-xl font-bold text-success-dark dark:text-success">{statistics.completed_sessions}</div>
                 <div className="text-xs text-muted-foreground">Completed</div>
               </div>
-              <div className="text-center p-2 bg-blue-50 rounded-lg">
-                <div className="text-xl font-bold text-blue-700">{statistics.scheduled_sessions}</div>
+              <div className="text-center p-2 bg-info-light dark:bg-info/10 rounded-lg">
+                <div className="text-xl font-bold text-info-dark dark:text-info">{statistics.scheduled_sessions}</div>
                 <div className="text-xs text-muted-foreground">Scheduled</div>
               </div>
-              <div className="text-center p-2 bg-purple-50 rounded-lg">
-                <div className="text-xl font-bold text-purple-700">{statistics.total_attendees}</div>
+              <div className="text-center p-2 bg-primary/10 rounded-lg">
+                <div className="text-xl font-bold text-primary">{statistics.total_attendees}</div>
                 <div className="text-xs text-muted-foreground">Attendees</div>
               </div>
-              <div className="text-center p-2 bg-yellow-50 rounded-lg">
-                <div className="text-xl font-bold text-yellow-700">{statistics.certificates_generated}</div>
+              <div className="text-center p-2 bg-warning-light dark:bg-warning/10 rounded-lg">
+                <div className="text-xl font-bold text-warning-dark dark:text-warning">{statistics.certificates_generated}</div>
                 <div className="text-xs text-muted-foreground">Certificates</div>
               </div>
             </div>
@@ -598,7 +599,7 @@ export function TrainingRecords({ projectId, className }: TrainingRecordsProps) 
                           <div className="flex items-center gap-3">
                             <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
                               {attendee.signed_in ? (
-                                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                                <CheckCircle2 className="h-4 w-4 text-success" />
                               ) : (
                                 <Circle className="h-4 w-4 text-muted-foreground" />
                               )}

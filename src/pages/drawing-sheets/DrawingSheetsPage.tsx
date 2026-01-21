@@ -51,7 +51,7 @@ export function DrawingSheetsPage() {
 
   // Filter sheets by search term
   const filteredSheets = sheets?.filter((sheet) => {
-    if (!searchTerm) return true
+    if (!searchTerm) {return true}
     const search = searchTerm.toLowerCase()
     return (
       sheet.sheet_number?.toLowerCase().includes(search) ||
@@ -75,7 +75,7 @@ export function DrawingSheetsPage() {
         <div className="flex-none border-b border-border bg-background p-4">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl font-bold">Drawing Sheets</h1>
+              <h1 className="heading-page">Drawing Sheets</h1>
               <p className="text-muted-foreground text-sm">
                 AI-extracted sheets from uploaded drawing sets
               </p>

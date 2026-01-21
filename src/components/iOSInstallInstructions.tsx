@@ -129,11 +129,11 @@ export function IOSInstallInstructionsPage({
       )}
 
       {/* Safari Requirement Notice */}
-      <div className="flex items-start gap-3 p-4 bg-warning-light dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-800">
-        <Info className="h-5 w-5 text-warning dark:text-amber-400 mt-0.5 flex-shrink-0" />
+      <div className="flex items-start gap-3 p-4 bg-warning-light dark:bg-warning/20 rounded-lg border border-warning/30 dark:border-warning/40">
+        <Info className="h-5 w-5 text-warning mt-0.5 flex-shrink-0" />
         <div>
-          <p className="font-medium text-amber-800 dark:text-amber-200">Safari Required</p>
-          <p className="text-sm text-amber-700 dark:text-amber-300">
+          <p className="font-medium text-warning-dark dark:text-warning">Safari Required</p>
+          <p className="text-sm text-warning-dark/80 dark:text-warning/80">
             Web apps can only be installed using Safari on iOS. If you're using a different browser,
             please open this page in Safari.
           </p>
@@ -164,7 +164,7 @@ export function IOSInstallInstructionsPage({
               </div>
               {index < steps.length - 1 && (
                 <div className="hidden sm:flex items-center">
-                  <ChevronRight className="h-5 w-5 text-gray-300" />
+                  <ChevronRight className="h-5 w-5 text-muted-foreground/50" />
                 </div>
               )}
             </div>
@@ -177,19 +177,19 @@ export function IOSInstallInstructionsPage({
         <h3 className="font-medium mb-3 heading-subsection">Why Install?</h3>
         <ul className="space-y-2 text-sm text-muted-foreground">
           <li className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+            <span className="w-1.5 h-1.5 bg-success rounded-full" />
             Quick access from your home screen
           </li>
           <li className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+            <span className="w-1.5 h-1.5 bg-success rounded-full" />
             Works offline with cached data
           </li>
           <li className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+            <span className="w-1.5 h-1.5 bg-success rounded-full" />
             Full-screen experience without browser UI
           </li>
           <li className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+            <span className="w-1.5 h-1.5 bg-success rounded-full" />
             Faster loading and better performance
           </li>
         </ul>

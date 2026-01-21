@@ -713,7 +713,7 @@ export function DailyReportsPage() {
                       {filteredReports.filter((r) => r.status === 'submitted').length}
                     </p>
                   </div>
-                  <Clock className="h-8 w-8 text-orange-600" />
+                  <Clock className="h-8 w-8 text-warning" />
                 </div>
               </CardContent>
             </Card>

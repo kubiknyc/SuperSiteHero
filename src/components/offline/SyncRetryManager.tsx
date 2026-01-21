@@ -112,10 +112,10 @@ function SyncItemRow({ item, onRetry, onDiscard, disabled }: SyncItemRowProps) {
   }
 
   const statusIcon = {
-    pending: <Clock className="h-4 w-4 text-yellow-500" />,
-    syncing: <RefreshCw className="h-4 w-4 text-blue-500 animate-spin" />,
+    pending: <Clock className="h-4 w-4 text-warning" />,
+    syncing: <RefreshCw className="h-4 w-4 text-info animate-spin" />,
     failed: <XCircle className="h-4 w-4 text-destructive" />,
-    success: <CheckCircle2 className="h-4 w-4 text-green-500" />,
+    success: <CheckCircle2 className="h-4 w-4 text-success" />,
   }
 
   return (
@@ -143,7 +143,7 @@ function SyncItemRow({ item, onRetry, onDiscard, disabled }: SyncItemRowProps) {
             <span>Last attempt: {formatRelativeTime(item.lastAttempt)}</span>
           )}
           {item.status === 'failed' && item.retryCount < item.maxRetries && item.nextRetry && (
-            <span className="text-yellow-600 dark:text-yellow-400">
+            <span className="text-warning dark:text-warning">
               Retry {formatCountdown(item.nextRetry)}
             </span>
           )}
@@ -287,8 +287,8 @@ export function SyncRetryManager({
                 <p className="text-lg font-semibold text-destructive">{stats.failed}</p>
                 <p className="text-xs text-muted-foreground">Failed</p>
               </div>
-              <div className="text-center p-2 rounded-lg bg-green-500/10">
-                <p className="text-lg font-semibold text-green-600 dark:text-green-400">{stats.success}</p>
+              <div className="text-center p-2 rounded-lg bg-success/10 dark:bg-success/20">
+                <p className="text-lg font-semibold text-success dark:text-success">{stats.success}</p>
                 <p className="text-xs text-muted-foreground">Done</p>
               </div>
             </div>
@@ -363,14 +363,14 @@ export function SyncRetryManager({
 
             {/* Offline message */}
             {!isOnline && (
-              <div className="p-4 rounded-lg bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800">
+              <div className="p-4 rounded-lg bg-warning-light dark:bg-warning/20 border border-warning/30 dark:border-warning/40">
                 <div className="flex items-start gap-3">
-                  <WifiOff className="h-5 w-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
+                  <WifiOff className="h-5 w-5 text-warning dark:text-warning flex-shrink-0" />
                   <div>
-                    <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+                    <p className="text-sm font-medium text-warning-dark dark:text-warning">
                       You're offline
                     </p>
-                    <p className="text-xs text-yellow-700 dark:text-yellow-300 mt-1">
+                    <p className="text-xs text-warning-dark/80 dark:text-warning/80 mt-1">
                       Items will sync automatically when your connection is restored.
                     </p>
                   </div>

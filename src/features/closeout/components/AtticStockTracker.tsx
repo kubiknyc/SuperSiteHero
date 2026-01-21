@@ -210,16 +210,16 @@ export function AtticStockTracker({ projectId, subcontractors = [], className }:
     const status = getDeliveryStatus(item)
 
     if (item.owner_verified) {
-      return <Badge className="bg-green-100 text-green-800">Verified</Badge>
+      return <Badge className="bg-success-light text-success-dark dark:bg-success/20 dark:text-success">Verified</Badge>
     }
 
     switch (status) {
       case 'fully_delivered':
-        return <Badge className="bg-blue-100 text-blue-800">Delivered</Badge>
+        return <Badge className="bg-info-light text-info-dark dark:bg-info/20 dark:text-info">Delivered</Badge>
       case 'partially_delivered':
-        return <Badge className="bg-yellow-100 text-yellow-800">Partial</Badge>
+        return <Badge className="bg-warning-light text-warning-dark dark:bg-warning/20 dark:text-warning">Partial</Badge>
       default:
-        return <Badge className="bg-gray-100 text-gray-800">Pending</Badge>
+        return <Badge className="bg-muted text-muted-foreground">Pending</Badge>
     }
   }
 
@@ -258,24 +258,24 @@ export function AtticStockTracker({ projectId, subcontractors = [], className }:
                 <div className="text-xl font-bold">{statistics.total_items}</div>
                 <div className="text-xs text-muted-foreground">Total</div>
               </div>
-              <div className="text-center p-2 bg-green-50 rounded-lg">
-                <div className="text-xl font-bold text-green-700">{statistics.fully_delivered}</div>
+              <div className="text-center p-2 bg-success-light dark:bg-success/10 rounded-lg">
+                <div className="text-xl font-bold text-success-dark dark:text-success">{statistics.fully_delivered}</div>
                 <div className="text-xs text-muted-foreground">Delivered</div>
               </div>
-              <div className="text-center p-2 bg-yellow-50 rounded-lg">
-                <div className="text-xl font-bold text-yellow-700">{statistics.partially_delivered}</div>
+              <div className="text-center p-2 bg-warning-light dark:bg-warning/10 rounded-lg">
+                <div className="text-xl font-bold text-warning-dark dark:text-warning">{statistics.partially_delivered}</div>
                 <div className="text-xs text-muted-foreground">Partial</div>
               </div>
-              <div className="text-center p-2 bg-gray-50 rounded-lg">
-                <div className="text-xl font-bold text-gray-700">{statistics.not_delivered}</div>
+              <div className="text-center p-2 bg-muted rounded-lg">
+                <div className="text-xl font-bold text-foreground">{statistics.not_delivered}</div>
                 <div className="text-xs text-muted-foreground">Pending</div>
               </div>
-              <div className="text-center p-2 bg-blue-50 rounded-lg">
-                <div className="text-xl font-bold text-blue-700">{statistics.owner_verified}</div>
+              <div className="text-center p-2 bg-info-light dark:bg-info/10 rounded-lg">
+                <div className="text-xl font-bold text-info-dark dark:text-info">{statistics.owner_verified}</div>
                 <div className="text-xs text-muted-foreground">Verified</div>
               </div>
-              <div className="text-center p-2 bg-orange-50 rounded-lg">
-                <div className="text-xl font-bold text-orange-700">{statistics.pending_verification}</div>
+              <div className="text-center p-2 bg-warning-light dark:bg-warning/10 rounded-lg">
+                <div className="text-xl font-bold text-warning">{statistics.pending_verification}</div>
                 <div className="text-xs text-muted-foreground">To Verify</div>
               </div>
             </div>
@@ -412,7 +412,7 @@ export function AtticStockTracker({ projectId, subcontractors = [], className }:
 
                     {/* Verification Info */}
                     {item.owner_verified && item.verified_at && (
-                      <div className="mt-3 pt-3 border-t text-sm text-green-700 bg-green-50 -mx-4 -mb-4 px-4 py-2 rounded-b-lg">
+                      <div className="mt-3 pt-3 border-t text-sm text-success-dark dark:text-success bg-success-light dark:bg-success/10 -mx-4 -mb-4 px-4 py-2 rounded-b-lg">
                         <CheckCircle2 className="h-4 w-4 inline mr-1" />
                         Verified by {item.verified_by_user?.full_name || 'Owner'} on{' '}
                         {format(new Date(item.verified_at), 'MMM d, yyyy')}

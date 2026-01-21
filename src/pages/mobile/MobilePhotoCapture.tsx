@@ -399,7 +399,7 @@ export const MobilePhotoCapture = memo(function MobilePhotoCapture() {
         {cameraState === 'error' && (
           <div className="text-white text-center p-8">
             <Camera className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p className="text-red-400 mb-4">{error}</p>
+            <p className="text-error mb-4">{error}</p>
             <Button onClick={initCamera} variant="secondary">
               Retry
             </Button>
@@ -441,7 +441,7 @@ export const MobilePhotoCapture = memo(function MobilePhotoCapture() {
             className={cn(
               "h-4 w-4",
               isGettingLocation && "animate-pulse",
-              gpsLocation ? "text-green-400" : "text-yellow-400"
+              gpsLocation ? "text-success" : "text-warning"
             )}
           />
           <span className="max-w-[150px] truncate">
@@ -469,7 +469,7 @@ export const MobilePhotoCapture = memo(function MobilePhotoCapture() {
                     className="w-full h-full object-cover"
                   />
                   <button
-                    className="absolute top-0.5 right-0.5 p-1 rounded-full bg-red-500/80"
+                    className="absolute top-0.5 right-0.5 p-1 rounded-full bg-destructive/80"
                     onClick={(e) => {
                       e.stopPropagation();
                       deletePhoto(index);
@@ -478,7 +478,7 @@ export const MobilePhotoCapture = memo(function MobilePhotoCapture() {
                     <X className="h-3 w-3 text-white" />
                   </button>
                   {photo.gps && (
-                    <MapPin className="absolute bottom-0.5 left-0.5 h-3 w-3 text-green-400 drop-shadow" />
+                    <MapPin className="absolute bottom-0.5 left-0.5 h-3 w-3 text-success drop-shadow" />
                   )}
                 </div>
               ))}
@@ -507,7 +507,7 @@ export const MobilePhotoCapture = memo(function MobilePhotoCapture() {
             }}
           >
             {flashEnabled ? (
-              <Zap className="h-6 w-6 text-yellow-400" />
+              <Zap className="h-6 w-6 text-warning" />
             ) : (
               <ZapOff className="h-6 w-6" />
             )}

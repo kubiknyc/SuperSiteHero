@@ -99,7 +99,7 @@ function CalloutMarker({ callout, isSelected, onClick }: CalloutMarkerProps) {
         className={cn(
           'absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center',
           'text-white text-xs font-bold shadow-md',
-          isLinked ? 'bg-green-500' : 'bg-orange-500'
+          isLinked ? 'bg-success dark:bg-success' : 'bg-warning dark:bg-warning'
         )}
       >
         {icon}
@@ -109,6 +109,8 @@ function CalloutMarker({ callout, isSelected, onClick }: CalloutMarkerProps) {
 }
 
 // Get styling based on callout type
+// Note: These colors are intentionally distinct for visual differentiation of callout types
+// They use semantic tokens where available (info for detail, muted for other)
 function getCalloutTypeStyle(type: CalloutType | null): {
   bgColor: string
   borderColor: string
@@ -117,39 +119,39 @@ function getCalloutTypeStyle(type: CalloutType | null): {
   switch (type) {
     case 'detail':
       return {
-        bgColor: 'bg-blue-500',
-        borderColor: 'border-blue-500',
+        bgColor: 'bg-info dark:bg-info',
+        borderColor: 'border-info dark:border-info',
         icon: 'D',
       }
     case 'section':
       return {
-        bgColor: 'bg-purple-500',
-        borderColor: 'border-purple-500',
+        bgColor: 'bg-purple-500 dark:bg-purple-400',
+        borderColor: 'border-purple-500 dark:border-purple-400',
         icon: 'S',
       }
     case 'elevation':
       return {
-        bgColor: 'bg-teal-500',
-        borderColor: 'border-teal-500',
+        bgColor: 'bg-teal-500 dark:bg-teal-400',
+        borderColor: 'border-teal-500 dark:border-teal-400',
         icon: 'E',
       }
     case 'plan':
       return {
-        bgColor: 'bg-amber-500',
-        borderColor: 'border-amber-500',
+        bgColor: 'bg-warning dark:bg-warning',
+        borderColor: 'border-warning dark:border-warning',
         icon: 'P',
       }
     case 'reference':
       return {
-        bgColor: 'bg-cyan-500',
-        borderColor: 'border-cyan-500',
+        bgColor: 'bg-cyan-500 dark:bg-cyan-400',
+        borderColor: 'border-cyan-500 dark:border-cyan-400',
         icon: 'R',
       }
     case 'other':
     default:
       return {
-        bgColor: 'bg-gray-500',
-        borderColor: 'border-gray-500',
+        bgColor: 'bg-muted-foreground dark:bg-muted-foreground',
+        borderColor: 'border-muted-foreground dark:border-muted-foreground',
         icon: '?',
       }
   }
@@ -190,7 +192,7 @@ export function SimpleCalloutOverlay({
               'flex items-center justify-center',
               'transition-all hover:scale-125',
               'shadow-lg border-2 border-white',
-              isLinked ? 'bg-green-500' : 'bg-orange-500',
+              isLinked ? 'bg-success dark:bg-success' : 'bg-warning dark:bg-warning',
               isSelected && 'ring-2 ring-primary ring-offset-2'
             )}
             style={{ left: `${x}%`, top: `${y}%` }}
@@ -240,11 +242,11 @@ export function CalloutLegend({ className }: { className?: string }) {
       <div className="w-px bg-border mx-2" />
 
       <div className="flex items-center gap-1.5">
-        <div className="w-3 h-3 rounded-full bg-green-500" />
+        <div className="w-3 h-3 rounded-full bg-success dark:bg-success" />
         <span className="text-muted-foreground">Linked</span>
       </div>
       <div className="flex items-center gap-1.5">
-        <div className="w-3 h-3 rounded-full bg-orange-500" />
+        <div className="w-3 h-3 rounded-full bg-warning dark:bg-warning" />
         <span className="text-muted-foreground">Unlinked</span>
       </div>
     </div>

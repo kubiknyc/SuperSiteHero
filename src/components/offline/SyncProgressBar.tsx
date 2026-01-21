@@ -129,7 +129,7 @@ export function SyncProgressBar({
   }
 
   return (
-    <Card className={cn('border-blue-200 bg-blue-50/50 dark:bg-blue-950/20', className)}>
+    <Card className={cn('border-info/30 bg-info-light dark:bg-info/20 dark:border-info/40', className)}>
       <CardContent className="p-4">
         <div className="space-y-3">
           {/* Header */}

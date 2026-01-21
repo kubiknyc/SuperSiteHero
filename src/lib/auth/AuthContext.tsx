@@ -1,5 +1,6 @@
 // File: /src/lib/auth/AuthContext.tsx
-// Authentication context and provider with enhanced session management
+// Simplified authentication context and provider
+// Handles email/password auth with Supabase
 
 import { createContext, useContext, useEffect, useState, useCallback, useMemo, type ReactNode } from 'react'
 import { Session, User } from '@supabase/supabase-js'
@@ -9,13 +10,7 @@ import { logger } from '@/lib/utils/logger'
 import { setSentryUser, clearSentryUser } from '../sentry'
 import { withAuthRetry, isTransientError, isOnline, waitForOnline } from './auth-retry'
 import { sessionManager } from './session-manager'
-import {
-  initializeSessionSecurity,
-  clearSessionSecurityData,
-  startActivityMonitoring,
-  SecurityCheckResult,
-} from './session-security'
-import { logAuthEvent, logSecurityEvent } from '@/lib/audit/audit-logger'
+import { logAuthEvent } from '@/lib/audit/audit-logger'
 
 interface AuthContextType {
   session: Session | null
@@ -23,13 +18,9 @@ interface AuthContextType {
   userProfile: UserProfile | null
   loading: boolean
   isPending: boolean
-  /** Security warning if session appears hijacked */
-  securityWarning: SecurityCheckResult | null
   signIn: (email: string, password: string) => Promise<void>
   signOut: () => Promise<void>
   refreshUserProfile: () => Promise<void>
-  /** Dismiss the security warning */
-  dismissSecurityWarning: () => void
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -39,7 +30,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
-  const [securityWarning, setSecurityWarning] = useState<SecurityCheckResult | null>(null)
 
   // Fetch user profile from database with retry logic for transient failures
   const fetchUserProfile = useCallback(async (userId: string): Promise<boolean> => {
@@ -121,19 +111,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       logger.error('[Auth] Failed to initialize session manager:', error)
     })
 
-    // Get initial session - optimized to wait for both session AND profile before showing UI
+    // Get initial session
     const initializeAuth = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession()
         setSession(session)
         setUser(session?.user ?? null)
 
-        // Fetch user profile and initialize security in parallel
+        // Fetch user profile if session exists
         if (session?.user) {
-          await Promise.all([
-            fetchUserProfile(session.user.id),
-            Promise.resolve(initializeSessionSecurity()),
-          ])
+          await fetchUserProfile(session.user.id)
         }
       } catch (error) {
         logger.error('Error getting session:', error)
@@ -156,10 +143,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (session?.user) {
         fetchUserProfile(session.user.id)
 
-        // Initialize security on new sign in
+        // Log successful login
         if (event === 'SIGNED_IN') {
-          initializeSessionSecurity()
-          // Log successful login
           logAuthEvent('login', {
             user_id: session.user.id,
             email: session.user.email,
@@ -175,47 +160,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       } else {
         setUserProfile(null)
-        // Clear security data on sign out
+        // Log logout
         if (event === 'SIGNED_OUT') {
-          clearSessionSecurityData()
-          // Log logout
           logAuthEvent('logout')
-        }
-      }
-    })
-
-    // Start activity monitoring for session security
-    const stopActivityMonitoring = startActivityMonitoring((result) => {
-      if (!result.passed) {
-        logger.warn('[Auth] Security issue detected:', result.reason)
-        setSecurityWarning(result)
-
-        // Log security event
-        logSecurityEvent(
-          result.riskLevel === 'high' ? 'suspicious_activity' : 'security_warning',
-          {
-            reason: result.reason,
-            riskLevel: result.riskLevel,
-            action: result.action,
-          }
-        )
-
-        // Auto-logout on high risk
-        if (result.action === 'logout') {
-          logger.warn('[Auth] Auto-logout triggered due to security concern')
-          supabase.auth.signOut()
         }
       }
     })
 
     return () => {
       subscription.unsubscribe()
-      stopActivityMonitoring()
       sessionManager.destroy()
     }
-  }, [])
+  }, [fetchUserProfile])
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = useCallback(async (email: string, password: string) => {
     // Use retry logic for sign-in to handle transient network failures
     const result = await withAuthRetry(
       async () => {
@@ -243,17 +201,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error('Failed to load user profile. Please contact support.')
       }
     }
-  }
+  }, [fetchUserProfile])
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     const { error } = await supabase.auth.signOut()
     if (error) {throw error}
 
     // Clear Sentry user context
     clearSentryUser()
-
-    // Clear session security data
-    clearSessionSecurityData()
 
     // Clear sensitive data from localStorage on logout
     try {
@@ -264,21 +219,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       // Ignore errors if localStorage is not available
     }
-  }
-
-  // Dismiss security warning
-  const dismissSecurityWarning = useCallback(() => {
-    setSecurityWarning(null)
   }, [])
 
   const isPending = userProfile?.approval_status === 'pending'
 
   // Refresh user profile from database (used after profile updates)
-  const refreshUserProfile = async () => {
+  const refreshUserProfile = useCallback(async () => {
     if (user) {
       await fetchUserProfile(user.id)
     }
-  }
+  }, [user, fetchUserProfile])
 
   const value = useMemo(() => ({
     session,
@@ -286,12 +236,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     userProfile,
     loading,
     isPending,
-    securityWarning,
     signIn,
     signOut,
     refreshUserProfile,
-    dismissSecurityWarning,
-  }), [session, user, userProfile, loading, isPending, securityWarning, signIn, signOut, refreshUserProfile, dismissSecurityWarning])
+  }), [session, user, userProfile, loading, isPending, signIn, signOut, refreshUserProfile])
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

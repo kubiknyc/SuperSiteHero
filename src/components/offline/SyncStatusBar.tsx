@@ -65,7 +65,7 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
   const getNetworkBadge = () => {
     if (isSyncing) {
       return (
-        <Badge variant="secondary" className="bg-info-light text-primary-hover border-blue-300 animate-pulse">
+        <Badge variant="secondary" className="bg-info-light text-info-dark border-info/30 dark:bg-info/20 dark:text-info dark:border-info/40 animate-pulse">
           <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
           Syncing
         </Badge>
@@ -74,7 +74,7 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
 
     if (isOnline) {
       return (
-        <Badge variant="secondary" className="bg-success-light text-success-dark border-green-300">
+        <Badge variant="secondary" className="bg-success-light text-success-dark border-success/30 dark:bg-success/20 dark:text-success dark:border-success/40">
           <Wifi className="h-3 w-3 mr-1" />
           Online
         </Badge>
@@ -82,7 +82,7 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
     }
 
     return (
-      <Badge variant="secondary" className="bg-error-light text-error-dark border-red-300">
+      <Badge variant="secondary" className="bg-error-light text-error-dark border-error/30 dark:bg-error/20 dark:text-error dark:border-error/40">
         <WifiOff className="h-3 w-3 mr-1" />
         Offline
       </Badge>
@@ -105,10 +105,10 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
   };
 
   const getStatusColor = () => {
-    if (isSyncing) {return 'bg-blue-500';}
-    if (isOnline && pendingSyncs === 0) {return 'bg-green-500';}
+    if (isSyncing) {return 'bg-info';}
+    if (isOnline && pendingSyncs === 0) {return 'bg-success';}
     if (isOnline && pendingSyncs > 0) {return 'bg-warning';}
-    return 'bg-red-500';
+    return 'bg-error';
   };
 
   const getStatusMessage = () => {
@@ -147,7 +147,7 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
                 {getNetworkBadge()}
 
                 {pendingSyncs > 0 && !isSyncing && (
-                  <Badge variant="outline" className="bg-warning-light text-amber-700 border-amber-300">
+                  <Badge variant="outline" className="bg-warning-light text-warning-dark border-warning/30 dark:bg-warning/20 dark:text-warning dark:border-warning/40">
                     <Clock className="h-3 w-3 mr-1" />
                     {pendingSyncs} pending
                   </Badge>
@@ -176,7 +176,7 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
             {isSyncing && syncProgress && (
               <div className="mt-2 w-full bg-secondary rounded-full h-1.5 overflow-hidden">
                 <div
-                  className="bg-blue-500 h-full transition-all duration-300"
+                  className="bg-info h-full transition-all duration-300"
                   style={{
                     width: `${(syncProgress.current / syncProgress.total) * 100}%`,
                   }}
@@ -208,11 +208,11 @@ export function SyncStatusBar({ position = 'top', className }: SyncStatusBarProp
               <span className="text-muted-foreground">Pending items:</span>
               <span className="font-medium">
                 {pendingSyncs > 0 ? (
-                  <Badge variant="outline" className="bg-warning-light text-amber-700 border-amber-300">
+                  <Badge variant="outline" className="bg-warning-light text-warning-dark border-warning/30 dark:bg-warning/20 dark:text-warning dark:border-warning/40">
                     {pendingSyncs}
                   </Badge>
                 ) : (
-                  <Badge variant="outline" className="bg-success-light text-success-dark border-green-300">
+                  <Badge variant="outline" className="bg-success-light text-success-dark border-success/30 dark:bg-success/20 dark:text-success dark:border-success/40">
                     <CheckCircle2 className="h-3 w-3 mr-1" />
                     0
                   </Badge>

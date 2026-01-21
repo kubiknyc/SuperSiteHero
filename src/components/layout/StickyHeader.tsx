@@ -98,8 +98,8 @@ export function StickyHeader({
           label: 'Tasks',
           value: dashboardStats.tasks.pending + dashboardStats.tasks.inProgress,
           icon: ClipboardList,
-          color: 'bg-blue-500/10 dark:bg-blue-500/20',
-          iconColor: '#3B82F6',
+          color: 'bg-info/10 dark:bg-info/20',
+          iconColor: 'hsl(var(--info))',
           link: '/tasks?status=pending',
           trend: 'up',
           change: '+2',
@@ -108,8 +108,8 @@ export function StickyHeader({
           label: 'RFIs',
           value: dashboardStats.rfis.open + dashboardStats.rfis.pendingResponse,
           icon: AlertCircle,
-          color: 'bg-amber-500/10 dark:bg-amber-500/20',
-          iconColor: '#F59E0B',
+          color: 'bg-warning/10 dark:bg-warning/20',
+          iconColor: 'hsl(var(--warning))',
           link: '/rfis?status=open',
           trend: 'down',
           change: '-1',
@@ -118,8 +118,8 @@ export function StickyHeader({
           label: 'Punch',
           value: dashboardStats.punchItems.open + dashboardStats.punchItems.inProgress,
           icon: ListChecks,
-          color: 'bg-purple-500/10 dark:bg-purple-500/20',
-          iconColor: '#8B5CF6',
+          color: 'bg-primary/10 dark:bg-primary/20',
+          iconColor: 'hsl(var(--primary))',
           link: '/punch-lists?status=open',
           trend: 'up',
           change: '+3',
@@ -128,8 +128,8 @@ export function StickyHeader({
           label: 'Safety',
           value: `${dashboardStats.safety.daysSinceIncident}d`,
           icon: Shield,
-          color: 'bg-emerald-500/10 dark:bg-emerald-500/20',
-          iconColor: '#10B981',
+          color: 'bg-success/10 dark:bg-success/20',
+          iconColor: 'hsl(var(--success))',
           link: '/safety',
           trend: 'up',
           change: '+1',
@@ -274,8 +274,8 @@ export function StickyHeader({
                                   className={cn(
                                     'flex items-center gap-0.5 text-[10px] font-bold px-1.5 py-0.5 rounded-full',
                                     stat.trend === 'up'
-                                      ? 'text-emerald-700 dark:text-emerald-400 bg-emerald-100/80 dark:bg-emerald-500/20'
-                                      : 'text-rose-700 dark:text-rose-400 bg-rose-100/80 dark:bg-rose-500/20'
+                                      ? 'text-success-dark dark:text-success bg-success/10 dark:bg-success/20'
+                                      : 'text-destructive-dark dark:text-destructive bg-destructive/10 dark:bg-destructive/20'
                                   )}
                                 >
                                   <TrendIcon className="w-2.5 h-2.5" />
@@ -348,8 +348,8 @@ export function StickyHeader({
                   <Bell className="h-5 w-5" />
                   {/* Enhanced notification badge with pulse */}
                   <span className="absolute top-1.5 right-1.5 flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500 ring-[2px] ring-white dark:ring-slate-900" />
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive/75 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-destructive ring-[2px] ring-white dark:ring-slate-900" />
                   </span>
                 </Button>
               </TooltipTrigger>

@@ -894,7 +894,7 @@ export function EnhancedGanttChart({
                   {scheduleHealth.avgVarianceDays}d behind
                 </Badge>
               ) : scheduleHealth.avgVarianceDays < 0 ? (
-                <Badge className="gap-1 text-[10px] bg-green-600 hover:bg-green-700">
+                <Badge className="gap-1 text-[10px] bg-success hover:bg-success/90">
                   <TrendingUp className="h-3 w-3" />
                   {Math.abs(scheduleHealth.avgVarianceDays)}d ahead
                 </Badge>
@@ -935,35 +935,35 @@ export function EnhancedGanttChart({
                 checked={options.showCriticalPath}
                 onCheckedChange={() => toggleOption('showCriticalPath')}
               >
-                <Target className="h-4 w-4 mr-2 text-red-500" />
+                <Target className="h-4 w-4 mr-2 text-destructive" />
                 Critical Path
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
                 checked={options.showBaseline}
                 onCheckedChange={() => toggleOption('showBaseline')}
               >
-                <Calendar className="h-4 w-4 mr-2 text-blue-500" />
+                <Calendar className="h-4 w-4 mr-2 text-info" />
                 Baseline
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
                 checked={options.showDependencies}
                 onCheckedChange={() => toggleOption('showDependencies')}
               >
-                <Link2 className="h-4 w-4 mr-2 text-gray-500" />
+                <Link2 className="h-4 w-4 mr-2 text-muted-foreground" />
                 Dependencies
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
                 checked={options.showFloatBars}
                 onCheckedChange={() => toggleOption('showFloatBars')}
               >
-                <Clock className="h-4 w-4 mr-2 text-amber-500" />
+                <Clock className="h-4 w-4 mr-2 text-warning" />
                 Float Bars
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
                 checked={options.showProgress}
                 onCheckedChange={() => toggleOption('showProgress')}
               >
-                <TrendingUp className="h-4 w-4 mr-2 text-green-500" />
+                <TrendingUp className="h-4 w-4 mr-2 text-success" />
                 Progress
               </DropdownMenuCheckboxItem>
               <DropdownMenuSeparator />
@@ -1031,7 +1031,7 @@ export function EnhancedGanttChart({
                     'h-10 flex items-center px-3 border-b hover:bg-muted/40 cursor-pointer transition-colors',
                     hoveredTask === task.id && 'bg-muted/40',
                     selectedTask === task.id && 'bg-primary/10',
-                    isCritical && options.showCriticalPath && 'border-l-2 border-l-red-500'
+                    isCritical && options.showCriticalPath && 'border-l-2 border-l-destructive'
                   )}
                   style={{ paddingLeft: task.wbsLevel ? `${task.wbsLevel * 12 + 12}px` : undefined }}
                   onMouseEnter={() => setHoveredTask(task.id)}
@@ -1103,14 +1103,14 @@ export function EnhancedGanttChart({
                   {/* Variance indicator */}
                   {options.showBaseline && variance && (
                     variance.isBehindSchedule ? (
-                      <TrendingDown className="h-3 w-3 text-red-500 mr-1" />
+                      <TrendingDown className="h-3 w-3 text-destructive mr-1" />
                     ) : variance.isAheadOfSchedule ? (
-                      <TrendingUp className="h-3 w-3 text-green-500 mr-1" />
+                      <TrendingUp className="h-3 w-3 text-success mr-1" />
                     ) : null
                   )}
 
                   {isCritical && options.showCriticalPath && (
-                    <AlertTriangle className="h-4 w-4 text-red-500 mr-1" />
+                    <AlertTriangle className="h-4 w-4 text-destructive mr-1" />
                   )}
 
                   {task.status && (
@@ -1335,11 +1335,11 @@ export function EnhancedGanttChart({
                             {options.showBaseline && variance && (
                               <div className="absolute -top-1 -right-1">
                                 {variance.isBehindSchedule ? (
-                                  <div className="w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                                  <div className="w-4 h-4 bg-destructive rounded-full flex items-center justify-center">
                                     <TrendingDown className="h-2.5 w-2.5 text-white" />
                                   </div>
                                 ) : variance.isAheadOfSchedule ? (
-                                  <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                                  <div className="w-4 h-4 bg-success rounded-full flex items-center justify-center">
                                     <TrendingUp className="h-2.5 w-2.5 text-white" />
                                   </div>
                                 ) : null}
@@ -1383,7 +1383,7 @@ export function EnhancedGanttChart({
                               options.showCriticalPath &&
                               parseFloat(style.width) > 40 && (
                                 <div className="absolute right-1 top-1/2 -translate-y-1/2">
-                                  <Target className="h-3 w-3 text-red-600" />
+                                  <Target className="h-3 w-3 text-destructive" />
                                 </div>
                               )}
                           </div>
@@ -1406,7 +1406,7 @@ export function EnhancedGanttChart({
                                 {variance.endVarianceDays}d late
                               </Badge>
                             ) : variance.isAheadOfSchedule ? (
-                              <Badge className="text-[10px] gap-0.5 bg-green-600">
+                              <Badge className="text-[10px] gap-0.5 bg-success">
                                 <TrendingUp className="h-2.5 w-2.5" />
                                 {Math.abs(variance.endVarianceDays)}d early
                               </Badge>
@@ -1524,23 +1524,23 @@ export function EnhancedGanttChart({
           {options.showBaseline && baselineVariances.size > 0 && (
             <>
               <div className="flex items-center gap-1">
-                <div className="w-6 h-2 rounded-sm bg-gray-400 opacity-40 border border-dashed border-gray-500" />
+                <div className="w-6 h-2 rounded-sm bg-muted-foreground opacity-40 border border-dashed border-muted-foreground" />
                 <span className="text-muted-foreground">Baseline</span>
               </div>
               <div className="flex items-center gap-1">
-                <TrendingUp className="h-3 w-3 text-green-500" />
-                <span className="text-green-600">Ahead</span>
+                <TrendingUp className="h-3 w-3 text-success" />
+                <span className="text-success">Ahead</span>
               </div>
               <div className="flex items-center gap-1">
-                <TrendingDown className="h-3 w-3 text-red-500" />
-                <span className="text-red-600">Behind</span>
+                <TrendingDown className="h-3 w-3 text-destructive" />
+                <span className="text-destructive">Behind</span>
               </div>
             </>
           )}
 
           {/* Critical Path */}
           {options.showCriticalPath && criticalPath.size > 0 && (
-            <div className="flex items-center gap-1 text-red-600">
+            <div className="flex items-center gap-1 text-destructive">
               <AlertTriangle className="h-3 w-3" />
               <span>{criticalPath.size} tasks on critical path</span>
             </div>
@@ -1550,8 +1550,8 @@ export function EnhancedGanttChart({
           {scheduleHealth && (
             <div className="flex items-center gap-2 text-muted-foreground">
               <span>|</span>
-              <span className="text-green-600">{scheduleHealth.aheadCount} ahead</span>
-              <span className="text-red-600">{scheduleHealth.behindCount} behind</span>
+              <span className="text-success">{scheduleHealth.aheadCount} ahead</span>
+              <span className="text-destructive">{scheduleHealth.behindCount} behind</span>
               <span>{scheduleHealth.onTimeCount} on time</span>
             </div>
           )}

@@ -237,7 +237,7 @@ export const ActionPanel = memo(function ActionPanel({
                           {getTypeLabel(item.type, item.isOverdue)}
                         </Badge>
                         {item.isOverdue && (
-                          <span className="flex items-center gap-1 text-[10px] font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-500/10 px-2 py-0.5 rounded-full">
+                          <span className="flex items-center gap-1 text-[10px] font-semibold text-destructive dark:text-destructive bg-destructive/10 dark:bg-destructive/10 px-2 py-0.5 rounded-full">
                             <Clock className="w-3 h-3" />
                             Overdue
                           </span>
@@ -292,12 +292,12 @@ export const ActionPanel = memo(function ActionPanel({
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <div className={cn(
                 'w-20 h-20 rounded-2xl',
-                'bg-gradient-to-br from-emerald-50 to-emerald-100',
-                'dark:from-emerald-500/20 dark:to-emerald-500/10',
+                'bg-gradient-to-br from-success-light to-success/20',
+                'dark:from-success/20 dark:to-success/10',
                 'flex items-center justify-center mb-5',
-                'shadow-lg shadow-emerald-500/10'
+                'shadow-lg shadow-success/10'
               )}>
-                <Shield className="w-10 h-10 text-emerald-500" />
+                <Shield className="w-10 h-10 text-success" />
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-1.5 text-lg">
                 All caught up!

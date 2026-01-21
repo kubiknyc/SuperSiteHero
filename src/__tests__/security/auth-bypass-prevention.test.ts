@@ -4,7 +4,6 @@
  * Security tests for preventing authentication bypass attacks:
  * - Protected route access without auth
  * - Role-based access control
- * - MFA requirement enforcement
  * - Session tampering prevention
  * - Token validation
  */
@@ -306,40 +305,6 @@ describe('Authentication Bypass Prevention', () => {
       // Token should be a string (JWT format in real implementation)
       expect(typeof token).toBe('string');
       expect(token.length).toBeGreaterThan(0);
-    });
-  });
-
-  describe('MFA Requirement Enforcement', () => {
-    it('should enforce MFA for admin users', () => {
-      const adminUser = createMockUser({ role: 'admin', mfaEnabled: true });
-
-      // MFA should be enabled for admin
-      expect(adminUser.mfaEnabled).toBe(true);
-    });
-
-    it('should allow optional MFA for regular users', () => {
-      const regularUser = createMockUser({ role: 'foreman', mfaEnabled: false });
-
-      // MFA can be optional for non-admin users
-      expect(regularUser.mfaEnabled).toBe(false);
-    });
-
-    it('should verify MFA status in user profile', () => {
-      const context = createAuthenticatedContext({ mfaEnabled: true });
-
-      expect(context.userProfile?.mfaEnabled).toBe(true);
-    });
-
-    it('should prevent access to sensitive operations without MFA verification', () => {
-      const userWithoutMFA = createMockUser({ role: 'admin', mfaEnabled: false });
-      const userWithMFA = createMockUser({ role: 'admin', mfaEnabled: true });
-
-      // In real implementation, certain operations would require MFA
-      expect(userWithoutMFA.mfaEnabled).toBe(false);
-      expect(userWithMFA.mfaEnabled).toBe(true);
-
-      // User with MFA should have higher trust level
-      expect(userWithMFA.mfaEnabled).toBe(true);
     });
   });
 

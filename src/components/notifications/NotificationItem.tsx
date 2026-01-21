@@ -65,10 +65,10 @@ interface NotificationItemProps {
 
 // Priority colors
 const PRIORITY_STYLES: Record<string, { bg: string; text: string; border: string }> = {
-  urgent: { bg: 'bg-red-50', text: 'text-red-700', border: 'border-l-red-500' },
-  high: { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-l-orange-500' },
+  urgent: { bg: 'bg-error-light dark:bg-error/10', text: 'text-error-dark dark:text-error', border: 'border-l-error' },
+  high: { bg: 'bg-warning-light dark:bg-warning/10', text: 'text-warning-dark dark:text-warning', border: 'border-l-warning' },
   normal: { bg: '', text: '', border: '' },
-  low: { bg: 'bg-gray-50', text: 'text-gray-600', border: '' },
+  low: { bg: 'bg-muted', text: 'text-muted-foreground', border: '' },
 }
 
 // Memoized icon renderer - renders notification type icon
@@ -242,7 +242,7 @@ export const NotificationItem = memo(function NotificationItem({
             key="complete"
             size="sm"
             variant="outline"
-            className="h-7 text-xs text-green-600"
+            className="h-7 text-xs text-success"
             onClick={(e) => {
               e.stopPropagation()
               onApprove?.(notification.id)
@@ -266,7 +266,7 @@ export const NotificationItem = memo(function NotificationItem({
               key="approve"
               size="sm"
               variant="outline"
-              className="h-7 text-xs text-green-600 hover:text-green-700 hover:bg-green-50"
+              className="h-7 text-xs text-success hover:text-success hover:bg-success-light"
               onClick={(e) => { e.stopPropagation(); onApprove(notification.id) }}
               disabled={isActionPending}
             >
@@ -281,7 +281,7 @@ export const NotificationItem = memo(function NotificationItem({
               key="reject"
               size="sm"
               variant="outline"
-              className="h-7 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
+              className="h-7 text-xs text-destructive hover:text-destructive hover:bg-error-light"
               onClick={(e) => { e.stopPropagation(); onReject(notification.id) }}
               disabled={isActionPending}
             >
@@ -361,7 +361,7 @@ export const NotificationItem = memo(function NotificationItem({
     >
       {/* Swipe action background */}
       {showSwipeActions && (
-        <div className="absolute inset-y-0 right-0 w-24 bg-red-500 flex items-center justify-center">
+        <div className="absolute inset-y-0 right-0 w-24 bg-destructive flex items-center justify-center">
           <X className="h-5 w-5 text-white" />
         </div>
       )}
@@ -370,7 +370,7 @@ export const NotificationItem = memo(function NotificationItem({
       <div
         className={cn(
           'flex items-start gap-3 p-4 cursor-pointer hover:bg-muted/50 transition-all bg-background',
-          !isRead && 'bg-blue-50/50 dark:bg-blue-950/20',
+          !isRead && 'bg-info-light/50 dark:bg-info/10',
           priority !== 'normal' && `border-l-4 ${priorityStyle.border}`,
           compact && 'p-3 gap-2'
         )}

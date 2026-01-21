@@ -159,7 +159,7 @@ export function WeatherLogDetailPage() {
                 {(weatherLog.temperature_high !== null || weatherLog.temperature_low !== null) && (
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <ThermometerSun className="w-5 h-5 text-orange-500" />
+                      <ThermometerSun className="w-5 h-5 text-warning" />
                       <span className="font-medium">Temperature</span>
                     </div>
                     <div className="space-y-1">
@@ -217,7 +217,7 @@ export function WeatherLogDetailPage() {
                 {weatherLog.humidity_percent !== null && (
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <Droplets className="w-5 h-5 text-blue-400" />
+                      <Droplets className="w-5 h-5 text-info" />
                       <span className="font-medium">Humidity</span>
                     </div>
                     <p className="text-sm text-secondary">
@@ -234,7 +234,7 @@ export function WeatherLogDetailPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <AlertTriangle className="w-5 h-5 text-orange-500" />
+                  <AlertTriangle className="w-5 h-5 text-warning" />
                   Work Impact
                 </CardTitle>
               </CardHeader>
@@ -251,7 +251,7 @@ export function WeatherLogDetailPage() {
                     <div>
                       <span className="text-sm text-secondary">Hours Lost:</span>
                       <div className="flex items-center gap-2 mt-1">
-                        <Clock className="w-4 h-4 text-orange-500" />
+                        <Clock className="w-4 h-4 text-warning" />
                         <span className="font-semibold text-lg">{weatherLog.hours_lost}</span>
                       </div>
                     </div>
@@ -293,15 +293,15 @@ export function WeatherLogDetailPage() {
 
           {/* Safety Concerns */}
           {weatherLog.safety_concerns && (
-            <Card className="border-orange-200 bg-orange-50/50">
+            <Card className="border-warning/30 bg-warning-light dark:border-warning/30 dark:bg-warning/10">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-orange-900">
-                  <Shield className="w-5 h-5 text-orange-600" />
+                <CardTitle className="flex items-center gap-2 text-warning-dark dark:text-warning">
+                  <Shield className="w-5 h-5 text-warning" />
                   Safety Concerns
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-orange-900 whitespace-pre-wrap">
+                <p className="text-sm text-warning-dark dark:text-warning/90 whitespace-pre-wrap">
                   {weatherLog.safety_concerns}
                 </p>
               </CardContent>
@@ -325,7 +325,7 @@ export function WeatherLogDetailPage() {
                       href={url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block aspect-square rounded-lg overflow-hidden border hover:border-blue-500 transition-colors"
+                      className="block aspect-square rounded-lg overflow-hidden border hover:border-primary transition-colors"
                     >
                       <img
                         src={url}

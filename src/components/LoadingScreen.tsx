@@ -66,7 +66,7 @@ export function LoadingScreen({ message = 'Loading JobSight...', className }: Lo
         </div>
 
         {/* Progress bar */}
-        <div className="mt-12 w-64 h-1 bg-gray-700 rounded-full overflow-hidden">
+        <div className="mt-12 w-64 h-1 bg-muted rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-primary to-primary-500 rounded-full dark:from-primary dark:to-primary-500"
             style={{
@@ -228,7 +228,7 @@ export function LoadingOverlay({ message, show }: { message?: string; show: bool
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-md">
-      <div className="bg-card/90 dark:bg-background/90 backdrop-blur-xl rounded-2xl p-10 shadow-2xl border border-white/20 dark:border-gray-700/50 flex flex-col items-center max-w-sm">
+      <div className="bg-card/90 dark:bg-background/90 backdrop-blur-xl rounded-2xl p-10 shadow-2xl border border-white/20 dark:border-border/50 flex flex-col items-center max-w-sm">
         {/* Mini logo with glow */}
         <div className="relative mb-6">
           <div className="absolute inset-0 bg-primary dark:bg-primary/20 blur-xl rounded-full" />
@@ -242,7 +242,7 @@ export function LoadingOverlay({ message, show }: { message?: string; show: bool
 
         {/* Message */}
         {message && (
-          <p className="text-secondary dark:text-gray-300 font-semibold text-center">
+          <p className="text-secondary dark:text-muted-foreground font-semibold text-center">
             {message}
           </p>
         )}

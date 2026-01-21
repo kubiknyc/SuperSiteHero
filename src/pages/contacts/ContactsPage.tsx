@@ -164,8 +164,8 @@ export function ContactsPage() {
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-purple-100">
-                    <Building2 className="h-5 w-5 text-purple-600" />
+                  <div className="p-2 rounded-lg bg-muted dark:bg-muted/50">
+                    <Building2 className="h-5 w-5 text-muted-foreground" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold text-foreground">{stats.subcontractors}</p>
@@ -263,7 +263,7 @@ export function ContactsPage() {
         {!selectedProjectId ? (
           <Card>
             <CardContent className="p-12 text-center">
-              <Users className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+              <Users className="h-16 w-16 text-muted-foreground/50 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">No Project Selected</h3>
               <p className="text-secondary">Select a project above to view and manage contacts</p>
             </CardContent>
@@ -278,7 +278,7 @@ export function ContactsPage() {
         ) : contactsError ? (
           <Card>
             <CardContent className="p-12 text-center">
-              <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
+              <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">Error Loading Contacts</h3>
               <p className="text-secondary">{contactsError.message}</p>
             </CardContent>
@@ -286,7 +286,7 @@ export function ContactsPage() {
         ) : contacts && contacts.length === 0 ? (
           <Card>
             <CardContent className="p-12 text-center">
-              <Users className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+              <Users className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">No Contacts Yet</h3>
               <p className="text-secondary mb-4">Add your first contact to get started</p>
               <Button onClick={() => navigate(`/contacts/new?projectId=${selectedProjectId}`)}>
@@ -345,7 +345,7 @@ export function ContactsPage() {
             <AlertDialogAction
               onClick={handleDeleteConfirm}
               disabled={isDeleting}
-              className="bg-error hover:bg-red-700"
+              className="bg-error hover:bg-error-dark"
             >
               {isDeleting ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>

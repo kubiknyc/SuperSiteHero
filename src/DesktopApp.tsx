@@ -17,10 +17,7 @@ const LoginPage = lazy(() => import('./pages/auth/LoginPageV2').then(m => ({ def
 const SignupPage = lazy(() => import('./pages/auth/SignupPageV2').then(m => ({ default: m.SignupPageV2 })));
 const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage').then(m => ({ default: m.ForgotPasswordPage })));
 const ResetPasswordPage = lazy(() => import('./pages/auth/ResetPasswordPage').then(m => ({ default: m.ResetPasswordPage })));
-
-// MFA pages - lazy loaded as they're secondary auth flows
-const MFASetupPage = lazy(() => import('./pages/auth/MFASetupPage').then(m => ({ default: m.MFASetupPage })));
-const MFAVerifyPage = lazy(() => import('./pages/auth/MFAVerifyPage').then(m => ({ default: m.MFAVerifyPage })));
+const AuthCallbackPage = lazy(() => import('./pages/auth/AuthCallbackPage').then(m => ({ default: m.AuthCallbackPage })));
 
 // Registration flow - lazy loaded for smaller initial bundle
 const CompanyRegistration = lazy(() => import('./features/registration/CompanyRegistration').then(m => ({ default: m.CompanyRegistration })));
@@ -381,10 +378,7 @@ export function DesktopApp() {
         <Route path="/register" element={<CompanyRegistration />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
-
-        {/* MFA Routes */}
-        <Route path="/auth/mfa-setup" element={<ProtectedRoute><MFASetupPage /></ProtectedRoute>} />
-        <Route path="/auth/mfa-verify" element={<MFAVerifyPage />} />
+        <Route path="/auth/callback" element={<AuthCallbackPage />} />
 
         {/* Protected registration routes */}
         <Route path="/pending-approval" element={<ProtectedRoute><PendingApproval /></ProtectedRoute>} />

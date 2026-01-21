@@ -26,11 +26,6 @@ export const RATE_LIMIT_CONFIG = {
     windowMs: 60 * 60 * 1000, // 1 hour
     captchaThreshold: 2,
   },
-  mfa_verify: {
-    maxAttempts: 5,
-    windowMs: 5 * 60 * 1000, // 5 minutes
-    captchaThreshold: 3,
-  },
 } as const
 
 export type RateLimitAction = keyof typeof RATE_LIMIT_CONFIG

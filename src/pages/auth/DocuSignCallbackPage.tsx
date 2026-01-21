@@ -89,7 +89,7 @@ export function DocuSignCallbackPage() {
                 </div>
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-foreground">
+                <h2 className="heading-card text-foreground">
                   Connecting DocuSign
                 </h2>
                 <p className="text-secondary mt-2">
@@ -107,7 +107,7 @@ export function DocuSignCallbackPage() {
                 </div>
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-foreground">
+                <h2 className="heading-card text-foreground">
                   DocuSign Connected!
                 </h2>
                 <p className="text-secondary mt-2">
@@ -126,7 +126,7 @@ export function DocuSignCallbackPage() {
                 </div>
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-foreground">
+                <h2 className="heading-card text-foreground">
                   Connection Failed
                 </h2>
                 <p className="text-error mt-2">{errorMessage}</p>

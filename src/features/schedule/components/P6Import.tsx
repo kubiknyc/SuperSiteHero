@@ -159,7 +159,7 @@ function FileDropZone({ onFileSelect, isLoading }: FileDropZoneProps) {
             </p>
           </div>
           <div className="flex justify-center gap-2">
-            <Badge variant="secondary" className="bg-orange-100 text-orange-700">.xer</Badge>
+            <Badge variant="secondary" className="bg-warning-light dark:bg-warning/20 text-warning-dark dark:text-warning">.xer</Badge>
             <Badge variant="secondary">.xml</Badge>
           </div>
           <p className="text-xs text-muted-foreground">
@@ -182,9 +182,9 @@ function ImportSummary({ summary, fileName }: ImportSummaryProps) {
   return (
     <div className="bg-muted/50 rounded-lg p-4 space-y-3">
       <div className="flex items-center gap-2">
-        <FileText className="h-4 w-4 text-orange-500" />
+        <FileText className="h-4 w-4 text-warning" />
         <span className="font-medium">{fileName}</span>
-        <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200">
+        <Badge variant="outline" className="bg-warning-light dark:bg-warning/20 text-warning-dark dark:text-warning border-warning/30">
           Primavera P6
         </Badge>
       </div>
@@ -566,10 +566,10 @@ function ActivityPreviewTable({ data }: ActivityPreviewTableProps) {
                   <TableCell className="font-mono text-xs">
                     <div className="flex items-center gap-1">
                       {isMilestone && (
-                        <Flag className="h-3 w-3 text-orange-500" />
+                        <Flag className="h-3 w-3 text-warning" />
                       )}
                       {activity.is_critical && (
-                        <span className="w-1.5 h-1.5 bg-red-500 rounded-full" />
+                        <span className="w-1.5 h-1.5 bg-destructive rounded-full" />
                       )}
                       {activity.task_code || activity.task_id}
                     </div>
@@ -757,7 +757,7 @@ export function P6Import({
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-orange-500" />
+            <FileText className="h-5 w-5 text-warning" />
             Import from Primavera P6
           </DialogTitle>
           <DialogDescription>

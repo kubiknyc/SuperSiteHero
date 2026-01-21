@@ -21,10 +21,10 @@ interface PresenceIndicatorProps {
 }
 
 const statusColors: Record<PresenceStatus, string> = {
-  online: 'bg-green-500',
-  away: 'bg-warning',
-  busy: 'bg-red-500',
-  offline: 'bg-gray-400',
+  online: 'bg-success dark:bg-success',
+  away: 'bg-warning dark:bg-warning',
+  busy: 'bg-destructive dark:bg-destructive',
+  offline: 'bg-muted-foreground dark:bg-muted-foreground',
 }
 
 const statusLabels: Record<PresenceStatus, string> = {

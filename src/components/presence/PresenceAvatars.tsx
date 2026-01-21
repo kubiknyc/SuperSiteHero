@@ -69,7 +69,7 @@ export const PresenceAvatars = memo(function PresenceAvatars({
             <TooltipTrigger asChild>
               <div
                 className={cn(
-                  'relative rounded-full ring-2 ring-white dark:ring-gray-900',
+                  'relative rounded-full ring-2 ring-white dark:ring-background',
                   sizeClasses[size],
                   index > 0 && overlapClasses[size]
                 )}
@@ -94,7 +94,7 @@ export const PresenceAvatars = memo(function PresenceAvatars({
                 )}
                 {/* Online indicator dot */}
                 <span
-                  className="absolute bottom-0 right-0 block h-2 w-2 rounded-full bg-green-500 ring-2 ring-white dark:ring-gray-900"
+                  className="absolute bottom-0 right-0 block h-2 w-2 rounded-full bg-success dark:bg-success ring-2 ring-white dark:ring-background"
                   aria-hidden="true"
                 />
               </div>
@@ -113,7 +113,7 @@ export const PresenceAvatars = memo(function PresenceAvatars({
             <TooltipTrigger asChild>
               <div
                 className={cn(
-                  'flex items-center justify-center rounded-full bg-muted dark:bg-muted ring-2 ring-white dark:ring-gray-900 font-medium text-secondary dark:text-gray-300',
+                  'flex items-center justify-center rounded-full bg-muted dark:bg-muted ring-2 ring-white dark:ring-background font-medium text-secondary dark:text-muted-foreground',
                   sizeClasses[size],
                   overlapClasses[size]
                 )}

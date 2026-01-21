@@ -326,7 +326,7 @@ function SignatureDialog({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div className="space-y-2">
               <Label htmlFor="signer-name">
-                Full Name <span className="text-red-500">*</span>
+                Full Name <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="signer-name"
@@ -359,7 +359,7 @@ function SignatureDialog({
           {/* Signature Canvas */}
           <div className="space-y-2">
             <Label className="flex items-center gap-1">
-              Signature <span className="text-red-500">*</span>
+              Signature <span className="text-destructive">*</span>
             </Label>
             <div className="relative border-2 border-input rounded-lg bg-white">
               <canvas
@@ -381,7 +381,7 @@ function SignatureDialog({
                 </div>
               )}
               {/* Signature line */}
-              <div className="absolute bottom-4 left-4 right-4 border-b border-gray-400" />
+              <div className="absolute bottom-4 left-4 right-4 border-b border-muted-foreground/50" />
             </div>
             {hasDrawn && (
               <Button
@@ -474,7 +474,7 @@ function SignatureDisplay({ label, signature, type, canSign, onSign }: Signature
       'p-4 rounded-lg border-2',
       signature
         ? `${borderClass} ${bgClass}`
-        : 'border-dashed border-gray-300 bg-gray-50 dark:border-gray-700 dark:bg-gray-900/50'
+        : 'border-dashed border-border bg-muted/50 dark:border-border dark:bg-muted/20'
     )}>
       <div className="flex items-center justify-between mb-3">
         <Label className={cn(
@@ -505,7 +505,7 @@ function SignatureDisplay({ label, signature, type, canSign, onSign }: Signature
               alt={`${label} signature`}
               className="h-16 object-contain mx-auto"
             />
-            <div className="border-t border-gray-300 mt-2" />
+            <div className="border-t border-border mt-2" />
           </div>
 
           {/* Signer Details */}

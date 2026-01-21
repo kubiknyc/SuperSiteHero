@@ -35,27 +35,27 @@ const ENTITY_STYLES: Record<
 > = {
   document: {
     icon: FileText,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-500/10',
-    borderColor: 'border-l-blue-500',
+    color: 'text-info',
+    bgColor: 'bg-info/10',
+    borderColor: 'border-l-info',
   },
   submittal: {
     icon: FileCheck,
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-500/10',
-    borderColor: 'border-l-purple-500',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
+    borderColor: 'border-l-primary',
   },
   rfi: {
     icon: MessageSquare,
-    color: 'text-emerald-600',
-    bgColor: 'bg-emerald-500/10',
-    borderColor: 'border-l-emerald-500',
+    color: 'text-success',
+    bgColor: 'bg-success/10',
+    borderColor: 'border-l-success',
   },
   change_order: {
     icon: Receipt,
-    color: 'text-amber-600',
-    bgColor: 'bg-amber-500/10',
-    borderColor: 'border-l-amber-500',
+    color: 'text-warning',
+    bgColor: 'bg-warning/10',
+    borderColor: 'border-l-warning',
   },
 }
 
@@ -144,13 +144,13 @@ export const ApprovalRequestCard = memo(function ApprovalRequestCard({
   // Status-based progress bar color
   const progressColor =
     request.status === 'approved' || request.status === 'approved_with_conditions'
-      ? 'bg-emerald-500'
+      ? 'bg-success'
       : request.status === 'rejected'
-        ? 'bg-red-500'
+        ? 'bg-error'
         : urgencyLevel === 'critical'
-          ? 'bg-red-500'
+          ? 'bg-error'
           : urgencyLevel === 'warning'
-            ? 'bg-amber-500'
+            ? 'bg-warning'
             : 'bg-primary'
 
   return (
@@ -160,7 +160,7 @@ export const ApprovalRequestCard = memo(function ApprovalRequestCard({
         'hover:shadow-md hover:border-border/80',
         'border-l-4',
         entityStyle.borderColor,
-        urgencyLevel === 'critical' && request.status === 'pending' && 'ring-2 ring-red-500/20',
+        urgencyLevel === 'critical' && request.status === 'pending' && 'ring-2 ring-error/20',
         className
       )}
     >
@@ -184,8 +184,8 @@ export const ApprovalRequestCard = memo(function ApprovalRequestCard({
                     className={cn(
                       'flex items-center gap-1 text-xs font-medium px-1.5 py-0.5 rounded',
                       urgencyLevel === 'critical'
-                        ? 'bg-red-100 text-red-700'
-                        : 'bg-amber-100 text-amber-700'
+                        ? 'bg-error-light text-error-dark dark:bg-error/20 dark:text-error'
+                        : 'bg-warning-light text-warning-dark dark:bg-warning/20 dark:text-warning'
                     )}
                   >
                     <AlertTriangle className="h-3 w-3" />
@@ -266,9 +266,9 @@ export const ApprovalRequestCard = memo(function ApprovalRequestCard({
 
         {/* Conditions display */}
         {request.status === 'approved_with_conditions' && request.conditions && (
-          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mb-4">
-            <span className="text-sm font-medium text-blue-800 dark:text-blue-300">Conditions:</span>
-            <p className="text-sm text-blue-700 dark:text-blue-400 mt-1">{request.conditions}</p>
+          <div className="bg-info-light dark:bg-info/20 border border-info dark:border-info/50 rounded-lg p-3 mb-4">
+            <span className="text-sm font-medium text-info-dark dark:text-info">Conditions:</span>
+            <p className="text-sm text-info-dark dark:text-info mt-1">{request.conditions}</p>
           </div>
         )}
 
@@ -285,8 +285,8 @@ export const ApprovalRequestCard = memo(function ApprovalRequestCard({
 
         {/* Reject comment input */}
         {showRejectInput && (
-          <div className="mb-4 p-4 bg-red-50 dark:bg-red-950/20 rounded-lg border border-red-200 dark:border-red-900">
-            <label className="block text-sm font-medium text-red-800 dark:text-red-300 mb-2">
+          <div className="mb-4 p-4 bg-error-light dark:bg-error/20 rounded-lg border border-error dark:border-error/50">
+            <label className="block text-sm font-medium text-error-dark dark:text-error mb-2">
               Rejection reason (required)
             </label>
             <textarea
@@ -295,9 +295,9 @@ export const ApprovalRequestCard = memo(function ApprovalRequestCard({
               placeholder="Please provide a reason for rejection..."
               className={cn(
                 'w-full px-3 py-2 border rounded-md text-sm resize-none',
-                'bg-white dark:bg-gray-900',
-                'border-red-300 dark:border-red-800',
-                'focus:outline-none focus:ring-2 focus:ring-red-500',
+                'bg-white dark:bg-background',
+                'border-error dark:border-error/50',
+                'focus:outline-none focus:ring-2 focus:ring-error',
                 'placeholder:text-muted-foreground'
               )}
               rows={2}
@@ -336,7 +336,7 @@ export const ApprovalRequestCard = memo(function ApprovalRequestCard({
                 size="sm"
                 onClick={handleApprove}
                 disabled={isLoading}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white gap-1.5"
+                className="bg-success hover:bg-success/90 text-white gap-1.5"
               >
                 <Check className="h-3.5 w-3.5" />
                 Approve
@@ -356,7 +356,7 @@ export const ApprovalRequestCard = memo(function ApprovalRequestCard({
                 variant="outline"
                 onClick={() => setShowRejectInput(true)}
                 disabled={isLoading}
-                className="border-red-300 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 gap-1.5"
+                className="border-error text-error hover:bg-error-light dark:hover:bg-error/20 gap-1.5"
               >
                 <X className="h-3.5 w-3.5" />
                 Reject

@@ -91,8 +91,8 @@ const STATUS_CONFIG: Record<
   },
   changes_requested: {
     label: 'Changes Requested',
-    color: 'text-orange-600',
-    bgColor: 'bg-orange-100',
+    color: 'text-warning',
+    bgColor: 'bg-warning-light dark:bg-warning/20',
     icon: <AlertTriangle className="h-4 w-4" />,
   },
   approved: {
@@ -103,8 +103,8 @@ const STATUS_CONFIG: Record<
   },
   locked: {
     label: 'Locked',
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-100',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     icon: <Lock className="h-4 w-4" />,
   },
   voided: {
@@ -293,12 +293,12 @@ export const ApprovalWorkflowPanel = React.memo(function ApprovalWorkflowPanel({
 
           {/* Rejection Reason */}
           {rejectionReason && currentStatus === 'changes_requested' && (
-            <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
+            <div className="p-3 bg-warning-light dark:bg-warning/20 border border-warning rounded-lg">
               <div className="flex items-start gap-2">
-                <AlertTriangle className="h-4 w-4 text-orange-500 mt-0.5" />
+                <AlertTriangle className="h-4 w-4 text-warning mt-0.5" />
                 <div>
-                  <p className="font-medium text-orange-700">Changes Requested</p>
-                  <p className="text-sm text-orange-600">{rejectionReason}</p>
+                  <p className="font-medium text-warning-dark dark:text-warning">Changes Requested</p>
+                  <p className="text-sm text-warning-dark dark:text-warning">{rejectionReason}</p>
                 </div>
               </div>
             </div>
@@ -332,7 +332,7 @@ export const ApprovalWorkflowPanel = React.memo(function ApprovalWorkflowPanel({
               <Button
                 size="sm"
                 variant="default"
-                className="bg-success hover:bg-green-700"
+                className="bg-success hover:bg-success/90"
                 onClick={() => setApproveDialogOpen(true)}
                 disabled={isLoading || processing}
               >
@@ -345,7 +345,7 @@ export const ApprovalWorkflowPanel = React.memo(function ApprovalWorkflowPanel({
               <Button
                 size="sm"
                 variant="outline"
-                className="text-orange-600 border-orange-300 hover:bg-orange-50"
+                className="text-warning border-warning hover:bg-warning-light dark:hover:bg-warning/20"
                 onClick={() => setRejectDialogOpen(true)}
                 disabled={isLoading || processing}
               >
@@ -390,7 +390,7 @@ export const ApprovalWorkflowPanel = React.memo(function ApprovalWorkflowPanel({
                 value={signerName}
                 onChange={(e) => setSignerName(e.target.value)}
                 placeholder="Enter your full name"
-                className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
 
@@ -437,7 +437,7 @@ export const ApprovalWorkflowPanel = React.memo(function ApprovalWorkflowPanel({
                 value={signerName}
                 onChange={(e) => setSignerName(e.target.value)}
                 placeholder="Enter your full name"
-                className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
 
@@ -447,7 +447,7 @@ export const ApprovalWorkflowPanel = React.memo(function ApprovalWorkflowPanel({
                 value={approvalComments}
                 onChange={(e) => setApprovalComments(e.target.value)}
                 placeholder="Add any approval comments..."
-                className="w-full px-3 py-2 border rounded-lg text-sm min-h-[60px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border rounded-lg text-sm min-h-[60px] focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
 
@@ -464,7 +464,7 @@ export const ApprovalWorkflowPanel = React.memo(function ApprovalWorkflowPanel({
               Cancel
             </Button>
             <Button
-              className="bg-success hover:bg-green-700"
+              className="bg-success hover:bg-success/90"
               onClick={handleApprove}
               disabled={!signature || !signerName.trim() || processing}
             >
@@ -479,7 +479,7 @@ export const ApprovalWorkflowPanel = React.memo(function ApprovalWorkflowPanel({
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-orange-600" />
+              <AlertTriangle className="h-5 w-5 text-warning" />
               Request Changes
             </DialogTitle>
             <DialogDescription>
@@ -494,7 +494,7 @@ export const ApprovalWorkflowPanel = React.memo(function ApprovalWorkflowPanel({
                 value={rejectionReasonInput}
                 onChange={(e) => setRejectionReasonInput(e.target.value)}
                 placeholder="Describe what needs to be changed..."
-                className="w-full px-3 py-2 border rounded-lg text-sm min-h-[100px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border rounded-lg text-sm min-h-[100px] focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
           </div>
@@ -505,7 +505,7 @@ export const ApprovalWorkflowPanel = React.memo(function ApprovalWorkflowPanel({
             </Button>
             <Button
               variant="outline"
-              className="text-orange-600 border-orange-300 hover:bg-orange-50"
+              className="text-warning border-warning hover:bg-warning-light dark:hover:bg-warning/20"
               onClick={handleRequestChanges}
               disabled={!rejectionReasonInput.trim() || processing}
             >
@@ -520,7 +520,7 @@ export const ApprovalWorkflowPanel = React.memo(function ApprovalWorkflowPanel({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
-              <Lock className="h-5 w-5 text-purple-600" />
+              <Lock className="h-5 w-5 text-primary" />
               Lock Report
             </AlertDialogTitle>
             <DialogDescription>
@@ -533,7 +533,7 @@ export const ApprovalWorkflowPanel = React.memo(function ApprovalWorkflowPanel({
             <AlertDialogAction
               onClick={handleLockConfirm}
               disabled={processing}
-              className="bg-purple-600 hover:bg-purple-700"
+              className="bg-primary hover:bg-primary/90"
             >
               {processing ? 'Locking...' : 'Lock Report'}
             </AlertDialogAction>

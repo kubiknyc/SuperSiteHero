@@ -48,12 +48,12 @@ function SubmittalReviewStatusBadge({ status }: { status: string }) {
 
   const colorClasses: Record<string, string> = {
     gray: 'bg-muted text-foreground',
-    blue: 'bg-info-light text-blue-800',
-    yellow: 'bg-warning-light text-yellow-800',
-    green: 'bg-success-light text-green-800',
-    lime: 'bg-lime-100 text-lime-800',
-    orange: 'bg-orange-100 text-orange-800',
-    red: 'bg-error-light text-red-800',
+    blue: 'bg-info-light text-info-dark',
+    yellow: 'bg-warning-light text-warning-dark',
+    green: 'bg-success-light text-success-dark',
+    lime: 'bg-success-light text-success-dark',
+    orange: 'bg-warning-light text-warning-dark',
+    red: 'bg-error-light text-error-dark',
   }
 
   return (
@@ -270,13 +270,13 @@ export function DedicatedSubmittalsPage() {
             </Card>
 
             <Card
-              className={`cursor-pointer transition-all ${state.statusFilter === 'revise_resubmit' ? 'ring-2 ring-orange-500' : 'hover:bg-surface'}`}
+              className={`cursor-pointer transition-all ${state.statusFilter === 'revise_resubmit' ? 'ring-2 ring-warning' : 'hover:bg-surface'}`}
               onClick={() => setState({ ...state, statusFilter: 'revise_resubmit' })}
             >
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-orange-100 rounded-lg">
-                    <AlertTriangle className="h-5 w-5 text-orange-600" />
+                  <div className="p-2 bg-warning-light rounded-lg">
+                    <AlertTriangle className="h-5 w-5 text-warning" />
                   </div>
                   <div>
                     <p className="text-2xl font-bold">{stats.reviseResubmit}</p>
@@ -287,7 +287,7 @@ export function DedicatedSubmittalsPage() {
             </Card>
 
             <Card
-              className={`cursor-pointer transition-all ${state.statusFilter === 'rejected' ? 'ring-2 ring-red-500' : 'hover:bg-surface'}`}
+              className={`cursor-pointer transition-all ${state.statusFilter === 'rejected' ? 'ring-2 ring-error' : 'hover:bg-surface'}`}
               onClick={() => setState({ ...state, statusFilter: 'rejected' })}
             >
               <CardContent className="p-4">
@@ -304,10 +304,10 @@ export function DedicatedSubmittalsPage() {
             </Card>
 
             {stats.overdue > 0 && (
-              <Card className="border-red-200 bg-error-light">
+              <Card className="border-error bg-error-light">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-red-200 rounded-lg">
+                    <div className="p-2 bg-error/20 rounded-lg">
                       <AlertCircle className="h-5 w-5 text-error-dark" />
                     </div>
                     <div>
@@ -457,7 +457,7 @@ export function DedicatedSubmittalsPage() {
               </div>
             ) : error ? (
               <div className="text-center py-12">
-                <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
+                <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
                 <p className="text-error">Failed to load submittals</p>
               </div>
             ) : filteredSubmittals.length === 0 ? (

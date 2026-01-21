@@ -112,7 +112,7 @@ export function ProcurementPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Procurement</h1>
+            <h1 className="heading-page text-foreground">Procurement</h1>
             <p className="text-muted mt-1">
               Manage purchase orders and vendor relationships
             </p>

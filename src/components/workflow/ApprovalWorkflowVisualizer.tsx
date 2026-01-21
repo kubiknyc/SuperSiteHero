@@ -110,38 +110,38 @@ function getStepColor(status: WorkflowStepStatus, isActive: boolean) {
   switch (status) {
     case 'approved':
       return {
-        bg: 'bg-green-500',
-        border: 'border-green-500',
-        text: 'text-white',
-        line: 'bg-green-500',
+        bg: 'bg-success dark:bg-success',
+        border: 'border-success dark:border-success',
+        text: 'text-success-foreground dark:text-success-foreground',
+        line: 'bg-success dark:bg-success',
       }
     case 'rejected':
       return {
-        bg: 'bg-red-500',
-        border: 'border-red-500',
-        text: 'text-white',
-        line: 'bg-red-500',
+        bg: 'bg-destructive dark:bg-destructive',
+        border: 'border-destructive dark:border-destructive',
+        text: 'text-destructive-foreground dark:text-destructive-foreground',
+        line: 'bg-destructive dark:bg-destructive',
       }
     case 'in_progress':
       return {
-        bg: 'bg-blue-500',
-        border: 'border-blue-500',
-        text: 'text-white',
-        line: 'bg-blue-200',
+        bg: 'bg-info dark:bg-info',
+        border: 'border-info dark:border-info',
+        text: 'text-info-foreground dark:text-info-foreground',
+        line: 'bg-info/20 dark:bg-info/30',
       }
     case 'skipped':
       return {
-        bg: 'bg-gray-300',
-        border: 'border-gray-300',
-        text: 'text-gray-500',
-        line: 'bg-gray-300',
+        bg: 'bg-muted dark:bg-muted',
+        border: 'border-muted-foreground/30 dark:border-muted-foreground/30',
+        text: 'text-muted-foreground dark:text-muted-foreground',
+        line: 'bg-muted dark:bg-muted',
       }
     default:
       return {
-        bg: 'bg-gray-200',
-        border: 'border-gray-300',
-        text: 'text-gray-500',
-        line: 'bg-gray-200',
+        bg: 'bg-muted dark:bg-muted',
+        border: 'border-muted-foreground/30 dark:border-muted-foreground/30',
+        text: 'text-muted-foreground dark:text-muted-foreground',
+        line: 'bg-muted dark:bg-muted',
       }
   }
 }
@@ -213,7 +213,7 @@ function HorizontalWorkflow({
               <div
                 className={cn(
                   'w-6 h-0.5 mx-0.5',
-                  isComplete ? colors.line : 'bg-gray-200'
+                  isComplete ? colors.line : 'bg-muted dark:bg-muted'
                 )}
               />
             )}
@@ -248,7 +248,7 @@ function CompactWorkflow({
           <span>Step {item.currentStep + 1} of {item.steps.length}</span>
           <span>{progress}% complete</span>
         </div>
-        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div className="h-2 bg-muted dark:bg-muted rounded-full overflow-hidden">
           <div
             className="h-full bg-primary transition-all duration-500"
             style={{ width: `${progress}%` }}
@@ -261,8 +261,8 @@ function CompactWorkflow({
         <div
           className={cn(
             'p-3 rounded-lg border',
-            currentStep.status === 'in_progress' && 'border-blue-200 bg-blue-50',
-            currentStep.status === 'pending' && 'border-gray-200 bg-gray-50'
+            currentStep.status === 'in_progress' && 'border-info/20 bg-info-light dark:border-info/30 dark:bg-info/10',
+            currentStep.status === 'pending' && 'border-muted-foreground/20 bg-muted/50 dark:border-muted-foreground/20 dark:bg-muted/30'
           )}
         >
           <div className="flex items-center justify-between">
@@ -338,7 +338,7 @@ function FullWorkflow({
                 <div
                   className={cn(
                     'w-0.5 flex-1 min-h-[60px]',
-                    isComplete ? colors.line : 'bg-gray-200'
+                    isComplete ? colors.line : 'bg-muted dark:bg-muted'
                   )}
                 />
               )}
@@ -350,9 +350,9 @@ function FullWorkflow({
                 className={cn(
                   'p-4 rounded-lg border transition-all',
                   isActive && 'border-primary bg-primary/5',
-                  step.status === 'rejected' && 'border-red-200 bg-red-50',
-                  step.status === 'approved' && 'border-green-200 bg-green-50',
-                  !isActive && step.status === 'pending' && 'border-gray-200 bg-gray-50/50'
+                  step.status === 'rejected' && 'border-destructive/20 bg-error-light dark:border-destructive/30 dark:bg-destructive/10',
+                  step.status === 'approved' && 'border-success/20 bg-success-light dark:border-success/30 dark:bg-success/10',
+                  !isActive && step.status === 'pending' && 'border-muted-foreground/20 bg-muted/50 dark:border-muted-foreground/20 dark:bg-muted/30'
                 )}
               >
                 <div className="flex items-start justify-between gap-3 mb-2">
@@ -395,7 +395,7 @@ function FullWorkflow({
                   )}
                   {step.completedAt && (
                     <span className="flex items-center gap-1">
-                      <Check className="h-3 w-3 text-green-500" />
+                      <Check className="h-3 w-3 text-success dark:text-success" />
                       Completed {format(new Date(step.completedAt), 'MMM d')}
                     </span>
                   )}
@@ -484,7 +484,7 @@ export function ApprovalWorkflowVisualizer({
               {item.isOverdue && (
                 <>
                   <span>•</span>
-                  <span className="text-red-500 flex items-center gap-1">
+                  <span className="text-destructive dark:text-destructive flex items-center gap-1">
                     <AlertTriangle className="h-3 w-3" />
                     Overdue
                   </span>

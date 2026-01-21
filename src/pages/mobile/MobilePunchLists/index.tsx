@@ -74,22 +74,22 @@ export const MobilePunchListsList = memo(function MobilePunchListsList() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
-        return <CheckCircle2 className="h-5 w-5 text-green-500" />;
+        return <CheckCircle2 className="h-5 w-5 text-success" />;
       case 'in_progress':
-        return <Circle className="h-5 w-5 text-yellow-500" />;
+        return <Circle className="h-5 w-5 text-warning" />;
       default:
-        return <AlertCircle className="h-5 w-5 text-red-500" />;
+        return <AlertCircle className="h-5 w-5 text-error" />;
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'high':
-        return 'bg-red-500';
+        return 'bg-error';
       case 'medium':
-        return 'bg-yellow-500';
+        return 'bg-warning';
       default:
-        return 'bg-green-500';
+        return 'bg-success';
     }
   };
 
@@ -130,16 +130,16 @@ export const MobilePunchListsList = memo(function MobilePunchListsList() {
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3">
-        <div className="p-3 bg-red-500/10 rounded-lg text-center">
-          <p className="text-2xl font-bold text-red-500">12</p>
+        <div className="p-3 bg-error/10 rounded-lg text-center">
+          <p className="text-2xl font-bold text-error">12</p>
           <p className="text-xs text-muted-foreground">Open</p>
         </div>
-        <div className="p-3 bg-yellow-500/10 rounded-lg text-center">
-          <p className="text-2xl font-bold text-yellow-500">5</p>
+        <div className="p-3 bg-warning/10 rounded-lg text-center">
+          <p className="text-2xl font-bold text-warning">5</p>
           <p className="text-xs text-muted-foreground">In Progress</p>
         </div>
-        <div className="p-3 bg-green-500/10 rounded-lg text-center">
-          <p className="text-2xl font-bold text-green-500">28</p>
+        <div className="p-3 bg-success/10 rounded-lg text-center">
+          <p className="text-2xl font-bold text-success">28</p>
           <p className="text-xs text-muted-foreground">Completed</p>
         </div>
       </div>
@@ -333,9 +333,9 @@ export const MobilePunchItemDetail = memo(function MobilePunchItemDetail() {
           <Badge
             variant="outline"
             className={cn(
-              item.priority === 'high' && 'border-red-500 text-red-500',
-              item.priority === 'medium' && 'border-yellow-500 text-yellow-500',
-              item.priority === 'low' && 'border-green-500 text-green-500'
+              item.priority === 'high' && 'border-error text-error',
+              item.priority === 'medium' && 'border-warning text-warning',
+              item.priority === 'low' && 'border-success text-success'
             )}
           >
             {item.priority}

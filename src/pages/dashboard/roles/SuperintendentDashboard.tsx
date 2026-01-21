@@ -37,15 +37,15 @@ export function SuperintendentDashboard() {
 
   return (
     <SmartLayout showHeaderStats={false}>
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
+      <div className="min-h-screen bg-gradient-to-b from-background to-muted/50 dark:from-background dark:to-muted/30">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
           {/* Header with Today's Date */}
           <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-2xl font-bold text-foreground">
                 Good {getTimeOfDay()}, {userProfile?.first_name || 'Super'}
               </h1>
-              <p className="text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-muted-foreground mt-1">
                 {format(today, 'EEEE, MMMM d, yyyy')}
               </p>
             </div>
@@ -69,20 +69,20 @@ export function SuperintendentDashboard() {
                   <div className={cn(
                     'p-3 rounded-lg',
                     stats?.dailyReportSubmitted
-                      ? 'bg-green-100 dark:bg-green-900'
-                      : 'bg-amber-100 dark:bg-amber-900'
+                      ? 'bg-success-light dark:bg-success/20'
+                      : 'bg-warning-light dark:bg-warning/20'
                   )}>
                     {stats?.dailyReportSubmitted ? (
-                      <CheckCircle2 className="h-6 w-6 text-green-600 dark:text-green-400" />
+                      <CheckCircle2 className="h-6 w-6 text-success dark:text-success" />
                     ) : (
-                      <ClipboardList className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+                      <ClipboardList className="h-6 w-6 text-warning dark:text-warning" />
                     )}
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">
+                    <p className="font-medium text-foreground">
                       Today's Daily Report
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted-foreground">
                       {stats?.dailyReportSubmitted
                         ? 'Submitted at ' + format(today, 'h:mm a')
                         : 'Not yet submitted'}
@@ -143,21 +143,21 @@ export function SuperintendentDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-center py-4">
-                  <p className="text-4xl font-bold text-gray-900 dark:text-white">
+                  <p className="text-4xl font-bold text-foreground">
                     72°F
                   </p>
-                  <p className="text-gray-500 mt-1">Partly Cloudy</p>
-                  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <p className="text-muted-foreground mt-1">Partly Cloudy</p>
+                  <div className="mt-4 pt-4 border-t border-border">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-500">High</span>
+                      <span className="text-muted-foreground">High</span>
                       <span className="font-medium">78°F</span>
                     </div>
                     <div className="flex justify-between text-sm mt-2">
-                      <span className="text-gray-500">Low</span>
+                      <span className="text-muted-foreground">Low</span>
                       <span className="font-medium">65°F</span>
                     </div>
                     <div className="flex justify-between text-sm mt-2">
-                      <span className="text-gray-500">Wind</span>
+                      <span className="text-muted-foreground">Wind</span>
                       <span className="font-medium">8 mph</span>
                     </div>
                   </div>
@@ -175,20 +175,20 @@ export function SuperintendentDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-red-50 dark:bg-red-950">
-                    <span className="text-sm font-medium text-red-800 dark:text-red-200">
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-error-light dark:bg-error/10">
+                    <span className="text-sm font-medium text-error-dark dark:text-error">
                       Critical
                     </span>
                     <Badge variant="destructive">{stats?.criticalPunchItems || 0}</Badge>
                   </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-amber-50 dark:bg-amber-950">
-                    <span className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-warning-light dark:bg-warning/10">
+                    <span className="text-sm font-medium text-warning-dark dark:text-warning">
                       High Priority
                     </span>
-                    <Badge className="bg-amber-500">{stats?.highPriorityPunchItems || 0}</Badge>
+                    <Badge className="bg-warning">{stats?.highPriorityPunchItems || 0}</Badge>
                   </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-                    <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-muted dark:bg-muted">
+                    <span className="text-sm font-medium text-foreground">
                       Normal
                     </span>
                     <Badge variant="secondary">{stats?.normalPunchItems || 0}</Badge>
@@ -204,7 +204,7 @@ export function SuperintendentDashboard() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-amber-500" />
+                  <AlertTriangle className="h-5 w-5 text-warning" />
                   Safety Alerts
                 </CardTitle>
               </CardHeader>
@@ -214,20 +214,20 @@ export function SuperintendentDashboard() {
                     stats.safetyAlerts.map((alert, i) => (
                       <div
                         key={i}
-                        className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800"
+                        className="p-3 rounded-lg bg-warning-light dark:bg-warning/10 border border-warning dark:border-warning/30"
                       >
-                        <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
+                        <p className="text-sm font-medium text-warning-dark dark:text-warning">
                           {alert.title}
                         </p>
-                        <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                        <p className="text-xs text-warning dark:text-warning mt-1">
                           {alert.description}
                         </p>
                       </div>
                     ))
                   ) : (
                     <div className="text-center py-4">
-                      <CheckCircle2 className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                      <p className="text-gray-500 text-sm">No active safety alerts</p>
+                      <CheckCircle2 className="h-8 w-8 text-success mx-auto mb-2" />
+                      <p className="text-secondary text-sm">No active safety alerts</p>
                     </div>
                   )}
                 </div>
@@ -262,22 +262,22 @@ function StatCard({ title, value, icon: Icon, link, alert }: StatCardProps) {
   const content = (
     <Card className={cn(
       'transition-all hover:shadow-md',
-      alert && 'border-amber-500 dark:border-amber-400',
+      alert && 'border-warning dark:border-warning',
       link && 'cursor-pointer hover:border-primary'
     )}>
       <CardContent className="pt-6">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400">{title}</p>
-            <p className="text-xl font-bold text-gray-900 dark:text-white mt-1">
+            <p className="text-xs text-secondary">{title}</p>
+            <p className="text-xl font-bold text-foreground mt-1">
               {value}
             </p>
           </div>
           <div className={cn(
             'p-2 rounded-lg',
-            alert ? 'bg-amber-100 dark:bg-amber-900' : 'bg-primary/10'
+            alert ? 'bg-warning-light dark:bg-warning/20' : 'bg-primary/10'
           )}>
-            <Icon className={cn('h-5 w-5', alert ? 'text-amber-600' : 'text-primary')} />
+            <Icon className={cn('h-5 w-5', alert ? 'text-warning' : 'text-primary')} />
           </div>
         </div>
       </CardContent>

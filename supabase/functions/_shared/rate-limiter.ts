@@ -47,11 +47,6 @@ export const RATE_LIMIT_CONFIGS: Record<string, RateLimitConfig> = {
     maxRequests: 3,
     windowSeconds: 60 * 60, // 1 hour
   },
-  mfa_verify: {
-    action: 'mfa_verify',
-    maxRequests: 5,
-    windowSeconds: 5 * 60, // 5 minutes
-  },
 }
 
 // ============================================================================

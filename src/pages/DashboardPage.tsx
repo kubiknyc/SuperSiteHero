@@ -406,8 +406,8 @@ export function DashboardPage() {
                           px-3.5 py-2 rounded-lg text-xs font-semibold
                           flex items-center gap-1.5 border
                           ${stat.trend === 'up'
-                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-400 dark:border-emerald-800'
-                            : 'bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-400 dark:border-red-800'
+                            ? 'bg-success-light text-success-dark border-success dark:bg-success-light/10 dark:text-success dark:border-success/30'
+                            : 'bg-error-light text-error-dark border-error dark:bg-error-light/10 dark:text-error dark:border-error/30'
                           }
                         `}
                       >
@@ -468,7 +468,7 @@ export function DashboardPage() {
                         <Link
                           to={'overdueLink' in stat && stat.overdueLink ? stat.overdueLink : stat.filterLink}
                           onClick={(e) => e.stopPropagation()}
-                          className="flex items-center gap-1.5 text-xs font-medium text-red-600 hover:text-red-700 bg-red-50 px-2 py-1 rounded-md border border-red-100 dark:bg-red-950 dark:text-red-400 dark:border-red-800"
+                          className="flex items-center gap-1.5 text-xs font-medium text-error-dark hover:text-error bg-error-light px-2 py-1 rounded-md border border-error/20 dark:bg-error-light/10 dark:text-error dark:border-error/30"
                         >
                           <AlertCircle className="w-3 h-3" />
                           {stat.overdueCount} Overdue
@@ -614,10 +614,9 @@ export function DashboardPage() {
                               </div>
                               <div className="w-full h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
                                 <div
-                                  className="h-full rounded-full transition-all duration-700 ease-out"
+                                  className="h-full rounded-full transition-all duration-700 ease-out bg-primary"
                                   style={{
-                                    width: `${progress}%`,
-                                    background: 'linear-gradient(90deg, #1E40AF 0%, #1E40AFCC 100%)'
+                                    width: `${progress}%`
                                   }}
                                 />
                               </div>
@@ -698,7 +697,7 @@ export function DashboardPage() {
                       </div>
                     ) : (
                       <div className="text-center py-6">
-                        <Shield className="w-10 h-10 mx-auto mb-2 text-green-500" />
+                        <Shield className="w-10 h-10 mx-auto mb-2 text-success" />
                         <p className="text-sm text-muted">All caught up!</p>
                         <p className="text-xs text-muted">No items need your attention</p>
                       </div>

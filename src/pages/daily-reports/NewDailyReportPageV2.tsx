@@ -113,14 +113,14 @@ export function NewDailyReportPageV2() {
         </div>
 
         {/* Quick Mode Banner */}
-        <Card className="bg-gradient-to-r from-blue-50 to-blue-100 border-blue-200">
+        <Card className="bg-gradient-to-r from-info-light to-info-light/80 border-info">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary rounded-lg">
                 <Zap className="h-5 w-5 text-white" />
               </div>
               <div>
-                <p className="font-semibold text-blue-900">Quick Mode Enabled</p>
+                <p className="font-semibold text-info-dark">Quick Mode Enabled</p>
                 <p className="text-sm text-primary-hover">
                   Complete your daily report in under 5 minutes with our streamlined form
                 </p>
@@ -154,8 +154,8 @@ export function NewDailyReportPageV2() {
                   setSelectedProjectId(e.target.value);
                   setErrors((prev) => ({ ...prev, project: '' }));
                 }}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.project ? 'border-red-500' : 'border-input'
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
+                  errors.project ? 'border-error' : 'border-input'
                 }`}
                 disabled={projectsLoading}
               >
@@ -183,34 +183,34 @@ export function NewDailyReportPageV2() {
                   setErrors((prev) => ({ ...prev, date: '' }));
                 }}
                 max={new Date().toISOString().split('T')[0]}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.date ? 'border-red-500' : 'border-input'
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary ${
+                  errors.date ? 'border-error' : 'border-input'
                 }`}
               />
             </FormField>
 
             {/* Duplicate Report Warning */}
             {duplicateResult?.hasDuplicate && duplicateResult.existingReport && (
-              <div className="p-4 bg-warning-light border border-amber-200 rounded-lg">
+              <div className="p-4 bg-warning-light border border-warning rounded-lg">
                 <div className="flex items-start gap-3">
                   <AlertTriangle className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
                   <div className="flex-1">
-                    <p className="font-medium text-amber-900">Report Already Exists</p>
-                    <p className="text-sm text-amber-700 mb-3">
+                    <p className="font-medium text-warning-dark">Report Already Exists</p>
+                    <p className="text-sm text-warning-dark/80 mb-3">
                       A daily report for <strong>{selectedDate}</strong> already exists.
                       Status: <strong>{duplicateResult.existingReport.status}</strong>
                     </p>
                     <div className="flex gap-2">
                       <Link
                         to={`/daily-reports/${duplicateResult.existingReport.id}`}
-                        className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-md bg-amber-100 text-amber-800 hover:bg-amber-200"
+                        className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-md bg-warning-light text-warning-dark hover:bg-warning/20"
                       >
                         View Report
                       </Link>
                       {duplicateResult.existingReport.status === 'draft' && (
                         <Link
                           to={`/daily-reports/${duplicateResult.existingReport.id}/edit`}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-md bg-amber-600 text-white hover:bg-amber-700"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-md bg-warning text-white hover:bg-warning/90"
                         >
                           Edit Draft
                         </Link>
@@ -223,11 +223,11 @@ export function NewDailyReportPageV2() {
 
             {/* No Projects Warning */}
             {!projectsLoading && projects && projects.length === 0 && (
-              <div className="flex gap-3 p-4 bg-warning-light border border-yellow-200 rounded-lg">
+              <div className="flex gap-3 p-4 bg-warning-light border border-warning rounded-lg">
                 <AlertCircle className="h-5 w-5 text-warning flex-shrink-0" />
                 <div>
-                  <p className="font-medium text-yellow-900">No projects available</p>
-                  <p className="text-sm text-yellow-700">
+                  <p className="font-medium text-warning-dark">No projects available</p>
+                  <p className="text-sm text-warning-dark/80">
                     Create a project first before creating daily reports.
                   </p>
                 </div>

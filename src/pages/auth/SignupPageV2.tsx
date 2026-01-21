@@ -126,7 +126,7 @@ export function SignupPageV2() {
         email: formData.email,
         password: formData.password,
         options: {
-          emailRedirectTo: `${window.location.origin}/login`,
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
           data: {
             first_name: formData.firstName,
             last_name: formData.lastName,
@@ -432,9 +432,9 @@ export function SignupPageV2() {
                     <div
                       className={cn(
                         "h-full transition-all duration-300 rounded-full",
-                        passwordStrength.percentage <= 40 && "bg-red-500",
-                        passwordStrength.percentage > 40 && passwordStrength.percentage <= 80 && "bg-yellow-500",
-                        passwordStrength.percentage > 80 && "bg-emerald-500"
+                        passwordStrength.percentage <= 40 && "bg-error",
+                        passwordStrength.percentage > 40 && passwordStrength.percentage <= 80 && "bg-warning",
+                        passwordStrength.percentage > 80 && "bg-success"
                       )}
                       style={{ width: `${passwordStrength.percentage}%` }}
                     />
@@ -446,7 +446,7 @@ export function SignupPageV2() {
                         key={req.key}
                         className={cn(
                           "flex items-center gap-1.5 text-xs transition-colors",
-                          req.met ? "text-emerald-400" : "text-slate-600"
+                          req.met ? "text-success" : "text-slate-600"
                         )}
                       >
                         {req.met ? (
@@ -484,8 +484,8 @@ export function SignupPageV2() {
                     "transition-all duration-200",
                     formData.confirmPassword && (
                       passwordsMatch
-                        ? "border-emerald-500/50"
-                        : "border-red-500/50"
+                        ? "border-success/50"
+                        : "border-error/50"
                     )
                   )}
                 />
@@ -499,7 +499,7 @@ export function SignupPageV2() {
                 </button>
               </div>
               {formData.confirmPassword && !passwordsMatch && (
-                <p className="text-xs text-red-400 mt-1">Passwords don't match</p>
+                <p className="text-xs text-error mt-1">Passwords don't match</p>
               )}
             </div>
 

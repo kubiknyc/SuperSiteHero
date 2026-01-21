@@ -234,8 +234,8 @@ export function ResetPasswordPage() {
         <Card className="w-full max-w-md">
           <CardHeader className="space-y-4">
             <div className="flex justify-center">
-              <div className="rounded-full bg-red-100 dark:bg-red-950 p-3">
-                <AlertCircle className="h-8 w-8 text-red-600 dark:text-red-400" />
+              <div className="rounded-full bg-error-light dark:bg-error/10 p-3">
+                <AlertCircle className="h-8 w-8 text-error dark:text-error" />
               </div>
             </div>
             <CardTitle className="text-2xl text-center">Link Expired</CardTitle>
@@ -269,8 +269,8 @@ export function ResetPasswordPage() {
         <Card className="w-full max-w-md">
           <CardHeader className="space-y-4">
             <div className="flex justify-center">
-              <div className="rounded-full bg-green-100 dark:bg-green-950 p-3">
-                <CheckCircle className="h-8 w-8 text-green-600 dark:text-green-400" />
+              <div className="rounded-full bg-success-light dark:bg-success/10 p-3">
+                <CheckCircle className="h-8 w-8 text-success dark:text-success" />
               </div>
             </div>
             <CardTitle className="text-2xl text-center">Password Reset Complete</CardTitle>
@@ -347,7 +347,7 @@ export function ResetPasswordPage() {
                       className={cn(
                         'flex items-center gap-2 text-sm transition-colors',
                         isMet
-                          ? 'text-green-600 dark:text-green-400'
+                          ? 'text-success dark:text-success'
                           : 'text-secondary dark:text-disabled'
                       )}
                     >
@@ -378,7 +378,7 @@ export function ResetPasswordPage() {
                   disabled={loading}
                   className={cn(
                     'pr-10',
-                    confirmPassword.length > 0 && !passwordsMatch && 'border-red-500 focus-visible:ring-red-500'
+                    confirmPassword.length > 0 && !passwordsMatch && 'border-error focus-visible:ring-error'
                   )}
                 />
                 <button
@@ -395,13 +395,13 @@ export function ResetPasswordPage() {
                 </button>
               </div>
               {confirmPassword.length > 0 && !passwordsMatch && (
-                <p className="text-xs text-red-500 flex items-center gap-1">
+                <p className="text-xs text-error flex items-center gap-1">
                   <X className="h-3 w-3" />
                   Passwords do not match
                 </p>
               )}
               {passwordsMatch && (
-                <p className="text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
+                <p className="text-xs text-success dark:text-success flex items-center gap-1">
                   <Check className="h-3 w-3" />
                   Passwords match
                 </p>

@@ -140,7 +140,7 @@ export function DocumentPopupViewerPage() {
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center max-w-md px-4">
             <AlertCircle className="w-16 h-16 text-error mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-white mb-2">Error Loading Document</h2>
+            <h2 className="heading-section text-white mb-2">Error Loading Document</h2>
             <p className="text-muted mb-6">
               {error?.message || 'The document could not be found or you do not have permission to view it.'}
             </p>
@@ -160,7 +160,7 @@ export function DocumentPopupViewerPage() {
         {/* Left side - Document info */}
         <div className="flex items-center gap-3 min-w-0 flex-1">
           <div className="min-w-0 flex-1">
-            <h1 className="text-white font-semibold text-sm truncate">
+            <h1 className="heading-subsection text-white truncate">
               {document.name}
             </h1>
             <p className="text-xs text-muted truncate">

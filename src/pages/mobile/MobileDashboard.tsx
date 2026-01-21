@@ -123,9 +123,9 @@ const ActivityItem = memo(function ActivityItem({
   to,
 }: ActivityItemProps) {
   const statusConfig = {
-    pending: { icon: Clock, color: 'text-yellow-500' },
-    completed: { icon: CheckCircle2, color: 'text-green-500' },
-    overdue: { icon: AlertCircle, color: 'text-red-500' },
+    pending: { icon: Clock, color: 'text-warning' },
+    completed: { icon: CheckCircle2, color: 'text-success' },
+    overdue: { icon: AlertCircle, color: 'text-error' },
   };
   const { icon: StatusIcon, color } = statusConfig[status];
 
@@ -300,7 +300,7 @@ export const MobileDashboard = memo(function MobileDashboard() {
     <div className="p-4 space-y-6 pb-24">
       {/* Greeting */}
       <div className="space-y-1">
-        <h1 className="text-2xl font-bold text-foreground">
+        <h1 className="heading-page text-foreground">
           {getGreeting()}, {firstName}
         </h1>
         <p className="text-muted-foreground">
@@ -316,7 +316,7 @@ export const MobileDashboard = memo(function MobileDashboard() {
             <div className="flex items-center gap-2">
               {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
               <div className="flex items-center gap-1 text-muted-foreground">
-                <WeatherIcon className="h-4 w-4 text-yellow-500" />
+                <WeatherIcon className="h-4 w-4 text-warning" />
                 <span className="text-sm">72°F</span>
               </div>
             </div>
@@ -362,25 +362,25 @@ export const MobileDashboard = memo(function MobileDashboard() {
             icon={Camera}
             label="Take Photo"
             to={selectedProject ? `/mobile/photo-progress/capture` : '/mobile/photo-progress/capture'}
-            color="bg-blue-500"
+            color="bg-info"
           />
           <QuickAction
             icon={ClipboardList}
             label="Daily Report"
             to="/mobile/daily-reports/new"
-            color="bg-green-500"
+            color="bg-success"
           />
           <QuickAction
             icon={ListChecks}
             label="Punch Item"
             to="/mobile/punch-lists/new"
-            color="bg-orange-500"
+            color="bg-warning"
           />
           <QuickAction
             icon={FileCheck}
             label="Inspection"
             to="/mobile/inspections/new"
-            color="bg-purple-500"
+            color="bg-primary"
           />
         </div>
       </div>
@@ -417,17 +417,17 @@ export const MobileDashboard = memo(function MobileDashboard() {
 
       {/* Pending Items - Only show if there are items */}
       {attentionItems.length > 0 && (
-        <Card className="border-yellow-500/50">
+        <Card className="border-warning/50">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
-              <AlertCircle className="h-5 w-5 text-yellow-500" />
+              <AlertCircle className="h-5 w-5 text-warning" />
               <CardTitle className="text-base">Needs Attention</CardTitle>
               <Badge variant="secondary" className="ml-auto">{attentionItems.length} items</Badge>
             </div>
           </CardHeader>
           <CardContent className="space-y-3">
             {attentionItems.map((item, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-yellow-500/10 rounded-lg">
+              <div key={index} className="flex items-center justify-between p-3 bg-warning/10 rounded-lg">
                 <div>
                   <p className="text-sm font-medium">{item.title}</p>
                   <p className="text-xs text-muted-foreground">{item.subtitle}</p>

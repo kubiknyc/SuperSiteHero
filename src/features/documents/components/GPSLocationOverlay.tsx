@@ -172,13 +172,13 @@ function getAccuracyLevel(accuracy: number): {
   label: string
 } {
   if (accuracy <= 5) {
-    return { level: 'high', icon: SignalHigh, color: 'text-success', label: 'Excellent' }
+    return { level: 'high', icon: SignalHigh, color: 'text-success dark:text-success', label: 'Excellent' }
   } else if (accuracy <= 15) {
-    return { level: 'medium', icon: SignalMedium, color: 'text-warning', label: 'Good' }
+    return { level: 'medium', icon: SignalMedium, color: 'text-warning dark:text-warning', label: 'Good' }
   } else if (accuracy <= 30) {
-    return { level: 'low', icon: SignalLow, color: 'text-warning-600', label: 'Fair' }
+    return { level: 'low', icon: SignalLow, color: 'text-warning dark:text-warning', label: 'Fair' }
   } else {
-    return { level: 'poor', icon: Signal, color: 'text-destructive', label: 'Poor' }
+    return { level: 'poor', icon: Signal, color: 'text-destructive dark:text-destructive', label: 'Poor' }
   }
 }
 
@@ -228,7 +228,7 @@ function PositionMarker({
       <div
         className={cn(
           'absolute rounded-full opacity-20',
-          isTracking ? 'bg-primary' : 'bg-gray-500'
+          isTracking ? 'bg-primary' : 'bg-muted-foreground dark:bg-muted-foreground'
         )}
         style={{
           width: accuracyRadius * 2,
@@ -258,8 +258,8 @@ function PositionMarker({
       <div
         className={cn(
           'relative w-6 h-6 rounded-full flex items-center justify-center',
-          'shadow-lg border-2 border-white',
-          isTracking ? 'bg-primary' : 'bg-gray-500'
+          'shadow-lg border-2 border-white dark:border-gray-800',
+          isTracking ? 'bg-primary' : 'bg-muted-foreground dark:bg-muted-foreground'
         )}
       >
         <div className="w-2 h-2 rounded-full bg-white" />
@@ -568,12 +568,12 @@ function CalibrationDialog({
 
           {step === 'confirm' && (
             <div className="space-y-4">
-              <div className="bg-success-50 dark:bg-success-950/30 rounded-lg p-4">
-                <div className="flex items-center gap-2 text-success-700 dark:text-success-300 mb-2">
+              <div className="bg-success/10 dark:bg-success/20 rounded-lg p-4">
+                <div className="flex items-center gap-2 text-success dark:text-success mb-2">
                   <Check className="w-5 h-5" />
                   <span className="font-medium">Calibration Ready</span>
                 </div>
-                <p className="text-sm text-success dark:text-success-400">
+                <p className="text-sm text-success dark:text-success">
                   {points.length} reference points set. GPS tracking is now available.
                 </p>
               </div>
@@ -823,7 +823,7 @@ export function GPSLocationOverlay({
               size="sm"
               className={cn(
                 'shadow-lg gap-2',
-                state.isTracking && 'bg-blue-500 hover:bg-blue-600 text-white'
+                state.isTracking && 'bg-info hover:bg-info/90 text-info-foreground dark:bg-info dark:hover:bg-info/90 dark:text-info-foreground'
               )}
             >
               <Navigation2

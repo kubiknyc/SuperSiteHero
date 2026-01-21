@@ -20,7 +20,7 @@ export function NotFoundPage() {
         </div>
 
         {/* Error Code */}
-        <h1 className="heading-error-code text-orange-500 mb-4 heading-page">
+        <h1 className="heading-error-code text-warning mb-4 heading-page">
           404
         </h1>
 

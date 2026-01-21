@@ -35,14 +35,14 @@ export function PMDashboard() {
 
   return (
     <SmartLayout showHeaderStats={false}>
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-950 dark:to-gray-900">
+      <div className="min-h-screen bg-gradient-to-b from-background to-muted/50 dark:from-background dark:to-muted/30">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-8">
           {/* Header */}
           <div className="mb-8">
             <h1 className="heading-page">
               Project Manager Dashboard
             </h1>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-secondary mt-1">
               Welcome back, {userProfile?.first_name || 'PM'} - {activeProjects.length} active project{activeProjects.length !== 1 ? 's' : ''}
             </p>
           </div>
@@ -106,14 +106,14 @@ export function PMDashboard() {
                     <Link
                       key={project.id}
                       to={`/projects/${project.id}`}
-                      className="block p-4 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                      className="block p-4 rounded-lg bg-muted hover:bg-muted/80 transition-colors"
                     >
                       <div className="flex justify-between items-start">
                         <div>
-                          <p className="font-medium text-gray-900 dark:text-white">
+                          <p className="font-medium text-foreground">
                             {project.name}
                           </p>
-                          <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                          <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
                             <span className="flex items-center gap-1">
                               <DollarSign className="h-4 w-4" />
                               ${((project.budget || 0) / 1000).toFixed(0)}K
@@ -133,7 +133,7 @@ export function PMDashboard() {
                     </Link>
                   ))}
                   {activeProjects.length === 0 && (
-                    <p className="text-gray-500 text-center py-4">
+                    <p className="text-muted-foreground text-center py-4">
                       No active projects assigned
                     </p>
                   )}
@@ -155,18 +155,18 @@ export function PMDashboard() {
                     <Link
                       key={i}
                       to={item.link || '#'}
-                      className="block p-3 rounded-lg bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                      className="block p-3 rounded-lg bg-muted hover:bg-muted/80 transition-colors"
                     >
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      <p className="text-sm font-medium text-foreground">
                         {item.title}
                       </p>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-xs text-muted-foreground mt-1">
                         {item.subtitle}
                       </p>
                     </Link>
                   ))}
                   {(!actionItems || actionItems.length === 0) && (
-                    <p className="text-gray-500 text-sm text-center py-4">
+                    <p className="text-muted-foreground text-sm text-center py-4">
                       No pending action items
                     </p>
                   )}
@@ -192,22 +192,22 @@ function StatCard({ title, value, icon: Icon, link, alert }: StatCardProps) {
   const content = (
     <Card className={cn(
       'transition-all hover:shadow-md',
-      alert && 'border-amber-500 dark:border-amber-400',
+      alert && 'border-warning dark:border-warning',
       link && 'cursor-pointer hover:border-primary'
     )}>
       <CardContent className="pt-6">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
+            <p className="text-sm text-secondary">{title}</p>
             <p className="heading-section">
               {value}
             </p>
           </div>
           <div className={cn(
             'p-3 rounded-lg',
-            alert ? 'bg-amber-100 dark:bg-amber-900' : 'bg-primary/10'
+            alert ? 'bg-warning-light dark:bg-warning/20' : 'bg-primary/10'
           )}>
-            <Icon className={cn('h-6 w-6', alert ? 'text-amber-600' : 'text-primary')} />
+            <Icon className={cn('h-6 w-6', alert ? 'text-warning' : 'text-primary')} />
           </div>
         </div>
       </CardContent>

@@ -149,7 +149,7 @@ export function DedicatedRFIsPage() {
     if (daysUntil < 0) {
       return { text: `${Math.abs(daysUntil)} days overdue`, class: 'text-error font-medium', isOverdue: true }
     } else if (daysUntil === 0) {
-      return { text: 'Due today', class: 'text-orange-600 font-medium', isOverdue: false }
+      return { text: 'Due today', class: 'text-warning font-medium', isOverdue: false }
     } else if (daysUntil <= 3) {
       return { text: `Due in ${daysUntil} days`, class: 'text-warning', isOverdue: false }
     }
@@ -199,7 +199,7 @@ export function DedicatedRFIsPage() {
             <div className="flex items-center gap-4 mt-2 text-sm flex-wrap">
               {/* Drawing reference */}
               {rfi.drawing_reference && (
-                <span className="text-purple-600 flex items-center gap-1">
+                <span className="text-primary flex items-center gap-1">
                   <FileText className="h-3.5 w-3.5" />
                   {rfi.drawing_reference}
                 </span>
@@ -236,7 +236,7 @@ export function DedicatedRFIsPage() {
                   </Badge>
                 )}
                 {rfi.schedule_impact_days && (
-                  <Badge variant="outline" className="text-xs text-amber-700 border-amber-300">
+                  <Badge variant="outline" className="text-xs text-warning-dark border-warning">
                     Schedule: {rfi.schedule_impact_days} days
                   </Badge>
                 )}
@@ -350,7 +350,7 @@ export function DedicatedRFIsPage() {
             <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setStatusFilter('open')}>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-amber-100">
+                  <div className="p-2 rounded-lg bg-warning-light">
                     <Clock className="h-5 w-5 text-warning" />
                   </div>
                   <div>
@@ -492,7 +492,7 @@ export function DedicatedRFIsPage() {
         ) : rfisError ? (
           <Card>
             <CardContent className="p-12 text-center">
-              <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
+              <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">Error Loading RFIs</h3>
               <p className="text-secondary">{rfisError.message}</p>
             </CardContent>

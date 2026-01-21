@@ -277,12 +277,12 @@ export function EnhancedMarkupToolbar({
               </Tooltip>
             ))}
             {groupIndex < TOOL_GROUPS.length - 1 && (
-              <div className="w-px h-6 bg-gray-300 mx-1" aria-hidden="true" />
+              <div className="w-px h-6 bg-border mx-1" aria-hidden="true" />
             )}
           </div>
         ))}
 
-        <div className="w-px h-6 bg-gray-300 mx-1" />
+        <div className="w-px h-6 bg-border mx-1" />
 
         {/* Color Picker */}
         <ColorPicker
@@ -329,7 +329,7 @@ export function EnhancedMarkupToolbar({
           </div>
         </div>
 
-        <div className="w-px h-6 bg-gray-300 mx-1" />
+        <div className="w-px h-6 bg-border mx-1" />
 
         {/* Layer Manager */}
         <LayerManager
@@ -382,7 +382,7 @@ export function EnhancedMarkupToolbar({
           />
         )}
 
-        <div className="w-px h-6 bg-gray-300 mx-1" />
+        <div className="w-px h-6 bg-border mx-1" />
 
         {/* Auto-Numbering Controls */}
         {autoNumberingConfig && onAutoNumberingToggle && (
@@ -412,7 +412,7 @@ export function EnhancedMarkupToolbar({
           />
         )}
 
-        <div className="w-px h-6 bg-gray-300 mx-1" />
+        <div className="w-px h-6 bg-border mx-1" />
 
         {/* History Panel */}
         <MarkupHistoryPanel

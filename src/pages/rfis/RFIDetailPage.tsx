@@ -199,10 +199,10 @@ export function RFIDetailPage() {
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
       draft: 'bg-muted text-foreground',
-      submitted: 'bg-info-light text-blue-800',
-      answered: 'bg-success-light text-green-800',
+      submitted: 'bg-info-light text-info-dark',
+      answered: 'bg-success-light text-success-dark',
       approved: 'bg-success text-white',
-      rejected: 'bg-error-light text-red-800',
+      rejected: 'bg-error-light text-error-dark',
       closed: 'bg-gray-300 text-foreground',
     }
     return colors[status] || 'bg-muted text-foreground'

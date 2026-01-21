@@ -66,14 +66,14 @@ export function MobileOfflineIndicator({
     return (
       <div
         className={cn(
-          'flex items-center gap-3 px-4 py-3 bg-success-light border-b border-green-200',
+          'flex items-center gap-3 px-4 py-3 bg-success-light dark:bg-success/20 border-b border-success/30 dark:border-success/40',
           className
         )}
       >
         <Wifi className="h-5 w-5 text-success flex-shrink-0" />
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-green-800">Back Online</p>
-          <p className="text-xs text-success">Syncing your changes...</p>
+          <p className="text-sm font-medium text-success-dark dark:text-success">Back Online</p>
+          <p className="text-xs text-success dark:text-success/80">Syncing your changes...</p>
         </div>
         <RefreshCw className="h-4 w-4 text-success animate-spin" />
       </div>
@@ -85,12 +85,12 @@ export function MobileOfflineIndicator({
     return (
       <div
         className={cn(
-          'flex items-center gap-3 px-4 py-3 bg-success-light border-b border-green-200',
+          'flex items-center gap-3 px-4 py-3 bg-success-light dark:bg-success/20 border-b border-success/30 dark:border-success/40',
           className
         )}
       >
         <Wifi className="h-5 w-5 text-success flex-shrink-0" />
-        <p className="text-sm font-medium text-green-800">Connected</p>
+        <p className="text-sm font-medium text-success-dark dark:text-success">Connected</p>
       </div>
     )
   }
@@ -99,7 +99,7 @@ export function MobileOfflineIndicator({
   return (
     <div
       className={cn(
-        'flex items-center gap-3 px-4 py-3 bg-warning-light border-b border-amber-200',
+        'flex items-center gap-3 px-4 py-3 bg-warning-light dark:bg-warning/20 border-b border-warning/30 dark:border-warning/40',
         className
       )}
     >
@@ -107,16 +107,16 @@ export function MobileOfflineIndicator({
         <>
           <RefreshCw className="h-5 w-5 text-warning flex-shrink-0 animate-spin" />
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-amber-800">Reconnecting...</p>
-            <p className="text-xs text-warning">Trying to restore connection</p>
+            <p className="text-sm font-medium text-warning-dark dark:text-warning">Reconnecting...</p>
+            <p className="text-xs text-warning dark:text-warning/80">Trying to restore connection</p>
           </div>
         </>
       ) : (
         <>
           <WifiOff className="h-5 w-5 text-warning flex-shrink-0" />
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-amber-800">You're Offline</p>
-            <p className="text-xs text-warning">Changes will sync when connected</p>
+            <p className="text-sm font-medium text-warning-dark dark:text-warning">You're Offline</p>
+            <p className="text-xs text-warning dark:text-warning/80">Changes will sync when connected</p>
           </div>
           <CloudOff className="h-4 w-4 text-warning" />
         </>

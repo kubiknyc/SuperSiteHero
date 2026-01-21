@@ -208,7 +208,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                   )} />
                   <span className="flex-1">{item.label}</span>
                   {typeof item.badge === 'number' && item.badge > 0 && (
-                    <span className="px-1.5 py-0.5 text-xs font-medium bg-red-500 text-white rounded-full min-w-[20px] text-center">
+                    <span className="px-1.5 py-0.5 text-xs font-medium bg-destructive text-destructive-foreground rounded-full min-w-[20px] text-center">
                       {item.badge}
                     </span>
                   )}

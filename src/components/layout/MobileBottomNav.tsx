@@ -22,7 +22,7 @@ export const MobileBottomNav = memo(function MobileBottomNav() {
     <>
       {/* Bottom Navigation Bar - Only visible on mobile */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-card dark:bg-background border-t border-border dark:border-gray-700 safe-area-bottom"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-card dark:bg-background border-t border-border safe-area-bottom"
         aria-label="Main navigation"
         role="navigation"
       >
@@ -49,8 +49,8 @@ export const MobileBottomNav = memo(function MobileBottomNav() {
                   'transition-all duration-200 ease-out',
                   'active:scale-95',
                   isActive
-                    ? 'text-primary dark:text-blue-400'
-                    : 'text-muted dark:text-disabled active:text-secondary dark:active:text-gray-300'
+                    ? 'text-primary'
+                    : 'text-muted active:text-secondary'
                 )}
               >
                 <div className={cn(
@@ -66,7 +66,7 @@ export const MobileBottomNav = memo(function MobileBottomNav() {
                   />
                   {typeof item.badge === 'number' && item.badge > 0 && (
                     <div className="absolute -top-1 -right-1 animate-pulse" aria-hidden="true">
-                      <span className="px-1 py-0.5 text-[10px] font-medium bg-red-500 text-white rounded-full min-w-[16px] text-center">
+                      <span className="px-1 py-0.5 text-[10px] font-medium bg-error text-white rounded-full min-w-[16px] text-center">
                         {item.badge}
                       </span>
                     </div>
@@ -99,7 +99,7 @@ export const MobileBottomNav = memo(function MobileBottomNav() {
             aria-haspopup="dialog"
             className={cn(
               'flex flex-col items-center justify-center flex-1 h-full min-w-[64px] touch-target',
-              'text-muted dark:text-disabled active:text-secondary dark:active:text-gray-300 transition-colors duration-200'
+              'text-muted active:text-secondary transition-colors duration-200'
             )}
           >
             <Menu className="h-6 w-6 mb-1" aria-hidden="true" />

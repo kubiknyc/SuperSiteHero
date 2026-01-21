@@ -236,7 +236,7 @@ export function ConflictResolutionDialog({
                                   onClick={() => handleFieldSelection(diff.field, 'local')}
                                   className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded transition-colors ${
                                     fieldSelections[diff.field] === 'local'
-                                      ? 'bg-amber-500 text-white'
+                                      ? 'bg-warning text-warning-foreground'
                                       : 'bg-muted hover:bg-muted/80'
                                   }`}
                                 >
@@ -251,8 +251,8 @@ export function ConflictResolutionDialog({
                               className={`rounded p-2 ${
                                 selectedResolution === 'merge' &&
                                 fieldSelections[diff.field] === 'local'
-                                  ? 'bg-amber-100 dark:bg-amber-950/40 border-2 border-amber-500'
-                                  : 'bg-warning-light dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800'
+                                  ? 'bg-warning/20 dark:bg-warning/30 border-2 border-warning'
+                                  : 'bg-warning-light dark:bg-warning/10 border border-warning/30 dark:border-warning/40'
                               }`}
                             >
                               <pre className="text-xs whitespace-pre-wrap break-words">
@@ -271,7 +271,7 @@ export function ConflictResolutionDialog({
                                   onClick={() => handleFieldSelection(diff.field, 'server')}
                                   className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded transition-colors ${
                                     fieldSelections[diff.field] === 'server'
-                                      ? 'bg-blue-500 text-white'
+                                      ? 'bg-info text-info-foreground'
                                       : 'bg-muted hover:bg-muted/80'
                                   }`}
                                 >
@@ -286,8 +286,8 @@ export function ConflictResolutionDialog({
                               className={`rounded p-2 ${
                                 selectedResolution === 'merge' &&
                                 fieldSelections[diff.field] === 'server'
-                                  ? 'bg-blue-100 dark:bg-blue-950/40 border-2 border-blue-500'
-                                  : 'bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800'
+                                  ? 'bg-info/20 dark:bg-info/30 border-2 border-info'
+                                  : 'bg-info-light dark:bg-info/10 border border-info/30 dark:border-info/40'
                               }`}
                             >
                               <pre className="text-xs whitespace-pre-wrap break-words">

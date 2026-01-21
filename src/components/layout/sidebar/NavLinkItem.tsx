@@ -72,7 +72,7 @@ export function NavLinkItem({
       {isActive && (
         <div
           className={cn(
-            'absolute left-0 top-1/2 -translate-y-1/2 w-1 bg-blue-500 rounded-r-full',
+            'absolute left-0 top-1/2 -translate-y-1/2 w-1 bg-primary rounded-r-full',
             isNested ? 'h-4' : 'h-5'
           )}
         />
@@ -83,7 +83,7 @@ export function NavLinkItem({
         className={cn(
           'flex-shrink-0',
           isNested ? 'h-4 w-4' : 'h-5 w-5',
-          isActive ? 'text-blue-400' : 'text-slate-500'
+          isActive ? 'text-primary-400' : 'text-slate-500'
         )}
       />
 
@@ -95,7 +95,7 @@ export function NavLinkItem({
             <span
               className={cn(
                 'px-2 py-0.5 text-xs font-medium rounded-full',
-                'bg-blue-500/20 text-blue-400',
+                'bg-primary/20 text-primary-400',
                 isNested && 'px-1.5'
               )}
             >
@@ -109,7 +109,7 @@ export function NavLinkItem({
       {!isExpanded && item.badge !== undefined && (typeof item.badge === 'number' ? item.badge > 0 : true) && (
         <span
           className={cn(
-            'absolute bg-blue-500 rounded-full',
+            'absolute bg-primary rounded-full',
             isNested ? 'top-1 right-1 w-1.5 h-1.5' : 'top-1.5 right-1.5 w-2 h-2'
           )}
         />
@@ -126,7 +126,7 @@ export function NavLinkItem({
           <p className="flex items-center gap-2">
             {item.label}
             {item.badge !== undefined && (typeof item.badge === 'number' ? item.badge > 0 : true) && (
-              <span className="px-1.5 py-0.5 text-xs bg-blue-500/20 text-blue-400 rounded">
+              <span className="px-1.5 py-0.5 text-xs bg-primary/20 text-primary-400 rounded">
                 {typeof item.badge === 'number' ? item.badge : <item.badge />}
               </span>
             )}

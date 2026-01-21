@@ -406,10 +406,10 @@ export function DedicatedRFIDetailPage() {
 
             {/* Overdue Warning */}
             {isOverdue && (
-              <div className="bg-error-light border border-red-200 rounded-lg p-4 flex items-center gap-3">
+              <div className="bg-error-light border border-error rounded-lg p-4 flex items-center gap-3">
                 <AlertTriangle className="h-5 w-5 text-error" />
                 <div>
-                  <p className="font-medium text-red-800">RFI Overdue</p>
+                  <p className="font-medium text-error-dark">RFI Overdue</p>
                   <p className="text-sm text-error">
                     Required by {format(new Date(rfi.date_required!), 'MMM d, yyyy')}
                   </p>
@@ -577,8 +577,8 @@ export function DedicatedRFIDetailPage() {
                       </div>
                     )}
                     {rfi.schedule_impact_days !== null && rfi.schedule_impact_days !== undefined && (
-                      <div className="flex items-center gap-3 p-3 bg-orange-50 rounded-lg">
-                        <CalendarClock className={`h-5 w-5 ${rfi.schedule_impact_days > 0 ? 'text-orange-600' : 'text-success'}`} />
+                      <div className="flex items-center gap-3 p-3 bg-warning-light rounded-lg">
+                        <CalendarClock className={`h-5 w-5 ${rfi.schedule_impact_days > 0 ? 'text-warning' : 'text-success'}`} />
                         <div>
                           <Label className="text-secondary">Schedule Impact</Label>
                           <p className="font-medium">
@@ -886,7 +886,7 @@ export function DedicatedRFIDetailPage() {
                                 type="button"
                                 onClick={() => toggleDistributionUser(user.id)}
                                 className={`w-full flex items-center gap-2 p-2 text-left hover:bg-muted/50 ${
-                                  isSelected ? 'bg-blue-50' : ''
+                                  isSelected ? 'bg-primary-50' : ''
                                 }`}
                               >
                                 {user.avatar_url ? (

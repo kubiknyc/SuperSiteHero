@@ -821,9 +821,9 @@ function DiffView({
       {showHighlights &&
         changeRegions.map((region) => {
           const colorClasses = {
-            added: 'border-green-500',
-            removed: 'border-red-500',
-            modified: 'border-yellow-400',
+            added: 'border-success',
+            removed: 'border-destructive',
+            modified: 'border-warning',
           };
           const isSelected = region.id === selectedChangeId;
           const colorClass =
@@ -927,13 +927,13 @@ function ChangesPanel({
       <div className="p-4 border-b">
         <h3 className="font-semibold mb-2">Changes Detected</h3>
         <div className="flex gap-2 text-sm">
-          <Badge variant="outline" className="border-green-500 text-green-600">
+          <Badge variant="outline" className="border-success text-success">
             {changeStats.added} added
           </Badge>
-          <Badge variant="outline" className="border-red-500 text-red-600">
+          <Badge variant="outline" className="border-destructive text-destructive">
             {changeStats.removed} removed
           </Badge>
-          <Badge variant="outline" className="border-yellow-500 text-yellow-600">
+          <Badge variant="outline" className="border-warning text-warning">
             {changeStats.modified} modified
           </Badge>
         </div>
@@ -971,9 +971,9 @@ interface ChangeCardProps {
 
 function ChangeCard({ region, isSelected, onClick }: ChangeCardProps) {
   const colorClasses = {
-    added: 'border-l-green-500',
-    removed: 'border-l-red-500',
-    modified: 'border-l-yellow-400',
+    added: 'border-l-success',
+    removed: 'border-l-destructive',
+    modified: 'border-l-warning',
   };
   const colorClass = colorClasses[region.changeType] || colorClasses.modified;
 
@@ -992,10 +992,10 @@ function ChangeCard({ region, isSelected, onClick }: ChangeCardProps) {
             variant="outline"
             className={cn(
               'text-xs capitalize',
-              region.changeType === 'added' && 'border-green-500 text-green-600',
-              region.changeType === 'removed' && 'border-red-500 text-red-600',
+              region.changeType === 'added' && 'border-success text-success',
+              region.changeType === 'removed' && 'border-destructive text-destructive',
               region.changeType === 'modified' &&
-              'border-yellow-500 text-yellow-600'
+              'border-warning text-warning'
             )}
           >
             {region.changeType}

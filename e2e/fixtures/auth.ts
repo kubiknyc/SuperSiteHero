@@ -2,7 +2,7 @@
  * Authentication Fixtures for Playwright Tests
  *
  * Provides reusable authenticated contexts and helper functions for all roles.
- * Supports email/password, magic link, MFA, and OAuth authentication.
+ * Supports email/password and magic link authentication.
  */
 
 import { test as base, expect, type Page, type BrowserContext } from '@playwright/test';
@@ -70,8 +70,6 @@ type AuthFixtures = {
   logout: () => Promise<void>;
   /** Helper to login with magic link (requires admin API) */
   loginWithMagicLink: (email: string) => Promise<void>;
-  /** Helper to verify MFA with TOTP code */
-  verifyMFA: (code: string) => Promise<void>;
   /** Helper to check if user is logged in */
   isLoggedIn: () => Promise<boolean>;
   /** Helper to clear all auth state */
@@ -316,35 +314,6 @@ export const test = base.extend<AuthFixtures>({
     await use(loginFn);
   },
 
-  // MFA verification helper
-  verifyMFA: async ({ page }, use) => {
-    const verifyFn = async (code: string) => {
-      // Wait for MFA input
-      await page.waitForSelector(
-        'input[data-testid="totp-input"], input[name="totp"], input[placeholder*="code"]',
-        { timeout: 10000 }
-      );
-
-      // Fill the code
-      const input = page.locator(
-        'input[data-testid="totp-input"], input[name="totp"], input[placeholder*="code"]'
-      );
-      await input.fill(code);
-
-      // Submit
-      const submitButton = page.locator(
-        'button[type="submit"], button:has-text("Verify")'
-      );
-      await submitButton.click();
-
-      // Wait for navigation
-      await page.waitForURL(url => !url.pathname.includes('/mfa'), {
-        timeout: 10000,
-      });
-    };
-    await use(verifyFn);
-  },
-
   // Check if logged in
   isLoggedIn: async ({ page }, use) => {
     const checkFn = async () => {
@@ -363,19 +332,6 @@ export const test = base.extend<AuthFixtures>({
 });
 
 export { expect } from '@playwright/test';
-
-/**
- * Generate TOTP code for MFA testing
- * Requires otplib package
- */
-export async function generateTOTPCode(secret: string): Promise<string> {
-  try {
-    const { authenticator } = await import('otplib');
-    return authenticator.generate(secret);
-  } catch {
-    throw new Error('otplib is required for TOTP code generation');
-  }
-}
 
 /**
  * Setup auth state for all roles (useful in global setup)

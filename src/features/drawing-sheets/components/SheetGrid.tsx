@@ -108,9 +108,9 @@ export function SheetGrid({
   const getStatusIcon = (status: ProcessingStatus) => {
     switch (status) {
       case 'completed':
-        return <CheckCircle2 className="h-4 w-4 text-green-500" />
+        return <CheckCircle2 className="h-4 w-4 text-success" />
       case 'processing':
-        return <Loader2 className="h-4 w-4 text-blue-500 animate-spin" />
+        return <Loader2 className="h-4 w-4 text-info animate-spin" />
       case 'failed':
         return <AlertCircle className="h-4 w-4 text-destructive" />
       default:

@@ -43,8 +43,8 @@ const COMMON_EQUIPMENT = [
 // Equipment owner type options
 const OWNER_TYPE_OPTIONS = [
   { value: 'owned', label: 'Owned', color: 'bg-info-light text-primary-hover' },
-  { value: 'rented', label: 'Rented', color: 'bg-warning-light text-yellow-700' },
-  { value: 'subcontractor', label: 'Subcontractor', color: 'bg-purple-100 text-purple-700' },
+  { value: 'rented', label: 'Rented', color: 'bg-warning-light text-warning-dark dark:bg-warning/20 dark:text-warning' },
+  { value: 'subcontractor', label: 'Subcontractor', color: 'bg-primary/10 text-primary' },
 ];
 
 interface EquipmentGridProps {
@@ -117,8 +117,8 @@ export function EquipmentGrid({
         className="w-full flex items-center justify-between p-4 hover:bg-surface transition-colors"
       >
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-orange-100 rounded-lg">
-            <Truck className="h-5 w-5 text-orange-600" />
+          <div className="p-2 bg-warning-light dark:bg-warning/20 rounded-lg">
+            <Truck className="h-5 w-5 text-warning" />
           </div>
           <div className="text-left">
             <CardTitle className="text-base flex items-center gap-2">
@@ -205,7 +205,7 @@ export function EquipmentGrid({
                   <tr
                     key={entry.id}
                     className={`border-b hover:bg-surface ${
-                      index % 2 === 0 ? 'bg-card' : 'bg-gray-25'
+                      index % 2 === 0 ? 'bg-card' : 'bg-muted/30'
                     }`}
                   >
                     {/* Equipment Type - with dropdown */}
@@ -221,7 +221,7 @@ export function EquipmentGrid({
                           setTimeout(() => setShowTypeDropdown(null), 200)
                         }
                         placeholder="Equipment type..."
-                        className="h-9 text-sm border-0 bg-transparent focus:ring-1 focus:ring-blue-500"
+                        className="h-9 text-sm border-0 bg-transparent focus:ring-1 focus:ring-primary"
                       />
                       {showTypeDropdown === entry.id && (
                         <div className="absolute z-10 left-2 right-2 mt-1 bg-card border rounded-lg shadow-lg max-h-48 overflow-y-auto">
@@ -252,7 +252,7 @@ export function EquipmentGrid({
                           handleFieldChange(entry.id, 'equipment_id', e.target.value)
                         }
                         placeholder="ID / Tag..."
-                        className="h-9 text-sm border-0 bg-transparent focus:ring-1 focus:ring-blue-500"
+                        className="h-9 text-sm border-0 bg-transparent focus:ring-1 focus:ring-primary"
                       />
                     </td>
 
@@ -263,7 +263,7 @@ export function EquipmentGrid({
                         onChange={(e) =>
                           handleFieldChange(entry.id, 'owner_type', e.target.value)
                         }
-                        className="h-9 w-full text-sm border-0 bg-transparent focus:ring-1 focus:ring-blue-500 rounded"
+                        className="h-9 w-full text-sm border-0 bg-transparent focus:ring-1 focus:ring-primary rounded"
                       >
                         {OWNER_TYPE_OPTIONS.map((option) => (
                           <option key={option.value} value={option.value}>
@@ -289,7 +289,7 @@ export function EquipmentGrid({
                           )
                         }
                         placeholder="8"
-                        className="h-9 text-sm text-center border-0 bg-transparent focus:ring-1 focus:ring-blue-500"
+                        className="h-9 text-sm text-center border-0 bg-transparent focus:ring-1 focus:ring-primary"
                       />
                     </td>
 
@@ -302,7 +302,7 @@ export function EquipmentGrid({
                           handleFieldChange(entry.id, 'operator_name', e.target.value)
                         }
                         placeholder="Operator name..."
-                        className="h-9 text-sm border-0 bg-transparent focus:ring-1 focus:ring-blue-500"
+                        className="h-9 text-sm border-0 bg-transparent focus:ring-1 focus:ring-primary"
                       />
                     </td>
 
@@ -315,7 +315,7 @@ export function EquipmentGrid({
                           handleFieldChange(entry.id, 'work_area', e.target.value)
                         }
                         placeholder="Area..."
-                        className="h-9 text-sm border-0 bg-transparent focus:ring-1 focus:ring-blue-500"
+                        className="h-9 text-sm border-0 bg-transparent focus:ring-1 focus:ring-primary"
                       />
                     </td>
 
@@ -328,7 +328,7 @@ export function EquipmentGrid({
                           handleFieldChange(entry.id, 'cost_code', e.target.value)
                         }
                         placeholder="Code..."
-                        className="h-9 text-sm border-0 bg-transparent focus:ring-1 focus:ring-blue-500"
+                        className="h-9 text-sm border-0 bg-transparent focus:ring-1 focus:ring-primary"
                       />
                     </td>
 

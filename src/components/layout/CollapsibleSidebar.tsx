@@ -321,7 +321,7 @@ export function CollapsibleSidebar({ className }: CollapsibleSidebarProps) {
                         </span>
                         {/* Handle badge as number or component */}
                         {typeof item.badge === 'number' && item.badge > 0 && (
-                          <span className="px-1.5 py-0.5 text-xs font-medium bg-red-500 text-white rounded-full min-w-[20px] text-center">
+                          <span className="px-1.5 py-0.5 text-xs font-medium bg-destructive text-destructive-foreground rounded-full min-w-[20px] text-center">
                             {item.badge}
                           </span>
                         )}
@@ -330,7 +330,7 @@ export function CollapsibleSidebar({ className }: CollapsibleSidebarProps) {
                     )}
                     {/* Badge dot when collapsed */}
                     {!isExpanded && item.badge && (
-                      <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full ring-2 ring-slate-900 animate-pulse" />
+                      <span className="absolute top-2 right-2 w-2 h-2 bg-destructive rounded-full ring-2 ring-slate-900 animate-pulse" />
                     )}
                   </Link>
                 )

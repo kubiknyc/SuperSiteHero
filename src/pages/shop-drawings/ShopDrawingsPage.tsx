@@ -59,7 +59,7 @@ export function ShopDrawingsPage() {
         {/* Header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Shop Drawings</h1>
+            <h1 className="heading-page">Shop Drawings</h1>
             <p className="text-muted-foreground">
               Manage shop drawing submittals and track approvals
             </p>
@@ -175,7 +175,7 @@ export function ShopDrawingsPage() {
           <Card>
             <CardContent className="flex flex-col items-center justify-center py-12">
               <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium">Select a Project</h3>
+              <h3 className="heading-card">Select a Project</h3>
               <p className="text-muted-foreground text-center max-w-md mt-2">
                 Choose a project from the dropdown above to view and manage shop drawings.
               </p>

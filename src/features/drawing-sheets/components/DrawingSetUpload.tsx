@@ -351,7 +351,7 @@ export function DrawingSetUpload({
             <div className="flex items-center justify-between text-sm">
               <span className="flex items-center gap-2">
                 {uploadState.status === 'complete' ? (
-                  <CheckCircle2 className="h-4 w-4 text-green-500" />
+                  <CheckCircle2 className="h-4 w-4 text-success" />
                 ) : uploadState.status === 'error' ? (
                   <X className="h-4 w-4 text-destructive" />
                 ) : (
@@ -370,7 +370,7 @@ export function DrawingSetUpload({
                 <div
                   className={cn(
                     'h-2 rounded-full transition-all duration-300',
-                    uploadState.status === 'complete' ? 'bg-green-500' : 'bg-primary'
+                    uploadState.status === 'complete' ? 'bg-success' : 'bg-primary'
                   )}
                   style={{ width: `${uploadState.progress}%` }}
                 />

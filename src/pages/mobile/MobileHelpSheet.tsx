@@ -144,7 +144,7 @@ export const MobileHelpSheet = memo(function MobileHelpSheet({
           <div>
             <div className="flex items-center gap-2 mb-3">
               <FileQuestion className="h-4 w-4 text-muted-foreground" />
-              <h3 className="text-sm font-medium text-muted-foreground uppercase">
+              <h3 className="heading-subsection text-muted-foreground uppercase">
                 Frequently Asked Questions
               </h3>
             </div>

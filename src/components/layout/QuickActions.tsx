@@ -56,45 +56,45 @@ const ALL_QUICK_ACTIONS: QuickAction[] = [
     label: 'Take Photo',
     icon: Camera,
     path: '/photo-progress/capture',
-    color: 'text-blue-600 dark:text-blue-400',
-    bgColor: 'bg-blue-50 dark:bg-blue-950',
-    hoverColor: 'hover:bg-blue-100 dark:hover:bg-blue-900',
+    color: 'text-info dark:text-info',
+    bgColor: 'bg-info/10 dark:bg-info/20',
+    hoverColor: 'hover:bg-info/20 dark:hover:bg-info/30',
   },
   {
     id: 'daily-report',
     label: 'Daily Report',
     icon: ClipboardList,
     path: '/daily-reports/new',
-    color: 'text-emerald-600 dark:text-emerald-400',
-    bgColor: 'bg-emerald-50 dark:bg-emerald-950',
-    hoverColor: 'hover:bg-emerald-100 dark:hover:bg-emerald-900',
+    color: 'text-success dark:text-success',
+    bgColor: 'bg-success/10 dark:bg-success/20',
+    hoverColor: 'hover:bg-success/20 dark:hover:bg-success/30',
   },
   {
     id: 'punch-item',
     label: 'Punch Item',
     icon: ListChecks,
     path: '/punch-lists/new',
-    color: 'text-amber-600 dark:text-amber-400',
-    bgColor: 'bg-amber-50 dark:bg-amber-950',
-    hoverColor: 'hover:bg-amber-100 dark:hover:bg-amber-900',
+    color: 'text-warning dark:text-warning',
+    bgColor: 'bg-warning/10 dark:bg-warning/20',
+    hoverColor: 'hover:bg-warning/20 dark:hover:bg-warning/30',
   },
   {
     id: 'inspection',
     label: 'Inspection',
     icon: FileCheck,
     path: '/inspections/new',
-    color: 'text-purple-600 dark:text-purple-400',
-    bgColor: 'bg-purple-50 dark:bg-purple-950',
-    hoverColor: 'hover:bg-purple-100 dark:hover:bg-purple-900',
+    color: 'text-primary dark:text-primary',
+    bgColor: 'bg-primary/10 dark:bg-primary/20',
+    hoverColor: 'hover:bg-primary/20 dark:hover:bg-primary/30',
   },
   {
     id: 'rfi',
     label: 'New RFI',
     icon: FileQuestion,
     path: '/rfis/new',
-    color: 'text-rose-600 dark:text-rose-400',
-    bgColor: 'bg-rose-50 dark:bg-rose-950',
-    hoverColor: 'hover:bg-rose-100 dark:hover:bg-rose-900',
+    color: 'text-destructive dark:text-destructive',
+    bgColor: 'bg-destructive/10 dark:bg-destructive/20',
+    hoverColor: 'hover:bg-destructive/20 dark:hover:bg-destructive/30',
     projectOnly: true,
   },
   {
@@ -102,9 +102,9 @@ const ALL_QUICK_ACTIONS: QuickAction[] = [
     label: 'Schedule Meeting',
     icon: Calendar,
     path: '/meetings/new',
-    color: 'text-cyan-600 dark:text-cyan-400',
-    bgColor: 'bg-cyan-50 dark:bg-cyan-950',
-    hoverColor: 'hover:bg-cyan-100 dark:hover:bg-cyan-900',
+    color: 'text-info dark:text-info',
+    bgColor: 'bg-info/10 dark:bg-info/20',
+    hoverColor: 'hover:bg-info/20 dark:hover:bg-info/30',
     projectOnly: true,
   },
 ]
@@ -202,8 +202,8 @@ export function QuickActions({
               className={cn(
                 'flex items-center gap-2 px-3 py-2',
                 'rounded-lg border',
-                'border-gray-200 dark:border-gray-700',
-                'bg-white dark:bg-gray-800',
+                'border-border',
+                'bg-card',
                 'hover:border-primary/50 hover:shadow-sm',
                 'transition-all duration-150',
                 'group'
@@ -217,7 +217,7 @@ export function QuickActions({
               >
                 <Icon className={cn('w-3.5 h-3.5', action.color)} />
               </div>
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+              <span className="text-sm font-medium text-foreground">
                 {action.label}
               </span>
             </Link>
@@ -247,12 +247,12 @@ export function QuickActions({
               'bg-white/70 dark:bg-white/[0.04]',
               'backdrop-blur-sm',
               // Ring border
-              'ring-1 ring-gray-200/60 dark:ring-white/[0.06]',
+              'ring-1 ring-border',
               // Layered shadow
               'shadow-sm',
               // Hover effects
               'hover:bg-white/90 dark:hover:bg-white/[0.08]',
-              'hover:ring-gray-300/60 dark:hover:ring-white/[0.12]',
+              'hover:ring-border/80',
               'hover:shadow-lg hover:-translate-y-1',
               // Premium spring transition
               'transition-all duration-200',
@@ -292,20 +292,20 @@ export function QuickActions({
                 )}
               />
             </div>
-            <span className="text-sm font-semibold text-gray-700 dark:text-gray-200 text-center">
+            <span className="text-sm font-semibold text-foreground text-center">
               {action.label}
             </span>
 
             {/* Plus icon indicator */}
             <div className={cn(
               'absolute top-3 right-3 w-5 h-5 rounded-full',
-              'bg-gray-100 dark:bg-gray-800',
+              'bg-muted',
               'flex items-center justify-center',
               'opacity-0 group-hover:opacity-100',
               'scale-75 group-hover:scale-100',
               'transition-all duration-200'
             )}>
-              <Plus className="w-3 h-3 text-gray-500 dark:text-gray-400" />
+              <Plus className="w-3 h-3 text-muted-foreground" />
             </div>
           </Link>
         )
@@ -325,37 +325,37 @@ export const projectQuickActions = getProjectActions()
  * Convert role-based quick action to component format
  */
 function convertRoleAction(action: RoleQuickAction): QuickAction {
-  // Map solid color classes to component color scheme
+  // Map solid color classes to semantic color scheme
   const colorMap: Record<string, { color: string; bgColor: string; hoverColor: string }> = {
     'bg-blue-500': {
-      color: 'text-blue-600 dark:text-blue-400',
-      bgColor: 'bg-blue-50 dark:bg-blue-950',
-      hoverColor: 'hover:bg-blue-100 dark:hover:bg-blue-900',
+      color: 'text-info dark:text-info',
+      bgColor: 'bg-info/10 dark:bg-info/20',
+      hoverColor: 'hover:bg-info/20 dark:hover:bg-info/30',
     },
     'bg-green-500': {
-      color: 'text-emerald-600 dark:text-emerald-400',
-      bgColor: 'bg-emerald-50 dark:bg-emerald-950',
-      hoverColor: 'hover:bg-emerald-100 dark:hover:bg-emerald-900',
+      color: 'text-success dark:text-success',
+      bgColor: 'bg-success/10 dark:bg-success/20',
+      hoverColor: 'hover:bg-success/20 dark:hover:bg-success/30',
     },
     'bg-orange-500': {
-      color: 'text-amber-600 dark:text-amber-400',
-      bgColor: 'bg-amber-50 dark:bg-amber-950',
-      hoverColor: 'hover:bg-amber-100 dark:hover:bg-amber-900',
+      color: 'text-warning dark:text-warning',
+      bgColor: 'bg-warning/10 dark:bg-warning/20',
+      hoverColor: 'hover:bg-warning/20 dark:hover:bg-warning/30',
     },
     'bg-purple-500': {
-      color: 'text-purple-600 dark:text-purple-400',
-      bgColor: 'bg-purple-50 dark:bg-purple-950',
-      hoverColor: 'hover:bg-purple-100 dark:hover:bg-purple-900',
+      color: 'text-primary dark:text-primary',
+      bgColor: 'bg-primary/10 dark:bg-primary/20',
+      hoverColor: 'hover:bg-primary/20 dark:hover:bg-primary/30',
     },
     'bg-red-500': {
-      color: 'text-rose-600 dark:text-rose-400',
-      bgColor: 'bg-rose-50 dark:bg-rose-950',
-      hoverColor: 'hover:bg-rose-100 dark:hover:bg-rose-900',
+      color: 'text-destructive dark:text-destructive',
+      bgColor: 'bg-destructive/10 dark:bg-destructive/20',
+      hoverColor: 'hover:bg-destructive/20 dark:hover:bg-destructive/30',
     },
     'bg-gray-500': {
-      color: 'text-gray-600 dark:text-gray-400',
-      bgColor: 'bg-gray-50 dark:bg-gray-950',
-      hoverColor: 'hover:bg-gray-100 dark:hover:bg-gray-900',
+      color: 'text-muted-foreground dark:text-muted-foreground',
+      bgColor: 'bg-muted dark:bg-muted',
+      hoverColor: 'hover:bg-muted/80 dark:hover:bg-muted/80',
     },
   }
 

@@ -305,14 +305,14 @@ export function WarrantyClaims({ projectId, className }: WarrantyClaimsProps) {
   const getStatusBadge = (status: WarrantyClaimStatus) => {
     const config = WARRANTY_CLAIM_STATUSES.find((s) => s.value === status)
     const colorClasses: Record<string, string> = {
-      gray: 'bg-gray-100 text-gray-800',
-      blue: 'bg-blue-100 text-blue-800',
-      yellow: 'bg-yellow-100 text-yellow-800',
-      orange: 'bg-orange-100 text-orange-800',
-      purple: 'bg-purple-100 text-purple-800',
-      green: 'bg-green-100 text-green-800',
-      red: 'bg-red-100 text-red-800',
-      slate: 'bg-slate-100 text-slate-800',
+      gray: 'bg-muted text-muted-foreground',
+      blue: 'bg-info-light text-info-dark dark:bg-info/20 dark:text-info',
+      yellow: 'bg-warning-light text-warning-dark dark:bg-warning/20 dark:text-warning',
+      orange: 'bg-warning-light text-warning-dark dark:bg-warning/20 dark:text-warning',
+      purple: 'bg-primary/10 text-primary dark:bg-primary/20',
+      green: 'bg-success-light text-success-dark dark:bg-success/20 dark:text-success',
+      red: 'bg-error-light text-error-dark dark:bg-error/20 dark:text-error',
+      slate: 'bg-muted text-muted-foreground',
     }
     return (
       <Badge className={colorClasses[config?.color || 'gray']}>
@@ -325,10 +325,10 @@ export function WarrantyClaims({ projectId, className }: WarrantyClaimsProps) {
   const getPriorityBadge = (priority: WarrantyClaimPriority) => {
     const config = WARRANTY_CLAIM_PRIORITIES.find((p) => p.value === priority)
     const colorClasses: Record<string, string> = {
-      slate: 'bg-slate-100 text-slate-800',
-      blue: 'bg-blue-100 text-blue-800',
-      orange: 'bg-orange-100 text-orange-800',
-      red: 'bg-red-100 text-red-800',
+      slate: 'bg-muted text-muted-foreground',
+      blue: 'bg-info-light text-info-dark dark:bg-info/20 dark:text-info',
+      orange: 'bg-warning-light text-warning-dark dark:bg-warning/20 dark:text-warning',
+      red: 'bg-error-light text-error-dark dark:bg-error/20 dark:text-error',
     }
     return (
       <Badge variant="outline" className={colorClasses[config?.color || 'blue']}>
@@ -372,20 +372,20 @@ export function WarrantyClaims({ projectId, className }: WarrantyClaimsProps) {
                 <div className="text-xl font-bold">{statistics.total_claims}</div>
                 <div className="text-xs text-muted-foreground">Total</div>
               </div>
-              <div className="text-center p-2 bg-blue-50 rounded-lg">
-                <div className="text-xl font-bold text-blue-700">{statistics.open_claims}</div>
+              <div className="text-center p-2 bg-info-light dark:bg-info/10 rounded-lg">
+                <div className="text-xl font-bold text-info-dark dark:text-info">{statistics.open_claims}</div>
                 <div className="text-xs text-muted-foreground">Open</div>
               </div>
-              <div className="text-center p-2 bg-yellow-50 rounded-lg">
-                <div className="text-xl font-bold text-yellow-700">{statistics.in_progress_claims}</div>
+              <div className="text-center p-2 bg-warning-light dark:bg-warning/10 rounded-lg">
+                <div className="text-xl font-bold text-warning-dark dark:text-warning">{statistics.in_progress_claims}</div>
                 <div className="text-xs text-muted-foreground">In Progress</div>
               </div>
-              <div className="text-center p-2 bg-green-50 rounded-lg">
-                <div className="text-xl font-bold text-green-700">{statistics.resolved_claims}</div>
+              <div className="text-center p-2 bg-success-light dark:bg-success/10 rounded-lg">
+                <div className="text-xl font-bold text-success-dark dark:text-success">{statistics.resolved_claims}</div>
                 <div className="text-xs text-muted-foreground">Resolved</div>
               </div>
-              <div className="text-center p-2 bg-red-50 rounded-lg">
-                <div className="text-xl font-bold text-red-700">{statistics.denied_claims}</div>
+              <div className="text-center p-2 bg-error-light dark:bg-error/10 rounded-lg">
+                <div className="text-xl font-bold text-error-dark dark:text-error">{statistics.denied_claims}</div>
                 <div className="text-xs text-muted-foreground">Denied</div>
               </div>
             </div>
@@ -654,9 +654,9 @@ export function WarrantyClaims({ projectId, className }: WarrantyClaimsProps) {
                     <h4 className="font-medium mb-2 flex items-center gap-2">
                       Resolution
                       {selectedClaim.resolution_satisfactory ? (
-                        <ThumbsUp className="h-4 w-4 text-green-600" />
+                        <ThumbsUp className="h-4 w-4 text-success" />
                       ) : (
-                        <ThumbsDown className="h-4 w-4 text-red-600" />
+                        <ThumbsDown className="h-4 w-4 text-destructive" />
                       )}
                     </h4>
                     <p className="text-sm text-muted-foreground">{selectedClaim.resolution_description}</p>
@@ -671,7 +671,7 @@ export function WarrantyClaims({ projectId, className }: WarrantyClaimsProps) {
                 {/* Denial */}
                 {selectedClaim.denial_reason && (
                   <div className="border-t pt-4">
-                    <h4 className="font-medium mb-2 text-red-700">Denial Reason</h4>
+                    <h4 className="font-medium mb-2 text-destructive">Denial Reason</h4>
                     <p className="text-sm text-muted-foreground">{selectedClaim.denial_reason}</p>
                   </div>
                 )}

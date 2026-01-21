@@ -276,7 +276,7 @@ export default function TransmittalLogPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold flex items-center gap-2">
+          <h1 className="heading-page flex items-center gap-2">
             <Send className="h-6 w-6" />
             Transmittal Log
           </h1>
@@ -408,7 +408,7 @@ export default function TransmittalLogPage() {
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <Send className="h-12 w-12 text-muted-foreground mb-4" />
-                <h3 className="text-lg font-medium">No transmittals found</h3>
+                <h3 className="heading-card">No transmittals found</h3>
                 <p className="text-muted-foreground mb-4">
                   {search || statusFilter !== 'all' || dateRange !== 'all'
                     ? 'Try adjusting your filters'
@@ -449,7 +449,7 @@ export default function TransmittalLogPage() {
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <Building2 className="h-12 w-12 text-muted-foreground mb-4" />
-                <h3 className="text-lg font-medium">No transmittals found</h3>
+                <h3 className="heading-card">No transmittals found</h3>
                 <p className="text-muted-foreground">
                   Transmittals grouped by company will appear here
                 </p>

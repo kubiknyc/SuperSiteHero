@@ -113,8 +113,8 @@ export function DailyReportEditPage() {
       <SmartLayout title="Edit Daily Report">
         <div className="p-6">
           <div className="text-center py-12">
-            <AlertCircle className="h-12 w-12 text-orange-500 mx-auto mb-4" />
-            <p className="text-orange-600 font-semibold">Cannot edit submitted reports</p>
+            <AlertCircle className="h-12 w-12 text-warning mx-auto mb-4" />
+            <p className="text-warning-dark font-semibold">Cannot edit submitted reports</p>
             <p className="text-secondary mt-2">Only draft reports can be edited</p>
           </div>
         </div>

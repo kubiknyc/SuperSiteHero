@@ -528,7 +528,7 @@ function CodeBlock({ language, code }: { language: string; code: string }) {
                 onClick={handleCopy}
               >
                 {copied ? (
-                  <Check className="h-3 w-3 text-green-400" />
+                  <Check className="h-3 w-3 text-success" />
                 ) : (
                   <Copy className="h-3 w-3" />
                 )}
@@ -592,7 +592,7 @@ function MessageActions({
               onClick={onCopy}
             >
               {copied ? (
-                <Check className="h-3 w-3 text-green-500" />
+                <Check className="h-3 w-3 text-success" />
               ) : (
                 <Copy className="h-3 w-3" />
               )}
@@ -613,7 +613,7 @@ function MessageActions({
                   size="icon"
                   className={cn(
                     'h-6 w-6',
-                    feedbackGiven === 'positive' && 'text-green-500'
+                    feedbackGiven === 'positive' && 'text-success'
                   )}
                   onClick={() => onFeedback('positive')}
                   disabled={feedbackGiven !== null}
@@ -633,7 +633,7 @@ function MessageActions({
                   size="icon"
                   className={cn(
                     'h-6 w-6',
-                    feedbackGiven === 'negative' && 'text-red-500'
+                    feedbackGiven === 'negative' && 'text-destructive'
                   )}
                   onClick={() => onFeedback('negative')}
                   disabled={feedbackGiven !== null}

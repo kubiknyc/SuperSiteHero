@@ -60,8 +60,8 @@ export const ActionItemRow = memo(function ActionItemRow({ item }: ActionItemRow
 
   return (
     <Card className={cn(
-      item.urgency_status === 'overdue' && 'border-red-200 bg-error-light/30',
-      item.escalation_level > 0 && 'border-orange-200'
+      item.urgency_status === 'overdue' && 'border-error bg-error-light/30',
+      item.escalation_level > 0 && 'border-warning'
     )}>
       <CardContent className="py-4">
         <div className="flex items-start gap-4">
@@ -70,11 +70,11 @@ export const ActionItemRow = memo(function ActionItemRow({ item }: ActionItemRow
             {item.status === 'completed' ? (
               <CheckCircle className="h-5 w-5 text-success" />
             ) : item.status === 'in_progress' ? (
-              <div className="h-5 w-5 rounded-full border-2 border-blue-500 flex items-center justify-center">
-                <div className="h-2.5 w-2.5 rounded-full bg-blue-500" />
+              <div className="h-5 w-5 rounded-full border-2 border-info flex items-center justify-center">
+                <div className="h-2.5 w-2.5 rounded-full bg-info" />
               </div>
             ) : (
-              <Circle className="h-5 w-5 text-gray-300" />
+              <Circle className="h-5 w-5 text-muted-foreground" />
             )}
           </div>
 
@@ -146,9 +146,9 @@ export const ActionItemRow = memo(function ActionItemRow({ item }: ActionItemRow
                   variant={item.urgency_status === 'overdue' ? 'destructive' : 'secondary'}
                   className={cn(
                     'text-xs',
-                    item.urgency_status === 'due_today' && 'bg-orange-100 text-orange-800',
-                    item.urgency_status === 'due_soon' && 'bg-warning-light text-yellow-800',
-                    item.urgency_status === 'on_track' && 'bg-success-light text-green-800'
+                    item.urgency_status === 'due_today' && 'bg-warning-light text-warning-dark dark:bg-warning/20 dark:text-warning',
+                    item.urgency_status === 'due_soon' && 'bg-warning-light text-warning-dark dark:bg-warning/20 dark:text-warning',
+                    item.urgency_status === 'on_track' && 'bg-success-light text-success-dark dark:bg-success/20 dark:text-success'
                   )}
                 >
                   {urgencyConfig.label}
@@ -174,7 +174,7 @@ export const ActionItemRow = memo(function ActionItemRow({ item }: ActionItemRow
 
               {/* Escalation */}
               {item.escalation_level > 0 && (
-                <Badge variant="secondary" className="text-xs bg-orange-100 text-orange-800">
+                <Badge variant="secondary" className="text-xs bg-warning-light text-warning-dark dark:bg-warning/20 dark:text-warning">
                   Escalated L{item.escalation_level}
                 </Badge>
               )}

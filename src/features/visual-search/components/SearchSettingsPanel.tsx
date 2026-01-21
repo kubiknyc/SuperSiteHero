@@ -69,7 +69,7 @@ export function SearchSettingsPanel({
   // Calculate estimated search time based on sheet count
   // Rough estimate: ~2 seconds per sheet for AI visual search
   const estimatedSearchTime = useMemo(() => {
-    if (selectedSheetCount === 0) return null
+    if (selectedSheetCount === 0) {return null}
 
     // Base time + time per sheet
     const baseTimeSeconds = 3
@@ -86,17 +86,17 @@ export function SearchSettingsPanel({
 
   // Get tolerance description based on value
   const getToleranceDescription = (value: number): string => {
-    if (value >= 0.95) return 'Very strict - Only near-exact matches'
-    if (value >= 0.85) return 'Strict - High confidence matches only'
-    if (value >= 0.75) return 'Balanced - Good mix of precision and recall'
-    if (value >= 0.65) return 'Relaxed - More results, may include variations'
+    if (value >= 0.95) {return 'Very strict - Only near-exact matches'}
+    if (value >= 0.85) {return 'Strict - High confidence matches only'}
+    if (value >= 0.75) {return 'Balanced - Good mix of precision and recall'}
+    if (value >= 0.65) {return 'Relaxed - More results, may include variations'}
     return 'Very relaxed - Many results, lower confidence'
   }
 
   // Get tolerance badge variant based on value
   const getToleranceBadgeVariant = (value: number): 'default' | 'secondary' | 'outline' => {
-    if (value >= 0.85) return 'default'
-    if (value >= 0.70) return 'secondary'
+    if (value >= 0.85) {return 'default'}
+    if (value >= 0.70) {return 'secondary'}
     return 'outline'
   }
 
@@ -272,7 +272,7 @@ export function SearchSettingsPanel({
           </div>
 
           {selectedSheetCount > 50 && (
-            <div className="mt-3 flex items-start gap-2 p-2 bg-amber-50 dark:bg-amber-950/30 rounded text-xs text-amber-700 dark:text-amber-400">
+            <div className="mt-3 flex items-start gap-2 p-2 bg-warning-light dark:bg-warning/20 rounded text-xs text-warning-dark dark:text-warning">
               <Info className="h-3.5 w-3.5 flex-shrink-0 mt-0.5" />
               <span>
                 Searching many sheets may take several minutes. Consider narrowing

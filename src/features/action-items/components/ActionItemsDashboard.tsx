@@ -211,7 +211,7 @@ export function ActionItemsDashboard({ projectId }: ActionItemsDashboardProps) {
               <TabsTrigger value="overdue" className="text-error">
                 Overdue ({overdueItems?.length || 0})
               </TabsTrigger>
-              <TabsTrigger value="due-soon" className="text-orange-600">
+              <TabsTrigger value="due-soon" className="text-warning">
                 Due Soon ({dueSoonItems?.length || 0})
               </TabsTrigger>
               <TabsTrigger value="escalated">

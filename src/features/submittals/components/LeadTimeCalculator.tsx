@@ -112,10 +112,10 @@ interface Holiday {
 
 // Review cycle configuration
 const DEFAULT_REVIEW_CYCLES: ReviewCycleItem[] = [
-  { id: 'gc', name: 'GC Review', entity: 'General Contractor', days: 3, color: 'bg-blue-500' },
-  { id: 'architect', name: 'Architect Review', entity: 'Architect', days: 7, color: 'bg-purple-500' },
-  { id: 'engineer', name: 'Engineer Review', entity: 'Engineer', days: 5, color: 'bg-green-500' },
-  { id: 'owner', name: 'Owner Review', entity: 'Owner', days: 0, color: 'bg-orange-500' },
+  { id: 'gc', name: 'GC Review', entity: 'General Contractor', days: 3, color: 'bg-info' },
+  { id: 'architect', name: 'Architect Review', entity: 'Architect', days: 7, color: 'bg-primary' },
+  { id: 'engineer', name: 'Engineer Review', entity: 'Engineer', days: 5, color: 'bg-success' },
+  { id: 'owner', name: 'Owner Review', entity: 'Owner', days: 0, color: 'bg-warning' },
 ]
 
 const COMMON_LEAD_TIMES = [
@@ -270,10 +270,10 @@ function MiniCalendar({
               className={cn(
                 'text-xs py-1 rounded transition-colors',
                 isWeekendDay && 'text-muted-foreground',
-                isHoliday && 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400',
+                isHoliday && 'bg-warning-light text-warning-dark dark:bg-warning/20 dark:text-warning',
                 isToday && !isRequired && !isSubmitBy && 'ring-1 ring-primary',
-                isRequired && 'bg-red-500 text-white font-bold',
-                isSubmitBy && 'bg-green-500 text-white font-bold'
+                isRequired && 'bg-error text-white font-bold',
+                isSubmitBy && 'bg-success text-white font-bold'
               )}
               title={
                 isRequired
@@ -293,15 +293,15 @@ function MiniCalendar({
 
       <div className="flex items-center gap-4 mt-3 pt-3 border-t border-border text-xs">
         <div className="flex items-center gap-1">
-          <div className="w-3 h-3 rounded bg-green-500" />
+          <div className="w-3 h-3 rounded bg-success" />
           <span className="text-muted-foreground">Submit by</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-3 h-3 rounded bg-red-500" />
+          <div className="w-3 h-3 rounded bg-error" />
           <span className="text-muted-foreground">Required</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-3 h-3 rounded bg-amber-100 dark:bg-amber-900/50" />
+          <div className="w-3 h-3 rounded bg-warning-light dark:bg-warning/50" />
           <span className="text-muted-foreground">Holiday</span>
         </div>
       </div>
@@ -438,14 +438,14 @@ export function LeadTimeCalculator({
         )
       case 'warning':
         return (
-          <Badge variant="secondary" className="gap-1 bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
+          <Badge variant="secondary" className="gap-1 bg-warning-light text-warning-dark dark:bg-warning/20 dark:text-warning">
             <AlertTriangle className="h-3 w-3" />
             Due Soon
           </Badge>
         )
       case 'safe':
         return (
-          <Badge variant="secondary" className="gap-1 bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300">
+          <Badge variant="secondary" className="gap-1 bg-success-light text-success-dark dark:bg-success/20 dark:text-success">
             <CheckCircle2 className="h-3 w-3" />
             On Track
           </Badge>
@@ -477,8 +477,8 @@ export function LeadTimeCalculator({
                 <span className={cn('font-medium',
                   calculation.status === 'overdue' && 'text-destructive',
                   calculation.status === 'critical' && 'text-destructive',
-                  calculation.status === 'warning' && 'text-amber-600',
-                  calculation.status === 'safe' && 'text-green-600'
+                  calculation.status === 'warning' && 'text-warning',
+                  calculation.status === 'safe' && 'text-success'
                 )}>
                   {format(calculation.submitByDate, 'MMM d')}
                 </span>
@@ -631,8 +631,8 @@ export function LeadTimeCalculator({
                     'text-lg font-bold',
                     calculation.status === 'overdue' && 'text-destructive',
                     calculation.status === 'critical' && 'text-destructive',
-                    calculation.status === 'warning' && 'text-amber-600',
-                    calculation.status === 'safe' && 'text-green-600'
+                    calculation.status === 'warning' && 'text-warning',
+                    calculation.status === 'safe' && 'text-success'
                   )}>
                     {format(calculation.submitByDate, 'MMM d, yyyy')}
                   </span>
@@ -644,7 +644,7 @@ export function LeadTimeCalculator({
                       {Math.abs(calculation.daysUntilDeadline)} days overdue!
                     </p>
                   ) : calculation.daysUntilDeadline === 0 ? (
-                    <p className="text-amber-600 font-medium">Due today!</p>
+                    <p className="text-warning font-medium">Due today!</p>
                   ) : (
                     <p className="text-muted-foreground">
                       <span className="font-semibold text-foreground">
@@ -695,7 +695,7 @@ export function LeadTimeCalculator({
                   </div>
                   <div className="p-2 bg-background rounded">
                     <p className="text-muted-foreground">Holidays</p>
-                    <p className={cn('font-medium', calculation.holidaysInRange > 0 && 'text-amber-600')}>
+                    <p className={cn('font-medium', calculation.holidaysInRange > 0 && 'text-warning')}>
                       {calculation.holidaysInRange}
                     </p>
                   </div>
@@ -703,10 +703,10 @@ export function LeadTimeCalculator({
 
                 {/* Holidays Warning */}
                 {calculation.holidaysInRange > 0 && (
-                  <div className="flex items-start gap-2 p-3 rounded-lg bg-amber-50 border border-amber-200 dark:bg-amber-900/20 dark:border-amber-800">
-                    <Info className="h-4 w-4 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div className="flex items-start gap-2 p-3 rounded-lg bg-warning-light border border-warning/30 dark:bg-warning/20 dark:border-warning/30">
+                    <Info className="h-4 w-4 text-warning flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="text-sm font-medium text-amber-800 dark:text-amber-400">
+                      <p className="text-sm font-medium text-warning-dark dark:text-warning">
                         {calculation.holidaysInRange} holiday{calculation.holidaysInRange !== 1 ? 's' : ''} in this period
                       </p>
                       <ul className="mt-1 space-y-0.5">
@@ -717,12 +717,12 @@ export function LeadTimeCalculator({
                           })
                           .slice(0, 3)
                           .map(h => (
-                            <li key={h.id} className="text-xs text-amber-700 dark:text-amber-300">
+                            <li key={h.id} className="text-xs text-warning-dark dark:text-warning">
                               {format(new Date(h.holiday_date), 'MMM d')}: {h.name}
                             </li>
                           ))}
                         {calculation.holidaysInRange > 3 && (
-                          <li className="text-xs text-amber-700 dark:text-amber-300">
+                          <li className="text-xs text-warning-dark dark:text-warning">
                             +{calculation.holidaysInRange - 3} more...
                           </li>
                         )}
@@ -746,24 +746,24 @@ export function LeadTimeCalculator({
               <div className="space-y-4">
                 {/* Summary */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 rounded-lg bg-green-50 border border-green-200 dark:bg-green-900/20 dark:border-green-800">
+                  <div className="p-4 rounded-lg bg-success-light border border-success/30 dark:bg-success/20 dark:border-success/30">
                     <div className="flex items-center gap-2 mb-2">
-                      <CheckCircle2 className="h-5 w-5 text-green-600" />
+                      <CheckCircle2 className="h-5 w-5 text-success" />
                       <span className="font-medium text-foreground">Submit By</span>
                     </div>
-                    <p className="text-xl font-bold text-green-600">
+                    <p className="text-xl font-bold text-success">
                       {format(calculation.submitByDate, 'MMM d, yyyy')}
                     </p>
                     <p className="text-sm text-muted-foreground mt-1">
                       {format(calculation.submitByDate, 'EEEE')}
                     </p>
                   </div>
-                  <div className="p-4 rounded-lg bg-red-50 border border-red-200 dark:bg-red-900/20 dark:border-red-800">
+                  <div className="p-4 rounded-lg bg-error-light border border-error/30 dark:bg-error/20 dark:border-error/30">
                     <div className="flex items-center gap-2 mb-2">
-                      <AlertTriangle className="h-5 w-5 text-red-600" />
+                      <AlertTriangle className="h-5 w-5 text-error" />
                       <span className="font-medium text-foreground">Required On-Site</span>
                     </div>
-                    <p className="text-xl font-bold text-red-600">
+                    <p className="text-xl font-bold text-error">
                       {format(calculation.requiredOnSite, 'MMM d, yyyy')}
                     </p>
                     <p className="text-sm text-muted-foreground mt-1">
@@ -797,7 +797,7 @@ export function LeadTimeCalculator({
                     <p className="text-xs text-muted-foreground">Working Days</p>
                   </div>
                   <div className="p-3 rounded-lg bg-muted/50">
-                    <p className={cn('text-2xl font-bold', calculation.holidaysInRange > 0 ? 'text-amber-600' : 'text-foreground')}>
+                    <p className={cn('text-2xl font-bold', calculation.holidaysInRange > 0 ? 'text-warning' : 'text-foreground')}>
                       {calculation.holidaysInRange}
                     </p>
                     <p className="text-xs text-muted-foreground">Holidays</p>

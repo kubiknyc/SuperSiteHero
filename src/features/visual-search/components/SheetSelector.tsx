@@ -81,7 +81,7 @@ export function SheetSelector({
 
   // Filter sheets by search term and discipline
   const filteredSheets = useMemo(() => {
-    if (!sheets) return []
+    if (!sheets) {return []}
 
     let result = sheets
 
@@ -106,7 +106,7 @@ export function SheetSelector({
   // Get sheets for a specific discipline
   const getSheetsByDiscipline = useCallback(
     (discipline: DrawingDiscipline) => {
-      if (!sheets) return []
+      if (!sheets) {return []}
       return sheets.filter((sheet) => sheet.discipline === discipline)
     },
     [sheets]
@@ -114,7 +114,7 @@ export function SheetSelector({
 
   // Count sheets per discipline for quick select buttons
   const disciplineCounts = useMemo(() => {
-    if (!sheets) return new Map<DrawingDiscipline, number>()
+    if (!sheets) {return new Map<DrawingDiscipline, number>()}
     const counts = new Map<DrawingDiscipline, number>()
     for (const sheet of sheets) {
       if (sheet.discipline) {
@@ -171,7 +171,7 @@ export function SheetSelector({
 
   // Check if all visible sheets are selected
   const allVisibleSelected = useMemo(() => {
-    if (filteredSheets.length === 0) return false
+    if (filteredSheets.length === 0) {return false}
     return filteredSheets.every((sheet) => selectedSheetIds.has(sheet.id))
   }, [filteredSheets, selectedSheetIds])
 
@@ -248,7 +248,7 @@ export function SheetSelector({
           </span>
           {QUICK_SELECT_DISCIPLINES.map((discipline) => {
             const count = disciplineCounts.get(discipline) || 0
-            if (count === 0) return null
+            if (count === 0) {return null}
             return (
               <Button
                 key={discipline}

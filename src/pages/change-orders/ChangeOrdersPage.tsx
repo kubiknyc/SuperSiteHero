@@ -125,11 +125,11 @@ export function ChangeOrdersPage() {
                 {getChangeOrderStatusLabel(co.status)}
               </Badge>
               {co.is_pco ? (
-                <Badge variant="outline" className="border-orange-300 text-orange-700 bg-orange-50">
+                <Badge variant="outline" className="border-warning text-warning-dark bg-warning-light">
                   PCO
                 </Badge>
               ) : (
-                <Badge variant="outline" className="border-green-300 text-success-dark bg-success-light">
+                <Badge variant="outline" className="border-success text-success-dark bg-success-light">
                   CO
                 </Badge>
               )}
@@ -181,8 +181,8 @@ export function ChangeOrdersPage() {
             {/* Ball-in-Court Indicator */}
             {co.ball_in_court_user && (
               <div className="mt-2 flex items-center gap-2 text-sm">
-                <User className="h-4 w-4 text-orange-500" />
-                <span className="text-orange-700 font-medium">
+                <User className="h-4 w-4 text-warning" />
+                <span className="text-warning-dark font-medium">
                   Ball in court: {co.ball_in_court_user.full_name}
                 </span>
                 {co.ball_in_court_role && (
@@ -240,17 +240,17 @@ export function ChangeOrdersPage() {
               </CardContent>
             </Card>
 
-            <Card className="border-orange-200 bg-orange-50">
+            <Card className="border-warning bg-warning-light">
               <CardContent className="pt-4">
-                <div className="flex items-center gap-2 text-orange-700 mb-1">
+                <div className="flex items-center gap-2 text-warning-dark mb-1">
                   <AlertTriangle className="h-4 w-4" />
                   <span className="text-sm">PCOs</span>
                 </div>
-                <p className="text-2xl font-bold text-orange-700">{statistics.pco_count}</p>
+                <p className="text-2xl font-bold text-warning-dark">{statistics.pco_count}</p>
               </CardContent>
             </Card>
 
-            <Card className="border-green-200 bg-success-light">
+            <Card className="border-success bg-success-light">
               <CardContent className="pt-4">
                 <div className="flex items-center gap-2 text-success-dark mb-1">
                   <CheckCircle className="h-4 w-4" />
@@ -290,13 +290,13 @@ export function ChangeOrdersPage() {
         {statistics && (statistics.pending_internal > 0 || statistics.pending_owner > 0) && (
           <div className="flex gap-4">
             {statistics.pending_internal > 0 && (
-              <Badge variant="outline" className="px-3 py-1 border-orange-300 bg-orange-50 text-orange-700">
+              <Badge variant="outline" className="px-3 py-1 border-warning bg-warning-light text-warning-dark">
                 <Clock className="h-3 w-3 mr-1" />
                 {statistics.pending_internal} pending internal approval
               </Badge>
             )}
             {statistics.pending_owner > 0 && (
-              <Badge variant="outline" className="px-3 py-1 border-purple-300 bg-purple-50 text-purple-700">
+              <Badge variant="outline" className="px-3 py-1 border-primary bg-primary/10 text-primary">
                 <Clock className="h-3 w-3 mr-1" />
                 {statistics.pending_owner} pending owner approval
               </Badge>
@@ -413,10 +413,10 @@ export function ChangeOrdersPage() {
 
         {/* Error state */}
         {error && (
-          <Card className="border-red-200 bg-error-light">
+          <Card className="border-error bg-error-light">
             <CardContent className="py-8 text-center">
               <AlertCircle className="h-8 w-8 mx-auto text-error mb-4" />
-              <h3 className="text-lg font-medium text-red-800 mb-2 heading-subsection">Error Loading Change Orders</h3>
+              <h3 className="text-lg font-medium text-error-dark mb-2 heading-subsection">Error Loading Change Orders</h3>
               <p className="text-error">{error.message}</p>
             </CardContent>
           </Card>
@@ -426,7 +426,7 @@ export function ChangeOrdersPage() {
         {!isLoading && !error && (!changeOrders || changeOrders.length === 0) && (
           <Card className="border-dashed">
             <CardContent className="py-12 text-center">
-              <FileEdit className="h-12 w-12 mx-auto text-gray-300 mb-4" />
+              <FileEdit className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium text-foreground mb-2 heading-subsection">
                 {activeTab === 'pco'
                   ? 'No PCOs found'

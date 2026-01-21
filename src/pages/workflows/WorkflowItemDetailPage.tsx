@@ -44,9 +44,9 @@ export function WorkflowItemDetailPage() {
     return (
       <SmartLayout title="Workflow Item">
         <div className="p-6">
-          <Card className="border-red-200 bg-error-light">
+          <Card className="border-destructive/20 dark:border-destructive/30 bg-error-light">
             <CardContent className="pt-6">
-              <p className="text-red-800">Invalid workflow item ID</p>
+              <p className="text-destructive dark:text-destructive">Invalid workflow item ID</p>
             </CardContent>
           </Card>
         </div>
@@ -70,9 +70,9 @@ export function WorkflowItemDetailPage() {
     return (
       <SmartLayout title="Workflow Item">
         <div className="p-6">
-          <Card className="border-red-200 bg-error-light">
+          <Card className="border-destructive/20 dark:border-destructive/30 bg-error-light">
             <CardContent className="pt-6">
-              <p className="text-red-800">
+              <p className="text-destructive dark:text-destructive">
                 {error instanceof Error ? error.message : 'Failed to load workflow item'}
               </p>
             </CardContent>
@@ -224,7 +224,7 @@ export function WorkflowItemDetailPage() {
             {item.schedule_impact !== null && (
               <div>
                 <p className="text-sm text-secondary mb-1">Schedule Impact</p>
-                <p className="text-2xl font-bold text-orange-600">
+                <p className="text-2xl font-bold text-warning dark:text-warning">
                   {item.schedule_impact} {item.schedule_impact === 1 ? 'day' : 'days'}
                 </p>
               </div>

@@ -23,14 +23,14 @@ import {
 import { cn } from '@/lib/utils'
 
 const contactTypeColors: Record<string, string> = {
-  subcontractor: 'bg-info-light text-blue-800',
-  architect: 'bg-purple-100 text-purple-800',
-  engineer: 'bg-success-light text-green-800',
-  inspector: 'bg-orange-100 text-orange-800',
-  supplier: 'bg-warning-light text-yellow-800',
-  owner: 'bg-error-light text-red-800',
-  consultant: 'bg-indigo-100 text-indigo-800',
-  other: 'bg-muted text-foreground',
+  subcontractor: 'bg-info-light text-info-dark dark:bg-info/20 dark:text-info',
+  architect: 'bg-muted text-muted-foreground dark:bg-muted/50',
+  engineer: 'bg-success-light text-success-dark dark:bg-success/20 dark:text-success',
+  inspector: 'bg-warning-light text-warning-dark dark:bg-warning/20 dark:text-warning',
+  supplier: 'bg-warning-light text-warning-dark dark:bg-warning/20 dark:text-warning',
+  owner: 'bg-error-light text-error-dark dark:bg-error/20 dark:text-error',
+  consultant: 'bg-info-light text-info-dark dark:bg-info/20 dark:text-info',
+  other: 'bg-muted text-foreground dark:bg-muted/50',
 }
 
 export function ContactDetailPage() {
@@ -76,7 +76,7 @@ export function ContactDetailPage() {
         <div className="p-6">
           <Card>
             <CardContent className="p-12 text-center">
-              <AlertCircle className="h-12 w-12 text-red-400 mx-auto mb-4" />
+              <AlertCircle className="h-12 w-12 text-error mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-foreground mb-2 heading-subsection">Contact Not Found</h3>
               <p className="text-secondary mb-4">{error?.message || 'The contact could not be loaded'}</p>
               <Button onClick={() => navigate('/contacts')}>
@@ -106,7 +106,7 @@ export function ContactDetailPage() {
               <div className="flex items-center gap-2">
                 <h1 className="text-3xl font-bold text-foreground heading-page">{displayName}</h1>
                 {contact.is_primary && (
-                  <Star className="h-5 w-5 text-warning fill-yellow-500" aria-label="Primary Contact" />
+                  <Star className="h-5 w-5 text-warning fill-warning" aria-label="Primary Contact" />
                 )}
               </div>
               {contact.title && <p className="text-secondary mt-1">{contact.title}</p>}
@@ -223,8 +223,8 @@ export function ContactDetailPage() {
             {/* Address */}
             {(contact.address || contact.city || contact.state || contact.zip) && (
               <div className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-purple-100">
-                  <MapPin className="h-5 w-5 text-purple-600" />
+                <div className="p-2 rounded-lg bg-muted dark:bg-muted/50">
+                  <MapPin className="h-5 w-5 text-muted-foreground" />
                 </div>
                 <div>
                   <p className="text-sm text-secondary">Address</p>

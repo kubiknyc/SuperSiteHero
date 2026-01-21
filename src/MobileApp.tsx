@@ -21,10 +21,7 @@ import { LoginPageV2 as LoginPage } from './pages/auth/LoginPageV2';
 import { SignupPageV2 as SignupPage } from './pages/auth/SignupPageV2';
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/auth/ResetPasswordPage';
-
-// MFA pages
-const MFASetupPage = lazy(() => import('./pages/auth/MFASetupPage').then(m => ({ default: m.MFASetupPage })));
-const MFAVerifyPage = lazy(() => import('./pages/auth/MFAVerifyPage').then(m => ({ default: m.MFAVerifyPage })));
+import { AuthCallbackPage } from './pages/auth/AuthCallbackPage';
 
 // Registration flow
 import { CompanyRegistration } from './features/registration/CompanyRegistration';
@@ -97,10 +94,7 @@ export function MobileApp() {
         <Route path="/register" element={<CompanyRegistration />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
-
-        {/* MFA Routes */}
-        <Route path="/auth/mfa-setup" element={<ProtectedRoute><MFASetupPage /></ProtectedRoute>} />
-        <Route path="/auth/mfa-verify" element={<MFAVerifyPage />} />
+        <Route path="/auth/callback" element={<AuthCallbackPage />} />
 
         {/* Registration routes */}
         <Route path="/pending-approval" element={<ProtectedRoute><PendingApproval /></ProtectedRoute>} />

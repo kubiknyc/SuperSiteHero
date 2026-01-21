@@ -81,14 +81,14 @@ import type { PhotoEntryV2, PhotoCategory } from '@/types/daily-reports-v2';
 import { cn } from '@/lib/utils';
 
 const PHOTO_CATEGORIES: { value: PhotoCategory; label: string; color: string }[] = [
-  { value: 'progress', label: 'Progress', color: 'bg-info-light text-primary-hover' },
-  { value: 'safety', label: 'Safety', color: 'bg-error-light text-error-dark' },
-  { value: 'quality', label: 'Quality', color: 'bg-success-light text-success-dark' },
-  { value: 'delivery', label: 'Delivery', color: 'bg-orange-100 text-orange-700' },
-  { value: 'weather', label: 'Weather', color: 'bg-cyan-100 text-cyan-700' },
-  { value: 'issue', label: 'Issue', color: 'bg-warning-light text-yellow-700' },
-  { value: 'inspection', label: 'Inspection', color: 'bg-purple-100 text-purple-700' },
-  { value: 'general', label: 'General', color: 'bg-muted text-secondary' },
+  { value: 'progress', label: 'Progress', color: 'bg-info-light dark:bg-info/20 text-info-dark dark:text-info' },
+  { value: 'safety', label: 'Safety', color: 'bg-error-light dark:bg-error/20 text-error-dark dark:text-error' },
+  { value: 'quality', label: 'Quality', color: 'bg-success-light dark:bg-success/20 text-success-dark dark:text-success' },
+  { value: 'delivery', label: 'Delivery', color: 'bg-warning-light dark:bg-warning/20 text-warning-dark dark:text-warning' },
+  { value: 'weather', label: 'Weather', color: 'bg-info-light dark:bg-info/20 text-info-dark dark:text-info' },
+  { value: 'issue', label: 'Issue', color: 'bg-warning-light dark:bg-warning/20 text-warning-dark dark:text-warning' },
+  { value: 'inspection', label: 'Inspection', color: 'bg-primary/10 dark:bg-primary/20 text-primary dark:text-primary' },
+  { value: 'general', label: 'General', color: 'bg-muted text-muted-foreground' },
 ];
 
 interface PhotosSectionProps {
@@ -425,8 +425,8 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
           className="w-full flex items-center justify-between p-4 hover:bg-surface transition-colors"
         >
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-pink-100 rounded-lg">
-              <Camera className="h-5 w-5 text-pink-600" />
+            <div className="p-2 bg-primary/10 dark:bg-primary/20 rounded-lg">
+              <Camera className="h-5 w-5 text-primary" />
             </div>
             <div className="text-left">
               <CardTitle className="text-base flex items-center gap-2">
@@ -462,7 +462,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                         id="auto-gps"
                         checked={autoGpsEnabled}
                         onCheckedChange={setAutoGpsEnabled}
-                        className="data-[state=checked]:bg-green-500"
+                        className="data-[state=checked]:bg-success"
                         aria-label="Toggle auto GPS"
                       />
                       <Label htmlFor="auto-gps" className="text-sm text-secondary cursor-pointer">
@@ -512,8 +512,8 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
 
               <div
                 className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${isProcessing || isUploading
-                    ? 'border-blue-300 bg-blue-50 cursor-wait'
-                    : 'border-input hover:border-blue-400 hover:bg-blue-50 cursor-pointer'
+                    ? 'border-primary/30 bg-primary/5 cursor-wait'
+                    : 'border-input hover:border-primary/50 hover:bg-primary/5 cursor-pointer'
                   }`}
                 onClick={() => !isProcessing && !isUploading && fileInputRef.current?.click()}
                 role="button"
@@ -529,7 +529,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                   <>
                     <Loader2 className="h-8 w-8 mx-auto mb-2 text-primary animate-spin" />
                     <p className="text-sm text-primary">Processing photos...</p>
-                    <p className="text-xs text-blue-400">Compressing and extracting metadata</p>
+                    <p className="text-xs text-primary/70">Compressing and extracting metadata</p>
                   </>
                 ) : isUploading ? (
                   <>
@@ -643,7 +643,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                         key={photo.id}
                         className={cn(
                           'relative group rounded-lg overflow-hidden border transition-all',
-                          isFailed ? 'border-red-300' : isPending ? 'border-yellow-300' : 'border-border',
+                          isFailed ? 'border-error/50' : isPending ? 'border-warning/50' : 'border-border',
                           isSelected && 'ring-2 ring-primary ring-offset-2',
                           multiSelectMode && 'cursor-pointer'
                         )}
@@ -693,14 +693,14 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                             )}
                             {isPending && !isCurrentlyUploading && (
                               <>
-                                <Upload className="h-5 w-5 text-yellow-400 mb-1" />
-                                <span className="text-xs text-yellow-400">Pending upload</span>
+                                <Upload className="h-5 w-5 text-warning mb-1" />
+                                <span className="text-xs text-warning">Pending upload</span>
                               </>
                             )}
                             {isFailed && (
                               <>
-                                <AlertCircle className="h-5 w-5 text-red-400 mb-1" />
-                                <span className="text-xs text-red-400">Upload failed</span>
+                                <AlertCircle className="h-5 w-5 text-error mb-1" />
+                                <span className="text-xs text-error">Upload failed</span>
                               </>
                             )}
                           </div>
@@ -972,7 +972,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                       {safetyIncidents.map((incident) => (
                         <SelectItem key={`safety_incident:${incident.id}`} value={`safety_incident:${incident.id}`}>
                           <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-red-500" />
+                            <span className="w-2 h-2 rounded-full bg-error" />
                             {incident.incident_type} - {incident.description?.substring(0, 30) || 'Incident'}
                             {incident.description && incident.description.length > 30 && '...'}
                           </div>
@@ -990,7 +990,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                       {inspections.map((inspection) => (
                         <SelectItem key={`inspection:${inspection.id}`} value={`inspection:${inspection.id}`}>
                           <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-purple-500" />
+                            <span className="w-2 h-2 rounded-full bg-primary" />
                             {inspection.inspection_type} - {inspection.result || 'Pending'}
                           </div>
                         </SelectItem>
@@ -1007,7 +1007,7 @@ export function PhotosSection({ expanded, onToggle }: PhotosSectionProps) {
                       {deliveries.map((delivery) => (
                         <SelectItem key={`delivery:${delivery.id}`} value={`delivery:${delivery.id}`}>
                           <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-orange-500" />
+                            <span className="w-2 h-2 rounded-full bg-warning" />
                             {delivery.material_description?.substring(0, 40) || 'Delivery'}
                             {delivery.material_description && delivery.material_description.length > 40 && '...'}
                           </div>

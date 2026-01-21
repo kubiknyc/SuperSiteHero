@@ -66,7 +66,7 @@ export function usePhotoUploadManager(): UsePhotoUploadManagerReturn {
     (photoId: string, update: Partial<UploadProgress>) => {
       setUploadProgress((prev) => ({
         ...prev,
-        // eslint-disable-next-line security/detect-object-injection
+         
         [photoId]: {
           ...prev[photoId],
           photoId,

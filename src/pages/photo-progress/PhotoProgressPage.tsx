@@ -153,7 +153,7 @@ export function PhotoProgressPage() {
         <div className="p-6">
           <div className="text-center py-12 bg-card rounded-lg border">
             <Camera className="h-12 w-12 text-gray-300 mx-auto" />
-            <h3 className="text-lg font-medium text-foreground mt-4 heading-subsection">
+            <h3 className="heading-card text-foreground mt-4">
               No Projects Found
             </h3>
             <p className="text-muted mt-2">
@@ -171,7 +171,7 @@ export function PhotoProgressPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-foreground heading-page">Photo Progress</h1>
+            <h1 className="heading-page text-foreground">Photo Progress</h1>
             <p className="text-muted mt-1">
               Track visual project progress with time-lapse photo comparisons
             </p>
@@ -305,7 +305,7 @@ export function PhotoProgressPage() {
                 ) : locations.length === 0 ? (
                   <div className="text-center py-12 bg-card rounded-lg border">
                     <MapPin className="h-12 w-12 text-gray-300 mx-auto" />
-                    <h3 className="text-lg font-medium text-foreground mt-4">No Locations Found</h3>
+                    <h3 className="heading-card text-foreground mt-4">No Locations Found</h3>
                     <p className="text-muted mt-2">
                       {locationSearch || locationFrequency !== 'all'
                         ? 'Try adjusting your filters'
@@ -366,7 +366,7 @@ export function PhotoProgressPage() {
                 ) : photos.length === 0 ? (
                   <div className="text-center py-12 bg-card rounded-lg border">
                     <Image className="h-12 w-12 text-gray-300 mx-auto" />
-                    <h3 className="text-lg font-medium text-foreground mt-4">No Photos Found</h3>
+                    <h3 className="heading-card text-foreground mt-4">No Photos Found</h3>
                     <p className="text-muted mt-2">
                       {photoSearch || photoFeatured !== 'all'
                         ? 'Try adjusting your filters'
@@ -441,7 +441,7 @@ export function PhotoProgressPage() {
                 ) : comparisons.length === 0 ? (
                   <div className="text-center py-12 bg-card rounded-lg border">
                     <GitCompare className="h-12 w-12 text-gray-300 mx-auto" />
-                    <h3 className="text-lg font-medium text-foreground mt-4">No Comparisons Found</h3>
+                    <h3 className="heading-card text-foreground mt-4">No Comparisons Found</h3>
                     <p className="text-muted mt-2">
                       {comparisonSearch || comparisonType !== 'all'
                         ? 'Try adjusting your filters'
@@ -515,7 +515,7 @@ export function PhotoProgressPage() {
                 ) : reports.length === 0 ? (
                   <div className="text-center py-12 bg-card rounded-lg border">
                     <FileText className="h-12 w-12 text-gray-300 mx-auto" />
-                    <h3 className="text-lg font-medium text-foreground mt-4">No Reports Found</h3>
+                    <h3 className="heading-card text-foreground mt-4">No Reports Found</h3>
                     <p className="text-muted mt-2">
                       {reportSearch || reportStatus !== 'all'
                         ? 'Try adjusting your filters'

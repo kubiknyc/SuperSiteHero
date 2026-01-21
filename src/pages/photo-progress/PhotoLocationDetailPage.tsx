@@ -125,7 +125,7 @@ export function PhotoLocationDetailPage() {
         <div className="p-6">
           <div className="text-center py-12">
             <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Location Not Found</h2>
+            <h2 className="heading-section mb-2">Location Not Found</h2>
             <p className="text-muted-foreground mb-4">
               This photo location may have been deleted.
             </p>
@@ -160,7 +160,7 @@ export function PhotoLocationDetailPage() {
                   </Badge>
                 )}
               </div>
-              <h1 className="text-2xl font-bold text-foreground heading-page">
+              <h1 className="heading-page text-foreground">
                 {location.name}
               </h1>
               <p className="text-muted mt-1">{project?.name || 'Project'}</p>
@@ -300,7 +300,7 @@ export function PhotoLocationDetailPage() {
               <Card>
                 <CardContent className="py-12 text-center">
                   <Camera className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-medium mb-2">No Photos Yet</h3>
+                  <h3 className="heading-card mb-2">No Photos Yet</h3>
                   <p className="text-muted-foreground mb-4">
                     Upload your first photo for this location
                   </p>
@@ -332,7 +332,7 @@ export function PhotoLocationDetailPage() {
               <Card>
                 <CardContent className="py-12 text-center">
                   <Play className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-medium mb-2">Not Enough Photos</h3>
+                  <h3 className="heading-card mb-2">Not Enough Photos</h3>
                   <p className="text-muted-foreground">
                     Upload at least 2 photos to view the timeline
                   </p>

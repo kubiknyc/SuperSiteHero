@@ -1,8 +1,8 @@
 // File: /src/pages/auth/LoginPageV2.tsx
 // Premium login page with construction industry aesthetic
-// Features: Blueprint grid, industrial styling, dramatic animations
+// Simplified: Email/password only (no biometric)
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '@/lib/auth/AuthContext'
 import { Button } from '@/components/ui/button'
@@ -10,7 +10,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/lib/notifications/ToastContext'
 import {
-  Fingerprint,
   Loader2,
   HardHat,
   Shield,
@@ -19,13 +18,6 @@ import {
   Eye,
   EyeOff
 } from 'lucide-react'
-import {
-  isWebAuthnSupported,
-  isPlatformAuthenticatorAvailable,
-  authenticateWithBiometric,
-  verifyBiometricAuthentication,
-  setLastBiometricAuthTime,
-} from '@/lib/auth/biometric'
 import { useRateLimit } from '@/lib/auth/rate-limiter'
 import { RateLimitWarning } from '@/components/auth/RateLimitWarning'
 import { logger } from '@/lib/utils/logger'
@@ -43,9 +35,6 @@ export function LoginPageV2() {
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [biometricLoading, setBiometricLoading] = useState(false)
-  const [biometricAvailable, setBiometricAvailable] = useState(false)
-  const [checkingBiometric, setCheckingBiometric] = useState(true)
   const [mounted, setMounted] = useState(false)
   const [showSlowWarning, setShowSlowWarning] = useState(false)
 
@@ -86,24 +75,6 @@ export function LoginPageV2() {
       logger.log('[LoginPageV2] Rate limit lockout expired')
     },
   })
-
-  // Check biometric availability
-  useEffect(() => {
-    const checkBiometric = async () => {
-      setCheckingBiometric(true)
-      try {
-        const webAuthnSupported = isWebAuthnSupported()
-        const platformAvailable = await isPlatformAuthenticatorAvailable()
-        setBiometricAvailable(webAuthnSupported && platformAvailable)
-      } catch (err) {
-        logger.error('Error checking biometric:', err)
-        setBiometricAvailable(false)
-      } finally {
-        setCheckingBiometric(false)
-      }
-    }
-    checkBiometric()
-  }, [])
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
@@ -151,38 +122,11 @@ export function LoginPageV2() {
     }
   }
 
-  // Handle biometric login
-  const handleBiometricLogin = useCallback(async () => {
-    setBiometricLoading(true)
-
-    try {
-      const authResult = await authenticateWithBiometric()
-      const verificationResult = await verifyBiometricAuthentication(
-        authResult.credentialId,
-        authResult.authenticatorData,
-        authResult.clientDataJSON,
-        authResult.signature
-      )
-
-      if (verificationResult.token && verificationResult.userId) {
-        setLastBiometricAuthTime()
-        success('Identity Verified', 'Biometric authentication successful.')
-      } else {
-        throw new Error('Verification failed')
-      }
-    } catch (err) {
-      error('Authentication Failed', err instanceof Error ? err.message : 'Biometric authentication failed')
-    } finally {
-      setBiometricLoading(false)
-    }
-  }, [error, success])
-
-  const isLoading = loading || biometricLoading
-  const isDisabled = isLoading || !rateLimit.isAllowed
+  const isDisabled = loading || !rateLimit.isAllowed
 
   return (
     <div className="login-container min-h-screen flex bg-slate-950 overflow-hidden">
-      {/* Inline CSS fallback for responsive layout - ensures layout works even if Tailwind responsive classes are missing from build */}
+      {/* Inline CSS fallback for responsive layout */}
       <style>{`
         .login-container {
           display: flex !important;
@@ -389,47 +333,6 @@ export function LoginPageV2() {
             </div>
           )}
 
-          {/* Biometric Login */}
-          {biometricAvailable && !checkingBiometric && !rateLimit.state.isLocked && (
-            <div className="mb-6">
-              <Button
-                type="button"
-                variant="outline"
-                className={cn(
-                  "w-full h-14 text-base font-medium",
-                  "bg-white/[0.03] border-white/10 text-white",
-                  "hover:bg-white/[0.06] hover:border-white/20",
-                  "transition-all duration-200"
-                )}
-                onClick={handleBiometricLogin}
-                disabled={isDisabled}
-              >
-                {biometricLoading ? (
-                  <>
-                    <Loader2 className="h-5 w-5 mr-3 animate-spin" />
-                    Authenticating...
-                  </>
-                ) : (
-                  <>
-                    <Fingerprint className="h-5 w-5 mr-3" />
-                    Sign in with Biometrics
-                  </>
-                )}
-              </Button>
-
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-800" />
-                </div>
-                <div className="relative flex justify-center">
-                  <span className="px-4 text-xs uppercase tracking-wider text-slate-600 bg-slate-950">
-                    or continue with email
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email Field */}
@@ -449,7 +352,7 @@ export function LoginPageV2() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isDisabled}
-                autoComplete="email webauthn"
+                autoComplete="email"
                 className={cn(
                   "h-12 px-4 text-base",
                   "bg-white/[0.03] border-white/10 text-white placeholder:text-slate-600",
@@ -485,7 +388,7 @@ export function LoginPageV2() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={isDisabled}
-                  autoComplete="current-password webauthn"
+                  autoComplete="current-password"
                   className={cn(
                     "h-12 px-4 pr-12 text-base",
                     "bg-white/[0.03] border-white/10 text-white placeholder:text-slate-600",
@@ -510,8 +413,8 @@ export function LoginPageV2() {
 
             {/* Slow Connection Warning */}
             {loading && showSlowWarning && (
-              <div className="p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
-                <p className="text-sm text-yellow-400 text-center">
+              <div className="p-3 rounded-lg bg-warning/10 border border-warning/20">
+                <p className="text-sm text-warning text-center">
                   This is taking longer than expected. Please check your connection.
                 </p>
               </div>

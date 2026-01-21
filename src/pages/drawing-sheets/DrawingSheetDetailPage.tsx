@@ -50,16 +50,18 @@ export function DrawingSheetDetailPage() {
     )
   }
 
+  // Discipline colors use semantic tokens where available
+  // These are intentionally distinct for visual differentiation of building disciplines
   const disciplineColors: Record<string, string> = {
-    architectural: 'bg-blue-500',
-    structural: 'bg-red-500',
-    mechanical: 'bg-green-500',
-    electrical: 'bg-yellow-500',
-    plumbing: 'bg-purple-500',
-    civil: 'bg-orange-500',
-    landscape: 'bg-emerald-500',
-    fire_protection: 'bg-rose-500',
-    other: 'bg-gray-500',
+    architectural: 'bg-info dark:bg-info',
+    structural: 'bg-destructive dark:bg-destructive',
+    mechanical: 'bg-success dark:bg-success',
+    electrical: 'bg-warning dark:bg-warning',
+    plumbing: 'bg-purple-500 dark:bg-purple-400',
+    civil: 'bg-warning dark:bg-warning',
+    landscape: 'bg-success dark:bg-success',
+    fire_protection: 'bg-destructive dark:bg-destructive',
+    other: 'bg-muted-foreground dark:bg-muted-foreground',
   }
 
   return (
@@ -76,7 +78,7 @@ export function DrawingSheetDetailPage() {
 
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-xl font-bold">
+                  <h1 className="heading-section">
                     {sheet.sheet_number || `Page ${sheet.page_number}`}
                   </h1>
                   {sheet.discipline && (

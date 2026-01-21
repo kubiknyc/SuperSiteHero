@@ -206,26 +206,26 @@ export function NewDailyReportPage() {
 
               {/* Duplicate Report Warning */}
               {duplicateResult?.hasDuplicate && duplicateResult.existingReport && (
-                <div className="p-4 bg-warning-light border border-amber-200 rounded-lg">
+                <div className="p-4 bg-warning-light border border-warning rounded-lg">
                   <div className="flex items-start gap-3">
                     <AlertTriangle className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
                     <div className="flex-1">
-                      <p className="font-medium text-amber-900">Report Already Exists</p>
-                      <p className="text-sm text-amber-700 mb-2">
+                      <p className="font-medium text-warning-dark">Report Already Exists</p>
+                      <p className="text-sm text-warning-dark/80 mb-2">
                         A daily report for <strong>{selectedDate}</strong> already exists for this project.
                         Status: <strong>{duplicateResult.existingReport.status}</strong>
                       </p>
                       <div className="flex gap-2">
                         <Link
                           to={`/daily-reports/${duplicateResult.existingReport.id}`}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-md bg-amber-100 text-amber-800 hover:bg-amber-200"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-md bg-warning-light text-warning-dark hover:bg-warning/20"
                         >
                           View Existing Report
                         </Link>
                         {duplicateResult.existingReport.status === 'draft' && (
                           <Link
                             to={`/daily-reports/${duplicateResult.existingReport.id}/edit`}
-                            className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-md bg-amber-600 text-white hover:bg-amber-700"
+                            className="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium rounded-md bg-warning text-white hover:bg-warning/90"
                           >
                             Edit Existing Report
                           </Link>
@@ -300,7 +300,7 @@ export function NewDailyReportPage() {
                         disabled={copyFromPrevious || previousReportRelatedData.isLoading}
                         className={`inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md ${
                           copyFromPrevious
-                            ? 'bg-success-light text-green-800 cursor-default'
+                            ? 'bg-success-light text-success-dark cursor-default'
                             : 'bg-primary text-white hover:bg-primary/90 dark:bg-primary dark:hover:bg-primary/80'
                         }`}
                       >
@@ -334,11 +334,11 @@ export function NewDailyReportPage() {
               </button>
 
               {projects && projects.length === 0 && (
-                <div className="flex gap-3 p-4 bg-warning-light border border-yellow-200 rounded-lg">
+                <div className="flex gap-3 p-4 bg-warning-light border border-warning rounded-lg">
                   <AlertCircle className="h-5 w-5 text-warning flex-shrink-0" />
                   <div>
-                    <p className="font-medium text-yellow-900">No projects available</p>
-                    <p className="text-sm text-yellow-700">
+                    <p className="font-medium text-warning-dark">No projects available</p>
+                    <p className="text-sm text-warning-dark/80">
                       Create a project first before creating daily reports.
                     </p>
                   </div>

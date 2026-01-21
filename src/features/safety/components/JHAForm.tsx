@@ -128,10 +128,10 @@ interface AcknowledgmentFormData {
 function RiskLevelBadge({ level }: { level: RiskLevel }) {
   const config = RISK_LEVELS.find((r) => r.value === level);
   const colorClasses = {
-    low: 'bg-green-100 text-green-800 border-green-200',
-    medium: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    high: 'bg-orange-100 text-orange-800 border-orange-200',
-    critical: 'bg-red-100 text-red-800 border-red-200',
+    low: 'bg-success-light text-success-dark dark:bg-success/20 dark:text-success border-success/30',
+    medium: 'bg-warning-light text-warning-dark dark:bg-warning/20 dark:text-warning border-warning/30',
+    high: 'bg-warning-light text-warning-dark dark:bg-warning/20 dark:text-warning border-warning/30',
+    critical: 'bg-error-light text-error-dark dark:bg-error/20 dark:text-error border-error/30',
   };
 
   return (
@@ -184,7 +184,7 @@ function HazardStepEditor({
   };
 
   return (
-    <Card className="border-l-4 border-l-blue-500">
+    <Card className="border-l-4 border-l-info">
       <CardHeader className="py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -294,10 +294,10 @@ function HazardStepEditor({
                         <div
                           className={cn(
                             'w-2 h-2 rounded-full',
-                            level.value === 'low' && 'bg-green-500',
-                            level.value === 'medium' && 'bg-yellow-500',
-                            level.value === 'high' && 'bg-orange-500',
-                            level.value === 'critical' && 'bg-red-500'
+                            level.value === 'low' && 'bg-success',
+                            level.value === 'medium' && 'bg-warning',
+                            level.value === 'high' && 'bg-warning',
+                            level.value === 'critical' && 'bg-destructive'
                           )}
                         />
                         {level.label}
@@ -859,10 +859,10 @@ export function JHAForm({
           <Alert
             variant={maxRisk === 'critical' || maxRisk === 'high' ? 'destructive' : 'default'}
             className={cn(
-              maxRisk === 'low' && 'border-green-500 bg-green-50',
-              maxRisk === 'medium' && 'border-yellow-500 bg-yellow-50',
-              maxRisk === 'high' && 'border-orange-500 bg-orange-50',
-              maxRisk === 'critical' && 'border-red-500 bg-red-50'
+              maxRisk === 'low' && 'border-success bg-success-light dark:bg-success/10',
+              maxRisk === 'medium' && 'border-warning bg-warning-light dark:bg-warning/10',
+              maxRisk === 'high' && 'border-warning bg-warning-light dark:bg-warning/10',
+              maxRisk === 'critical' && 'border-destructive bg-error-light dark:bg-error/10'
             )}
           >
             <AlertTriangle className="h-4 w-4" />
@@ -1157,7 +1157,7 @@ export function JHAForm({
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-semibold flex items-center gap-2">
-                <AlertTriangle className="h-5 w-5 text-yellow-600" />
+                <AlertTriangle className="h-5 w-5 text-warning" />
                 Hazard Analysis Steps
               </h3>
               <p className="text-sm text-muted-foreground">
